@@ -1,5 +1,11 @@
 # Commander Spellbook Website V2
 
+## Installation Requirements
+
+Install [Node v14](https://nodejs.org/). This will also install the `npm` command line tool.
+
+If you are already using the [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm) tool, you can run `nvm install` in the directory to get the correct version of node.
+
 ## Build Setup
 
 ```bash
