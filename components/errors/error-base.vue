@@ -14,13 +14,29 @@
   </div>
 </template>
 
-<script lang="typescript">
-export default {
-  props: ['containerClass', 'mainMessage', 'subMessage'],
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
+  props: {
+    containerClass: {
+      type: String,
+      default: '',
+    },
+    mainMessage: {
+      type: String,
+      default: '',
+    },
+    subMessage: {
+      type: String,
+      default: '',
+    },
+  },
   mounted() {
-    this.$refs.homeLink.$el.focus();
-  }
-}
+    // @ts-ignore
+    this.$refs.homeLink.$el.focus()
+  },
+})
 </script>
 
 <style scoped>

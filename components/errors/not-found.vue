@@ -1,13 +1,15 @@
 <template>
-  <Error-Template
-    :containerClass="notFoundClass"
-    mainMessage="Page Not Found"
-    :subMessage="notFoundMessage"
+  <Error-Base
+    :container-class="notFoundClass"
+    main-message="Page Not Found"
+    :sub-message="notFoundMessage"
   />
 </template>
 
-<script lang="typescript">
-import ErrorTemplateComponent from "./error-template";
+<script lang="ts">
+import Vue from 'vue'
+import getRandomItemFromArray from '../lib/random-from-array'
+import ErrorBaseComponent from './error-base.vue'
 
 const notFoundTemplates = [
   ['barren-glory', 'You were looking for glory, but found an empty world.'],
@@ -20,9 +22,9 @@ const notFoundTemplates = [
   ['zhalfirin-void', 'Must have phased out.'],
 ]
 
-export default {
+export default Vue.extend({
   components: {
-    'Error-Template': ErrorTemplateComponent
+    'Error-Base': ErrorBaseComponent,
   },
   data() {
     return {
@@ -31,13 +33,12 @@ export default {
     }
   },
   mounted() {
-    const notFoundTemplate =
-      notFoundTemplates[Math.floor(Math.random() * notFoundTemplates.length)]
+    const notFoundTemplate = getRandomItemFromArray(notFoundTemplates)
 
     this.notFoundClass = notFoundTemplate[0]
     this.notFoundMessage = notFoundTemplate[1]
   },
-}
+})
 </script>
 
 <style scoped>

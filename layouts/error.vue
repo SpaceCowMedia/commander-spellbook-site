@@ -5,15 +5,24 @@
   </div>
 </template>
 
-<script lang="typescript">
-import NotFoundErrorComponent from "../components/errors/not-found.vue";
-import UnknownErrorComponent from "../components/errors/unknown.vue";
+<script lang="ts">
+import NotFoundErrorComponent from '../components/errors/not-found.vue'
+import UnknownErrorComponent from '../components/errors/unknown.vue'
 
 export default {
-  props: ['error'],
   components: {
     'Not-Found-Error': NotFoundErrorComponent,
-    'Unknown-Error': UnknownErrorComponent
+    'Unknown-Error': UnknownErrorComponent,
+  },
+  props: {
+    error: {
+      type: Object,
+      default() {
+        return {
+          statusCode: 500,
+        }
+      },
+    },
   },
 }
 </script>
