@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import TextWithMagicSymbol from '@/components/Text-With-Magic-Symbol.vue'
+import TextWithMagicSymbol from '@/components/TextWithMagicSymbol.vue'
 
 describe('TextWithMagicSymbol', () => {
   test('is a Vue instance', () => {
