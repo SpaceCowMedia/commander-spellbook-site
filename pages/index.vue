@@ -12,11 +12,13 @@
           />
         </div>
         <div class="links">
-          <nuxt-link to="/todo" class="button--red">
+          <nuxt-link to="/advanced-search" class="button--red">
             Advanced Search
           </nuxt-link>
-          <nuxt-link to="/todo" class="button--red"> Syntax Guide </nuxt-link>
-          <nuxt-link to="/todo" class="button--red"> Random Combo </nuxt-link>
+          <nuxt-link to="/syntax-guide" class="button--red">
+            Syntax Guide
+          </nuxt-link>
+          <nuxt-link to="/random" class="button--red"> Random Combo </nuxt-link>
         </div>
       </div>
     </div>
