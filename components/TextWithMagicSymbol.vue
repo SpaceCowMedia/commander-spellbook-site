@@ -1,12 +1,13 @@
 <template>
   <span>
+    <!-- eslint-disable-next-line vue/require-v-for-key -->
     <span v-for="item in items">
       <img
-        class="magic-symbol"
         v-if="item.type === 'image'"
+        class="magic-symbol"
         :src="item.value"
       />
-      <span class="text" v-else>{{ item.value }}</span>
+      <span v-else class="text">{{ item.value }}</span>
     </span>
   </span>
 </template>
