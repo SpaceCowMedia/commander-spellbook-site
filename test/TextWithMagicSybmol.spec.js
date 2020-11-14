@@ -2,11 +2,6 @@ import { mount } from '@vue/test-utils'
 import TextWithMagicSymbol from '@/components/TextWithMagicSymbol.vue'
 
 describe('TextWithMagicSymbol', () => {
-  test('is a Vue instance', () => {
-    const wrapper = mount(TextWithMagicSymbol)
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   test('renders text', () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {

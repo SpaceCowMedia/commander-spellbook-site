@@ -5,11 +5,6 @@ import spellbookApi from 'commander-spellbook'
 jest.mock('commander-spellbook')
 
 describe('SearchBar', () => {
-  test('is a Vue instance', () => {
-    const wrapper = mount(SearchBar)
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   test('can set an classes on the input', () => {
     const wrapper = mount(SearchBar, {
       propsData: {

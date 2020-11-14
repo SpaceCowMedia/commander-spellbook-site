@@ -5,11 +5,6 @@ import scryfall from 'scryfall-client'
 jest.mock('scryfall-client')
 
 describe('ColorIdentity', () => {
-  test('is a Vue instance', () => {
-    const wrapper = mount(ColorIdentity)
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   test('sets scryfall image src for symbol', () => {
     scryfall.getSymbolUrl.mockReturnValueOnce('https://example.com/W.svg')
     scryfall.getSymbolUrl.mockReturnValueOnce('https://example.com/B.svg')

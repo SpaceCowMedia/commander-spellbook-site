@@ -1,14 +1,7 @@
 import { mount } from '@vue/test-utils'
 import CardHeader from '@/components/combo/CardHeader.vue'
 
-jest.mock('scryfall-client')
-
 describe('CardHeader', () => {
-  test('is a Vue instance', () => {
-    const wrapper = mount(CardHeader)
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   test('sets card images', () => {
     const wrapper = mount(CardHeader, {
       propsData: {
