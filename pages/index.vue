@@ -3,14 +3,7 @@
     <div class="container">
       <div class="w-full">
         <Logo />
-        <div class="w-full flex">
-          <div class="w-1/6"></div>
-          <input
-            type="text"
-            class="main-search-input"
-            placeholder="Search xxxxx combos"
-          />
-        </div>
+        <SearchBar class="md:w-2/3 h-20" inputClass="text-2xl text-center" />
         <div class="links">
           <nuxt-link to="/advanced-search" class="button--red">
             Advanced Search
@@ -32,14 +25,6 @@ export default Vue.extend({})
 </script>
 
 <style>
-.main-search-input {
-  @apply appearance-none block w-4/6 h-20 bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight text-lg;
-}
-
-.main-search-input:focus {
-  @apply outline-none bg-white border-gray-500;
-}
-
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
