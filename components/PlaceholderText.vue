@@ -26,7 +26,7 @@ export default Vue.extend({
   },
 
   computed: {
-    style() {
+    style(): string {
       return `width: ${this.length}%`
     },
   },
