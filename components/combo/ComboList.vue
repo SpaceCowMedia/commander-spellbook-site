@@ -2,14 +2,15 @@
   <div class="md:flex-1 m-4 w-full rounded overflow-hidden">
     <div class="px-6 py-4">
       <div class="combo-list-title">{{ title }}</div>
-      <ol
-        v-if="iterations.length"
-        class="combo-list"
-        :class="{ 'list-decimal': showNumbers }"
-      >
+      <ol class="combo-list" :class="{ 'list-decimal': showNumbers }">
         <li v-for="(item, index) in iterations" :key="title + '-' + index">
           <TextWithMagicSymbol :text="item" />
         </li>
+        <div v-if="iterations.length === 0">
+          <li v-for="n in Math.floor(Math.random() * 5) + 2">
+            <PlaceholderText :maxLength="50" />
+          </li>
+        </div>
       </ol>
     </div>
   </div>
@@ -18,10 +19,12 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import TextWithMagicSymbol from '../TextWithMagicSymbol.vue'
+import PlaceholderText from '../PlaceholderText.vue'
 
 export default Vue.extend({
   components: {
     TextWithMagicSymbol,
+    PlaceholderText,
   },
   props: {
     title: {

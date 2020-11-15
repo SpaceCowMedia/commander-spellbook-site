@@ -1,10 +1,11 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import ComboList from '@/components/combo/ComboList.vue'
 import TextWithMagicSymbol from '@/components/TextWithMagicSymbol.vue'
+import PlaceholderText from '@/components/PlaceholderText.vue'
 
 describe('ComboList', () => {
   test('creates a list of combo items', () => {
-    const wrapper = mount(ComboList, {
+    const wrapper = shallowMount(ComboList, {
       propsData: {
         title: 'My Title',
         iterations: ['Step 1', 'Step 2', 'Step 3'],
@@ -24,13 +25,13 @@ describe('ComboList', () => {
   })
 
   test('can set list to be numbered', () => {
-    const wrapperWithoutNumbers = mount(ComboList, {
+    const wrapperWithoutNumbers = shallowMount(ComboList, {
       propsData: {
         title: 'My Title',
         iterations: ['Step 1', 'Step 2', 'Step 3'],
       },
     })
-    const wrapperWithNumbers = mount(ComboList, {
+    const wrapperWithNumbers = shallowMount(ComboList, {
       propsData: {
         title: 'My Title',
         showNumbers: true,
@@ -42,5 +43,22 @@ describe('ComboList', () => {
       'list-decimal'
     )
     expect(wrapperWithNumbers.find('ol').classes()).toContain('list-decimal')
+  })
+
+  test('provides placeholders when iterations are not yet available', async () => {
+    const wrapper = shallowMount(ComboList, {
+      propsData: {
+        title: 'My Title',
+        iterations: [],
+      },
+    })
+
+    expect(wrapper.findAllComponents(PlaceholderText).length).toBeGreaterThan(0)
+
+    await wrapper.setProps({
+      iterations: ['1', '2', '3'],
+    })
+
+    expect(wrapper.findAllComponents(PlaceholderText).length).toBe(0)
   })
 })
