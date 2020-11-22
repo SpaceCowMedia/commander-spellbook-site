@@ -32,11 +32,26 @@ html {
   color: rgb(141, 54, 34);
   text-decoration: none;
   padding: 10px 30px;
+  @apply mb-4 mt-4;
 }
 
 .button--red:hover {
   color: #fff;
   background-color: rgb(141, 54, 34);
+}
+
+.heading-title {
+  font-family: monospace;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  @apply text-4xl;
+}
+
+@media (min-width: 640px) {
+  .heading-title {
+    @apply text-6xl mb-4;
+  }
 }
 
 .footer {
