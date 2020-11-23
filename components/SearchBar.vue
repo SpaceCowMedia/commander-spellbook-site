@@ -5,6 +5,8 @@
       class="main-search-input"
       :class="inputClass"
       :placeholder="'Search ' + numberOfCombos + ' combos'"
+      v-model="query"
+      v-on:keydown.enter="onEnter"
     />
   </div>
 </template>
@@ -25,13 +27,32 @@ export default Vue.extend({
   },
   data() {
     return {
-      numberOfCombos: 'x',
+      query: '',
+      numberOfCombos: '....',
+    }
+  },
+  mounted() {
+    const query = this.$route.query.q
+
+    if (typeof query === 'string') {
+      this.query = query
     }
   },
   methods: {
     async lookupNumberOfCombos() {
       const combos = await spellbookApi.search()
       this.numberOfCombos = String(combos.length)
+    },
+    onEnter() {
+      if (!this.query.trim()) {
+        return
+      }
+
+      if (this.$route.path === '/search') {
+        this.$emit('new-query', this.query)
+      } else {
+        this.$router.push(`/search?q=${this.query}`)
+      }
     },
   },
 })
