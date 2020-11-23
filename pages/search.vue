@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBar />
+    <SearchBar @new-query="updateSearchResults" />
 
     <div class="container max-w-5xl mx-auto sm:flex flex-row">
       <div v-if="loaded">
@@ -35,15 +35,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    async parseSearchQuery() {
-      const query = this.$route.query.q
-
-      if (!query || typeof query !== 'string') {
-        this.loaded = true
-        return
-      }
+    async updateSearchResults(query: string) {
+      this.results = []
 
       const combos = await spellbookApi.search(query)
+
       this.results.push(
         ...combos.map((c) => {
           return {
@@ -52,6 +48,16 @@ export default Vue.extend({
           }
         })
       )
+    },
+    async parseSearchQuery() {
+      const query = this.$route.query.q
+
+      if (!query || typeof query !== 'string') {
+        this.loaded = true
+        return
+      }
+
+      await this.updateSearchResults(query)
 
       this.loaded = true
     },

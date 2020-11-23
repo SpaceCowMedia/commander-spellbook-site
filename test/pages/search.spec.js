@@ -108,11 +108,22 @@ describe('SearchPage', () => {
     ])
   })
 
-  describe('parseSearchQuery', () => {
-    beforeEach(() => {
-      spellbookApi.search.mockResolvedValue([])
-    })
+  it('updates search when search bar emits new-query event', async () => {
+    const SearchBarStub = {
+      template: '<div></div>',
+    }
+    wrapperOptions.stubs.SearchBar = SearchBarStub
+    const wrapper = shallowMount(SearchPage, wrapperOptions)
 
+    spellbookApi.search.mockResolvedValue([])
+
+    await wrapper.findComponent(SearchBarStub).vm.$emit('new-query', 'query')
+
+    expect(spellbookApi.search).toBeCalledTimes(1)
+    expect(spellbookApi.search).toBeCalledWith('query')
+  })
+
+  describe('parseSearchQuery', () => {
     it('sets loaded to true if no query is available', async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions)
 
@@ -125,38 +136,58 @@ describe('SearchPage', () => {
 
     it('noops if no query is available', async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions)
+      jest.spyOn(wrapper.vm, 'updateSearchResults')
 
       await wrapper.vm.parseSearchQuery()
 
-      expect(spellbookApi.search).not.toBeCalled()
+      expect(wrapper.vm.updateSearchResults).not.toBeCalled()
     })
 
     it('noops if query is not a string', async () => {
       $route.query.q = ['foo', 'bar']
 
       const wrapper = shallowMount(SearchPage, wrapperOptions)
+      jest.spyOn(wrapper.vm, 'updateSearchResults')
 
       await wrapper.vm.parseSearchQuery()
 
-      expect(spellbookApi.search).not.toBeCalled()
+      expect(wrapper.vm.updateSearchResults).not.toBeCalled()
     })
 
     it('looks up combos with query', async () => {
       $route.query.q = 'card:Sydri'
 
       const wrapper = shallowMount(SearchPage, wrapperOptions)
+      jest.spyOn(wrapper.vm, 'updateSearchResults').mockResolvedValue()
 
       spellbookApi.search.mockResolvedValue([])
 
       await wrapper.vm.parseSearchQuery()
 
-      expect(spellbookApi.search).toBeCalledTimes(1)
-      expect(spellbookApi.search).toBeCalledWith('card:Sydri')
+      expect(wrapper.vm.updateSearchResults).toBeCalledTimes(1)
+      expect(wrapper.vm.updateSearchResults).toBeCalledWith('card:Sydri')
+    })
+
+    it('sets loaded to true when done populating results', async () => {
+      $route.query.q = 'card:Sydri'
+
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+      jest.spyOn(wrapper.vm, 'updateSearchResults').mockResolvedValue()
+
+      expect(wrapper.vm.loaded).toBe(false)
+
+      await wrapper.vm.parseSearchQuery()
+
+      expect(wrapper.vm.loaded).toBe(true)
+    })
+  })
+
+  describe('updateSearchResults', () => {
+    beforeEach(() => {
+      spellbookApi.search.mockResolvedValue([])
     })
 
     it('populates results with cmobos from lookup', async () => {
-      $route.query.q = 'card:Sydri'
-
       const wrapper = shallowMount(SearchPage, wrapperOptions)
 
       spellbookApi.search.mockResolvedValue([
@@ -172,7 +203,8 @@ describe('SearchPage', () => {
         },
       ])
 
-      await wrapper.vm.parseSearchQuery()
+      await wrapper.vm.updateSearchResults('query')
+      expect(spellbookApi.search).toBeCalledWith('query')
 
       expect(wrapper.vm.results).toEqual([
         {
@@ -184,20 +216,6 @@ describe('SearchPage', () => {
           id: '2',
         },
       ])
-    })
-
-    it('sets loaded to true when done populating results', async () => {
-      $route.query.q = 'card:Sydri'
-
-      const wrapper = shallowMount(SearchPage, wrapperOptions)
-
-      spellbookApi.search.mockResolvedValue([])
-
-      expect(wrapper.vm.loaded).toBe(false)
-
-      await wrapper.vm.parseSearchQuery()
-
-      expect(wrapper.vm.loaded).toBe(true)
     })
   })
 })
