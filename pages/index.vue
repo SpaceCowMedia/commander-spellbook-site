@@ -26,6 +26,7 @@ import Vue from 'vue'
 export default Vue.extend({
   mounted() {
     const query = this.$route.query.q
+    const status = this.$route.query.status
 
     if (!(typeof query === 'string')) {
       return
@@ -36,12 +37,12 @@ export default Vue.extend({
       return
     }
 
-    if (query === 'spoiled') {
+    if (query === 'spoiled' || status === 'spoiled') {
       this.$router.push('/search?q=is:spoiled')
       return
     }
 
-    if (query === 'banned') {
+    if (query === 'banned' || status === 'banned') {
       this.$router.push('/search?q=is:banned')
       return
     }

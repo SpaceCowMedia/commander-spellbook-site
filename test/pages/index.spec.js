@@ -61,8 +61,26 @@ describe('HomePage', () => {
     expect($router.push).toBeCalledWith('/search?q=is:spoiled')
   })
 
+  it('redirects to search results page when status param is a spoiled', () => {
+    $route.query.q = 'card:Sydri'
+    $route.query.status = 'spoiled'
+    shallowMount(HomePage, wrapperOptions)
+
+    expect($router.push).toBeCalledTimes(1)
+    expect($router.push).toBeCalledWith('/search?q=is:spoiled')
+  })
+
   it('redirects to search results page when query is a banned', () => {
     $route.query.q = 'banned'
+    shallowMount(HomePage, wrapperOptions)
+
+    expect($router.push).toBeCalledTimes(1)
+    expect($router.push).toBeCalledWith('/search?q=is:banned')
+  })
+
+  it('redirects to search results page when status param is a banned', () => {
+    $route.query.q = 'card:Sydri'
+    $route.query.status = 'banned'
     shallowMount(HomePage, wrapperOptions)
 
     expect($router.push).toBeCalledTimes(1)
