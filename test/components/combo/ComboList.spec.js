@@ -53,7 +53,11 @@ describe('ComboList', () => {
       },
     })
 
-    expect(wrapper.findAllComponents(PlaceholderText).length).toBeGreaterThan(0)
+    await wrapper.setData({
+      numberOfPlacholderItems: 4,
+    })
+
+    expect(wrapper.findAllComponents(PlaceholderText).length).toBe(4)
 
     await wrapper.setProps({
       iterations: ['1', '2', '3'],
