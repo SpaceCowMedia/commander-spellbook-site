@@ -6,23 +6,23 @@
       <div v-if="loaded">
         <div v-if="paginatedResults.length > 0">
           <Pagination
+            :page-size="maxNumberOfCombosPerPage"
+            :current-page="page"
+            :total-pages="totalPages"
+            :total-results="totalResults"
             @go-forward="goForward"
             @go-back="goBack"
-            :pageSize="maxNumberOfCombosPerPage"
-            :currentPage="page"
-            :totalPages="totalPages"
-            :totalResults="totalResults"
           />
 
           <ComboResults :results="paginatedResults" />
 
           <Pagination
+            :page-size="maxNumberOfCombosPerPage"
+            :current-page="page"
+            :total-pages="totalPages"
+            :total-results="totalResults"
             @go-forward="goForward"
             @go-back="goBack"
-            :pageSize="maxNumberOfCombosPerPage"
-            :currentPage="page"
-            :totalPages="totalPages"
-            :totalResults="totalResults"
           />
         </div>
 

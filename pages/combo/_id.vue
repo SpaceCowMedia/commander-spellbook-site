@@ -2,13 +2,13 @@
   <div>
     <SearchBar />
 
-    <CardHeader :cardsArt="cardArts" :title="title" />
+    <CardHeader :cards-art="cardArts" :title="title" />
 
     <div class="container max-w-5xl mx-auto md:flex flex-row">
       <div class="w-2/3">
         <ComboList title="Cards" :iterations="cardNames" />
         <ComboList title="Prerequisites" :iterations="prerequisites" />
-        <ComboList title="Steps" :showNumbers="true" :iterations="steps" />
+        <ComboList title="Steps" :show-numbers="true" :iterations="steps" />
         <ComboList title="Results" :iterations="results" />
       </div>
 

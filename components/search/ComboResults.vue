@@ -13,8 +13,8 @@
           </div>
           <CardTooltip
             v-for="name in r.names"
-            :cardName="name"
             :key="r.id + '_' + name"
+            :card-name="name"
           >
             <div class="card-name pl-3 pr-3">{{ name }}</div>
           </CardTooltip>

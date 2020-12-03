@@ -4,7 +4,7 @@
       <div class="w-full">
         <Logo />
 
-        <SearchBar class="md:w-2/3 h-20" inputClass="text-2xl text-center" />
+        <SearchBar class="md:w-2/3 h-20" input-class="text-2xl text-center" />
 
         <div class="links">
           <nuxt-link to="/advanced-search" class="button--red">

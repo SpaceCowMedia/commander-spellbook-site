@@ -17,6 +17,12 @@ type TooltipData = {
 }
 
 export default Vue.extend({
+  props: {
+    cardName: {
+      type: String,
+      default: '',
+    },
+  },
   data(): TooltipData {
     return {
       hover: false,
@@ -24,10 +30,9 @@ export default Vue.extend({
       top: '0px',
     }
   },
-  props: {
-    cardName: {
-      type: String,
-      default: '',
+  computed: {
+    imgSrc(): string {
+      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image`
     },
   },
   methods: {
@@ -38,11 +43,6 @@ export default Vue.extend({
     },
     mouseout(): void {
       this.hover = false
-    },
-  },
-  computed: {
-    imgSrc(): string {
-      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image`
     },
   },
 })

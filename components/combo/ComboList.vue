@@ -9,7 +9,7 @@
         <div v-if="iterations.length === 0">
           <!-- eslint-disable-next-line vue/require-v-for-key, vue/no-unused-vars -->
           <li v-for="n in numberOfPlacholderItems">
-            <PlaceholderText :maxLength="50" />
+            <PlaceholderText :max-length="50" />
           </li>
         </div>
       </ol>
@@ -27,14 +27,6 @@ export default Vue.extend({
     TextWithMagicSymbol,
     PlaceholderText,
   },
-  data() {
-    return {
-      numberOfPlacholderItems: 0,
-    }
-  },
-  mounted() {
-    this.numberOfPlacholderItems = Math.floor(Math.random() * 5) + 2
-  },
   props: {
     title: {
       type: String,
@@ -50,6 +42,14 @@ export default Vue.extend({
         return []
       },
     },
+  },
+  data() {
+    return {
+      numberOfPlacholderItems: 0,
+    }
+  },
+  mounted() {
+    this.numberOfPlacholderItems = Math.floor(Math.random() * 5) + 2
   },
 })
 </script>

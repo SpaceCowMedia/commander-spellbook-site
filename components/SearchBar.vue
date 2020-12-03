@@ -1,12 +1,12 @@
 <template>
   <div class="main-search-input-container">
     <input
+      v-model="query"
       type="text"
       class="main-search-input"
       :class="inputClass"
       :placeholder="'Search ' + numberOfCombos + ' combos'"
-      v-model="query"
-      v-on:keydown.enter="onEnter"
+      @keydown.enter="onEnter"
     />
   </div>
 </template>
@@ -16,14 +16,14 @@ import Vue from 'vue'
 import spellbookApi from 'commander-spellbook'
 
 export default Vue.extend({
-  async fetch() {
-    await this.lookupNumberOfCombos()
-  },
   props: {
     inputClass: {
       type: String,
       default: 'text-lg',
     },
+  },
+  async fetch() {
+    await this.lookupNumberOfCombos()
   },
   data() {
     return {
