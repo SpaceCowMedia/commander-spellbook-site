@@ -99,6 +99,14 @@ export default Vue.extend({
 
       const combos = await spellbookApi.search(query)
 
+      if (combos.length === 1) {
+        this.$router.push({
+          path: `/combo/${combos[0].commanderSpellbookId}`,
+          query: { q: query },
+        })
+        return
+      }
+
       this.combos = combos.map((c) => {
         return {
           names: c.cards.map((card) => card.name),

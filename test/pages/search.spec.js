@@ -351,6 +351,30 @@ describe('SearchPage', () => {
         },
       ])
     })
+
+    it('automatically redirects to combo page when only a single value is found', async () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      spellbookApi.search.mockResolvedValue([
+        {
+          cards: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],
+          results: ['result 1', 'result 2'],
+          colorIdentity: {
+            colors: ['r', 'b'],
+          },
+          commanderSpellbookId: '1',
+        },
+      ])
+
+      await wrapper.vm.updateSearchResults('query')
+
+      expect($router.push).toBeCalledWith({
+        path: '/combo/1',
+        query: {
+          q: 'query',
+        },
+      })
+    })
   })
 
   describe('navigateToPage', () => {
