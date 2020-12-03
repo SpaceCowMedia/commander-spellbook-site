@@ -163,16 +163,12 @@ describe('SearchPage', () => {
       pageSize: 76,
       currentPage: 1,
       totalPages: 3,
-      firstResult: 1,
-      lastResult: 76,
       totalResults: 215,
     })
     expect(paginationComponents.at(1).props()).toEqual({
       pageSize: 76,
       currentPage: 1,
       totalPages: 3,
-      firstResult: 1,
-      lastResult: 76,
       totalResults: 215,
     })
 
@@ -184,16 +180,12 @@ describe('SearchPage', () => {
       pageSize: 76,
       currentPage: 2,
       totalPages: 3,
-      firstResult: 77,
-      lastResult: 152,
       totalResults: 215,
     })
     expect(paginationComponents.at(1).props()).toEqual({
       pageSize: 76,
       currentPage: 2,
       totalPages: 3,
-      firstResult: 77,
-      lastResult: 152,
       totalResults: 215,
     })
   })

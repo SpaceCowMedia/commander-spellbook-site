@@ -11,8 +11,6 @@
             :pageSize="maxNumberOfCombosPerPage"
             :currentPage="page"
             :totalPages="totalPages"
-            :firstResult="startingPoint + 1"
-            :lastResult="lastResult"
             :totalResults="totalResults"
           />
 
@@ -24,8 +22,6 @@
             :pageSize="maxNumberOfCombosPerPage"
             :currentPage="page"
             :totalPages="totalPages"
-            :firstResult="startingPoint + 1"
-            :lastResult="lastResult"
             :totalResults="totalResults"
           />
         </div>
@@ -78,15 +74,6 @@ export default Vue.extend({
       }
 
       return startingPoint
-    },
-    lastResult(): number {
-      const lastResult = this.startingPoint + this.maxNumberOfCombosPerPage
-
-      if (lastResult > this.totalResults) {
-        return this.totalResults
-      }
-
-      return lastResult
     },
     paginatedResults(): ComboResult[] {
       let results = this.combos
