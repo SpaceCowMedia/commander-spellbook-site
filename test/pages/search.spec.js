@@ -5,21 +5,41 @@ import spellbookApi from 'commander-spellbook'
 jest.mock('commander-spellbook')
 
 describe('SearchPage', () => {
-  let $route, wrapperOptions
+  let $route, $router, wrapperOptions, fakeCombos
 
   beforeEach(() => {
+    fakeCombos = [
+      {
+        names: ['a', 'b', 'c'],
+        colors: ['w', 'b', 'r'],
+        results: ['result 1', 'result 2'],
+        id: '1',
+      },
+      {
+        names: ['d', 'e', 'f'],
+        colors: ['u', 'g'],
+        results: ['result 3', 'result 4'],
+        id: '2',
+      },
+    ]
     $route = {
+      path: '/search',
       query: {},
+    }
+    $router = {
+      push: jest.fn(),
     }
     wrapperOptions = {
       mocks: {
         $route,
+        $router,
       },
       stubs: {
         SearchBar: true,
         ComboResults: true,
         NoCombosFound: true,
         LoadingCombos: true,
+        Pagination: true,
       },
     }
   })
@@ -79,16 +99,7 @@ describe('SearchPage', () => {
 
     await wrapper.setData({
       loaded: true,
-      results: [
-        {
-          names: 'a, b, c',
-          id: '1',
-        },
-        {
-          names: 'd, e, f',
-          id: '2',
-        },
-      ],
+      combos: fakeCombos,
     })
 
     expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy()
@@ -98,14 +109,93 @@ describe('SearchPage', () => {
     expect(comboResultsNode.exists()).toBeTruthy()
     expect(comboResultsNode.props('results')).toEqual([
       {
-        names: 'a, b, c',
+        names: ['a', 'b', 'c'],
+        colors: ['w', 'b', 'r'],
+        results: ['result 1', 'result 2'],
         id: '1',
       },
       {
-        names: 'd, e, f',
+        names: ['d', 'e', 'f'],
+        colors: ['u', 'g'],
+        results: ['result 3', 'result 4'],
         id: '2',
       },
     ])
+  })
+
+  it('shows pagination for results', async () => {
+    const PaginationStub = {
+      template: '<div></div>',
+      props: {
+        pageSize: Number,
+        currentPage: Number,
+        totalPages: Number,
+        firstResult: Number,
+        lastResult: Number,
+        totalResults: Number,
+      },
+    }
+    wrapperOptions.stubs.Pagination = PaginationStub
+    const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+    // add a large number of combos
+    'x'
+      .repeat(213)
+      .split('')
+      .forEach((value, index) => {
+        fakeCombos.push({
+          names: [value],
+          colors: ['u', 'g'],
+          results: ['result x', 'result y'],
+          id: String(index + 2),
+        })
+      })
+
+    await wrapper.setData({
+      loaded: true,
+      combos: fakeCombos,
+    })
+
+    const paginationComponents = wrapper.findAllComponents(PaginationStub)
+
+    expect(paginationComponents.length).toBe(2)
+    expect(paginationComponents.at(0).props()).toEqual({
+      pageSize: 76,
+      currentPage: 1,
+      totalPages: 3,
+      firstResult: 1,
+      lastResult: 76,
+      totalResults: 215,
+    })
+    expect(paginationComponents.at(1).props()).toEqual({
+      pageSize: 76,
+      currentPage: 1,
+      totalPages: 3,
+      firstResult: 1,
+      lastResult: 76,
+      totalResults: 215,
+    })
+
+    await wrapper.setData({
+      page: 2,
+    })
+
+    expect(paginationComponents.at(0).props()).toEqual({
+      pageSize: 76,
+      currentPage: 2,
+      totalPages: 3,
+      firstResult: 77,
+      lastResult: 152,
+      totalResults: 215,
+    })
+    expect(paginationComponents.at(1).props()).toEqual({
+      pageSize: 76,
+      currentPage: 2,
+      totalPages: 3,
+      firstResult: 77,
+      lastResult: 152,
+      totalResults: 215,
+    })
   })
 
   it('updates search when search bar emits new-query event', async () => {
@@ -121,6 +211,48 @@ describe('SearchPage', () => {
 
     expect(spellbookApi.search).toBeCalledTimes(1)
     expect(spellbookApi.search).toBeCalledWith('query')
+  })
+
+  it('calls goFoward when pagination element emits a goForward event', async () => {
+    const forwardSpy = jest
+      .spyOn(SearchPage.options.methods, 'goForward')
+      .mockImplementation()
+
+    const PaginationStub = {
+      template: '<div></div>',
+    }
+    wrapperOptions.stubs.Pagination = PaginationStub
+    const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+    await wrapper.setData({
+      loaded: true,
+      combos: fakeCombos,
+    })
+
+    await wrapper.findAllComponents(PaginationStub).at(0).vm.$emit('go-forward')
+
+    expect(forwardSpy).toBeCalledTimes(1)
+  })
+
+  it('calls goBack when pagination element emits a goBack event', async () => {
+    const forwardSpy = jest
+      .spyOn(SearchPage.options.methods, 'goBack')
+      .mockImplementation()
+
+    const PaginationStub = {
+      template: '<div></div>',
+    }
+    wrapperOptions.stubs.Pagination = PaginationStub
+    const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+    await wrapper.setData({
+      loaded: true,
+      combos: fakeCombos,
+    })
+
+    await wrapper.findAllComponents(PaginationStub).at(0).vm.$emit('go-back')
+
+    expect(forwardSpy).toBeCalledTimes(1)
   })
 
   describe('parseSearchQuery', () => {
@@ -192,13 +324,19 @@ describe('SearchPage', () => {
 
       spellbookApi.search.mockResolvedValue([
         {
-          cards: ['a', 'b', 'c'],
-          colorIdentity: ['r', 'b'],
+          cards: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],
+          results: ['result 1', 'result 2'],
+          colorIdentity: {
+            colors: ['r', 'b'],
+          },
           commanderSpellbookId: '1',
         },
         {
-          cards: ['d', 'e', 'f'],
-          colorIdentity: ['w', 'b'],
+          cards: [{ name: 'd' }, { name: 'e' }, { name: 'f' }],
+          results: ['result 3', 'result 4'],
+          colorIdentity: {
+            colors: ['w', 'b'],
+          },
           commanderSpellbookId: '2',
         },
       ])
@@ -206,16 +344,134 @@ describe('SearchPage', () => {
       await wrapper.vm.updateSearchResults('query')
       expect(spellbookApi.search).toBeCalledWith('query')
 
-      expect(wrapper.vm.results).toEqual([
+      expect(wrapper.vm.paginatedResults).toEqual([
         {
-          names: 'a, b, c',
+          names: ['a', 'b', 'c'],
+          colors: ['r', 'b'],
+          results: ['result 1', 'result 2'],
           id: '1',
         },
         {
-          names: 'd, e, f',
+          names: ['d', 'e', 'f'],
+          colors: ['w', 'b'],
+          results: ['result 3', 'result 4'],
           id: '2',
         },
       ])
+    })
+  })
+
+  describe('navigateToPage', () => {
+    beforeEach(() => {
+      $route.query.q = 'card:Arjun'
+      window.scrollTo = jest.fn()
+    })
+
+    it('adds to specified number to page', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      wrapper.setData({
+        page: 3,
+      })
+      wrapper.vm.navigateToPage(3)
+
+      expect(wrapper.vm.page).toBe(6)
+    })
+
+    it('supports negative numbers', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      wrapper.setData({
+        page: 3,
+      })
+      wrapper.vm.navigateToPage(-1)
+
+      expect(wrapper.vm.page).toBe(2)
+    })
+
+    it('pushes the query params in the router', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      wrapper.vm.navigateToPage(3)
+
+      expect($router.push).toBeCalledTimes(1)
+      expect($router.push).toBeCalledWith({
+        path: '/search',
+        query: {
+          q: 'card:Arjun',
+          page: '4',
+        },
+      })
+    })
+
+    it('preserves the query param for q', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      $route.query.q = 'Sydri'
+      wrapper.vm.navigateToPage(3)
+
+      expect($router.push).toBeCalledTimes(1)
+      expect($router.push).toBeCalledWith({
+        path: '/search',
+        query: {
+          q: 'Sydri',
+          page: '4',
+        },
+      })
+    })
+
+    it('scrolls to the top of the page', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+
+      $route.query.q = 'Sydri'
+      wrapper.vm.navigateToPage(3)
+
+      expect(window.scrollTo).toBeCalledTimes(1)
+      expect(window.scrollTo).toBeCalledWith(0, 0)
+    })
+  })
+
+  describe('goForward', () => {
+    let spy
+
+    beforeEach(() => {
+      spy = jest
+        .spyOn(SearchPage.options.methods, 'navigateToPage')
+        .mockImplementation()
+    })
+
+    it('calls navigateToPage with one page further than the current page', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+      wrapper.setData({
+        page: 2,
+      })
+
+      wrapper.vm.goForward()
+
+      expect(spy).toBeCalledTimes(1)
+      expect(spy).toBeCalledWith(1)
+    })
+  })
+
+  describe('goBack', () => {
+    let spy
+
+    beforeEach(() => {
+      spy = jest
+        .spyOn(SearchPage.options.methods, 'navigateToPage')
+        .mockImplementation()
+    })
+
+    it('calls navigateToPage with one page back from the current page', () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions)
+      wrapper.setData({
+        page: 2,
+      })
+
+      wrapper.vm.goBack()
+
+      expect(spy).toBeCalledTimes(1)
+      expect(spy).toBeCalledWith(-1)
     })
   })
 })

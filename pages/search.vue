@@ -4,7 +4,32 @@
 
     <div class="container max-w-5xl mx-auto sm:flex flex-row">
       <div v-if="loaded">
-        <ComboResults v-if="results.length > 0" :results="results" />
+        <div v-if="paginatedResults.length > 0">
+          <Pagination
+            @go-forward="goForward"
+            @go-back="goBack"
+            :pageSize="maxNumberOfCombosPerPage"
+            :currentPage="page"
+            :totalPages="totalPages"
+            :firstResult="startingPoint + 1"
+            :lastResult="lastResult"
+            :totalResults="totalResults"
+          />
+
+          <ComboResults :results="paginatedResults" />
+
+          <Pagination
+            @go-forward="goForward"
+            @go-back="goBack"
+            :pageSize="maxNumberOfCombosPerPage"
+            :currentPage="page"
+            :totalPages="totalPages"
+            :firstResult="startingPoint + 1"
+            :lastResult="lastResult"
+            :totalResults="totalResults"
+          />
+        </div>
+
         <NoCombosFound v-else />
       </div>
 
@@ -21,7 +46,9 @@ import type { ComboResult } from '../components/search/ComboResults.vue'
 
 type Data = {
   loaded: boolean
-  results: ComboResult[]
+  page: number
+  maxNumberOfCombosPerPage: number
+  combos: ComboResult[]
 }
 
 export default Vue.extend({
@@ -31,26 +58,73 @@ export default Vue.extend({
   data(): Data {
     return {
       loaded: false,
-      results: [],
+      page: 1,
+      maxNumberOfCombosPerPage: 76,
+      combos: [],
     }
+  },
+  computed: {
+    totalResults(): number {
+      return this.combos.length
+    },
+    totalPages(): number {
+      return Math.floor(this.totalResults / this.maxNumberOfCombosPerPage) + 1
+    },
+    startingPoint(): number {
+      let startingPoint = (this.page - 1) * this.maxNumberOfCombosPerPage
+
+      if (startingPoint > this.totalResults) {
+        startingPoint = (this.totalPages - 1) * this.maxNumberOfCombosPerPage
+      }
+
+      return startingPoint
+    },
+    lastResult(): number {
+      const lastResult = this.startingPoint + this.maxNumberOfCombosPerPage
+
+      if (lastResult > this.totalResults) {
+        return this.totalResults
+      }
+
+      return lastResult
+    },
+    paginatedResults(): ComboResult[] {
+      let results = this.combos
+
+      if (this.totalResults > this.maxNumberOfCombosPerPage) {
+        results = results.slice(
+          this.startingPoint,
+          this.startingPoint + this.maxNumberOfCombosPerPage
+        )
+      }
+
+      return results
+    },
   },
   methods: {
     async updateSearchResults(query: string) {
-      this.results = []
+      this.combos = []
+      this.page = 1
+      this.$router.push({
+        path: this.$route.path,
+        query: { q: query },
+      })
 
       const combos = await spellbookApi.search(query)
 
-      this.results.push(
-        ...combos.map((c) => {
-          return {
-            names: c.cards.join(', '),
-            id: String(c.commanderSpellbookId),
-          }
-        })
-      )
+      this.combos = combos.map((c) => {
+        return {
+          names: c.cards.map((card) => card.name),
+          colors: Array.from(c.colorIdentity.colors),
+          results: Array.from(c.results),
+          id: String(c.commanderSpellbookId),
+        }
+      })
     },
     async parseSearchQuery() {
       const query = this.$route.query.q
+
+      this.page = Number(this.$route.query.page) || 1
 
       if (!query || typeof query !== 'string') {
         this.loaded = true
@@ -60,6 +134,20 @@ export default Vue.extend({
       await this.updateSearchResults(query)
 
       this.loaded = true
+    },
+    navigateToPage(pagesToChange: number): void {
+      this.page = this.page + pagesToChange
+      this.$router.push({
+        path: this.$route.path,
+        query: { q: this.$route.query.q, page: String(this.page) },
+      })
+      window.scrollTo(0, 0)
+    },
+    goForward(): void {
+      this.navigateToPage(1)
+    },
+    goBack(): void {
+      this.navigateToPage(-1)
     },
   },
 })
