@@ -7,12 +7,14 @@ import { mocked } from 'ts-jest/utils'
 jest.mock('@/components/lib/random-from-array')
 
 describe('NotFoundErrorComponent', () => {
-  it('sets a random background class', () => {
+  beforeEach(() => {
     mocked(getRandomItemFromArray).mockReturnValue([
       'mock-class',
       'mock message',
     ])
+  })
 
+  it('sets a random background class', () => {
     const wrapper = shallowMount(NotFoundErrorComponent)
     expect(wrapper.vm.$data.notFoundClass).toBe('mock-class')
     expect(wrapper.vm.$data.notFoundMessage).toBe('mock message')

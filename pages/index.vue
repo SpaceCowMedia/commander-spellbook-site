@@ -1,25 +1,20 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">commander-spellbook-site</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <div>
+    <div class="container">
+      <div class="w-full">
+        <Logo />
+
+        <SearchBar class="md:w-2/3 h-20" input-class="text-2xl text-center" />
+
+        <div class="links">
+          <nuxt-link to="/advanced-search" class="button--red">
+            Advanced Search
+          </nuxt-link>
+          <nuxt-link to="/syntax-guide" class="button--red">
+            Syntax Guide
+          </nuxt-link>
+          <nuxt-link to="/random" class="button--red"> Random Combo </nuxt-link>
+        </div>
       </div>
     </div>
   </div>
@@ -28,10 +23,36 @@
 <script lang="ts">
 import Vue from 'vue'
 
-export default Vue.extend({})
+export default Vue.extend({
+  mounted() {
+    const query = this.$route.query.q
+    const status = this.$route.query.status
+
+    if (!(typeof query === 'string')) {
+      return
+    }
+
+    if (Number(query) > 0) {
+      this.$router.push(`/combo/${query}`)
+      return
+    }
+
+    if (query === 'spoiled' || status === 'spoiled') {
+      this.$router.push('/search?q=is:spoiled')
+      return
+    }
+
+    if (query === 'banned' || status === 'banned') {
+      this.$router.push('/search?q=is:banned')
+      return
+    }
+
+    this.$router.push(`/search?q=${query}`)
+  },
+})
 </script>
 
-<style>
+<style scoped>
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
@@ -40,31 +61,6 @@ export default Vue.extend({})
 .container {
   margin: 0 auto;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+  @apply flex flex-col items-center justify-center text-center;
 }
 </style>
