@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import scryfall from 'scryfall-client'
 
 type TooltipData = {
   hover: boolean

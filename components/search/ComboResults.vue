@@ -23,6 +23,7 @@
           <div class="pl-3 pr-3 p-1 bg-gray-300 mb-2">
             <strong>Results</strong>
           </div>
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div v-for="result in r.results" class="result pl-3 pr-3">
             {{ result }}
           </div>
