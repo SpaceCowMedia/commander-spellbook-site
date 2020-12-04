@@ -21,35 +21,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 
 export default Vue.extend({
   mounted() {
-    const query = this.$route.query.q
-    const status = this.$route.query.status
+    const query = this.$route.query.q;
+    const status = this.$route.query.status;
 
-    if (!(typeof query === 'string')) {
-      return
+    if (!(typeof query === "string")) {
+      return;
     }
 
     if (Number(query) > 0) {
-      this.$router.push(`/combo/${query}`)
-      return
+      this.$router.push(`/combo/${query}`);
+      return;
     }
 
-    if (query === 'spoiled' || status === 'spoiled') {
-      this.$router.push('/search?q=is:spoiled')
-      return
+    if (query === "spoiled" || status === "spoiled") {
+      this.$router.push("/search?q=is:spoiled");
+      return;
     }
 
-    if (query === 'banned' || status === 'banned') {
-      this.$router.push('/search?q=is:banned')
-      return
+    if (query === "banned" || status === "banned") {
+      this.$router.push("/search?q=is:banned");
+      return;
     }
 
-    this.$router.push(`/search?q=${query}`)
+    this.$router.push(`/search?q=${query}`);
   },
-})
+});
 </script>
 
 <style scoped>

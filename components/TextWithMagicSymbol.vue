@@ -13,19 +13,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import scryfall from 'scryfall-client'
+import Vue from "vue";
+import scryfall from "scryfall-client";
 
 type Item = {
-  type: string
-  value: string
-}
+  type: string;
+  value: string;
+};
 
 export default Vue.extend({
   props: {
     text: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   computed: {
@@ -34,25 +34,25 @@ export default Vue.extend({
         .split(/(:mana[^:]+:)/g)
         .filter((val) => val)
         .map((val) => {
-          const match = val.match(/:mana([^:]+):/)
+          const match = val.match(/:mana([^:]+):/);
 
           if (match) {
-            const manaSymbol = match[1]
+            const manaSymbol = match[1];
 
             return {
-              type: 'image',
+              type: "image",
               value: scryfall.getSymbolUrl(manaSymbol),
-            }
+            };
           }
 
           return {
-            type: 'text',
+            type: "text",
             value: val,
-          }
-        })
+          };
+        });
     },
   },
-})
+});
 </script>
 
 <style scoped>

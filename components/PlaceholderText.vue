@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
@@ -22,19 +22,19 @@ export default Vue.extend({
   data() {
     return {
       length: 0,
-    }
+    };
   },
 
   computed: {
     style(): string {
-      return `width: ${this.length}%`
+      return `width: ${this.length}%`;
     },
   },
 
   mounted() {
-    this.length = Math.floor(Math.random() * this.maxLength) + this.minLength
+    this.length = Math.floor(Math.random() * this.maxLength) + this.minLength;
   },
-})
+});
 </script>
 
 <style scoped>

@@ -7,33 +7,33 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import getRandomItemFromArray from '../lib/random-from-array'
-import ErrorBaseComponent from './error-base.vue'
+import Vue from "vue";
+import getRandomItemFromArray from "../lib/random-from-array";
+import ErrorBaseComponent from "./error-base.vue";
 
-const backgroundOptions = ['apocalypse', 'obliterate']
+const backgroundOptions = ["apocalypse", "obliterate"];
 
 export default Vue.extend({
   components: {
-    'Error-Base': ErrorBaseComponent,
+    "Error-Base": ErrorBaseComponent,
   },
   data() {
     return {
-      unknownErrorClass: '',
-    }
+      unknownErrorClass: "",
+    };
   },
   mounted() {
-    this.unknownErrorClass = getRandomItemFromArray(backgroundOptions)
+    this.unknownErrorClass = getRandomItemFromArray(backgroundOptions);
   },
-})
+});
 </script>
 
 <style scoped>
 .apocalypse {
-  background-image: url('~assets/images/unknown-errors/apocalypse.jpg');
+  background-image: url("~assets/images/unknown-errors/apocalypse.jpg");
 }
 
 .obliterate {
-  background-image: url('~assets/images/unknown-errors/obliterate.jpg');
+  background-image: url("~assets/images/unknown-errors/obliterate.jpg");
 }
 </style>

@@ -12,50 +12,50 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import spellbookApi from 'commander-spellbook'
+import Vue from "vue";
+import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
   props: {
     inputClass: {
       type: String,
-      default: 'text-lg',
+      default: "text-lg",
     },
   },
   async fetch() {
-    await this.lookupNumberOfCombos()
+    await this.lookupNumberOfCombos();
   },
   data() {
     return {
-      query: '',
-      numberOfCombos: '....',
-    }
+      query: "",
+      numberOfCombos: "....",
+    };
   },
   mounted() {
-    const query = this.$route.query.q
+    const query = this.$route.query.q;
 
-    if (typeof query === 'string') {
-      this.query = query
+    if (typeof query === "string") {
+      this.query = query;
     }
   },
   methods: {
     async lookupNumberOfCombos() {
-      const combos = await spellbookApi.search()
-      this.numberOfCombos = String(combos.length)
+      const combos = await spellbookApi.search();
+      this.numberOfCombos = String(combos.length);
     },
     onEnter() {
       if (!this.query.trim()) {
-        return
+        return;
       }
 
-      if (this.$route.path === '/search') {
-        this.$emit('new-query', this.query)
+      if (this.$route.path === "/search") {
+        this.$emit("new-query", this.query);
       } else {
-        this.$router.push(`/search?q=${this.query}`)
+        this.$router.push(`/search?q=${this.query}`);
       }
     },
   },
-})
+});
 </script>
 
 <style scoped>

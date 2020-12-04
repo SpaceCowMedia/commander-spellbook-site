@@ -1,47 +1,47 @@
-import { shallowMount } from '@vue/test-utils'
-import CardTooltip from '@/components/CardTooltip.vue'
+import { shallowMount } from "@vue/test-utils";
+import CardTooltip from "@/components/CardTooltip.vue";
 
-describe('CardTooltip', () => {
-  let options
+describe("CardTooltip", () => {
+  let options;
 
   beforeEach(() => {
     options = {
       propsData: {
-        cardName: 'Sydri',
+        cardName: "Sydri",
       },
       slots: {
-        default: '<div></div>',
+        default: "<div></div>",
       },
-    }
-  })
+    };
+  });
 
-  test('is hidden by default', () => {
-    const wrapper = shallowMount(CardTooltip, options)
+  test("is hidden by default", () => {
+    const wrapper = shallowMount(CardTooltip, options);
 
-    expect(wrapper.find('.card-tooltip').exists()).toBe(false)
-  })
+    expect(wrapper.find(".card-tooltip").exists()).toBe(false);
+  });
 
-  test('reveals and hides tooltip on mousemove and mouseout', async () => {
-    const wrapper = shallowMount(CardTooltip, options)
+  test("reveals and hides tooltip on mousemove and mouseout", async () => {
+    const wrapper = shallowMount(CardTooltip, options);
 
-    await wrapper.find('span').trigger('mousemove')
-    expect(wrapper.find('.card-tooltip').exists()).toBe(true)
-    expect(wrapper.find('.card-tooltip img').element.src).toBe(
-      'https://api.scryfall.com/cards/named?exact=Sydri&format=image'
-    )
+    await wrapper.find("span").trigger("mousemove");
+    expect(wrapper.find(".card-tooltip").exists()).toBe(true);
+    expect(wrapper.find(".card-tooltip img").element.src).toBe(
+      "https://api.scryfall.com/cards/named?exact=Sydri&format=image"
+    );
 
-    await wrapper.find('span').trigger('mouseout')
-    expect(wrapper.find('.card-tooltip').exists()).toBe(false)
-  })
+    await wrapper.find("span").trigger("mouseout");
+    expect(wrapper.find(".card-tooltip").exists()).toBe(false);
+  });
 
-  test('sets the tooltip position based on the mousemove event', async () => {
-    const wrapper = shallowMount(CardTooltip, options)
+  test("sets the tooltip position based on the mousemove event", async () => {
+    const wrapper = shallowMount(CardTooltip, options);
 
-    await wrapper.find('span').trigger('mousemove', {
+    await wrapper.find("span").trigger("mousemove", {
       clientX: 23,
       clientY: 12,
-    })
-    expect(wrapper.find('.card-tooltip').element.style.left).toBe('73px')
-    expect(wrapper.find('.card-tooltip').element.style.top).toBe('-18px')
-  })
-})
+    });
+    expect(wrapper.find(".card-tooltip").element.style.left).toBe("73px");
+    expect(wrapper.find(".card-tooltip").element.style.top).toBe("-18px");
+  });
+});

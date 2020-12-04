@@ -12,40 +12,40 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import spellbookApi from 'commander-spellbook'
+import Vue from "vue";
+import spellbookApi from "commander-spellbook";
 
 type ComboInfo = {
-  id: string
-  names: string
-}
+  id: string;
+  names: string;
+};
 type Data = {
-  links: ComboInfo[]
-}
+  links: ComboInfo[];
+};
 
 export default Vue.extend({
   async fetch() {
-    await this.lookupCombos()
+    await this.lookupCombos();
   },
   data(): Data {
     return {
       links: [],
-    }
+    };
   },
   methods: {
     async lookupCombos() {
-      const combos = await spellbookApi.search()
+      const combos = await spellbookApi.search();
       this.links.push(
         ...combos.map((c) => {
           return {
-            names: c.cards.join(', '),
+            names: c.cards.join(", "),
             id: String(c.commanderSpellbookId),
-          }
+          };
         })
-      )
+      );
     },
   },
-})
+});
 </script>
 
 <style>

@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
@@ -87,27 +87,27 @@ export default Vue.extend({
   },
   computed: {
     firstResult(): number {
-      return this.currentPage * this.pageSize - this.pageSize + 1
+      return this.currentPage * this.pageSize - this.pageSize + 1;
     },
     lastResult(): number {
-      const finalResult = this.firstResult + this.pageSize - 1
+      const finalResult = this.firstResult + this.pageSize - 1;
 
       if (finalResult > this.totalResults) {
-        return this.totalResults
+        return this.totalResults;
       }
 
-      return finalResult
+      return finalResult;
     },
   },
   methods: {
     goBack(): void {
-      this.$emit('go-back')
+      this.$emit("go-back");
     },
     goForward(): void {
-      this.$emit('go-forward')
+      this.$emit("go-forward");
     },
   },
-})
+});
 </script>
 
 <style scoped>

@@ -6,24 +6,24 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import scryfall from 'scryfall-client'
+import Vue, { PropType } from "vue";
+import scryfall from "scryfall-client";
 
 export default Vue.extend({
   props: {
     colors: {
       type: Array as PropType<string[]>,
       default() {
-        return []
+        return [];
       },
     },
   },
   computed: {
     colorIdentity(): string[] {
-      return this.colors.map((c) => scryfall.getSymbolUrl(c))
+      return this.colors.map((c) => scryfall.getSymbolUrl(c));
     },
   },
-})
+});
 </script>
 
 <style scoped>

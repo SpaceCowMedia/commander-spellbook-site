@@ -16,27 +16,27 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import Vue, { PropType } from "vue";
 
 export default Vue.extend({
   props: {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     cardsArt: {
       type: Array as PropType<string[]>,
       default() {
-        return []
+        return [];
       },
     },
   },
   methods: {
     background(url: string) {
-      return `background-image: url("${url}")`
+      return `background-image: url("${url}")`;
     },
   },
-})
+});
 </script>
 
 <style scoped>

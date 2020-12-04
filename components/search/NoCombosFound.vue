@@ -33,13 +33,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({})
+import Vue from "vue";
+export default Vue.extend({});
 </script>
 
 <style scoped>
 .card-art {
-  background-image: url('~assets/images/combo-not-found-frantic-search.jpg');
+  background-image: url("~assets/images/combo-not-found-frantic-search.jpg");
   background-position: center;
   background-size: cover;
 }

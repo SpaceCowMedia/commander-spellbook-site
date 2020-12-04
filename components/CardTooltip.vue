@@ -8,44 +8,44 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 
 type TooltipData = {
-  hover: boolean
-  left: string
-  top: string
-}
+  hover: boolean;
+  left: string;
+  top: string;
+};
 
 export default Vue.extend({
   props: {
     cardName: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   data(): TooltipData {
     return {
       hover: false,
-      left: '0px',
-      top: '0px',
-    }
+      left: "0px",
+      top: "0px",
+    };
   },
   computed: {
     imgSrc(): string {
-      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image`
+      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image`;
     },
   },
   methods: {
     mousemove(event: MouseEvent): void {
-      this.hover = true
-      this.left = event.clientX + 50 + 'px'
-      this.top = event.clientY - 30 + 'px'
+      this.hover = true;
+      this.left = event.clientX + 50 + "px";
+      this.top = event.clientY - 30 + "px";
     },
     mouseout(): void {
-      this.hover = false
+      this.hover = false;
     },
   },
-})
+});
 </script>
 
 <style scoped>

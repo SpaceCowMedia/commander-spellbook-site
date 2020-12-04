@@ -6,13 +6,13 @@
 </template>
 
 <script lang="ts">
-import NotFoundErrorComponent from '../components/errors/not-found.vue'
-import UnknownErrorComponent from '../components/errors/unknown.vue'
+import NotFoundErrorComponent from "../components/errors/not-found.vue";
+import UnknownErrorComponent from "../components/errors/unknown.vue";
 
 export default {
   components: {
-    'Not-Found-Error': NotFoundErrorComponent,
-    'Unknown-Error': UnknownErrorComponent,
+    "Not-Found-Error": NotFoundErrorComponent,
+    "Unknown-Error": UnknownErrorComponent,
   },
   props: {
     error: {
@@ -20,9 +20,9 @@ export default {
       default() {
         return {
           statusCode: 500,
-        }
+        };
       },
     },
   },
-}
+};
 </script>

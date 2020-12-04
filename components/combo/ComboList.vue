@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
-import TextWithMagicSymbol from '../TextWithMagicSymbol.vue'
-import PlaceholderText from '../PlaceholderText.vue'
+import Vue, { PropType } from "vue";
+import TextWithMagicSymbol from "../TextWithMagicSymbol.vue";
+import PlaceholderText from "../PlaceholderText.vue";
 
 export default Vue.extend({
   components: {
@@ -30,7 +30,7 @@ export default Vue.extend({
   props: {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     showNumbers: {
       type: Boolean,
@@ -39,19 +39,19 @@ export default Vue.extend({
     iterations: {
       type: Array as PropType<string[]>,
       default() {
-        return []
+        return [];
       },
     },
   },
   data() {
     return {
       numberOfPlacholderItems: 0,
-    }
+    };
   },
   mounted() {
-    this.numberOfPlacholderItems = Math.floor(Math.random() * 5) + 2
+    this.numberOfPlacholderItems = Math.floor(Math.random() * 5) + 2;
   },
-})
+});
 </script>
 
 <style scoped>

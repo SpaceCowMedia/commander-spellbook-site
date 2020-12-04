@@ -22,48 +22,48 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import spellbookApi from 'commander-spellbook'
+import Vue from "vue";
+import spellbookApi from "commander-spellbook";
 
 type CardData = {
-  name: string
-  oracleImageUrl: string
-  artUrl: string
-}
+  name: string;
+  oracleImageUrl: string;
+  artUrl: string;
+};
 
 type ComboData = {
-  title: string
-  loaded: boolean
-  comboNumber: string
-  cards: CardData[]
-  colorIdentity: string[]
-  prerequisites: string[]
-  steps: string[]
-  results: string[]
-}
+  title: string;
+  loaded: boolean;
+  comboNumber: string;
+  cards: CardData[];
+  colorIdentity: string[];
+  prerequisites: string[];
+  steps: string[];
+  results: string[];
+};
 
 export default Vue.extend({
   async fetch() {
-    await this.loadCombo()
+    await this.loadCombo();
   },
   data(): ComboData {
     return {
-      title: 'Looking up Combo',
+      title: "Looking up Combo",
       loaded: false,
-      comboNumber: '0',
+      comboNumber: "0",
       cards: [],
       colorIdentity: [],
       prerequisites: [],
       steps: [],
       results: [],
-    }
+    };
   },
   computed: {
     cardNames(): string[] {
-      return this.cards.map((c) => c.name)
+      return this.cards.map((c) => c.name);
     },
     cardArts(): string[] {
-      return this.cards.map((c) => c.artUrl)
+      return this.cards.map((c) => c.artUrl);
     },
   },
   mounted() {
@@ -73,34 +73,34 @@ export default Vue.extend({
   },
   methods: {
     async loadCombo() {
-      const id = this.$route.params.id
-      this.comboNumber = id
-      const combos = await spellbookApi.search(`id:${id}`)
-      const combo = combos[0]
+      const id = this.$route.params.id;
+      this.comboNumber = id;
+      const combos = await spellbookApi.search(`id:${id}`);
+      const combo = combos[0];
 
       if (!combo) {
         // TODO redirect to 404 page??
-        return
+        return;
       }
 
-      this.title = `Combo Number ${this.comboNumber}`
-      this.prerequisites.push(...combo.prerequisites)
-      this.steps.push(...combo.steps)
-      this.results.push(...combo.results)
-      this.colorIdentity.push(...combo.colorIdentity.colors)
+      this.title = `Combo Number ${this.comboNumber}`;
+      this.prerequisites.push(...combo.prerequisites);
+      this.steps.push(...combo.steps);
+      this.results.push(...combo.results);
+      this.colorIdentity.push(...combo.colorIdentity.colors);
       const cards = combo.cards.map((card: any) => {
         return {
           name: card.name,
-          artUrl: card.getScryfallImageUrl('art_crop'),
+          artUrl: card.getScryfallImageUrl("art_crop"),
           oracleImageUrl: card.getScryfallImageUrl(),
-        }
-      })
-      this.cards.push(...cards)
+        };
+      });
+      this.cards.push(...cards);
 
-      this.loaded = true
+      this.loaded = true;
     },
   },
-})
+});
 </script>
 
 <style>

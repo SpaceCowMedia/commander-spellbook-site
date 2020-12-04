@@ -38,25 +38,25 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import Vue, { PropType } from "vue";
 
 export type ComboResult = {
-  id: string
-  names: string[]
-  results: string[]
-  colors: string[]
-}
+  id: string;
+  names: string[];
+  results: string[];
+  colors: string[];
+};
 
 export default Vue.extend({
   props: {
     results: {
       type: Array as PropType<ComboResult[]>,
       default() {
-        return []
+        return [];
       },
     },
   },
-})
+});
 </script>
 
 <style scoped>

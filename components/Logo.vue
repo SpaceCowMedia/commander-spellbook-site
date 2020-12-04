@@ -9,7 +9,7 @@
 <style scoped>
 .spellbook-logo {
   margin: auto;
-  background: url('~assets/images/spellbook-art-crop.jpg');
+  background: url("~assets/images/spellbook-art-crop.jpg");
   background-size: cover;
   background-position: center;
   @apply rounded-full overflow-hidden h-48 w-48;

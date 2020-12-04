@@ -15,28 +15,28 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
     containerClass: {
       type: String,
-      default: '',
+      default: "",
     },
     mainMessage: {
       type: String,
-      default: '',
+      default: "",
     },
     subMessage: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   mounted() {
     // @ts-ignore
-    this.$refs.homeLink.$el.focus()
+    this.$refs.homeLink.$el.focus();
   },
-})
+});
 </script>
 
 <style scoped>
