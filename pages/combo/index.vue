@@ -24,13 +24,13 @@ type Data = {
 };
 
 export default Vue.extend({
-  async fetch() {
-    await this.lookupCombos();
-  },
   data(): Data {
     return {
       links: [],
     };
+  },
+  async fetch() {
+    await this.lookupCombos();
   },
   methods: {
     async lookupCombos() {

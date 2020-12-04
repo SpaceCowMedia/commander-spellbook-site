@@ -48,9 +48,6 @@ type Data = {
 };
 
 export default Vue.extend({
-  async fetch() {
-    await this.parseSearchQuery();
-  },
   data(): Data {
     return {
       loaded: false,
@@ -58,6 +55,9 @@ export default Vue.extend({
       maxNumberOfCombosPerPage: 76,
       combos: [],
     };
+  },
+  async fetch() {
+    await this.parseSearchQuery();
   },
   computed: {
     totalResults(): number {

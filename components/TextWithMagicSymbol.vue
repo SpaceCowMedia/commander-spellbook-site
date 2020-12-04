@@ -16,11 +16,6 @@
 import Vue from "vue";
 import scryfall from "scryfall-client";
 
-type Item = {
-  type: string;
-  value: string;
-};
-
 export default Vue.extend({
   props: {
     text: {

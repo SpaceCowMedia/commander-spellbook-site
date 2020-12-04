@@ -43,9 +43,6 @@ type ComboData = {
 };
 
 export default Vue.extend({
-  async fetch() {
-    await this.loadCombo();
-  },
   data(): ComboData {
     return {
       title: "Looking up Combo",
@@ -57,6 +54,9 @@ export default Vue.extend({
       steps: [],
       results: [],
     };
+  },
+  async fetch() {
+    await this.loadCombo();
   },
   computed: {
     cardNames(): string[] {

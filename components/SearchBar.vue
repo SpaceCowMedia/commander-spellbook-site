@@ -22,14 +22,14 @@ export default Vue.extend({
       default: "text-lg",
     },
   },
-  async fetch() {
-    await this.lookupNumberOfCombos();
-  },
   data() {
     return {
       query: "",
       numberOfCombos: "....",
     };
+  },
+  async fetch() {
+    await this.lookupNumberOfCombos();
   },
   mounted() {
     const query = this.$route.query.q;
