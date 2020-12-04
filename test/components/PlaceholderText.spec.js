@@ -2,7 +2,7 @@ import { shallowMount } from "@vue/test-utils";
 import PlaceholderText from "@/components/PlaceholderText.vue";
 
 describe("PlaceholderText", () => {
-  test("creates a text-bar element with a set width", () => {
+  it("creates a text-bar element with a set width", () => {
     const wrapper = shallowMount(PlaceholderText);
 
     expect(wrapper.find(".text-bar").element.style).toBeTruthy();

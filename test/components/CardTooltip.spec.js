@@ -15,13 +15,13 @@ describe("CardTooltip", () => {
     };
   });
 
-  test("is hidden by default", () => {
+  it("is hidden by default", () => {
     const wrapper = shallowMount(CardTooltip, options);
 
     expect(wrapper.find(".card-tooltip").exists()).toBe(false);
   });
 
-  test("reveals and hides tooltip on mousemove and mouseout", async () => {
+  it("reveals and hides tooltip on mousemove and mouseout", async () => {
     const wrapper = shallowMount(CardTooltip, options);
 
     await wrapper.find("span").trigger("mousemove");
@@ -34,7 +34,7 @@ describe("CardTooltip", () => {
     expect(wrapper.find(".card-tooltip").exists()).toBe(false);
   });
 
-  test("sets the tooltip position based on the mousemove event", async () => {
+  it("sets the tooltip position based on the mousemove event", async () => {
     const wrapper = shallowMount(CardTooltip, options);
 
     await wrapper.find("span").trigger("mousemove", {

@@ -36,7 +36,7 @@ describe("ComboResults", () => {
     };
   });
 
-  test("creates a link for each combo result", () => {
+  it("creates a link for each combo result", () => {
     const wrapper = shallowMount(ComboResults, options);
 
     const links = wrapper.findAllComponents(RouterLinkStub);
@@ -47,7 +47,7 @@ describe("ComboResults", () => {
     expect(links.at(2).props("to")).toBe("/combo/3");
   });
 
-  test("creates a card tooltip for each name", () => {
+  it("creates a card tooltip for each name", () => {
     const CardTooltipStub = {
       template: "<div><slot /></div>",
     };
@@ -91,7 +91,7 @@ describe("ComboResults", () => {
     );
   });
 
-  test("prints results for each combo", () => {
+  it("prints results for each combo", () => {
     const wrapper = shallowMount(ComboResults, options);
 
     const links = wrapper.findAllComponents(RouterLinkStub);
@@ -116,7 +116,7 @@ describe("ComboResults", () => {
     );
   });
 
-  test("prints the color identity", () => {
+  it("prints the color identity", () => {
     const CIStub = {
       template: "<div></div>",
       props: {

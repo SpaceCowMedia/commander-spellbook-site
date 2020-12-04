@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import CardHeader from "@/components/combo/CardHeader.vue";
 
 describe("CardHeader", () => {
-  test("sets title", () => {
+  it("sets title", () => {
     const wrapper = mount(CardHeader, {
       propsData: {
         title: "combo 1",
@@ -13,7 +13,7 @@ describe("CardHeader", () => {
     expect(wrapper.find(".combo-title").element.textContent).toBe("combo 1");
   });
 
-  test("sets card images", () => {
+  it("sets card images", () => {
     const wrapper = mount(CardHeader, {
       propsData: {
         title: "combo 1",
@@ -39,7 +39,7 @@ describe("CardHeader", () => {
   });
 
   describe("background", () => {
-    test("renders url as background-image property", () => {
+    it("renders url as background-image property", () => {
       const wrapper = mount(CardHeader);
 
       expect(wrapper.vm.background("https://example.com/art.png")).toBe(

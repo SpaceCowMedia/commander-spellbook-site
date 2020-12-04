@@ -5,7 +5,7 @@ import scryfall from "scryfall-client";
 jest.mock("scryfall-client");
 
 describe("ColorIdentity", () => {
-  test("sets scryfall image src for symbol", () => {
+  it("sets scryfall image src for symbol", () => {
     scryfall.getSymbolUrl.mockReturnValueOnce("https://example.com/W.svg");
     scryfall.getSymbolUrl.mockReturnValueOnce("https://example.com/B.svg");
     scryfall.getSymbolUrl.mockReturnValueOnce("https://example.com/G.svg");

@@ -4,7 +4,7 @@ import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 import PlaceholderText from "@/components/PlaceholderText.vue";
 
 describe("ComboList", () => {
-  test("creates a list of combo items", () => {
+  it("creates a list of combo items", () => {
     const wrapper = shallowMount(ComboList, {
       propsData: {
         title: "My Title",
@@ -24,7 +24,7 @@ describe("ComboList", () => {
     expect(items.at(2).props("text")).toBe("Step 3");
   });
 
-  test("can set list to be numbered", () => {
+  it("can set list to be numbered", () => {
     const wrapperWithoutNumbers = shallowMount(ComboList, {
       propsData: {
         title: "My Title",
@@ -45,7 +45,7 @@ describe("ComboList", () => {
     expect(wrapperWithNumbers.find("ol").classes()).toContain("list-decimal");
   });
 
-  test("provides placeholders when iterations are not yet available", async () => {
+  it("provides placeholders when iterations are not yet available", async () => {
     const wrapper = shallowMount(ComboList, {
       propsData: {
         title: "My Title",

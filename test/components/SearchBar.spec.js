@@ -23,7 +23,7 @@ describe("SearchBar", () => {
     };
   });
 
-  test("can set an classes on the input", () => {
+  it("can set an classes on the input", () => {
     wrapperOptions.propsData = {
       inputClass: "custom class names",
     };
@@ -34,21 +34,21 @@ describe("SearchBar", () => {
     expect(wrapper.find(".main-search-input").classes()).toContain("names");
   });
 
-  test("sets query from the query param if available", () => {
+  it("sets query from the query param if available", () => {
     $route.query.q = "card:sydri";
     const wrapper = mount(SearchBar, wrapperOptions);
 
     expect(wrapper.vm.query).toBe("card:sydri");
   });
 
-  test("does not set query if it is not a string", () => {
+  it("does not set query if it is not a string", () => {
     $route.query.q = ["card:sydri"];
     const wrapper = mount(SearchBar, wrapperOptions);
 
     expect(wrapper.vm.query).toBe("");
   });
 
-  test("it triggers onEnter when enter key is pressed", async () => {
+  it("it triggers onEnter when enter key is pressed", async () => {
     const wrapper = mount(SearchBar, wrapperOptions);
 
     jest.spyOn(wrapper.vm, "onEnter");
@@ -59,7 +59,7 @@ describe("SearchBar", () => {
   });
 
   describe("lookupNumberOfCombos", () => {
-    test("sets numberOfCombos to the number of combos found in spellbook api", async () => {
+    it("sets numberOfCombos to the number of combos found in spellbook api", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
       spellbookApi.search.mockResolvedValue([{}]);
@@ -77,7 +77,7 @@ describe("SearchBar", () => {
   });
 
   describe("onEnter", () => {
-    test("noops when there is no query", () => {
+    it("noops when there is no query", () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
       wrapper.vm.onEnter();
@@ -85,7 +85,7 @@ describe("SearchBar", () => {
       expect($router.push).not.toBeCalled();
     });
 
-    test("noops when the query is made up of blank spaces", async () => {
+    it("noops when the query is made up of blank spaces", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
       await wrapper.setData({ query: "      " });
@@ -95,7 +95,7 @@ describe("SearchBar", () => {
       expect($router.push).not.toBeCalled();
     });
 
-    test("redirects to /search with query", async () => {
+    it("redirects to /search with query", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
       await wrapper.setData({ query: "card:Rashmi" });
@@ -106,7 +106,7 @@ describe("SearchBar", () => {
       expect($router.push).toBeCalledWith("/search?q=card:Rashmi");
     });
 
-    test("dispatches event when on the search path", async () => {
+    it("dispatches event when on the search path", async () => {
       $route.path = "/search";
 
       const wrapper = mount(SearchBar, wrapperOptions);

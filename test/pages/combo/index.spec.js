@@ -6,7 +6,7 @@ jest.mock("commander-spellbook");
 
 describe("ComboHomePage", () => {
   describe("lookupCombos", () => {
-    test("renders links for each combo", async () => {
+    it("renders links for each combo", async () => {
       const wrapper = shallowMount(ComboHomePage, {
         stubs: {
           NuxtLink: RouterLinkStub,

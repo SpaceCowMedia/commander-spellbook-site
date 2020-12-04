@@ -15,7 +15,7 @@ describe("Pagination", () => {
     };
   });
 
-  test("shows simple message when results are less than page size", () => {
+  it("shows simple message when results are less than page size", () => {
     options.propsData.totalPages = 1;
     options.propsData.totalResults = 9;
 
@@ -29,7 +29,7 @@ describe("Pagination", () => {
     ).toContain("9 results");
   });
 
-  test("shows simple message when results are equal to the page size", () => {
+  it("shows simple message when results are equal to the page size", () => {
     options.propsData.totalPages = 1;
     options.propsData.totalResults = 10;
 
@@ -43,7 +43,7 @@ describe("Pagination", () => {
     ).toContain("10 results");
   });
 
-  test("shows complex message when results are larger than the page size", () => {
+  it("shows complex message when results are larger than the page size", () => {
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".simple-result-message").exists()).toBe(false);
@@ -56,7 +56,7 @@ describe("Pagination", () => {
     ).toContain("Showing 1 - 10 of 23 results");
   });
 
-  test("shows complex message with info about the current page", () => {
+  it("shows complex message with info about the current page", () => {
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
@@ -69,7 +69,7 @@ describe("Pagination", () => {
     ).toContain("Showing 11 - 20 of 23 results");
   });
 
-  test("shows complex message with correct last result on last page", () => {
+  it("shows complex message with correct last result on last page", () => {
     options.propsData.currentPage = 3;
     const wrapper = shallowMount(Pagination, options);
 
@@ -82,21 +82,21 @@ describe("Pagination", () => {
     ).toContain("Showing 21 - 23 of 23 results");
   });
 
-  test("does not show the back button on the first page", () => {
+  it("does not show the back button on the first page", () => {
     options.propsData.currentPage = 1;
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".back-button").classes("invisible")).toBe(true);
   });
 
-  test("does show the back button when not on the first page", () => {
+  it("does show the back button when not on the first page", () => {
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".back-button").classes("invisible")).toBe(false);
   });
 
-  test("calls goBack when back button is clicked", () => {
+  it("calls goBack when back button is clicked", () => {
     const spy = jest.spyOn(Pagination.options.methods, "goBack");
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
@@ -106,21 +106,21 @@ describe("Pagination", () => {
     expect(spy).toBeCalledTimes(1);
   });
 
-  test("does not show the forward button on the last page", () => {
+  it("does not show the forward button on the last page", () => {
     options.propsData.currentPage = 3;
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".forward-button").classes("invisible")).toBe(true);
   });
 
-  test("does show the forward button when not on the last page", () => {
+  it("does show the forward button when not on the last page", () => {
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".forward-button").classes("invisible")).toBe(false);
   });
 
-  test("calls goForward when forward button is clicked", () => {
+  it("calls goForward when forward button is clicked", () => {
     const spy = jest.spyOn(Pagination.options.methods, "goForward");
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);

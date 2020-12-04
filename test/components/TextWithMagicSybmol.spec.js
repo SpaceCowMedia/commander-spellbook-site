@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 
 describe("TextWithMagicSymbol", () => {
-  test("renders text", () => {
+  it("renders text", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: "Some text",
@@ -13,7 +13,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(0);
   });
 
-  test("renders image", () => {
+  it("renders image", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manar:",
@@ -24,7 +24,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.find(".magic-symbol").element.src).toMatch(/R\.svg$/);
   });
 
-  test("renders longer symbols", () => {
+  it("renders longer symbols", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manachaos:",
@@ -35,7 +35,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.find(".magic-symbol").element.src).toMatch(/CHAOS\.svg$/);
   });
 
-  test("renders text and images together", () => {
+  it("renders text and images together", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: "some words, :manar: and :manau: some words",
