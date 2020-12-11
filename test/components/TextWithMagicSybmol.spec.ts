@@ -21,7 +21,9 @@ describe("TextWithMagicSymbol", () => {
     });
     expect(wrapper.findAll(".text").length).toBe(0);
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
-    expect(wrapper.find(".magic-symbol").element.src).toMatch(/R\.svg$/);
+    expect(
+      (wrapper.find(".magic-symbol").element as HTMLImageElement).src
+    ).toMatch(/R\.svg$/);
   });
 
   it("renders longer symbols", () => {
@@ -32,7 +34,9 @@ describe("TextWithMagicSymbol", () => {
     });
     expect(wrapper.findAll(".text").length).toBe(0);
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
-    expect(wrapper.find(".magic-symbol").element.src).toMatch(/CHAOS\.svg$/);
+    expect(
+      (wrapper.find(".magic-symbol").element as HTMLImageElement).src
+    ).toMatch(/CHAOS\.svg$/);
   });
 
   it("renders text and images together", () => {
@@ -49,7 +53,7 @@ describe("TextWithMagicSymbol", () => {
     expect(textNodes.at(0).element.textContent).toBe("some words, ");
     expect(textNodes.at(1).element.textContent).toBe(" and ");
     expect(textNodes.at(2).element.textContent).toBe(" some words");
-    expect(imgNodes.at(0).element.src).toMatch(/R\.svg$/);
-    expect(imgNodes.at(1).element.src).toMatch(/U\.svg$/);
+    expect((imgNodes.at(0).element as HTMLImageElement).src).toMatch(/R\.svg$/);
+    expect((imgNodes.at(1).element as HTMLImageElement).src).toMatch(/U\.svg$/);
   });
 });

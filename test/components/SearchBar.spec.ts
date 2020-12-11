@@ -1,11 +1,16 @@
+jest.mock("commander-spellbook");
+
 import { mount } from "@vue/test-utils";
 import SearchBar from "@/components/SearchBar.vue";
 import spellbookApi from "commander-spellbook";
+import type { MountOptions, Route, Router, VueComponent } from "../types";
 
-jest.mock("commander-spellbook");
+import { mocked } from "ts-jest/utils";
 
 describe("SearchBar", () => {
-  let $route, $router, wrapperOptions;
+  let wrapperOptions: MountOptions;
+  let $route: Route;
+  let $router: Router;
 
   beforeEach(() => {
     $route = {
@@ -24,7 +29,7 @@ describe("SearchBar", () => {
   });
 
   it("can set an classes on the input", () => {
-    wrapperOptions.propsData = {
+    wrapperOptions!.propsData = {
       inputClass: "custom class names",
     };
     const wrapper = mount(SearchBar, wrapperOptions);
@@ -38,37 +43,40 @@ describe("SearchBar", () => {
     $route.query.q = "card:sydri";
     const wrapper = mount(SearchBar, wrapperOptions);
 
-    expect(wrapper.vm.query).toBe("card:sydri");
+    expect((wrapper.vm as VueComponent).query).toBe("card:sydri");
   });
 
   it("does not set query if it is not a string", () => {
+    // @ts-ignore
     $route.query.q = ["card:sydri"];
     const wrapper = mount(SearchBar, wrapperOptions);
 
-    expect(wrapper.vm.query).toBe("");
+    expect((wrapper.vm as VueComponent).query).toBe("");
   });
 
   it("it triggers onEnter when enter key is pressed", async () => {
     const wrapper = mount(SearchBar, wrapperOptions);
+    const vm = wrapper.vm as VueComponent;
 
-    jest.spyOn(wrapper.vm, "onEnter");
+    jest.spyOn(vm, "onEnter");
 
     await wrapper.find("input").trigger("keydown.enter");
 
-    expect(wrapper.vm.onEnter).toBeCalledTimes(1);
+    expect(vm.onEnter).toBeCalledTimes(1);
   });
 
   describe("lookupNumberOfCombos", () => {
     it("sets numberOfCombos to the number of combos found in spellbook api", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
+      const mockCombo = await spellbookApi.random();
 
-      spellbookApi.search.mockResolvedValue([{}]);
+      mocked(spellbookApi.search).mockResolvedValue([mockCombo]);
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
       ).toBe("Search .... combos");
 
-      await wrapper.vm.lookupNumberOfCombos();
+      await (wrapper.vm as VueComponent).lookupNumberOfCombos();
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
@@ -80,7 +88,7 @@ describe("SearchBar", () => {
     it("noops when there is no query", () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
-      wrapper.vm.onEnter();
+      (wrapper.vm as VueComponent).onEnter();
 
       expect($router.push).not.toBeCalled();
     });
@@ -90,7 +98,7 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "      " });
 
-      wrapper.vm.onEnter();
+      (wrapper.vm as VueComponent).onEnter();
 
       expect($router.push).not.toBeCalled();
     });
@@ -100,7 +108,7 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "card:Rashmi" });
 
-      wrapper.vm.onEnter();
+      (wrapper.vm as VueComponent).onEnter();
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith("/search?q=card:Rashmi");
@@ -114,11 +122,14 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "card:Rashmi" });
 
-      wrapper.vm.onEnter();
+      (wrapper.vm as VueComponent).onEnter();
 
       expect($router.push).not.toBeCalled();
-      expect(wrapper.vm.$emit).toBeCalledTimes(1);
-      expect(wrapper.vm.$emit).toBeCalledWith("new-query", "card:Rashmi");
+      expect((wrapper.vm as VueComponent).$emit).toBeCalledTimes(1);
+      expect((wrapper.vm as VueComponent).$emit).toBeCalledWith(
+        "new-query",
+        "card:Rashmi"
+      );
     });
   });
 });

@@ -2,7 +2,7 @@ import { shallowMount } from "@vue/test-utils";
 import CardTooltip from "@/components/CardTooltip.vue";
 
 describe("CardTooltip", () => {
-  let options;
+  let options: Parameters<typeof shallowMount>[1];
 
   beforeEach(() => {
     options = {
@@ -26,7 +26,8 @@ describe("CardTooltip", () => {
 
     await wrapper.find("span").trigger("mousemove");
     expect(wrapper.find(".card-tooltip").exists()).toBe(true);
-    expect(wrapper.find(".card-tooltip img").element.src).toBe(
+    const img = wrapper.find(".card-tooltip img").element as HTMLImageElement;
+    expect(img.src).toBe(
       "https://api.scryfall.com/cards/named?exact=Sydri&format=image"
     );
 
