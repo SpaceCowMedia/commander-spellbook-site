@@ -1,8 +1,10 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboResults from "@/components/search/ComboResults.vue";
 
+import type { MountOptions, VueComponent } from "../../types";
+
 describe("ComboResults", () => {
-  let options;
+  let options: MountOptions;
 
   beforeEach(() => {
     options = {
@@ -51,6 +53,7 @@ describe("ComboResults", () => {
     const CardTooltipStub = {
       template: "<div><slot /></div>",
     };
+    // @ts-ignore
     options.stubs.CardTooltip = CardTooltipStub;
     const wrapper = shallowMount(ComboResults, options);
 
@@ -126,6 +129,7 @@ describe("ComboResults", () => {
         },
       },
     };
+    // @ts-ignore
     options.stubs.ColorIdentity = CIStub;
     const wrapper = shallowMount(ComboResults, options);
 

@@ -1,6 +1,8 @@
 import { mount } from "@vue/test-utils";
 import CardHeader from "@/components/combo/CardHeader.vue";
 
+import type { VueComponent } from "../../types";
+
 describe("CardHeader", () => {
   it("sets title", () => {
     const wrapper = mount(CardHeader, {
@@ -42,9 +44,9 @@ describe("CardHeader", () => {
     it("renders url as background-image property", () => {
       const wrapper = mount(CardHeader);
 
-      expect(wrapper.vm.background("https://example.com/art.png")).toBe(
-        'background-image: url("https://example.com/art.png")'
-      );
+      expect(
+        (wrapper.vm as VueComponent).background("https://example.com/art.png")
+      ).toBe('background-image: url("https://example.com/art.png")');
     });
   });
 });

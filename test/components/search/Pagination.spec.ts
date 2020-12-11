@@ -1,8 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
 import Pagination from "@/components/search/Pagination.vue";
+import type { MountOptions, VueComponent } from "../../types";
 
 describe("Pagination", () => {
-  let options;
+  let options: MountOptions;
 
   beforeEach(() => {
     options = {
@@ -16,7 +17,9 @@ describe("Pagination", () => {
   });
 
   it("shows simple message when results are less than page size", () => {
+    // @ts-ignore
     options.propsData.totalPages = 1;
+    // @ts-ignore
     options.propsData.totalResults = 9;
 
     const wrapper = shallowMount(Pagination, options);
@@ -30,7 +33,9 @@ describe("Pagination", () => {
   });
 
   it("shows simple message when results are equal to the page size", () => {
+    // @ts-ignore
     options.propsData.totalPages = 1;
+    // @ts-ignore
     options.propsData.totalResults = 10;
 
     const wrapper = shallowMount(Pagination, options);
@@ -47,42 +52,49 @@ describe("Pagination", () => {
     const wrapper = shallowMount(Pagination, options);
 
     expect(wrapper.find(".simple-result-message").exists()).toBe(false);
+    const element = wrapper.find(".complex-result-message")
+      .element as HTMLDivElement;
+    const textContent = element.textContent as string;
     expect(
-      wrapper
-        .find(".complex-result-message")
-        .element.textContent.split("\n")
+      textContent
+        .split("\n")
         .map((v) => v.trim())
         .join(" ")
     ).toContain("Showing 1 - 10 of 23 results");
   });
 
   it("shows complex message with info about the current page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
+    const element = wrapper.find(".complex-result-message").element;
+    const textContent = element.textContent as string;
 
     expect(
-      wrapper
-        .find(".complex-result-message")
-        .element.textContent.split("\n")
+      textContent
+        .split("\n")
         .map((v) => v.trim())
         .join(" ")
     ).toContain("Showing 11 - 20 of 23 results");
   });
 
   it("shows complex message with correct last result on last page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 3;
     const wrapper = shallowMount(Pagination, options);
 
+    const element = wrapper.find(".complex-result-message").element;
+    const textContent = element.textContent as string;
     expect(
-      wrapper
-        .find(".complex-result-message")
-        .element.textContent.split("\n")
+      textContent
+        .split("\n")
         .map((v) => v.trim())
         .join(" ")
     ).toContain("Showing 21 - 23 of 23 results");
   });
 
   it("does not show the back button on the first page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 1;
     const wrapper = shallowMount(Pagination, options);
 
@@ -90,6 +102,7 @@ describe("Pagination", () => {
   });
 
   it("does show the back button when not on the first page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
@@ -97,7 +110,9 @@ describe("Pagination", () => {
   });
 
   it("calls goBack when back button is clicked", () => {
+    // @ts-ignore
     const spy = jest.spyOn(Pagination.options.methods, "goBack");
+    // @ts-ignore
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
@@ -107,6 +122,7 @@ describe("Pagination", () => {
   });
 
   it("does not show the forward button on the last page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 3;
     const wrapper = shallowMount(Pagination, options);
 
@@ -114,6 +130,7 @@ describe("Pagination", () => {
   });
 
   it("does show the forward button when not on the last page", () => {
+    // @ts-ignore
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
@@ -121,7 +138,11 @@ describe("Pagination", () => {
   });
 
   it("calls goForward when forward button is clicked", () => {
-    const spy = jest.spyOn(Pagination.options.methods, "goForward");
+    const spy = jest.spyOn(
+      (Pagination as VueComponent).options.methods,
+      "goForward"
+    );
+    // @ts-ignore
     options.propsData.currentPage = 2;
     const wrapper = shallowMount(Pagination, options);
 
@@ -136,7 +157,7 @@ describe("Pagination", () => {
 
       jest.spyOn(wrapper.vm, "$emit");
 
-      wrapper.vm.goBack();
+      (wrapper.vm as VueComponent).goBack();
       expect(wrapper.vm.$emit).toBeCalledTimes(1);
       expect(wrapper.vm.$emit).toBeCalledWith("go-back");
     });
@@ -148,7 +169,7 @@ describe("Pagination", () => {
 
       jest.spyOn(wrapper.vm, "$emit");
 
-      wrapper.vm.goForward();
+      (wrapper.vm as VueComponent).goForward();
       expect(wrapper.vm.$emit).toBeCalledTimes(1);
       expect(wrapper.vm.$emit).toBeCalledWith("go-forward");
     });
