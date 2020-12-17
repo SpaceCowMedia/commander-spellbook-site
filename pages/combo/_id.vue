@@ -73,12 +73,13 @@ export default Vue.extend({
   },
   methods: {
     async loadCombo() {
+      let combo;
       const id = this.$route.params.id;
       this.comboNumber = id;
-      const combos = await spellbookApi.search(`id:${id}`);
-      const combo = combos[0];
 
-      if (!combo) {
+      try {
+        combo = await spellbookApi.findById(id);
+      } catch (err) {
         // TODO redirect to 404 page??
         return;
       }

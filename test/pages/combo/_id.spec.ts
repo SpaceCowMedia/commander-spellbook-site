@@ -1,17 +1,20 @@
 import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import spellbookApi from "commander-spellbook";
+import { mocked } from "ts-jest/utils";
 
-jest.mock("commander-spellbook");
+import type { MountOptions, Route, Router, VueComponent } from "../../types";
 
 describe("ComboPage", () => {
-  let options, $route;
+  let options: MountOptions;
+  let $route: Route;
 
   beforeEach(() => {
     $route = {
       params: {
         id: "13",
       },
+      query: {},
     };
     options = {
       mocks: {
@@ -31,7 +34,7 @@ describe("ComboPage", () => {
   it("starts in loaded false state", () => {
     const wrapper = shallowMount(ComboPage, options);
 
-    expect(wrapper.vm.loaded).toBe(false);
+    expect((wrapper.vm as VueComponent).loaded).toBe(false);
   });
 
   it("creates a card header component", async () => {
@@ -46,6 +49,7 @@ describe("ComboPage", () => {
         },
       },
     };
+    // @ts-ignore
     options.stubs.CardHeader = CardHeaderStub;
     const wrapper = shallowMount(ComboPage, options);
 
@@ -82,6 +86,7 @@ describe("ComboPage", () => {
         },
       },
     };
+    // @ts-ignore
     options.stubs.ComboList = ComboListStub;
     const wrapper = shallowMount(ComboPage, options);
 
@@ -123,6 +128,7 @@ describe("ComboPage", () => {
         },
       },
     };
+    // @ts-ignore
     options.stubs.ColorIdentity = ColorIdentityStub;
     const wrapper = shallowMount(ComboPage, options);
 
@@ -137,83 +143,83 @@ describe("ComboPage", () => {
   });
 
   describe("loadCombo", () => {
+    let fakeCombo: ReturnType<typeof spellbookApi.makeFakeCombo>;
+
     beforeEach(() => {
-      spellbookApi.search.mockResolvedValue([]);
+      fakeCombo = spellbookApi.makeFakeCombo({
+        commanderSpellbookId: "13",
+        prerequisites: ["1", "2", "3"],
+        steps: ["1", "2", "3"],
+        results: ["1", "2", "3"],
+        colorIdentity: "wbr",
+        cards: ["card 1", "card 2"],
+      });
+      jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
     });
 
     it("looks up combo and loads data from it", async () => {
-      const imageSpy = jest.fn().mockReturnValue("https://example.com/card");
-
-      spellbookApi.search.mockResolvedValue([
-        {
-          commanderSpellbookId: "13",
-          prerequisites: ["1", "2", "3"],
-          steps: ["1", "2", "3"],
-          results: ["1", "2", "3"],
-          colorIdentity: {
-            colors: ["w", "b", "r"],
-          },
-          cards: [
-            {
-              name: "card 1",
-              getScryfallImageUrl: imageSpy,
-            },
-            {
-              name: "card 2",
-              getScryfallImageUrl: imageSpy,
-            },
-          ],
-        },
-      ]);
+      jest.spyOn(fakeCombo.cards[0], "getScryfallImageUrl");
+      jest.spyOn(fakeCombo.cards[1], "getScryfallImageUrl");
 
       const wrapper = shallowMount(ComboPage, options);
+      const vm = wrapper.vm as VueComponent;
 
-      await wrapper.vm.loadCombo();
+      await vm.loadCombo();
 
-      expect(spellbookApi.search).toBeCalledTimes(1);
-      expect(spellbookApi.search).toBeCalledWith("id:13");
+      expect(spellbookApi.findById).toBeCalledTimes(1);
+      expect(spellbookApi.findById).toBeCalledWith("13");
 
-      expect(wrapper.vm.loaded).toBe(true);
-      expect(wrapper.vm.title).toBe("Combo Number 13");
-      expect(wrapper.vm.prerequisites).toEqual(["1", "2", "3"]);
-      expect(wrapper.vm.steps).toEqual(["1", "2", "3"]);
-      expect(wrapper.vm.results).toEqual(["1", "2", "3"]);
-      expect(wrapper.vm.results).toEqual(["1", "2", "3"]);
-      expect(wrapper.vm.cards).toEqual([
+      expect(vm.loaded).toBe(true);
+      expect(vm.title).toBe("Combo Number 13");
+      expect(vm.prerequisites).toEqual(["1", "2", "3"]);
+      expect(vm.steps).toEqual(["1", "2", "3"]);
+      expect(vm.results).toEqual(["1", "2", "3"]);
+      expect(vm.results).toEqual(["1", "2", "3"]);
+      expect(vm.cards).toEqual([
         {
           name: "card 1",
-          artUrl: "https://example.com/card",
-          oracleImageUrl: "https://example.com/card",
+          artUrl: expect.stringMatching("exact=card%201"),
+          oracleImageUrl: expect.stringMatching("exact=card%201"),
         },
         {
           name: "card 2",
-          artUrl: "https://example.com/card",
-          oracleImageUrl: "https://example.com/card",
+          artUrl: expect.stringMatching("exact=card%202"),
+          oracleImageUrl: expect.stringMatching("exact=card%202"),
         },
       ]);
 
-      expect(imageSpy).toBeCalledTimes(4);
-      expect(imageSpy).toBeCalledWith();
-      expect(imageSpy).toBeCalledWith("art_crop");
+      expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
+      expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(
+        1,
+        "art_crop"
+      );
+      expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2);
+      expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
+      expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(
+        1,
+        "art_crop"
+      );
+      expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2);
     });
 
     it("does not load data from combo when no combos is found for id", async () => {
-      spellbookApi.search.mockResolvedValue([]);
+      mocked(spellbookApi.findById).mockRejectedValue(new Error("not found"));
 
       const wrapper = shallowMount(ComboPage, options);
+      const vm = wrapper.vm as VueComponent;
 
-      await wrapper.vm.loadCombo();
+      await vm.loadCombo();
 
-      expect(spellbookApi.search).toBeCalledTimes(1);
-      expect(spellbookApi.search).toBeCalledWith("id:13");
+      expect(spellbookApi.findById).toBeCalledTimes(1);
+      expect(spellbookApi.findById).toBeCalledWith("13");
 
-      expect(wrapper.vm.loaded).toBe(false);
-      expect(wrapper.vm.title).toBe("Looking up Combo");
-      expect(wrapper.vm.prerequisites).toEqual([]);
-      expect(wrapper.vm.steps).toEqual([]);
-      expect(wrapper.vm.results).toEqual([]);
-      expect(wrapper.vm.results).toEqual([]);
-      expect(wrapper.vm.cards).toEqual([]);
+      expect(vm.loaded).toBe(false);
+      expect(vm.title).toBe("Looking up Combo");
+      expect(vm.prerequisites).toEqual([]);
+      expect(vm.steps).toEqual([]);
+      expect(vm.results).toEqual([]);
+      expect(vm.results).toEqual([]);
+      expect(vm.cards).toEqual([]);
     });
   });
 });

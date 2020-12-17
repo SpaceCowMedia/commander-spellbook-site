@@ -89,7 +89,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    async updateSearchResults(query: string) {
+    async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
       this.page = 1;
       this.$router.push({

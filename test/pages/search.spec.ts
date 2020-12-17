@@ -1,13 +1,23 @@
 import { shallowMount } from "@vue/test-utils";
 import SearchPage from "@/pages/search.vue";
 import spellbookApi from "commander-spellbook";
+import { mocked } from "ts-jest/utils";
 
-jest.mock("commander-spellbook");
+import type { MountOptions, Route, Router, VueComponent } from "../types";
 
 describe("SearchPage", () => {
-  let $route, $router, wrapperOptions, fakeCombos;
+  let $route: Route;
+  let $router: Router;
+  let wrapperOptions: MountOptions;
+  let fakeCombos: {
+    names: string[];
+    colors: string[];
+    results: string[];
+    id: string;
+  }[];
 
   beforeEach(() => {
+    jest.spyOn(spellbookApi, "search").mockResolvedValue([]);
     fakeCombos = [
       {
         names: ["a", "b", "c"],
@@ -51,11 +61,14 @@ describe("SearchPage", () => {
     const NoCombosStub = {
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
+    // @ts-ignore
     wrapperOptions.stubs.NoCombosFound = NoCombosStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
+    const vm = wrapper.vm as VueComponent;
 
-    expect(wrapper.vm.loaded).toBe(false);
+    expect(vm.loaded).toBe(false);
 
     expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeTruthy();
     expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
@@ -68,11 +81,14 @@ describe("SearchPage", () => {
     const NoCombosStub = {
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
+    // @ts-ignore
     wrapperOptions.stubs.NoCombosFound = NoCombosStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
+    const vm = wrapper.vm as VueComponent;
 
-    expect(wrapper.vm.loaded).toBe(false);
+    expect(vm.loaded).toBe(false);
     await wrapper.setData({
       loaded: true,
     });
@@ -93,7 +109,9 @@ describe("SearchPage", () => {
       },
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.NoCombosFound = NoCombosStub;
+    // @ts-ignore
     wrapperOptions.stubs.ComboResults = ComboResultsStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
 
@@ -135,6 +153,7 @@ describe("SearchPage", () => {
         totalResults: Number,
       },
     };
+    // @ts-ignore
     wrapperOptions.stubs.Pagination = PaginationStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
 
@@ -194,10 +213,11 @@ describe("SearchPage", () => {
     const SearchBarStub = {
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.SearchBar = SearchBarStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
 
-    spellbookApi.search.mockResolvedValue([]);
+    mocked(spellbookApi.search).mockResolvedValue([]);
 
     await wrapper.findComponent(SearchBarStub).vm.$emit("new-query", "query");
 
@@ -207,12 +227,14 @@ describe("SearchPage", () => {
 
   it("calls goFoward when pagination element emits a goForward event", async () => {
     const forwardSpy = jest
+      // @ts-ignore
       .spyOn(SearchPage.options.methods, "goForward")
       .mockImplementation();
 
     const PaginationStub = {
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.Pagination = PaginationStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
 
@@ -231,12 +253,14 @@ describe("SearchPage", () => {
 
   it("calls goBack when pagination element emits a goBack event", async () => {
     const forwardSpy = jest
+      // @ts-ignore
       .spyOn(SearchPage.options.methods, "goBack")
       .mockImplementation();
 
     const PaginationStub = {
       template: "<div></div>",
     };
+    // @ts-ignore
     wrapperOptions.stubs.Pagination = PaginationStub;
     const wrapper = shallowMount(SearchPage, wrapperOptions);
 
@@ -253,96 +277,99 @@ describe("SearchPage", () => {
   describe("parseSearchQuery", () => {
     it("sets loaded to true if no query is available", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
-      expect(wrapper.vm.loaded).toBe(false);
+      expect(vm.loaded).toBe(false);
 
-      await wrapper.vm.parseSearchQuery();
+      await vm.parseSearchQuery();
 
-      expect(wrapper.vm.loaded).toBe(true);
+      expect(vm.loaded).toBe(true);
     });
 
     it("noops if no query is available", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      jest.spyOn(wrapper.vm, "updateSearchResults");
+      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "updateSearchResults");
 
-      await wrapper.vm.parseSearchQuery();
+      await vm.parseSearchQuery();
 
-      expect(wrapper.vm.updateSearchResults).not.toBeCalled();
+      expect(vm.updateSearchResults).not.toBeCalled();
     });
 
     it("noops if query is not a string", async () => {
+      // @ts-ignore
       $route.query.q = ["foo", "bar"];
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      jest.spyOn(wrapper.vm, "updateSearchResults");
+      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "updateSearchResults");
 
-      await wrapper.vm.parseSearchQuery();
+      await vm.parseSearchQuery();
 
-      expect(wrapper.vm.updateSearchResults).not.toBeCalled();
+      expect(vm.updateSearchResults).not.toBeCalled();
     });
 
     it("looks up combos with query", async () => {
       $route.query.q = "card:Sydri";
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      jest.spyOn(wrapper.vm, "updateSearchResults").mockResolvedValue();
+      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "updateSearchResults").mockImplementation();
 
-      spellbookApi.search.mockResolvedValue([]);
+      mocked(spellbookApi.search).mockResolvedValue([]);
 
-      await wrapper.vm.parseSearchQuery();
+      await vm.parseSearchQuery();
 
-      expect(wrapper.vm.updateSearchResults).toBeCalledTimes(1);
-      expect(wrapper.vm.updateSearchResults).toBeCalledWith("card:Sydri");
+      expect(vm.updateSearchResults).toBeCalledTimes(1);
+      expect(vm.updateSearchResults).toBeCalledWith("card:Sydri");
     });
 
     it("sets loaded to true when done populating results", async () => {
       $route.query.q = "card:Sydri";
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      jest.spyOn(wrapper.vm, "updateSearchResults").mockResolvedValue();
+      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "updateSearchResults").mockImplementation();
 
-      expect(wrapper.vm.loaded).toBe(false);
+      expect(vm.loaded).toBe(false);
 
-      await wrapper.vm.parseSearchQuery();
+      await vm.parseSearchQuery();
 
-      expect(wrapper.vm.loaded).toBe(true);
+      expect(vm.loaded).toBe(true);
     });
   });
 
   describe("updateSearchResults", () => {
     beforeEach(() => {
-      spellbookApi.search.mockResolvedValue([]);
+      mocked(spellbookApi.search).mockResolvedValue([]);
     });
 
     it("populates results with cmobos from lookup", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
-      spellbookApi.search.mockResolvedValue([
-        {
-          cards: [{ name: "a" }, { name: "b" }, { name: "c" }],
+      mocked(spellbookApi.search).mockResolvedValue([
+        spellbookApi.makeFakeCombo({
+          cards: ["a", "b", "c"],
           results: ["result 1", "result 2"],
-          colorIdentity: {
-            colors: ["r", "b"],
-          },
+          colorIdentity: "rb",
           commanderSpellbookId: "1",
-        },
-        {
-          cards: [{ name: "d" }, { name: "e" }, { name: "f" }],
+        }),
+        spellbookApi.makeFakeCombo({
+          cards: ["d", "e", "f"],
           results: ["result 3", "result 4"],
-          colorIdentity: {
-            colors: ["w", "b"],
-          },
+          colorIdentity: "wb",
           commanderSpellbookId: "2",
-        },
+        }),
       ]);
 
-      await wrapper.vm.updateSearchResults("query");
+      await vm.updateSearchResults("query");
       expect(spellbookApi.search).toBeCalledWith("query");
 
-      expect(wrapper.vm.paginatedResults).toEqual([
+      expect(vm.paginatedResults).toEqual([
         {
           names: ["a", "b", "c"],
-          colors: ["r", "b"],
+          colors: ["b", "r"],
           results: ["result 1", "result 2"],
           id: "1",
         },
@@ -357,19 +384,18 @@ describe("SearchPage", () => {
 
     it("automatically redirects to combo page when only a single value is found", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
-      spellbookApi.search.mockResolvedValue([
-        {
-          cards: [{ name: "a" }, { name: "b" }, { name: "c" }],
+      mocked(spellbookApi.search).mockResolvedValue([
+        spellbookApi.makeFakeCombo({
+          cards: ["a", "b", "c"],
           results: ["result 1", "result 2"],
-          colorIdentity: {
-            colors: ["r", "b"],
-          },
+          colorIdentity: "rb",
           commanderSpellbookId: "1",
-        },
+        }),
       ]);
 
-      await wrapper.vm.updateSearchResults("query");
+      await vm.updateSearchResults("query");
 
       expect($router.push).toBeCalledWith({
         path: "/combo/1",
@@ -388,30 +414,33 @@ describe("SearchPage", () => {
 
     it("adds to specified number to page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
       wrapper.setData({
         page: 3,
       });
-      wrapper.vm.navigateToPage(3);
+      vm.navigateToPage(3);
 
-      expect(wrapper.vm.page).toBe(6);
+      expect(vm.page).toBe(6);
     });
 
     it("supports negative numbers", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
       wrapper.setData({
         page: 3,
       });
-      wrapper.vm.navigateToPage(-1);
+      vm.navigateToPage(-1);
 
-      expect(wrapper.vm.page).toBe(2);
+      expect(vm.page).toBe(2);
     });
 
     it("pushes the query params in the router", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
-      wrapper.vm.navigateToPage(3);
+      vm.navigateToPage(3);
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
@@ -425,9 +454,10 @@ describe("SearchPage", () => {
 
     it("preserves the query param for q", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
       $route.query.q = "Sydri";
-      wrapper.vm.navigateToPage(3);
+      vm.navigateToPage(3);
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
@@ -441,9 +471,10 @@ describe("SearchPage", () => {
 
     it("scrolls to the top of the page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
 
       $route.query.q = "Sydri";
-      wrapper.vm.navigateToPage(3);
+      vm.navigateToPage(3);
 
       expect(window.scrollTo).toBeCalledTimes(1);
       expect(window.scrollTo).toBeCalledWith(0, 0);
@@ -451,21 +482,23 @@ describe("SearchPage", () => {
   });
 
   describe("goForward", () => {
-    let spy;
+    let spy: jest.SpyInstance;
 
     beforeEach(() => {
       spy = jest
+        // @ts-ignore
         .spyOn(SearchPage.options.methods, "navigateToPage")
         .mockImplementation();
     });
 
     it("calls navigateToPage with one page further than the current page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
       wrapper.setData({
         page: 2,
       });
 
-      wrapper.vm.goForward();
+      vm.goForward();
 
       expect(spy).toBeCalledTimes(1);
       expect(spy).toBeCalledWith(1);
@@ -473,21 +506,23 @@ describe("SearchPage", () => {
   });
 
   describe("goBack", () => {
-    let spy;
+    let spy: jest.SpyInstance;
 
     beforeEach(() => {
       spy = jest
+        // @ts-ignore
         .spyOn(SearchPage.options.methods, "navigateToPage")
         .mockImplementation();
     });
 
     it("calls navigateToPage with one page back from the current page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
       wrapper.setData({
         page: 2,
       });
 
-      wrapper.vm.goBack();
+      vm.goBack();
 
       expect(spy).toBeCalledTimes(1);
       expect(spy).toBeCalledWith(-1);

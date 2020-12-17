@@ -2,7 +2,7 @@ import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboHomePage from "@/pages/combo/index.vue";
 import spellbookApi from "commander-spellbook";
 
-jest.mock("commander-spellbook");
+import type { VueComponent } from "../../types";
 
 describe("ComboHomePage", () => {
   describe("lookupCombos", () => {
@@ -12,23 +12,24 @@ describe("ComboHomePage", () => {
           NuxtLink: RouterLinkStub,
         },
       });
+      const vm = wrapper.vm as VueComponent;
 
-      spellbookApi.search.mockResolvedValue([
-        {
+      jest.spyOn(spellbookApi, "search").mockResolvedValue([
+        spellbookApi.makeFakeCombo({
           cards: ["card 1", "card 2"],
-          commanderSpellbookId: 1,
-        },
-        {
+          commanderSpellbookId: "1",
+        }),
+        spellbookApi.makeFakeCombo({
           cards: ["card 3", "card 4", "card 5", "card 6"],
-          commanderSpellbookId: 2,
-        },
-        {
+          commanderSpellbookId: "2",
+        }),
+        spellbookApi.makeFakeCombo({
           cards: ["card 7", "card 8", "card 9"],
-          commanderSpellbookId: 3,
-        },
+          commanderSpellbookId: "3",
+        }),
       ]);
 
-      await wrapper.vm.lookupCombos();
+      await vm.lookupCombos();
 
       const links = wrapper.findAllComponents(RouterLinkStub);
 

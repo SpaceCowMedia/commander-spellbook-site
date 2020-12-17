@@ -1,8 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import HomePage from "@/pages/index.vue";
 
+import type { MountOptions, Route, Router, VueComponent } from "../types";
+
 describe("HomePage", () => {
-  let $route, $router, wrapperOptions;
+  let $route: Route;
+  let $router: Router;
+  let wrapperOptions: MountOptions;
 
   beforeEach(() => {
     $route = {
@@ -31,6 +35,7 @@ describe("HomePage", () => {
   });
 
   it("remains on home page when query is not a string", () => {
+    // @ts-ignore
     $route.query.q = ["foo", "bar"];
     shallowMount(HomePage, wrapperOptions);
 

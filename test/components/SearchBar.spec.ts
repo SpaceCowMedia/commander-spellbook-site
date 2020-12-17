@@ -68,7 +68,7 @@ describe("SearchBar", () => {
   describe("lookupNumberOfCombos", () => {
     it("sets numberOfCombos to the number of combos found in spellbook api", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
-      const mockCombo = await spellbookApi.random();
+      const mockCombo = spellbookApi.makeFakeCombo();
 
       mocked(spellbookApi.search).mockResolvedValue([mockCombo]);
 

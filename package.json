@@ -28,7 +28,7 @@
     "@nuxtjs/axios": "^5.12.3",
     "@nuxtjs/pwa": "^3.3.2",
     "autoprefixer": "^10.0.4",
-    "commander-spellbook": "^0.3.0",
+    "commander-spellbook": "^0.5.0",
     "core-js": "^3.8.0",
     "nuxt": "^2.14.9",
     "postcss": "^8.1.14",

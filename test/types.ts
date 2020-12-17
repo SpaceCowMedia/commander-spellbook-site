@@ -2,6 +2,7 @@ import type { mount, shallowMount } from "@vue/test-utils";
 
 export type MountOptions = Parameters<typeof mount>[1];
 export type Route = {
+  params?: Record<string, string>;
   path?: string;
   query: Record<string, string>;
 };
