@@ -1,10 +1,10 @@
-jest.mock("scryfall-client");
-
 import { mount } from "@vue/test-utils";
 import ColorIdentity from "@/components/ColorIdentity.vue";
 import scryfall from "scryfall-client";
 
 import { mocked } from "ts-jest/utils";
+
+jest.mock("scryfall-client");
 
 describe("ColorIdentity", () => {
   it("sets scryfall image src for symbol", () => {

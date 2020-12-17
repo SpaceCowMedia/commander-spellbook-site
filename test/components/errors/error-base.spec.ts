@@ -18,6 +18,8 @@ describe("ErrorBaseComponent", () => {
       },
     });
 
-    expect((wrapper.vm as VueComponent).$refs.homeLink.$el.focus).toBeCalledTimes(1);
+    expect(
+      (wrapper.vm as VueComponent).$refs.homeLink.$el.focus
+    ).toBeCalledTimes(1);
   });
 });

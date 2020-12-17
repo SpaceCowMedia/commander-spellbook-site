@@ -3,7 +3,7 @@ import ComboPage from "@/pages/combo/_id.vue";
 import spellbookApi from "commander-spellbook";
 import { mocked } from "ts-jest/utils";
 
-import type { MountOptions, Route, Router, VueComponent } from "../../types";
+import type { MountOptions, Route, VueComponent } from "../../types";
 
 describe("ComboPage", () => {
   let options: MountOptions;

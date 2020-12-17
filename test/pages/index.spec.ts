@@ -1,7 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import HomePage from "@/pages/index.vue";
 
-import type { MountOptions, Route, Router, VueComponent } from "../types";
+import type { MountOptions, Route, Router } from "../types";
 
 describe("HomePage", () => {
   let $route: Route;

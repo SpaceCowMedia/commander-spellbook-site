@@ -1,4 +1,4 @@
-import type { mount, shallowMount } from "@vue/test-utils";
+import type { mount } from "@vue/test-utils";
 
 export type MountOptions = Parameters<typeof mount>[1];
 export type Route = {

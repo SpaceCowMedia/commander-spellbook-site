@@ -1,7 +1,7 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboResults from "@/components/search/ComboResults.vue";
 
-import type { MountOptions, VueComponent } from "../../types";
+import type { MountOptions } from "../../types";
 
 describe("ComboResults", () => {
   let options: MountOptions;

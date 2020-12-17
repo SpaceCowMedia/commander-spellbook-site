@@ -1,11 +1,10 @@
-jest.mock("commander-spellbook");
-
 import { mount } from "@vue/test-utils";
 import SearchBar from "@/components/SearchBar.vue";
 import spellbookApi from "commander-spellbook";
+import { mocked } from "ts-jest/utils";
 import type { MountOptions, Route, Router, VueComponent } from "../types";
 
-import { mocked } from "ts-jest/utils";
+jest.mock("commander-spellbook");
 
 describe("SearchBar", () => {
   let wrapperOptions: MountOptions;
