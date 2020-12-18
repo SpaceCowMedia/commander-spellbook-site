@@ -3,9 +3,12 @@
     <div class="mb-auto mt-auto p-10">
       <h3 class="heading-title">No Combos Found</h3>
 
-      <div
-        class="card-art m-auto rounded-full mt-4 mb-4 h-64 w-64 bg-gray-400"
-      ></div>
+      <ArtCircle
+        class="m-auto mt-4 mb-4"
+        cardName="Frantic Search"
+        artist="Jeff Miracola"
+        setCode="vma"
+      />
 
       <p>
         Your search didn’t match any combos. Adjust your search or try one of
@@ -38,9 +41,5 @@ export default Vue.extend({});
 </script>
 
 <style scoped>
-.card-art {
-  background-image: url("~assets/images/combo-not-found-frantic-search.jpg");
-  background-position: center;
-  background-size: cover;
-}
+/* TODO */
 </style>
