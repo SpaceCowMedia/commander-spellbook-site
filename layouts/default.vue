@@ -1,7 +1,9 @@
 <template>
   <div>
-    <Nuxt />
-    <footer class="footer">Secondary navigation links go here</footer>
+    <BetaMask>
+      <Nuxt />
+      <footer class="footer">Secondary navigation links go here</footer>
+    </BetaMask>
   </div>
 </template>
 
