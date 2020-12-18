@@ -33,7 +33,7 @@ export default Vue.extend({
   },
   mounted(): void {
     // localStorage.removeItem("savedPassword");
-    this.savedPassword = localStorage.getItem("savedPassword");
+    this.savedPassword = localStorage.getItem("savedPassword") || "";
     this.loaded = true;
   },
   methods: {
