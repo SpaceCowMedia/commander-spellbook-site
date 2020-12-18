@@ -20,6 +20,11 @@
 <script lang="ts">
 import Vue from "vue";
 
+// This is not meant to keep people out (obviously,
+// it's revaled directly on the client), but to just
+// provide a simple way to obscure the beta version of the
+// site. This component will be removed when the site
+// is ready to go to production
 const PASSWORD = "arjun";
 
 export default Vue.extend({
