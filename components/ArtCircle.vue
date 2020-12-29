@@ -20,10 +20,6 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-    setCode: {
-      type: String,
-      default: "",
-    },
     size: {
       type: Number,
       default: 64,
@@ -42,13 +38,7 @@ export default Vue.extend({
       return `${this.cardName} by ${this.artist}`;
     },
     imgSrc(): string {
-      let url = `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image&version=art_crop`;
-
-      if (this.setCode) {
-        url += `&set=${this.setCode}`;
-      }
-
-      return url;
+      return require(`~/assets/images/art-circles/${this.cardName}-${this.artist}.jpg`);
     },
   },
 });
