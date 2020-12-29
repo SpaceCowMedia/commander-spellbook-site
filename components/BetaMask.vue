@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!passwordsMatch" class="auth-required">
+    <div v-show="!passwordsMatch" class="auth-required">
       <div v-if="loaded" class="w-1/2 m-auto">
         <p class="mb-2">Enter Password</p>
         <input
@@ -13,18 +13,18 @@
         />
       </div>
     </div>
-    <slot v-else />
+    <slot v-show="passwordMatch" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-// This is not meant to keep people out (obviously,
-// it's revaled directly on the client), but to just
-// provide a simple way to obscure the beta version of the
-// site. This component will be removed when the site
-// is ready to go to production
+// This is not meant as a secure way to keep people out
+// (obviously, it's revealed directly on the client),
+// but to just provide a simple way to obscure the beta
+// version of the site. This component will be removed
+// when the site is ready to go to production
 const PASSWORD = "arjun";
 
 export default Vue.extend({
