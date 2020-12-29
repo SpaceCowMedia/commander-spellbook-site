@@ -2,7 +2,9 @@
   <div>
     <BetaMask>
       <Nuxt />
-      <footer class="footer">Secondary navigation links go here</footer>
+      <footer class="footer">
+        <nuxt-link to="/syntax-guide"> Syntax Guide </nuxt-link>
+      </footer>
     </BetaMask>
   </div>
 </template>
