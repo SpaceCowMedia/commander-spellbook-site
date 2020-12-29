@@ -3,15 +3,17 @@
     <SearchBar />
 
     <div class="border-b-2 border-gray-400 w-full">
-      <div class="container max-w-5xl mx-auto mt-6 mb-6 pb-4">
-        <p>A variety of parameters can be used to search for combos.</p>
+      <div class="container max-w-5xl m-auto mt-6 mb-6 pb-4">
+        <p class="pl-4 pr-4">
+          A variety of parameters can be used to search for combos.
+        </p>
 
-        <div class="flex">
+        <div class="flex-none md:flex">
           <a
             v-for="section in sections"
             :key="section.id"
             :href="'#' + section.id"
-            class="p-1 m-4 text-center block w-full flex-grow rounded border-2 border-blue-100"
+            class="p-1 m-4 text-center block flex-grow rounded border-2 border-blue-100"
           >
             <div>
               {{ section.text }}
@@ -19,7 +21,7 @@
           </a>
         </div>
 
-        <p>
+        <p class="pl-4 pr-4">
           No matter what parameter is used, capitalization will be disregarded,
           so a search of
           <code>CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE</code>

@@ -1,22 +1,24 @@
 <template>
   <div :id="id" class="search-guide border-b-2 border-gray-400 w-full">
-    <div class="container max-w-5xl mx-auto mt-6 mb-6 pb-4">
-      <div class="mt-4 mb-4 flex items-center">
+    <div class="container max-w-5xl m-auto mt-6 mb-6 pb-4">
+      <div class="mt-4 mb-4 flex-none text-center md:flex items-center">
         <ArtCircle
           :cardName="headingCardName"
           :artist="headingArtistName"
-          class="mr-4"
+          class="mr-4 md:block hidden"
           :size="28"
         />
         <h2 class="heading-title">{{ heading }}</h2>
       </div>
 
-      <div class="flex w-full">
-        <div class="description w-1/2 flex-grow pr-4">
+      <div class="flex-none md:flex w-full">
+        <div class="description w-full md:w-1/2 flex-grow pl-4 pr-4 md:pl-0">
           <slot />
         </div>
 
-        <div class="search-snippets w-1/2 flex-grow pl-4">
+        <div
+          class="search-snippets w-full md:w-1/2 flex-grow pl-4 pr-4 md:pr-4"
+        >
           <SearchSnippet
             v-for="(snippet, index) in snippets"
             :key="index + '-' + snippet.search"
@@ -62,12 +64,14 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.search-guide:nth-child(even) .description {
-  @apply order-last pr-0 pl-4;
-}
+@media (min-width: 768px) {
+  .search-guide:nth-child(even) .description {
+    @apply order-last pr-0 pl-4;
+  }
 
-.search-guide:nth-child(even) .search-snippets {
-  @apply pl-0 pr-4;
+  .search-guide:nth-child(even) .search-snippets {
+    @apply pl-0 pr-4;
+  }
 }
 
 code {
