@@ -1,17 +1,289 @@
 <template>
   <div>
-    <div class="container">
-      <div class="w-full">Syntax Guide Here</div>
+    <SearchBar />
+
+    <div class="border-b-2 border-gray-400 w-full">
+      <div class="container max-w-5xl mx-auto mt-6 mb-6 pb-4">
+        <p>A variety of parameters can be used to search for combos.</p>
+
+        <div class="flex">
+          <a
+            v-for="section in sections"
+            :key="section.id"
+            :href="'#' + section.id"
+            class="p-1 m-4 text-center block w-full flex-grow rounded border-2 border-blue-100"
+          >
+            <div>
+              {{ section.text }}
+            </div>
+          </a>
+        </div>
+
+        <p>
+          No matter what parameter is used, capitalization will be disregarded,
+          so a search of
+          <code>CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE</code>
+          is equivalent to
+          <code>card:"breath of" coloridentity:temur result:infinite</code>
+        </p>
+      </div>
     </div>
+
+    <SearchGuide
+      heading="Cards"
+      headingCardName="Peek"
+      headingArtistName="Adam Rex"
+      :snippets="cardSnippets"
+    >
+      <p>
+        You can find cards in a combo simply by entering the card names, or
+        parts of the card names, into the search bar. Passing multiple card
+        names will result in combos that have cards that contain those words
+        among the names of the cards in the combo.
+      </p>
+      <p>
+        You can lookup longer names for cards by using the
+        <code>card:</code> key with single (<code>'</code>) or double
+        (<code>"</code>) quotes. This will find combos that contain cards with
+        names that include the whole phrase. For instance,
+        <code>card:dream</code>, will include combos that contain the card
+        Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
+        <code>card:"dream stalk"</code> is used, then only combos that contain
+        Dream Stalker wil lbe displayed.
+      </p>
+      <p>
+        To find combos with an exact card name, use
+        <code>card=</code> instead.
+      </p>
+      <p>
+        Use <code>-card:</code> To find combos that do not include a certain
+        card.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Color Identity"
+      headingCardName="Fist of Suns"
+      headingArtistName="Arnie Swekel"
+      :snippets="colorIdentitySnippets"
+    >
+      <p>
+        The color identity of a combo determines what colors the combo is
+        comprised of. The most basic search is in the form,
+        <code>coloridentity:bug</code>, which in this example finds all the
+        combos that can be played within a green, blue, black color identity.
+      </p>
+
+      <p>
+        The <code>coloridentity</code> paraameter accepts full color names like
+        <code>green</code> or the single character representations of the colors
+        (<code>w</code>, <code>u</code>, <code>b</code>, <code>r</code>,
+        <code>g</code>). You can use the names for color combinations such as
+        <code>boros</code>, <code>izzet</code>, <code>naya</code>,
+        <code>sultai</code>, etc.
+      </p>
+
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used to
+        find combos with a range of color identities. These operators can be
+        used with the color values or a number to indicate the number of colors
+        required for the combo.
+      </p>
+
+      <p>
+        Aliases for the <code>coloridentity</code> key include
+        <code>color_identity</code> and <code>ci</code>.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Prerequisites"
+      headingCardName="Long-Term Plans"
+      headingArtistName="Ben Thompson"
+      :snippets="prerequisiteSnippets"
+    >
+      <p>
+        The prerequisites are the elements that need to be in place before the
+        combo can be initiated.
+      </p>
+
+      <p>
+        You can also use <code>-prerequisites:</code> to find combos that do not
+        contain the value passed.
+      </p>
+
+      <p>
+        Aliases for <code>prerequisites</code> are <code>prerequisite</code> and
+        <code>pre</code>.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Steps"
+      headingCardName="The Grand Calcutron"
+      headingArtistName="Sean Murray"
+      :snippets="stepSnippets"
+    >
+      <p>
+        The steps are the elements that need to be followed to execute the
+        combo.
+      </p>
+
+      <p>
+        You can also use <code>-steps:</code> to find combos that do not contain
+        steps with the value passed.
+      </p>
+
+      <p>An alias for <code>steps</code> is <code>step</code>.</p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Results"
+      headingCardName="Revel in Riches"
+      headingArtistName="Eric Deschamps"
+      :snippets="resultSnippets"
+    >
+      <p>
+        The results are the effects that occur as a result of completing the
+        combo.
+      </p>
+
+      <p>
+        You can also use <code>-results:</code> to find combos that do not
+        contain results with the value passed.
+      </p>
+
+      <p>An alias for <code>results</code> is <code>result</code>.</p>
+    </SearchGuide>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-export default Vue.extend({});
+export default Vue.extend({
+  data() {
+    return {
+      sections: [
+        {
+          id: "cards",
+          text: "Cards",
+        },
+        {
+          id: "color-identity",
+          text: "Color Identity",
+        },
+        {
+          id: "prerequisites",
+          text: "Prerequisites",
+        },
+        {
+          id: "steps",
+          text: "Steps",
+        },
+        {
+          id: "results",
+          text: "Results",
+        },
+      ],
+      cardSnippets: [
+        {
+          search: "kenrith golem",
+          description:
+            "Combos that contain a card with the word kenrith in the name and a card with the word golem in the name",
+        },
+        {
+          search: 'card:"breath of" -card:brudiclad',
+          description:
+            'Combos that contain a card with the phrase "breath of" in the name, but do not include any cards with the word brudiclad in the name',
+        },
+        {
+          search: 'card="sydri, galvanic genius"',
+          description:
+            'Combos that contain card with the exact name "sydri, galvanic genius"',
+        },
+      ],
+      colorIdentitySnippets: [
+        {
+          search: "coloridentity:bug",
+          description: "Combos within the black, blue, green color identity.",
+        },
+        {
+          search: "ci=temur",
+          description:
+            "Combos that have exactly the blue, green, red color identity.",
+        },
+        {
+          search: "ci<3",
+          description:
+            "Combos that have no more than 2 colors in their color identity.",
+        },
+        {
+          search: "ci=3 ci>=wb",
+          description:
+            "Combos that have exactly 3 colors in their color identity and 2 of those colors must be white and black.",
+        },
+      ],
+      resultSnippets: [
+        {
+          search: "result:infinite",
+          description:
+            'Combos that include the word "infinite" in one of the results.',
+        },
+        {
+          search: 'result:"win the game"',
+          description:
+            'Combos that include the phrase "win the game" in one of the results.',
+        },
+        {
+          search: '-result:"win the game"',
+          description:
+            'Combos that do not include the phrase "win the game" in one of the results.',
+        },
+      ],
+      prerequisiteSnippets: [
+        {
+          search: "prerequisite:mana",
+          description:
+            'Combos that include the word "mana" in one of the prerequisites.',
+        },
+        {
+          search: 'pre:"mana to cast it" -pre:permanent',
+          description:
+            'Combos that include the phrase "mana to cast it" in one of the prerequisites and no prerequisite with the word "permanent".',
+        },
+        {
+          search: "-pre:mana",
+          description:
+            'Combos that do not include the word "mana" in one of the prerequisites.',
+        },
+      ],
+      stepSnippets: [
+        {
+          search: "step:permanent",
+          description:
+            'Combos that include the word "permanent" in one of the steps.',
+        },
+        {
+          search: 'steps:"mill target opponent"',
+          description:
+            'Combos that include the phrase "mill target opponent" in one of the steps.',
+        },
+        {
+          search: "-step:permanent",
+          description:
+            'Combos that do not include the word "permanent" in one of the steps.',
+        },
+      ],
+    };
+  },
+});
 </script>
 
-<style>
-/* styles here */
+<style scoped>
+code {
+  color: rgb(92, 126, 159);
+  @apply bg-gray-200 pl-1 pr-1;
+}
 </style>
