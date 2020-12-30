@@ -85,7 +85,7 @@ export default Vue.extend({
       return results;
     },
   },
-  async mounted(): void {
+  async mounted(): Promise<void> {
     const query = this.parseSearchQuery();
     this.page = Number(this.$route.query.page) || 1;
 

@@ -66,7 +66,7 @@ describe("SearchPage", () => {
         });
     });
 
-    it("starts in a loading state", async () => {
+    it("starts in a loading state", () => {
       $route.query.q = "card:sydri";
       const LoadingCombosStub = {
         template: "<div></div>",
@@ -101,7 +101,6 @@ describe("SearchPage", () => {
       mocked(spellbookApi.search).mockResolvedValue([]);
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      const vm = wrapper.vm as VueComponent;
 
       // let mounting finish
       await Promise.resolve();
@@ -231,7 +230,6 @@ describe("SearchPage", () => {
       // @ts-ignore
       wrapperOptions.stubs.SearchBar = SearchBarStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
-      const vm = wrapper.vm as VueComponent;
 
       await wrapper.findComponent(SearchBarStub).vm.$emit("new-query", "query");
 
@@ -299,7 +297,7 @@ describe("SearchPage", () => {
       expect(query).toBe("");
     });
 
-    it("returns an empty string if query is not a string", async () => {
+    it("returns an empty string if query is not a string", () => {
       // @ts-ignore
       $route.query.q = ["foo", "bar"];
 
@@ -311,7 +309,7 @@ describe("SearchPage", () => {
       expect(query).toBe("");
     });
 
-    it("returns query if it exists", async () => {
+    it("returns query if it exists", () => {
       $route.query.q = "card:Sydri";
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);

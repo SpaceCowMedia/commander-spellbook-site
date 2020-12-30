@@ -1,4 +1,4 @@
-import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import SearchGuide from "@/components/syntax-guide/SearchGuide.vue";
 
 describe("SearchGuide", () => {

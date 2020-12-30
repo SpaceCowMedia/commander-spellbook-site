@@ -43,7 +43,7 @@ type ComboData = {
 };
 
 export default Vue.extend({
-  async asyncData({ params }): ComboData {
+  async asyncData({ params }): Promise<ComboData | void> {
     const comboNumber = params.id;
     let combo;
 

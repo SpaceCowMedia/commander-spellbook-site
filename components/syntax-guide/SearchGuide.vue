@@ -3,7 +3,7 @@
     <div class="container max-w-5xl m-auto mt-6 mb-6 pb-4">
       <div class="mt-4 mb-4 flex-none text-center md:flex items-center">
         <ArtCircle
-          :cardName="headingCardName"
+          :card-name="headingCardName"
           :artist="headingArtistName"
           class="mr-4 md:block hidden"
           :size="28"

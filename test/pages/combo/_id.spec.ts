@@ -1,7 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import spellbookApi from "commander-spellbook";
-import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, VueComponent } from "../../types";
 

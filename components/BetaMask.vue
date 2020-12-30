@@ -4,8 +4,8 @@
       <div v-if="loaded" class="w-1/2 m-auto">
         <p class="mb-2">Enter Password</p>
         <input
-          type="text"
           v-model="password"
+          type="text"
           class="rounded bg-blue-300 focus:bg-blue-200 w-full p-4"
           :class="{ error }"
           @keydown.enter="submitPassword"
@@ -36,6 +36,11 @@ export default Vue.extend({
       loaded: false,
     };
   },
+  computed: {
+    passwordsMatch(): boolean {
+      return this.savedPassword === PASSWORD;
+    },
+  },
   mounted(): void {
     // localStorage.removeItem("savedPassword");
     this.savedPassword = localStorage.getItem("savedPassword") || "";
@@ -54,11 +59,6 @@ export default Vue.extend({
 
       localStorage.setItem("savedPassword", pw);
       this.savedPassword = pw;
-    },
-  },
-  computed: {
-    passwordsMatch(): boolean {
-      return this.savedPassword === PASSWORD;
     },
   },
 });

@@ -33,8 +33,8 @@
 
     <SearchGuide
       heading="Cards"
-      headingCardName="Peek"
-      headingArtistName="Adam Rex"
+      heading-card-name="Peek"
+      heading-artist-name="Adam Rex"
       :snippets="cardSnippets"
     >
       <p>
@@ -65,8 +65,8 @@
 
     <SearchGuide
       heading="Color Identity"
-      headingCardName="Fist of Suns"
-      headingArtistName="Arnie Swekel"
+      heading-card-name="Fist of Suns"
+      heading-artist-name="Arnie Swekel"
       :snippets="colorIdentitySnippets"
     >
       <p>
@@ -101,8 +101,8 @@
 
     <SearchGuide
       heading="Prerequisites"
-      headingCardName="Long-Term Plans"
-      headingArtistName="Ben Thompson"
+      heading-card-name="Long-Term Plans"
+      heading-artist-name="Ben Thompson"
       :snippets="prerequisiteSnippets"
     >
       <p>
@@ -123,8 +123,8 @@
 
     <SearchGuide
       heading="Steps"
-      headingCardName="The Grand Calcutron"
-      headingArtistName="Sean Murray"
+      heading-card-name="The Grand Calcutron"
+      heading-artist-name="Sean Murray"
       :snippets="stepSnippets"
     >
       <p>
@@ -142,8 +142,8 @@
 
     <SearchGuide
       heading="Results"
-      headingCardName="Revel in Riches"
-      headingArtistName="Eric Deschamps"
+      heading-card-name="Revel in Riches"
+      heading-artist-name="Eric Deschamps"
       :snippets="resultSnippets"
     >
       <p>

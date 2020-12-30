@@ -5,7 +5,7 @@
 
       <ArtCircle
         class="m-auto mt-4 mb-4"
-        cardName="Frantic Search"
+        card-name="Frantic Search"
         artist="Jeff Miracola"
       />
 
