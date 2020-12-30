@@ -142,84 +142,78 @@ describe("ComboPage", () => {
     ]);
   });
 
-  describe("loadCombo", () => {
-    let fakeCombo: ReturnType<typeof spellbookApi.makeFakeCombo>;
+  it("looks up combo from page number param", async () => {
+    const fakeCombo = spellbookApi.makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
 
-    beforeEach(() => {
-      fakeCombo = spellbookApi.makeFakeCombo({
-        commanderSpellbookId: "13",
-        prerequisites: ["1", "2", "3"],
-        steps: ["1", "2", "3"],
-        results: ["1", "2", "3"],
-        colorIdentity: "wbr",
-        cards: ["card 1", "card 2"],
-      });
-      jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+    jest.spyOn(fakeCombo.cards[0], "getScryfallImageUrl");
+    jest.spyOn(fakeCombo.cards[1], "getScryfallImageUrl");
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
     });
 
-    it("looks up combo and loads data from it", async () => {
-      jest.spyOn(fakeCombo.cards[0], "getScryfallImageUrl");
-      jest.spyOn(fakeCombo.cards[1], "getScryfallImageUrl");
+    expect(spellbookApi.findById).toBeCalledTimes(1);
+    expect(spellbookApi.findById).toBeCalledWith("13");
 
-      const wrapper = shallowMount(ComboPage, options);
-      const vm = wrapper.vm as VueComponent;
+    wrapper.setData(data);
 
-      await vm.loadCombo();
+    expect(vm.loaded).toBe(true);
+    expect(vm.title).toBe("Combo Number 13");
+    expect(vm.prerequisites).toEqual(["1", "2", "3"]);
+    expect(vm.steps).toEqual(["1", "2", "3"]);
+    expect(vm.results).toEqual(["1", "2", "3"]);
+    expect(vm.results).toEqual(["1", "2", "3"]);
+    expect(vm.cards).toEqual([
+      {
+        name: "card 1",
+        artUrl: expect.stringMatching("exact=card%201"),
+        oracleImageUrl: expect.stringMatching("exact=card%201"),
+      },
+      {
+        name: "card 2",
+        artUrl: expect.stringMatching("exact=card%202"),
+        oracleImageUrl: expect.stringMatching("exact=card%202"),
+      },
+    ]);
 
-      expect(spellbookApi.findById).toBeCalledTimes(1);
-      expect(spellbookApi.findById).toBeCalledWith("13");
+    expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
+    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(1, "art_crop");
+    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2);
+    expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
+    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
+    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2);
+  });
 
-      expect(vm.loaded).toBe(true);
-      expect(vm.title).toBe("Combo Number 13");
-      expect(vm.prerequisites).toEqual(["1", "2", "3"]);
-      expect(vm.steps).toEqual(["1", "2", "3"]);
-      expect(vm.results).toEqual(["1", "2", "3"]);
-      expect(vm.results).toEqual(["1", "2", "3"]);
-      expect(vm.cards).toEqual([
-        {
-          name: "card 1",
-          artUrl: expect.stringMatching("exact=card%201"),
-          oracleImageUrl: expect.stringMatching("exact=card%201"),
-        },
-        {
-          name: "card 2",
-          artUrl: expect.stringMatching("exact=card%202"),
-          oracleImageUrl: expect.stringMatching("exact=card%202"),
-        },
-      ]);
+  it("does not load data from combo when no combos is found for id", async () => {
+    jest
+      .spyOn(spellbookApi, "findById")
+      .mockRejectedValue(new Error("not found"));
 
-      expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
-      expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(
-        1,
-        "art_crop"
-      );
-      expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2);
-      expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
-      expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(
-        1,
-        "art_crop"
-      );
-      expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2);
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
     });
 
-    it("does not load data from combo when no combos is found for id", async () => {
-      mocked(spellbookApi.findById).mockRejectedValue(new Error("not found"));
+    expect(spellbookApi.findById).toBeCalledTimes(1);
+    expect(spellbookApi.findById).toBeCalledWith("13");
 
-      const wrapper = shallowMount(ComboPage, options);
-      const vm = wrapper.vm as VueComponent;
-
-      await vm.loadCombo();
-
-      expect(spellbookApi.findById).toBeCalledTimes(1);
-      expect(spellbookApi.findById).toBeCalledWith("13");
-
-      expect(vm.loaded).toBe(false);
-      expect(vm.title).toBe("Looking up Combo");
-      expect(vm.prerequisites).toEqual([]);
-      expect(vm.steps).toEqual([]);
-      expect(vm.results).toEqual([]);
-      expect(vm.results).toEqual([]);
-      expect(vm.cards).toEqual([]);
-    });
+    expect(data).toBeFalsy();
   });
 });

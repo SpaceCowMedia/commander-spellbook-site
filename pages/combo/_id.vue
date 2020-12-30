@@ -43,6 +43,36 @@ type ComboData = {
 };
 
 export default Vue.extend({
+  async asyncData({ params }): ComboData {
+    const comboNumber = params.id;
+    let combo;
+
+    try {
+      combo = await spellbookApi.findById(comboNumber);
+    } catch (err) {
+      // TODO redirect to 404 page??
+      return;
+    }
+
+    const cards = combo.cards.map((card: any) => {
+      return {
+        name: card.name,
+        artUrl: card.getScryfallImageUrl("art_crop"),
+        oracleImageUrl: card.getScryfallImageUrl(),
+      };
+    });
+
+    return {
+      comboNumber,
+      title: `Combo Number ${comboNumber}`,
+      cards,
+      loaded: true,
+      prerequisites: Array.from(combo.prerequisites),
+      steps: Array.from(combo.steps),
+      results: Array.from(combo.results),
+      colorIdentity: Array.from(combo.colorIdentity.colors),
+    };
+  },
   data(): ComboData {
     return {
       title: "Looking up Combo",
@@ -54,9 +84,6 @@ export default Vue.extend({
       steps: [],
       results: [],
     };
-  },
-  async fetch() {
-    await this.loadCombo();
   },
   computed: {
     cardNames(): string[] {
@@ -71,36 +98,7 @@ export default Vue.extend({
       // TODO not loaded, what to do here
     }
   },
-  methods: {
-    async loadCombo() {
-      let combo;
-      const id = this.$route.params.id;
-      this.comboNumber = id;
-
-      try {
-        combo = await spellbookApi.findById(id);
-      } catch (err) {
-        // TODO redirect to 404 page??
-        return;
-      }
-
-      this.title = `Combo Number ${this.comboNumber}`;
-      this.prerequisites.push(...combo.prerequisites);
-      this.steps.push(...combo.steps);
-      this.results.push(...combo.results);
-      this.colorIdentity.push(...combo.colorIdentity.colors);
-      const cards = combo.cards.map((card: any) => {
-        return {
-          name: card.name,
-          artUrl: card.getScryfallImageUrl("art_crop"),
-          oracleImageUrl: card.getScryfallImageUrl(),
-        };
-      });
-      this.cards.push(...cards);
-
-      this.loaded = true;
-    },
-  },
+  methods: {},
 });
 </script>
 
