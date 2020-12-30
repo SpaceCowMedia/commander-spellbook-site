@@ -56,9 +56,6 @@ export default Vue.extend({
       combos: [],
     };
   },
-  async fetch() {
-    await this.parseSearchQuery();
-  },
   computed: {
     totalResults(): number {
       return this.combos.length;
@@ -88,6 +85,19 @@ export default Vue.extend({
       return results;
     },
   },
+  async mounted(): void {
+    const query = this.parseSearchQuery();
+    this.page = Number(this.$route.query.page) || 1;
+
+    if (!query) {
+      this.loaded = true;
+      return;
+    }
+
+    await this.updateSearchResults(query);
+
+    this.loaded = true;
+  },
   methods: {
     async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
@@ -116,19 +126,14 @@ export default Vue.extend({
         };
       });
     },
-    async parseSearchQuery() {
+    parseSearchQuery(): string {
       const query = this.$route.query.q;
 
-      this.page = Number(this.$route.query.page) || 1;
-
       if (!query || typeof query !== "string") {
-        this.loaded = true;
-        return;
+        return "";
       }
 
-      await this.updateSearchResults(query);
-
-      this.loaded = true;
+      return query;
     },
     navigateToPage(pagesToChange: number): void {
       this.page = this.page + pagesToChange;

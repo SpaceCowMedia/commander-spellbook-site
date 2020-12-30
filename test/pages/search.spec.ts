@@ -54,288 +54,272 @@ describe("SearchPage", () => {
     };
   });
 
-  it("starts in a loading state", () => {
-    const LoadingCombosStub = {
-      template: "<div></div>",
-    };
-    const NoCombosStub = {
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
-    // @ts-ignore
-    wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-    const vm = wrapper.vm as VueComponent;
-
-    expect(vm.loaded).toBe(false);
-
-    expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeTruthy();
-    expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
-  });
-
-  it("shows no combos found when page has loaded but no results are available", async () => {
-    const LoadingCombosStub = {
-      template: "<div></div>",
-    };
-    const NoCombosStub = {
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
-    // @ts-ignore
-    wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-    const vm = wrapper.vm as VueComponent;
-
-    expect(vm.loaded).toBe(false);
-    await wrapper.setData({
-      loaded: true,
-    });
-
-    expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeFalsy();
-    expect(wrapper.findComponent(NoCombosStub).exists()).toBeTruthy();
-  });
-
-  it("shows combo results when page has loaded and results are available", async () => {
-    const NoCombosStub = {
-      template: "<div></div>",
-    };
-    const ComboResultsStub = {
-      props: {
-        results: {
-          type: Array,
-        },
-      },
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-    // @ts-ignore
-    wrapperOptions.stubs.ComboResults = ComboResultsStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-
-    await wrapper.setData({
-      loaded: true,
-      combos: fakeCombos,
-    });
-
-    expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
-
-    const comboResultsNode = wrapper.findComponent(ComboResultsStub);
-
-    expect(comboResultsNode.exists()).toBeTruthy();
-    expect(comboResultsNode.props("results")).toEqual([
-      {
-        names: ["a", "b", "c"],
-        colors: ["w", "b", "r"],
-        results: ["result 1", "result 2"],
-        id: "1",
-      },
-      {
-        names: ["d", "e", "f"],
-        colors: ["u", "g"],
-        results: ["result 3", "result 4"],
-        id: "2",
-      },
-    ]);
-  });
-
-  it("shows pagination for results", async () => {
-    const PaginationStub = {
-      template: "<div></div>",
-      props: {
-        pageSize: Number,
-        currentPage: Number,
-        totalPages: Number,
-        firstResult: Number,
-        lastResult: Number,
-        totalResults: Number,
-      },
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.Pagination = PaginationStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-
-    // add a large number of combos
-    "x"
-      .repeat(213)
-      .split("")
-      .forEach((value, index) => {
-        fakeCombos.push({
-          names: [value],
-          colors: ["u", "g"],
-          results: ["result x", "result y"],
-          id: String(index + 2),
+  describe("mounting", () => {
+    beforeEach(() => {
+      jest
+        .spyOn(
+          (SearchPage as VueComponent).options.methods,
+          "updateSearchResults"
+        )
+        .mockImplementation(() => {
+          return Promise.resolve();
         });
-      });
-
-    await wrapper.setData({
-      loaded: true,
-      combos: fakeCombos,
     });
 
-    const paginationComponents = wrapper.findAllComponents(PaginationStub);
-
-    expect(paginationComponents.length).toBe(2);
-    expect(paginationComponents.at(0).props()).toEqual({
-      pageSize: 76,
-      currentPage: 1,
-      totalPages: 3,
-      totalResults: 215,
-    });
-    expect(paginationComponents.at(1).props()).toEqual({
-      pageSize: 76,
-      currentPage: 1,
-      totalPages: 3,
-      totalResults: 215,
-    });
-
-    await wrapper.setData({
-      page: 2,
-    });
-
-    expect(paginationComponents.at(0).props()).toEqual({
-      pageSize: 76,
-      currentPage: 2,
-      totalPages: 3,
-      totalResults: 215,
-    });
-    expect(paginationComponents.at(1).props()).toEqual({
-      pageSize: 76,
-      currentPage: 2,
-      totalPages: 3,
-      totalResults: 215,
-    });
-  });
-
-  it("updates search when search bar emits new-query event", async () => {
-    const SearchBarStub = {
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.SearchBar = SearchBarStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-
-    mocked(spellbookApi.search).mockResolvedValue([]);
-
-    await wrapper.findComponent(SearchBarStub).vm.$emit("new-query", "query");
-
-    expect(spellbookApi.search).toBeCalledTimes(1);
-    expect(spellbookApi.search).toBeCalledWith("query");
-  });
-
-  it("calls goFoward when pagination element emits a goForward event", async () => {
-    const forwardSpy = jest
+    it("starts in a loading state", async () => {
+      $route.query.q = "card:sydri";
+      const LoadingCombosStub = {
+        template: "<div></div>",
+      };
+      const NoCombosStub = {
+        template: "<div></div>",
+      };
       // @ts-ignore
-      .spyOn(SearchPage.options.methods, "goForward")
-      .mockImplementation();
-
-    const PaginationStub = {
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.Pagination = PaginationStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-
-    await wrapper.setData({
-      loaded: true,
-      combos: fakeCombos,
-    });
-
-    await wrapper
-      .findAllComponents(PaginationStub)
-      .at(0)
-      .vm.$emit("go-forward");
-
-    expect(forwardSpy).toBeCalledTimes(1);
-  });
-
-  it("calls goBack when pagination element emits a goBack event", async () => {
-    const forwardSpy = jest
+      wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
       // @ts-ignore
-      .spyOn(SearchPage.options.methods, "goBack")
-      .mockImplementation();
-
-    const PaginationStub = {
-      template: "<div></div>",
-    };
-    // @ts-ignore
-    wrapperOptions.stubs.Pagination = PaginationStub;
-    const wrapper = shallowMount(SearchPage, wrapperOptions);
-
-    await wrapper.setData({
-      loaded: true,
-      combos: fakeCombos,
-    });
-
-    await wrapper.findAllComponents(PaginationStub).at(0).vm.$emit("go-back");
-
-    expect(forwardSpy).toBeCalledTimes(1);
-  });
-
-  describe("parseSearchQuery", () => {
-    it("sets loaded to true if no query is available", async () => {
+      wrapperOptions.stubs.NoCombosFound = NoCombosStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
       expect(vm.loaded).toBe(false);
 
-      await vm.parseSearchQuery();
-
-      expect(vm.loaded).toBe(true);
+      expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeTruthy();
+      expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
     });
 
-    it("noops if no query is available", async () => {
+    it("shows no combos found when page has loaded but no results are available", async () => {
+      const LoadingCombosStub = {
+        template: "<div></div>",
+      };
+      const NoCombosStub = {
+        template: "<div></div>",
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
+      // @ts-ignore
+      wrapperOptions.stubs.NoCombosFound = NoCombosStub;
+      mocked(spellbookApi.search).mockResolvedValue([]);
+
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
-      jest.spyOn(vm, "updateSearchResults");
 
-      await vm.parseSearchQuery();
+      // let mounting finish
+      await Promise.resolve();
 
-      expect(vm.updateSearchResults).not.toBeCalled();
+      expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeFalsy();
+      expect(wrapper.findComponent(NoCombosStub).exists()).toBeTruthy();
     });
 
-    it("noops if query is not a string", async () => {
+    it("shows combo results when page has loaded and results are available", async () => {
+      const NoCombosStub = {
+        template: "<div></div>",
+      };
+      const ComboResultsStub = {
+        props: {
+          results: {
+            type: Array,
+          },
+        },
+        template: "<div></div>",
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.NoCombosFound = NoCombosStub;
+      // @ts-ignore
+      wrapperOptions.stubs.ComboResults = ComboResultsStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+      });
+
+      expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
+
+      const comboResultsNode = wrapper.findComponent(ComboResultsStub);
+
+      expect(comboResultsNode.exists()).toBeTruthy();
+      expect(comboResultsNode.props("results")).toEqual([
+        {
+          names: ["a", "b", "c"],
+          colors: ["w", "b", "r"],
+          results: ["result 1", "result 2"],
+          id: "1",
+        },
+        {
+          names: ["d", "e", "f"],
+          colors: ["u", "g"],
+          results: ["result 3", "result 4"],
+          id: "2",
+        },
+      ]);
+    });
+
+    it("shows pagination for results", async () => {
+      const PaginationStub = {
+        template: "<div></div>",
+        props: {
+          pageSize: Number,
+          currentPage: Number,
+          totalPages: Number,
+          firstResult: Number,
+          lastResult: Number,
+          totalResults: Number,
+        },
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.Pagination = PaginationStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      // add a large number of combos
+      "x"
+        .repeat(213)
+        .split("")
+        .forEach((value, index) => {
+          fakeCombos.push({
+            names: [value],
+            colors: ["u", "g"],
+            results: ["result x", "result y"],
+            id: String(index + 2),
+          });
+        });
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+      });
+
+      const paginationComponents = wrapper.findAllComponents(PaginationStub);
+
+      expect(paginationComponents.length).toBe(2);
+      expect(paginationComponents.at(0).props()).toEqual({
+        pageSize: 76,
+        currentPage: 1,
+        totalPages: 3,
+        totalResults: 215,
+      });
+      expect(paginationComponents.at(1).props()).toEqual({
+        pageSize: 76,
+        currentPage: 1,
+        totalPages: 3,
+        totalResults: 215,
+      });
+
+      await wrapper.setData({
+        page: 2,
+      });
+
+      expect(paginationComponents.at(0).props()).toEqual({
+        pageSize: 76,
+        currentPage: 2,
+        totalPages: 3,
+        totalResults: 215,
+      });
+      expect(paginationComponents.at(1).props()).toEqual({
+        pageSize: 76,
+        currentPage: 2,
+        totalPages: 3,
+        totalResults: 215,
+      });
+    });
+
+    it("updates search when search bar emits new-query event", async () => {
+      const SearchBarStub = {
+        template: "<div></div>",
+      };
+      const spy = (SearchPage as VueComponent).options.methods
+        .updateSearchResults;
+      // @ts-ignore
+      wrapperOptions.stubs.SearchBar = SearchBarStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.findComponent(SearchBarStub).vm.$emit("new-query", "query");
+
+      expect(spy).toBeCalledTimes(1);
+      expect(spy).toBeCalledWith("query");
+    });
+
+    it("calls goFoward when pagination element emits a goForward event", async () => {
+      const forwardSpy = jest
+        // @ts-ignore
+        .spyOn(SearchPage.options.methods, "goForward")
+        .mockImplementation();
+
+      const PaginationStub = {
+        template: "<div></div>",
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.Pagination = PaginationStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+      });
+
+      await wrapper
+        .findAllComponents(PaginationStub)
+        .at(0)
+        .vm.$emit("go-forward");
+
+      expect(forwardSpy).toBeCalledTimes(1);
+    });
+
+    it("calls goBack when pagination element emits a goBack event", async () => {
+      const forwardSpy = jest
+        // @ts-ignore
+        .spyOn(SearchPage.options.methods, "goBack")
+        .mockImplementation();
+
+      const PaginationStub = {
+        template: "<div></div>",
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.Pagination = PaginationStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+      });
+
+      await wrapper.findAllComponents(PaginationStub).at(0).vm.$emit("go-back");
+
+      expect(forwardSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe("parseSearchQuery", () => {
+    it("returns an empty string if no query is available", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const query = vm.parseSearchQuery();
+
+      expect(query).toBe("");
+    });
+
+    it("returns an empty string if query is not a string", async () => {
       // @ts-ignore
       $route.query.q = ["foo", "bar"];
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
-      jest.spyOn(vm, "updateSearchResults");
 
-      await vm.parseSearchQuery();
+      const query = vm.parseSearchQuery();
 
-      expect(vm.updateSearchResults).not.toBeCalled();
+      expect(query).toBe("");
     });
 
-    it("looks up combos with query", async () => {
+    it("returns query if it exists", async () => {
       $route.query.q = "card:Sydri";
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
-      jest.spyOn(vm, "updateSearchResults").mockImplementation();
 
-      mocked(spellbookApi.search).mockResolvedValue([]);
+      const query = vm.parseSearchQuery();
 
-      await vm.parseSearchQuery();
-
-      expect(vm.updateSearchResults).toBeCalledTimes(1);
-      expect(vm.updateSearchResults).toBeCalledWith("card:Sydri");
-    });
-
-    it("sets loaded to true when done populating results", async () => {
-      $route.query.q = "card:Sydri";
-
-      const wrapper = shallowMount(SearchPage, wrapperOptions);
-      const vm = wrapper.vm as VueComponent;
-      jest.spyOn(vm, "updateSearchResults").mockImplementation();
-
-      expect(vm.loaded).toBe(false);
-
-      await vm.parseSearchQuery();
-
-      expect(vm.loaded).toBe(true);
+      expect(query).toBe("card:Sydri");
     });
   });
 
@@ -410,6 +394,12 @@ describe("SearchPage", () => {
     beforeEach(() => {
       $route.query.q = "card:Arjun";
       window.scrollTo = jest.fn();
+      jest
+        .spyOn(
+          (SearchPage as VueComponent).options.methods,
+          "updateSearchResults"
+        )
+        .mockImplementation();
     });
 
     it("adds to specified number to page", () => {
