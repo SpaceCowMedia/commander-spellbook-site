@@ -1,14 +1,13 @@
 <template>
-  <div class="main-search-input-container">
+  <form class="main-search-input-container" @submit.prevent="onSubmit">
     <input
       v-model="query"
       type="text"
       class="main-search-input"
       :class="inputClass"
-      :placeholder="'Search ' + numberOfCombos + ' combos'"
-      @keydown.enter="onEnter"
+      :placeholder="`Search ${numberOfCombos} combos`"
     />
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
@@ -43,7 +42,7 @@ export default Vue.extend({
       const combos = await spellbookApi.search();
       this.numberOfCombos = String(combos.length);
     },
-    onEnter() {
+    onSubmit() {
       if (!this.query.trim()) {
         return;
       }

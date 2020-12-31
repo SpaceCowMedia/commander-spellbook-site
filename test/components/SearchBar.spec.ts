@@ -53,15 +53,15 @@ describe("SearchBar", () => {
     expect((wrapper.vm as VueComponent).query).toBe("");
   });
 
-  it("it triggers onEnter when enter key is pressed", async () => {
+  it("it triggers onSubmit when enter key is pressed", async () => {
     const wrapper = mount(SearchBar, wrapperOptions);
     const vm = wrapper.vm as VueComponent;
 
-    jest.spyOn(vm, "onEnter");
+    jest.spyOn(vm, "onSubmit");
 
-    await wrapper.find("input").trigger("keydown.enter");
+    await wrapper.find("form").trigger("submit");
 
-    expect(vm.onEnter).toBeCalledTimes(1);
+    expect(vm.onSubmit).toBeCalledTimes(1);
   });
 
   describe("lookupNumberOfCombos", () => {
@@ -83,11 +83,11 @@ describe("SearchBar", () => {
     });
   });
 
-  describe("onEnter", () => {
+  describe("onSubmit", () => {
     it("noops when there is no query", () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
-      (wrapper.vm as VueComponent).onEnter();
+      (wrapper.vm as VueComponent).onSubmit();
 
       expect($router.push).not.toBeCalled();
     });
@@ -97,7 +97,7 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "      " });
 
-      (wrapper.vm as VueComponent).onEnter();
+      (wrapper.vm as VueComponent).onSubmit();
 
       expect($router.push).not.toBeCalled();
     });
@@ -107,7 +107,7 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "card:Rashmi" });
 
-      (wrapper.vm as VueComponent).onEnter();
+      (wrapper.vm as VueComponent).onSubmit();
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith("/search?q=card:Rashmi");
@@ -121,7 +121,7 @@ describe("SearchBar", () => {
 
       await wrapper.setData({ query: "card:Rashmi" });
 
-      (wrapper.vm as VueComponent).onEnter();
+      (wrapper.vm as VueComponent).onSubmit();
 
       expect($router.push).not.toBeCalled();
       expect((wrapper.vm as VueComponent).$emit).toBeCalledTimes(1);
