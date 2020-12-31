@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!passwordsMatch" class="auth-required">
-      <div v-if="loaded" class="w-1/2 m-auto">
+      <div v-show="loaded" class="w-1/2 m-auto">
         <p class="mb-2">Enter Password</p>
         <input
           v-model="password"
@@ -13,7 +13,9 @@
         />
       </div>
     </div>
-    <slot v-show="passwordMatch" />
+    <div v-show="passwordsMatch">
+      <slot />
+    </div>
   </div>
 </template>
 
