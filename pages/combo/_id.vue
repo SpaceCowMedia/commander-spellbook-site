@@ -15,7 +15,7 @@
       <div class="w-1/3 text-center">
         <ColorIdentity :colors="colorIdentity" />
 
-        <ComboSidebarLinks />
+        <ComboSidebarLinks :combo-link="link" />
       </div>
     </div>
   </div>
@@ -33,6 +33,7 @@ type CardData = {
 
 type ComboData = {
   title: string;
+  link: string;
   loaded: boolean;
   comboNumber: string;
   cards: CardData[];
@@ -65,6 +66,7 @@ export default Vue.extend({
     return {
       comboNumber,
       title: `Combo Number ${comboNumber}`,
+      link: combo.permalink,
       cards,
       loaded: true,
       prerequisites: Array.from(combo.prerequisites),
@@ -76,6 +78,7 @@ export default Vue.extend({
   data(): ComboData {
     return {
       title: "Looking up Combo",
+      link: "",
       loaded: false,
       comboNumber: "0",
       cards: [],
