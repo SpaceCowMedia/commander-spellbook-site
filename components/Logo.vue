@@ -1,36 +1,34 @@
 <template>
-  <div>
-    <div class="spellbook-logo"></div>
-    <h1 class="title">commander spellbook</h1>
-    <h2 class="subtitle">Combo Database for EDH</h2>
+  <div class="mt-4 md:mt-0">
+    <div class="spellbook-logo h-24 w-24 md:h-48 md:w-48"></div>
+    <h1 class="title text-5xl md:text-6xl -mt-6 md:-mt-9 xl:-mt-14">
+      commander spellbook
+    </h1>
+    <h2 class="subtitle text-3xl xl:text-5xl">Combo Database for EDH</h2>
   </div>
 </template>
 
 <style scoped>
 .spellbook-logo {
-  margin: auto;
   background: url("~assets/images/spellbook-art-crop.jpg");
-  background-size: cover;
-  background-position: center;
-  @apply rounded-full overflow-hidden h-48 w-48;
+  @apply rounded-full overflow-hidden m-auto bg-cover bg-center;
 }
 
 .title {
   font-family: monospace;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
   color: #35495e;
-  letter-spacing: 1px;
-  @apply -mt-20;
+  @apply tracking-wide font-light block mb-6;
 }
 
 .subtitle {
-  font-weight: 300;
-  font-size: 42px;
   color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-  @apply -mt-5;
+  @apply -mt-5 font-light pb-2;
+}
+
+@media (min-width: 1280px) {
+  .title {
+    /* this is actually text-8xl, but the current verson of Nuxt doesn't support it */
+    font-size: 6rem;
+  }
 }
 </style>

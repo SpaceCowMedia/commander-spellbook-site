@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container md:h-screen">
       <div class="w-full">
         <Logo />
 
         <SearchBar class="md:w-2/3 h-20" input-class="text-2xl text-center" />
 
-        <div class="links">
+        <div class="links md:block flex flex-col">
           <nuxt-link to="/advanced-search" class="button--red">
             Advanced Search
           </nuxt-link>
@@ -59,8 +59,6 @@ export default Vue.extend({
 }
 */
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
-  @apply flex flex-col items-center justify-center text-center;
+  @apply flex flex-col items-center justify-center text-center m-auto;
 }
 </style>

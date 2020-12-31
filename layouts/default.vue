@@ -36,7 +36,7 @@ html {
   color: rgb(141, 54, 34);
   text-decoration: none;
   padding: 10px 30px;
-  @apply mb-4 mt-4;
+  @apply m-4;
 }
 
 .button--red:hover {
