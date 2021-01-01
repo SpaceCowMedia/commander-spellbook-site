@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="flex items-center h-full">
+      <div class="flex items-center flex-grow">
         <ColorIdentity :colors="r.colors" />
       </div>
     </nuxt-link>
