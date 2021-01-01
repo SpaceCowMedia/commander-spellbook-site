@@ -6,7 +6,7 @@
           :card-name="headingCardName"
           :artist="headingArtistName"
           class="mr-4 md:block hidden"
-          :size="28"
+          :size="7"
         />
         <h2 class="heading-title">{{ heading }}</h2>
       </div>

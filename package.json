@@ -25,15 +25,10 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
-    "@nuxtjs/axios": "^5.12.4",
-    "@nuxtjs/pwa": "^3.3.3",
-    "autoprefixer": "^10.1.0",
     "commander-spellbook": "^0.5.2",
     "core-js": "^3.8.1",
     "nuxt": "^2.14.12",
-    "postcss": "^8.2.2",
-    "scryfall-client": "^0.18.5",
-    "tailwindcss": "^2.0.2"
+    "scryfall-client": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

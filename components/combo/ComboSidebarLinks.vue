@@ -21,7 +21,7 @@
     />
     <div
       ref="copyNotification"
-      class="copy-combo-notification"
+      class="copy-combo-notification w-full md:w-1/2"
       :class="{ show: showCopyNotification }"
     >
       Combo link copied to your clipboard!
@@ -72,14 +72,19 @@ export default Vue.extend({
 }
 
 .hidden-combo-link-input {
-  @apply fixed -left-1/2 -top-1/2;
+  left: -25%;
+  top: -25%;
+  @apply fixed;
 }
 
 .copy-combo-notification {
-  @apply transition-all duration-1000 fixed -bottom-20 inset-x-1/3 m-auto p-4 bg-black text-white;
+  /* Tailwind 2 class: -bottom-20 */
+  bottom: -5rem;
+  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-4 bg-black text-white;
 }
 
 .copy-combo-notification.show {
-  @apply bottom-4;
+  /* Tailwind 2 class: bottom-4 */
+  bottom: 1rem;
 }
 </style>

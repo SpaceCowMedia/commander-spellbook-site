@@ -47,7 +47,7 @@ describe("SearchGuide", () => {
 
     expect(circle.props("artist")).toBe("Given Sur");
     expect(circle.props("cardName")).toBe("Card Name");
-    expect(circle.props("size")).toBe(28);
+    expect(circle.props("size")).toBe(7);
   });
 
   it("renders search snippets", () => {

@@ -1,4 +1,7 @@
 export default {
+  // Target (https://go.nuxtjs.dev/config-target)
+  target: "static",
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: "commander-spellbook-site",
@@ -30,18 +33,11 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    "@nuxtjs/axios",
-    // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa",
-  ],
+  modules: [],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-
-  target: "static",
 };

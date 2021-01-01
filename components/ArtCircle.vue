@@ -1,7 +1,6 @@
 <template>
   <div
     class="rounded-full bg-gray-400 bg-center bg-cover"
-    :class="computedClass"
     :style="computedStyle"
     :title="credit"
   ></div>
@@ -22,16 +21,15 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 64,
+      default: 16,
     },
   },
   computed: {
-    computedClass(): string {
-      return `h-${this.size} w-${this.size}`;
-    },
     computedStyle(): Record<string, string> {
       return {
         backgroundImage: `url('${this.imgSrc}')`,
+        height: `${this.size}rem`,
+        width: `${this.size}rem`,
       };
     },
     credit(): string {
