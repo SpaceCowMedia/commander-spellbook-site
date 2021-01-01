@@ -1,42 +1,30 @@
 <template>
-  <div
-    class="w-full sm:pt-32 sm:pb-32 flex content-center justify-center text-center"
+  <SplashPage
+    :title="title"
+    :flavor="flavor"
+    :pulse="!loaded"
+    art-circle-card-name="Frantic Search"
+    art-circle-artist-name="Jeff Miracola"
   >
-    <div :class="{ 'animate-pulse': !loaded }" class="mb-auto mt-auto p-10">
-      <h3 class="heading-title">
-        {{ title }}
-      </h3>
+    <div
+      class="no-combos-found-buttons"
+      :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }"
+    >
+      <p>
+        Your search didn’t match any combos. Adjust your search or try one of
+        the links below:
+      </p>
 
-      <ArtCircle
-        class="m-auto mt-4 mb-4"
-        card-name="Frantic Search"
-        artist="Jeff Miracola"
-      />
-
-      <div
-        class="no-combos-found-buttons"
-        :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }"
-      >
-        <p>
-          Your search didn’t match any combos. Adjust your search or try one of
-          the links below:
-        </p>
-
-        <div>
-          <nuxt-link to="/advanced-search" class="button--red">
-            Advanced Search
-          </nuxt-link>
-          <nuxt-link to="/syntax-guide" class="button--red">
-            Syntax Guide
-          </nuxt-link>
-        </div>
-      </div>
-
-      <div class="text-xs text-gray-600 w-1/2 m-auto">
-        <i class="flavor-text">{{ flavor }}</i>
+      <div>
+        <nuxt-link to="/advanced-search" class="button--red">
+          Advanced Search
+        </nuxt-link>
+        <nuxt-link to="/syntax-guide" class="button--red">
+          Syntax Guide
+        </nuxt-link>
       </div>
     </div>
-  </div>
+  </SplashPage>
 </template>
 
 <script lang="ts">
