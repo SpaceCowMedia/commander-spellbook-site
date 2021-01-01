@@ -1,7 +1,5 @@
-import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import NoCombosFound from "@/components/search/NoCombosFound.vue";
-
-import type { MountOptions } from "../../types";
 
 describe("NoCombosFound", () => {
   it("shows looking up combos state when not loaded", () => {

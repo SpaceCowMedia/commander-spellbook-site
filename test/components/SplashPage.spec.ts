@@ -1,10 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import SplashPage from "@/components/SplashPage.vue";
 
-import { mocked } from "ts-jest/utils";
-
-jest.mock("scryfall-client");
-
 describe("SplashPage", () => {
   it("passes along title and flavor", () => {
     const wrapper = shallowMount(SplashPage, {
@@ -16,8 +12,6 @@ describe("SplashPage", () => {
         flavor: "Flavor text",
       },
     });
-
-    const imgs = wrapper.findAll(".color-identity");
 
     expect(wrapper.find(".heading-title").text()).toBe("Title");
     expect(wrapper.find(".flavor-text").text()).toBe("Flavor text");

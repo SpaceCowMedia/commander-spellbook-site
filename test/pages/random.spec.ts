@@ -2,9 +2,8 @@ import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
 import RandomPage from "@/pages/random.vue";
 import spellbookApi from "commander-spellbook";
-import { mocked } from "ts-jest/utils";
 
-import type { MountOptions, Route, Router, VueComponent } from "../types";
+import type { Router } from "../types";
 
 describe("RandomPage", () => {
   let $router: Router;
@@ -21,7 +20,7 @@ describe("RandomPage", () => {
   });
 
   it("redirects to a random combo", async () => {
-    const wrapper = shallowMount(RandomPage, {
+    shallowMount(RandomPage, {
       mocks: {
         $router,
       },
