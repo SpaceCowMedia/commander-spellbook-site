@@ -13,7 +13,7 @@
             v-for="section in sections"
             :key="section.id"
             :href="'#' + section.id"
-            class="p-1 m-4 text-center block flex-grow rounded border-2 border-blue-100"
+            class="button--red flex-grow text-center"
           >
             <div>
               {{ section.text }}

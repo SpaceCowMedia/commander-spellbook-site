@@ -30,13 +30,10 @@ html {
 }
 
 .button--red {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid rgb(141, 54, 34);
+  border-color: rgb(141, 54, 34);
   color: rgb(141, 54, 34);
   text-decoration: none;
-  padding: 10px 30px;
-  @apply m-4;
+  @apply m-4 inline-block border py-2 px-3;
 }
 
 .button--red:hover {
