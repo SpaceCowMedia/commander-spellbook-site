@@ -77,7 +77,7 @@
       </p>
 
       <p>
-        The <code>coloridentity</code> paraameter accepts full color names like
+        The <code>coloridentity</code> parameter accepts full color names like
         <code>green</code> or the single character representations of the colors
         (<code>w</code>, <code>u</code>, <code>b</code>, <code>r</code>,
         <code>g</code>). You can use the names for color combinations such as
