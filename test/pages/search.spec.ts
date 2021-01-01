@@ -48,7 +48,6 @@ describe("SearchPage", () => {
         SearchBar: true,
         ComboResults: true,
         NoCombosFound: true,
-        LoadingCombos: true,
         Pagination: true,
       },
     };
@@ -68,14 +67,14 @@ describe("SearchPage", () => {
 
     it("starts in a loading state", () => {
       $route.query.q = "card:sydri";
-      const LoadingCombosStub = {
-        template: "<div></div>",
-      };
       const NoCombosStub = {
         template: "<div></div>",
+        props: {
+          loaded: {
+            type: Boolean,
+          },
+        },
       };
-      // @ts-ignore
-      wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
       // @ts-ignore
       wrapperOptions.stubs.NoCombosFound = NoCombosStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
@@ -83,19 +82,18 @@ describe("SearchPage", () => {
 
       expect(vm.loaded).toBe(false);
 
-      expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeTruthy();
-      expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
+      expect(wrapper.findComponent(NoCombosStub).props("loaded")).toBe(false);
     });
 
     it("shows no combos found when page has loaded but no results are available", async () => {
-      const LoadingCombosStub = {
-        template: "<div></div>",
-      };
       const NoCombosStub = {
         template: "<div></div>",
+        props: {
+          loaded: {
+            type: Boolean,
+          },
+        },
       };
-      // @ts-ignore
-      wrapperOptions.stubs.LoadingCombos = LoadingCombosStub;
       // @ts-ignore
       wrapperOptions.stubs.NoCombosFound = NoCombosStub;
       mocked(spellbookApi.search).mockResolvedValue([]);
@@ -105,8 +103,7 @@ describe("SearchPage", () => {
       // let mounting finish
       await Promise.resolve();
 
-      expect(wrapper.findComponent(LoadingCombosStub).exists()).toBeFalsy();
-      expect(wrapper.findComponent(NoCombosStub).exists()).toBeTruthy();
+      expect(wrapper.findComponent(NoCombosStub).props("loaded")).toBe(true);
     });
 
     it("shows combo results when page has loaded and results are available", async () => {

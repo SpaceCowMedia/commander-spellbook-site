@@ -3,33 +3,29 @@
     <SearchBar @new-query="updateSearchResults" />
 
     <div class="container max-w-5xl mx-auto sm:flex flex-row">
-      <div v-if="loaded">
-        <div v-if="paginatedResults.length > 0">
-          <Pagination
-            :page-size="maxNumberOfCombosPerPage"
-            :current-page="page"
-            :total-pages="totalPages"
-            :total-results="totalResults"
-            @go-forward="goForward"
-            @go-back="goBack"
-          />
+      <div v-if="paginatedResults.length > 0">
+        <Pagination
+          :page-size="maxNumberOfCombosPerPage"
+          :current-page="page"
+          :total-pages="totalPages"
+          :total-results="totalResults"
+          @go-forward="goForward"
+          @go-back="goBack"
+        />
 
-          <ComboResults :results="paginatedResults" />
+        <ComboResults :results="paginatedResults" />
 
-          <Pagination
-            :page-size="maxNumberOfCombosPerPage"
-            :current-page="page"
-            :total-pages="totalPages"
-            :total-results="totalResults"
-            @go-forward="goForward"
-            @go-back="goBack"
-          />
-        </div>
-
-        <NoCombosFound v-else />
+        <Pagination
+          :page-size="maxNumberOfCombosPerPage"
+          :current-page="page"
+          :total-pages="totalPages"
+          :total-results="totalResults"
+          @go-forward="goForward"
+          @go-back="goBack"
+        />
       </div>
 
-      <LoadingCombos v-else />
+      <NoCombosFound v-else :loaded="loaded" />
     </div>
   </div>
 </template>
