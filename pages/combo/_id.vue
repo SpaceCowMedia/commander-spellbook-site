@@ -13,7 +13,9 @@
       </div>
 
       <div class="w-1/3 text-center">
-        <ColorIdentity :colors="colorIdentity" />
+        <div class="my-4">
+          <ColorIdentity :colors="colorIdentity" />
+        </div>
 
         <ComboSidebarLinks :combo-link="link" />
       </div>

@@ -28,6 +28,6 @@ export default Vue.extend({
 
 <style scoped>
 .color-identity {
-  @apply m-2 mt-4 mb-4 inline-block w-10;
+  @apply m-2 inline-block w-10;
 }
 </style>
