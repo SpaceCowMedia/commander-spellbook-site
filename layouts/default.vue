@@ -2,9 +2,7 @@
   <div>
     <BetaMask>
       <Nuxt />
-      <footer class="footer">
-        <nuxt-link to="/syntax-guide"> Syntax Guide </nuxt-link>
-      </footer>
+      <Footer />
     </BetaMask>
   </div>
 </template>
@@ -53,10 +51,5 @@ html {
   .heading-title {
     @apply text-6xl mb-4;
   }
-}
-
-.footer {
-  background: rgb(92, 126, 159);
-  @apply w-full h-10 p-10 text-center;
 }
 </style>
