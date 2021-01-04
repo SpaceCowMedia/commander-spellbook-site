@@ -47,11 +47,12 @@ export default Vue.extend({
         return;
       }
 
-      if (this.$route.path === "/search") {
-        this.$emit("new-query", this.query);
-      } else {
-        this.$router.push(`/search?q=${this.query}`);
-      }
+      this.$router.push({
+        path: "search",
+        query: {
+          q: this.query,
+        },
+      });
     },
   },
 });

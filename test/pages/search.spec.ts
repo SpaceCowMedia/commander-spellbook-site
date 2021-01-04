@@ -218,20 +218,19 @@ describe("SearchPage", () => {
       });
     });
 
-    it("updates search when search bar emits new-query event", async () => {
+    it("updates search when query param `q` updates", async () => {
       const SearchBarStub = {
         template: "<div></div>",
       };
-      const spy = (SearchPage as VueComponent).options.methods
-        .updateSearchResults;
       // @ts-ignore
       wrapperOptions.stubs.SearchBar = SearchBarStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "onQueryChange").mockImplementation();
 
-      await wrapper.findComponent(SearchBarStub).vm.$emit("new-query", "query");
+      vm.$options.watch["$route.query.q"].call(wrapper.vm);
 
-      expect(spy).toBeCalledTimes(1);
-      expect(spy).toBeCalledWith("query");
+      expect(vm.onQueryChange).toBeCalledTimes(1);
     });
 
     it("calls goFoward when pagination element emits a goForward event", async () => {

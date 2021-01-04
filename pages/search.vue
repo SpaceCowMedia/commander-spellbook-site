@@ -81,20 +81,30 @@ export default Vue.extend({
       return results;
     },
   },
+  watch: {
+    "$route.query.q"(): void {
+      this.onQueryChange();
+    },
+  },
   async mounted(): Promise<void> {
-    const query = this.parseSearchQuery();
-    this.page = Number(this.$route.query.page) || 1;
-
-    if (!query) {
-      this.loaded = true;
-      return;
-    }
-
-    await this.updateSearchResults(query);
-
-    this.loaded = true;
+    await this.onQueryChange();
   },
   methods: {
+    async onQueryChange(): Promise<void> {
+      this.loaded = false;
+
+      const query = this.parseSearchQuery();
+      this.page = Number(this.$route.query.page) || 1;
+
+      if (!query) {
+        this.loaded = true;
+        return;
+      }
+
+      await this.updateSearchResults(query);
+
+      this.loaded = true;
+    },
     async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
       this.page = 1;

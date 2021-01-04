@@ -110,25 +110,12 @@ describe("SearchBar", () => {
       (wrapper.vm as VueComponent).onSubmit();
 
       expect($router.push).toBeCalledTimes(1);
-      expect($router.push).toBeCalledWith("/search?q=card:Rashmi");
-    });
-
-    it("dispatches event when on the search path", async () => {
-      $route.path = "/search";
-
-      const wrapper = mount(SearchBar, wrapperOptions);
-      jest.spyOn(wrapper.vm, "$emit");
-
-      await wrapper.setData({ query: "card:Rashmi" });
-
-      (wrapper.vm as VueComponent).onSubmit();
-
-      expect($router.push).not.toBeCalled();
-      expect((wrapper.vm as VueComponent).$emit).toBeCalledTimes(1);
-      expect((wrapper.vm as VueComponent).$emit).toBeCalledWith(
-        "new-query",
-        "card:Rashmi"
-      );
+      expect($router.push).toBeCalledWith({
+        path: "search",
+        query: {
+          q: "card:Rashmi",
+        },
+      });
     });
   });
 });
