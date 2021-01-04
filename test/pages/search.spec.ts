@@ -217,7 +217,7 @@ describe("SearchPage", () => {
       });
     });
 
-    it("updates search when query param `q` updates", async () => {
+    it("updates search when query param `q` updates", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
       jest.spyOn(vm, "onQueryChange").mockImplementation();
