@@ -25,7 +25,6 @@ describe("ComboPage", () => {
         ColorIdentity: true,
         ComboSidebarLinks: true,
         ComboResults: true,
-        SearchBar: true,
       },
     };
   });

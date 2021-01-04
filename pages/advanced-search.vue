@@ -1,7 +1,5 @@
 <template>
   <div>
-    <SearchBar />
-
     <div class="container">
       <h2 class="heading-title">Advanced Search</h2>
       <p>TODO: Intro text about how this works</p>

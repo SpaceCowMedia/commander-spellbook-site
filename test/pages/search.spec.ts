@@ -45,7 +45,6 @@ describe("SearchPage", () => {
         $router,
       },
       stubs: {
-        SearchBar: true,
         ComboResults: true,
         NoCombosFound: true,
         Pagination: true,
@@ -219,11 +218,6 @@ describe("SearchPage", () => {
     });
 
     it("updates search when query param `q` updates", async () => {
-      const SearchBarStub = {
-        template: "<div></div>",
-      };
-      // @ts-ignore
-      wrapperOptions.stubs.SearchBar = SearchBarStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
       jest.spyOn(vm, "onQueryChange").mockImplementation();

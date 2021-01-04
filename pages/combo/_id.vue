@@ -1,7 +1,5 @@
 <template>
   <div>
-    <SearchBar />
-
     <CardHeader :cards-art="cardArts" :title="title" />
 
     <div class="container max-w-5xl mx-auto md:flex flex-row">

@@ -19,7 +19,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -59,7 +58,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -76,7 +74,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -123,7 +120,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -171,7 +167,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -197,7 +192,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -223,7 +217,6 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -248,7 +241,6 @@ describe("AdvancedSearchPage", () => {
     it("toggles the state of the color identity when clicked", async () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: true,
         },
@@ -275,7 +267,6 @@ describe("AdvancedSearchPage", () => {
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: FakeMultiSearchInput,
         },
@@ -302,7 +293,6 @@ describe("AdvancedSearchPage", () => {
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: FakeMultiSearchInput,
         },
@@ -329,7 +319,6 @@ describe("AdvancedSearchPage", () => {
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: FakeMultiSearchInput,
         },
@@ -356,7 +345,6 @@ describe("AdvancedSearchPage", () => {
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          SearchBar: true,
           ColorIdentity: true,
           MultiSearchInput: FakeMultiSearchInput,
         },

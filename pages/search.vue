@@ -1,7 +1,5 @@
 <template>
   <div>
-    <SearchBar @new-query="updateSearchResults" />
-
     <div class="container max-w-5xl mx-auto sm:flex flex-row">
       <div v-if="paginatedResults.length > 0">
         <Pagination
