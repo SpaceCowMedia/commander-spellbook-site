@@ -1,0 +1,28 @@
+html {
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.heading-title {
+  font-family: monospace;
+  font-weight: 300;
+  color: #35495e;
+  @apply text-4xl;
+}
+
+.button--red {
+  border-color: rgb(141, 54, 34);
+  color: rgb(141, 54, 34);
+  @apply m-4 inline-block border py-2 px-3;
+}
+
+.button--red:hover {
+  color: #fff;
+  background-color: rgb(141, 54, 34);
+}
+
+@media (min-width: 640px) {
+  .heading-title {
+    @apply text-6xl mb-4;
+  }
+}
