@@ -24,6 +24,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  layout: "landing",
   mounted() {
     const query = this.$route.query.q;
     const status = this.$route.query.status;

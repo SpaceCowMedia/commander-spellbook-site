@@ -12,6 +12,8 @@ import Vue from "vue";
 import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
+  layout: "landing",
+
   async mounted(): Promise<void> {
     const randomCombo = await spellbookApi.random();
 
