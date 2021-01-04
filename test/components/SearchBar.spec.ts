@@ -111,7 +111,7 @@ describe("SearchBar", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "search",
+        path: "/search",
         query: {
           q: "card:Rashmi",
         },

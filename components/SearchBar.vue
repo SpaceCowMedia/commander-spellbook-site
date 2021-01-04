@@ -48,7 +48,7 @@ export default Vue.extend({
       }
 
       this.$router.push({
-        path: "search",
+        path: "/search",
         query: {
           q: this.query,
         },
