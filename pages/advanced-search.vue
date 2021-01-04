@@ -208,7 +208,7 @@ export default Vue.extend({
   @apply border-t w-full;
 }
 .container {
-  @apply max-w-5xl m-auto mt-6 mb-6 px-4;
+  @apply max-w-5xl m-auto pt-6 mb-6 px-4;
 }
 
 .subtitle {

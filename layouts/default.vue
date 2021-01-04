@@ -2,7 +2,9 @@
   <div>
     <BetaMask>
       <SearchBar />
-      <Nuxt />
+      <main>
+        <Nuxt />
+      </main>
       <Footer />
     </BetaMask>
   </div>
