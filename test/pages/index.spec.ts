@@ -21,6 +21,7 @@ describe("HomePage", () => {
         $router,
       },
       stubs: {
+        SearchBar: true,
         Logo: true,
         NuxtLink: true,
       },
