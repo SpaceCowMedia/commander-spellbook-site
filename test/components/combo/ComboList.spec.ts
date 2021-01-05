@@ -24,6 +24,30 @@ describe("ComboList", () => {
     expect(items.at(2).props("text")).toBe("Step 3");
   });
 
+  it("passes on cards in combo", () => {
+    const wrapper = shallowMount(ComboList, {
+      propsData: {
+        title: "My Title",
+        cardsInCombo: ["Card 1"],
+        iterations: ["Step 1", "Step 2", "Step 3"],
+      },
+    });
+
+    expect(wrapper.find(".combo-list-title").element.textContent).toBe(
+      "My Title"
+    );
+
+    const items = wrapper.findAllComponents(TextWithMagicSymbol);
+
+    expect(items.length).toBe(3);
+    expect(items.at(0).props("text")).toBe("Step 1");
+    expect(items.at(0).props("cardsInCombo")).toEqual(["Card 1"]);
+    expect(items.at(1).props("text")).toBe("Step 2");
+    expect(items.at(1).props("cardsInCombo")).toEqual(["Card 1"]);
+    expect(items.at(2).props("text")).toBe("Step 3");
+    expect(items.at(2).props("cardsInCombo")).toEqual(["Card 1"]);
+  });
+
   it("can set list to be numbered", () => {
     const wrapperWithoutNumbers = shallowMount(ComboList, {
       propsData: {

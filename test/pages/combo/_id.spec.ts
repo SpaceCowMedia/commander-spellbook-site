@@ -75,14 +75,7 @@ describe("ComboPage", () => {
   it("creates a combo list of the data", async () => {
     const ComboListStub = {
       template: "<div></div>",
-      props: {
-        iterations: {
-          type: Array,
-          default() {
-            return [];
-          },
-        },
-      },
+      props: ["cardsInCombo", "iterations"],
     };
     // @ts-ignore
     options.stubs.ComboList = ComboListStub;
@@ -109,9 +102,13 @@ describe("ComboPage", () => {
     const lists = wrapper.findAllComponents(ComboListStub);
 
     expect(lists.at(0).props("iterations")).toEqual(["Card 1", "Card 2"]);
+    expect(lists.at(0).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
     expect(lists.at(1).props("iterations")).toEqual(["pre 1", "pre 2"]);
+    expect(lists.at(1).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
     expect(lists.at(2).props("iterations")).toEqual(["step 1", "step 2"]);
+    expect(lists.at(2).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
     expect(lists.at(3).props("iterations")).toEqual(["result 1", "result 2"]);
+    expect(lists.at(3).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
   });
 
   it("adds a ColorIdentity component", async () => {

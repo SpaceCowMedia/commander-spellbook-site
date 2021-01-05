@@ -4,10 +4,28 @@
 
     <div class="container max-w-5xl mx-auto md:flex flex-row">
       <div class="w-2/3">
-        <ComboList title="Cards" :iterations="cardNames" />
-        <ComboList title="Prerequisites" :iterations="prerequisites" />
-        <ComboList title="Steps" :show-numbers="true" :iterations="steps" />
-        <ComboList title="Results" :iterations="results" />
+        <ComboList
+          title="Cards"
+          :iterations="cardNames"
+          :is-card="true"
+          :cards-in-combo="cardNames"
+        />
+        <ComboList
+          title="Prerequisites"
+          :iterations="prerequisites"
+          :cards-in-combo="cardNames"
+        />
+        <ComboList
+          title="Steps"
+          :show-numbers="true"
+          :iterations="steps"
+          :cards-in-combo="cardNames"
+        />
+        <ComboList
+          title="Results"
+          :iterations="results"
+          :cards-in-combo="cardNames"
+        />
       </div>
 
       <div class="w-1/3 text-center">
