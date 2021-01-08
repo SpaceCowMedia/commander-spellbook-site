@@ -6,7 +6,7 @@
           A variety of parameters can be used to search for combos.
         </p>
 
-        <div class="flex-none md:flex">
+        <div class="flex flex-col sm:flex-row">
           <a
             v-for="section in sections"
             :key="section.id"
