@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Commander Spellbook</ShortName>
+  <Description>Search Commander Spellbook by name</Description>
+  <Image width="32" height="32" type="image/x-icon">https://commanderspellbook.com/favicon/favicon-32x32.png</Image>
+  <Tags>Commander Spellbook - Combo Database for Commander (EDH)</Tags>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Url method="get" rel="results" type="text/html" template="https://commanderspellbook.com/?q={searchTerms}"/>
+  <Url rel="self" type="application/opensearchdescription+xml" template="https://commanderspellbook.com/favicon/opensearch.xml"/>
+  <Language>en</Language>
+  <InputEncoding>UTF-8</InputEncoding>
+</OpenSearchDescription>
