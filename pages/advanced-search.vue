@@ -204,9 +204,9 @@ export default Vue.extend({
 
 <style>
 .divider {
-  border-color: rgb(92, 126, 159);
-  @apply border-t w-full;
+  @apply border-t w-full bg-gray-400;
 }
+
 .container {
   @apply max-w-5xl m-auto pt-6 mb-6 px-4;
 }

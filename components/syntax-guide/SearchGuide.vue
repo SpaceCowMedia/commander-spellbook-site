@@ -74,6 +74,10 @@ export default Vue.extend({
   }
 }
 
+.search-guide:last-child {
+  @apply border-0;
+}
+
 code {
   color: rgb(92, 126, 159);
   @apply bg-gray-200 pl-1 pr-1;
