@@ -14,7 +14,7 @@ describe("ComboHomePage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      jest.spyOn(spellbookApi, "search").mockResolvedValue([
+      jest.spyOn(spellbookApi, "getAllCombos").mockResolvedValue([
         spellbookApi.makeFakeCombo({
           cards: ["card 1", "card 2"],
           commanderSpellbookId: "1",

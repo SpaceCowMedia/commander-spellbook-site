@@ -39,7 +39,8 @@ export default Vue.extend({
   },
   methods: {
     async lookupNumberOfCombos() {
-      const combos = await spellbookApi.search();
+      const combos = await spellbookApi.getAllCombos();
+
       this.numberOfCombos = String(combos.length);
     },
     onSubmit() {

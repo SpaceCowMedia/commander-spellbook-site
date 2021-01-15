@@ -69,7 +69,7 @@ describe("SearchBar", () => {
       const wrapper = mount(SearchBar, wrapperOptions);
       const mockCombo = spellbookApi.makeFakeCombo();
 
-      mocked(spellbookApi.search).mockResolvedValue([mockCombo]);
+      mocked(spellbookApi.getAllCombos).mockResolvedValue([mockCombo]);
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")

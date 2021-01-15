@@ -34,7 +34,8 @@ export default Vue.extend({
   },
   methods: {
     async lookupCombos() {
-      const combos = await spellbookApi.search();
+      const combos = await spellbookApi.getAllCombos();
+
       this.links.push(
         ...combos.map((c) => {
           return {

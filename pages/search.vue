@@ -38,6 +38,8 @@ type Data = {
   loaded: boolean;
   page: number;
   maxNumberOfCombosPerPage: number;
+  message: string;
+  errors: string;
   combos: ComboResult[];
 };
 
@@ -47,6 +49,8 @@ export default Vue.extend({
       loaded: false,
       page: 1,
       maxNumberOfCombosPerPage: 76,
+      message: "",
+      errors: "",
       combos: [],
     };
   },
@@ -105,13 +109,15 @@ export default Vue.extend({
     },
     async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
+      this.message = "";
+      this.errors = "";
       this.page = 1;
       this.$router.push({
         path: this.$route.path,
         query: { q: query },
       });
 
-      const combos = await spellbookApi.search(query);
+      const { message, errors, combos } = await spellbookApi.search(query);
 
       if (combos.length === 1) {
         this.$router.push({
@@ -121,6 +127,8 @@ export default Vue.extend({
         return;
       }
 
+      this.message = message;
+      this.errors = errors.map((e) => e.message).join(" ");
       this.combos = combos.map((c) => {
         return {
           names: c.cards.map((card) => card.name),
