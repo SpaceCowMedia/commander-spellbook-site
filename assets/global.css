@@ -8,6 +8,10 @@ main {
   @apply bg-white;
 }
 
+.container {
+  @apply max-w-5xl mx-auto;
+}
+
 .heading-title {
   font-family: monospace;
   font-weight: 300;

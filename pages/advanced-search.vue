@@ -202,13 +202,13 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .divider {
   @apply border-t w-full bg-gray-400;
 }
 
 .container {
-  @apply max-w-5xl m-auto pt-6 mb-6 px-4;
+  @apply pt-6 mb-6 px-4;
 }
 
 .subtitle {
