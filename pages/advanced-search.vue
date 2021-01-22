@@ -208,20 +208,10 @@ export default Vue.extend({
 }
 
 .container {
-  @apply pt-6 mb-6 px-4;
+  @apply pt-6 mb-6;
 }
 
 .subtitle {
   @apply font-light text-3xl;
-}
-
-.input {
-  border-color: rgb(92, 126, 159);
-  @apply appearance-none block bg-gray-200 text-gray-700 border py-2 px-4 leading-tight m-auto w-full max-w-5xl;
-}
-
-.input-button {
-  background: rgb(92, 126, 159);
-  @apply px-2 text-white flex flex-row items-center text-3xl;
 }
 </style>

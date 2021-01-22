@@ -1,6 +1,6 @@
 <template>
   <div :id="id" class="search-guide border-b-2 border-gray-400 w-full">
-    <div class="container max-w-5xl m-auto mt-6 mb-6 pb-4">
+    <div class="container mt-6 mb-6 pb-4">
       <div class="mt-4 mb-4 flex-none text-center md:flex items-center">
         <ArtCircle
           :card-name="headingCardName"

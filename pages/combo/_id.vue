@@ -2,7 +2,7 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" />
 
-    <div class="container max-w-5xl mx-auto md:flex flex-row">
+    <div class="container md:flex flex-row">
       <div class="w-2/3">
         <ComboList
           title="Cards"

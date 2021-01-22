@@ -9,7 +9,7 @@ main {
 }
 
 .container {
-  @apply max-w-5xl mx-auto;
+  @apply w-full max-w-5xl px-4 mx-auto;
 }
 
 .heading-title {

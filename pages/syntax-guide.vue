@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="border-b-2 border-gray-400 w-full">
-      <div class="container max-w-5xl m-auto py-6">
+      <div class="container py-6">
         <p class="pl-4 pr-4">
           A variety of parameters can be used to search for combos.
         </p>

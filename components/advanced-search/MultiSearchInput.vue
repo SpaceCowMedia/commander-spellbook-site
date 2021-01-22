@@ -3,12 +3,12 @@
     <div
       v-for="(input, index) in inputs"
       :key="`${label}-input-${index}`"
-      class="my-2 flex"
+      class="my-2 md:flex"
     >
-      <div class="w-1/3 flex-grow">
+      <div class="w-full md:w-1/3 flex-grow my-2 md:my-0">
         <span v-if="index === 0" class="input-label">{{ inputLabel }}</span>
       </div>
-      <div class="w-2/3 flex flex-row">
+      <div class="w-full md:w-2/3 flex flex-row">
         <input
           v-model="input.value"
           class="input"
@@ -92,5 +92,13 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-/* Styles here */
+.input {
+  border-color: rgb(92, 126, 159);
+  @apply appearance-none block bg-gray-200 text-gray-700 border py-2 px-4 leading-tight m-auto w-full;
+}
+
+.input-button {
+  background: rgb(92, 126, 159);
+  @apply px-2 text-white flex flex-row items-center text-3xl;
+}
 </style>
