@@ -1,12 +1,19 @@
 <template>
   <div>
-    <div class="container max-w-5xl mx-auto sm:flex flex-row">
+    <SearchMessage
+      :message="message"
+      :errors="errors"
+      :current-page="page"
+      :totalPages="totalPages"
+      :maxNumberOfCombosPerPage="maxNumberOfCombosPerPage"
+      :totalResults="totalResults"
+    />
+
+    <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0">
         <Pagination
-          :page-size="maxNumberOfCombosPerPage"
           :current-page="page"
           :total-pages="totalPages"
-          :total-results="totalResults"
           @go-forward="goForward"
           @go-back="goBack"
         />
@@ -14,10 +21,8 @@
         <ComboResults :results="paginatedResults" />
 
         <Pagination
-          :page-size="maxNumberOfCombosPerPage"
           :current-page="page"
           :total-pages="totalPages"
-          :total-results="totalResults"
           @go-forward="goForward"
           @go-back="goBack"
         />
@@ -81,6 +86,22 @@ export default Vue.extend({
       }
 
       return results;
+    },
+    firstResult(): number {
+      return (
+        this.page * this.maxNumberOfCombosPerPage -
+        this.maxNumberOfCombosPerPage +
+        1
+      );
+    },
+    lastResult(): number {
+      const finalResult = this.firstResult + this.maxNumberOfCombosPerPage - 1;
+
+      if (finalResult > this.totalResults) {
+        return this.totalResults;
+      }
+
+      return finalResult;
     },
   },
   watch: {

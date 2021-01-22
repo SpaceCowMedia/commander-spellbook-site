@@ -22,23 +22,6 @@
         Previous
       </button>
 
-      <div class="flex-1 items-center justify-center hidden sm:inline-flex">
-        <p class="text-sm text-gray-700">
-          <span v-if="totalResults <= pageSize" class="simple-result-message">
-            <span class="font-medium">{{ totalResults }}</span> results
-          </span>
-          <span v-else class="complex-result-message">
-            Showing
-            <span class="font-medium">{{ firstResult }}</span>
-            -
-            <span class="font-medium">{{ lastResult }}</span>
-            of
-            <span class="font-medium">{{ totalResults }}</span>
-            results
-          </span>
-        </p>
-      </div>
-
       <button
         class="forward-button nav-button"
         :class="{ invisible: currentPage >= totalPages }"
@@ -68,10 +51,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   props: {
-    pageSize: {
-      type: Number,
-      default: 1,
-    },
     currentPage: {
       type: Number,
       default: 1,
@@ -79,24 +58,6 @@ export default Vue.extend({
     totalPages: {
       type: Number,
       default: 1,
-    },
-    totalResults: {
-      type: Number,
-      default: 1,
-    },
-  },
-  computed: {
-    firstResult(): number {
-      return this.currentPage * this.pageSize - this.pageSize + 1;
-    },
-    lastResult(): number {
-      const finalResult = this.firstResult + this.pageSize - 1;
-
-      if (finalResult > this.totalResults) {
-        return this.totalResults;
-      }
-
-      return finalResult;
     },
   },
   methods: {

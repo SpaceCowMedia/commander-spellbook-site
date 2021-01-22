@@ -50,6 +50,7 @@ describe("SearchPage", () => {
       },
       stubs: {
         ComboResults: true,
+        SearchMessage: true,
         NoCombosFound: true,
         Pagination: true,
       },
@@ -157,16 +158,60 @@ describe("SearchPage", () => {
       ]);
     });
 
+    it("shows search message", async () => {
+      const SearchMessageStub = {
+        template: "<div></div>",
+        props: [
+          "message",
+          "errors",
+          "currentPage",
+          "totalPages",
+          "maxNumberOfCombosPerPage",
+          "totalResults",
+        ],
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.SearchMessage = SearchMessageStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      // add a large number of combos
+      "x"
+        .repeat(213)
+        .split("")
+        .forEach((value, index) => {
+          fakeCombos.push({
+            names: [value],
+            colors: ["u", "g"],
+            results: ["result x", "result y"],
+            id: String(index + 2),
+          });
+        });
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+        message: "some message",
+        errors: "some errors",
+      });
+
+      const searchMessageComponent = wrapper.findComponent(SearchMessageStub);
+
+      expect(searchMessageComponent.props()).toEqual({
+        message: "some message",
+        errors: "some errors",
+        currentPage: 1,
+        totalPages: 3,
+        maxNumberOfCombosPerPage: 76,
+        totalResults: 215,
+      });
+    });
+
     it("shows pagination for results", async () => {
       const PaginationStub = {
         template: "<div></div>",
         props: {
-          pageSize: Number,
           currentPage: Number,
           totalPages: Number,
-          firstResult: Number,
-          lastResult: Number,
-          totalResults: Number,
         },
       };
       // @ts-ignore
@@ -195,16 +240,12 @@ describe("SearchPage", () => {
 
       expect(paginationComponents.length).toBe(2);
       expect(paginationComponents.at(0).props()).toEqual({
-        pageSize: 76,
         currentPage: 1,
         totalPages: 3,
-        totalResults: 215,
       });
       expect(paginationComponents.at(1).props()).toEqual({
-        pageSize: 76,
         currentPage: 1,
         totalPages: 3,
-        totalResults: 215,
       });
 
       await wrapper.setData({
@@ -212,16 +253,12 @@ describe("SearchPage", () => {
       });
 
       expect(paginationComponents.at(0).props()).toEqual({
-        pageSize: 76,
         currentPage: 2,
         totalPages: 3,
-        totalResults: 215,
       });
       expect(paginationComponents.at(1).props()).toEqual({
-        pageSize: 76,
         currentPage: 2,
         totalPages: 3,
-        totalResults: 215,
       });
     });
 
