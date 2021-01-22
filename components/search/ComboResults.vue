@@ -65,6 +65,14 @@ export default Vue.extend({
 }
 
 .combo-result {
-  @apply block m-4 rounded border-2 border-gray-300 flex-grow flex flex-col content-center;
+  @apply block my-4 rounded border-2 border-gray-300 flex-grow flex flex-col content-center;
+}
+
+.combo-result:nth-child(odd) {
+  @apply mr-2;
+}
+
+.combo-result:nth-child(even) {
+  @apply ml-2;
 }
 </style>
