@@ -4,9 +4,9 @@
       :message="message"
       :errors="errors"
       :current-page="page"
-      :totalPages="totalPages"
-      :maxNumberOfCombosPerPage="maxNumberOfCombosPerPage"
-      :totalResults="totalResults"
+      :total-pages="totalPages"
+      :max-number-of-combos-per-page="maxNumberOfCombosPerPage"
+      :total-results="totalResults"
     />
 
     <div class="container sm:flex flex-row">
