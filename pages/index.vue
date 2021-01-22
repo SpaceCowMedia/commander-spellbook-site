@@ -4,7 +4,11 @@
       <div class="w-full">
         <Logo />
 
-        <SearchBar class="md:w-2/3 h-20" input-class="text-2xl text-center" />
+        <SearchBar
+          :include-logo="false"
+          class="md:w-2/3 h-20"
+          input-class="text-2xl text-center"
+        />
 
         <div class="links md:block flex flex-col">
           <nuxt-link to="/advanced-search" class="button--red">

@@ -20,6 +20,10 @@ describe("SearchBar", () => {
       push: jest.fn(),
     };
     wrapperOptions = {
+      stubs: {
+        ArtCircle: true,
+        NuxtLink: true,
+      },
       mocks: {
         $route,
         $router,
@@ -62,6 +66,26 @@ describe("SearchBar", () => {
     await wrapper.find("form").trigger("submit");
 
     expect(vm.onSubmit).toBeCalledTimes(1);
+  });
+
+  it("can opt out of logo link", async () => {
+    const NuxtLinkStub = {
+      props: ["to"],
+      template: "<div></div>",
+    };
+    // @ts-ignore
+    wrapperOptions.stubs.NuxtLink = NuxtLinkStub;
+    const wrapper = mount(SearchBar, wrapperOptions);
+
+    const link = wrapper.findComponent(NuxtLinkStub);
+
+    expect(link.props("to")).toBe("/");
+
+    await wrapper.setProps({
+      includeLogo: false,
+    });
+
+    expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
   });
 
   describe("lookupNumberOfCombos", () => {

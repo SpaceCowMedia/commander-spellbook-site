@@ -1,13 +1,26 @@
 <template>
-  <form class="main-search-input-container" @submit.prevent="onSubmit">
-    <input
-      v-model="query"
-      type="text"
-      class="main-search-input"
-      :class="inputClass"
-      :placeholder="`Search ${numberOfCombos} combos`"
-    />
-  </form>
+  <div class="outer-container">
+    <form
+      class="main-search-input-container container h-full"
+      @submit.prevent="onSubmit"
+    >
+      <nuxt-link
+        v-if="includeLogo"
+        to="/"
+        class="block mr-2 flex-grow py-1 px-2 border-r border-l border-gray-400"
+      >
+        <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
+      </nuxt-link>
+      <input
+        v-model="query"
+        type="text"
+        class="main-search-input"
+        name="q"
+        :class="inputClass"
+        :placeholder="`Search ${numberOfCombos} combos`"
+      />
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,6 +29,10 @@ import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
   props: {
+    includeLogo: {
+      type: Boolean,
+      default: true,
+    },
     inputClass: {
       type: String,
       default: "text-lg",
@@ -38,12 +55,12 @@ export default Vue.extend({
     }
   },
   methods: {
-    async lookupNumberOfCombos() {
+    async lookupNumberOfCombos(): Promise<void> {
       const combos = await spellbookApi.getAllCombos();
 
       this.numberOfCombos = String(combos.length);
     },
-    onSubmit() {
+    onSubmit(): void {
       if (!this.query.trim()) {
         return;
       }
@@ -60,12 +77,16 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.outer-container {
+  @apply bg-gray-200 border border-gray-200 mx-auto;
+}
+
 .main-search-input-container {
-  @apply bg-gray-200 flex m-auto;
+  @apply flex m-auto;
 }
 
 .main-search-input {
-  @apply appearance-none block h-12 bg-gray-200 text-gray-700 border border-gray-200 py-2 px-4 leading-tight m-auto w-full max-w-5xl;
+  @apply appearance-none block h-full bg-gray-200 text-gray-700 py-2 leading-tight w-full;
 }
 
 .main-search-input:focus {
