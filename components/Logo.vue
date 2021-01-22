@@ -1,6 +1,11 @@
 <template>
   <div class="mt-4 md:mt-0">
-    <div class="spellbook-logo h-24 w-24 md:h-48 md:w-48"></div>
+    <ArtCircle
+      class="m-auto"
+      :size="12"
+      card-name="Spellbook"
+      artist="Ciruelo"
+    />
     <h1 class="title text-5xl md:text-6xl -mt-6 md:-mt-9 xl:-mt-14">
       commander spellbook
     </h1>
