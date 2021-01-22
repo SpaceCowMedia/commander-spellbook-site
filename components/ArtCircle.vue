@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="rounded-full bg-gray-400 bg-center bg-cover"
-    :style="computedStyle"
-    :title="credit"
-  ></div>
+  <div class="art-circle" :style="computedStyle" :title="credit"></div>
 </template>
 
 <script lang="ts">
@@ -43,5 +39,8 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-/* TODO */
+.art-circle {
+  image-rendering: crisp-edges;
+  @apply rounded-full bg-gray-400 bg-center bg-cover;
+}
 </style>
