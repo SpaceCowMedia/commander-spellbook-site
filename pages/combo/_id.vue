@@ -3,7 +3,7 @@
     <CardHeader :cards-art="cardArts" :title="title" />
 
     <div class="container md:flex flex-row">
-      <div class="w-2/3">
+      <div class="w-full sm:w-2/3">
         <ComboList
           title="Cards"
           :iterations="cardNames"
@@ -28,7 +28,7 @@
         />
       </div>
 
-      <div class="w-1/3 text-center">
+      <div class="w-full sm:w-1/3 text-center">
         <div class="my-4">
           <ColorIdentity :colors="colorIdentity" />
         </div>
