@@ -69,10 +69,20 @@ export default Vue.extend({
 }
 
 .combo-result:nth-child(odd) {
-  @apply mr-2;
+  @apply mr-0;
 }
 
 .combo-result:nth-child(even) {
-  @apply ml-2;
+  @apply ml-0;
+}
+
+@media (min-width: 640px) {
+  .combo-result:nth-child(odd) {
+    @apply mr-2;
+  }
+
+  .combo-result:nth-child(even) {
+    @apply ml-2;
+  }
 }
 </style>
