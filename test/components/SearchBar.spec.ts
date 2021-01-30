@@ -31,7 +31,7 @@ describe("SearchBar", () => {
     };
   });
 
-  it("can set an classes on the input", () => {
+  it("can set classes on the input", () => {
     wrapperOptions!.propsData = {
       inputClass: "custom class names",
     };
