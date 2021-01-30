@@ -44,17 +44,14 @@ describe("SearchBar", () => {
 
   it("sets query from the query param if available", () => {
     $route.query.q = "card:sydri";
-    const wrapper = mount(SearchBar, wrapperOptions);
-
-    expect((wrapper.vm as VueComponent).query).toBe("card:sydri");
-  });
-
-  it("does not set query if it is not a string", () => {
     // @ts-ignore
-    $route.query.q = ["card:sydri"];
+    jest.spyOn(SearchBar.options.methods, "setQueryFromUrl");
     const wrapper = mount(SearchBar, wrapperOptions);
+    const vm = wrapper.vm as VueComponent;
 
-    expect((wrapper.vm as VueComponent).query).toBe("");
+    expect(vm.query).toBe("card:sydri");
+    // @ts-ignore
+    expect(SearchBar.options.methods.setQueryFromUrl).toBeCalledTimes(1);
   });
 
   it("it triggers onSubmit when enter key is pressed", async () => {
@@ -140,6 +137,52 @@ describe("SearchBar", () => {
           q: "card:Rashmi",
         },
       });
+    });
+  });
+
+  describe("setQueryFromUrl", () => {
+    it("sets query to empty string when there is no query in url", () => {
+      const wrapper = mount(SearchBar, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        query: "foo",
+      });
+
+      vm.setQueryFromUrl();
+
+      expect(vm.query).toBe("");
+    });
+
+    it("sets query to empty string when the query in the url is not a string", () => {
+      const wrapper = mount(SearchBar, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      // @ts-ignore
+      $route.query.q = ["card:sydri"];
+
+      wrapper.setData({
+        query: "foo",
+      });
+
+      vm.setQueryFromUrl();
+
+      expect(vm.query).toBe("");
+    });
+
+    it("sets query to query string when the query in the url is a string", () => {
+      const wrapper = mount(SearchBar, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      $route.query.q = "some-query";
+
+      wrapper.setData({
+        query: "foo",
+      });
+
+      vm.setQueryFromUrl();
+
+      expect(vm.query).toBe("some-query");
     });
   });
 });

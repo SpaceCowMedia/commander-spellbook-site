@@ -47,18 +47,28 @@ export default Vue.extend({
   async fetch() {
     await this.lookupNumberOfCombos();
   },
+  watch: {
+    "$route.query.q"(): void {
+      this.setQueryFromUrl();
+    },
+  },
   mounted() {
-    const query = this.$route.query.q;
-
-    if (typeof query === "string") {
-      this.query = query;
-    }
+    this.setQueryFromUrl();
   },
   methods: {
     async lookupNumberOfCombos(): Promise<void> {
       const combos = await spellbookApi.getAllCombos();
 
       this.numberOfCombos = String(combos.length);
+    },
+    setQueryFromUrl() {
+      const query = this.$route.query.q;
+
+      if (typeof query === "string") {
+        this.query = query;
+      } else {
+        this.query = "";
+      }
     },
     onSubmit(): void {
       if (!this.query.trim()) {
