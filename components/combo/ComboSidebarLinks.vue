@@ -9,9 +9,13 @@
       Copy Combo Link
     </button>
 
-    <br />
-    <br />
-    <p>Additional utilities here</p>
+    <div id="has-similiar-combos" v-if="hasSimiliarCombos">
+      <nuxt-link :to="similiarCombosLink">
+        <button class="combo-button">
+          Find Other Combos Using These Cards
+        </button>
+      </nuxt-link>
+    </div>
 
     <input
       ref="copyInput"
@@ -30,10 +34,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
+import spellbookApi from "commander-spellbook";
+
 export default Vue.extend({
   props: {
+    cards: {
+      type: Array as PropType<string[]>,
+      default() {
+        return [];
+      },
+    },
     comboLink: {
+      type: String,
+      default: "",
+    },
+    id: {
       type: String,
       default: "",
     },
@@ -41,7 +57,23 @@ export default Vue.extend({
   data() {
     return {
       showCopyNotification: false,
+      hasSimiliarCombos: false,
     };
+  },
+  async fetch() {
+    await this.lookupSimiliarCombos();
+  },
+
+  computed: {
+    similiarSearchString(): string {
+      return this.cards.reduce((accum, name) => {
+        // TODO support single quote
+        return accum + ` card="${name}"`;
+      }, `-id:${this.id}`);
+    },
+    similiarCombosLink(): string {
+      return `/search?q=${encodeURIComponent(this.similiarSearchString)}`;
+    },
   },
   methods: {
     copyComboLink(): void {
@@ -58,13 +90,18 @@ export default Vue.extend({
         (this.$refs.copyButton as HTMLButtonElement).blur();
       });
     },
+    async lookupSimiliarCombos(): Promise<void> {
+      const result = await spellbookApi.search(this.similiarSearchString);
+
+      this.hasSimiliarCombos = result.combos.length > 0;
+    },
   },
 });
 </script>
 
 <style scoped>
 .combo-button {
-  @apply bg-white  text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
+  @apply w-full bg-white block mx-auto mb-4 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
 }
 
 .combo-button:hover {

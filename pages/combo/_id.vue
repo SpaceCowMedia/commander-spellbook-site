@@ -33,7 +33,11 @@
           <ColorIdentity :colors="colorIdentity" />
         </div>
 
-        <ComboSidebarLinks :combo-link="link" />
+        <ComboSidebarLinks
+          :combo-link="link"
+          :id="comboNumber"
+          :cards="cardNames"
+        />
       </div>
     </div>
   </div>
