@@ -43,11 +43,11 @@
       </p>
       <p>
         You can lookup longer names for cards by using the
-        <code>card:</code> key with single (<code>'</code>) or double
-        (<code>"</code>) quotes. This will find combos that contain cards with
-        names that include the whole phrase. For instance,
-        <code>card:dream</code>, will include combos that contain the card
-        Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
+        <code>card:</code> or <code>cards:</code> keys with single
+        (<code>'</code>) or double (<code>"</code>) quotes. This will find
+        combos that contain cards with names that include the whole phrase. For
+        instance, <code>card:dream</code>, will include combos that contain the
+        card Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
         <code>card:"dream stalk"</code> is used, then only combos that contain
         Dream Stalker wil lbe displayed.
       </p>
@@ -58,6 +58,11 @@
       <p>
         Use <code>-card:</code> To find combos that do not include a certain
         card.
+      </p>
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of cards.
       </p>
     </SearchGuide>
 
@@ -114,6 +119,12 @@
       </p>
 
       <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of prerequisites.
+      </p>
+
+      <p>
         Aliases for <code>prerequisites</code> are <code>prerequisite</code> and
         <code>pre</code>.
       </p>
@@ -135,6 +146,12 @@
         steps with the value passed.
       </p>
 
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of steps.
+      </p>
+
       <p>An alias for <code>steps</code> is <code>step</code>.</p>
     </SearchGuide>
 
@@ -152,6 +169,12 @@
       <p>
         You can also use <code>-results:</code> to find combos that do not
         contain results with the value passed.
+      </p>
+
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of results.
       </p>
 
       <p>An alias for <code>results</code> is <code>result</code>.</p>
@@ -203,6 +226,11 @@ export default Vue.extend({
           description:
             'Combos that contain card with the exact name "sydri, galvanic genius"',
         },
+        {
+          search: "cards>2 cards<=5",
+          description:
+            "Combos that contain more than 2 cards but no greater than 5 cards",
+        },
       ],
       colorIdentitySnippets: [
         {
@@ -232,14 +260,13 @@ export default Vue.extend({
             'Combos that include the word "infinite" in one of the results.',
         },
         {
-          search: 'result:"win the game"',
+          search: 'result:"win the game" -result:infinite',
           description:
-            'Combos that include the phrase "win the game" in one of the results.',
+            'Combos that include the phrase "win the game" and do not include the word "infinite" in any of the results.',
         },
         {
-          search: '-result:"win the game"',
-          description:
-            'Combos that do not include the phrase "win the game" in one of the results.',
+          search: "result=3",
+          description: "Combos that include exactly 3 results.",
         },
       ],
       prerequisiteSnippets: [
@@ -254,9 +281,8 @@ export default Vue.extend({
             'Combos that include the phrase "mana to cast it" in one of the prerequisites and no prerequisite with the word "permanent".',
         },
         {
-          search: "-pre:mana",
-          description:
-            'Combos that do not include the word "mana" in one of the prerequisites.',
+          search: "pre<=3",
+          description: "Combos that have no more than 3 prerequisites.",
         },
       ],
       stepSnippets: [
@@ -271,9 +297,8 @@ export default Vue.extend({
             'Combos that include the phrase "mill target opponent" in one of the steps.',
         },
         {
-          search: "-step:permanent",
-          description:
-            'Combos that do not include the word "permanent" in one of the steps.',
+          search: "steps>6",
+          description: "Combos that contain greater than 6 steps.",
         },
       ],
     };
