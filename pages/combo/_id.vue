@@ -34,8 +34,8 @@
         </div>
 
         <ComboSidebarLinks
+          :combo-id="comboNumber"
           :combo-link="link"
-          :id="comboNumber"
           :cards="cardNames"
         />
       </div>

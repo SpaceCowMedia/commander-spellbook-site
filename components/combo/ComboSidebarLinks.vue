@@ -9,7 +9,7 @@
       Copy Combo Link
     </button>
 
-    <div id="has-similiar-combos" v-if="hasSimiliarCombos">
+    <div v-if="hasSimiliarCombos" id="has-similiar-combos">
       <nuxt-link :to="similiarCombosLink">
         <button class="combo-button">
           Find Other Combos Using These Cards
@@ -49,7 +49,7 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-    id: {
+    comboId: {
       type: String,
       default: "",
     },
@@ -69,7 +69,7 @@ export default Vue.extend({
       return this.cards.reduce((accum, name) => {
         // TODO support single quote
         return accum + ` card="${name}"`;
-      }, `-id:${this.id}`);
+      }, `-id:${this.comboId}`);
     },
     similiarCombosLink(): string {
       return `/search?q=${encodeURIComponent(this.similiarSearchString)}`;

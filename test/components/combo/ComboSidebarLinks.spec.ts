@@ -31,7 +31,7 @@ describe("ComboSidebarLinks", () => {
       },
       propsData: {
         comboLink: "https://example.com/combo/3",
-        id: "fake-id",
+        comboId: "fake-id",
         cards: ["card 1", "card 2"],
       },
     });
@@ -102,7 +102,7 @@ describe("ComboSidebarLinks", () => {
       const wrapper = shallowMount(ComboSidebarLinks, {
         propsData: {
           comboLink: "https://example.com/combo/3",
-          id: "fake-id",
+          comboId: "fake-id",
           cards: ["card 1", "card 2"],
         },
       });
@@ -120,7 +120,7 @@ describe("ComboSidebarLinks", () => {
       const wrapper = shallowMount(ComboSidebarLinks, {
         propsData: {
           comboLink: "https://example.com/combo/3",
-          id: "fake-id",
+          comboId: "fake-id",
           cards: ["card 1", "card 2"],
         },
       });
