@@ -8,7 +8,9 @@
         :src="item.value"
       />
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
-        <span>{{ item.value }}</span>
+        <a :href="getLinkFromCardName(item.value)" target="_blank">{{
+          item.value
+        }}</a>
       </CardTooltip>
       <span v-else class="text">{{ item.value }}</span>
     </span>
@@ -75,6 +77,19 @@ export default Vue.extend({
             value,
           };
         });
+    },
+  },
+  methods: {
+    getLinkFromCardName(cardName: string): string {
+      let quotes = "%22";
+
+      if (cardName.includes('"')) {
+        quotes = "%27";
+      }
+
+      return `https://scryfall.com/search?q=name%3D${quotes}${encodeURIComponent(
+        cardName
+      )}${quotes}`;
     },
   },
 });

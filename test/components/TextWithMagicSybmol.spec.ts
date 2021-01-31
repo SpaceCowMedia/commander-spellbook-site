@@ -41,7 +41,7 @@ describe("TextWithMagicSymbol", () => {
 
   it("renders cards", () => {
     const CardTooltipStub = {
-      template: "<div></div>",
+      template: "<div><slot /></div>",
       props: ["cardName"],
     };
     const wrapper = mount(TextWithMagicSymbol, {
@@ -57,6 +57,9 @@ describe("TextWithMagicSymbol", () => {
     const tooltip = wrapper.findComponent(CardTooltipStub);
 
     expect(tooltip.props("cardName")).toBe("Card Name 1");
+    expect((tooltip.find("a").element as HTMLAnchorElement).href).toBe(
+      "https://scryfall.com/search?q=name%3D%22Card%20Name%201%22"
+    );
   });
 
   it("renders text, cards and images together", () => {
