@@ -179,6 +179,74 @@
 
       <p>An alias for <code>results</code> is <code>result</code>.</p>
     </SearchGuide>
+
+    <SearchGuide
+      heading="Id"
+      heading-card-name="Fractured Identity"
+      heading-artist-name="Yongjae Choi"
+      :snippets="idSnippets"
+    >
+      <p>
+        You can also search by <code>id:</code> if you want to find a specific
+        combo by its id. Using more than one <code>id:</code> will result in a
+        query error.
+      </p>
+
+      <p>
+        A more useful parameter to use is <code>-id:</code>, to more easilly
+        omit certain combos. For instance, for finding all combos using Basalt
+        Monolith and Mesmeric Orb except
+        <nuxt-link to="/combo/450">combo 450</nuxt-link>.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Spoiled"
+      heading-card-name="Spoils of Adventure"
+      heading-artist-name="Zezhou Chen"
+      :snippets="spoiledSnippets"
+    >
+      <p>
+        By default, combo results will include combos that contain cards that
+        have been newly previewed and are <em>technically</em> not yet legal in
+        Commander. To exclude these combos, use <code>exclude:spoiled</code> or
+        <code>exclude:previewed</code>.
+      </p>
+
+      <p>
+        To find combos that contain cards that are not yet legal in Commander,
+        use <code>is:spoiled</code> or <code>is:previewed</code>.
+      </p>
+
+      <p>
+        To find combos that contain <em>no</em> cards that are not yet legal in
+        Commander, use <code>not:spoiled</code> or
+        <code>not:previewed</code> instead.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Banned"
+      heading-card-name="Leovold, Emissary of Trest"
+      heading-artist-name="Magali Villeneuve"
+      :snippets="bannedSnippets"
+    >
+      <p>
+        By default, combo results will not include combos that contain cards
+        that are banned in Commander. Use <code>include:banned</code> to allow
+        combo results that are banned in Commander.
+      </p>
+
+      <p>
+        To find specific combos that contain cards that are banned in Commander,
+        use <code>is:banned</code>.
+      </p>
+
+      <p>
+        To find combos that contain <em>no</em> cards that are banned in
+        Commander, use <code>not:banned</code> instead.
+      </p>
+    </SearchGuide>
   </div>
 </template>
 
@@ -299,6 +367,41 @@ export default Vue.extend({
         {
           search: "steps>6",
           description: "Combos that contain greater than 6 steps.",
+        },
+      ],
+      idSnippets: [
+        {
+          search: "id:450",
+          description: "The combo for Basalt Monolith and Mesmeric Orb.",
+        },
+        {
+          search: '-id:450 card="Basalt Monolith" card="Mesmeric Orb"',
+          description:
+            "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
+        },
+      ],
+      spoiledSnippets: [
+        {
+          search: "exclude:spoiled",
+          description:
+            "Exclude any combos that contain cards that are not legal in Commander (yet).",
+        },
+        {
+          search: "is:previewed",
+          description:
+            "Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)",
+        },
+      ],
+      bannedSnippets: [
+        {
+          search: "include:banned",
+          description:
+            "Include any combos that contain cards that are banned in Commander.",
+        },
+        {
+          search: "is:banned",
+          description:
+            "Combos that contain at least one card that is banned in Commander.",
         },
       ],
     };
