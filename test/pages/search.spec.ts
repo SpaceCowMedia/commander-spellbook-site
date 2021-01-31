@@ -563,4 +563,51 @@ describe("SearchPage", () => {
       expect(spy).toBeCalledWith(-1);
     });
   });
+
+  describe("updatePageFromQuery", () => {
+    it("defaults page to 1 when it is not present in the query", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      delete $route.query.page;
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(1);
+    });
+
+    it("defaults page to 1 when the page query cannot be parsed to a number", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      $route.query.page = "asdf";
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(1);
+    });
+
+    it("sets page to the value in the query", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      $route.query.page = "5";
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(5);
+    });
+  });
 });

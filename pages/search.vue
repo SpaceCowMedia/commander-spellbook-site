@@ -108,6 +108,9 @@ export default Vue.extend({
     "$route.query.q"(): void {
       this.onQueryChange();
     },
+    "$route.query.page"(): void {
+      this.updatePageFromQuery();
+    },
   },
   async mounted(): Promise<void> {
     await this.onQueryChange();
@@ -117,7 +120,7 @@ export default Vue.extend({
       this.loaded = false;
 
       const query = this.parseSearchQuery();
-      this.page = Number(this.$route.query.page) || 1;
+      this.updatePageFromQuery();
 
       if (!query) {
         this.loaded = true;
@@ -127,6 +130,9 @@ export default Vue.extend({
       await this.updateSearchResults(query);
 
       this.loaded = true;
+    },
+    updatePageFromQuery(): void {
+      this.page = Number(this.$route.query.page) || 1;
     },
     async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
