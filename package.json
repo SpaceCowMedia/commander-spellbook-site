@@ -11,7 +11,10 @@
     "lint:js": "eslint --ext .ts,.vue .",
     "lint:style": "stylelint **/*.{vue,css}",
     "lint": "npm run lint:js && npm run lint:style",
-    "test": "jest"
+    "test": "jest",
+    "cy:run": "cypress run --spec cypress/integration/*.ts",
+    "pretest:integration": "npm run generate -- -c cypress/nuxt.config.js",
+    "test:integration": "npm start & wait-on http://localhost:3000 && npm run cy:run"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint",
@@ -58,6 +61,7 @@
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0",
     "ts-jest": "^26.4.4",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^3.0.4",
+    "wait-on": "^5.2.1"
   }
 }

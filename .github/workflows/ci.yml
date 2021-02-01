@@ -40,5 +40,8 @@ jobs:
       - name: Run linter 👀
         run: npm run lint
 
-      - name: Run tests 🧪
-        run: npm run test
+      - name: Run unit tests 🧪
+        run: npm test
+
+      - name: Run Integration tests 🧪
+        run: npm run test:integration
