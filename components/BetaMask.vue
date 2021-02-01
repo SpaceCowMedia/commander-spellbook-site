@@ -5,6 +5,7 @@
         <p class="mb-2">Enter Password</p>
         <input
           v-model="password"
+          id="beta-password"
           type="text"
           class="rounded bg-blue-300 focus:bg-blue-200 w-full p-4"
           :class="{ error }"
