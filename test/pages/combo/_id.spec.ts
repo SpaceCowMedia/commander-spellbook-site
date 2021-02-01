@@ -41,7 +41,7 @@ describe("ComboPage", () => {
   });
 
   it("redirects on mount when loaded", () => {
-    const wrapper = shallowMount(ComboPage, options);
+    shallowMount(ComboPage, options);
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
