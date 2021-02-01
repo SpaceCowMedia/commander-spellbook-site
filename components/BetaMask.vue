@@ -4,8 +4,8 @@
       <div v-show="loaded" class="w-1/2 m-auto">
         <p class="mb-2">Enter Password</p>
         <input
-          v-model="password"
           id="beta-password"
+          v-model="password"
           type="text"
           class="rounded bg-blue-300 focus:bg-blue-200 w-full p-4"
           :class="{ error }"
