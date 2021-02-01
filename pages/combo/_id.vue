@@ -135,7 +135,9 @@ export default Vue.extend({
   },
   mounted() {
     if (!this.loaded) {
-      // TODO not loaded, what to do here
+      this.$router.push({
+        path: "/combo-not-found",
+      });
     }
   },
   methods: {},

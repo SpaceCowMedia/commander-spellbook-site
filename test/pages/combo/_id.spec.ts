@@ -2,11 +2,12 @@ import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import spellbookApi from "commander-spellbook";
 
-import type { MountOptions, Route, VueComponent } from "../../types";
+import type { MountOptions, Route, Router, VueComponent } from "../../types";
 
 describe("ComboPage", () => {
   let options: MountOptions;
   let $route: Route;
+  let $router: Router;
 
   beforeEach(() => {
     $route = {
@@ -15,9 +16,13 @@ describe("ComboPage", () => {
       },
       query: {},
     };
+    $router = {
+      push: jest.fn(),
+    };
     options = {
       mocks: {
         $route,
+        $router,
       },
       stubs: {
         CardHeader: true,
@@ -33,6 +38,15 @@ describe("ComboPage", () => {
     const wrapper = shallowMount(ComboPage, options);
 
     expect((wrapper.vm as VueComponent).loaded).toBe(false);
+  });
+
+  it("redirects on mount when loaded", () => {
+    const wrapper = shallowMount(ComboPage, options);
+
+    expect($router.push).toBeCalledTimes(1);
+    expect($router.push).toBeCalledWith({
+      path: "/combo-not-found",
+    });
   });
 
   it("creates a card header component", async () => {
