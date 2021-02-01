@@ -137,6 +137,38 @@ describe("ComboPage", () => {
     ]);
   });
 
+  it("includes warning about banned cards if combo contains them", async () => {
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      hasBannedCard: false,
+    });
+
+    expect(wrapper.find(".banned-warning").exists()).toBe(false);
+
+    await wrapper.setData({
+      hasBannedCard: true,
+    });
+
+    expect(wrapper.find(".banned-warning").exists()).toBe(true);
+  });
+
+  it("includes warning about spoiled cards if combo contains them", async () => {
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      hasSpoiledCard: false,
+    });
+
+    expect(wrapper.find(".spoiled-warning").exists()).toBe(false);
+
+    await wrapper.setData({
+      hasSpoiledCard: true,
+    });
+
+    expect(wrapper.find(".spoiled-warning").exists()).toBe(true);
+  });
+
   it("looks up combo from page number param", async () => {
     const fakeCombo = spellbookApi.makeFakeCombo({
       commanderSpellbookId: "13",

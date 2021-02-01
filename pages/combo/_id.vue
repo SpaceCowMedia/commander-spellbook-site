@@ -33,6 +33,15 @@
           <ColorIdentity :colors="colorIdentity" />
         </div>
 
+        <div v-if="hasBannedCard" class="banned-warning">
+          WARNING: Combo contains cards that are banned in Commander
+        </div>
+
+        <div v-if="hasSpoiledCard" class="spoiled-warning">
+          WARNING: Combo contains cards that are from a forthcoming set (and not
+          yet legal in Commander)
+        </div>
+
         <ComboSidebarLinks
           :combo-id="comboNumber"
           :combo-link="link"
@@ -55,6 +64,8 @@ type CardData = {
 
 type ComboData = {
   title: string;
+  hasBannedCard: boolean;
+  hasSpoiledCard: boolean;
   link: string;
   loaded: boolean;
   comboNumber: string;
@@ -88,6 +99,8 @@ export default Vue.extend({
     return {
       comboNumber,
       title: `Combo Number ${comboNumber}`,
+      hasBannedCard: combo.hasBannedCard,
+      hasSpoiledCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
       loaded: true,
@@ -100,6 +113,8 @@ export default Vue.extend({
   data(): ComboData {
     return {
       title: "Looking up Combo",
+      hasBannedCard: false,
+      hasSpoiledCard: false,
       link: "",
       loaded: false,
       comboNumber: "0",
@@ -134,5 +149,13 @@ export default Vue.extend({
   font-size: 50px;
   color: #35495e;
   letter-spacing: 1px;
+}
+
+.banned-warning {
+  @apply text-red-500 font-semibold;
+}
+
+.spoiled-warning {
+  @apply font-semibold;
 }
 </style>
