@@ -1,11 +1,4 @@
 describe("Home Page", () => {
-  // TODO remove this when the beta mask component is removed
-  beforeEach(() => {
-    cy.visit("/");
-
-    cy.get("input#beta-password").type("arjun{enter}");
-  });
-
   it("can enter a query", () => {
     cy.visit("/");
 

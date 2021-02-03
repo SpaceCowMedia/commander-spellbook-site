@@ -91,4 +91,4 @@ sw.*
 
 cypress/plugins
 cypress/videos
-cypress/support
+cypress/screenshots
