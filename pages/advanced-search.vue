@@ -8,7 +8,7 @@
     <form @submit.prevent="submit">
       <div class="divider"></div>
 
-      <div class="container">
+      <div id="card-name-inputs" class="container">
         <MultiSearchInput
           label="Card Name"
           placeholder="Card Name"
@@ -18,28 +18,32 @@
 
       <div class="divider"></div>
 
-      <div class="container">
+      <div id="color-identity-chooser" class="container">
         <div class="my-2 flex">
           <div class="w-1/3 flex-grow">
             <span>Color Identity</span>
           </div>
           <div class="w-2/3 flex flex-row">
-            <div
+            <button
               v-for="(color, index) in colorIdentity"
               :key="`ci-input-${index}`"
+              type="button"
               class="color-identity-wrapper cursor-pointer"
-              :class="{ 'opacity-25': !color.checked }"
+              :class="{
+                'opacity-25': !color.checked,
+                ['ci-button-' + index]: true,
+              }"
               @click="toggleColorIdentity(index)"
             >
               <ColorIdentity :colors="[color.symbol]" />
-            </div>
+            </button>
           </div>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <div class="container">
+      <div id="prerequisite-inputs" class="container">
         <MultiSearchInput
           label="Prerequisite"
           placeholder="Text"
@@ -49,7 +53,7 @@
 
       <div class="divider"></div>
 
-      <div class="container">
+      <div id="step-inputs" class="container">
         <MultiSearchInput
           label="Step"
           placeholder="Text"
@@ -59,7 +63,7 @@
 
       <div class="divider"></div>
 
-      <div class="container">
+      <div id="result-inputs" class="container">
         <MultiSearchInput
           label="Result"
           placeholder="Text"
@@ -70,7 +74,13 @@
       <div class="divider"></div>
 
       <div class="container">
-        <button type="submit" class="button--red">Search</button>
+        <button
+          id="advanced-search-submit-button"
+          type="submit"
+          class="button--red"
+        >
+          Search
+        </button>
       </div>
     </form>
   </div>

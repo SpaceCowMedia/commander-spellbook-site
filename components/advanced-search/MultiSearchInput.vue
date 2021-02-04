@@ -12,6 +12,7 @@
         <input
           v-model="input.value"
           class="input"
+          :class="'input-' + index"
           type="text"
           :placeholder="placeholder"
           @keyup="update(index)"
