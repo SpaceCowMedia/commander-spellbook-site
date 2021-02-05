@@ -25,7 +25,7 @@ describe("Combo Detail Page", () => {
     });
   });
 
-  it.only("can copy page url to clipboard", () => {
+  it("can copy page url to clipboard", () => {
     cy.visit("/combo/450");
 
     cy.get("#copy-combo-button").click();
