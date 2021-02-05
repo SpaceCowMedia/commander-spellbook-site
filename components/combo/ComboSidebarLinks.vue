@@ -1,6 +1,7 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
     <button
+      id="copy-combo-button"
       ref="copyButton"
       class="combo-button"
       type="button"

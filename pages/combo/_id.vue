@@ -5,23 +5,27 @@
     <div class="container md:flex flex-row">
       <div class="w-full sm:w-2/3">
         <ComboList
+          id="combo-cards"
           title="Cards"
           :iterations="cardNames"
           :is-card="true"
           :cards-in-combo="cardNames"
         />
         <ComboList
+          id="combo-prerequisites"
           title="Prerequisites"
           :iterations="prerequisites"
           :cards-in-combo="cardNames"
         />
         <ComboList
+          id="combo-steps"
           title="Steps"
           :show-numbers="true"
           :iterations="steps"
           :cards-in-combo="cardNames"
         />
         <ComboList
+          id="combo-results"
           title="Results"
           :iterations="results"
           :cards-in-combo="cardNames"
@@ -29,7 +33,7 @@
       </div>
 
       <div class="w-full sm:w-1/3 text-center">
-        <div class="my-4">
+        <div id="combo-color-identity" class="my-4">
           <ColorIdentity :colors="colorIdentity" />
         </div>
 
