@@ -10,6 +10,7 @@
           v-if="includeLinks"
           class="search-input-icon"
           @click="focusSearch"
+          aria-hidden="true"
         ></div>
         <input
           v-model="query"
@@ -28,21 +29,21 @@
           @click="toggleMenu"
           class="sm:hidden flex flex-row items-center rounded bg-gray-300 py-1 px-2 border border-gray-400 text-gray-700"
         >
-          <div class="menu-icon link-icon"></div>
+          <div class="menu-icon link-icon" aria-hidden="true"></div>
           Menu
         </button>
         <nuxt-link
           to="/advanced-search"
           class="hidden sm:flex flex-row items-center px-4 border-l border-r border-gray-400 text-gray-700"
         >
-          <div class="advanced-search-icon link-icon"></div>
+          <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
           Advanced
         </nuxt-link>
         <nuxt-link
           to="/syntax-guide"
           class="hidden sm:flex items-center flex-row pl-4 pr-2 text-gray-700"
         >
-          <div class="syntax-guide-icon link-icon"></div>
+          <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
       </div>
@@ -56,14 +57,14 @@
         to="/advanced-search"
         class="rounded bg-gray-300 flex flex-row w-1/2 flex-grow items-center py-1 px-2 border border-gray-400 mr-4"
       >
-        <div class="advanced-search-icon link-icon"></div>
+        <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
         Advanced Search
       </nuxt-link>
       <nuxt-link
         to="/syntax-guide"
         class="rounded bg-gray-300 flex items-center flex-row w-1/2 flex-grow py-1 px-2 border border-gray-400 ml-4"
       >
-        <div class="syntax-guide-icon link-icon"></div>
+        <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax Guide
       </nuxt-link>
     </div>
