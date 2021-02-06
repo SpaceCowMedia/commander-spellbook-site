@@ -1,6 +1,6 @@
 <template>
   <div class="outer-container">
-    <form class="main-search-input-container h-full" @submit.prevent="onSubmit">
+    <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="includeLinks" to="/" class="block mr-2 flex-shrink py-1">
         <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
       </nuxt-link>
@@ -27,22 +27,16 @@
           id="search-bar-menu-button"
           type="button"
           @click="toggleMenu"
-          class="sm:hidden flex flex-row items-center rounded bg-gray-300 py-1 px-2 border border-gray-400 text-gray-700"
+          class="mobile-menu-button"
         >
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           Menu
         </button>
-        <nuxt-link
-          to="/advanced-search"
-          class="hidden sm:flex flex-row items-center px-4 border-l border-r border-gray-400 text-gray-700"
-        >
+        <nuxt-link to="/advanced-search" class="hidden sm:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
           Advanced
         </nuxt-link>
-        <nuxt-link
-          to="/syntax-guide"
-          class="hidden sm:flex items-center flex-row pl-4 pr-2 text-gray-700"
-        >
+        <nuxt-link to="/syntax-guide" class="hidden sm:flex menu-link">
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
@@ -53,17 +47,11 @@
       @click="toggleMenu"
       class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400 text-gray-700"
     >
-      <nuxt-link
-        to="/advanced-search"
-        class="rounded bg-gray-300 flex flex-row w-1/2 flex-grow items-center py-1 px-2 border border-gray-400 mr-4"
-      >
+      <nuxt-link to="/advanced-search" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
         Advanced Search
       </nuxt-link>
-      <nuxt-link
-        to="/syntax-guide"
-        class="rounded bg-gray-300 flex items-center flex-row w-1/2 flex-grow py-1 px-2 border border-gray-400 ml-4"
-      >
+      <nuxt-link to="/syntax-guide" class="mobile-menu-button">
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax Guide
       </nuxt-link>
@@ -161,7 +149,7 @@ export default Vue.extend({
 }
 
 .main-search-input-container {
-  @apply flex m-auto;
+  @apply flex m-auto h-full;
 }
 
 .main-search-input {
@@ -185,16 +173,61 @@ export default Vue.extend({
   -webkit-mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
   mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
 }
+
 .syntax-guide-icon {
   -webkit-mask: url("~assets/svgs/question-solid.svg") no-repeat center;
   mask: url("~assets/svgs/question-solid.svg") no-repeat center;
 }
+
 .search-input-icon {
   -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   @apply bg-gray-700 w-4 h-4 mt-1 z-10 cursor-pointer;
 }
+
 .search-input-icon:hover {
   @apply bg-gray-800;
+}
+
+.menu-link {
+  @apply items-center flex-row px-4 pr-2 text-gray-700 border-l border-gray-400;
+}
+
+.menu-link:last-of-type {
+  @apply pr-0;
+}
+
+.menu-link:hover {
+  @apply text-gray-800;
+}
+
+.menu-link:hover .link-icon {
+  @apply bg-gray-800;
+}
+
+.mobile-menu-button {
+  @apply flex flex-row flex-grow items-center w-1/2 rounded bg-gray-300 py-1 px-2 border border-gray-400 mx-2;
+}
+
+.mobile-menu-button:hover {
+  @apply border-gray-500 text-gray-800;
+}
+
+.mobile-menu-button:hover .link-icon {
+  @apply bg-gray-800;
+}
+
+.mobile-menu-button:nth-child(even),
+.mobile-menu-button:last-of-type {
+  @apply mr-0;
+}
+.mobile-menu-button:nth-child(odd) {
+  @apply ml-0;
+}
+
+@media (min-width: 640px) {
+  #search-bar-menu-button {
+    @apply hidden;
+  }
 }
 </style>
