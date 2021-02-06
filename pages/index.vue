@@ -5,7 +5,7 @@
         <Logo />
 
         <SearchBar
-          :include-logo="false"
+          :include-links="false"
           class="md:w-2/3 h-20"
           input-class="text-2xl text-center"
         />

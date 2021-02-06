@@ -5,7 +5,7 @@
       @submit.prevent="onSubmit"
     >
       <nuxt-link
-        v-if="includeLogo"
+        v-if="includeLinks"
         to="/"
         class="block mr-2 flex-grow py-1 px-2 border-r border-l border-gray-400"
       >
@@ -29,7 +29,7 @@ import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
   props: {
-    includeLogo: {
+    includeLinks: {
       type: Boolean,
       default: true,
     },

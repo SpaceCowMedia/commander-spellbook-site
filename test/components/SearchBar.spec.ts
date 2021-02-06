@@ -79,7 +79,7 @@ describe("SearchBar", () => {
     expect(link.props("to")).toBe("/");
 
     await wrapper.setProps({
-      includeLogo: false,
+      includeLinks: false,
     });
 
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
