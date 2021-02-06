@@ -31,17 +31,6 @@ describe("SearchBar", () => {
     };
   });
 
-  it("can set classes on the input", () => {
-    wrapperOptions!.propsData = {
-      inputClass: "custom class names",
-    };
-    const wrapper = mount(SearchBar, wrapperOptions);
-
-    expect(wrapper.find(".main-search-input").classes()).toContain("custom");
-    expect(wrapper.find(".main-search-input").classes()).toContain("class");
-    expect(wrapper.find(".main-search-input").classes()).toContain("names");
-  });
-
   it("sets query from the query param if available", () => {
     $route.query.q = "card:sydri";
     // @ts-ignore
@@ -81,7 +70,7 @@ describe("SearchBar", () => {
     expect(links.at(2).props("to")).toBe("/syntax-guide");
 
     await wrapper.setProps({
-      includeLinks: false,
+      onHomePage: true,
     });
 
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);

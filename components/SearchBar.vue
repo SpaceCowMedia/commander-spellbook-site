@@ -1,13 +1,13 @@
 <template>
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
-      <nuxt-link v-if="includeLinks" to="/" class="block mr-2 flex-shrink py-1">
+      <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
         <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
       </nuxt-link>
 
       <div class="flex flex-grow items-center">
         <div
-          v-if="includeLinks"
+          v-if="!onHomePage"
           class="search-input-icon"
           @click="focusSearch"
           aria-hidden="true"
@@ -22,7 +22,7 @@
           :placeholder="`Search ${numberOfCombos} combos`"
         />
       </div>
-      <div v-if="includeLinks" class="flex flex-shrink flex-row items-center">
+      <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center">
         <button
           id="search-bar-menu-button"
           type="button"
@@ -43,7 +43,7 @@
       </div>
     </form>
     <div
-      v-if="includeLinks && showMobileMenu"
+      v-if="!onHomePage && showMobileMenu"
       @click="toggleMenu"
       class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400 text-gray-700"
     >
@@ -65,13 +65,9 @@ import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
   props: {
-    includeLinks: {
+    onHomePage: {
       type: Boolean,
-      default: true,
-    },
-    inputClass: {
-      type: String,
-      default: "pl-2 text-lg",
+      default: false,
     },
   },
   data() {
@@ -94,16 +90,10 @@ export default Vue.extend({
   },
   computed: {
     inputClasses(): string {
-      let classes = "";
-
-      if (this.includeLinks) {
-        classes += " pl-8 -ml-6";
+      if (this.onHomePage) {
+        return "text-2xl text-center";
       }
-      if (this.inputClass) {
-        classes += ` ${this.inputClass}`;
-      }
-
-      return classes;
+      return "pl-8 -ml-6";
     },
   },
   methods: {
