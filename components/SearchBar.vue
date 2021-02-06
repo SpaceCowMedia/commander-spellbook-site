@@ -4,13 +4,13 @@
       <nuxt-link v-if="includeLinks" to="/" class="block mr-2 flex-shrink py-1">
         <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
       </nuxt-link>
+
       <div class="flex flex-grow items-center">
-        <img
+        <div
           v-if="includeLinks"
-          :src="magnifyingGlassIcon"
-          class="h-4 z-10 cursor-pointer"
+          class="search-input-icon"
           @click="focusSearch"
-        />
+        ></div>
         <input
           v-model="query"
           type="text"
@@ -26,42 +26,45 @@
           id="search-bar-menu-button"
           type="button"
           @click="toggleMenu"
-          class="sm:hidden flex flex-row items-center rounded bg-gray-300 py-1 px-2 border border-gray-400"
+          class="sm:hidden flex flex-row items-center rounded bg-gray-300 py-1 px-2 border border-gray-400 text-gray-700"
         >
-          <img :src="menuIcon" class="link-icon" /> Menu
+          <div class="menu-icon link-icon"></div>
+          Menu
         </button>
         <nuxt-link
           to="/advanced-search"
-          class="hidden sm:flex flex-row items-center px-4 border-l border-r border-gray-400"
+          class="hidden sm:flex flex-row items-center px-4 border-l border-r border-gray-400 text-gray-700"
         >
-          <img :src="advancedSearchIcon" class="link-icon" />
+          <div class="advanced-search-icon link-icon"></div>
           Advanced
         </nuxt-link>
         <nuxt-link
           to="/syntax-guide"
-          class="hidden sm:flex items-center flex-row pl-4 pr-2"
+          class="hidden sm:flex items-center flex-row pl-4 pr-2 text-gray-700"
         >
-          <img :src="syntaxGuideIcon" class="link-icon" /> Syntax
+          <div class="syntax-guide-icon link-icon"></div>
+          Syntax
         </nuxt-link>
       </div>
     </form>
     <div
       v-if="includeLinks && showMobileMenu"
       @click="toggleMenu"
-      class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400"
+      class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400 text-gray-700"
     >
       <nuxt-link
         to="/advanced-search"
         class="rounded bg-gray-300 flex flex-row w-1/2 flex-grow items-center py-1 px-2 border border-gray-400 mr-4"
       >
-        <img :src="advancedSearchIcon" class="link-icon" />
-        Advanced
+        <div class="advanced-search-icon link-icon"></div>
+        Advanced Search
       </nuxt-link>
       <nuxt-link
         to="/syntax-guide"
         class="rounded bg-gray-300 flex items-center flex-row w-1/2 flex-grow py-1 px-2 border border-gray-400 ml-4"
       >
-        <img :src="syntaxGuideIcon" class="link-icon" /> Syntax
+        <div class="syntax-guide-icon link-icon"></div>
+        Syntax Guide
       </nuxt-link>
     </div>
   </div>
@@ -101,18 +104,6 @@ export default Vue.extend({
     this.setQueryFromUrl();
   },
   computed: {
-    advancedSearchIcon(): string {
-      return require("~/assets/svgs/columns-solid.svg");
-    },
-    magnifyingGlassIcon(): string {
-      return require("~/assets/svgs/search-solid.svg");
-    },
-    menuIcon(): string {
-      return require("~/assets/svgs/bars-solid.svg");
-    },
-    syntaxGuideIcon(): string {
-      return require("~/assets/svgs/question-solid.svg");
-    },
     inputClasses(): string {
       let classes = "";
 
@@ -181,6 +172,28 @@ export default Vue.extend({
 }
 
 .link-icon {
-  @apply h-4 mr-2;
+  @apply bg-gray-700 h-4 w-4 mr-2;
+}
+
+.menu-icon {
+  -webkit-mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
+  mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
+}
+
+.advanced-search-icon {
+  -webkit-mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
+  mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
+}
+.syntax-guide-icon {
+  -webkit-mask: url("~assets/svgs/question-solid.svg") no-repeat center;
+  mask: url("~assets/svgs/question-solid.svg") no-repeat center;
+}
+.search-input-icon {
+  -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
+  mask: url("~assets/svgs/search-solid.svg") no-repeat center;
+  @apply bg-gray-700 w-4 h-4 mt-1 z-10 cursor-pointer;
+}
+.search-input-icon:hover {
+  @apply bg-gray-800;
 }
 </style>
