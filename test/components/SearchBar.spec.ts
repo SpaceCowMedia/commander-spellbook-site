@@ -65,7 +65,7 @@ describe("SearchBar", () => {
     expect(vm.onSubmit).toBeCalledTimes(1);
   });
 
-  it("can opt out of logo link", async () => {
+  it("can opt out of navigation links", async () => {
     const NuxtLinkStub = {
       props: ["to"],
       template: "<div></div>",
@@ -74,9 +74,11 @@ describe("SearchBar", () => {
     wrapperOptions.stubs.NuxtLink = NuxtLinkStub;
     const wrapper = mount(SearchBar, wrapperOptions);
 
-    const link = wrapper.findComponent(NuxtLinkStub);
+    const links = wrapper.findAllComponents(NuxtLinkStub);
 
-    expect(link.props("to")).toBe("/");
+    expect(links.at(0).props("to")).toBe("/");
+    expect(links.at(1).props("to")).toBe("/advanced-search");
+    expect(links.at(2).props("to")).toBe("/syntax-guide");
 
     await wrapper.setProps({
       includeLinks: false,

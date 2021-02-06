@@ -1,7 +1,11 @@
 <template>
   <div>
     <BetaMask>
-      <SearchBar />
+      <div class="bg-gray-200">
+        <div class="container">
+          <SearchBar />
+        </div>
+      </div>
       <main>
         <Nuxt />
       </main>

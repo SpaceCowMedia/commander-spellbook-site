@@ -1,24 +1,32 @@
 <template>
   <div class="outer-container">
-    <form
-      class="main-search-input-container container h-full"
-      @submit.prevent="onSubmit"
-    >
-      <nuxt-link
-        v-if="includeLinks"
-        to="/"
-        class="block mr-2 flex-grow py-1 px-2 border-r border-l border-gray-400"
-      >
+    <form class="main-search-input-container h-full" @submit.prevent="onSubmit">
+      <nuxt-link v-if="includeLinks" to="/" class="block mr-2 flex-shrink py-1">
         <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
       </nuxt-link>
       <input
         v-model="query"
         type="text"
-        class="main-search-input"
+        class="main-search-input flex-grow"
         name="q"
         :class="inputClass"
         :placeholder="`Search ${numberOfCombos} combos`"
       />
+      <div v-if="includeLinks" class="flex flex-shrink flex-row items-center">
+        <nuxt-link
+          to="/advanced-search"
+          class="flex flex-row items-center px-4 border-l border-r border-gray-400"
+        >
+          <img :src="advancedSearchIcon" class="link-icon" />
+          <span>Advanced</span>
+        </nuxt-link>
+        <nuxt-link
+          to="/syntax-guide"
+          class="flex items-center flex-row pl-4 pr-2"
+        >
+          <img :src="syntaxGuideIcon" class="link-icon" /> <span>Syntax</span>
+        </nuxt-link>
+      </div>
     </form>
   </div>
 </template>
@@ -35,7 +43,7 @@ export default Vue.extend({
     },
     inputClass: {
       type: String,
-      default: "text-lg",
+      default: "pl-2 text-lg",
     },
   },
   data() {
@@ -54,6 +62,14 @@ export default Vue.extend({
   },
   mounted() {
     this.setQueryFromUrl();
+  },
+  computed: {
+    advancedSearchIcon(): string {
+      return require("~/assets/svgs/columns-solid.svg");
+    },
+    syntaxGuideIcon(): string {
+      return require("~/assets/svgs/question-solid.svg");
+    },
   },
   methods: {
     async lookupNumberOfCombos(): Promise<void> {
@@ -96,10 +112,14 @@ export default Vue.extend({
 }
 
 .main-search-input {
-  @apply appearance-none block h-full bg-gray-200 text-gray-700 py-2 leading-tight w-full;
+  @apply appearance-none block bg-gray-200 text-gray-700 py-2 leading-tight;
 }
 
 .main-search-input:focus {
   @apply outline-none bg-white border-gray-500;
+}
+
+.link-icon {
+  @apply h-4 mr-2;
 }
 </style>
