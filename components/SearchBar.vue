@@ -4,14 +4,23 @@
       <nuxt-link v-if="includeLinks" to="/" class="block mr-2 flex-shrink py-1">
         <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
       </nuxt-link>
-      <input
-        v-model="query"
-        type="text"
-        class="main-search-input flex-grow"
-        name="q"
-        :class="inputClass"
-        :placeholder="`Search ${numberOfCombos} combos`"
-      />
+      <div class="flex flex-grow items-center">
+        <img
+          v-if="includeLinks"
+          :src="magnifyingGlassIcon"
+          class="h-4 z-10 cursor-pointer"
+          @click="focusSearch"
+        />
+        <input
+          v-model="query"
+          type="text"
+          class="main-search-input"
+          :class="inputClasses"
+          name="q"
+          ref="searchInput"
+          :placeholder="`Search ${numberOfCombos} combos`"
+        />
+      </div>
       <div v-if="includeLinks" class="flex flex-shrink flex-row items-center">
         <button
           id="search-bar-menu-button"
@@ -95,14 +104,32 @@ export default Vue.extend({
     advancedSearchIcon(): string {
       return require("~/assets/svgs/columns-solid.svg");
     },
+    magnifyingGlassIcon(): string {
+      return require("~/assets/svgs/search-solid.svg");
+    },
     menuIcon(): string {
       return require("~/assets/svgs/bars-solid.svg");
     },
     syntaxGuideIcon(): string {
       return require("~/assets/svgs/question-solid.svg");
     },
+    inputClasses(): string {
+      let classes = "";
+
+      if (this.includeLinks) {
+        classes += " pl-8 -ml-6";
+      }
+      if (this.inputClass) {
+        classes += ` ${this.inputClass}`;
+      }
+
+      return classes;
+    },
   },
   methods: {
+    focusSearch(): void {
+      (this.$refs.searchInput as HTMLInputElement).focus();
+    },
     async lookupNumberOfCombos(): Promise<void> {
       const combos = await spellbookApi.getAllCombos();
 
@@ -146,7 +173,7 @@ export default Vue.extend({
 }
 
 .main-search-input {
-  @apply appearance-none block bg-gray-200 text-gray-700 py-2 leading-tight;
+  @apply w-full h-full appearance-none block py-2 bg-gray-200 text-gray-700 leading-tight;
 }
 
 .main-search-input:focus {
