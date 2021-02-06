@@ -87,6 +87,17 @@ describe("SearchBar", () => {
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
   });
 
+  it("toggles link menu when menu button is clicked", async () => {
+    const wrapper = mount(SearchBar, wrapperOptions);
+    const vm = wrapper.vm as VueComponent;
+
+    expect(vm.showMobileMenu).toBe(false);
+
+    await wrapper.find("#search-bar-menu-button").trigger("click");
+
+    expect(vm.showMobileMenu).toBe(true);
+  });
+
   describe("lookupNumberOfCombos", () => {
     it("sets numberOfCombos to the number of combos found in spellbook api", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
@@ -185,6 +196,25 @@ describe("SearchBar", () => {
       vm.setQueryFromUrl();
 
       expect(vm.query).toBe("some-query");
+    });
+  });
+
+  describe("toggleMenu", () => {
+    it("toggles showMobileMenu state", () => {
+      const wrapper = mount(SearchBar, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        showMobileMenu: false,
+      });
+
+      vm.toggleMenu();
+
+      expect(vm.showMobileMenu).toBe(true);
+
+      vm.toggleMenu();
+
+      expect(vm.showMobileMenu).toBe(false);
     });
   });
 });

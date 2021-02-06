@@ -13,21 +13,48 @@
         :placeholder="`Search ${numberOfCombos} combos`"
       />
       <div v-if="includeLinks" class="flex flex-shrink flex-row items-center">
+        <button
+          id="search-bar-menu-button"
+          type="button"
+          @click="toggleMenu"
+          class="sm:hidden flex flex-row items-center rounded bg-gray-300 py-1 px-2 border border-gray-400"
+        >
+          <img :src="menuIcon" class="link-icon" /> Menu
+        </button>
         <nuxt-link
           to="/advanced-search"
-          class="flex flex-row items-center px-4 border-l border-r border-gray-400"
+          class="hidden sm:flex flex-row items-center px-4 border-l border-r border-gray-400"
         >
           <img :src="advancedSearchIcon" class="link-icon" />
-          <span>Advanced</span>
+          Advanced
         </nuxt-link>
         <nuxt-link
           to="/syntax-guide"
-          class="flex items-center flex-row pl-4 pr-2"
+          class="hidden sm:flex items-center flex-row pl-4 pr-2"
         >
-          <img :src="syntaxGuideIcon" class="link-icon" /> <span>Syntax</span>
+          <img :src="syntaxGuideIcon" class="link-icon" /> Syntax
         </nuxt-link>
       </div>
     </form>
+    <div
+      v-if="includeLinks && showMobileMenu"
+      @click="toggleMenu"
+      class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400"
+    >
+      <nuxt-link
+        to="/advanced-search"
+        class="rounded bg-gray-300 flex flex-row w-1/2 flex-grow items-center py-1 px-2 border border-gray-400 mr-4"
+      >
+        <img :src="advancedSearchIcon" class="link-icon" />
+        Advanced
+      </nuxt-link>
+      <nuxt-link
+        to="/syntax-guide"
+        class="rounded bg-gray-300 flex items-center flex-row w-1/2 flex-grow py-1 px-2 border border-gray-400 ml-4"
+      >
+        <img :src="syntaxGuideIcon" class="link-icon" /> Syntax
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -48,6 +75,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      showMobileMenu: false,
       query: "",
       numberOfCombos: "....",
     };
@@ -67,6 +95,9 @@ export default Vue.extend({
     advancedSearchIcon(): string {
       return require("~/assets/svgs/columns-solid.svg");
     },
+    menuIcon(): string {
+      return require("~/assets/svgs/bars-solid.svg");
+    },
     syntaxGuideIcon(): string {
       return require("~/assets/svgs/question-solid.svg");
     },
@@ -77,7 +108,7 @@ export default Vue.extend({
 
       this.numberOfCombos = String(combos.length);
     },
-    setQueryFromUrl() {
+    setQueryFromUrl(): void {
       const query = this.$route.query.q;
 
       if (typeof query === "string") {
@@ -85,6 +116,9 @@ export default Vue.extend({
       } else {
         this.query = "";
       }
+    },
+    toggleMenu(): void {
+      this.showMobileMenu = !this.showMobileMenu;
     },
     onSubmit(): void {
       if (!this.query.trim()) {
