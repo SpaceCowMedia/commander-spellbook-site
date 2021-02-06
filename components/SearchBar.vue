@@ -9,16 +9,16 @@
         <div
           v-if="!onHomePage"
           class="search-input-icon"
-          @click="focusSearch"
           aria-hidden="true"
+          @click="focusSearch"
         ></div>
         <input
+          ref="searchInput"
           v-model="query"
           type="text"
           class="main-search-input"
           :class="inputClasses"
           name="q"
-          ref="searchInput"
           :placeholder="`Search ${numberOfCombos} combos`"
         />
       </div>
@@ -26,8 +26,8 @@
         <button
           id="search-bar-menu-button"
           type="button"
-          @click="toggleMenu"
           class="mobile-menu-button"
+          @click="toggleMenu"
         >
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           Menu
@@ -44,8 +44,8 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      @click="toggleMenu"
       class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400 text-gray-700"
+      @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
@@ -80,14 +80,6 @@ export default Vue.extend({
   async fetch() {
     await this.lookupNumberOfCombos();
   },
-  watch: {
-    "$route.query.q"(): void {
-      this.setQueryFromUrl();
-    },
-  },
-  mounted() {
-    this.setQueryFromUrl();
-  },
   computed: {
     inputClasses(): string {
       if (this.onHomePage) {
@@ -95,6 +87,14 @@ export default Vue.extend({
       }
       return "pl-8 -ml-6";
     },
+  },
+  watch: {
+    "$route.query.q"(): void {
+      this.setQueryFromUrl();
+    },
+  },
+  mounted() {
+    this.setQueryFromUrl();
   },
   methods: {
     focusSearch(): void {
