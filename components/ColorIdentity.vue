@@ -1,8 +1,10 @@
 <template>
   <div class="w-full text-center">
+    <p class="sr-only">Color Identity: {{ colorIdentityDescription }}</p>
     <!-- eslint-disable-next-line vue/require-v-for-key -->
     <img
       v-for="(url, index) in colorIdentitySymbolUrls"
+      aria-hidden="true"
       class="color-identity"
       :src="url"
       :alt="altTextFromIndex(index)"
@@ -24,30 +26,41 @@ export default Vue.extend({
     },
   },
   computed: {
+    colorIdentityDescription(): string {
+      return this.colors.map((c) => this.colorNameFromSymbol(c)).join(", ");
+    },
     colorIdentitySymbolUrls(): string[] {
       return this.colors.map((c) => scryfall.getSymbolUrl(c));
     },
   },
   methods: {
-    altTextFromIndex(index: number): string {
-      const color = this.colors[index].toLowerCase();
-
-      switch (color) {
+    colorNameFromSymbol(id: string): string {
+      switch (id) {
         case "w":
-          return "White Mana Symbol";
+          return "White";
         case "u":
-          return "Blue Mana Symbol";
+          return "Blue";
         case "b":
-          return "Black Mana Symbol";
+          return "Black";
         case "r":
-          return "Red Mana Symbol";
+          return "Red";
         case "g":
-          return "Green Mana Symbol";
+          return "Green";
         case "c":
-          return "Colorless Mana Symbol";
+          return "Colorless";
         default:
-          return "Mana Symbol";
+          return "";
       }
+    },
+    altTextFromIndex(index: number): string {
+      const colorId = this.colors[index].toLowerCase();
+      const colorName = this.colorNameFromSymbol(colorId);
+
+      if (!colorName) {
+        return "Mana Symbol";
+      }
+
+      return `${colorName} Mana Symbol`;
     },
   },
 });
