@@ -20,7 +20,8 @@
 
     <input
       ref="copyInput"
-      type="hidden"
+      aria-hidden="true"
+      type="text"
       class="hidden-combo-link-input"
       :value="comboLink"
     />
