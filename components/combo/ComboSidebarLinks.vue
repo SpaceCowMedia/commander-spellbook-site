@@ -30,7 +30,7 @@
     the message to the user. Therfore, we have 2 version, one that is not
     visible in the UI but alerts the user with a screenreader, and one
     that is visible in the UI, but is hidden to screen readers. -->
-    <div role="alert" class="sr-only" v-if="showCopyNotification">
+    <div v-if="showCopyNotification" role="alert" class="sr-only">
       Combo link copied to your clipboard
     </div>
     <div
