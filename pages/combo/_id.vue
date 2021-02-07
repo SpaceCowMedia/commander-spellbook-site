@@ -3,7 +3,11 @@
     <CardHeader :cards-art="cardArts" :title="title" />
 
     <div class="container md:flex flex-row">
-      <div class="w-full sm:w-2/3">
+      <div class="w-full md:w-2/3">
+        <div class="md:hidden pt-4">
+          <ColorIdentity :colors="colorIdentity" />
+        </div>
+
         <ComboList
           id="combo-cards"
           title="Cards"
@@ -33,7 +37,7 @@
       </div>
 
       <div class="w-full sm:w-1/3 text-center">
-        <div id="combo-color-identity" class="my-4">
+        <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
 
