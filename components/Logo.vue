@@ -2,6 +2,7 @@
   <div class="mt-4 md:mt-0">
     <ArtCircle
       class="m-auto"
+      title="Commander Spellbook Logo (art Spellbook by Ciruelo)"
       :size="12"
       card-name="Spellbook"
       artist="Ciruelo"

@@ -30,6 +30,18 @@ describe("ArtCircle", () => {
     );
   });
 
+  it("can provide a custom title", () => {
+    const wrapper = mount(ArtCircle, {
+      propsData: {
+        title: "Custom Title",
+        cardName: "Card Name",
+        artist: "Some Name",
+      },
+    });
+
+    expect(wrapper.element.getAttribute("title")).toBe("Custom Title");
+  });
+
   it("defaults height and width class to 64", () => {
     const wrapper = mount(ArtCircle, {
       propsData: {

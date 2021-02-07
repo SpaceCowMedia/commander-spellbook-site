@@ -1,5 +1,5 @@
 <template>
-  <div class="art-circle" :style="computedStyle" :title="credit"></div>
+  <div class="art-circle" :style="computedStyle" :title="customTitle"></div>
 </template>
 
 <script lang="ts">
@@ -19,6 +19,10 @@ export default Vue.extend({
       type: Number,
       default: 16,
     },
+    title: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     computedStyle(): Record<string, string> {
@@ -30,6 +34,9 @@ export default Vue.extend({
     },
     credit(): string {
       return `${this.cardName} by ${this.artist}`;
+    },
+    customTitle(): string {
+      return this.title ? this.title : this.credit;
     },
     imgSrc(): string {
       return require(`~/assets/images/art-circles/${this.cardName}-${this.artist}.jpg`);

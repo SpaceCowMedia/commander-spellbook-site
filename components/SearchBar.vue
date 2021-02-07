@@ -2,7 +2,12 @@
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
-        <ArtCircle :size="2" card-name="Spellbook" artist="Ciruelo" />
+        <ArtCircle
+          title="Commander Spellbook Logo (art Spellbook by Ciruelo)"
+          :size="2"
+          card-name="Spellbook"
+          artist="Ciruelo"
+        />
       </nuxt-link>
 
       <div class="flex flex-grow items-center">
