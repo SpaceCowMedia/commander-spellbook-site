@@ -1,7 +1,12 @@
 <template>
   <div class="w-full text-center">
     <!-- eslint-disable-next-line vue/require-v-for-key -->
-    <img v-for="color in colorIdentity" class="color-identity" :src="color" />
+    <img
+      v-for="(url, index) in colorIdentitySymbolUrls"
+      class="color-identity"
+      :src="url"
+      :alt="altTextFromIndex(index)"
+    />
   </div>
 </template>
 
@@ -19,8 +24,30 @@ export default Vue.extend({
     },
   },
   computed: {
-    colorIdentity(): string[] {
+    colorIdentitySymbolUrls(): string[] {
       return this.colors.map((c) => scryfall.getSymbolUrl(c));
+    },
+  },
+  methods: {
+    altTextFromIndex(index: number): string {
+      const color = this.colors[index].toLowerCase();
+
+      switch (color) {
+        case "w":
+          return "White Mana Symbol";
+        case "u":
+          return "Blue Mana Symbol";
+        case "b":
+          return "Black Mana Symbol";
+        case "r":
+          return "Red Mana Symbol";
+        case "g":
+          return "Green Mana Symbol";
+        case "c":
+          return "Colorless Mana Symbol";
+        default:
+          return "Mana Symbol";
+      }
     },
   },
 });
