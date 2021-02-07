@@ -2,6 +2,7 @@
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
+        <div class="sr-only">Go to Home Page</div>
         <ArtCircle
           title="Commander Spellbook Logo (art Spellbook by Ciruelo)"
           :size="2"
@@ -17,8 +18,12 @@
           aria-hidden="true"
           @click="focusSearch"
         ></div>
+        <label aria-hidden="true" for="search-bar-input" class="sr-only"
+          >Combo Search</label
+        >
         <input
           ref="searchInput"
+          id="search-bar-input"
           v-model="query"
           type="text"
           class="main-search-input"
