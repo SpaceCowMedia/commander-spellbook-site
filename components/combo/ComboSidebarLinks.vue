@@ -20,7 +20,7 @@
 
     <input
       ref="copyInput"
-      type="text"
+      type="hidden"
       class="hidden-combo-link-input"
       :value="comboLink"
     />
