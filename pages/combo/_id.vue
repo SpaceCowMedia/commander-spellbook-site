@@ -140,9 +140,12 @@ export default Vue.extend({
     // @ts-ignore
     const title = `Commander Spellbook: ${this.title}`;
     // @ts-ignore
-    const description = `Cards: ${this.cardNames.join(" - ")}
+    const results = this.results.join(" - ");
+    // @ts-ignore
+    const cardNames = this.cardNames.join(" - ");
+    const description = `Cards: ${cardNames}
  |
- Results: ${this.results.join(" - ")}`;
+ Results: ${results}`;
     // @ts-ignore
     const link = this.link;
     const logo = require(`~/assets/images/art-circles/Spellbook-Ciruelo.jpg`);
