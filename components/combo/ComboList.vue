@@ -4,7 +4,11 @@
       <div class="combo-list-title">{{ title }}</div>
       <ol class="combo-list" :class="{ 'list-decimal': showNumbers }">
         <li v-for="(item, index) in iterations" :key="title + '-' + index">
-          <TextWithMagicSymbol :text="item" :cards-in-combo="cardsInCombo" />
+          <TextWithMagicSymbol
+            :text="item"
+            :cards-in-combo="cardsInCombo"
+            :include-card-links="includeCardLinks"
+          />
         </li>
         <div v-if="iterations.length === 0">
           <!-- eslint-disable-next-line vue/require-v-for-key, vue/no-unused-vars -->
@@ -37,6 +41,10 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+    includeCardLinks: {
+      type: Boolean,
+      default: false,
     },
     showNumbers: {
       type: Boolean,

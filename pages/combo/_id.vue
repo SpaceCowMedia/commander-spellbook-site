@@ -14,6 +14,7 @@
           :iterations="cardNames"
           :is-card="true"
           :cards-in-combo="cardNames"
+          :include-card-links="true"
         />
         <ComboList
           id="combo-prerequisites"

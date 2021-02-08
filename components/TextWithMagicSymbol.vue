@@ -4,13 +4,21 @@
     <span v-for="item in items">
       <img
         v-if="item.nodeType === 'image'"
+        aria-hidden="true"
         class="magic-symbol"
         :src="item.value"
       />
+      <span v-if="item.nodeType === 'image'" class="sr-only">
+        {{ item.manaSymbol }} mana &nbsp;
+      </span>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
-        <a :href="getLinkFromCardName(item.value)" target="_blank">{{
-          item.value
-        }}</a>
+        <a
+          v-if="includeCardLinks"
+          :href="getLinkFromCardName(item.value)"
+          target="_blank"
+          >{{ item.value }}</a
+        >
+        <span v-else>{{ item.value }}</span>
       </CardTooltip>
       <span v-else class="text">{{ item.value }}</span>
     </span>
@@ -37,6 +45,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: "",
+    },
+    includeCardLinks: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -69,6 +81,7 @@ export default Vue.extend({
             return {
               nodeType: "image",
               value: scryfall.getSymbolUrl(manaSymbol),
+              manaSymbol,
             };
           }
 

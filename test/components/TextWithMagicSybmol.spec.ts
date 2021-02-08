@@ -57,8 +57,35 @@ describe("TextWithMagicSymbol", () => {
     const tooltip = wrapper.findComponent(CardTooltipStub);
 
     expect(tooltip.props("cardName")).toBe("Card Name 1");
+    expect(
+      (tooltip.find("span").element as HTMLAnchorElement).textContent
+    ).toBe("Card Name 1");
+  });
+
+  it("renders cards with links", () => {
+    const CardTooltipStub = {
+      template: "<div><slot /></div>",
+      props: ["cardName"],
+    };
+    const wrapper = mount(TextWithMagicSymbol, {
+      stubs: {
+        CardTooltip: CardTooltipStub,
+      },
+      propsData: {
+        cardsInCombo: ["Card Name 1", "Card Name 2"],
+        includeCardLinks: true,
+        text: "Card Name 1",
+      },
+    });
+
+    const tooltip = wrapper.findComponent(CardTooltipStub);
+
+    expect(tooltip.props("cardName")).toBe("Card Name 1");
     expect((tooltip.find("a").element as HTMLAnchorElement).href).toBe(
       "https://scryfall.com/search?q=name%3D%22Card%20Name%201%22"
+    );
+    expect((tooltip.find("a").element as HTMLAnchorElement).textContent).toBe(
+      "Card Name 1"
     );
   });
 
