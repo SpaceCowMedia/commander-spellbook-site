@@ -138,17 +138,15 @@ export default Vue.extend({
     // for some reason, these properties aren't available here???
     // seems like a nuxt typescript issue
     // @ts-ignore
-    const title = `Commander Spellbook: ${this.title}`;
+    const title = this.cardNames.join(" | ");
     // @ts-ignore
-    const results = this.results.join(" - ");
-    // @ts-ignore
-    const cardNames = this.cardNames.join(" - ");
-    const description = `Cards: ${cardNames}
- |
- Results: ${results}`;
+    const description = this.results.reduce((str, result) => {
+      return str + `\n  * ${result}`;
+    }, "Combo Results:");
     // @ts-ignore
     const link = this.link;
-    const logo = require(`~/assets/images/art-circles/Spellbook-Ciruelo.jpg`);
+    // @ts-ignore
+    const logo = this.cardArts[0];
 
     return {
       title,
@@ -167,6 +165,11 @@ export default Vue.extend({
           hid: "og-url",
           property: "og:url",
           content: link,
+        },
+        {
+          hid: "og-site_name",
+          property: "og:site_name",
+          content: "Commander Spellbook: Combo Database for Commander (EDH)",
         },
         {
           hid: "og-title",
