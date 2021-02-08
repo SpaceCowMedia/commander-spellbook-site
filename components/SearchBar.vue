@@ -22,8 +22,8 @@
           >Combo Search</label
         >
         <input
-          ref="searchInput"
           id="search-bar-input"
+          ref="searchInput"
           v-model="query"
           type="text"
           class="main-search-input"
