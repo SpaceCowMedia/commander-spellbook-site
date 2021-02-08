@@ -134,6 +134,80 @@ export default Vue.extend({
       results: [],
     };
   },
+  head() {
+    // for some reason, these properties aren't available here???
+    // seems like a nuxt typescript issue
+    // @ts-ignore
+    const title = `Commander Spellbook: ${this.title}`;
+    // @ts-ignore
+    const description = `Cards: ${this.cardNames.join(" - ")}
+ |
+ Results: ${this.results.join(" - ")}`;
+    // @ts-ignore
+    const link = this.link;
+    const logo = require(`~/assets/images/art-circles/Spellbook-Ciruelo.jpg`);
+
+    return {
+      title,
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: description,
+        },
+        {
+          hid: "og-type",
+          property: "og:type",
+          content: "website",
+        },
+        {
+          hid: "og-url",
+          property: "og:url",
+          content: link,
+        },
+        {
+          hid: "og-title",
+          property: "og:title",
+          content: title,
+        },
+        {
+          hid: "og-description",
+          property: "og:description",
+          content: description,
+        },
+        {
+          hid: "og-image",
+          property: "og:image",
+          content: logo,
+        },
+        {
+          hid: "twitter-card",
+          property: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          hid: "twitter-url",
+          property: "twitter:url",
+          content: link,
+        },
+        {
+          hid: "twitter-title",
+          property: "twitter:title",
+          content: title,
+        },
+        {
+          hid: "twitter-description",
+          property: "twitter:description",
+          content: description,
+        },
+        {
+          hid: "twitter-image",
+          property: "twitter:image",
+          content: logo,
+        },
+      ],
+    };
+  },
   computed: {
     cardNames(): string[] {
       return this.cards.map((c) => c.name);
