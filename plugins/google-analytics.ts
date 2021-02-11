@@ -9,15 +9,17 @@ type NuxtObject = {
 };
 
 export default (nuxt: NuxtObject) => {
-  const getGDPR = localStorage.getItem("GDPR:accepted");
+  const gdprIsAccepted = localStorage.getItem("GDPR:accepted") === "true";
+  const isProd = process.env.NODE_ENV === "production";
+  const shouldRunAnalytics = isProd && gdprIsAccepted;
 
   Vue.use(
     VueGtag,
     {
       config: { id: "G-357BGWEVLV" },
       appName: "Commander Spellbook",
-      bootstrap: getGDPR === "true",
-      enabled: getGDPR === "true",
+      bootstrap: shouldRunAnalytics,
+      enabled: shouldRunAnalytics,
       pageTrackerScreenviewEnabled: true,
     },
     nuxt.app.router
