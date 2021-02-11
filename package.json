@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.1",
-    "commander-spellbook": "^0.8.0",
+    "commander-spellbook": "^0.8.1",
     "core-js": "^3.8.3",
     "nuxt": "^2.14.12",
     "scryfall-client": "^0.18.6"
