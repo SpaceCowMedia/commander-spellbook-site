@@ -1,11 +1,11 @@
-jest.mock("vue-gtag");
-
 import { mount } from "@vue/test-utils";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
-import type { VueComponent } from "../types";
 import { bootstrap } from "vue-gtag";
-
 import { mocked } from "ts-jest/utils";
+
+import type { VueComponent } from "../types";
+
+jest.mock("vue-gtag");
 
 describe("AnalyticsCookieBanner", () => {
   afterEach(() => {
