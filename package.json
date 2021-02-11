@@ -34,7 +34,8 @@
     "commander-spellbook": "^0.8.1",
     "core-js": "^3.8.3",
     "nuxt": "^2.14.12",
-    "scryfall-client": "^0.18.6"
+    "scryfall-client": "^0.18.6",
+    "vue-gtag": "^1.11.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

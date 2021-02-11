@@ -10,6 +10,7 @@
         <Nuxt />
       </main>
       <Footer />
+      <AnalyticsCookieBanner />
     </BetaMask>
   </div>
 </template>
