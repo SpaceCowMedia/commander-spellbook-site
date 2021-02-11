@@ -1,6 +1,11 @@
 <template>
-  <footer class="footer">
-    <nuxt-link to="/syntax-guide"> Syntax Guide </nuxt-link>
+  <footer class="container footer md:flex flex-row w-full">
+    <div class="flex-grow">
+      <nuxt-link to="/syntax-guide"> Syntax Guide </nuxt-link>
+    </div>
+    <div class="flex-grow">
+      <nuxt-link to="/privacy-policy"> Privacy Policy </nuxt-link>
+    </div>
   </footer>
 </template>
 
