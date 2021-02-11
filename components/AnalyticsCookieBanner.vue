@@ -15,8 +15,10 @@
       </p>
     </div>
     <div class="flex justify-center mt-4 lg:mt-0">
-      <div class="button" @click="accept">Sure!</div>
-      <div class="button" @click="deny">Nope</div>
+      <button id="cookie-accept-button" class="button" @click="accept">
+        Sure!
+      </button>
+      <button id="cookie-deny-button" class="button" @click="deny">Nope</button>
     </div>
   </div>
 </template>
