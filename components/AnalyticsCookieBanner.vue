@@ -33,7 +33,7 @@ export default Vue.extend({
       isOpen: false,
     };
   },
-  created(): void {
+  mounted(): void {
     // if the user has set it, it will be either the string
     // "true" or "false", so we can show the modal when the
     // value returned from localstorage is undefined
