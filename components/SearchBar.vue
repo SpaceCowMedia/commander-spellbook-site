@@ -59,11 +59,11 @@
     >
       <nuxt-link to="/advanced-search" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
-        Advanced Search
+        Advanced
       </nuxt-link>
       <nuxt-link to="/syntax-guide" class="mobile-menu-button">
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
-        Syntax Guide
+        Syntax
       </nuxt-link>
     </div>
   </div>
