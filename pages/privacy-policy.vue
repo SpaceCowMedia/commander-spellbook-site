@@ -5,7 +5,8 @@
       artist="Dave Allsop"
       class="m-auto md:block hidden"
     />
-    <h1>Privacy Policy</h1>
+    <h1 class="heading-title text-center">Privacy Policy</h1>
+
     <p>
       We consider the privacy of our visitors to be extremely important. This
       privacy policy document describes in detail the types of personal
@@ -443,10 +444,6 @@
 </template>
 
 <style scoped>
-h1 {
-  @apply my-4 text-4xl font-semibold text-center;
-}
-
 h3 {
   @apply my-4 text-2xl font-semibold;
 }
