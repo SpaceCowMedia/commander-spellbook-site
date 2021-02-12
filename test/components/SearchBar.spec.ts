@@ -27,6 +27,9 @@ describe("SearchBar", () => {
       mocks: {
         $route,
         $router,
+        $gtag: {
+          event: jest.fn(),
+        },
       },
     };
   });
@@ -138,6 +141,21 @@ describe("SearchBar", () => {
         query: {
           q: "card:Rashmi",
         },
+      });
+    });
+
+    it("sends an analytics event", async () => {
+      // @ts-ignore
+      const eventSpy = wrapperOptions.mocks.$gtag.event;
+      const wrapper = mount(SearchBar, wrapperOptions);
+
+      await wrapper.setData({ query: "card:Rashmi" });
+
+      (wrapper.vm as VueComponent).onSubmit();
+
+      expect(eventSpy).toBeCalledTimes(1);
+      expect(eventSpy).toBeCalledWith("search", {
+        search_term: "card:Rashmi",
       });
     });
   });

@@ -132,6 +132,8 @@ export default Vue.extend({
         return;
       }
 
+      this.$gtag.event("search", { search_term: this.query });
+
       this.$router.push({
         path: "/search",
         query: {
