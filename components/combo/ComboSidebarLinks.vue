@@ -90,8 +90,8 @@ export default Vue.extend({
       document.execCommand("copy");
 
       this.showCopyNotification = true;
-      this.$gtag.event("user_copied_combo_link", {
-        combo_id: this.comboId,
+      this.$gtag.event("Copy Combo Link Clicked", {
+        event_category: "Combo Detail Page Actions",
       });
 
       setTimeout(() => {
@@ -110,7 +110,6 @@ export default Vue.extend({
     goToSimiliarCombos(): void {
       this.$gtag.event("Find Other Combos Using These Cards Button Clicked", {
         event_category: "Combo Detail Page Actions",
-        event_label: "Find Other Combos Using These Cards Button Clicked",
       });
 
       this.$router.push({

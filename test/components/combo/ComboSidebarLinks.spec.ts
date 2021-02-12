@@ -115,8 +115,8 @@ describe("ComboSidebarLinks", () => {
       vm.copyComboLink();
 
       expect(eventSpy).toBeCalledTimes(1);
-      expect(eventSpy).toBeCalledWith("user_copied_combo_link", {
-        combo_id: "3",
+      expect(eventSpy).toBeCalledWith("Copy Combo Link Clicked", {
+        event_category: "Combo Detail Page Actions",
       });
     });
   });
@@ -242,7 +242,6 @@ describe("ComboSidebarLinks", () => {
         "Find Other Combos Using These Cards Button Clicked",
         {
           event_category: "Combo Detail Page Actions",
-          event_label: "Find Other Combos Using These Cards Button Clicked",
         }
       );
     });
