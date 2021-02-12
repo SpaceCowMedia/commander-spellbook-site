@@ -92,6 +92,9 @@ export default Vue.extend({
       document.execCommand("copy");
 
       this.showCopyNotification = true;
+      this.$gtag.event("user_copied_combo_link", {
+        combo_id: this.comboId,
+      });
 
       setTimeout(() => {
         this.showCopyNotification = false;

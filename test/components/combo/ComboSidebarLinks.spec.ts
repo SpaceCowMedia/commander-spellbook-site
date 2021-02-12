@@ -15,9 +15,14 @@ describe("ComboSidebarLinks", () => {
       propsData: {
         comboLink: "https://example.com/combo/3",
       },
+      mocks: {
+        $gtag: {
+          event: jest.fn(),
+        },
+      },
     });
 
-    const comboButton = wrapper.find(".combo-button");
+    const comboButton = wrapper.find("#copy-combo-button");
 
     await comboButton.trigger("click");
 
@@ -55,6 +60,11 @@ describe("ComboSidebarLinks", () => {
         propsData: {
           comboLink: "https://example.com/combo/3",
         },
+        mocks: {
+          $gtag: {
+            event: jest.fn(),
+          },
+        },
       });
       const vm = wrapper.vm as VueComponent;
 
@@ -74,6 +84,11 @@ describe("ComboSidebarLinks", () => {
         propsData: {
           comboLink: "https://example.com/combo/3",
         },
+        mocks: {
+          $gtag: {
+            event: jest.fn(),
+          },
+        },
       });
       const vm = wrapper.vm as VueComponent;
 
@@ -86,6 +101,30 @@ describe("ComboSidebarLinks", () => {
 
       jest.advanceTimersByTime(1001);
       expect(vm.showCopyNotification).toBe(false);
+    });
+
+    it("sends analytics event for copying combo", () => {
+      const eventSpy = jest.fn();
+
+      const wrapper = shallowMount(ComboSidebarLinks, {
+        propsData: {
+          comboId: "3",
+          comboLink: "https://example.com/combo/3",
+        },
+        mocks: {
+          $gtag: {
+            event: eventSpy,
+          },
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      vm.copyComboLink();
+
+      expect(eventSpy).toBeCalledTimes(1);
+      expect(eventSpy).toBeCalledWith("user_copied_combo_link", {
+        combo_id: "3",
+      });
     });
   });
 
