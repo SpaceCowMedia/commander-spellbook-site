@@ -31,9 +31,6 @@ describe("ComboSidebarLinks", () => {
 
   it("creates a 'Find Other Combos Using These Cards' button when there are related searches", async () => {
     const wrapper = shallowMount(ComboSidebarLinks, {
-      stubs: {
-        NuxtLink: RouterLinkStub,
-      },
       propsData: {
         comboLink: "https://example.com/combo/3",
         comboId: "fake-id",
@@ -48,10 +45,6 @@ describe("ComboSidebarLinks", () => {
     });
 
     expect(wrapper.find("#has-similiar-combos").exists()).toBe(true);
-    // Will probably need to adjust this if a second NuxtLink gets added to the component
-    expect(wrapper.findComponent(RouterLinkStub).props("to")).toContain(
-      "/search?q="
-    );
   });
 
   describe("copyComboLink", () => {
@@ -178,9 +171,6 @@ describe("ComboSidebarLinks", () => {
       });
 
       const wrapper = shallowMount(ComboSidebarLinks, {
-        stubs: {
-          NuxtLink: true,
-        },
         propsData: {
           comboLink: "https://example.com/combo/3",
           id: "fake-id",
@@ -192,6 +182,69 @@ describe("ComboSidebarLinks", () => {
       await vm.lookupSimiliarCombos();
 
       expect(vm.hasSimiliarCombos).toBe(true);
+    });
+  });
+
+  describe("goToSimiliarCombos", () => {
+    it("reroutes to search page", async () => {
+      const pushSpy = jest.fn();
+      const wrapper = shallowMount(ComboSidebarLinks, {
+        propsData: {
+          comboLink: "https://example.com/combo/3",
+          comboId: "fake-id",
+          cards: ["card 1", "card 2"],
+        },
+        mocks: {
+          $router: {
+            push: pushSpy,
+          },
+          $gtag: {
+            event: jest.fn(),
+          },
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await vm.goToSimiliarCombos();
+
+      expect(pushSpy).toBeCalledTimes(1);
+      expect(pushSpy).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: `-id:fake-id card="card 1" card="card 2"`,
+        },
+      });
+    });
+
+    it("sends an analytics event", async () => {
+      const eventSpy = jest.fn();
+      const wrapper = shallowMount(ComboSidebarLinks, {
+        propsData: {
+          comboLink: "https://example.com/combo/3",
+          comboId: "fake-id",
+          cards: ["card 1", "card 2"],
+        },
+        mocks: {
+          $router: {
+            push: jest.fn(),
+          },
+          $gtag: {
+            event: eventSpy,
+          },
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await vm.goToSimiliarCombos();
+
+      expect(eventSpy).toBeCalledTimes(1);
+      expect(eventSpy).toBeCalledWith(
+        "Find Other Combos Using These Cards Button Clicked",
+        {
+          event_category: "Combo Detail Page Actions",
+          event_label: "Find Other Combos Using These Cards Button Clicked",
+        }
+      );
     });
   });
 });

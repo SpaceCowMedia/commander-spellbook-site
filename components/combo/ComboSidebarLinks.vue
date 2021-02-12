@@ -10,13 +10,14 @@
       Copy Combo Link
     </button>
 
-    <div v-if="hasSimiliarCombos" id="has-similiar-combos">
-      <nuxt-link :to="similiarCombosLink">
-        <button class="combo-button">
-          Find Other Combos Using These Cards
-        </button>
-      </nuxt-link>
-    </div>
+    <button
+      v-if="hasSimiliarCombos"
+      id="has-similiar-combos"
+      class="combo-button"
+      @click="goToSimiliarCombos"
+    >
+      Find Other Combos Using These Cards
+    </button>
 
     <input
       ref="copyInput"
@@ -82,9 +83,6 @@ export default Vue.extend({
         return accum + ` card="${name}"`;
       }, `-id:${this.comboId}`);
     },
-    similiarCombosLink(): string {
-      return `/search?q=${encodeURIComponent(this.similiarSearchString)}`;
-    },
   },
   methods: {
     copyComboLink(): void {
@@ -108,6 +106,19 @@ export default Vue.extend({
       const result = await spellbookApi.search(this.similiarSearchString);
 
       this.hasSimiliarCombos = result.combos.length > 0;
+    },
+    goToSimiliarCombos(): void {
+      this.$gtag.event("Find Other Combos Using These Cards Button Clicked", {
+        event_category: "Combo Detail Page Actions",
+        event_label: "Find Other Combos Using These Cards Button Clicked",
+      });
+
+      this.$router.push({
+        path: "/search",
+        query: {
+          q: this.similiarSearchString,
+        },
+      });
     },
   },
 });
