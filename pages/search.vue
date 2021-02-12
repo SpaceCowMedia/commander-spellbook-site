@@ -147,7 +147,7 @@ export default Vue.extend({
       const { message, errors, combos } = await spellbookApi.search(query);
 
       if (combos.length === 1) {
-        this.$router.push({
+        this.$router.replace({
           path: `/combo/${combos[0].commanderSpellbookId}`,
           query: { q: query },
         });

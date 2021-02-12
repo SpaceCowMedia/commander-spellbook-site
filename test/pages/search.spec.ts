@@ -42,6 +42,7 @@ describe("SearchPage", () => {
     };
     $router = {
       push: jest.fn(),
+      replace: jest.fn(),
     };
     wrapperOptions = {
       mocks: {
@@ -426,7 +427,7 @@ describe("SearchPage", () => {
 
       await vm.updateSearchResults("query");
 
-      expect($router.push).toBeCalledWith({
+      expect($router.replace).toBeCalledWith({
         path: "/combo/1",
         query: {
           q: "query",
