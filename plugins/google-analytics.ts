@@ -18,7 +18,6 @@ export default (nuxt: NuxtObject) => {
     {
       config: { id: "G-357BGWEVLV" },
       appName: "Commander Spellbook",
-      bootstrap: shouldRunAnalytics,
       enabled: shouldRunAnalytics,
       pageTrackerScreenviewEnabled: true,
     },
