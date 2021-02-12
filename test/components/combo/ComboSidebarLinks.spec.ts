@@ -1,4 +1,4 @@
-import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
 import spellbookApi from "commander-spellbook";
 
