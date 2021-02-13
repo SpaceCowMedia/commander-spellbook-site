@@ -60,6 +60,10 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+a {
+  @apply no-underline text-dark;
+}
+
 .combo-results-wrapper {
   @apply flex flex-wrap;
 }

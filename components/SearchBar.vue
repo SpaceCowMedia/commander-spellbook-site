@@ -151,6 +151,10 @@ export default Vue.extend({
   @apply bg-gray-200 border border-gray-200 mx-auto;
 }
 
+a {
+  @apply text-dark no-underline;
+}
+
 .main-search-input-container {
   @apply flex m-auto h-full;
 }

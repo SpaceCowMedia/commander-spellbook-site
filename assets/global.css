@@ -4,6 +4,10 @@ html {
   @apply bg-primary;
 }
 
+a {
+  @apply text-primary underline;
+}
+
 main {
   @apply bg-white;
 }
@@ -19,7 +23,7 @@ main {
 }
 
 .button--red {
-  @apply m-4 inline-block border border-secondary py-2 px-3 text-secondary rounded-sm;
+  @apply m-4 inline-block border border-secondary py-2 px-3 text-secondary rounded-sm no-underline;
 }
 
 .button--red:hover {

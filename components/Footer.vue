@@ -21,6 +21,6 @@
 }
 
 .footer a {
-  @apply text-white;
+  @apply text-white no-underline;
 }
 </style>

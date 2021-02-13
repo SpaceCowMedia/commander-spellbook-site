@@ -460,10 +460,6 @@ ul {
   @apply list-disc list-inside ml-4;
 }
 
-a {
-  @apply underline text-primary;
-}
-
 hr {
   @apply mt-6 mb-2;
 }
