@@ -40,7 +40,6 @@
           @click="toggleMenu"
         >
           <div class="menu-icon link-icon" aria-hidden="true"></div>
-          Menu
         </button>
         <nuxt-link to="/advanced-search" class="hidden sm:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
@@ -171,6 +170,7 @@ export default Vue.extend({
 .menu-icon {
   -webkit-mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
   mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
+  @apply mr-0;
 }
 
 .advanced-search-icon {
