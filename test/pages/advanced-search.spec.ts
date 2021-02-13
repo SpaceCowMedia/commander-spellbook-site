@@ -485,11 +485,11 @@ describe("AdvancedSearchPage", () => {
       expect(vm.validate()).toBe(true);
 
       expect(cards[0].error).toBe(
-        "Contains a non-integer. Use an full number instead."
+        "Contains a non-integer. Use a full number instead."
       );
       expect(cards[1].error).toBeFalsy();
       expect(cards[2].error).toBe(
-        "Contains a non-integer. Use an full number instead."
+        "Contains a non-integer. Use a full number instead."
       );
     });
   });

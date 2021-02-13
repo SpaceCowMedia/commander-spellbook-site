@@ -316,7 +316,7 @@ export default Vue.extend({
           input.operator.split("-")[1] === "number" &&
           !Number.isInteger(Number(input.value))
         ) {
-          input.error = "Contains a non-integer. Use an full number instead.";
+          input.error = "Contains a non-integer. Use a full number instead.";
         }
 
         if (input.error) {

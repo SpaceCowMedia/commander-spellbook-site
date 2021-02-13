@@ -139,7 +139,7 @@ describe("Advanced Search Page", () => {
     );
     cy.contains(
       "#step-inputs .input-wrapper-0 .input-error",
-      "Contains a non-integer. Use an full number instead."
+      "Contains a non-integer. Use a full number instead."
     );
   });
 });
