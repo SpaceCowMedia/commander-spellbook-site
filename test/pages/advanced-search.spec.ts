@@ -87,7 +87,7 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" pre>2 step:"step 1" steps>3 result:"result 1" result="result 2"`,
+          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2"`,
         },
       });
     });
@@ -213,7 +213,7 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
-    it("adds an s to keys that are not ci or pre when they are setting a number of the key", () => {
+    it("adds an s to keys that are not ci (transforms to colors) or pre (transforms to prerequisites) when they are setting a number of the key", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
           $router,
@@ -237,7 +237,7 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `cards>5 ci>5 pre>5 steps>5 results>5`,
+          q: `cards>5 colors>5 prerequisites>5 steps>5 results>5`,
         },
       });
     });

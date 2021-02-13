@@ -234,8 +234,11 @@ export default Vue.extend({
             keyInQuery = "";
             operator = "";
           } else if (isNumericOperator) {
-            // TODO handle color identity and prerequisites for pluralization
-            if (keyInQuery !== "ci" && keyInQuery !== "pre") {
+            if (keyInQuery === "ci") {
+              keyInQuery = "colors";
+            } else if (keyInQuery === "pre") {
+              keyInQuery = "prerequisites";
+            } else {
               keyInQuery += "s";
             }
           } else if (isExclusionOperator) {

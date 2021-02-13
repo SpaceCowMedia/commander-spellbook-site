@@ -43,7 +43,10 @@ describe("Advanced Search Page", () => {
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should("include", "/search?q=ci%3Awubr%20ci%3E2%20ci%3Dgrixis");
+    cy.url().should(
+      "include",
+      "/search?q=ci%3Awubr%20colors%3E2%20ci%3Dgrixis"
+    );
   });
 
   it("can search prerequisites in combo", () => {
