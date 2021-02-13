@@ -59,6 +59,40 @@ describe("MultiSearchInput", () => {
     expect(wrapper.props("inputs")[0].operator).toBe(">");
   });
 
+  it("includes error if provided", () => {
+    const wrapper = shallowMount(MultiSearchInput, {
+      propsData: {
+        inputs: [
+          {
+            value: "",
+            operator: ":",
+            error: "has error",
+          },
+          {
+            value: "",
+            operator: ":",
+          },
+          {
+            value: "",
+            operator: ":",
+            error: "has another error",
+          },
+        ],
+      },
+    });
+
+    const errors = wrapper.findAll(".input-error");
+
+    expect(errors.length).toBe(2);
+
+    expect(wrapper.find(".input-wrapper-0 .input-error").text()).toContain(
+      "has error"
+    );
+    expect(wrapper.find(".input-wrapper-2 .input-error").text()).toContain(
+      "has another error"
+    );
+  });
+
   it("emits add-input event when plus button is clicked", async () => {
     const spy = jest.fn();
     const wrapper = shallowMount(MultiSearchInput, {

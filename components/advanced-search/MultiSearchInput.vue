@@ -6,61 +6,87 @@
     <div
       v-for="(input, index) in inputs"
       :key="`${label}-input-${index}`"
-      class="my-2 flex"
+      class="my-2"
+      :class="'input-wrapper-' + index"
     >
-      <div class="w-1/2 relative bg-blue-800 rounded-l-sm">
-        <select
-          v-model="input.operator"
-          class="operator-selector focus:shadow-outline"
-          :class="'select-' + index"
-        >
-          <option
-            v-for="option in operatorOptions"
-            :key="`${label}-input-${index}-${option.label}`"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select>
+      <div class="flex">
         <div
-          class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+          class="w-1/2 relative rounded-l-sm"
+          :class="{ 'bg-blue-800': !input.error, 'bg-red-700': input.error }"
         >
-          <svg class="w-4 h-4 fill-current text-blue-100" viewBox="0 0 20 20">
-            <path
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-              fill-rule="evenodd"
-            ></path>
-          </svg>
+          <select
+            v-model="input.operator"
+            class="operator-selector focus:shadow-outline"
+            :class="{
+              ['select-' + index]: true,
+            }"
+          >
+            <option
+              v-for="option in operatorOptions"
+              :key="`${label}-input-${index}-${option.label}`"
+              :value="option.value"
+            >
+              {{ option.label }}
+            </option>
+          </select>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+          >
+            <svg class="w-4 h-4 fill-current text-white" viewBox="0 0 20 20">
+              <path
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="w-full flex-grow flex flex-row">
+          <input
+            v-model="input.value"
+            class="input"
+            :class="{
+              ['input-' + index]: true,
+              'border-blue-800': !input.error,
+              'border-red-700': input.error,
+            }"
+            type="text"
+            :placeholder="getPlaceholder(input.operator)"
+          />
+
+          <button
+            v-if="inputs.length > 1"
+            type="button"
+            class="minus-button input-button"
+            :class="{
+              ['minus-button-' + index]: true,
+              'bg-blue-800': !input.error,
+              'bg-red-700': input.error,
+            }"
+            @click.prevent="removeInput(index)"
+          >
+            −
+          </button>
+          <button
+            type="button"
+            class="plus-button input-button rounded-r-sm"
+            :class="{
+              ['plus-button-' + index]: true,
+              'bg-blue-800': !input.error,
+              'bg-red-700': input.error,
+            }"
+            @click.prevent="addInput(index)"
+          >
+            +
+          </button>
         </div>
       </div>
-
-      <div class="w-full flex-grow flex flex-row">
-        <input
-          v-model="input.value"
-          class="input"
-          type="text"
-          :class="'input-' + index"
-          :placeholder="getPlaceholder(input.operator)"
-        />
-
-        <button
-          v-if="inputs.length > 1"
-          type="button"
-          class="minus-button input-button"
-          :class="'minus-button-' + index"
-          @click.prevent="removeInput(index)"
-        >
-          −
-        </button>
-        <button
-          type="button"
-          class="plus-button input-button rounded-r-sm"
-          :class="'plus-button-' + index"
-          @click.prevent="addInput(index)"
-        >
-          +
-        </button>
+      <div
+        v-if="input.error"
+        class="input-error text-red-700 w-full py-2 px-4 text-center rounded-b-sm"
+      >
+        {{ input.error }}
       </div>
     </div>
   </div>
@@ -145,14 +171,14 @@ export default Vue.extend({
 }
 
 .input {
-  @apply border border-blue-800 px-3 flex-grow;
+  @apply border px-3 flex-grow;
 }
 
 .operator-selector {
-  @apply w-full h-10 pl-3 pr-6 text-base appearance-none bg-transparent text-blue-100;
+  @apply w-full h-10 pl-3 pr-6 text-base text-white appearance-none bg-transparent;
 }
 
 .input-button {
-  @apply bg-blue-800 px-2 text-white flex flex-row items-center text-3xl;
+  @apply px-2 text-white flex flex-row items-center text-3xl;
 }
 </style>
