@@ -1,86 +1,84 @@
 <template>
   <div>
     <div class="container">
-      <h2 class="heading-title">Advanced Search</h2>
-      <p>TODO: Intro text about how this works</p>
+      <ArtCircle
+        card-name="Tribute Mage"
+        artist="Scott Murphy"
+        class="m-auto md:block hidden"
+      />
+      <h1 class="heading-title text-center">Advanced Search</h1>
     </div>
 
     <form @submit.prevent="submit">
-      <div class="divider"></div>
-
       <div id="card-name-inputs" class="container">
         <MultiSearchInput
+          :inputs="cards"
           label="Card Name"
-          placeholder="Card Name"
-          @update="updateCards"
+          :operator-options="cardOperatorOptions"
+          @add-input="addInput('cards', $event)"
+          @remove-input="removeInput('cards', $event)"
         />
       </div>
 
-      <div class="divider"></div>
-
-      <div id="color-identity-chooser" class="container">
-        <div class="my-2 flex">
-          <div class="w-1/3 flex-grow">
-            <span>Color Identity</span>
-          </div>
-          <div class="w-2/3 flex flex-row">
-            <button
-              v-for="(color, index) in colorIdentity"
-              :key="`ci-input-${index}`"
-              type="button"
-              class="color-identity-wrapper cursor-pointer"
-              :class="{
-                'opacity-25': !color.checked,
-                ['ci-button-' + index]: true,
-              }"
-              @click="toggleColorIdentity(index)"
-            >
-              <ColorIdentity :colors="[color.symbol]" />
-            </button>
-          </div>
-        </div>
+      <div id="color-identity-inputs" class="container">
+        <MultiSearchInput
+          :inputs="colorIdentity"
+          default-placeholder="ex: wug, temur, colorless, black"
+          label="Color Identity"
+          :operator-options="colorIdentityOperatorOptions"
+          @add-input="addInput('colorIdentity', $event)"
+          @remove-input="removeInput('colorIdentity', $event)"
+        />
       </div>
-
-      <div class="divider"></div>
 
       <div id="prerequisite-inputs" class="container">
         <MultiSearchInput
+          :inputs="prerequisites"
+          default-placeholder="all permanents on the battlefield"
           label="Prerequisite"
-          placeholder="Text"
-          @update="updatePrerequisites"
+          :operator-options="comboDataOperatorOptions"
+          @add-input="addInput('prerequisites', $event)"
+          @remove-input="removeInput('prerequisites', $event)"
         />
       </div>
-
-      <div class="divider"></div>
 
       <div id="step-inputs" class="container">
         <MultiSearchInput
+          :inputs="steps"
+          default-placeholder="ex: intruder alarm triggers as well"
           label="Step"
-          placeholder="Text"
-          @update="updateSteps"
+          :operator-options="comboDataOperatorOptions"
+          @add-input="addInput('steps', $event)"
+          @remove-input="removeInput('steps', $event)"
         />
       </div>
-
-      <div class="divider"></div>
 
       <div id="result-inputs" class="container">
         <MultiSearchInput
+          :inputs="results"
+          default-placeholder="ex: win the game"
           label="Result"
-          placeholder="Text"
-          @update="updateResults"
+          :operator-options="comboDataOperatorOptions"
+          @add-input="addInput('results', $event)"
+          @remove-input="removeInput('results', $event)"
         />
       </div>
 
-      <div class="divider"></div>
-
-      <div class="container">
-        <button
-          id="advanced-search-submit-button"
-          type="submit"
-          class="button--red"
-        >
-          Search
-        </button>
+      <div class="container text-center pb-8">
+        <div class="flex flex-row items-center">
+          <button
+            id="advanced-search-submit-button"
+            type="submit"
+            class="border border-red-800 p-4 rounded-l-sm hover:bg-red-800 hover:text-white"
+          >
+            Search&nbsp;With&nbsp;Query
+          </button>
+          <div
+            class="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
+          >
+            {{ query }}&nbsp;
+          </div>
+        </div>
       </div>
     </form>
   </div>
@@ -89,99 +87,179 @@
 <script lang="ts">
 import Vue from "vue";
 
-type ColorIdentityInput = {
-  symbol: string;
-  checked: boolean;
+type InputData = {
+  value: string;
+  operator: string;
 };
+type OperatorOption = {
+  value: string;
+  label: string;
+  placeholder?: string;
+};
+type ModelTypes =
+  | "cards"
+  | "colorIdentity"
+  | "prerequisites"
+  | "steps"
+  | "results";
 
 type Data = {
-  cards: string[];
-  prerequisites: string[];
-  steps: string[];
-  results: string[];
-  colorIdentity: ColorIdentityInput[];
+  cards: InputData[];
+  cardOperatorOptions: OperatorOption[];
+
+  colorIdentity: InputData[];
+  colorIdentityOperatorOptions: OperatorOption[];
+
+  prerequisites: InputData[];
+  steps: InputData[];
+  results: InputData[];
+  comboDataOperatorOptions: OperatorOption[];
 };
 
 export default Vue.extend({
   data(): Data {
     return {
-      cards: [],
-      prerequisites: [],
-      steps: [],
-      results: [],
-      colorIdentity: [
+      cards: [{ value: "", operator: ":" }],
+      cardOperatorOptions: [
         {
-          symbol: "w",
-          checked: true,
+          value: ":",
+          label: "Contains card with name",
+          placeholder: "ex: isochron",
         },
         {
-          symbol: "u",
-          checked: true,
+          value: "=",
+          label: "Contains card with exact name",
+          placeholder: "ex: basalt monolith",
         },
         {
-          symbol: "b",
-          checked: true,
+          value: ":-exclude",
+          label: "Does not contain card with name",
+          placeholder: "ex: isochron",
         },
         {
-          symbol: "r",
-          checked: true,
+          value: "=-exclude",
+          label: "Does not contain card with exact name",
+          placeholder: "ex: basalt monolith",
+        },
+        { value: ">-number", label: "Contains more than x cards (number)" },
+        { value: "<-number", label: "Contains less than x cards (number)" },
+        { value: "=-number", label: "Contains exactly x cards (number)" },
+      ],
+
+      colorIdentity: [{ value: "", operator: ":" }],
+      colorIdentityOperatorOptions: [
+        {
+          value: ":",
+          label: "Is within the color identity",
         },
         {
-          symbol: "g",
-          checked: true,
+          value: "=",
+          label: "Is exactly the color identity",
         },
+        {
+          value: ":-exclude",
+          label: "Is not within the color identity",
+        },
+        {
+          value: "=-exclude",
+          label: "Is not exactly the color identity",
+        },
+        { value: ">-number", label: "Contains more than x colors (number)" },
+        { value: "<-number", label: "Contains less than x colors (number)" },
+        { value: "=-number", label: "Contains exactly x colors (number)" },
+      ],
+
+      prerequisites: [{ value: "", operator: ":" }],
+      steps: [{ value: "", operator: ":" }],
+      results: [{ value: "", operator: ":" }],
+      comboDataOperatorOptions: [
+        {
+          value: ":",
+          label: "Contains",
+          placeholder: "ex: mana, untap, infinite",
+        },
+        { value: "=", label: "Is exactly" },
+        {
+          value: ":-exclude",
+          label: "Does not contain",
+          placeholder: "ex: mana, untap, infinite",
+        },
+        { value: "=-exclude", label: "Is not exactly" },
+        { value: ">-number", label: "Contains more than x (number)" },
+        { value: "<-number", label: "Contains less than x (number)" },
+        { value: "=-number", label: "Contains exactly x (number)" },
       ],
     };
   },
-  methods: {
-    submit(): void {
+  computed: {
+    query(): string {
       let query = "";
 
       function makeQueryFunction(
         key: string
       ): Parameters<typeof Array.prototype.forEach>[0] {
-        return (value: string) => {
-          if (!value.trim()) {
+        return (input: InputData) => {
+          const value = input.value.trim();
+          const isSimpleValue = value.match(/^[\w\d]*$/);
+          const modifier = input.operator.split("-")[1];
+          const isNumericOperator = modifier === "number";
+          const isExclusionOperator = modifier === "exclude";
+          let operator = input.operator.split("-")[0];
+          let keyInQuery = key;
+          const isSimpleCardValue =
+            isSimpleValue &&
+            keyInQuery === "card" &&
+            operator === ":" &&
+            !isExclusionOperator;
+
+          if (!value) {
             return;
           }
 
-          let quotes = '"';
+          let quotes = "";
 
-          if (value.includes(quotes)) {
-            if (value.includes("'")) {
-              // malformed if it includes both double quotes and single quotes
-              return;
+          if (!isSimpleValue) {
+            quotes = '"';
+
+            if (value.includes(quotes)) {
+              if (value.includes("'")) {
+                // malformed if it includes both double quotes and single quotes
+                return;
+              }
+              quotes = "'";
             }
-            quotes = "'";
           }
 
-          query += ` ${key}:${quotes}${value}${quotes}`;
+          if (isSimpleCardValue) {
+            keyInQuery = "";
+            operator = "";
+          } else if (isNumericOperator) {
+            // TODO handle color identity and prerequisites for pluralization
+            if (keyInQuery !== "ci" && keyInQuery !== "pre") {
+              keyInQuery += "s";
+            }
+          } else if (isExclusionOperator) {
+            keyInQuery = `-${keyInQuery}`;
+          }
+
+          query += ` ${keyInQuery}${operator}${quotes}${value}${quotes}`;
         };
       }
 
       this.cards.forEach(makeQueryFunction("card"));
-
-      const colors = this.colorIdentity.reduce((accum, color) => {
-        if (color.checked) {
-          accum += color.symbol;
-        }
-
-        return accum;
-      }, "");
-
-      if (!colors) {
-        query += " ci:colorless";
-      } else if (colors.length < 5) {
-        query += ` ci:${colors}`;
-      }
-
+      this.colorIdentity.forEach(makeQueryFunction("ci"));
       this.prerequisites.forEach(makeQueryFunction("pre"));
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
 
       query = query.trim();
 
-      if (!query) {
+      return query;
+    },
+  },
+  methods: {
+    submit(): void {
+      if (!this.query) {
         // TODO erorr
         return;
       }
@@ -189,34 +267,21 @@ export default Vue.extend({
       this.$router.push({
         path: "/search",
         query: {
-          q: `${query}`,
+          q: `${this.query}`,
         },
       });
     },
-    toggleColorIdentity(index: number): void {
-      this.colorIdentity[index].checked = !this.colorIdentity[index].checked;
+    addInput(model: ModelTypes, index: number): void {
+      this[model].splice(index + 1, 0, { operator: ":", value: "" });
     },
-    updateCards(payload: { index: number; value: string }): void {
-      this.cards[payload.index] = payload.value;
-    },
-    updatePrerequisites(payload: { index: number; value: string }): void {
-      this.prerequisites[payload.index] = payload.value;
-    },
-    updateSteps(payload: { index: number; value: string }): void {
-      this.steps[payload.index] = payload.value;
-    },
-    updateResults(payload: { index: number; value: string }): void {
-      this.results[payload.index] = payload.value;
+    removeInput(model: ModelTypes, index: number): void {
+      this[model].splice(index, 1);
     },
   },
 });
 </script>
 
 <style scoped>
-.divider {
-  @apply border-t w-full bg-gray-400;
-}
-
 .container {
   @apply pt-6 mb-6;
 }
