@@ -6,12 +6,12 @@
           A variety of parameters can be used to search for combos.
         </p>
 
-        <div class="flex flex-col sm:flex-row">
+        <div class="flex flex-col md:flex-row md:flex-wrap">
           <a
             v-for="section in sections"
             :key="section.id"
             :href="'#' + section.id"
-            class="button--red flex-grow text-center"
+            class="button--red flex-grow text-center md:w-1/4"
           >
             <div>
               {{ section.text }}
@@ -201,7 +201,8 @@
     </SearchGuide>
 
     <SearchGuide
-      heading="Spoiled"
+      id="spoiled"
+      heading="Spoiled / Previewed"
       heading-card-name="Spoils of Adventure"
       heading-artist-name="Zezhou Chen"
       :snippets="spoiledSnippets"
@@ -276,6 +277,18 @@ export default Vue.extend({
         {
           id: "results",
           text: "Results",
+        },
+        {
+          id: "id",
+          text: "Combo Identifier",
+        },
+        {
+          id: "spoiled",
+          text: "Spoiled / Previewed",
+        },
+        {
+          id: "banned",
+          text: "Banned",
         },
       ],
       cardSnippets: [
