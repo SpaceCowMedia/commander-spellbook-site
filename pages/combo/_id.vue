@@ -243,7 +243,7 @@ export default Vue.extend({
 }
 
 .banned-warning {
-  @apply text-red-500 font-semibold;
+  @apply text-danger font-semibold;
 }
 
 .spoiled-warning {

@@ -31,8 +31,7 @@ export default Vue.extend({
 
 <style scoped>
 .search-snippet {
-  border-color: rgb(92, 126, 159);
-  @apply border-2 pb-2 mb-4;
+  @apply border-2 border-primary pb-2 mb-4 rounded-sm;
 }
 
 .search-snippet pre,
@@ -41,8 +40,6 @@ export default Vue.extend({
 }
 
 .search-snippet pre {
-  background: rgb(92, 126, 159);
-  border-color: rgb(92, 126, 159);
-  @apply text-white pb-2 pt-1;
+  @apply text-white border-primary bg-primary pb-2 pt-1;
 }
 </style>

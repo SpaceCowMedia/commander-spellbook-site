@@ -1,7 +1,16 @@
-// these are opt in breaking changes to be ready for Tailwind v2 when it releases
 module.exports = {
   theme: {
+    extend: {
+      colors: {
+        primary: "rgb(65, 95, 129)",
+        secondary: "rgb(136, 35, 17)",
+        dark: "#35495e",
+        danger: "rgb(150, 49, 28)",
+        warning: "rgb(224, 212, 128)",
+      },
+    },
     fontSize: {
+      // these are opt in breaking changes to be ready for Tailwind v2 when it releases
       xs: ["0.75rem", { lineHeight: "1rem" }],
       sm: ["0.875rem", { lineHeight: "1.25rem" }],
       base: ["1rem", { lineHeight: "1.5rem" }],

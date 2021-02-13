@@ -12,7 +12,7 @@
       <div class="flex">
         <div
           class="w-1/2 relative rounded-l-sm"
-          :class="{ 'bg-blue-800': !input.error, 'bg-red-700': input.error }"
+          :class="{ 'bg-primary': !input.error, 'bg-danger': input.error }"
         >
           <select
             v-model="input.operator"
@@ -48,8 +48,8 @@
             class="input"
             :class="{
               ['input-' + index]: true,
-              'border-blue-800': !input.error,
-              'border-red-700': input.error,
+              'border-primary': !input.error,
+              'border-danger': input.error,
             }"
             type="text"
             :placeholder="getPlaceholder(input.operator)"
@@ -61,8 +61,8 @@
             class="minus-button input-button"
             :class="{
               ['minus-button-' + index]: true,
-              'bg-blue-800': !input.error,
-              'bg-red-700': input.error,
+              'bg-primary': !input.error,
+              'bg-danger': input.error,
             }"
             @click.prevent="removeInput(index)"
           >
@@ -73,8 +73,8 @@
             class="plus-button input-button rounded-r-sm"
             :class="{
               ['plus-button-' + index]: true,
-              'bg-blue-800': !input.error,
-              'bg-red-700': input.error,
+              'bg-primary': !input.error,
+              'bg-danger': input.error,
             }"
             @click.prevent="addInput(index)"
           >
@@ -84,7 +84,7 @@
       </div>
       <div
         v-if="input.error"
-        class="input-error text-red-700 w-full py-2 px-4 text-center rounded-b-sm"
+        class="input-error text-danger w-full py-2 px-4 text-center rounded-b-sm"
       >
         {{ input.error }}
       </div>

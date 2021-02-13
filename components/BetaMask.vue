@@ -73,6 +73,6 @@ export default Vue.extend({
 }
 
 .error {
-  @apply bg-red-300;
+  @apply bg-danger;
 }
 </style>

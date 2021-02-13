@@ -73,7 +73,7 @@ export default Vue.extend({
 
 <style scoped>
 .search-errors {
-  @apply border-t border-gray-400 bg-red-200;
+  @apply border-t border-gray-400 bg-warning;
 }
 
 .search-description {

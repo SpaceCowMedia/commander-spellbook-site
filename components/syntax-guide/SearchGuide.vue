@@ -79,8 +79,7 @@ export default Vue.extend({
 }
 
 code {
-  color: rgb(92, 126, 159);
-  @apply bg-gray-200 pl-1 pr-1;
+  @apply text-primary bg-gray-200 pl-1 pr-1;
 }
 
 .description p {

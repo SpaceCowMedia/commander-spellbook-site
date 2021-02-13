@@ -411,7 +411,6 @@ export default Vue.extend({
 
 <style scoped>
 code {
-  color: rgb(92, 126, 159);
-  @apply bg-gray-200 pl-1 pr-1;
+  @apply bg-gray-200 text-primary px-1;
 }
 </style>

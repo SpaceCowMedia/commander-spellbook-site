@@ -69,7 +69,7 @@
           <button
             id="advanced-search-submit-button"
             type="submit"
-            class="border border-red-800 p-4 rounded-l-sm hover:bg-red-800 hover:text-white"
+            class="border border-primary p-4 rounded-l-sm hover:bg-primary hover:text-white"
           >
             Search&nbsp;With&nbsp;Query
           </button>
@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <div id="advanced-search-validation-error" class="text-red-600 p-4">
+        <div id="advanced-search-validation-error" class="text-danger p-4">
           {{ validationError }}
         </div>
       </div>

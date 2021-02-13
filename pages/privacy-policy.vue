@@ -461,7 +461,7 @@ ul {
 }
 
 a {
-  @apply underline text-blue-700;
+  @apply underline text-primary;
 }
 
 hr {
