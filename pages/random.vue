@@ -17,13 +17,9 @@ export default Vue.extend({
   async mounted(): Promise<void> {
     const randomCombo = await spellbookApi.random();
 
-    this.$router.push({
+    this.$router.replace({
       path: `/combo/${randomCombo.commanderSpellbookId}`,
     });
   },
 });
 </script>
-
-<style>
-/* styles here */
-</style>
