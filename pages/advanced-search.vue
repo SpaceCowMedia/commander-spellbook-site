@@ -7,6 +7,11 @@
         class="m-auto md:block hidden"
       />
       <h1 class="heading-title text-center">Advanced Search</h1>
+
+      <p class="text-center">
+        For more information on the syntax for searches,
+        <nuxt-link to="/syntax-guide">check out the Syntax Guide</nuxt-link>.
+      </p>
     </div>
 
     <form @submit.prevent="submit">

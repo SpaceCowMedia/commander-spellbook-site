@@ -20,6 +20,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -99,6 +100,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -129,6 +131,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -154,6 +157,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -179,6 +183,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -204,6 +209,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -233,6 +239,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -258,6 +265,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -276,6 +284,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -302,6 +311,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -328,6 +338,7 @@ describe("AdvancedSearchPage", () => {
         },
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -353,6 +364,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -371,6 +383,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -389,6 +402,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -422,6 +436,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
         },
       });
@@ -457,6 +472,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
         },
       });
@@ -505,6 +521,7 @@ describe("AdvancedSearchPage", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
           ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
         },
       });
