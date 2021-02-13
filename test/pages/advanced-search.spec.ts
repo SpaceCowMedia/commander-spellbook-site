@@ -12,6 +12,37 @@ describe("AdvancedSearchPage", () => {
     };
   });
 
+  it("renders a placeholder query until a search term is entered", async () => {
+    const wrapper = shallowMount(AdvancedSearchPage, {
+      mocks: {
+        $router,
+      },
+      stubs: {
+        ArtCircle: true,
+        NuxtLink: true,
+        MultiSearchInput: true,
+      },
+    });
+
+    expect(wrapper.find("#search-query span").text()).toContain(
+      "(your query will populate here"
+    );
+
+    await wrapper.setData({
+      cards: [
+        {
+          value: "cardname",
+          operator: ":",
+        },
+      ],
+    });
+
+    expect(wrapper.find("#search-query span").text()).toContain("cardname");
+    expect(wrapper.find("#search-query span").text()).not.toContain(
+      "(your query will populate here"
+    );
+  });
+
   describe("submit", () => {
     it("redirects to search with query based on data", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
