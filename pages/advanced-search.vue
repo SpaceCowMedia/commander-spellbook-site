@@ -79,6 +79,10 @@
             {{ query }}&nbsp;
           </div>
         </div>
+
+        <div id="advanced-search-validation-error" class="text-red-600 p-4">
+          {{ validationError }}
+        </div>
       </div>
     </form>
   </div>
@@ -90,6 +94,7 @@ import Vue from "vue";
 type InputData = {
   value: string;
   operator: string;
+  error?: string;
 };
 type OperatorOption = {
   value: string;
@@ -114,6 +119,8 @@ type Data = {
   steps: InputData[];
   results: InputData[];
   comboDataOperatorOptions: OperatorOption[];
+
+  validationError: string;
 };
 
 export default Vue.extend({
@@ -189,11 +196,15 @@ export default Vue.extend({
         { value: "<-number", label: "Contains less than x (number)" },
         { value: "=-number", label: "Contains exactly x (number)" },
       ],
+
+      validationError: "",
     };
   },
   computed: {
     query(): string {
       let query = "";
+
+      this.validate();
 
       function makeQueryFunction(
         key: string
@@ -222,10 +233,6 @@ export default Vue.extend({
             quotes = '"';
 
             if (value.includes(quotes)) {
-              if (value.includes("'")) {
-                // malformed if it includes both double quotes and single quotes
-                return;
-              }
               quotes = "'";
             }
           }
@@ -262,8 +269,16 @@ export default Vue.extend({
   },
   methods: {
     submit(): void {
+      this.validationError = "";
+
       if (!this.query) {
-        // TODO erorr
+        this.validationError = "No search queries entered.";
+        return;
+      }
+
+      if (this.validate()) {
+        this.validationError =
+          "Check for errors in your search terms before submitting.";
         return;
       }
 
@@ -273,6 +288,39 @@ export default Vue.extend({
           q: `${this.query}`,
         },
       });
+    },
+    validate(): boolean {
+      let hasValidationError = false;
+
+      this.validationError = "";
+
+      function val(input: InputData) {
+        input.error = "";
+
+        if (input.value.includes("'") && input.value.includes('"')) {
+          input.error =
+            "Contains both single and double quotes. A card name may only use one kind.";
+        }
+
+        if (
+          input.operator.split("-")[1] === "number" &&
+          !Number.isInteger(Number(input.value))
+        ) {
+          input.error = "Contains a non-integer. Use an full number instead.";
+        }
+
+        if (input.error) {
+          hasValidationError = true;
+        }
+      }
+
+      this.cards.forEach(val);
+      this.colorIdentity.forEach(val);
+      this.prerequisites.forEach(val);
+      this.steps.forEach(val);
+      this.results.forEach(val);
+
+      return hasValidationError;
     },
     addInput(model: ModelTypes, index: number): void {
       this[model].splice(index + 1, 0, { operator: ":", value: "" });

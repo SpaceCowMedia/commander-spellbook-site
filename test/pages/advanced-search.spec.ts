@@ -92,22 +92,6 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
-    it("does not redirect when query is empty", () => {
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        mocks: {
-          $router,
-        },
-        stubs: {
-          ArtCircle: true,
-          MultiSearchInput: true,
-        },
-      });
-
-      (wrapper.vm as VueComponent).submit();
-
-      expect($router.push).not.toBeCalled();
-    });
-
     it("ignores data with empty spaces", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
@@ -267,7 +251,7 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
-    it("ignores query if it contains both single and double quotes", () => {
+    it("prevents submission if query is empty", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
           $router,
@@ -277,6 +261,51 @@ describe("AdvancedSearchPage", () => {
           MultiSearchInput: true,
         },
       });
+      const vm = wrapper.vm as VueComponent;
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe("No search queries entered.");
+    });
+
+    it("prevents submission if query is not empty, but only has blank spaces", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        cards: [
+          { value: "", operator: ":" },
+          { value: "     ", operator: ":" },
+        ],
+        results: [{ value: " ", operator: ":" }],
+      });
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe("No search queries entered.");
+    });
+
+    it("prevents submission if query contains both double and single quotes", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
       wrapper.setData({
         cards: [
           { value: `Card with "symbols" and 'symbols'`, operator: ":" },
@@ -284,15 +313,138 @@ describe("AdvancedSearchPage", () => {
         ],
       });
 
-      (wrapper.vm as VueComponent).submit();
+      vm.submit();
 
-      expect($router.push).toBeCalledTimes(1);
-      expect($router.push).toBeCalledWith({
-        path: "/search",
-        query: {
-          q: `card:"basic card"`,
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe(
+        "Check for errors in your search terms before submitting."
+      );
+    });
+
+    it("prevents submission if query contains non-numeric values for numeric operator", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
         },
       });
+      const vm = wrapper.vm as VueComponent;
+      wrapper.setData({
+        cards: [
+          { value: "card 1", operator: ":-number" },
+          { value: "basic card", operator: ":" },
+        ],
+      });
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe(
+        "Check for errors in your search terms before submitting."
+      );
+    });
+  });
+
+  describe("validate", () => {
+    it("resets global validation error message", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        validationError: "some error",
+      });
+
+      vm.validate();
+
+      expect(vm.validationError).toBe("");
+    });
+
+    it("returns true when there is a validation error", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      expect(vm.validate()).toBe(false);
+
+      wrapper.setData({
+        cards: [{ value: `' card "`, operator: ":" }],
+      });
+
+      expect(vm.validate()).toBe(true);
+    });
+
+    it("adds validation error to inputs for mixing quotes", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      const cards = [
+        { value: `' card 1"`, operator: ":", error: "" },
+        { value: " card 2", operator: ":" },
+        { value: `' card 3"`, operator: ":" },
+        { value: "card with '", operator: ":" },
+        { value: 'card with "', operator: ":" },
+      ];
+
+      wrapper.setData({
+        cards,
+      });
+
+      expect(vm.validate()).toBe(true);
+
+      expect(cards[0].error).toBe(
+        "Contains both single and double quotes. A card name may only use one kind."
+      );
+      expect(cards[1].error).toBeFalsy();
+      expect(cards[2].error).toBe(
+        "Contains both single and double quotes. A card name may only use one kind."
+      );
+      expect(cards[3].error).toBeFalsy();
+      expect(cards[4].error).toBeFalsy();
+    });
+
+    it("adds validation error for providing non-numeric values for numeric operators", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          MultiSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      const cards = [
+        { value: "card 1", operator: ":-number", error: "" },
+        { value: "2", operator: ":-number" },
+        { value: "3.05", operator: ":-number" },
+      ];
+
+      wrapper.setData({
+        cards,
+      });
+
+      expect(vm.validate()).toBe(true);
+
+      expect(cards[0].error).toBe(
+        "Contains a non-integer. Use an full number instead."
+      );
+      expect(cards[1].error).toBeFalsy();
+      expect(cards[2].error).toBe(
+        "Contains a non-integer. Use an full number instead."
+      );
     });
   });
 

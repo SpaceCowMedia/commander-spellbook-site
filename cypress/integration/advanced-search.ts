@@ -108,4 +108,38 @@ describe("Advanced Search Page", () => {
       "/search?q=result%3Amana%20-result%3D%22untap%20all%22"
     );
   });
+
+  it("prevents searches when queries are empty", () => {
+    cy.visit("/advanced-search");
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.contains(
+      "#advanced-search-validation-error",
+      "No search queries entered."
+    );
+  });
+
+  it("prevents searches when invalid queries are used", () => {
+    cy.visit("/advanced-search");
+
+    cy.get("#result-inputs input.input-0").type(`mana ' " mana`);
+    cy.get("#step-inputs input.input-0").type("not a number");
+    cy.get("#step-inputs select.select-0").select("=-number");
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.contains(
+      "#advanced-search-validation-error",
+      "Check for errors in your search terms before submitting."
+    );
+    cy.contains(
+      "#result-inputs .input-wrapper-0 .input-error",
+      "Contains both single and double quotes. A card name may only use one kind."
+    );
+    cy.contains(
+      "#step-inputs .input-wrapper-0 .input-error",
+      "Contains a non-integer. Use an full number instead."
+    );
+  });
 });
