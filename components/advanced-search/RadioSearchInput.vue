@@ -3,6 +3,7 @@
     <div class="font-semibold">{{ label }}</div>
 
     <fieldset class="flex flex-col">
+      <legend class="sr-only">Choose settings for {{ label }}</legend>
       <label
         v-for="(option, index) in options"
         :key="`${label}-radio-input-${index}`"

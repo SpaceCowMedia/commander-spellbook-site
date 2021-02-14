@@ -13,7 +13,11 @@
           class="w-1/2 relative rounded-l-sm"
           :class="{ 'bg-primary': !input.error, 'bg-danger': input.error }"
         >
+          <label :for="label + '-select-' + index" class="sr-only"
+            >Modifier selector for {{ label }}</label
+          >
           <select
+            :id="label + '-select-' + index"
             v-model="input.operator"
             class="operator-selector focus:shadow-outline"
             :class="{
