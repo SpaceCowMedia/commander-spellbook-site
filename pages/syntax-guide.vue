@@ -1,11 +1,19 @@
 <template>
   <div>
-    <div class="border-b-2 border-gray-400 w-full">
-      <div class="container py-6">
-        <p class="pl-4 pr-4">
-          A variety of parameters can be used to search for combos.
-        </p>
+    <div class="container pt-6 mb-6">
+      <ArtCircle
+        card-name="Goblin Guide"
+        artist="Mark Zug"
+        class="m-auto md:block hidden"
+      />
+      <h1 class="heading-title text-center">Syntax Guide</h1>
+      <p class="text-center">
+        A variety of parameters can be used to search for combos.
+      </p>
+    </div>
 
+    <div class="border-b-2 border-gray-400 w-full">
+      <div class="container pb-6">
         <div class="flex flex-col md:flex-row md:flex-wrap">
           <a
             v-for="section in sections"
