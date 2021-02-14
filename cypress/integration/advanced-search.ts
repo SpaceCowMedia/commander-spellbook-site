@@ -13,15 +13,32 @@ describe("Advanced Search Page", () => {
 
     cy.get("#card-name-inputs .plus-button-0").click();
 
-    cy.get("#card-name-inputs input.input-1").type("2");
-    cy.get("#card-name-inputs select.select-1").select(">-number");
+    cy.get("#card-name-inputs input.input-1").type("emry");
+    cy.get("#card-name-inputs select.select-1").select(":-exclude");
 
     cy.get("#advanced-search-submit-button").click();
 
     cy.url().should(
       "include",
-      "/search?q=mesmeric%20cards%3E2%20card%3D%22basalt%20monolith%22"
+      "/search?q=mesmeric%20-card%3Aemry%20card%3D%22basalt%20monolith%22"
     );
+  });
+
+  it("can search card amounts in combo", () => {
+    cy.visit("/advanced-search");
+
+    cy.get("#card-amount-inputs input.input").should("have.length", 1);
+    cy.get("#card-amount-inputs input.input-0").type("3");
+
+    cy.get("#card-amount-inputs .plus-button-0").click();
+    cy.get("#card-amount-inputs input.input").should("have.length", 2);
+
+    cy.get("#card-amount-inputs select.select-1").select("<-number");
+    cy.get("#card-amount-inputs input.input-1").type("5");
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.url().should("include", "/search?q=cards%3D3%20cards%3C5");
   });
 
   it("can search color identity in combo", () => {

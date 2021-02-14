@@ -25,6 +25,16 @@
         />
       </div>
 
+      <div id="card-amount-inputs" class="container">
+        <MultiSearchInput
+          :inputs="cardAmounts"
+          label="Number of Cards"
+          :operator-options="cardAmountOperatorOptions"
+          @add-input="addInput('cardAmounts', $event)"
+          @remove-input="removeInput('cardAmounts', $event)"
+        />
+      </div>
+
       <div id="color-identity-inputs" class="container">
         <MultiSearchInput
           :inputs="colorIdentity"
@@ -113,6 +123,7 @@ type OperatorOption = {
 };
 type ModelTypes =
   | "cards"
+  | "cardAmounts"
   | "colorIdentity"
   | "prerequisites"
   | "steps"
@@ -121,6 +132,9 @@ type ModelTypes =
 type Data = {
   cards: InputData[];
   cardOperatorOptions: OperatorOption[];
+
+  cardAmounts: InputData[];
+  cardAmountOperatorOptions: OperatorOption[];
 
   colorIdentity: InputData[];
   colorIdentityOperatorOptions: OperatorOption[];
@@ -158,9 +172,13 @@ export default Vue.extend({
           label: "Does not contain card with exact name",
           placeholder: "ex: basalt monolith",
         },
+      ],
+
+      cardAmounts: [{ value: "", operator: "=-number" }],
+      cardAmountOperatorOptions: [
+        { value: "=-number", label: "Contains exactly x cards (number)" },
         { value: ">-number", label: "Contains more than x cards (number)" },
         { value: "<-number", label: "Contains less than x cards (number)" },
-        { value: "=-number", label: "Contains exactly x cards (number)" },
       ],
 
       colorIdentity: [{ value: "", operator: ":" }],
@@ -267,6 +285,7 @@ export default Vue.extend({
       }
 
       this.cards.forEach(makeQueryFunction("card"));
+      this.cardAmounts.forEach(makeQueryFunction("card"));
       this.colorIdentity.forEach(makeQueryFunction("ci"));
       this.prerequisites.forEach(makeQueryFunction("pre"));
       this.steps.forEach(makeQueryFunction("step"));
@@ -325,6 +344,7 @@ export default Vue.extend({
       }
 
       this.cards.forEach(val);
+      this.cardAmounts.forEach(val);
       this.colorIdentity.forEach(val);
       this.prerequisites.forEach(val);
       this.steps.forEach(val);
@@ -333,7 +353,14 @@ export default Vue.extend({
       return hasValidationError;
     },
     addInput(model: ModelTypes, index: number): void {
-      this[model].splice(index + 1, 0, { operator: ":", value: "" });
+      let operator = ":";
+
+      if (model === "cardAmounts") {
+        // the cardAmounts model has a different default operator than
+        // the rest of them
+        operator = "=-number";
+      }
+      this[model].splice(index + 1, 0, { operator, value: "" });
     },
     removeInput(model: ModelTypes, index: number): void {
       this[model].splice(index, 1);

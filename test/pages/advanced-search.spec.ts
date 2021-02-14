@@ -66,6 +66,8 @@ describe("AdvancedSearchPage", () => {
             value: "card 2",
             operator: "=",
           },
+        ],
+        cardAmounts: [
           {
             value: "3",
             operator: ">-number",
@@ -245,7 +247,7 @@ describe("AdvancedSearchPage", () => {
         },
       });
       wrapper.setData({
-        cards: [{ value: "5", operator: ">-number" }],
+        cardAmounts: [{ value: "5", operator: ">-number" }],
         colorIdentity: [{ value: "5", operator: ">-number" }],
         prerequisites: [{ value: "5", operator: ">-number" }],
         steps: [{ value: "5", operator: ">-number" }],
@@ -375,10 +377,8 @@ describe("AdvancedSearchPage", () => {
       });
       const vm = wrapper.vm as VueComponent;
       wrapper.setData({
-        cards: [
-          { value: "card 1", operator: ":-number" },
-          { value: "basic card", operator: ":" },
-        ],
+        cardAmounts: [{ value: "card 1", operator: ":-number" }],
+        cards: [{ value: "basic card", operator: ":" }],
       });
 
       vm.submit();
@@ -472,23 +472,23 @@ describe("AdvancedSearchPage", () => {
         },
       });
       const vm = wrapper.vm as VueComponent;
-      const cards = [
+      const cardAmounts = [
         { value: "card 1", operator: ":-number", error: "" },
         { value: "2", operator: ":-number" },
         { value: "3.05", operator: ":-number" },
       ];
 
       wrapper.setData({
-        cards,
+        cardAmounts,
       });
 
       expect(vm.validate()).toBe(true);
 
-      expect(cards[0].error).toBe(
+      expect(cardAmounts[0].error).toBe(
         "Contains a non-integer. Use a full number instead."
       );
-      expect(cards[1].error).toBeFalsy();
-      expect(cards[2].error).toBe(
+      expect(cardAmounts[1].error).toBeFalsy();
+      expect(cardAmounts[2].error).toBe(
         "Contains a non-integer. Use a full number instead."
       );
     });
@@ -540,6 +540,35 @@ describe("AdvancedSearchPage", () => {
       expect(vm.cards[2].operator).toBe(":");
       expect(vm.cards[3].value).toBe("3");
       expect(vm.cards[3].operator).toBe("<");
+    });
+
+    it("uses custom operator for cardAmounts model", async () => {
+      const FakeMultiSearchInput = {
+        template: "<div></div>",
+        props: ["label", "placeholder"],
+      };
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: FakeMultiSearchInput,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        cardAmounts: [{ value: "1", operator: ">-number" }],
+      });
+
+      await wrapper
+        .findAllComponents(FakeMultiSearchInput)
+        .at(1)
+        .vm.$emit("add-input", 0);
+
+      expect(vm.cardAmounts[0].value).toBe("1");
+      expect(vm.cardAmounts[0].operator).toBe(">-number");
+      expect(vm.cardAmounts[1].value).toBe("");
+      expect(vm.cardAmounts[1].operator).toBe("=-number");
     });
   });
 
