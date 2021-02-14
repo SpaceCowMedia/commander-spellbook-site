@@ -126,6 +126,26 @@ describe("Advanced Search Page", () => {
     );
   });
 
+  it("can search for previewed combos", () => {
+    cy.visit("/advanced-search");
+
+    cy.get("#spoiled-combos input[type='radio']").last().check();
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.url().should("include", "/search?q=is%3Aspoiled");
+  });
+
+  it("can search for banned combos", () => {
+    cy.visit("/advanced-search");
+
+    cy.get("#banned-combos input[type='radio']").last().check();
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.url().should("include", "/search?q=is%3Abanned");
+  });
+
   it("prevents searches when queries are empty", () => {
     cy.visit("/advanced-search");
 
