@@ -29,6 +29,7 @@
         <MultiSearchInput
           :inputs="cardAmounts"
           label="Number of Cards"
+          plural-label="Number of Cards"
           :operator-options="cardAmountOperatorOptions"
           @add-input="addInput('cardAmounts', $event)"
           @remove-input="removeInput('cardAmounts', $event)"
