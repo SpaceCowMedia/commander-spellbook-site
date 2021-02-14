@@ -14,7 +14,7 @@
       use it.
     </p>
 
-    <h4>Log Files</h4>
+    <h2>Log Files</h2>
 
     <p>
       Like many other websites, we makes use of log files. These files merely
@@ -29,7 +29,7 @@
       identifiable.
     </p>
 
-    <h4>Cookies and Web Beacon</h4>
+    <h2>Cookies and Web Beacon</h2>
 
     <p>
       We use cookies to store information about visitors' preferences, to record
@@ -39,7 +39,7 @@
       their browser.
     </p>
 
-    <h4>Third Party Privacy Policies</h4>
+    <h2>Third Party Privacy Policies</h2>
 
     <p>
       You should consult the respective privacy policies of these third-party ad
@@ -55,7 +55,7 @@
       >
     </p>
 
-    <h4>Children's Information</h4>
+    <h2>Children's Information</h2>
 
     <p>
       We believe it is important to provide added protection for children
@@ -69,7 +69,7 @@
       promptly remove such information from our records.
     </p>
 
-    <h4>Online Privacy Policy Only</h4>
+    <h2>Online Privacy Policy Only</h2>
 
     <p>
       This privacy policy applies only to our online activities and is valid for
@@ -80,9 +80,7 @@
 
     <hr />
 
-    <h3>For California Residents: CCPA Information</h3>
-
-    <p><span data-ccpa-link="1"></span></p>
+    <h2>For California Residents: CCPA Information</h2>
 
     <p>
       This Privacy Notice for California Residents supplements the information
@@ -93,7 +91,7 @@
       the same meaning when used in this notice.
     </p>
 
-    <h4>Rights and Choices</h4>
+    <h3>Rights and Choices</h3>
 
     <p>
       The CCPA provides consumers located in the state of California with
@@ -102,7 +100,7 @@
       them:
     </p>
 
-    <h4>Access to Specific Information and Data Portability Rights</h4>
+    <h3>Access to Specific Information and Data Portability Rights</h3>
 
     <p>
       You have the right to request that the company disclose certain
@@ -145,7 +143,7 @@
       </li>
     </ul>
 
-    <h4>Non-Discrimination</h4>
+    <h3>Non-Discrimination</h3>
 
     <p>
       We will not discriminate against you for exercising any of your CCPA
@@ -168,7 +166,9 @@
       your value and contain written terms that describe the program’s material
       aspects.
     </p>
-    <h4>Exercising Access, Data Portability, and Deletion Rights</h4>
+
+    <h3>Exercising Access, Data Portability, and Deletion Rights</h3>
+
     <p>
       To exercise the access, data portability, and deletion rights described
       above, please submit a verifiable consumer request to us by
@@ -207,7 +207,9 @@
       verifiable consumer request to verify the requestor’s identity or
       authority to make the request.
     </p>
-    <h4>Information We Collect</h4>
+
+    <h3>Information We Collect</h3>
+
     <p>
       Our websites, emails (with your consent, where required by law), and other
       products, services and platforms collect information that identifies,
@@ -295,7 +297,9 @@
         </ul>
       </li>
     </ul>
-    <h4>Use of Personal Information</h4>
+
+    <h3>Use of Personal Information</h3>
+
     <p>
       We may use or disclose the personal information we collect for one or more
       of the following business purposes:
@@ -365,7 +369,9 @@
       or use the personal information we collected for materially different,
       unrelated, or incompatible purposes without providing you notice.
     </p>
-    <h4>Sharing Personal Information</h4>
+
+    <h3>Sharing Personal Information</h3>
+
     <p>
       The Company may disclose your personal information to a third-party for a
       business purpose or sell your personal information, subject to your right
@@ -393,7 +399,8 @@
       </li>
     </ul>
 
-    <h4>Disclosures of Personal Information for a Business Purpose</h4>
+    <h3>Disclosures of Personal Information for a Business Purpose</h3>
+
     <p>
       In the preceding twelve (12) months, the Company has disclosed the
       following categories of personal information for a business purpose:
@@ -409,7 +416,9 @@
       <li>[Category G: Geolocation Data.]</li>
       <li>[Category K: Inferences drawn from other personal information.]</li>
     </ul>
-    <h4>Sales of Personal Information</h4>
+
+    <h3>Sales of Personal Information</h3>
+
     <p>
       In the preceding twelve (12) months, the company has sold the following
       categories of personal information collected through our ad-supported
@@ -434,7 +443,7 @@
       information we collect with third parties.
     </p>
 
-    <h4>Consent</h4>
+    <h2>Consent</h2>
 
     <p>
       By using our website, you hereby consent to our privacy policy and agree
@@ -444,6 +453,10 @@
 </template>
 
 <style scoped>
+h2 {
+  @apply my-4 text-3xl font-semibold;
+}
+
 h3 {
   @apply my-4 text-2xl font-semibold;
 }
