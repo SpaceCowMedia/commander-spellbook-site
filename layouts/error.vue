@@ -26,3 +26,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+a {
+  @apply text-white no-underline;
+}
+</style>
