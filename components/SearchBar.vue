@@ -1,5 +1,5 @@
 <template>
-  <div class="outer-container">
+  <nav class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
         <div class="sr-only">Go to Home Page</div>
@@ -18,9 +18,7 @@
           aria-hidden="true"
           @click="focusSearch"
         ></div>
-        <label aria-hidden="true" for="search-bar-input" class="sr-only"
-          >Combo Search</label
-        >
+        <label for="search-bar-input" class="sr-only">Combo Search</label>
         <input
           id="search-bar-input"
           ref="searchInput"
@@ -40,6 +38,7 @@
           @click="toggleMenu"
         >
           <div class="menu-icon link-icon" aria-hidden="true"></div>
+          <div class="sr-only">Menu</div>
         </button>
         <nuxt-link to="/advanced-search" class="hidden sm:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
@@ -65,7 +64,7 @@
         Syntax
       </nuxt-link>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script lang="ts">
