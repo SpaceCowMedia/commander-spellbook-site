@@ -2,7 +2,7 @@
   <div>
     <div v-show="!passwordsMatch" class="auth-required">
       <div v-show="loaded" class="w-1/2 m-auto">
-        <p class="mb-2">Enter Password</p>
+        <label for="beta-password" class="mb-2">Enter Password</label>
         <input
           id="beta-password"
           v-model="password"
