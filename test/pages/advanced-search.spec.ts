@@ -21,6 +21,7 @@ describe("AdvancedSearchPage", () => {
         ArtCircle: true,
         NuxtLink: true,
         MultiSearchInput: true,
+        RadioSearchInput: true,
       },
     });
 
@@ -53,6 +54,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
 
@@ -113,6 +115,8 @@ describe("AdvancedSearchPage", () => {
             operator: ":",
           },
         ],
+        spoiled: "exclude",
+        banned: "is",
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -121,7 +125,7 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2"`,
+          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:spoiled is:banned`,
         },
       });
     });
@@ -135,6 +139,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -166,6 +171,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -192,6 +198,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -218,6 +225,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -244,6 +252,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -274,6 +283,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
@@ -291,6 +301,96 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
+    it("only applies spoiled property when `include` is not used", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        spoiled: "include",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        spoiled: "exclude",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "exclude:spoiled",
+        },
+      });
+
+      wrapper.setData({
+        spoiled: "is",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "is:spoiled",
+        },
+      });
+    });
+
+    it("only applies banned property when `exclude` is not used", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        banned: "exclude",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        banned: "include",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "include:banned",
+        },
+      });
+
+      wrapper.setData({
+        banned: "is",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "is:banned",
+        },
+      });
+    });
+
     it("prevents submission if query is empty", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
@@ -300,6 +400,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -319,6 +420,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -346,6 +448,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -373,6 +476,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -397,6 +501,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -416,6 +521,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -435,6 +541,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -469,6 +576,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -505,6 +613,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -552,6 +661,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -583,6 +693,7 @@ describe("AdvancedSearchPage", () => {
           ArtCircle: true,
           NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
@@ -603,6 +714,40 @@ describe("AdvancedSearchPage", () => {
       expect(vm.cards[0].operator).toBe("=");
       expect(vm.cards[1].value).toBe("3");
       expect(vm.cards[1].operator).toBe("<");
+    });
+  });
+
+  describe("updateRadio", () => {
+    it("updates model with value", async () => {
+      const FakeRadioSearchInput = {
+        template: "<div></div>",
+      };
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: FakeRadioSearchInput,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        spoiled: "include",
+        banned: "exclude",
+      });
+
+      const spoiledInput = wrapper
+        .findAllComponents(FakeRadioSearchInput)
+        .at(0);
+      const bannedInput = wrapper.findAllComponents(FakeRadioSearchInput).at(1);
+
+      await spoiledInput.vm.$emit("update-radio", "is");
+      expect(vm.spoiled).toBe("is");
+
+      await bannedInput.vm.$emit("update-radio", "is");
+
+      expect(vm.banned).toBe("is");
     });
   });
 });

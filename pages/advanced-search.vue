@@ -80,6 +80,26 @@
         />
       </div>
 
+      <div id="spoiled-combos" class="container">
+        <RadioSearchInput
+          label="Spoiled / Previewed Combos"
+          :checked-value="spoiled"
+          :options="spoiledOptions"
+          form-name="spoiled"
+          @update-radio="updateRadio('spoiled', $event)"
+        />
+      </div>
+
+      <div id="banned-combos" class="container">
+        <RadioSearchInput
+          label="Banned Combos"
+          :checked-value="banned"
+          :options="bannedOptions"
+          form-name="banned"
+          @update-radio="updateRadio('banned', $event)"
+        />
+      </div>
+
       <div class="container text-center pb-8">
         <div class="flex flex-row items-center">
           <button
@@ -146,7 +166,15 @@ type Data = {
   comboDataOperatorOptions: OperatorOption[];
 
   validationError: string;
+
+  spoiled: string;
+  spoiledOptions: OperatorOption[];
+  banned: string;
+  bannedOptions: OperatorOption[];
 };
+
+const DEFAULT_SPOILED_VALUE = "include";
+const DEFAULT_BANNED_VALUE = "exclude";
 
 export default Vue.extend({
   data(): Data {
@@ -226,6 +254,40 @@ export default Vue.extend({
         { value: "=-number", label: "Contains exactly x (number)" },
       ],
 
+      spoiled: DEFAULT_SPOILED_VALUE,
+      spoiledOptions: [
+        {
+          value: "include",
+          label:
+            "Include combos with newly previewed cards in search results (default search behavior)",
+        },
+        {
+          value: "exclude",
+          label: "Exclude combos with newly previewed cards in search results",
+        },
+        {
+          value: "is",
+          label: "Only show combos with newly previwed cards",
+        },
+      ],
+
+      banned: DEFAULT_BANNED_VALUE,
+      bannedOptions: [
+        {
+          value: "exclude",
+          label:
+            "Exclude combos with banned cards in search results (default search behavior)",
+        },
+        {
+          value: "include",
+          label: "Include combos with banned cards in search results",
+        },
+        {
+          value: "is",
+          label: "Only show combos with banned cards",
+        },
+      ],
+
       validationError: "",
     };
   },
@@ -291,6 +353,13 @@ export default Vue.extend({
       this.prerequisites.forEach(makeQueryFunction("pre"));
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
+
+      if (this.spoiled !== DEFAULT_SPOILED_VALUE) {
+        query += ` ${this.spoiled}:spoiled`;
+      }
+      if (this.banned !== DEFAULT_BANNED_VALUE) {
+        query += ` ${this.banned}:banned`;
+      }
 
       query = query.trim();
 
@@ -365,6 +434,9 @@ export default Vue.extend({
     },
     removeInput(model: TextInputModelTypes, index: number): void {
       this[model].splice(index, 1);
+    },
+    updateRadio(model: "banned" | "spoiled", value: string): void {
+      this[model] = value;
     },
   },
 });
