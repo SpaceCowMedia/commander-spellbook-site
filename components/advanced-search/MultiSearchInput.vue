@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="w-full md:w-1/3 flex-grow my-2 md:my-0">
-      <span class="input-label">{{ inputLabel }}</span>
-    </div>
+    <div class="input-label">{{ inputLabel }}</div>
+
     <div
       v-for="(input, index) in inputs"
       :key="`${label}-input-${index}`"
