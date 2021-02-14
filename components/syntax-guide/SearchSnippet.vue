@@ -30,6 +30,10 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+a {
+  @apply text-dark no-underline;
+}
+
 .search-snippet {
   @apply border-2 border-primary pb-2 mb-4 rounded-sm;
 }
