@@ -122,7 +122,7 @@ type OperatorOption = {
   label: string;
   placeholder?: string;
 };
-type ModelTypes =
+type TextInputModelTypes =
   | "cards"
   | "cardAmounts"
   | "colorIdentity"
@@ -353,7 +353,7 @@ export default Vue.extend({
 
       return hasValidationError;
     },
-    addInput(model: ModelTypes, index: number): void {
+    addInput(model: TextInputModelTypes, index: number): void {
       let operator = ":";
 
       if (model === "cardAmounts") {
@@ -363,7 +363,7 @@ export default Vue.extend({
       }
       this[model].splice(index + 1, 0, { operator, value: "" });
     },
-    removeInput(model: ModelTypes, index: number): void {
+    removeInput(model: TextInputModelTypes, index: number): void {
       this[model].splice(index, 1);
     },
   },
