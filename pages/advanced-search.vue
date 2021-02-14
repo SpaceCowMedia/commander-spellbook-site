@@ -85,7 +85,7 @@
           <button
             id="advanced-search-submit-button"
             type="submit"
-            class="border border-primary p-4 rounded-l-sm hover:bg-primary hover:text-white"
+            class="border border-secondary text-secondary p-4 rounded-l-sm hover:bg-secondary hover:text-white"
           >
             Search&nbsp;With&nbsp;Query
           </button>
