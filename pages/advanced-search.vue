@@ -192,14 +192,14 @@ export default Vue.extend({
       comboDataOperatorOptions: [
         {
           value: ":",
-          label: "Contains",
-          placeholder: "ex: mana, untap, infinite",
+          label: "Contains the phrase",
+          placeholder: "ex: mana, untap, additional",
         },
         { value: "=", label: "Is exactly" },
         {
           value: ":-exclude",
-          label: "Does not contain",
-          placeholder: "ex: mana, untap, infinite",
+          label: "Does not contain the phrase",
+          placeholder: "ex: mana, untap, additional",
         },
         { value: "=-exclude", label: "Is not exactly" },
         { value: ">-number", label: "Contains more than x (number)" },
