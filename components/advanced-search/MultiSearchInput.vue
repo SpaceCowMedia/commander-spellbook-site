@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="input-label">{{ inputLabel }}</div>
+    <label class="input-label" :for="getInputId(0)">{{ inputLabel }}</label>
 
     <div
       v-for="(input, index) in inputs"
@@ -43,6 +43,7 @@
 
         <div class="w-full flex-grow flex flex-row">
           <input
+            :id="getInputId(index)"
             v-model="input.value"
             class="input"
             :class="{
@@ -142,6 +143,9 @@ export default Vue.extend({
     },
     removeInput(index: number): void {
       this.$emit("remove-input", index);
+    },
+    getInputId(index: number): string {
+      return `${this.label}-input-${index}`;
     },
     getPlaceholder(operator: string): string {
       const isNumber = operator.split("-")[1] === "number";

@@ -114,7 +114,7 @@
             class="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
           >
             <span v-if="query">{{ query }}</span>
-            <span v-else class="text-gray-600"
+            <span v-else class="text-dark"
               >(your query will populate here when you've entered any search
               terms)</span
             >

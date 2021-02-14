@@ -2,13 +2,15 @@
   <div>
     <div class="font-semibold">{{ label }}</div>
 
-    <div class="flex flex-col">
+    <fieldset class="flex flex-col">
       <label
         v-for="(option, index) in options"
         :key="`${label}-radio-input-${index}`"
+        :for="label + '-radio-input-' + index"
         class="radio-wrapper sm:inline-flex items-center mt-3"
       >
         <input
+          :id="label + '-radio-input-' + index"
           type="radio"
           :name="formName"
           class="h-5 w-5"
@@ -17,7 +19,7 @@
           @change="updateRadio(option.value)"
         /><span class="ml-2 text-dark">{{ option.label }}</span>
       </label>
-    </div>
+    </fieldset>
   </div>
 </template>
 
