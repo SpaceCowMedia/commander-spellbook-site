@@ -2,9 +2,9 @@
   <div>
     <BetaMask>
       <div class="bg-gray-200">
-        <div class="container">
+        <nav class="container">
           <SearchBar />
-        </div>
+        </nav>
       </div>
       <main>
         <Nuxt />

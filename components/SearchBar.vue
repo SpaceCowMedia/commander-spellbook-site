@@ -1,5 +1,5 @@
 <template>
-  <nav class="outer-container">
+  <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
         <div class="sr-only">Go to Home Page</div>
@@ -18,7 +18,9 @@
           aria-hidden="true"
           @click="focusSearch"
         ></div>
-        <label for="search-bar-input" class="sr-only">Combo Search</label>
+        <label for="search-bar-input" class="sr-only" aria-hidden="true"
+          >Combo Search</label
+        >
         <input
           id="search-bar-input"
           ref="searchInput"
@@ -64,7 +66,7 @@
         Syntax
       </nuxt-link>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script lang="ts">
