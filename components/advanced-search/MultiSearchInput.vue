@@ -13,7 +13,7 @@
           class="w-1/2 relative rounded-l-sm"
           :class="{ 'bg-primary': !input.error, 'bg-danger': input.error }"
         >
-          <label :for="label + '-select-' + index" class="sr-only"
+          <label :for="label + '-select-' + index" class="sr-only text-white"
             >Modifier selector for {{ label }}</label
           >
           <select
