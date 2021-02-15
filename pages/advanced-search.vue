@@ -10,7 +10,7 @@
 
       <p class="text-center">
         For more information on the syntax for searches,
-        <nuxt-link to="/syntax-guide">check out the Syntax Guide</nuxt-link>.
+        <nuxt-link to="/syntax-guide">check out the Syntax Guide.</nuxt-link>
       </p>
     </div>
 
@@ -112,6 +112,7 @@
           <div
             id="search-query"
             class="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
+            aria-hidden="true"
           >
             <span v-if="query">{{ query }}</span>
             <span v-else class="text-dark"

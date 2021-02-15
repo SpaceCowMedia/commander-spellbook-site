@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="input-label" :for="getInputId(0)">{{ inputLabel }}</label>
+    <label class="input-label">{{ inputLabel }}</label>
 
     <div
       v-for="(input, index) in inputs"
@@ -13,8 +13,11 @@
           class="w-1/2 relative rounded-l-sm"
           :class="{ 'bg-primary': !input.error, 'bg-danger': input.error }"
         >
-          <label :for="label + '-select-' + index" class="sr-only text-white"
-            >Modifier selector for {{ label }}</label
+          <label
+            :for="label + '-select-' + index"
+            class="sr-only text-white"
+            aria-hidden="true"
+            >Modifier for {{ label }}</label
           >
           <select
             :id="label + '-select-' + index"
@@ -46,6 +49,9 @@
         </div>
 
         <div class="w-full flex-grow flex flex-row">
+          <label class="sr-only" aria-hidden="true" :for="getInputId(index)">{{
+            inputLabel
+          }}</label>
           <input
             :id="getInputId(index)"
             v-model="input.value"
@@ -70,7 +76,8 @@
             }"
             @click.prevent="removeInput(index)"
           >
-            −
+            <span class="sr-only">Remove this search query</span>
+            <span aria-hidden="true">−</span>
           </button>
           <button
             type="button"
@@ -82,7 +89,8 @@
             }"
             @click.prevent="addInput(index)"
           >
-            +
+            <span class="sr-only">Add a new search query of this type</span>
+            <span aria-hidden="true">+</span>
           </button>
         </div>
       </div>

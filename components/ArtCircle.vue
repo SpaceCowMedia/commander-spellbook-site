@@ -1,5 +1,10 @@
 <template>
-  <div class="art-circle" :style="computedStyle" :title="customTitle"></div>
+  <div
+    class="art-circle"
+    :style="computedStyle"
+    :title="customTitle"
+    aria-hidden="true"
+  ></div>
 </template>
 
 <script lang="ts">
