@@ -1,7 +1,7 @@
 <template>
   <div class="md:flex-1 m-4 w-full rounded overflow-hidden">
     <div class="px-6 py-4">
-      <div class="combo-list-title">{{ title }}</div>
+      <h2 class="combo-list-title">{{ title }}</h2>
       <ol class="combo-list" :class="{ 'list-decimal': showNumbers }">
         <li v-for="(item, index) in iterations" :key="title + '-' + index">
           <TextWithMagicSymbol

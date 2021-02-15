@@ -19,10 +19,14 @@
       Find Other Combos Using These Cards
     </button>
 
+    <!-- accessibility compliance software may see this as an
+      issue since there is no label for it. But it's hidden
+      from screenreaders and hidden on the page. It only needs
+      to be a text input in order to make the copy code work -->
     <input
       ref="copyInput"
       aria-hidden="true"
-      type="text"
+      type="hidden"
       class="hidden-combo-link-input"
       :value="comboLink"
     />
@@ -86,8 +90,16 @@ export default Vue.extend({
   },
   methods: {
     copyComboLink(): void {
-      (this.$refs.copyInput as HTMLInputElement).select();
+      // kind of convoluted, but the hidden input needs to be
+      // text so we can actually copy from it, but when it's
+      // text, accessibility programs flag it for not having a label
+      // or being usable, even when set to aria-hidden, so we quickly
+      // set it to text and back to hidden again
+      const copyInput = this.$refs.copyInput as HTMLInputElement;
+      copyInput.type = "text";
+      copyInput.select();
       document.execCommand("copy");
+      copyInput.type = "hidden";
 
       this.showCopyNotification = true;
       this.$gtag.event("Copy Combo Link Clicked", {

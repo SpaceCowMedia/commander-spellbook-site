@@ -37,7 +37,7 @@
         />
       </div>
 
-      <div class="w-full sm:w-1/3 text-center">
+      <aside class="w-full sm:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
@@ -56,7 +56,7 @@
           :combo-link="link"
           :cards="cardNames"
         />
-      </div>
+      </aside>
     </div>
   </div>
 </template>

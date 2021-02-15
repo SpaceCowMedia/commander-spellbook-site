@@ -7,9 +7,10 @@
         aria-hidden="true"
         class="magic-symbol"
         :src="item.value"
+        :alt="'Magic Symbol (' + item.manaSymbol + ')'"
       />
       <span v-if="item.nodeType === 'image'" class="sr-only">
-        {{ item.manaSymbol }} mana &nbsp;
+        ({{ item.manaSymbol }} magic symbol) &nbsp;
       </span>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
         <a
