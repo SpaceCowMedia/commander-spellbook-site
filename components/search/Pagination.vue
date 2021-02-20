@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 py-3 flex items-center justify-between sm:px-6">
+  <div class="px-4 mt-3 flex items-center justify-between sm:px-1">
     <div class="flex-1 flex justify-between">
       <button
         class="back-button nav-button"
@@ -73,7 +73,14 @@ export default Vue.extend({
 
 <style scoped>
 .nav-button {
-  @apply ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+  @apply mx-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+}
+
+.nav-button:first-child {
+  @apply ml-0;
+}
+.nav-button:last-child {
+  @apply mr-0;
 }
 
 .nav-button:hover {
