@@ -4,7 +4,7 @@
       v-for="r in results"
       :key="'combo_' + r.id"
       :to="'/combo/' + r.id"
-      class="combo-result w-full sm:w-1/3"
+      class="combo-result w-full md:w-1/3"
     >
       <div class="flex border-b-2 border-gray-300">
         <div class="flex-grow w-1/2">
