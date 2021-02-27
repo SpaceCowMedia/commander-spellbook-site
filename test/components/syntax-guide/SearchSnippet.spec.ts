@@ -29,7 +29,7 @@ describe("SearchSnippet", () => {
       },
     });
 
-    const search = wrapper.find("pre");
+    const search = wrapper.find(".search-snippet-header");
     const description = wrapper.find(".description");
 
     expect(search.text()).toBe("ci:wub card:mind");

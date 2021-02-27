@@ -202,7 +202,7 @@ describe("SearchPage", () => {
         errors: "some errors",
         currentPage: 1,
         totalPages: 3,
-        maxNumberOfCombosPerPage: 76,
+        maxNumberOfCombosPerPage: 78,
         totalResults: 215,
       });
     });

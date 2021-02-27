@@ -16,19 +16,19 @@ describe("ComboResults", () => {
       propsData: {
         results: [
           {
-            names: ["a", "b", "c"],
+            names: ["card a", "card b", "card c"],
             id: "1",
             results: ["result 1", "result 2"],
             colors: ["w", "b", "r"],
           },
           {
-            names: ["d", "e", "f", "g"],
+            names: ["card d", "card e", "card f", "card g"],
             id: "2",
             results: ["result 3", "result 4"],
             colors: ["g", "u"],
           },
           {
-            names: ["h", "i"],
+            names: ["card h", "card i"],
             id: "3",
             results: ["result 5", "result 6"],
             colors: ["c"],
@@ -63,35 +63,35 @@ describe("ComboResults", () => {
     const thirdCardTooltips = links.at(2).findAllComponents(CardTooltipStub);
 
     expect(firstCardTooltips.length).toBe(3);
-    expect(firstCardTooltips.at(0).find(".card-name").element.textContent).toBe(
-      "a"
-    );
-    expect(firstCardTooltips.at(1).find(".card-name").element.textContent).toBe(
-      "b"
-    );
-    expect(firstCardTooltips.at(2).find(".card-name").element.textContent).toBe(
-      "c"
-    );
+    expect(
+      firstCardTooltips.at(0).find(".card-name").element.textContent
+    ).toContain("card a");
+    expect(
+      firstCardTooltips.at(1).find(".card-name").element.textContent
+    ).toContain("card b");
+    expect(
+      firstCardTooltips.at(2).find(".card-name").element.textContent
+    ).toContain("card c");
     expect(secondCardTooltips.length).toBe(4);
     expect(
       secondCardTooltips.at(0).find(".card-name").element.textContent
-    ).toBe("d");
+    ).toContain("card d");
     expect(
       secondCardTooltips.at(1).find(".card-name").element.textContent
-    ).toBe("e");
+    ).toContain("card e");
     expect(
       secondCardTooltips.at(2).find(".card-name").element.textContent
-    ).toBe("f");
+    ).toContain("card f");
     expect(
       secondCardTooltips.at(3).find(".card-name").element.textContent
-    ).toBe("g");
+    ).toContain("card g");
     expect(thirdCardTooltips.length).toBe(2);
-    expect(thirdCardTooltips.at(0).find(".card-name").element.textContent).toBe(
-      "h"
-    );
-    expect(thirdCardTooltips.at(1).find(".card-name").element.textContent).toBe(
-      "i"
-    );
+    expect(
+      thirdCardTooltips.at(0).find(".card-name").element.textContent
+    ).toContain("card h");
+    expect(
+      thirdCardTooltips.at(1).find(".card-name").element.textContent
+    ).toContain("card i");
   });
 
   it("prints results for each combo", () => {
