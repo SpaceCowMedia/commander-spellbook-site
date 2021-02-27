@@ -10,7 +10,7 @@
     />
 
     <div class="container sm:flex flex-row">
-      <div v-if="paginatedResults.length > 0">
+      <div v-if="paginatedResults.length > 0" class="w-full">
         <Pagination
           :current-page="page"
           :total-pages="totalPages"
@@ -63,7 +63,7 @@ export default Vue.extend({
     return {
       loaded: false,
       page: 1,
-      maxNumberOfCombosPerPage: 76,
+      maxNumberOfCombosPerPage: 78,
       message: "",
       errors: "",
       combos: [],
