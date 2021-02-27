@@ -38,6 +38,7 @@ import Vue from "vue";
 import ComboResults from "@/components/search/ComboResults.vue";
 import NoCombosFound from "@/components/search/NoCombosFound.vue";
 import Pagination from "@/components/search/Pagination.vue";
+import SearchMessage from "@/components/search/SearchMessage.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { ComboResult } from "../components/search/ComboResults.vue";
@@ -56,6 +57,7 @@ export default Vue.extend({
     ComboResults,
     NoCombosFound,
     Pagination,
+    SearchMessage,
   },
   data(): Data {
     return {
