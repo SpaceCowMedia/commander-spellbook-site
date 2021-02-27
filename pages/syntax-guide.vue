@@ -256,6 +256,43 @@
         Commander, use <code>not:banned</code> instead.
       </p>
     </SearchGuide>
+
+    <SearchGuide
+      id="sort"
+      heading="Sort / Order"
+      heading-card-name="Brainstorm"
+      heading-artist-name="DiTerlizzi"
+      :snippets="sortOrderSnippets"
+    >
+      <p>
+        By default, combo results will be sorted by color identity, starting
+        with the fewest colors and going to the most colors. Use
+        <code>sort</code> to change the criteria for sorting the combos.
+        Available options are:
+      </p>
+
+      <ul class="list-disc list-inside ml-4 mb-4">
+        <li><code>results</code> (or <code>number-of-results</code>)</li>
+        <li><code>steps</code> (or <code>number-of-steps</code>)</li>
+
+        <li>
+          <code>prerequisites</code> (or <code>number-of-prerequisites</code>)
+        </li>
+
+        <li><code>cards</code> (or <code>number-of-cards</code>)</li>
+
+        <li>
+          <code>colors</code> (or <code>ci</code>, <code>color-identity</code>,
+          <code> color</code>)
+        </li>
+      </ul>
+
+      <p>
+        By default, the combo results are ordered in ascending order. Use
+        <code>order:descending</code> or <code>order:desc</code> to reverse the
+        order.
+      </p>
+    </SearchGuide>
   </div>
 </template>
 
@@ -303,6 +340,10 @@ export default Vue.extend({
         {
           id: "banned",
           text: "Banned",
+        },
+        {
+          id: "sort",
+          text: "Sort / Order",
         },
       ],
       cardSnippets: [
@@ -429,6 +470,18 @@ export default Vue.extend({
           search: "is:banned",
           description:
             "Combos that contain at least one card that is banned in Commander.",
+        },
+      ],
+      sortOrderSnippets: [
+        {
+          search: "ci:grixis sort:cards",
+          description:
+            "Combos with the grixis color identity sorted by the number of cards in them.",
+        },
+        {
+          search: "steps<3 sort:results order:descending",
+          description:
+            "Combos with fewer than 3 steps sorted by number of results, starting with the most results and going to the fewest results.",
         },
       ],
     };
