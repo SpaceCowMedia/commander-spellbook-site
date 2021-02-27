@@ -9,9 +9,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SplashPage from "@/components/SplashPage.vue";
 import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
+  components: {
+    SplashPage,
+  },
   layout: "landing",
 
   async mounted(): Promise<void> {

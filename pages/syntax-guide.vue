@@ -261,8 +261,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import SearchGuide from "@/components/syntax-guide/SearchGuide.vue";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+    SearchGuide,
+  },
   data() {
     return {
       sections: [

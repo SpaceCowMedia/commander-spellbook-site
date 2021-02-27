@@ -33,8 +33,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import SearchSnippet from "./SearchSnippet.vue";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+    SearchSnippet,
+  },
   props: {
     heading: {
       type: String,

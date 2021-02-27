@@ -22,8 +22,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SearchBar from "@/components/SearchBar.vue";
+import Logo from "@/components/Logo.vue";
 
 export default Vue.extend({
+  components: {
+    SearchBar,
+    Logo,
+  },
   layout: "landing",
   mounted() {
     const query = this.$route.query.q;

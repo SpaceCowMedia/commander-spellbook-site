@@ -28,6 +28,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import CardTooltip from "@/components/CardTooltip.vue";
 import scryfall from "scryfall-client";
 
 type NodeConfig = {
@@ -36,6 +37,9 @@ type NodeConfig = {
 };
 
 export default Vue.extend({
+  components: {
+    CardTooltip,
+  },
   props: {
     cardsInCombo: {
       type: Array as PropType<string[]>,

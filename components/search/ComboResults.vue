@@ -39,6 +39,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import CardTooltip from "@/components/CardTooltip.vue";
+import ColorIdentity from "@/components/ColorIdentity.vue";
 
 export type ComboResult = {
   id: string;
@@ -48,6 +50,10 @@ export type ComboResult = {
 };
 
 export default Vue.extend({
+  components: {
+    CardTooltip,
+    ColorIdentity,
+  },
   props: {
     results: {
       type: Array as PropType<ComboResult[]>,

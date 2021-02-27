@@ -71,9 +71,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
 import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+  },
   props: {
     onHomePage: {
       type: Boolean,

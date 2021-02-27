@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "postinstall": "husky install",
-    "dev": "nuxt-ts",
+    "dev": "nuxt",
     "prebuild": "prettier --write .",
-    "build": "nuxt-ts build",
-    "start": "nuxt-ts start",
+    "build": "nuxt build",
+    "start": "nuxt start",
     "//TODO": "ultimately, we probably want to deploy to github pages automatically, not manually, but we have this here for beta site deploys (currently living in Blade's fork connected to netlify)",
     "predeploy": "npm run generate",
     "deploy": "push-dir --dir=dist --branch=release --remote=blade --cleanup",
-    "generate": "nuxt-ts generate",
+    "generate": "nuxt generate",
     "lint:js": "eslint --ext .ts,.vue .",
     "lint:style": "stylelint **/*.{vue,css}",
     "lint": "npm run lint:js && npm run lint:style",
@@ -25,7 +25,6 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "@nuxt/typescript-runtime": "^2.0.2",
     "commander-spellbook": "^0.9.0",
     "core-js": "^3.9.0",
     "nuxt": "^2.15.2",

@@ -12,6 +12,17 @@
   </footer>
 </template>
 
+<script lang="ts">
+import Vue from "vue";
+import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
+
+export default Vue.extend({
+  components: {
+    AnalyticsCookieBanner,
+  },
+});
+</script>
+
 <style scoped>
 .footer {
   /* ensures that the cookie banner does not fully cover up footer

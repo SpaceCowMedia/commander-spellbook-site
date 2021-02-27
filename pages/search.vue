@@ -35,6 +35,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ComboResults from "@/components/search/ComboResults.vue";
+import NoCombosFound from "@/components/search/NoCombosFound.vue";
+import Pagination from "@/components/search/Pagination.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { ComboResult } from "../components/search/ComboResults.vue";
@@ -49,6 +52,11 @@ type Data = {
 };
 
 export default Vue.extend({
+  components: {
+    ComboResults,
+    NoCombosFound,
+    Pagination,
+  },
   data(): Data {
     return {
       loaded: false,

@@ -63,6 +63,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ColorIdentity from "@/components/ColorIdentity.vue";
+import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
+import CardHeader from "@/components/combo/CardHeader.vue";
+import ComboList from "@/components/combo/ComboList.vue";
 import spellbookApi from "commander-spellbook";
 
 type CardData = {
@@ -86,6 +90,12 @@ type ComboData = {
 };
 
 export default Vue.extend({
+  components: {
+    CardHeader,
+    ColorIdentity,
+    ComboList,
+    ComboSidebarLinks,
+  },
   async asyncData({ params }): Promise<ComboData | void> {
     const comboNumber = params.id;
     let combo;

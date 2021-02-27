@@ -132,6 +132,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
+import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
 
 type InputData = {
   value: string;
@@ -178,6 +181,11 @@ const DEFAULT_SPOILED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+    MultiSearchInput,
+    RadioSearchInput,
+  },
   data(): Data {
     return {
       cards: [{ value: "", operator: ":" }],

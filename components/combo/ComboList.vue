@@ -23,8 +23,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import TextWithMagicSymbol from "../TextWithMagicSymbol.vue";
-import PlaceholderText from "../PlaceholderText.vue";
+import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
+import PlaceholderText from "@/components/PlaceholderText.vue";
 
 export default Vue.extend({
   components: {
