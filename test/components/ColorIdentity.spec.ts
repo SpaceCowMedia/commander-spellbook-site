@@ -70,4 +70,25 @@ describe("ColorIdentity", () => {
     );
     expect((imgs.at(6).element as HTMLImageElement).alt).toBe("Mana Symbol");
   });
+
+  it("defaults size to 10", () => {
+    const defaultWrapper = mount(ColorIdentity, {
+      propsData: {
+        colors: ["w"],
+      },
+    });
+
+    expect(defaultWrapper.props("size")).toBe("10");
+    expect(defaultWrapper.find("img").classes()).toContain("w-10");
+
+    const customSizeWrapper = mount(ColorIdentity, {
+      propsData: {
+        colors: ["w"],
+        size: "6",
+      },
+    });
+
+    expect(customSizeWrapper.props("size")).toBe("6");
+    expect(customSizeWrapper.find("img").classes()).toContain("w-6");
+  });
 });
