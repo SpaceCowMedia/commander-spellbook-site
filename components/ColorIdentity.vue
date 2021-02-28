@@ -6,7 +6,7 @@
       v-for="(url, index) in colorIdentitySymbolUrls"
       aria-hidden="true"
       class="color-identity"
-      :class="'w-' + size"
+      :class="size"
       :src="url"
       :alt="altTextFromIndex(index)"
     />
@@ -27,7 +27,7 @@ export default Vue.extend({
     },
     size: {
       type: String,
-      default: "10",
+      default: "medium",
     },
   },
   computed: {
@@ -74,5 +74,13 @@ export default Vue.extend({
 <style scoped>
 .color-identity {
   @apply m-2 inline-block;
+}
+
+.medium {
+  @apply w-10;
+}
+
+.small {
+  @apply w-8;
 }
 </style>

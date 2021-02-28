@@ -8,7 +8,7 @@
     >
       <div class="flex flex-col">
         <div class="flex items-center flex-grow">
-          <ColorIdentity :colors="r.colors" size="8" />
+          <ColorIdentity :colors="r.colors" size="small" />
         </div>
         <div class="flex-grow border-t-2 border-b-2 border-gray-300">
           <div class="py-1">
