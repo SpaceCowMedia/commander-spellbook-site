@@ -8,7 +8,7 @@
       artist="Ciruelo"
     />
     <h1 class="title text-5xl md:text-6xl -mt-6 md:-mt-9 xl:-mt-14">
-      commander spellbook
+      Commander Spellbook
     </h1>
     <h2 class="subtitle text-3xl xl:text-5xl">Combo Database for EDH</h2>
   </div>
