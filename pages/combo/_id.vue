@@ -148,7 +148,9 @@ export default Vue.extend({
     // for some reason, these properties aren't available here???
     // seems like a nuxt typescript issue
     // @ts-ignore
-    const title = this.cardNames.join(" | ");
+    const colorIdentity = this.colorIdentity.map((c) => `:mana${c}:`);
+    // @ts-ignore
+    const title = `${colorIdentity} ${this.cardNames.join(" | ")}`;
     // @ts-ignore
     const description = this.results.reduce((str, result) => {
       return str + `\n  * ${result}`;
