@@ -1,17 +1,18 @@
 <template>
-  <span>
+  <Fragment>
     <!-- eslint-disable-next-line vue/require-v-for-key -->
     <span v-for="item in items">
-      <img
-        v-if="item.nodeType === 'image'"
-        aria-hidden="true"
-        class="magic-symbol"
-        :src="item.value"
-        :alt="'Magic Symbol (' + item.manaSymbol + ')'"
-      />
-      <span v-if="item.nodeType === 'image'" class="sr-only">
-        ({{ item.manaSymbol }} magic symbol) &nbsp;
-      </span>
+      <Fragment v-if="item.nodeType === 'image'">
+        <img
+          aria-hidden="true"
+          class="magic-symbol"
+          :src="item.value"
+          :alt="'Magic Symbol (' + item.manaSymbol + ')'"
+        />
+        <span class="sr-only">
+          ({{ item.manaSymbol }} magic symbol) &nbsp;
+        </span>
+      </Fragment>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
         <a
           v-if="includeCardLinks"
@@ -19,15 +20,16 @@
           target="_blank"
           >{{ item.value }}</a
         >
-        <span v-else>{{ item.value }}</span>
-      </CardTooltip>
-      <span v-else class="text">{{ item.value }}</span>
+        <Fragment v-else>{{ item.value }}</Fragment></CardTooltip
+      ><span v-else class="text">{{ item.value }}</span>
     </span>
-  </span>
+  </Fragment>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+
+import { Fragment } from "vue-fragment";
 import CardTooltip from "@/components/CardTooltip.vue";
 import scryfall from "scryfall-client";
 
@@ -38,6 +40,7 @@ type NodeConfig = {
 
 export default Vue.extend({
   components: {
+    Fragment,
     CardTooltip,
   },
   props: {

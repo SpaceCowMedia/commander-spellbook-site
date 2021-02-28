@@ -57,9 +57,9 @@ describe("TextWithMagicSymbol", () => {
     const tooltip = wrapper.findComponent(CardTooltipStub);
 
     expect(tooltip.props("cardName")).toBe("Card Name 1");
-    expect(
-      (tooltip.find("span").element as HTMLAnchorElement).textContent
-    ).toBe("Card Name 1");
+    expect((tooltip.element as HTMLAnchorElement).textContent).toContain(
+      "Card Name 1"
+    );
   });
 
   it("renders cards with links", () => {
