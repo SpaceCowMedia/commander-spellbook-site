@@ -30,6 +30,10 @@
           :class="inputClasses"
           name="q"
           :placeholder="`Search ${numberOfCombos} combos`"
+          autocomplete="on"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
         />
       </div>
       <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center">
