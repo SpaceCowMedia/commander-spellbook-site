@@ -48,4 +48,21 @@ describe("CardLink", () => {
         .attributes("target")
     ).toBe("_top");
   });
+
+  it("passes on focus event to component using cardlink", async () => {
+    const spy = jest.fn();
+    const wrapper = mount(CardLink, {
+      propsData: {
+        name: "Card Name",
+      },
+      mocks: {
+        $emit: spy,
+      },
+    });
+
+    await wrapper.find("a").trigger("focus");
+
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith("focus");
+  });
 });

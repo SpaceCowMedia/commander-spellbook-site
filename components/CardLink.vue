@@ -1,5 +1,5 @@
 <template>
-  <a :href="link" :target="target"><slot /></a>
+  <a :href="link" :target="target" @focus="$emit('focus')"><slot /></a>
 </template>
 
 <script lang="ts">
