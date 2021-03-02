@@ -14,12 +14,9 @@
         </span>
       </Fragment>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
-        <a
-          v-if="includeCardLinks"
-          :href="getLinkFromCardName(item.value)"
-          target="_blank"
-          >{{ item.value }}</a
-        >
+        <CardLink v-if="includeCardLinks" :name="item.value">{{
+          item.value
+        }}</CardLink>
         <Fragment v-else>{{ item.value }}</Fragment></CardTooltip
       ><span v-else class="text">{{ item.value }}</span>
     </span>
@@ -30,6 +27,7 @@
 import Vue, { PropType } from "vue";
 
 import { Fragment } from "vue-fragment";
+import CardLink from "@/components/CardLink.vue";
 import CardTooltip from "@/components/CardTooltip.vue";
 import scryfall from "scryfall-client";
 
@@ -41,6 +39,7 @@ type NodeConfig = {
 export default Vue.extend({
   components: {
     Fragment,
+    CardLink,
     CardTooltip,
   },
   props: {
