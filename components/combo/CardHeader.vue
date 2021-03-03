@@ -67,7 +67,7 @@ export default Vue.extend({
 
 .mask {
   background: black;
-  opacity: 0.75;
+  opacity: 0.65;
 }
 
 .combo-title-wrapper {
