@@ -25,7 +25,7 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "commander-spellbook": "^0.9.0",
+    "commander-spellbook": "^0.10.0",
     "core-js": "^3.9.0",
     "nuxt": "^2.15.2",
     "scryfall-client": "^0.18.6",
