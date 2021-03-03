@@ -232,10 +232,10 @@ describe("ComboPage", () => {
 
     expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2);
+    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2, "png");
     expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2);
+    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "png");
   });
 
   it("does not load data from combo when no combos is found for id", async () => {

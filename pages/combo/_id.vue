@@ -2,6 +2,8 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" />
 
+    <CardGroup :cards="cards" />
+
     <div class="container md:flex flex-row">
       <div class="w-full md:w-2/3">
         <div class="md:hidden pt-4">
@@ -10,12 +12,14 @@
 
         <ComboList
           id="combo-cards"
+          class="lg:hidden"
           title="Cards"
           :iterations="cardNames"
           :is-card="true"
           :cards-in-combo="cardNames"
           :include-card-links="true"
         />
+
         <ComboList
           id="combo-prerequisites"
           title="Prerequisites"
@@ -66,6 +70,7 @@ import Vue from "vue";
 import ColorIdentity from "@/components/ColorIdentity.vue";
 import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
 import CardHeader from "@/components/combo/CardHeader.vue";
+import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import spellbookApi from "commander-spellbook";
 
@@ -92,6 +97,7 @@ type ComboData = {
 export default Vue.extend({
   components: {
     CardHeader,
+    CardGroup,
     ColorIdentity,
     ComboList,
     ComboSidebarLinks,
@@ -111,7 +117,7 @@ export default Vue.extend({
       return {
         name: card.name,
         artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl(),
+        oracleImageUrl: card.getScryfallImageUrl("png"),
       };
     });
 
@@ -239,7 +245,6 @@ export default Vue.extend({
       });
     }
   },
-  methods: {},
 });
 </script>
 
