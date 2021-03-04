@@ -1,4 +1,4 @@
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, mount } from "@vue/test-utils";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 
 import type { VueComponent } from "../../types";
@@ -25,7 +25,7 @@ describe("MultiSearchInput", () => {
   });
 
   it("creates an operator selector for input", async () => {
-    const wrapper = shallowMount(MultiSearchInput, {
+    const wrapper = mount(MultiSearchInput, {
       propsData: {
         inputs: [
           {
@@ -42,9 +42,9 @@ describe("MultiSearchInput", () => {
       },
     });
 
-    expect(wrapper.find(".operator-selector").exists()).toBe(true);
+    expect(wrapper.find("select").exists()).toBe(true);
 
-    const options = wrapper.findAll(".operator-selector option");
+    const options = wrapper.findAll("option");
 
     expect(options.length).toBe(3);
     expect(options.at(0).attributes("value")).toBe(":");
