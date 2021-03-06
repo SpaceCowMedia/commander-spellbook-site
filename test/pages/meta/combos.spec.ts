@@ -1,5 +1,5 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
-import ComboHomePage from "@/pages/combo/index.vue";
+import ComboHomePage from "@/pages/meta/combos.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { VueComponent } from "../../types";

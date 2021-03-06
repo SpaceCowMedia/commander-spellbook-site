@@ -126,6 +126,8 @@ describe("ComboSidebarLinks", () => {
       jest.spyOn(spellbookApi, "search").mockResolvedValue({
         combos: [],
         message: "",
+        sort: "colors",
+        order: "descending",
         errors: [],
       });
     });
@@ -167,6 +169,8 @@ describe("ComboSidebarLinks", () => {
       mocked(spellbookApi.search).mockResolvedValue({
         combos: [spellbookApi.makeFakeCombo()],
         message: "",
+        sort: "colors",
+        order: "descending",
         errors: [],
       });
 

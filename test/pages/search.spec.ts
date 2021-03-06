@@ -18,6 +18,8 @@ describe("SearchPage", () => {
 
   beforeEach(() => {
     jest.spyOn(spellbookApi, "search").mockResolvedValue({
+      sort: "colors",
+      order: "ascending",
       combos: [],
       message: "",
       errors: [],
@@ -104,6 +106,8 @@ describe("SearchPage", () => {
       mocked(spellbookApi.search).mockResolvedValue({
         combos: [],
         message: "",
+        sort: "colors",
+        order: "descending",
         errors: [],
       });
 
@@ -362,6 +366,8 @@ describe("SearchPage", () => {
       mocked(spellbookApi.search).mockResolvedValue({
         combos: [],
         message: "",
+        sort: "colors",
+        order: "descending",
         errors: [],
       });
     });
@@ -386,6 +392,8 @@ describe("SearchPage", () => {
           }),
         ],
         message: "",
+        sort: "colors",
+        order: "descending",
         errors: [],
       });
 
@@ -421,6 +429,8 @@ describe("SearchPage", () => {
             commanderSpellbookId: "1",
           }),
         ],
+        sort: "colors",
+        order: "ascending",
         message: "",
         errors: [],
       });
