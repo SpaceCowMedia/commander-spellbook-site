@@ -33,7 +33,6 @@ describe("ComboHomePage", () => {
 
       const links = wrapper.findAllComponents(RouterLinkStub);
 
-      expect(links.length).toBe(3);
       expect(links.at(0).props("to")).toBe("/combo/1");
       expect(links.at(0).element.textContent).toBe("card 1, card 2");
       expect(links.at(1).props("to")).toBe("/combo/2");
