@@ -7,9 +7,6 @@ describe("TextWithMagicSymbol", () => {
       propsData: {
         text: "Some text",
       },
-      stubs: {
-        Fragment: true,
-      },
     });
     expect(wrapper.findAll(".text").length).toBe(1);
     expect(wrapper.find(".text").element.textContent).toBe("Some text");
@@ -20,9 +17,6 @@ describe("TextWithMagicSymbol", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manar:",
-      },
-      stubs: {
-        Fragment: true,
       },
     });
     expect(wrapper.findAll(".text").length).toBe(0);
@@ -36,9 +30,6 @@ describe("TextWithMagicSymbol", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manachaos:",
-      },
-      stubs: {
-        Fragment: true,
       },
     });
     expect(wrapper.findAll(".text").length).toBe(0);
@@ -56,7 +47,6 @@ describe("TextWithMagicSymbol", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       stubs: {
         CardTooltip: CardTooltipStub,
-        Fragment: true,
       },
       propsData: {
         cardsInCombo: ["Card Name 1", "Card Name 2"],
@@ -85,7 +75,6 @@ describe("TextWithMagicSymbol", () => {
       stubs: {
         CardTooltip: CardTooltipStub,
         CardLink: CardLinkStub,
-        Fragment: true,
       },
       propsData: {
         cardsInCombo: ["Card Name 1", "Card Name 2"],
@@ -114,7 +103,6 @@ describe("TextWithMagicSymbol", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       stubs: {
         CardTooltip: CardTooltipStub,
-        Fragment: true,
       },
       propsData: {
         cardsInCombo: ["Card Name 1", "Card Name 2"],
