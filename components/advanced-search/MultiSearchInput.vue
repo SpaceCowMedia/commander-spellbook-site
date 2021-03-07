@@ -10,10 +10,10 @@
     >
       <div class="flex">
         <Select
+          :id="label + '-select-' + index"
           v-model="input.operator"
           :label="'Modifier for ' + label"
           :error="input.error"
-          :id="label + '-select-' + index"
           :options="operatorOptions"
           :class="{
             ['select-' + index]: true,
