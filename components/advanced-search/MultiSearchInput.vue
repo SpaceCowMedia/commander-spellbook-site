@@ -15,6 +15,9 @@
           :error="input.error"
           :id="label + '-select-' + index"
           :options="operatorOptions"
+          :class="{
+            ['select-' + index]: true,
+          }"
         />
 
         <div class="w-full flex-grow flex flex-row">
