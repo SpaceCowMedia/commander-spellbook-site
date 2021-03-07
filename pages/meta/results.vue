@@ -8,7 +8,7 @@
     <p v-for="(result, index) in results" :key="index" class="p-2 my-1">
       <TextWithMagicSymbol :text="result.text" />
       -
-      <nuxt-link :to="{ path: 'search', query: { q: search(result.text) } }">
+      <nuxt-link :to="{ path: '/search', query: { q: search(result.text) } }">
         {{ result.numberOfCombos }} combo<span v-if="result.numberOfCombos > 1"
           >s</span
         >

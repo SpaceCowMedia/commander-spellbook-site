@@ -7,7 +7,7 @@
     <p v-for="(color, index) in colors" :key="index" class="p-2 my-1">
       <TextWithMagicSymbol :text="color.text" />
       -
-      <nuxt-link :to="{ path: 'search', query: { q: search(color.text) } }">
+      <nuxt-link :to="{ path: '/search', query: { q: search(color.text) } }">
         {{ color.numberOfCombos }} combo<span v-if="color.numberOfCombos > 1"
           >s</span
         >
