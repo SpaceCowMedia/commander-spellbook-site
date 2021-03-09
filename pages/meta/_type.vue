@@ -13,8 +13,9 @@
         (
         <span v-for="(id, comboIndex) in item.ids" :key="item.text + '-' + id">
           <span v-if="comboIndex !== 0"> | </span>
-          <nuxt-link :to="'/combo/' + id">{{ id }}</nuxt-link> </span
-        >)</span
+          <nuxt-link :to="'/combo/' + id">{{ id }}</nuxt-link>
+        </span>
+        )</span
       >
     </p>
   </div>
