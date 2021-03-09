@@ -33,14 +33,10 @@ export default Vue.extend({
   layout: "landing",
   mounted() {
     const query = this.$route.query.q;
-    const status = this.$route.query.status;
+    const { status, id } = this.$route.query;
 
-    if (!(typeof query === "string")) {
-      return;
-    }
-
-    if (Number(query) > 0) {
-      this.$router.push(`/combo/${query}`);
+    if (Number(query) > 0 || Number(id) > 0) {
+      this.$router.push(`/combo/${id || query}`);
       return;
     }
 
@@ -51,6 +47,10 @@ export default Vue.extend({
 
     if (query === "banned" || status === "banned") {
       this.$router.push("/search?q=is:banned");
+      return;
+    }
+
+    if (!(typeof query === "string")) {
       return;
     }
 

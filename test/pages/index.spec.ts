@@ -50,8 +50,16 @@ describe("HomePage", () => {
     expect($router.push).toBeCalledWith("/search?q=card:Sydri");
   });
 
-  it("redirects to combo page when query is a number", () => {
+  it("redirects to combo page when q query is a number", () => {
     $route.query.q = "435";
+    shallowMount(HomePage, wrapperOptions);
+
+    expect($router.push).toBeCalledTimes(1);
+    expect($router.push).toBeCalledWith("/combo/435");
+  });
+
+  it("redirects to combo page when id query is a number", () => {
+    $route.query.id = "435";
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
