@@ -13,7 +13,7 @@
           :id="label + '-select-' + index"
           v-model="input.operator"
           :label="'Modifier for ' + label"
-          :error="input.error"
+          :select-background-class="input.error ? 'bg-danger' : 'bg-primary'"
           :options="operatorOptions"
           :class="{
             ['select-' + index]: true,
