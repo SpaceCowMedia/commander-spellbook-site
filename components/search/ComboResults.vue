@@ -68,28 +68,24 @@ a {
 }
 
 .combo-results-wrapper {
-  @apply flex flex-wrap;
+  @apply flex flex-wrap justify-center;
 }
 
 .combo-result {
-  @apply block m-2 rounded border-2 border-gray-300 flex-grow flex flex-col content-center;
-}
-
-.combo-result:nth-child(3n + 3) {
-  @apply mr-0;
-}
-
-.combo-result:nth-child(3n + 1) {
-  @apply ml-0;
+  @apply max-w-lg mx-0 my-2 rounded border-2 border-gray-300 flex-grow flex flex-col content-center;
 }
 
 @media (min-width: 640px) {
+  .combo-result {
+    @apply m-2;
+  }
+
   .combo-result:nth-child(3n + 3) {
-    @apply mr-2;
+    @apply mr-0;
   }
 
   .combo-result:nth-child(3n + 1) {
-    @apply ml-2;
+    @apply ml-0;
   }
 }
 </style>
