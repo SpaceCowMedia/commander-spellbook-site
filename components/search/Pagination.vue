@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4 mt-3 flex items-center justify-between sm:px-1">
-    <div class="flex-1 flex justify-between">
+  <div class="px-4 mt-3 flex items-center sm:px-1">
+    <div class="flex-1 flex">
       <button
         class="back-button nav-button"
         :class="{ invisible: currentPage === 1 }"
