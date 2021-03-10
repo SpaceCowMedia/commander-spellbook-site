@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>About Commander Spellbook</h1>
+  <div class="container">
+    <h1 class="heading-title">About Commander Spellbook</h1>
     <p>
       The Commander Spellbook project exists to catalog all reasonable
       Commander/EDH combos and to make them easily available across all modern
