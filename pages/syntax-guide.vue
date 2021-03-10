@@ -1,17 +1,25 @@
 <template>
   <div>
-    <div class="border-b-2 border-gray-400 w-full">
-      <div class="container max-w-5xl m-auto py-6">
-        <p class="pl-4 pr-4">
-          A variety of parameters can be used to search for combos.
-        </p>
+    <div class="container pt-6 mb-6">
+      <ArtCircle
+        card-name="Goblin Guide"
+        artist="Mark Zug"
+        class="m-auto md:block hidden"
+      />
+      <h1 class="heading-title text-center">Syntax Guide</h1>
+      <p class="text-center">
+        A variety of parameters can be used to search for combos.
+      </p>
+    </div>
 
-        <div class="flex flex-col sm:flex-row">
+    <div class="border-b-2 border-gray-400 w-full">
+      <div class="container pb-6">
+        <div class="flex flex-col md:flex-row md:flex-wrap">
           <a
             v-for="section in sections"
             :key="section.id"
             :href="'#' + section.id"
-            class="button--red flex-grow text-center"
+            class="button--red flex-grow text-center md:w-1/4"
           >
             <div>
               {{ section.text }}
@@ -43,11 +51,11 @@
       </p>
       <p>
         You can lookup longer names for cards by using the
-        <code>card:</code> key with single (<code>'</code>) or double
-        (<code>"</code>) quotes. This will find combos that contain cards with
-        names that include the whole phrase. For instance,
-        <code>card:dream</code>, will include combos that contain the card
-        Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
+        <code>card:</code> or <code>cards:</code> keys with single
+        (<code>'</code>) or double (<code>"</code>) quotes. This will find
+        combos that contain cards with names that include the whole phrase. For
+        instance, <code>card:dream</code>, will include combos that contain the
+        card Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
         <code>card:"dream stalk"</code> is used, then only combos that contain
         Dream Stalker wil lbe displayed.
       </p>
@@ -58,6 +66,11 @@
       <p>
         Use <code>-card:</code> To find combos that do not include a certain
         card.
+      </p>
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of cards.
       </p>
     </SearchGuide>
 
@@ -114,6 +127,12 @@
       </p>
 
       <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of prerequisites.
+      </p>
+
+      <p>
         Aliases for <code>prerequisites</code> are <code>prerequisite</code> and
         <code>pre</code>.
       </p>
@@ -135,6 +154,12 @@
         steps with the value passed.
       </p>
 
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of steps.
+      </p>
+
       <p>An alias for <code>steps</code> is <code>step</code>.</p>
     </SearchGuide>
 
@@ -154,15 +179,133 @@
         contain results with the value passed.
       </p>
 
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
+        numbers to to find combos restricted by the number of results.
+      </p>
+
       <p>An alias for <code>results</code> is <code>result</code>.</p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Id"
+      heading-card-name="Fractured Identity"
+      heading-artist-name="Yongjae Choi"
+      :snippets="idSnippets"
+    >
+      <p>
+        You can also search by <code>id:</code> if you want to find a specific
+        combo by its id. Using more than one <code>id:</code> will result in a
+        query error.
+      </p>
+
+      <p>
+        A more useful parameter to use is <code>-id:</code>, to more easilly
+        omit certain combos. For instance, for finding all combos using Basalt
+        Monolith and Mesmeric Orb except
+        <nuxt-link to="/combo/450">combo 450</nuxt-link>.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      id="spoiled"
+      heading="Spoiled / Previewed"
+      heading-card-name="Spoils of Adventure"
+      heading-artist-name="Zezhou Chen"
+      :snippets="spoiledSnippets"
+    >
+      <p>
+        By default, combo results will include combos that contain cards that
+        have been newly previewed and are <em>technically</em> not yet legal in
+        Commander. To exclude these combos, use <code>exclude:spoiled</code> or
+        <code>exclude:previewed</code>.
+      </p>
+
+      <p>
+        To find combos that contain cards that are not yet legal in Commander,
+        use <code>is:spoiled</code> or <code>is:previewed</code>.
+      </p>
+
+      <p>
+        To find combos that contain <em>no</em> cards that are not yet legal in
+        Commander, use <code>not:spoiled</code> or
+        <code>not:previewed</code> instead.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      heading="Banned"
+      heading-card-name="Leovold, Emissary of Trest"
+      heading-artist-name="Magali Villeneuve"
+      :snippets="bannedSnippets"
+    >
+      <p>
+        By default, combo results will not include combos that contain cards
+        that are banned in Commander. Use <code>include:banned</code> to allow
+        combo results that are banned in Commander.
+      </p>
+
+      <p>
+        To find specific combos that contain cards that are banned in Commander,
+        use <code>is:banned</code>.
+      </p>
+
+      <p>
+        To find combos that contain <em>no</em> cards that are banned in
+        Commander, use <code>not:banned</code> instead.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
+      id="sort"
+      heading="Sort / Order"
+      heading-card-name="Brainstorm"
+      heading-artist-name="DiTerlizzi"
+      :snippets="sortOrderSnippets"
+    >
+      <p>
+        By default, combo results will be sorted by color identity, starting
+        with the fewest colors and going to the most colors. Use
+        <code>sort</code> to change the criteria for sorting the combos.
+        Available options are:
+      </p>
+
+      <ul class="list-disc list-inside ml-4 mb-4">
+        <li><code>results</code> (or <code>number-of-results</code>)</li>
+        <li><code>steps</code> (or <code>number-of-steps</code>)</li>
+
+        <li>
+          <code>prerequisites</code> (or <code>number-of-prerequisites</code>)
+        </li>
+
+        <li><code>cards</code> (or <code>number-of-cards</code>)</li>
+
+        <li>
+          <code>colors</code> (or <code>ci</code>, <code>color-identity</code>,
+          <code> color</code>)
+        </li>
+      </ul>
+
+      <p>
+        By default, the combo results are ordered in ascending order. Use
+        <code>order:descending</code> or <code>order:desc</code> to reverse the
+        order.
+      </p>
     </SearchGuide>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import SearchGuide from "@/components/syntax-guide/SearchGuide.vue";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+    SearchGuide,
+  },
   data() {
     return {
       sections: [
@@ -186,6 +329,22 @@ export default Vue.extend({
           id: "results",
           text: "Results",
         },
+        {
+          id: "id",
+          text: "Combo Identifier",
+        },
+        {
+          id: "spoiled",
+          text: "Spoiled / Previewed",
+        },
+        {
+          id: "banned",
+          text: "Banned",
+        },
+        {
+          id: "sort",
+          text: "Sort / Order",
+        },
       ],
       cardSnippets: [
         {
@@ -202,6 +361,11 @@ export default Vue.extend({
           search: 'card="sydri, galvanic genius"',
           description:
             'Combos that contain card with the exact name "sydri, galvanic genius"',
+        },
+        {
+          search: "cards>2 cards<=5",
+          description:
+            "Combos that contain more than 2 cards but no greater than 5 cards",
         },
       ],
       colorIdentitySnippets: [
@@ -232,14 +396,13 @@ export default Vue.extend({
             'Combos that include the word "infinite" in one of the results.',
         },
         {
-          search: 'result:"win the game"',
+          search: 'result:"win the game" -result:infinite',
           description:
-            'Combos that include the phrase "win the game" in one of the results.',
+            'Combos that include the phrase "win the game" and do not include the word "infinite" in any of the results.',
         },
         {
-          search: '-result:"win the game"',
-          description:
-            'Combos that do not include the phrase "win the game" in one of the results.',
+          search: "result=3",
+          description: "Combos that include exactly 3 results.",
         },
       ],
       prerequisiteSnippets: [
@@ -254,9 +417,8 @@ export default Vue.extend({
             'Combos that include the phrase "mana to cast it" in one of the prerequisites and no prerequisite with the word "permanent".',
         },
         {
-          search: "-pre:mana",
-          description:
-            'Combos that do not include the word "mana" in one of the prerequisites.',
+          search: "pre<=3",
+          description: "Combos that have no more than 3 prerequisites.",
         },
       ],
       stepSnippets: [
@@ -271,9 +433,55 @@ export default Vue.extend({
             'Combos that include the phrase "mill target opponent" in one of the steps.',
         },
         {
-          search: "-step:permanent",
+          search: "steps>6",
+          description: "Combos that contain greater than 6 steps.",
+        },
+      ],
+      idSnippets: [
+        {
+          search: "id:450",
+          description: "The combo for Basalt Monolith and Mesmeric Orb.",
+        },
+        {
+          search: '-id:450 card="Basalt Monolith" card="Mesmeric Orb"',
           description:
-            'Combos that do not include the word "permanent" in one of the steps.',
+            "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
+        },
+      ],
+      spoiledSnippets: [
+        {
+          search: "exclude:spoiled",
+          description:
+            "Exclude any combos that contain cards that are not legal in Commander (yet).",
+        },
+        {
+          search: "is:previewed",
+          description:
+            "Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)",
+        },
+      ],
+      bannedSnippets: [
+        {
+          search: "include:banned",
+          description:
+            "Include any combos that contain cards that are banned in Commander.",
+        },
+        {
+          search: "is:banned",
+          description:
+            "Combos that contain at least one card that is banned in Commander.",
+        },
+      ],
+      sortOrderSnippets: [
+        {
+          search: "ci:grixis sort:cards",
+          description:
+            "Combos with the grixis color identity sorted by the number of cards in them.",
+        },
+        {
+          search: "steps<3 sort:results order:descending",
+          description:
+            "Combos with fewer than 3 steps sorted by number of results, starting with the most results and going to the fewest results.",
         },
       ],
     };
@@ -283,7 +491,6 @@ export default Vue.extend({
 
 <style scoped>
 code {
-  color: rgb(92, 126, 159);
-  @apply bg-gray-200 pl-1 pr-1;
+  @apply bg-gray-200 text-primary px-1;
 }
 </style>

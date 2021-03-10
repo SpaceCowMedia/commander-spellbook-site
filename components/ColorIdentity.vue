@@ -1,7 +1,15 @@
 <template>
   <div class="w-full text-center">
+    <p class="sr-only">Color Identity: {{ colorIdentityDescription }}</p>
     <!-- eslint-disable-next-line vue/require-v-for-key -->
-    <img v-for="color in colorIdentity" class="color-identity" :src="color" />
+    <img
+      v-for="(url, index) in colorIdentitySymbolUrls"
+      aria-hidden="true"
+      class="color-identity"
+      :class="size"
+      :src="url"
+      :alt="altTextFromIndex(index)"
+    />
   </div>
 </template>
 
@@ -17,10 +25,47 @@ export default Vue.extend({
         return [];
       },
     },
+    size: {
+      type: String,
+      default: "medium",
+    },
   },
   computed: {
-    colorIdentity(): string[] {
+    colorIdentityDescription(): string {
+      return this.colors.map((c) => this.colorNameFromSymbol(c)).join(", ");
+    },
+    colorIdentitySymbolUrls(): string[] {
       return this.colors.map((c) => scryfall.getSymbolUrl(c));
+    },
+  },
+  methods: {
+    colorNameFromSymbol(id: string): string {
+      switch (id) {
+        case "w":
+          return "White";
+        case "u":
+          return "Blue";
+        case "b":
+          return "Black";
+        case "r":
+          return "Red";
+        case "g":
+          return "Green";
+        case "c":
+          return "Colorless";
+        default:
+          return "";
+      }
+    },
+    altTextFromIndex(index: number): string {
+      const colorId = this.colors[index].toLowerCase();
+      const colorName = this.colorNameFromSymbol(colorId);
+
+      if (!colorName) {
+        return "Mana Symbol";
+      }
+
+      return `${colorName} Mana Symbol`;
     },
   },
 });
@@ -28,6 +73,14 @@ export default Vue.extend({
 
 <style scoped>
 .color-identity {
-  @apply m-2 inline-block w-10;
+  @apply m-2 inline-block;
+}
+
+.medium {
+  @apply w-10;
+}
+
+.small {
+  @apply w-8;
 }
 </style>

@@ -1,10 +1,14 @@
 <template>
-  <div class="md:flex-1 m-4 w-full rounded overflow-hidden">
-    <div class="px-6 py-4">
-      <div class="combo-list-title">{{ title }}</div>
+  <div class="md:flex-1 my-4 w-full rounded overflow-hidden">
+    <div class="pr-6 py-4">
+      <h2 class="combo-list-title">{{ title }}</h2>
       <ol class="combo-list" :class="{ 'list-decimal': showNumbers }">
         <li v-for="(item, index) in iterations" :key="title + '-' + index">
-          <TextWithMagicSymbol :text="item" :cards-in-combo="cardsInCombo" />
+          <TextWithMagicSymbol
+            :text="item"
+            :cards-in-combo="cardsInCombo"
+            :include-card-links="includeCardLinks"
+          />
         </li>
         <div v-if="iterations.length === 0">
           <!-- eslint-disable-next-line vue/require-v-for-key, vue/no-unused-vars -->
@@ -19,8 +23,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import TextWithMagicSymbol from "../TextWithMagicSymbol.vue";
-import PlaceholderText from "../PlaceholderText.vue";
+import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
+import PlaceholderText from "@/components/PlaceholderText.vue";
 
 export default Vue.extend({
   components: {
@@ -37,6 +41,10 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+    includeCardLinks: {
+      type: Boolean,
+      default: false,
     },
     showNumbers: {
       type: Boolean,

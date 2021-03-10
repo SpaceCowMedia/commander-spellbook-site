@@ -29,7 +29,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SplashPage from "@/components/SplashPage.vue";
+
 export default Vue.extend({
+  components: {
+    SplashPage,
+  },
   props: {
     loaded: {
       type: Boolean,

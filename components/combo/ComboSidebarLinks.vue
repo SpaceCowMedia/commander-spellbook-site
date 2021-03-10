@@ -1,6 +1,7 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
     <button
+      id="copy-combo-button"
       ref="copyButton"
       class="combo-button"
       type="button"
@@ -9,18 +10,37 @@
       Copy Combo Link
     </button>
 
-    <br />
-    <br />
-    <p>Additional utilities here</p>
+    <button
+      v-if="hasSimiliarCombos"
+      id="has-similiar-combos"
+      class="combo-button"
+      @click="goToSimiliarCombos"
+    >
+      Find Other Combos Using These Cards
+    </button>
 
+    <!-- accessibility compliance software may see this as an
+      issue since there is no label for it. But it's hidden
+      from screenreaders and hidden on the page. It only needs
+      to be a text input in order to make the copy code work -->
     <input
       ref="copyInput"
-      type="text"
+      aria-hidden="true"
+      type="hidden"
       class="hidden-combo-link-input"
       :value="comboLink"
     />
+    <!-- This is a bit convoluated, but to get the notification we want
+    to animate correctly, we it to be always on screen (but out of frame)
+    to slide up from the bottom, screen readers need it to appear to read
+    the message to the user. Therfore, we have 2 version, one that is not
+    visible in the UI but alerts the user with a screenreader, and one
+    that is visible in the UI, but is hidden to screen readers. -->
+    <div v-if="showCopyNotification" role="alert" class="sr-only">
+      Combo link copied to your clipboard
+    </div>
     <div
-      ref="copyNotification"
+      aria-hidden="true"
       class="copy-combo-notification w-full md:w-1/2"
       :class="{ show: showCopyNotification }"
     >
@@ -30,10 +50,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
+import spellbookApi from "commander-spellbook";
+
 export default Vue.extend({
   props: {
+    cards: {
+      type: Array as PropType<string[]>,
+      default() {
+        return [];
+      },
+    },
     comboLink: {
+      type: String,
+      default: "",
+    },
+    comboId: {
       type: String,
       default: "",
     },
@@ -41,14 +73,38 @@ export default Vue.extend({
   data() {
     return {
       showCopyNotification: false,
+      hasSimiliarCombos: false,
     };
+  },
+  async fetch() {
+    await this.lookupSimiliarCombos();
+  },
+
+  computed: {
+    similiarSearchString(): string {
+      return this.cards.reduce((accum, name) => {
+        // TODO support single quote
+        return accum + ` card="${name}"`;
+      }, `-id:${this.comboId}`);
+    },
   },
   methods: {
     copyComboLink(): void {
-      (this.$refs.copyInput as HTMLInputElement).select();
+      // kind of convoluted, but the hidden input needs to be
+      // text so we can actually copy from it, but when it's
+      // text, accessibility programs flag it for not having a label
+      // or being usable, even when set to aria-hidden, so we quickly
+      // set it to text and back to hidden again
+      const copyInput = this.$refs.copyInput as HTMLInputElement;
+      copyInput.type = "text";
+      copyInput.select();
       document.execCommand("copy");
+      copyInput.type = "hidden";
 
       this.showCopyNotification = true;
+      this.$gtag.event("Copy Combo Link Clicked", {
+        event_category: "Combo Detail Page Actions",
+      });
 
       setTimeout(() => {
         this.showCopyNotification = false;
@@ -58,13 +114,30 @@ export default Vue.extend({
         (this.$refs.copyButton as HTMLButtonElement).blur();
       });
     },
+    async lookupSimiliarCombos(): Promise<void> {
+      const result = await spellbookApi.search(this.similiarSearchString);
+
+      this.hasSimiliarCombos = result.combos.length > 0;
+    },
+    goToSimiliarCombos(): void {
+      this.$gtag.event("Find Other Combos Using These Cards Button Clicked", {
+        event_category: "Combo Detail Page Actions",
+      });
+
+      this.$router.push({
+        path: "/search",
+        query: {
+          q: this.similiarSearchString,
+        },
+      });
+    },
   },
 });
 </script>
 
 <style scoped>
 .combo-button {
-  @apply bg-white  text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
+  @apply w-full bg-white block mx-auto mb-4 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
 }
 
 .combo-button:hover {

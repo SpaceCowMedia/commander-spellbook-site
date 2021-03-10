@@ -17,7 +17,13 @@ describe("SearchPage", () => {
   }[];
 
   beforeEach(() => {
-    jest.spyOn(spellbookApi, "search").mockResolvedValue([]);
+    jest.spyOn(spellbookApi, "search").mockResolvedValue({
+      sort: "colors",
+      order: "ascending",
+      combos: [],
+      message: "",
+      errors: [],
+    });
     fakeCombos = [
       {
         names: ["a", "b", "c"],
@@ -38,6 +44,7 @@ describe("SearchPage", () => {
     };
     $router = {
       push: jest.fn(),
+      replace: jest.fn(),
     };
     wrapperOptions = {
       mocks: {
@@ -46,6 +53,7 @@ describe("SearchPage", () => {
       },
       stubs: {
         ComboResults: true,
+        SearchMessage: true,
         NoCombosFound: true,
         Pagination: true,
       },
@@ -95,7 +103,13 @@ describe("SearchPage", () => {
       };
       // @ts-ignore
       wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-      mocked(spellbookApi.search).mockResolvedValue([]);
+      mocked(spellbookApi.search).mockResolvedValue({
+        combos: [],
+        message: "",
+        sort: "colors",
+        order: "descending",
+        errors: [],
+      });
 
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
@@ -149,16 +163,60 @@ describe("SearchPage", () => {
       ]);
     });
 
+    it("shows search message", async () => {
+      const SearchMessageStub = {
+        template: "<div></div>",
+        props: [
+          "message",
+          "errors",
+          "currentPage",
+          "totalPages",
+          "maxNumberOfCombosPerPage",
+          "totalResults",
+        ],
+      };
+      // @ts-ignore
+      wrapperOptions.stubs.SearchMessage = SearchMessageStub;
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      // add a large number of combos
+      "x"
+        .repeat(213)
+        .split("")
+        .forEach((value, index) => {
+          fakeCombos.push({
+            names: [value],
+            colors: ["u", "g"],
+            results: ["result x", "result y"],
+            id: String(index + 2),
+          });
+        });
+
+      await wrapper.setData({
+        loaded: true,
+        combos: fakeCombos,
+        message: "some message",
+        errors: "some errors",
+      });
+
+      const searchMessageComponent = wrapper.findComponent(SearchMessageStub);
+
+      expect(searchMessageComponent.props()).toEqual({
+        message: "some message",
+        errors: "some errors",
+        currentPage: 1,
+        totalPages: 3,
+        maxNumberOfCombosPerPage: 78,
+        totalResults: 215,
+      });
+    });
+
     it("shows pagination for results", async () => {
       const PaginationStub = {
         template: "<div></div>",
         props: {
-          pageSize: Number,
           currentPage: Number,
           totalPages: Number,
-          firstResult: Number,
-          lastResult: Number,
-          totalResults: Number,
         },
       };
       // @ts-ignore
@@ -187,16 +245,12 @@ describe("SearchPage", () => {
 
       expect(paginationComponents.length).toBe(2);
       expect(paginationComponents.at(0).props()).toEqual({
-        pageSize: 76,
         currentPage: 1,
         totalPages: 3,
-        totalResults: 215,
       });
       expect(paginationComponents.at(1).props()).toEqual({
-        pageSize: 76,
         currentPage: 1,
         totalPages: 3,
-        totalResults: 215,
       });
 
       await wrapper.setData({
@@ -204,16 +258,12 @@ describe("SearchPage", () => {
       });
 
       expect(paginationComponents.at(0).props()).toEqual({
-        pageSize: 76,
         currentPage: 2,
         totalPages: 3,
-        totalResults: 215,
       });
       expect(paginationComponents.at(1).props()).toEqual({
-        pageSize: 76,
         currentPage: 2,
         totalPages: 3,
-        totalResults: 215,
       });
     });
 
@@ -313,27 +363,39 @@ describe("SearchPage", () => {
 
   describe("updateSearchResults", () => {
     beforeEach(() => {
-      mocked(spellbookApi.search).mockResolvedValue([]);
+      mocked(spellbookApi.search).mockResolvedValue({
+        combos: [],
+        message: "",
+        sort: "colors",
+        order: "descending",
+        errors: [],
+      });
     });
 
     it("populates results with cmobos from lookup", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      mocked(spellbookApi.search).mockResolvedValue([
-        spellbookApi.makeFakeCombo({
-          cards: ["a", "b", "c"],
-          results: ["result 1", "result 2"],
-          colorIdentity: "rb",
-          commanderSpellbookId: "1",
-        }),
-        spellbookApi.makeFakeCombo({
-          cards: ["d", "e", "f"],
-          results: ["result 3", "result 4"],
-          colorIdentity: "wb",
-          commanderSpellbookId: "2",
-        }),
-      ]);
+      mocked(spellbookApi.search).mockResolvedValue({
+        combos: [
+          spellbookApi.makeFakeCombo({
+            cards: ["a", "b", "c"],
+            results: ["result 1", "result 2"],
+            colorIdentity: "rb",
+            commanderSpellbookId: "1",
+          }),
+          spellbookApi.makeFakeCombo({
+            cards: ["d", "e", "f"],
+            results: ["result 3", "result 4"],
+            colorIdentity: "wb",
+            commanderSpellbookId: "2",
+          }),
+        ],
+        message: "",
+        sort: "colors",
+        order: "descending",
+        errors: [],
+      });
 
       await vm.updateSearchResults("query");
       expect(spellbookApi.search).toBeCalledWith("query");
@@ -358,18 +420,24 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      mocked(spellbookApi.search).mockResolvedValue([
-        spellbookApi.makeFakeCombo({
-          cards: ["a", "b", "c"],
-          results: ["result 1", "result 2"],
-          colorIdentity: "rb",
-          commanderSpellbookId: "1",
-        }),
-      ]);
+      mocked(spellbookApi.search).mockResolvedValue({
+        combos: [
+          spellbookApi.makeFakeCombo({
+            cards: ["a", "b", "c"],
+            results: ["result 1", "result 2"],
+            colorIdentity: "rb",
+            commanderSpellbookId: "1",
+          }),
+        ],
+        sort: "colors",
+        order: "ascending",
+        message: "",
+        errors: [],
+      });
 
       await vm.updateSearchResults("query");
 
-      expect($router.push).toBeCalledWith({
+      expect($router.replace).toBeCalledWith({
         path: "/combo/1",
         query: {
           q: "query",
@@ -504,6 +572,53 @@ describe("SearchPage", () => {
 
       expect(spy).toBeCalledTimes(1);
       expect(spy).toBeCalledWith(-1);
+    });
+  });
+
+  describe("updatePageFromQuery", () => {
+    it("defaults page to 1 when it is not present in the query", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      delete $route.query.page;
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(1);
+    });
+
+    it("defaults page to 1 when the page query cannot be parsed to a number", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      $route.query.page = "asdf";
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(1);
+    });
+
+    it("sets page to the value in the query", () => {
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      $route.query.page = "5";
+
+      wrapper.setData({
+        page: 2,
+      });
+
+      vm.updatePageFromQuery();
+
+      expect(vm.page).toBe(5);
     });
   });
 });

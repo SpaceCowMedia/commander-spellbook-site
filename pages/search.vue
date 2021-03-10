@@ -1,12 +1,19 @@
 <template>
   <div>
-    <div class="container max-w-5xl mx-auto sm:flex flex-row">
-      <div v-if="paginatedResults.length > 0">
+    <SearchMessage
+      :message="message"
+      :errors="errors"
+      :current-page="page"
+      :total-pages="totalPages"
+      :max-number-of-combos-per-page="maxNumberOfCombosPerPage"
+      :total-results="totalResults"
+    />
+
+    <div class="container sm:flex flex-row">
+      <div v-if="paginatedResults.length > 0" class="w-full">
         <Pagination
-          :page-size="maxNumberOfCombosPerPage"
           :current-page="page"
           :total-pages="totalPages"
-          :total-results="totalResults"
           @go-forward="goForward"
           @go-back="goBack"
         />
@@ -14,10 +21,8 @@
         <ComboResults :results="paginatedResults" />
 
         <Pagination
-          :page-size="maxNumberOfCombosPerPage"
           :current-page="page"
           :total-pages="totalPages"
-          :total-results="totalResults"
           @go-forward="goForward"
           @go-back="goBack"
         />
@@ -30,6 +35,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ComboResults from "@/components/search/ComboResults.vue";
+import NoCombosFound from "@/components/search/NoCombosFound.vue";
+import Pagination from "@/components/search/Pagination.vue";
+import SearchMessage from "@/components/search/SearchMessage.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { ComboResult } from "../components/search/ComboResults.vue";
@@ -38,15 +47,25 @@ type Data = {
   loaded: boolean;
   page: number;
   maxNumberOfCombosPerPage: number;
+  message: string;
+  errors: string;
   combos: ComboResult[];
 };
 
 export default Vue.extend({
+  components: {
+    ComboResults,
+    NoCombosFound,
+    Pagination,
+    SearchMessage,
+  },
   data(): Data {
     return {
       loaded: false,
       page: 1,
-      maxNumberOfCombosPerPage: 76,
+      maxNumberOfCombosPerPage: 78,
+      message: "",
+      errors: "",
       combos: [],
     };
   },
@@ -78,10 +97,29 @@ export default Vue.extend({
 
       return results;
     },
+    firstResult(): number {
+      return (
+        this.page * this.maxNumberOfCombosPerPage -
+        this.maxNumberOfCombosPerPage +
+        1
+      );
+    },
+    lastResult(): number {
+      const finalResult = this.firstResult + this.maxNumberOfCombosPerPage - 1;
+
+      if (finalResult > this.totalResults) {
+        return this.totalResults;
+      }
+
+      return finalResult;
+    },
   },
   watch: {
     "$route.query.q"(): void {
       this.onQueryChange();
+    },
+    "$route.query.page"(): void {
+      this.updatePageFromQuery();
     },
   },
   async mounted(): Promise<void> {
@@ -92,7 +130,7 @@ export default Vue.extend({
       this.loaded = false;
 
       const query = this.parseSearchQuery();
-      this.page = Number(this.$route.query.page) || 1;
+      this.updatePageFromQuery();
 
       if (!query) {
         this.loaded = true;
@@ -103,24 +141,31 @@ export default Vue.extend({
 
       this.loaded = true;
     },
+    updatePageFromQuery(): void {
+      this.page = Number(this.$route.query.page) || 1;
+    },
     async updateSearchResults(query: string): Promise<void> {
       this.combos = [];
+      this.message = "";
+      this.errors = "";
       this.page = 1;
       this.$router.push({
         path: this.$route.path,
         query: { q: query },
       });
 
-      const combos = await spellbookApi.search(query);
+      const { message, errors, combos } = await spellbookApi.search(query);
 
       if (combos.length === 1) {
-        this.$router.push({
+        this.$router.replace({
           path: `/combo/${combos[0].commanderSpellbookId}`,
           query: { q: query },
         });
         return;
       }
 
+      this.message = message;
+      this.errors = errors.map((e) => e.message).join(" ");
       this.combos = combos.map((c) => {
         return {
           names: c.cards.map((card) => card.name),

@@ -8,5 +8,6 @@ export type Route = {
 };
 export type Router = {
   push: jest.SpyInstance;
+  replace?: jest.SpyInstance;
 };
 export type VueComponent = Record<string, any>;

@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4 py-3 flex items-center justify-between sm:px-6">
-    <div class="flex-1 flex justify-between">
+  <div class="px-4 mt-3 flex items-center sm:px-1">
+    <div class="flex-1 flex">
       <button
         class="back-button nav-button"
         :class="{ invisible: currentPage === 1 }"
@@ -21,23 +21,6 @@
         </svg>
         Previous
       </button>
-
-      <div class="flex-1 items-center justify-center hidden sm:inline-flex">
-        <p class="text-sm text-gray-700">
-          <span v-if="totalResults <= pageSize" class="simple-result-message">
-            <span class="font-medium">{{ totalResults }}</span> results
-          </span>
-          <span v-else class="complex-result-message">
-            Showing
-            <span class="font-medium">{{ firstResult }}</span>
-            -
-            <span class="font-medium">{{ lastResult }}</span>
-            of
-            <span class="font-medium">{{ totalResults }}</span>
-            results
-          </span>
-        </p>
-      </div>
 
       <button
         class="forward-button nav-button"
@@ -68,10 +51,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   props: {
-    pageSize: {
-      type: Number,
-      default: 1,
-    },
     currentPage: {
       type: Number,
       default: 1,
@@ -79,24 +58,6 @@ export default Vue.extend({
     totalPages: {
       type: Number,
       default: 1,
-    },
-    totalResults: {
-      type: Number,
-      default: 1,
-    },
-  },
-  computed: {
-    firstResult(): number {
-      return this.currentPage * this.pageSize - this.pageSize + 1;
-    },
-    lastResult(): number {
-      const finalResult = this.firstResult + this.pageSize - 1;
-
-      if (finalResult > this.totalResults) {
-        return this.totalResults;
-      }
-
-      return finalResult;
     },
   },
   methods: {
@@ -112,7 +73,14 @@ export default Vue.extend({
 
 <style scoped>
 .nav-button {
-  @apply ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+  @apply mx-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+}
+
+.nav-button:first-child {
+  @apply ml-0;
+}
+.nav-button:last-child {
+  @apply mr-0;
 }
 
 .nav-button:hover {

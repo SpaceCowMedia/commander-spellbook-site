@@ -1,6 +1,6 @@
 <template>
   <div :id="id" class="search-guide border-b-2 border-gray-400 w-full">
-    <div class="container max-w-5xl m-auto mt-6 mb-6 pb-4">
+    <div class="container mt-6 mb-6 pb-4">
       <div class="mt-4 mb-4 flex-none text-center md:flex items-center">
         <ArtCircle
           :card-name="headingCardName"
@@ -33,8 +33,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import SearchSnippet from "./SearchSnippet.vue";
 
 export default Vue.extend({
+  components: {
+    ArtCircle,
+    SearchSnippet,
+  },
   props: {
     heading: {
       type: String,
@@ -79,8 +85,7 @@ export default Vue.extend({
 }
 
 code {
-  color: rgb(92, 126, 159);
-  @apply bg-gray-200 pl-1 pr-1;
+  @apply text-primary bg-gray-200 pl-1 pr-1;
 }
 
 .description p {

@@ -2,11 +2,12 @@ import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import spellbookApi from "commander-spellbook";
 
-import type { MountOptions, Route, VueComponent } from "../../types";
+import type { MountOptions, Route, Router, VueComponent } from "../../types";
 
 describe("ComboPage", () => {
   let options: MountOptions;
   let $route: Route;
+  let $router: Router;
 
   beforeEach(() => {
     $route = {
@@ -15,9 +16,13 @@ describe("ComboPage", () => {
       },
       query: {},
     };
+    $router = {
+      push: jest.fn(),
+    };
     options = {
       mocks: {
         $route,
+        $router,
       },
       stubs: {
         CardHeader: true,
@@ -33,6 +38,15 @@ describe("ComboPage", () => {
     const wrapper = shallowMount(ComboPage, options);
 
     expect((wrapper.vm as VueComponent).loaded).toBe(false);
+  });
+
+  it("redirects on mount when loaded", () => {
+    shallowMount(ComboPage, options);
+
+    expect($router.push).toBeCalledTimes(1);
+    expect($router.push).toBeCalledWith({
+      path: "/combo-not-found",
+    });
   });
 
   it("creates a card header component", async () => {
@@ -137,6 +151,38 @@ describe("ComboPage", () => {
     ]);
   });
 
+  it("includes warning about banned cards if combo contains them", async () => {
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      hasBannedCard: false,
+    });
+
+    expect(wrapper.find(".banned-warning").exists()).toBe(false);
+
+    await wrapper.setData({
+      hasBannedCard: true,
+    });
+
+    expect(wrapper.find(".banned-warning").exists()).toBe(true);
+  });
+
+  it("includes warning about spoiled cards if combo contains them", async () => {
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      hasSpoiledCard: false,
+    });
+
+    expect(wrapper.find(".spoiled-warning").exists()).toBe(false);
+
+    await wrapper.setData({
+      hasSpoiledCard: true,
+    });
+
+    expect(wrapper.find(".spoiled-warning").exists()).toBe(true);
+  });
+
   it("looks up combo from page number param", async () => {
     const fakeCombo = spellbookApi.makeFakeCombo({
       commanderSpellbookId: "13",
@@ -186,10 +232,10 @@ describe("ComboPage", () => {
 
     expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2);
+    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2, "png");
     expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2);
+    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "png");
   });
 
   it("does not load data from combo when no combos is found for id", async () => {

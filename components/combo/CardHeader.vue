@@ -67,7 +67,7 @@ export default Vue.extend({
 
 .mask {
   background: black;
-  opacity: 0.75;
+  opacity: 0.65;
 }
 
 .combo-title-wrapper {
@@ -79,13 +79,13 @@ export default Vue.extend({
 
 @keyframes color {
   0% {
-    background-color: #222;
+    @apply bg-gray-900;
   }
   50% {
-    background-color: rgb(92, 126, 159);
+    @apply bg-primary;
   }
   100% {
-    background-color: #222;
+    @apply bg-gray-900;
   }
 }
 </style>

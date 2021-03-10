@@ -5,9 +5,23 @@
       if this pages is actually exposed on the site via links,
       it should probably get some major design work :)
     -->
-    <p v-for="link in links" :key="link.id">
-      <nuxt-link :to="'/combo/' + link.id">{{ link.names }}</nuxt-link>
-    </p>
+    <div id="combo-links">
+      <p v-for="link in links" :key="link.id">
+        <nuxt-link :to="'/combo/' + link.id">{{ link.names }}</nuxt-link>
+      </p>
+    </div>
+
+    <div id="meta-links">
+      <p class="py-4">
+        <nuxt-link to="/meta/cards">See all cards</nuxt-link>
+      </p>
+      <p class="py-4">
+        <nuxt-link to="/meta/colors">See all colors</nuxt-link>
+      </p>
+      <p class="py-4">
+        <nuxt-link to="/meta/results">See all results</nuxt-link>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -34,7 +48,8 @@ export default Vue.extend({
   },
   methods: {
     async lookupCombos() {
-      const combos = await spellbookApi.search();
+      const combos = await spellbookApi.getAllCombos();
+
       this.links.push(
         ...combos.map((c) => {
           return {

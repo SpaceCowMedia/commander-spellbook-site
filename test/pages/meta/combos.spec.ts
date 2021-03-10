@@ -1,5 +1,5 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
-import ComboHomePage from "@/pages/combo/index.vue";
+import ComboHomePage from "@/pages/meta/combos.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { VueComponent } from "../../types";
@@ -14,7 +14,7 @@ describe("ComboHomePage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      jest.spyOn(spellbookApi, "search").mockResolvedValue([
+      jest.spyOn(spellbookApi, "getAllCombos").mockResolvedValue([
         spellbookApi.makeFakeCombo({
           cards: ["card 1", "card 2"],
           commanderSpellbookId: "1",
@@ -33,7 +33,6 @@ describe("ComboHomePage", () => {
 
       const links = wrapper.findAllComponents(RouterLinkStub);
 
-      expect(links.length).toBe(3);
       expect(links.at(0).props("to")).toBe("/combo/1");
       expect(links.at(0).element.textContent).toBe("card 1, card 2");
       expect(links.at(1).props("to")).toBe("/combo/2");

@@ -2,45 +2,76 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" />
 
-    <div class="container max-w-5xl mx-auto md:flex flex-row">
-      <div class="w-2/3">
+    <CardGroup :cards="cards" />
+
+    <div class="container md:flex flex-row">
+      <div class="w-full md:w-2/3">
+        <div class="md:hidden pt-4">
+          <ColorIdentity :colors="colorIdentity" />
+        </div>
+
         <ComboList
+          id="combo-cards"
+          class="lg:hidden"
           title="Cards"
           :iterations="cardNames"
           :is-card="true"
           :cards-in-combo="cardNames"
+          :include-card-links="true"
         />
+
         <ComboList
+          id="combo-prerequisites"
           title="Prerequisites"
           :iterations="prerequisites"
           :cards-in-combo="cardNames"
         />
         <ComboList
+          id="combo-steps"
           title="Steps"
           :show-numbers="true"
           :iterations="steps"
           :cards-in-combo="cardNames"
         />
         <ComboList
+          id="combo-results"
           title="Results"
           :iterations="results"
           :cards-in-combo="cardNames"
         />
       </div>
 
-      <div class="w-1/3 text-center">
-        <div class="my-4">
+      <aside class="w-full sm:w-1/3 text-center">
+        <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
 
-        <ComboSidebarLinks :combo-link="link" />
-      </div>
+        <div v-if="hasBannedCard" class="banned-warning">
+          WARNING: Combo contains cards that are banned in Commander
+        </div>
+
+        <div v-if="hasSpoiledCard" class="spoiled-warning">
+          WARNING: Combo contains cards that are from a forthcoming set (and not
+          yet legal in Commander)
+        </div>
+
+        <ComboSidebarLinks
+          :combo-id="comboNumber"
+          :combo-link="link"
+          :cards="cardNames"
+        />
+      </aside>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import ColorIdentity from "@/components/ColorIdentity.vue";
+import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
+import CardHeader from "@/components/combo/CardHeader.vue";
+import CardGroup from "@/components/combo/CardGroup.vue";
+import ComboList from "@/components/combo/ComboList.vue";
 import spellbookApi from "commander-spellbook";
 
 type CardData = {
@@ -51,6 +82,8 @@ type CardData = {
 
 type ComboData = {
   title: string;
+  hasBannedCard: boolean;
+  hasSpoiledCard: boolean;
   link: string;
   loaded: boolean;
   comboNumber: string;
@@ -62,6 +95,13 @@ type ComboData = {
 };
 
 export default Vue.extend({
+  components: {
+    CardHeader,
+    CardGroup,
+    ColorIdentity,
+    ComboList,
+    ComboSidebarLinks,
+  },
   async asyncData({ params }): Promise<ComboData | void> {
     const comboNumber = params.id;
     let combo;
@@ -77,13 +117,15 @@ export default Vue.extend({
       return {
         name: card.name,
         artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl(),
+        oracleImageUrl: card.getScryfallImageUrl("png"),
       };
     });
 
     return {
       comboNumber,
       title: `Combo Number ${comboNumber}`,
+      hasBannedCard: combo.hasBannedCard,
+      hasSpoiledCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
       loaded: true,
@@ -96,6 +138,8 @@ export default Vue.extend({
   data(): ComboData {
     return {
       title: "Looking up Combo",
+      hasBannedCard: false,
+      hasSpoiledCard: false,
       link: "",
       loaded: false,
       comboNumber: "0",
@@ -104,6 +148,86 @@ export default Vue.extend({
       prerequisites: [],
       steps: [],
       results: [],
+    };
+  },
+  head() {
+    // for some reason, these properties aren't available here???
+    // seems like a nuxt typescript issue
+    // @ts-ignore
+    const title = this.cardNames.join(" | ");
+    // @ts-ignore
+    const description = this.results.reduce((str, result) => {
+      return str + `\n  * ${result}`;
+    }, "Combo Results:");
+    // @ts-ignore
+    const link = this.link;
+    // @ts-ignore
+    const logo = this.cardArts[0];
+
+    return {
+      title,
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: description,
+        },
+        {
+          hid: "og-type",
+          property: "og:type",
+          content: "website",
+        },
+        {
+          hid: "og-url",
+          property: "og:url",
+          content: link,
+        },
+        {
+          hid: "og-site_name",
+          property: "og:site_name",
+          content: "Commander Spellbook: Combo Database for Commander (EDH)",
+        },
+        {
+          hid: "og-title",
+          property: "og:title",
+          content: title,
+        },
+        {
+          hid: "og-description",
+          property: "og:description",
+          content: description,
+        },
+        {
+          hid: "og-image",
+          property: "og:image",
+          content: logo,
+        },
+        {
+          hid: "twitter-card",
+          property: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          hid: "twitter-url",
+          property: "twitter:url",
+          content: link,
+        },
+        {
+          hid: "twitter-title",
+          property: "twitter:title",
+          content: title,
+        },
+        {
+          hid: "twitter-description",
+          property: "twitter:description",
+          content: description,
+        },
+        {
+          hid: "twitter-image",
+          property: "twitter:image",
+          content: logo,
+        },
+      ],
     };
   },
   computed: {
@@ -116,10 +240,11 @@ export default Vue.extend({
   },
   mounted() {
     if (!this.loaded) {
-      // TODO not loaded, what to do here
+      this.$router.push({
+        path: "/combo-not-found",
+      });
     }
   },
-  methods: {},
 });
 </script>
 
@@ -130,5 +255,13 @@ export default Vue.extend({
   font-size: 50px;
   color: #35495e;
   letter-spacing: 1px;
+}
+
+.banned-warning {
+  @apply text-danger font-semibold;
+}
+
+.spoiled-warning {
+  @apply font-semibold;
 }
 </style>

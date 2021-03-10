@@ -4,7 +4,7 @@
       <div class="w-full">
         <Logo />
 
-        <SearchBar class="md:w-2/3 h-20" input-class="text-2xl text-center" />
+        <SearchBar :on-home-page="true" class="md:w-2/3 h-20" />
 
         <div class="links md:block flex flex-col">
           <nuxt-link to="/advanced-search" class="button--red">
@@ -22,19 +22,21 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SearchBar from "@/components/SearchBar.vue";
+import Logo from "@/components/Logo.vue";
 
 export default Vue.extend({
+  components: {
+    SearchBar,
+    Logo,
+  },
   layout: "landing",
   mounted() {
     const query = this.$route.query.q;
-    const status = this.$route.query.status;
+    const { status, id } = this.$route.query;
 
-    if (!(typeof query === "string")) {
-      return;
-    }
-
-    if (Number(query) > 0) {
-      this.$router.push(`/combo/${query}`);
+    if (Number(query) > 0 || Number(id) > 0) {
+      this.$router.push(`/combo/${id || query}`);
       return;
     }
 
@@ -45,6 +47,10 @@ export default Vue.extend({
 
     if (query === "banned" || status === "banned") {
       this.$router.push("/search?q=is:banned");
+      return;
+    }
+
+    if (!(typeof query === "string")) {
       return;
     }
 

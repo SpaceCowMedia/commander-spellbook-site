@@ -12,6 +12,38 @@ describe("AdvancedSearchPage", () => {
     };
   });
 
+  it("renders a placeholder query until a search term is entered", async () => {
+    const wrapper = shallowMount(AdvancedSearchPage, {
+      mocks: {
+        $router,
+      },
+      stubs: {
+        ArtCircle: true,
+        NuxtLink: true,
+        MultiSearchInput: true,
+        RadioSearchInput: true,
+      },
+    });
+
+    expect(wrapper.find("#search-query span").text()).toContain(
+      "(your query will populate here"
+    );
+
+    await wrapper.setData({
+      cards: [
+        {
+          value: "cardname",
+          operator: ":",
+        },
+      ],
+    });
+
+    expect(wrapper.find("#search-query span").text()).toContain("cardname");
+    expect(wrapper.find("#search-query span").text()).not.toContain(
+      "(your query will populate here"
+    );
+  });
+
   describe("submit", () => {
     it("redirects to search with query based on data", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
@@ -19,26 +51,72 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
 
       wrapper.setData({
-        cards: ["card 1", "card 2"],
-        prerequisites: ["pre 1", "pre 2"],
-        steps: ["step 1", "step 2"],
-        results: ["result 1", "result 2"],
-        colorIdentity: [
+        cards: [
           {
-            symbol: "w",
-            checked: true,
+            value: "cardname",
+            operator: ":",
           },
           {
-            symbol: "u",
-            checked: false,
+            value: "card 2",
+            operator: "=",
           },
         ],
+        cardAmounts: [
+          {
+            value: "3",
+            operator: ">-number",
+          },
+          {
+            value: "card 4",
+            operator: "=-exclude",
+          },
+        ],
+        prerequisites: [
+          {
+            value: "pre 1",
+            operator: ":",
+          },
+          {
+            value: "2",
+            operator: ">-number",
+          },
+        ],
+        steps: [
+          {
+            value: "step 1",
+            operator: ":",
+          },
+          {
+            value: "3",
+            operator: ">-number",
+          },
+        ],
+        results: [
+          {
+            value: "result 1",
+            operator: ":",
+          },
+          {
+            value: "result 2",
+            operator: "=",
+          },
+        ],
+        colorIdentity: [
+          {
+            value: "temur",
+            operator: ":",
+          },
+        ],
+        spoiled: "exclude",
+        banned: "is",
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -47,116 +125,7 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `card:"card 1" card:"card 2" ci:w pre:"pre 1" pre:"pre 2" step:"step 1" step:"step 2" result:"result 1" result:"result 2"`,
-        },
-      });
-    });
-
-    it("does not redirect when query is empty", () => {
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        mocks: {
-          $router,
-        },
-        stubs: {
-          ColorIdentity: true,
-          MultiSearchInput: true,
-        },
-      });
-
-      (wrapper.vm as VueComponent).submit();
-
-      expect($router.push).not.toBeCalled();
-    });
-
-    it("uses coloreless identity when no colors are checked", () => {
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        mocks: {
-          $router,
-        },
-        stubs: {
-          ColorIdentity: true,
-          MultiSearchInput: true,
-        },
-      });
-      wrapper.setData({
-        colorIdentity: [
-          {
-            symbol: "w",
-            checked: false,
-          },
-          {
-            symbol: "u",
-            checked: false,
-          },
-          {
-            symbol: "b",
-            checked: false,
-          },
-          {
-            symbol: "r",
-            checked: false,
-          },
-          {
-            symbol: "g",
-            checked: false,
-          },
-        ],
-      });
-
-      (wrapper.vm as VueComponent).submit();
-
-      expect($router.push).toBeCalledTimes(1);
-      expect($router.push).toBeCalledWith({
-        path: "/search",
-        query: {
-          q: "ci:colorless",
-        },
-      });
-    });
-
-    it("does not use color identity if all colores are checked", () => {
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        mocks: {
-          $router,
-        },
-        stubs: {
-          ColorIdentity: true,
-          MultiSearchInput: true,
-        },
-      });
-      wrapper.setData({
-        cards: ["card 1"],
-        colorIdentity: [
-          {
-            symbol: "w",
-            checked: true,
-          },
-          {
-            symbol: "u",
-            checked: true,
-          },
-          {
-            symbol: "b",
-            checked: true,
-          },
-          {
-            symbol: "r",
-            checked: true,
-          },
-          {
-            symbol: "g",
-            checked: true,
-          },
-        ],
-      });
-
-      (wrapper.vm as VueComponent).submit();
-
-      expect($router.push).toBeCalledTimes(1);
-      expect($router.push).toBeCalledWith({
-        path: "/search",
-        query: {
-          q: `card:"card 1"`,
+          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:spoiled is:banned`,
         },
       });
     });
@@ -167,12 +136,19 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
-        cards: ["card 1", "", "        ", "card 2"],
+        cards: [
+          { value: "card 1", operator: ":" },
+          { value: "", operator: ":" },
+          { value: "        ", operator: ":" },
+          { value: "card 2", operator: ":" },
+        ],
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -192,12 +168,14 @@ describe("AdvancedSearchPage", () => {
           $router,
         },
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
-        cards: ['Card with "symbols"'],
+        cards: [{ value: 'Card with "symbols"', operator: ":" }],
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -211,18 +189,20 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
-    it("ignores query if it contains both single and double quotes", () => {
+    it("uses no quotes when data has only alhpanumeric characters", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
           $router,
         },
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       wrapper.setData({
-        cards: [`Card with "symbols" and 'symbols'`, "basic card"],
+        cards: [{ value: "card123", operator: "=" }],
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -231,135 +211,543 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `card:"basic card"`,
+          q: `card=card123`,
         },
       });
     });
-  });
 
-  describe("toggleColorIdentity", () => {
-    it("toggles the state of the color identity when clicked", async () => {
+    it("uses no key when key is card and there are only alphanumeric characters", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        cards: [{ value: "card123", operator: ":" }],
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: `card123`,
+        },
+      });
+    });
+
+    it("adds an s to keys that are not ci (transforms to colors) or pre (transforms to prerequisites) when they are setting a number of the key", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        cardAmounts: [{ value: "5", operator: ">-number" }],
+        colorIdentity: [{ value: "5", operator: ">-number" }],
+        prerequisites: [{ value: "5", operator: ">-number" }],
+        steps: [{ value: "5", operator: ">-number" }],
+        results: [{ value: "5", operator: ">-number" }],
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: `cards>5 colors>5 prerequisites>5 steps>5 results>5`,
+        },
+      });
+    });
+
+    it("handles exclusion keys", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        cards: [{ value: "card 1", operator: ":-exclude" }],
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: `-card:"card 1"`,
+        },
+      });
+    });
+
+    it("only applies spoiled property when `include` is not used", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        spoiled: "include",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        spoiled: "exclude",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "exclude:spoiled",
+        },
+      });
+
+      wrapper.setData({
+        spoiled: "is",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "is:spoiled",
+        },
+      });
+    });
+
+    it("only applies banned property when `exclude` is not used", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        banned: "exclude",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        banned: "include",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "include:banned",
+        },
+      });
+
+      wrapper.setData({
+        banned: "is",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: {
+          q: "is:banned",
+        },
+      });
+    });
+
+    it("prevents submission if query is empty", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
         },
       });
       const vm = wrapper.vm as VueComponent;
 
-      expect(vm.colorIdentity[0].checked).toBe(true);
-      await wrapper.findAll(".color-identity-wrapper").at(0).trigger("click");
-      expect(vm.colorIdentity[0].checked).toBe(false);
-      await wrapper.findAll(".color-identity-wrapper").at(0).trigger("click");
-      expect(vm.colorIdentity[0].checked).toBe(true);
+      vm.submit();
 
-      expect(vm.colorIdentity[2].checked).toBe(true);
-      await wrapper.findAll(".color-identity-wrapper").at(2).trigger("click");
-      expect(vm.colorIdentity[2].checked).toBe(false);
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe("No search queries entered.");
+    });
+
+    it("prevents submission if query is not empty, but only has blank spaces", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        cards: [
+          { value: "", operator: ":" },
+          { value: "     ", operator: ":" },
+        ],
+        results: [{ value: " ", operator: ":" }],
+      });
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe("No search queries entered.");
+    });
+
+    it("prevents submission if query contains both double and single quotes", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      wrapper.setData({
+        cards: [
+          { value: `Card with "symbols" and 'symbols'`, operator: ":" },
+          { value: "basic card", operator: ":" },
+        ],
+      });
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe(
+        "Check for errors in your search terms before submitting."
+      );
+    });
+
+    it("prevents submission if query contains non-numeric values for numeric operator", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      wrapper.setData({
+        cardAmounts: [{ value: "card 1", operator: ":-number" }],
+        cards: [{ value: "basic card", operator: ":" }],
+      });
+
+      vm.submit();
+
+      expect($router.push).not.toBeCalled();
+      expect(vm.validationError).toBe(
+        "Check for errors in your search terms before submitting."
+      );
     });
   });
 
-  describe("updateCards", () => {
-    it("is a listener on a multi search input", async () => {
+  describe("validate", () => {
+    it("resets global validation error message", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        validationError: "some error",
+      });
+
+      vm.validate();
+
+      expect(vm.validationError).toBe("");
+    });
+
+    it("returns true when there is a validation error", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      expect(vm.validate()).toBe(false);
+
+      wrapper.setData({
+        cards: [{ value: `' card "`, operator: ":" }],
+      });
+
+      expect(vm.validate()).toBe(true);
+    });
+
+    it("adds validation error to inputs for mixing quotes", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      const cards = [
+        { value: `' card 1"`, operator: ":", error: "" },
+        { value: " card 2", operator: ":" },
+        { value: `' card 3"`, operator: ":" },
+        { value: "card with '", operator: ":" },
+        { value: 'card with "', operator: ":" },
+      ];
+
+      wrapper.setData({
+        cards,
+      });
+
+      expect(vm.validate()).toBe(true);
+
+      expect(cards[0].error).toBe(
+        "Contains both single and double quotes. A card name may only use one kind."
+      );
+      expect(cards[1].error).toBeFalsy();
+      expect(cards[2].error).toBe(
+        "Contains both single and double quotes. A card name may only use one kind."
+      );
+      expect(cards[3].error).toBeFalsy();
+      expect(cards[4].error).toBeFalsy();
+    });
+
+    it("adds validation error for providing non-numeric values for numeric operators", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+      const cardAmounts = [
+        { value: "card 1", operator: ":-number", error: "" },
+        { value: "2", operator: ":-number" },
+        { value: "3.05", operator: ":-number" },
+      ];
+
+      wrapper.setData({
+        cardAmounts,
+      });
+
+      expect(vm.validate()).toBe(true);
+
+      expect(cardAmounts[0].error).toBe(
+        "Contains a non-integer. Use a full number instead."
+      );
+      expect(cardAmounts[1].error).toBeFalsy();
+      expect(cardAmounts[2].error).toBe(
+        "Contains a non-integer. Use a full number instead."
+      );
+    });
+  });
+
+  describe("addInput", () => {
+    it("adds an input at specified index", async () => {
       const FakeMultiSearchInput = {
         template: "<div></div>",
         props: ["label", "placeholder"],
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.setData({
+        cards: [{ value: "1", operator: "=" }],
       });
 
       const cardsInput = wrapper.findAllComponents(FakeMultiSearchInput).at(0);
 
-      expect(cardsInput.props("label")).toBe("Card Name");
+      await cardsInput.vm.$emit("add-input", 0);
 
-      await cardsInput.vm.$emit("update", {
-        index: 1,
-        value: "new card",
+      expect(vm.cards[0].value).toBe("1");
+      expect(vm.cards[0].operator).toBe("=");
+      expect(vm.cards[1].value).toBe("");
+      expect(vm.cards[1].operator).toBe(":");
+
+      wrapper.setData({
+        cards: [
+          { value: "1", operator: "=" },
+          { value: "2", operator: ">" },
+          { value: "3", operator: "<" },
+        ],
       });
 
-      expect((wrapper.vm as VueComponent).cards[1]).toBe("new card");
-    });
-  });
+      await cardsInput.vm.$emit("add-input", 1);
 
-  describe("updatePrerequisites", () => {
-    it("is a listener on a multi search input", async () => {
+      expect(vm.cards[0].value).toBe("1");
+      expect(vm.cards[0].operator).toBe("=");
+      expect(vm.cards[1].value).toBe("2");
+      expect(vm.cards[1].operator).toBe(">");
+      expect(vm.cards[2].value).toBe("");
+      expect(vm.cards[2].operator).toBe(":");
+      expect(vm.cards[3].value).toBe("3");
+      expect(vm.cards[3].operator).toBe("<");
+    });
+
+    it("uses custom operator for cardAmounts model", async () => {
       const FakeMultiSearchInput = {
         template: "<div></div>",
         props: ["label", "placeholder"],
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
       });
+      const vm = wrapper.vm as VueComponent;
 
-      const preReqInput = wrapper.findAllComponents(FakeMultiSearchInput).at(1);
-
-      expect(preReqInput.props("label")).toBe("Prerequisite");
-
-      await preReqInput.vm.$emit("update", {
-        index: 1,
-        value: "new prereq",
+      wrapper.setData({
+        cardAmounts: [{ value: "1", operator: ">-number" }],
       });
 
-      expect((wrapper.vm as VueComponent).prerequisites[1]).toBe("new prereq");
+      await wrapper
+        .findAllComponents(FakeMultiSearchInput)
+        .at(1)
+        .vm.$emit("add-input", 0);
+
+      expect(vm.cardAmounts[0].value).toBe("1");
+      expect(vm.cardAmounts[0].operator).toBe(">-number");
+      expect(vm.cardAmounts[1].value).toBe("");
+      expect(vm.cardAmounts[1].operator).toBe("=-number");
     });
   });
 
-  describe("updateSteps", () => {
-    it("is a listener on a multi search input", async () => {
+  describe("removeInput", () => {
+    it("removes an input at specified index", async () => {
       const FakeMultiSearchInput = {
         template: "<div></div>",
         props: ["label", "placeholder"],
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          ColorIdentity: true,
+          ArtCircle: true,
+          NuxtLink: true,
           MultiSearchInput: FakeMultiSearchInput,
+          RadioSearchInput: true,
         },
       });
+      const vm = wrapper.vm as VueComponent;
 
-      const stepInput = wrapper.findAllComponents(FakeMultiSearchInput).at(2);
-
-      expect(stepInput.props("label")).toBe("Step");
-
-      await stepInput.vm.$emit("update", {
-        index: 1,
-        value: "new step",
+      wrapper.setData({
+        cards: [
+          { value: "1", operator: "=" },
+          { value: "2", operator: ">" },
+          { value: "3", operator: "<" },
+        ],
       });
 
-      expect((wrapper.vm as VueComponent).steps[1]).toBe("new step");
+      const cardsInput = wrapper.findAllComponents(FakeMultiSearchInput).at(0);
+
+      await cardsInput.vm.$emit("remove-input", 1);
+
+      expect(vm.cards[0].value).toBe("1");
+      expect(vm.cards[0].operator).toBe("=");
+      expect(vm.cards[1].value).toBe("3");
+      expect(vm.cards[1].operator).toBe("<");
     });
   });
 
-  describe("updateResults", () => {
-    it("is a listener on a multi search input", async () => {
-      const FakeMultiSearchInput = {
+  describe("updateRadio", () => {
+    it("updates model with value", async () => {
+      const FakeRadioSearchInput = {
         template: "<div></div>",
-        props: ["label", "placeholder"],
       };
       const wrapper = shallowMount(AdvancedSearchPage, {
         stubs: {
-          ColorIdentity: true,
-          MultiSearchInput: FakeMultiSearchInput,
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: FakeRadioSearchInput,
         },
       });
+      const vm = wrapper.vm as VueComponent;
 
-      const resultInput = wrapper.findAllComponents(FakeMultiSearchInput).at(3);
-
-      expect(resultInput.props("label")).toBe("Result");
-
-      await resultInput.vm.$emit("update", {
-        index: 1,
-        value: "new result",
+      wrapper.setData({
+        spoiled: "include",
+        banned: "exclude",
       });
 
-      expect((wrapper.vm as VueComponent).results[1]).toBe("new result");
+      const spoiledInput = wrapper
+        .findAllComponents(FakeRadioSearchInput)
+        .at(0);
+      const bannedInput = wrapper.findAllComponents(FakeRadioSearchInput).at(1);
+
+      await spoiledInput.vm.$emit("update-radio", "is");
+      expect(vm.spoiled).toBe("is");
+
+      await bannedInput.vm.$emit("update-radio", "is");
+
+      expect(vm.banned).toBe("is");
     });
   });
 });

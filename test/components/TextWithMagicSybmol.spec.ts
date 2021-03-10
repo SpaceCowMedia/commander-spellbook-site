@@ -41,7 +41,7 @@ describe("TextWithMagicSymbol", () => {
 
   it("renders cards", () => {
     const CardTooltipStub = {
-      template: "<div></div>",
+      template: "<div><slot /></div>",
       props: ["cardName"],
     };
     const wrapper = mount(TextWithMagicSymbol, {
@@ -57,6 +57,42 @@ describe("TextWithMagicSymbol", () => {
     const tooltip = wrapper.findComponent(CardTooltipStub);
 
     expect(tooltip.props("cardName")).toBe("Card Name 1");
+    expect((tooltip.element as HTMLAnchorElement).textContent).toContain(
+      "Card Name 1"
+    );
+  });
+
+  it("renders cards with links", () => {
+    const CardTooltipStub = {
+      template: "<div><slot /></div>",
+      props: ["cardName"],
+    };
+    const CardLinkStub = {
+      template: "<a><slot /></a>",
+      props: ["name"],
+    };
+    const wrapper = mount(TextWithMagicSymbol, {
+      stubs: {
+        CardTooltip: CardTooltipStub,
+        CardLink: CardLinkStub,
+      },
+      propsData: {
+        cardsInCombo: ["Card Name 1", "Card Name 2"],
+        includeCardLinks: true,
+        text: "Card Name 1",
+      },
+    });
+
+    const tooltip = wrapper.findComponent(CardTooltipStub);
+
+    expect(tooltip.props("cardName")).toBe("Card Name 1");
+    expect(tooltip.findComponent(CardLinkStub).props("name")).toBe(
+      "Card Name 1"
+    );
+    expect(
+      (tooltip.findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Card Name 1");
   });
 
   it("renders text, cards and images together", () => {

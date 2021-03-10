@@ -1,29 +1,34 @@
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: rgb(92, 126, 159);
+  @apply bg-primary;
+}
+
+a {
+  @apply text-primary underline;
 }
 
 main {
   @apply bg-white;
 }
 
+.container {
+  @apply w-full max-w-5xl px-4 mx-auto;
+}
+
 .heading-title {
   font-family: monospace;
   font-weight: 300;
-  color: #35495e;
-  @apply text-4xl;
+  @apply text-4xl text-dark;
 }
 
 .button--red {
-  border-color: rgb(141, 54, 34);
-  color: rgb(141, 54, 34);
-  @apply m-4 inline-block border py-2 px-3;
+  @apply m-4 inline-block border border-secondary py-2 px-3 text-secondary rounded-sm no-underline;
 }
 
 .button--red:hover {
   color: #fff;
-  background-color: rgb(141, 54, 34);
+  @apply bg-secondary;
 }
 
 @media (min-width: 640px) {

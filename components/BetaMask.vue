@@ -2,8 +2,9 @@
   <div>
     <div v-show="!passwordsMatch" class="auth-required">
       <div v-show="loaded" class="w-1/2 m-auto">
-        <p class="mb-2">Enter Password</p>
+        <label for="beta-password" class="mb-2">Enter Password</label>
         <input
+          id="beta-password"
           v-model="password"
           type="text"
           class="rounded bg-blue-300 focus:bg-blue-200 w-full p-4"
@@ -72,6 +73,6 @@ export default Vue.extend({
 }
 
 .error {
-  @apply bg-red-300;
+  @apply bg-danger;
 }
 </style>

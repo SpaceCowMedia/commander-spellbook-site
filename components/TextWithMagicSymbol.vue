@@ -2,21 +2,32 @@
   <span>
     <!-- eslint-disable-next-line vue/require-v-for-key -->
     <span v-for="item in items">
-      <img
-        v-if="item.nodeType === 'image'"
-        class="magic-symbol"
-        :src="item.value"
-      />
+      <span v-if="item.nodeType === 'image'">
+        <img
+          aria-hidden="true"
+          class="magic-symbol"
+          :src="item.value"
+          :alt="'Magic Symbol (' + item.manaSymbol + ')'"
+        />
+        <span class="sr-only">
+          ({{ item.manaSymbol }} magic symbol) &nbsp;
+        </span>
+      </span>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
-        <span>{{ item.value }}</span>
-      </CardTooltip>
-      <span v-else class="text">{{ item.value }}</span>
+        <CardLink v-if="includeCardLinks" :name="item.value">{{
+          item.value
+        }}</CardLink>
+        <span v-else>{{ item.value }}</span></CardTooltip
+      ><span v-else class="text">{{ item.value }}</span>
     </span>
   </span>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+
+import CardLink from "@/components/CardLink.vue";
+import CardTooltip from "@/components/CardTooltip.vue";
 import scryfall from "scryfall-client";
 
 type NodeConfig = {
@@ -25,6 +36,10 @@ type NodeConfig = {
 };
 
 export default Vue.extend({
+  components: {
+    CardLink,
+    CardTooltip,
+  },
   props: {
     cardsInCombo: {
       type: Array as PropType<string[]>,
@@ -35,6 +50,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: "",
+    },
+    includeCardLinks: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -67,6 +86,7 @@ export default Vue.extend({
             return {
               nodeType: "image",
               value: scryfall.getSymbolUrl(manaSymbol),
+              manaSymbol,
             };
           }
 
@@ -75,6 +95,19 @@ export default Vue.extend({
             value,
           };
         });
+    },
+  },
+  methods: {
+    getLinkFromCardName(cardName: string): string {
+      let quotes = "%22";
+
+      if (cardName.includes('"')) {
+        quotes = "%27";
+      }
+
+      return `https://scryfall.com/search?q=name%3D${quotes}${encodeURIComponent(
+        cardName
+      )}${quotes}`;
     },
   },
 });

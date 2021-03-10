@@ -16,6 +16,7 @@ describe("RandomPage", () => {
     );
     $router = {
       push: jest.fn(),
+      replace: jest.fn(),
     };
   });
 
@@ -32,8 +33,8 @@ describe("RandomPage", () => {
     await flushPromises();
 
     expect(spellbookApi.random).toBeCalledTimes(1);
-    expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith({
+    expect($router.replace).toBeCalledTimes(1);
+    expect($router.replace).toBeCalledWith({
       path: `/combo/123`,
     });
   });
