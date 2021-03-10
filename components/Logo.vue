@@ -1,45 +1,20 @@
 <template>
-  <div class="mt-4 md:mt-0">
-    <ArtCircle
-      class="m-auto"
-      title="Commander Spellbook Logo (art Spellbook by Ciruelo)"
-      :size="12"
-      card-name="Spellbook"
-      artist="Ciruelo"
+  <div class="mt-4 md:mt-0 text-center">
+    <img
+      src="~/assets/images/logo.svg"
+      class="h-32 inline-block md:h-48 lg:h-56"
     />
-    <h1 class="title text-5xl md:text-6xl -mt-6 md:-mt-9 xl:-mt-14">
-      Commander Spellbook
-    </h1>
-    <h2 class="subtitle text-3xl xl:text-5xl">Combo Database for EDH</h2>
+    <img
+      src="~/assets/images/title.svg"
+      class="h-32 inline-block md:h-48 lg:h-56"
+    />
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import ArtCircle from "@/components/ArtCircle.vue";
-
-export default Vue.extend({
-  components: {
-    ArtCircle,
-  },
-});
-</script>
-
 <style scoped>
 .spellbook-logo {
-  background: url("~assets/images/spellbook-art-crop.jpg");
-  @apply rounded-full overflow-hidden m-auto bg-cover bg-center;
-}
-
-.title {
-  font-family: monospace;
-  color: #35495e;
-  @apply tracking-wide font-light block mb-6;
-}
-
-.subtitle {
-  color: #526488;
-  @apply -mt-5 font-light pb-2;
+  background: url("~assets/images/full-logo.svg");
+  @apply m-auto bg-contain bg-center bg-no-repeat w-full;
 }
 
 @media (min-width: 1280px) {
