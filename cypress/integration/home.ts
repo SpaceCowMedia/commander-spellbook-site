@@ -10,7 +10,7 @@ describe("Home Page", () => {
   it("can load a random combo", () => {
     cy.visit("/");
 
-    cy.get("a[href='/random']").click();
+    cy.get("a.random-button").click();
 
     cy.url().should("include", "/combo");
   });
