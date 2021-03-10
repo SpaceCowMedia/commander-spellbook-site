@@ -157,7 +157,7 @@ export default Vue.extend({
 
 <style scoped>
 .outer-container {
-  @apply bg-gray-200 border border-gray-200 mx-auto;
+  @apply bg-white border border-gray-200 mx-auto;
 }
 
 a {
@@ -169,7 +169,7 @@ a {
 }
 
 .main-search-input {
-  @apply w-full h-full appearance-none block py-2 bg-gray-200 text-gray-700 leading-tight;
+  @apply w-full h-full appearance-none block py-2 bg-white text-gray-700 leading-tight;
 }
 
 .main-search-input:focus {

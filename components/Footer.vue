@@ -28,7 +28,7 @@ export default Vue.extend({
   /* ensures that the cookie banner does not fully cover up footer
     may not need this once the links are fully created */
   min-height: 300px;
-  @apply w-full h-10 bg-primary p-10 text-center;
+  @apply w-full h-10 bg-secondary p-10 text-center;
 }
 
 .footer a {

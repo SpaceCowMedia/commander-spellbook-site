@@ -9,7 +9,7 @@ a {
 }
 
 main {
-  @apply bg-white;
+  @apply bg-primary;
 }
 
 .container {
@@ -23,7 +23,7 @@ main {
 }
 
 .button--red {
-  @apply m-4 inline-block border border-secondary py-2 px-3 text-secondary rounded-sm no-underline;
+  @apply m-4 inline-block bg-secondary py-2 px-3 text-white rounded-sm no-underline;
 }
 
 .button--red:hover {
