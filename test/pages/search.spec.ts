@@ -325,6 +325,68 @@ describe("SearchPage", () => {
 
       expect(forwardSpy).toBeCalledTimes(1);
     });
+
+    it("updates page when sort is updated", async () => {
+      $route.query.q = "ci:temur";
+      $route.query.page = "3";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        sort: "results",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "ci:temur sort:results", page: "1" },
+      });
+    });
+
+    it("updates existing sort option in query when sort is updated", async () => {
+      $route.query.q = "sort:colors ci:temur";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        sort: "results",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "sort:results ci:temur", page: "1" },
+      });
+    });
+
+    it("updates page when order is updated", async () => {
+      $route.query.q = "ci:temur";
+      $route.query.page = "3";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        order: "descending",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "ci:temur order:descending", page: "1" },
+      });
+    });
+
+    it("updates existing order option in query when order is updated", async () => {
+      $route.query.q = "order:ascending ci:temur";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        order: "descending",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "order:descending ci:temur", page: "1" },
+      });
+    });
   });
 
   describe("parseSearchQuery", () => {
