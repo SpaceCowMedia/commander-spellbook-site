@@ -67,10 +67,9 @@
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 
-
 export default Vue.extend({
   components: {
-    ArtCircle
+    ArtCircle,
   },
 });
 </script>
