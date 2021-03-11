@@ -13,6 +13,16 @@
         <nuxt-link to="/fan-site-policy">Fan Site Policy</nuxt-link>
         <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
       </div>
+      <div class="flex-grow flex flex-col">
+        <a href="https://www.patreon.com/commanderspellbook" target="_blank"
+          >Patreon</a
+        >
+        <a href="https://discord.gg/DkAyVJG" target="_blank">Discord</a>
+        <a href="https://twitter.com/CommanderSpell" target="_blank">Twitter</a>
+        <a href="https://github.com/Commander-Spellbook" target="_blank"
+          >Github</a
+        >
+      </div>
     </div>
     <AnalyticsCookieBanner />
   </footer>
