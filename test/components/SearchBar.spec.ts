@@ -21,7 +21,6 @@ describe("SearchBar", () => {
     };
     wrapperOptions = {
       stubs: {
-        ArtCircle: true,
         NuxtLink: true,
       },
       mocks: {

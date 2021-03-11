@@ -2,13 +2,13 @@
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
-        <div class="sr-only">Go to Home Page</div>
-        <ArtCircle
-          title="Commander Spellbook Logo (art Spellbook by Ciruelo)"
-          :size="2"
-          card-name="Spellbook"
-          artist="Ciruelo"
-        />
+        <div class="commander-spellbook-icon">
+          <img
+            src="~/assets/images/logo.svg"
+            alt="Go to home page"
+            class="w-8 h-8 inline-block"
+          />
+        </div>
       </nuxt-link>
 
       <div class="flex flex-grow items-center">
@@ -75,13 +75,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArtCircle from "@/components/ArtCircle.vue";
 import spellbookApi from "commander-spellbook";
 
 export default Vue.extend({
-  components: {
-    ArtCircle,
-  },
   props: {
     onHomePage: {
       type: Boolean,

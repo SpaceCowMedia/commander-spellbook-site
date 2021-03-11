@@ -4,7 +4,7 @@
       <div class="w-full">
         <Logo />
 
-        <SearchBar :on-home-page="true" class="md:w-2/3 h-20" />
+        <SearchBar :on-home-page="true" class="mt-4 md:w-2/3 h-20" />
 
         <div class="links md:block flex flex-col">
           <nuxt-link to="/advanced-search" class="button--red">
