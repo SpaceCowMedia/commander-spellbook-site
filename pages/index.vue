@@ -13,7 +13,9 @@
           <nuxt-link to="/syntax-guide" class="button--red">
             Syntax Guide
           </nuxt-link>
-          <nuxt-link to="/random" class="button--red"> Random Combo </nuxt-link>
+          <nuxt-link to="/random" class="random-button button--red">
+            Random Combo
+          </nuxt-link>
         </div>
       </div>
     </div>

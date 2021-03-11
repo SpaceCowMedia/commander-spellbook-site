@@ -16,6 +16,10 @@ main {
   @apply w-full max-w-5xl px-4 mx-auto;
 }
 
+.static-page {
+  @apply container py-6;
+}
+
 .heading-title {
   font-family: monospace;
   font-weight: 300;
