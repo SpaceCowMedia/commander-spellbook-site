@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Wizards of the Coast Fan Site Policy</h1>
+  <div class="container">
+    <h1 class="heading-title">Wizards of the Coast Fan Site Policy</h1>
     <p>
       Commander Spellbook may use the trademarks and other intellectual property
       of Wizards of the Coast LLC, which is permitted under Wizards' Fan Site

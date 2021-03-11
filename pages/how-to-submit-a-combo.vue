@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Want to submit a combo?</h1>
+  <div class="container">
+    <h1 class="heading-title">Want to submit a combo?</h1>
     <p>
       At this time, combo submissions (and updates) are only being accepted via
       <a target="_blank" href="https://discord.gg/KDnvP5f">Discord</a>, as we've
@@ -10,7 +10,6 @@
     </p>
     <a
       role="button"
-      class="btn btn-success"
       target="_blank"
       href="https://discord.gg/KDnvP5f"
       >Join us on Discord</a
