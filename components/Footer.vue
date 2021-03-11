@@ -10,7 +10,6 @@
         <nuxt-link to="/about">About</nuxt-link>
         <nuxt-link to="/metrics">Combo Metrics</nuxt-link>
         <nuxt-link to="/how-to-submit-a-combo">Combo Submission</nuxt-link>
-        <nuxt-link to="/fan-site-policy">Fan Site Policy</nuxt-link>
         <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
       </div>
       <div class="link-collection">
@@ -34,8 +33,6 @@
         </p>
         <p>
           Commander Spellbook utilizes icons provided by
-          <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
-          No changes were made to the resources provided by
           <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
           Licensing information may be found here:
           <a href="https://fontawesome.com/license" target="_blank">
