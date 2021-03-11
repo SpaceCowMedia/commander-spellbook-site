@@ -1,5 +1,10 @@
 <template>
   <div class="static-page">
+    <ArtCircle
+      card-name="Aeon Chronicler"
+      artist="Dan Dos Santos"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">About Commander Spellbook</h1>
 
     <p>
@@ -57,6 +62,17 @@
     </ul>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+
+export default Vue.extend({
+  components: {
+    ArtCircle,
+  },
+});
+</script>
 
 <style scoped>
 p,

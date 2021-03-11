@@ -1,5 +1,10 @@
 <template>
   <div class="static-page">
+    <ArtCircle
+      card-name="beetleback chief"
+      artist="Wayne England"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">Want to submit a combo?</h1>
     <p>
       At this time, combo submissions (and updates) are only being accepted via
@@ -13,3 +18,14 @@
     >
   </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+
+export default Vue.extend({
+  components: {
+    ArtCircle,
+  },
+});
+</script>

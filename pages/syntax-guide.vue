@@ -2,8 +2,8 @@
   <div>
     <div class="container pt-6 mb-6">
       <ArtCircle
-        card-name="Goblin Guide"
-        artist="Mark Zug"
+        card-name="Bruvac the Grandiloquent"
+        artist="Ekaterina Burmak"
         class="m-auto md:block hidden"
       />
       <h1 class="heading-title text-center">Syntax Guide</h1>

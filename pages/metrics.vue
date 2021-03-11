@@ -1,5 +1,10 @@
 <template>
   <div class="static-page">
+    <ArtCircle
+      card-name="lat nams legacy"
+      artist="Tom Wanerstrand"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">Metrics</h1>
 
     <table class="table">
@@ -20,3 +25,14 @@
     </table>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+
+export default Vue.extend({
+  components: {
+    ArtCircle,
+  },
+});
+</script>
