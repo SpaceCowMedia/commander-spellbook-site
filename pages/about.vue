@@ -63,6 +63,18 @@
   </div>
 </template>
 
+<script lang="ts">
+import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+
+
+export default Vue.extend({
+  components: {
+    ArtCircle
+  },
+});
+</script>
+
 <style scoped>
 p,
 ul {
