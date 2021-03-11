@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="static-page">
     <h1 class="heading-title">Want to submit a combo?</h1>
     <p>
       At this time, combo submissions (and updates) are only being accepted via

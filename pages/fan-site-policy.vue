@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="static-page">
     <h1 class="heading-title">Wizards of the Coast Fan Site Policy</h1>
     <p>
       Commander Spellbook may use the trademarks and other intellectual property

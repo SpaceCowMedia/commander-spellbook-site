@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+  <div class="static-page">
+    <h1 class="heading-title">Metrics</h1>
+
     <table class="table">
       <thead>
         <tr>
