@@ -13,6 +13,7 @@
         v-for="(option, index) in options"
         :key="`${label}-input-${index}-${option.label}`"
         :value="option.value"
+        class="text-dark"
       >
         {{ option.label }}
       </option>
