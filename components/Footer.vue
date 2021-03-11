@@ -22,24 +22,22 @@
           >Github</a
         >
       </div>
-      <div>
-        <p>
-          Commander Spellbook may use the trademarks and other intellectual
-          property of Wizards of the Coast LLC, which is permitted under
-          Wizards' Fan Site Policy. For more information, please visit their
-          website at
-          <a href="https://company.wizards.com/">https://company.wizards.com/</a
-          >.
-        </p>
-        <p>
-          Commander Spellbook utilizes icons provided by
-          <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
-          Licensing information may be found here:
-          <a href="https://fontawesome.com/license" target="_blank">
-            https://fontawesome.com/license</a
-          >.
-        </p>
-      </div>
+    </div>
+    <div class="container mt-8 text-gray-400">
+      <p class="my-4">
+        Commander Spellbook may use the trademarks and other intellectual
+        property of Wizards of the Coast LLC, which is permitted under Wizards'
+        Fan Site Policy. For more information, please visit their website at
+        <a href="https://company.wizards.com/">https://company.wizards.com/</a>.
+      </p>
+      <p class="my-4">
+        Commander Spellbook utilizes icons provided by
+        <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
+        Licensing information may be found here:
+        <a href="https://fontawesome.com/license" target="_blank">
+          https://fontawesome.com/license</a
+        >.
+      </p>
     </div>
     <AnalyticsCookieBanner />
   </footer>
