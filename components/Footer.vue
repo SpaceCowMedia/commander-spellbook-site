@@ -10,7 +10,6 @@
         <nuxt-link to="/about">About</nuxt-link>
         <nuxt-link to="/metrics">Combo Metrics</nuxt-link>
         <nuxt-link to="/how-to-submit-a-combo">Combo Submission</nuxt-link>
-        <nuxt-link to="/fan-site-policy">Fan Site Policy</nuxt-link>
         <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
       </div>
       <div class="link-collection">
@@ -23,6 +22,22 @@
           >Github</a
         >
       </div>
+    </div>
+    <div class="container mt-8 text-gray-400">
+      <p class="my-4">
+        Commander Spellbook may use the trademarks and other intellectual
+        property of Wizards of the Coast LLC, which is permitted under Wizards'
+        Fan Site Policy. For more information, please visit their website at
+        <a href="https://company.wizards.com/">https://company.wizards.com/</a>.
+      </p>
+      <p class="my-4">
+        Commander Spellbook utilizes icons provided by
+        <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
+        Licensing information may be found here:
+        <a href="https://fontawesome.com/license" target="_blank">
+          https://fontawesome.com/license</a
+        >.
+      </p>
     </div>
     <AnalyticsCookieBanner />
   </footer>
