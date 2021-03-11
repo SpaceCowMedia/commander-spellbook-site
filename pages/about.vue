@@ -52,9 +52,7 @@
         >
       </li>
       <li>
-        <a href="https://tappedout.net/users/LapperMedic/" target="_blank"
-          >Lapper</a
-        >
+        <a href="https://twitter.com/lappermedic" target="_blank">Lapper</a>
       </li>
     </ul>
   </div>
