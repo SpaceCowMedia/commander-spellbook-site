@@ -1,5 +1,10 @@
 <template>
   <div class="static-page">
+    <ArtCircle
+        card-name="lat nams legacy"
+        artist="Tom Wanerstrand"
+        class="m-auto md:block hidden"
+      />
     <h1 class="heading-title">Metrics</h1>
 
     <table class="table">

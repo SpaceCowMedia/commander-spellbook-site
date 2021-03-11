@@ -1,5 +1,10 @@
 <template>
   <div class="static-page">
+    <ArtCircle
+      card-name="Aeon Chronicler"
+      artist="Dan Dos Santos"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">About Commander Spellbook</h1>
 
     <p>
