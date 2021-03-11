@@ -2,6 +2,7 @@
   <div class="combo-results-wrapper">
     <nuxt-link
       v-for="r in results"
+      ref="comboLinks"
       :key="'combo_' + r.id"
       :to="'/combo/' + r.id"
       class="combo-result w-full md:w-1/4"
@@ -12,6 +13,7 @@
         </div>
         <div class="flex-grow border-t-2 border-b-2 border-gray-300">
           <div class="py-1">
+            <span class="sr-only">Cards in combo:</span>
             <CardTooltip
               v-for="name in r.names"
               :key="r.id + '_' + name"
@@ -24,6 +26,7 @@
           </div>
         </div>
         <div class="flex-grow">
+          <span class="sr-only">Results in combo:</span>
           <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div v-for="result in r.results" class="result pl-3 pr-3">
             {{ result }}
@@ -57,6 +60,20 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+  },
+  methods: {
+    focus(): void {
+      this.$nextTick().then(() => {
+        // @ts-ignore
+        const firstLink = this.$refs.comboLinks[0];
+
+        if (!firstLink) {
+          return;
+        }
+
+        firstLink.$el.focus();
+      });
     },
   },
 });

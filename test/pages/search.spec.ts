@@ -523,6 +523,7 @@ describe("SearchPage", () => {
     it("adds to specified number to page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       wrapper.setData({
         page: 3,
@@ -535,6 +536,7 @@ describe("SearchPage", () => {
     it("supports negative numbers", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       wrapper.setData({
         page: 3,
@@ -547,6 +549,7 @@ describe("SearchPage", () => {
     it("pushes the query params in the router", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       vm.navigateToPage(3);
 
@@ -563,6 +566,7 @@ describe("SearchPage", () => {
     it("preserves the query param for q", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       $route.query.q = "Sydri";
       vm.navigateToPage(3);
@@ -577,15 +581,15 @@ describe("SearchPage", () => {
       });
     });
 
-    it("scrolls to the top of the page", () => {
+    it("focuses on first combo", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       $route.query.q = "Sydri";
       vm.navigateToPage(3);
 
-      expect(window.scrollTo).toBeCalledTimes(1);
-      expect(window.scrollTo).toBeCalledWith(0, 0);
+      expect(vm.focusFirstCombo).toBeCalledTimes(1);
     });
   });
 

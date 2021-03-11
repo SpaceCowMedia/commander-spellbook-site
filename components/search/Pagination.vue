@@ -19,7 +19,7 @@
             clip-rule="evenodd"
           />
         </svg>
-        Previous
+        Previous <span class="sr-only">78 combos</span>
       </button>
 
       <button
@@ -27,7 +27,7 @@
         :class="{ invisible: currentPage >= totalPages }"
         @click="goForward"
       >
-        Next
+        Next <span class="sr-only">78 combos</span>
         <svg
           class="nav-icon"
           xmlns="http://www.w3.org/2000/svg"

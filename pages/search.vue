@@ -33,6 +33,7 @@
         <Pagination
           :current-page="page"
           :total-pages="totalPages"
+          aria-hidden="true"
           @go-forward="goForward"
           @go-back="goBack"
         />
@@ -41,7 +42,7 @@
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults :results="paginatedResults" />
+        <ComboResults ref="comboLinks" :results="paginatedResults" />
 
         <Pagination
           :current-page="page"
@@ -275,13 +276,17 @@ export default Vue.extend({
         path: this.$route.path,
         query: { q: this.$route.query.q, page: String(this.page) },
       });
-      window.scrollTo(0, 0);
+      this.focusFirstCombo();
     },
     goForward(): void {
       this.navigateToPage(1);
     },
     goBack(): void {
       this.navigateToPage(-1);
+    },
+    focusFirstCombo(): void {
+      // @ts-ignore
+      this.$refs.comboLinks.focus();
     },
   },
 });
