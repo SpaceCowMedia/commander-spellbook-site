@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 mt-3 flex items-center sm:px-1">
-    <div class="flex-1 flex">
+    <div class="flex-1 flex justify-between">
       <button
         class="back-button nav-button"
         :class="{ invisible: currentPage === 1 }"
@@ -73,7 +73,7 @@ export default Vue.extend({
 
 <style scoped>
 .nav-button {
-  @apply mx-3 relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
 }
 
 .nav-button:first-child {
