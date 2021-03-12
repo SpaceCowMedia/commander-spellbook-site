@@ -105,7 +105,7 @@ export default Vue.extend({
 }
 
 .footer a {
-  @apply text-white no-underline;
+  @apply no-underline;
 }
 
 .link-collection {
