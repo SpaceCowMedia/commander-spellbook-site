@@ -67,7 +67,6 @@ export default Vue.extend({
 }
 
 .gradient {
-  /* background: linear-gradient(90deg, #d53369 0%, #daae51 100%); */
   @apply bg-gradient-to-r from-primary to-secondary pb-8;
 }
 
@@ -76,6 +75,6 @@ export default Vue.extend({
 }
 
 .button:hover {
-  @apply bg-secondary;
+  @apply bg-secondary text-dark;
 }
 </style>

@@ -47,8 +47,8 @@
             class="minus-button input-button"
             :class="{
               ['minus-button-' + index]: true,
-              'bg-secondary': !input.error,
-              'bg-danger': input.error,
+              'bg-dark border-dark': !input.error,
+              'bg-danger border-danger': input.error,
             }"
             @click.prevent="removeInput(index)"
           >
@@ -60,8 +60,8 @@
             class="plus-button input-button rounded-r-sm"
             :class="{
               ['plus-button-' + index]: true,
-              'bg-secondary': !input.error,
-              'bg-danger': input.error,
+              'bg-dark border-dark': !input.error,
+              'bg-danger border-danger': input.error,
             }"
             @click.prevent="addInput(index)"
           >
@@ -170,6 +170,6 @@ export default Vue.extend({
 }
 
 .input-button {
-  @apply px-2 text-white flex flex-row items-center text-3xl border border-dark border-l-0;
+  @apply px-2 text-white flex flex-row items-center text-3xl border;
 }
 </style>

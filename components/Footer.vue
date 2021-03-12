@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- cool wavy effect taken from this free template: https://www.tailwindtoolbox.com/templates/landing-page-demo.php -->
-    <div class="relative hidden lg:block -mt-48">
+    <div class="relative hidden lg:block -mt-64">
       <svg
         viewBox="0 0 1428 174"
         version="1.1"

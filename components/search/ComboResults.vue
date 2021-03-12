@@ -8,10 +8,10 @@
       class="combo-result w-full md:w-1/4"
     >
       <div class="flex flex-col">
-        <div class="flex items-center flex-grow">
+        <div class="flex items-center flex-grow bg-dark">
           <ColorIdentity :colors="r.colors" size="small" />
         </div>
-        <div class="flex-grow border-t-2 border-b-2 border-gray-300">
+        <div class="flex-grow border-b-2 border-dark">
           <div class="py-1">
             <span class="sr-only">Cards in combo:</span>
             <CardTooltip
@@ -89,7 +89,7 @@ a {
 }
 
 .combo-result {
-  @apply max-w-lg mx-0 my-2 rounded border-2 border-gray-300 flex-grow flex flex-col content-center;
+  @apply max-w-lg mx-0 my-2 rounded border-2 border-dark flex-grow flex flex-col content-center;
 }
 
 @media (min-width: 640px) {
