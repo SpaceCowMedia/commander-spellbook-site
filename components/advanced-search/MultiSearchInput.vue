@@ -13,7 +13,11 @@
           :id="label + '-select-' + index"
           v-model="input.operator"
           :label="'Modifier for ' + label"
-          :select-background-class="input.error ? 'bg-danger' : 'bg-primary'"
+          :select-background-class="
+            input.error
+              ? 'border-danger border border-r-0'
+              : 'border-dark border border-r-0'
+          "
           :options="operatorOptions"
           :class="{
             ['select-' + index]: true,
@@ -30,7 +34,7 @@
             class="input"
             :class="{
               ['input-' + index]: true,
-              'border-primary': !input.error,
+              'border-dark': !input.error,
               'border-danger': input.error,
             }"
             type="text"
@@ -43,7 +47,7 @@
             class="minus-button input-button"
             :class="{
               ['minus-button-' + index]: true,
-              'bg-primary': !input.error,
+              'bg-secondary': !input.error,
               'bg-danger': input.error,
             }"
             @click.prevent="removeInput(index)"
@@ -56,7 +60,7 @@
             class="plus-button input-button rounded-r-sm"
             :class="{
               ['plus-button-' + index]: true,
-              'bg-primary': !input.error,
+              'bg-secondary': !input.error,
               'bg-danger': input.error,
             }"
             @click.prevent="addInput(index)"
@@ -166,6 +170,6 @@ export default Vue.extend({
 }
 
 .input-button {
-  @apply px-2 text-white flex flex-row items-center text-3xl;
+  @apply px-2 text-white flex flex-row items-center text-3xl border border-dark border-l-0;
 }
 </style>

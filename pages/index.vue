@@ -1,10 +1,10 @@
 <template>
-  <div class="relative bg-primary">
+  <div class="relative gradient">
     <div class="container relative md:h-screen z-10">
       <div class="w-full">
         <Logo />
 
-        <SearchBar :on-home-page="true" class="mt-4 md:w-2/3 h-20" />
+        <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
 
         <div class="links md:block flex flex-col">
           <nuxt-link to="/advanced-search" class="button">
@@ -62,12 +62,20 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
 .container {
   @apply flex flex-col items-center justify-center text-center m-auto;
+}
+
+.gradient {
+  /* background: linear-gradient(90deg, #d53369 0%, #daae51 100%); */
+  @apply bg-gradient-to-r from-primary to-secondary pb-8;
+}
+
+.button {
+  @apply bg-dark;
+}
+
+.button:hover {
+  @apply bg-secondary;
 }
 </style>

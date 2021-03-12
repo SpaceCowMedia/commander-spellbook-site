@@ -2,7 +2,7 @@
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
-        <div class="commander-spellbook-icon">
+        <div class="commander-spellbook-icon mr-2">
           <img
             src="~/assets/images/logo.svg"
             alt="Go to home page"
@@ -58,7 +58,7 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="sm:hidden flex flex-row text-center mt-2 mb-4 pt-4 border-t border-gray-400 text-gray-700"
+      class="sm:hidden flex flex-row text-center mt-2 py-4 border-t border-gray-400 text-gray-700"
       @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search" class="mobile-menu-button">
@@ -153,11 +153,11 @@ export default Vue.extend({
 
 <style scoped>
 .outer-container {
-  @apply bg-white border border-gray-200 mx-auto;
+  @apply mx-auto;
 }
 
 a {
-  @apply text-dark no-underline;
+  @apply text-white no-underline;
 }
 
 .main-search-input-container {
@@ -165,15 +165,15 @@ a {
 }
 
 .main-search-input {
-  @apply w-full h-full appearance-none block py-2 bg-white text-gray-700 leading-tight;
+  @apply w-full h-full appearance-none block py-2 bg-transparent text-white leading-tight;
 }
 
 .main-search-input:focus {
-  @apply outline-none bg-white border-gray-500;
+  @apply outline-none bg-white text-dark;
 }
 
 .link-icon {
-  @apply bg-gray-700 h-4 w-4 mr-2;
+  @apply bg-white h-4 w-4 mr-2;
 }
 
 .menu-icon {
@@ -195,15 +195,15 @@ a {
 .search-input-icon {
   -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
-  @apply bg-gray-700 w-4 h-4 mt-1 z-10 cursor-pointer;
+  @apply bg-gray-400 w-4 h-4 mt-1 z-10 cursor-pointer;
 }
 
 .search-input-icon:hover {
-  @apply bg-gray-800;
+  @apply bg-gray-100;
 }
 
 .menu-link {
-  @apply items-center flex-row px-4 pr-2 text-gray-700 border-l border-gray-400;
+  @apply items-center flex-row px-4 pr-2 text-white border-l border-white;
 }
 
 .menu-link:last-of-type {
@@ -211,23 +211,23 @@ a {
 }
 
 .menu-link:hover {
-  @apply text-gray-800;
+  @apply text-gray-300;
 }
 
 .menu-link:hover .link-icon {
-  @apply bg-gray-800;
+  @apply bg-gray-300;
 }
 
 .mobile-menu-button {
-  @apply flex flex-row flex-grow items-center w-1/2 rounded bg-gray-300 py-1 px-2 border border-gray-400 mx-2;
+  @apply flex flex-row flex-grow items-center w-1/2 rounded py-1 px-2 border border-gray-400 mx-2;
 }
 
 .mobile-menu-button:hover {
-  @apply border-gray-500 text-gray-800;
+  @apply border-gray-300 text-gray-300;
 }
 
 .mobile-menu-button:hover .link-icon {
-  @apply bg-gray-800;
+  @apply bg-gray-300;
 }
 
 .mobile-menu-button:nth-child(even),

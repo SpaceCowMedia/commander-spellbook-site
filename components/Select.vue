@@ -46,11 +46,11 @@ export default Vue.extend({
   props: {
     selectBackgroundClass: {
       type: String,
-      default: "bg-primary",
+      default: "border border-dark",
     },
     selectTextClass: {
       type: String,
-      default: "text-white",
+      default: "text-dark",
     },
     label: {
       type: String,

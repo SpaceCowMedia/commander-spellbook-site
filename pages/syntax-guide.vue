@@ -491,6 +491,6 @@ export default Vue.extend({
 
 <style scoped>
 code {
-  @apply bg-gray-200 text-primary px-1;
+  @apply bg-gray-200 text-dark px-1;
 }
 </style>

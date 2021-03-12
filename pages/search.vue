@@ -15,8 +15,8 @@
           id="sort-combos-select"
           v-model="sort"
           class="my-2 sm:mr-2"
-          select-background-class="border-primary border-2"
-          select-text-class="text-primary"
+          select-background-class="border-secondary border-2"
+          select-text-class="text-dark"
           label="Sort Combos"
           :options="sortOptions"
         />
@@ -24,8 +24,8 @@
           id="order-combos-select"
           v-model="order"
           class="sm:m-2"
-          select-background-class="border-primary border-2"
-          select-text-class="text-primary"
+          select-background-class="border-secondary border-2"
+          select-text-class="text-dark"
           label="Order Combos"
           :options="orderOptions"
         />

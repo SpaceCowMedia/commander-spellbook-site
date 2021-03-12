@@ -1,7 +1,7 @@
 <template>
   <div>
     <BetaMask>
-      <div class="bg-gray-200">
+      <div class="bg-dark">
         <nav class="container">
           <SearchBar />
         </nav>
@@ -9,7 +9,7 @@
       <main>
         <Nuxt />
       </main>
-      <Footer />
+      <Footer class="mt-48" />
     </BetaMask>
   </div>
 </template>

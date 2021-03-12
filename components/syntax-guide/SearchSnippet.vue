@@ -35,7 +35,7 @@ a {
 }
 
 .search-snippet {
-  @apply border-2 border-primary pb-2 mb-4 rounded-sm;
+  @apply border-2 border-dark pb-2 mb-4 rounded-sm;
 }
 
 .search-snippet .search-snippet-header,
@@ -44,6 +44,6 @@ a {
 }
 
 .search-snippet .search-snippet-header {
-  @apply text-white border-primary bg-primary pb-2 pt-1 font-mono;
+  @apply text-white border-dark bg-secondary pb-2 pt-1 font-mono;
 }
 </style>
