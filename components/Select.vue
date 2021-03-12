@@ -13,12 +13,14 @@
         v-for="(option, index) in options"
         :key="`${label}-input-${index}-${option.label}`"
         :value="option.value"
+        class="text-dark"
       >
         {{ option.label }}
       </option>
     </select>
     <div
       class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+      aria-hidden="true"
     >
       <svg
         class="w-4 h-4 fill-current"

@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <div class="container md:h-screen">
+  <div class="relative bg-primary">
+    <div class="container relative md:h-screen z-10">
       <div class="w-full">
         <Logo />
 
-        <SearchBar :on-home-page="true" class="md:w-2/3 h-20" />
+        <SearchBar :on-home-page="true" class="mt-4 md:w-2/3 h-20" />
 
         <div class="links md:block flex flex-col">
-          <nuxt-link to="/advanced-search" class="button--red">
+          <nuxt-link to="/advanced-search" class="button">
             Advanced Search
           </nuxt-link>
-          <nuxt-link to="/syntax-guide" class="button--red">
+          <nuxt-link to="/syntax-guide" class="button">
             Syntax Guide
           </nuxt-link>
-          <nuxt-link to="/random" class="button--red"> Random Combo </nuxt-link>
+          <nuxt-link to="/random" class="random-button button">
+            Random Combo
+          </nuxt-link>
         </div>
       </div>
     </div>

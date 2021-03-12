@@ -325,6 +325,68 @@ describe("SearchPage", () => {
 
       expect(forwardSpy).toBeCalledTimes(1);
     });
+
+    it("updates page when sort is updated", async () => {
+      $route.query.q = "ci:temur";
+      $route.query.page = "3";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        sort: "results",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "ci:temur sort:results", page: "1" },
+      });
+    });
+
+    it("updates existing sort option in query when sort is updated", async () => {
+      $route.query.q = "sort:colors ci:temur";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        sort: "results",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "sort:results ci:temur", page: "1" },
+      });
+    });
+
+    it("updates page when order is updated", async () => {
+      $route.query.q = "ci:temur";
+      $route.query.page = "3";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        order: "descending",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "ci:temur order:descending", page: "1" },
+      });
+    });
+
+    it("updates existing order option in query when order is updated", async () => {
+      $route.query.q = "order:ascending ci:temur";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        order: "descending",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search",
+        query: { q: "order:descending ci:temur", page: "1" },
+      });
+    });
   });
 
   describe("parseSearchQuery", () => {
@@ -461,6 +523,7 @@ describe("SearchPage", () => {
     it("adds to specified number to page", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       wrapper.setData({
         page: 3,
@@ -473,6 +536,7 @@ describe("SearchPage", () => {
     it("supports negative numbers", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       wrapper.setData({
         page: 3,
@@ -485,6 +549,7 @@ describe("SearchPage", () => {
     it("pushes the query params in the router", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       vm.navigateToPage(3);
 
@@ -501,6 +566,7 @@ describe("SearchPage", () => {
     it("preserves the query param for q", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       $route.query.q = "Sydri";
       vm.navigateToPage(3);
@@ -515,15 +581,15 @@ describe("SearchPage", () => {
       });
     });
 
-    it("scrolls to the top of the page", () => {
+    it("focuses on first combo", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "focusFirstCombo").mockImplementation();
 
       $route.query.q = "Sydri";
       vm.navigateToPage(3);
 
-      expect(window.scrollTo).toBeCalledTimes(1);
-      expect(window.scrollTo).toBeCalledWith(0, 0);
+      expect(vm.focusFirstCombo).toBeCalledTimes(1);
     });
   });
 

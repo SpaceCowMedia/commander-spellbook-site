@@ -2,11 +2,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "rgb(184,143, 248)",
-        secondary: "#7B6697",
-        dark: "#35495e",
-        danger: "rgb(150, 49, 28)",
-        warning: "rgb(224, 212, 128)",
+        primary: "#C18AFF",
+        secondary: "#FF9595",
+        dark: "#222222",
+        danger: "#FF9595",
+        warning: "#FFC580",
       },
     },
     fontSize: {

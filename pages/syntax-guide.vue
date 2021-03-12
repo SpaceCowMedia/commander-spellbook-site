@@ -2,8 +2,8 @@
   <div>
     <div class="container pt-6 mb-6">
       <ArtCircle
-        card-name="Goblin Guide"
-        artist="Mark Zug"
+        card-name="Bruvac the Grandiloquent"
+        artist="Ekaterina Burmak"
         class="m-auto md:block hidden"
       />
       <h1 class="heading-title text-center">Syntax Guide</h1>
@@ -19,7 +19,7 @@
             v-for="section in sections"
             :key="section.id"
             :href="'#' + section.id"
-            class="button--red flex-grow text-center md:w-1/4"
+            class="button flex-grow text-center md:w-1/4"
           >
             <div>
               {{ section.text }}

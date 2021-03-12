@@ -9,16 +9,40 @@
       :total-results="totalResults"
     />
 
-    <div class="container sm:flex flex-row">
-      <div v-if="paginatedResults.length > 0" class="w-full">
+    <div v-if="paginatedResults.length > 0" class="border-b border-gray-400">
+      <div class="container sm:flex flex-row justify-center">
+        <Select
+          id="sort-combos-select"
+          v-model="sort"
+          class="my-2 sm:mr-2"
+          select-background-class="border-primary border-2"
+          select-text-class="text-primary"
+          label="Sort Combos"
+          :options="sortOptions"
+        />
+        <Select
+          id="order-combos-select"
+          v-model="order"
+          class="sm:m-2"
+          select-background-class="border-primary border-2"
+          select-text-class="text-primary"
+          label="Order Combos"
+          :options="orderOptions"
+        />
+        <div class="flex-grow"></div>
         <Pagination
           :current-page="page"
           :total-pages="totalPages"
+          aria-hidden="true"
           @go-forward="goForward"
           @go-back="goBack"
         />
+      </div>
+    </div>
 
-        <ComboResults :results="paginatedResults" />
+    <div class="container sm:flex flex-row">
+      <div v-if="paginatedResults.length > 0" class="w-full">
+        <ComboResults ref="comboLinks" :results="paginatedResults" />
 
         <Pagination
           :current-page="page"
@@ -39,6 +63,7 @@ import ComboResults from "@/components/search/ComboResults.vue";
 import NoCombosFound from "@/components/search/NoCombosFound.vue";
 import Pagination from "@/components/search/Pagination.vue";
 import SearchMessage from "@/components/search/SearchMessage.vue";
+import Select, { Option } from "@/components/Select.vue";
 import spellbookApi from "commander-spellbook";
 
 import type { ComboResult } from "../components/search/ComboResults.vue";
@@ -50,6 +75,8 @@ type Data = {
   message: string;
   errors: string;
   combos: ComboResult[];
+  sort: string;
+  order: string;
 };
 
 export default Vue.extend({
@@ -58,6 +85,7 @@ export default Vue.extend({
     NoCombosFound,
     Pagination,
     SearchMessage,
+    Select,
   },
   data(): Data {
     return {
@@ -67,6 +95,8 @@ export default Vue.extend({
       message: "",
       errors: "",
       combos: [],
+      sort: "colors",
+      order: "ascending",
     };
   },
   computed: {
@@ -113,6 +143,34 @@ export default Vue.extend({
 
       return finalResult;
     },
+    sortOptions(): Option[] {
+      return [
+        { value: "colors", label: "Sort by color identity" },
+        {
+          value: "cards",
+          label: "Sort by number of cards",
+        },
+        {
+          value: "prerequisites",
+          label: "Sort by number of prerequisites",
+        },
+        {
+          value: "steps",
+          label: "Sort by number of steps",
+        },
+        {
+          value: "results",
+          label: "Sort by number of results",
+        },
+      ];
+    },
+
+    orderOptions(): Option[] {
+      return [
+        { value: "ascending", label: "in ascending order" },
+        { value: "descending", label: "in descending order" },
+      ];
+    },
   },
   watch: {
     "$route.query.q"(): void {
@@ -120,6 +178,26 @@ export default Vue.extend({
     },
     "$route.query.page"(): void {
       this.updatePageFromQuery();
+    },
+    sort(): void {
+      const query = String(this.$route.query.q)
+        .replace(/((\s)?sort(:|=)\w*|$)/, ` sort:${this.sort}`)
+        .trim();
+
+      this.$router.push({
+        path: this.$route.path,
+        query: { q: query, page: "1" },
+      });
+    },
+    order(): void {
+      const query = String(this.$route.query.q)
+        .replace(/((\s)?order(:|=)\w*|$)/, ` order:${this.order}`)
+        .trim();
+
+      this.$router.push({
+        path: this.$route.path,
+        query: { q: query, page: "1" },
+      });
     },
   },
   async mounted(): Promise<void> {
@@ -154,7 +232,13 @@ export default Vue.extend({
         query: { q: query },
       });
 
-      const { message, errors, combos } = await spellbookApi.search(query);
+      const {
+        message,
+        sort,
+        order,
+        errors,
+        combos,
+      } = await spellbookApi.search(query);
 
       if (combos.length === 1) {
         this.$router.replace({
@@ -165,6 +249,8 @@ export default Vue.extend({
       }
 
       this.message = message;
+      this.sort = sort;
+      this.order = order;
       this.errors = errors.map((e) => e.message).join(" ");
       this.combos = combos.map((c) => {
         return {
@@ -190,13 +276,17 @@ export default Vue.extend({
         path: this.$route.path,
         query: { q: this.$route.query.q, page: String(this.page) },
       });
-      window.scrollTo(0, 0);
+      this.focusFirstCombo();
     },
     goForward(): void {
       this.navigateToPage(1);
     },
     goBack(): void {
       this.navigateToPage(-1);
+    },
+    focusFirstCombo(): void {
+      // @ts-ignore
+      this.$refs.comboLinks.focus();
     },
   },
 });

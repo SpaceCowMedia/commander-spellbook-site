@@ -9,11 +9,15 @@ a {
 }
 
 main {
-  @apply bg-primary;
+  @apply bg-white;
 }
 
 .container {
   @apply w-full max-w-5xl px-4 mx-auto;
+}
+
+.static-page {
+  @apply container py-6;
 }
 
 .heading-title {
@@ -22,13 +26,8 @@ main {
   @apply text-4xl text-dark;
 }
 
-.button--red {
+.button {
   @apply m-4 inline-block bg-secondary py-2 px-3 text-white rounded-sm no-underline;
-}
-
-.button--red:hover {
-  color: #fff;
-  @apply bg-secondary;
 }
 
 @media (min-width: 640px) {

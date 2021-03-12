@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-6">
+  <div class="static-page">
     <ArtCircle
       card-name="Time Out"
       artist="Dave Allsop"
