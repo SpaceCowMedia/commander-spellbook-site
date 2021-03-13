@@ -1,5 +1,5 @@
 <template>
-  <div class="relative gradient">
+  <div class="relative gradient pb-40 md:pb-8">
     <div class="container relative md:h-screen z-10">
       <div class="w-full">
         <Logo />
@@ -67,7 +67,7 @@ export default Vue.extend({
 }
 
 .gradient {
-  @apply bg-gradient-to-r from-primary to-secondary pb-8;
+  @apply bg-gradient-to-r from-primary to-secondary;
 }
 
 .button {

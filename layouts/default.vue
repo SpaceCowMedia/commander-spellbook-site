@@ -7,10 +7,10 @@
           <SearchBar />
         </nav>
       </div>
-      <main>
+      <main class="pb-16">
         <Nuxt />
       </main>
-      <Footer class="mt-48" />
+      <Footer class="mt-24 lg:mt-48 z-0" />
     </BetaMask>
   </div>
 </template>
