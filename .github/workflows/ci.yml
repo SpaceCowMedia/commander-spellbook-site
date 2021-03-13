@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   ci:
@@ -45,3 +47,14 @@ jobs:
 
       - name: Run Integration tests 🧪
         run: npm run test:integration
+
+      - name: Generate 🏗️
+        if: ${{ github.event_name != 'pull_request'}}
+        run: npm run generate
+
+      - name: Deploy 🛫
+        if: ${{ github.event_name != 'pull_request'}}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
