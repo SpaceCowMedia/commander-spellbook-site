@@ -1,3 +1,6 @@
+const notDevelopment = process.env.NODE_ENV !== "development";
+const prefix = notDevelopment ? "/website-v2" : "";
+
 const config = {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
@@ -19,25 +22,29 @@ const config = {
       },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicons/favicon.ico" },
+      {
+        rel: "icon",
+        type: "image/x-icon",
+        href: `${prefix}/favicons/favicon.ico`,
+      },
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
-        href: "/favicons/apple-touch-icon.png",
+        href: `${prefix}/favicons/apple-touch-icon.png`,
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "32x32",
-        href: "/favicons/favicon-32x32.png",
+        href: `${prefix}/favicons/favicon-32x32.png`,
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "16x16",
-        href: "/favicons/favicon-16x16.png",
+        href: `${prefix}/favicons/favicon-16x16.png`,
       },
-      { rel: "manifest", href: "/site.webmanifest" },
+      { rel: "manifest", href: `${prefix}/site.webmanifest` },
       {
         rel: "search",
         type: "application/opensearchdescription+xml",
@@ -80,7 +87,7 @@ const config = {
   build: {},
 };
 
-if (process.env.NODE_ENV !== "development") {
+if (notDevelopment) {
   config.router = {
     base: "/website-v2/",
   };
