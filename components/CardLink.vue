@@ -24,7 +24,7 @@ export default Vue.extend({
         quotes = "%27";
       }
 
-      return `https://scryfall.com/search?q=name%3D${quotes}${encodeURIComponent(
+      return `https://scryfall.com/search?q=%21${quotes}${encodeURIComponent(
         this.name
       )}${quotes}`;
     },
