@@ -14,7 +14,7 @@ describe("SplashPage", () => {
     });
 
     expect(wrapper.find(".heading-title").text()).toBe("Title");
-    expect(wrapper.find(".flavor-text").text()).toBe("Flavor text");
+    expect(wrapper.find(".flavor-text i").text()).toBe("Flavor text");
   });
 
   it("creates an ArtCircle component", () => {

@@ -13,7 +13,7 @@
 
       <slot />
 
-      <div class="text-xs w-1/2 m-auto">
+      <div class="flavor-text">
         <i>{{ flavor }}</i>
       </div>
     </div>
@@ -54,5 +54,7 @@ export default Vue.extend({
 </script>
 
 <style>
-/* styles here */
+.flavor-text {
+  @apply text-xs w-1/2 m-auto;
+}
 </style>
