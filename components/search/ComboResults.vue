@@ -62,20 +62,6 @@ export default Vue.extend({
       },
     },
   },
-  methods: {
-    focus(): void {
-      this.$nextTick().then(() => {
-        // @ts-ignore
-        const firstLink = this.$refs.comboLinks[0];
-
-        if (!firstLink) {
-          return;
-        }
-
-        firstLink.$el.focus();
-      });
-    },
-  },
 });
 </script>
 

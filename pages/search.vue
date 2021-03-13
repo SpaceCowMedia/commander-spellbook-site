@@ -42,7 +42,7 @@
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults ref="comboLinks" :results="paginatedResults" />
+        <ComboResults :results="paginatedResults" />
 
         <Pagination
           :current-page="page"
@@ -276,17 +276,12 @@ export default Vue.extend({
         path: this.$route.path,
         query: { q: this.$route.query.q, page: String(this.page) },
       });
-      this.focusFirstCombo();
     },
     goForward(): void {
       this.navigateToPage(1);
     },
     goBack(): void {
       this.navigateToPage(-1);
-    },
-    focusFirstCombo(): void {
-      // @ts-ignore
-      this.$refs.comboLinks.focus();
     },
   },
 });

@@ -1,13 +1,14 @@
 <template>
   <div>
     <BetaMask>
+      <a ref="skipLink" href="#main" class="sr-only">Skip to main content</a>
       <AnalyticsCookieBanner />
       <div class="bg-dark">
         <nav class="container">
           <SearchBar />
         </nav>
       </div>
-      <main class="pb-16">
+      <main id="main" tabindex="-1" class="pb-16">
         <Nuxt />
       </main>
       <Footer class="mt-24 lg:mt-48 z-0" />
@@ -28,6 +29,12 @@ export default Vue.extend({
     SearchBar,
     BetaMask,
     Footer,
+  },
+  watch: {
+    $route(): void {
+      // @ts-ignore
+      this.$refs.skipLink.focus();
+    },
   },
 });
 </script>
