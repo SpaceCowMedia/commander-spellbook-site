@@ -50,7 +50,7 @@
           WARNING: Combo contains cards that are banned in Commander
         </div>
 
-        <div v-if="hasSpoiledCard" class="spoiled-warning">
+        <div v-if="hasPreviewedCard" class="previewed-warning">
           WARNING: Combo contains cards that are from a forthcoming set (and not
           yet legal in Commander)
         </div>
@@ -83,7 +83,7 @@ type CardData = {
 type ComboData = {
   title: string;
   hasBannedCard: boolean;
-  hasSpoiledCard: boolean;
+  hasPreviewedCard: boolean;
   link: string;
   loaded: boolean;
   comboNumber: string;
@@ -125,7 +125,7 @@ export default Vue.extend({
       comboNumber,
       title: `Combo Number ${comboNumber}`,
       hasBannedCard: combo.hasBannedCard,
-      hasSpoiledCard: combo.hasSpoiledCard,
+      hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
       loaded: true,
@@ -139,7 +139,7 @@ export default Vue.extend({
     return {
       title: "Looking up Combo",
       hasBannedCard: false,
-      hasSpoiledCard: false,
+      hasPreviewedCard: false,
       link: "",
       loaded: false,
       comboNumber: "0",
@@ -261,7 +261,7 @@ export default Vue.extend({
   @apply text-danger font-semibold;
 }
 
-.spoiled-warning {
+.previwed-warning {
   @apply font-semibold;
 }
 </style>

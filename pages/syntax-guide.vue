@@ -210,28 +210,28 @@
     </SearchGuide>
 
     <SearchGuide
-      id="spoiled"
-      heading="Spoiled / Previewed"
+      id="previewed"
+      heading="Previewed / Spoiled"
       heading-card-name="Spoils of Adventure"
       heading-artist-name="Zezhou Chen"
-      :snippets="spoiledSnippets"
+      :snippets="previewedSnippets"
     >
       <p>
         By default, combo results will include combos that contain cards that
         have been newly previewed and are <em>technically</em> not yet legal in
-        Commander. To exclude these combos, use <code>exclude:spoiled</code> or
-        <code>exclude:previewed</code>.
+        Commander. To exclude these combos, use
+        <code>exclude:previewed</code> or <code>exclude:spoiled</code>.
       </p>
 
       <p>
         To find combos that contain cards that are not yet legal in Commander,
-        use <code>is:spoiled</code> or <code>is:previewed</code>.
+        use <code>is:previewed</code> or <code>is:spoiled</code>.
       </p>
 
       <p>
         To find combos that contain <em>no</em> cards that are not yet legal in
-        Commander, use <code>not:spoiled</code> or
-        <code>not:previewed</code> instead.
+        Commander, use <code>not:previewed</code> or
+        <code>not:spoiled</code> instead.
       </p>
     </SearchGuide>
 
@@ -335,8 +335,8 @@ export default Vue.extend({
           text: "Combo Identifier",
         },
         {
-          id: "spoiled",
-          text: "Spoiled / Previewed",
+          id: "previewed",
+          text: "Previewed / Spoiled",
         },
         {
           id: "banned",
@@ -449,14 +449,14 @@ export default Vue.extend({
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
         },
       ],
-      spoiledSnippets: [
+      previewedSnippets: [
         {
-          search: "exclude:spoiled",
+          search: "exclude:previewed",
           description:
             "Exclude any combos that contain cards that are not legal in Commander (yet).",
         },
         {
-          search: "is:previewed",
+          search: "is:spoiled",
           description:
             "Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)",
         },

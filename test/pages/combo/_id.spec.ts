@@ -167,20 +167,20 @@ describe("ComboPage", () => {
     expect(wrapper.find(".banned-warning").exists()).toBe(true);
   });
 
-  it("includes warning about spoiled cards if combo contains them", async () => {
+  it("includes warning about previewed cards if combo contains them", async () => {
     const wrapper = shallowMount(ComboPage, options);
 
     await wrapper.setData({
-      hasSpoiledCard: false,
+      hasPreviewedCard: false,
     });
 
-    expect(wrapper.find(".spoiled-warning").exists()).toBe(false);
+    expect(wrapper.find(".previewed-warning").exists()).toBe(false);
 
     await wrapper.setData({
-      hasSpoiledCard: true,
+      hasPreviewedCard: true,
     });
 
-    expect(wrapper.find(".spoiled-warning").exists()).toBe(true);
+    expect(wrapper.find(".previewed-warning").exists()).toBe(true);
   });
 
   it("looks up combo from page number param", async () => {
