@@ -106,7 +106,8 @@
 
       <p>
         Aliases for the <code>coloridentity</code> key include
-        <code>color_identity</code> and <code>ci</code>.
+        <code>color_identity</code>, <code>color</code>, <code>colors</code>,
+        <code>id</code>, <code>ids</code>, <code>c</code>, and <code>ci</code>.
       </p>
     </SearchGuide>
 
@@ -189,21 +190,21 @@
     </SearchGuide>
 
     <SearchGuide
-      heading="Id"
+      heading="Spellbook ID"
       heading-card-name="Fractured Identity"
       heading-artist-name="Yongjae Choi"
       :snippets="idSnippets"
     >
       <p>
-        You can also search by <code>id:</code> if you want to find a specific
-        combo by its id. Using more than one <code>id:</code> will result in a
-        query error.
+        You can also search by <code>spellbookid:</code> if you want to find a
+        specific combo by its id. Using more than one
+        <code>spellbookid:</code> will result in a query error.
       </p>
 
       <p>
-        A more useful parameter to use is <code>-id:</code>, to more easilly
-        omit certain combos. For instance, for finding all combos using Basalt
-        Monolith and Mesmeric Orb except
+        A more useful parameter to use is <code>-spellbookid:</code>, to more
+        easilly omit certain combos. For instance, for finding all combos using
+        Basalt Monolith and Mesmeric Orb except
         <nuxt-link to="/combo/450">combo 450</nuxt-link>.
       </p>
     </SearchGuide>
@@ -330,7 +331,7 @@ export default Vue.extend({
           text: "Results",
         },
         {
-          id: "id",
+          id: "spellbook-id",
           text: "Combo Identifier",
         },
         {
@@ -379,12 +380,12 @@ export default Vue.extend({
             "Combos that have exactly the blue, green, red color identity.",
         },
         {
-          search: "ci<3",
+          search: "c<3",
           description:
             "Combos that have no more than 2 colors in their color identity.",
         },
         {
-          search: "ci=3 ci>=wb",
+          search: "colors=3 ids>=wb",
           description:
             "Combos that have exactly 3 colors in their color identity and 2 of those colors must be white and black.",
         },
@@ -439,11 +440,11 @@ export default Vue.extend({
       ],
       idSnippets: [
         {
-          search: "id:450",
+          search: "spellbookid:450",
           description: "The combo for Basalt Monolith and Mesmeric Orb.",
         },
         {
-          search: '-id:450 card="Basalt Monolith" card="Mesmeric Orb"',
+          search: '-spellbookid:450 card="Basalt Monolith" card="Mesmeric Orb"',
           description:
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
         },
