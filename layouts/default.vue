@@ -7,6 +7,7 @@
         <nav class="container">
           <SearchBar />
         </nav>
+        <div class="gradient search-bar-border"></div>
       </div>
       <main id="main" tabindex="-1" class="pb-16">
         <Nuxt />
@@ -42,5 +43,9 @@ export default Vue.extend({
 <style scoped>
 #main:focus {
   outline: 0 solid transparent;
+}
+
+.search-bar-border {
+  height: 2px;
 }
 </style>
