@@ -6,7 +6,7 @@
         artist="Scott Murphy"
         class="m-auto md:block hidden"
       />
-      <h1 class="heading-title text-center">Advanced Search</h1>
+      <h1 class="heading-title">Advanced Search</h1>
 
       <p class="text-center">
         For more information on the syntax for searches,

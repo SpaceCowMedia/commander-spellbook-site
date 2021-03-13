@@ -1,8 +1,8 @@
 <template>
   <div class="static-page">
     <ArtCircle
-      card-name="Time Out"
-      artist="Dave Allsop"
+      card-name="Bruvac the Grandiloquent"
+      artist="Ekaterina Burmak"
       class="m-auto md:block hidden"
     />
     <h1 class="heading-title text-center">Privacy Policy</h1>

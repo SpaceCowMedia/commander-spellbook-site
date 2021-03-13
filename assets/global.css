@@ -17,9 +17,7 @@ a {
 }
 
 .heading-title {
-  font-family: monospace;
-  font-weight: 300;
-  @apply text-4xl text-dark;
+  @apply font-mono text-center text-4xl text-dark uppercase;
 }
 
 .button {
@@ -27,11 +25,11 @@ a {
 }
 
 .button:hover {
-  @apply bg-dark text-white border-secondary border;
+  @apply bg-dark text-white border-secondary;
 }
 
 @media (min-width: 640px) {
   .heading-title {
-    @apply text-6xl mb-4;
+    @apply text-5xl my-4;
   }
 }

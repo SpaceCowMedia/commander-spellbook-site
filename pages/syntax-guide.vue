@@ -2,11 +2,11 @@
   <div>
     <div class="container pt-6 mb-6">
       <ArtCircle
-        card-name="Bruvac the Grandiloquent"
-        artist="Ekaterina Burmak"
+        card-name="Goblin Guide"
+        artist="Mark Zug"
         class="m-auto md:block hidden"
       />
-      <h1 class="heading-title text-center">Syntax Guide</h1>
+      <h1 class="heading-title">Syntax Guide</h1>
       <p class="text-center">
         A variety of parameters can be used to search for combos.
       </p>

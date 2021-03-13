@@ -48,7 +48,6 @@
         </div>
         <div class="link-collection">
           <nuxt-link to="/about">About</nuxt-link>
-          <nuxt-link to="/metrics">Combo Metrics</nuxt-link>
           <nuxt-link to="/how-to-submit-a-combo">Combo Submission</nuxt-link>
           <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
         </div>
