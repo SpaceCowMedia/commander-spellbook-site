@@ -41,7 +41,7 @@ export default {
       {
         rel: "search",
         type: "application/opensearchdescription+xml",
-        title: "Commander Spellbook",
+        title: "Commander Spellbook: The Search Engine for EDH Combos",
         href: "https://commanderspellbook.com/opensearch.xml",
       },
     ],

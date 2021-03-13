@@ -4,6 +4,10 @@
       <div class="w-full">
         <Logo />
 
+        <h2 class="sm:my-2 font-mono text-xl sm:text-3xl md:text-4xl">
+          THE SEARCH ENGINE FOR EDH COMBOS
+        </h2>
+
         <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
 
         <div class="links md:block flex flex-col">
