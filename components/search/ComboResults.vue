@@ -92,7 +92,7 @@ a {
   @apply max-w-lg mx-0 my-2 rounded border-2 border-dark flex-grow flex flex-col content-center;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .combo-result {
     @apply m-2;
   }
