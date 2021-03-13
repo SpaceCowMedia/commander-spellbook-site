@@ -13,8 +13,8 @@
 
       <slot />
 
-      <div class="text-xs text-light w-1/2 m-auto">
-        <i class="flavor-text">{{ flavor }}</i>
+      <div class="text-xs w-1/2 m-auto">
+        <i>{{ flavor }}</i>
       </div>
     </div>
   </div>

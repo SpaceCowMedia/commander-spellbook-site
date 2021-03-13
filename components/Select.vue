@@ -1,8 +1,6 @@
 <template>
   <div class="rounded-l-sm relative" :class="selectBackgroundClass">
-    <label :for="id" class="sr-only text-white" aria-hidden="true">{{
-      label
-    }}</label>
+    <label :for="id" class="sr-only" aria-hidden="true">{{ label }}</label>
     <select
       :id="id"
       v-model="localState"

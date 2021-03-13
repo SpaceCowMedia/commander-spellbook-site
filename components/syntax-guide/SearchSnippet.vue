@@ -44,6 +44,6 @@ a {
 }
 
 .search-snippet .search-snippet-header {
-  @apply text-white border-dark bg-secondary pb-2 pt-1 font-mono;
+  @apply text-dark border-dark bg-primary pb-2 pt-1 font-mono;
 }
 </style>

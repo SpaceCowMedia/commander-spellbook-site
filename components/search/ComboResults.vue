@@ -8,7 +8,7 @@
       class="combo-result w-full md:w-1/4"
     >
       <div class="flex flex-col">
-        <div class="flex items-center flex-grow bg-dark">
+        <div class="flex items-center flex-grow bg-dark text-white">
           <ColorIdentity :colors="r.colors" size="small" />
         </div>
         <div class="flex-grow border-b-2 border-light">

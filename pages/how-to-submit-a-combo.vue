@@ -1,8 +1,8 @@
 <template>
   <div class="static-page">
     <ArtCircle
-      card-name="beetleback chief"
-      artist="Wayne England"
+      card-name="Kethis the Hidden Hand"
+      artist="Yongjae Choi"
       class="m-auto md:block hidden"
     />
     <h1 class="heading-title">Want to submit a combo?</h1>

@@ -92,7 +92,7 @@
 }
 
 .footer a {
-  @apply no-underline;
+  @apply no-underline text-secondary;
 }
 
 .link-collection {

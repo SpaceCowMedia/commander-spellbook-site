@@ -16,7 +16,7 @@ export default Vue.extend({
   components: {
     SplashPage,
   },
-  layout: "landing",
+  layout: "splash",
 
   async mounted(): Promise<void> {
     const randomCombo = await spellbookApi.random();

@@ -18,7 +18,10 @@
           aria-hidden="true"
           @click="focusSearch"
         ></div>
-        <label for="search-bar-input" class="sr-only" aria-hidden="true"
+        <label
+          for="search-bar-input"
+          class="sr-only text-white"
+          aria-hidden="true"
           >Combo Search</label
         >
         <input
