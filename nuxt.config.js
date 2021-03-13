@@ -1,4 +1,4 @@
-export default {
+const config = {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
 
@@ -79,3 +79,11 @@ export default {
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 };
+
+if (process.env.NODE_ENV !== "development") {
+  config.router = {
+    base: "/website-v2/",
+  };
+}
+
+export default config;
