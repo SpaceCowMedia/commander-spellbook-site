@@ -70,10 +70,6 @@ export default Vue.extend({
   @apply flex flex-col items-center justify-center text-center m-auto;
 }
 
-.gradient {
-  @apply bg-gradient-to-r from-primary to-secondary;
-}
-
 .button {
   @apply bg-dark text-white;
 }

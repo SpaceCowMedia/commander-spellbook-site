@@ -2,11 +2,11 @@
   <div class="outer-container">
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
-        <div class="commander-spellbook-icon mr-2">
+        <div class="mr-1">
           <img
-            src="~/assets/images/logo.svg"
+            src="~/assets/images/gear.svg"
             alt="Go to home page"
-            class="w-8 h-8 inline-block"
+            class="w-8 inline-block"
           />
         </div>
       </nuxt-link>

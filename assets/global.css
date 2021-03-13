@@ -16,6 +16,10 @@ a {
   @apply container py-6;
 }
 
+.gradient {
+  @apply bg-gradient-to-r from-primary to-secondary;
+}
+
 .heading-title {
   @apply font-mono text-center text-4xl text-dark uppercase;
 }
