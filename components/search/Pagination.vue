@@ -73,7 +73,7 @@ export default Vue.extend({
 
 <style scoped>
 .nav-button {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-dark;
 }
 
 .nav-button:first-child {
@@ -81,10 +81,6 @@ export default Vue.extend({
 }
 .nav-button:last-child {
   @apply mr-0;
-}
-
-.nav-button:hover {
-  @apply text-gray-500;
 }
 
 .nav-icon {

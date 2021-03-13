@@ -73,6 +73,6 @@ export default Vue.extend({
   @apply font-bold text-xl mb-2;
 }
 .combo-list {
-  @apply text-gray-700 text-base list-inside;
+  @apply list-inside;
 }
 </style>

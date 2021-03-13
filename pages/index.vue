@@ -71,7 +71,7 @@ export default Vue.extend({
 }
 
 .button {
-  @apply bg-dark;
+  @apply bg-dark text-white;
 }
 
 .button:hover {

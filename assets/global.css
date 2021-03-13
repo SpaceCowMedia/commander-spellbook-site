@@ -23,11 +23,11 @@ a {
 }
 
 .button {
-  @apply m-4 inline-block  py-2 px-3 bg-secondary text-white border-2 border-dark rounded-sm no-underline;
+  @apply m-4 inline-block  py-2 px-3 bg-secondary text-dark border-2 border-dark rounded-sm no-underline;
 }
 
 .button:hover {
-  background-color: #555;
+  @apply bg-dark text-white border-secondary border;
 }
 
 @media (min-width: 640px) {

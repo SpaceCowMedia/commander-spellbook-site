@@ -79,13 +79,13 @@ export default Vue.extend({
 
 @keyframes color {
   0% {
-    @apply bg-gray-900;
+    @apply bg-dark;
   }
   50% {
     @apply bg-primary;
   }
   100% {
-    @apply bg-gray-900;
+    @apply bg-dark;
   }
 }
 </style>

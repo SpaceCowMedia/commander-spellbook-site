@@ -73,10 +73,10 @@ export default Vue.extend({
 
 <style scoped>
 .search-errors {
-  @apply border-t border-gray-400 bg-warning;
+  @apply bg-warning;
 }
 
 .search-description {
-  @apply border-t border-b border-gray-400;
+  @apply border-t border-b border-light;
 }
 </style>

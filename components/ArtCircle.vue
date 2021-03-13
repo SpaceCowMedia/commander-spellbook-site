@@ -53,6 +53,6 @@ export default Vue.extend({
 <style scoped>
 .art-circle {
   image-rendering: crisp-edges;
-  @apply rounded-full bg-gray-400 bg-center bg-cover;
+  @apply rounded-full bg-light bg-center bg-cover;
 }
 </style>

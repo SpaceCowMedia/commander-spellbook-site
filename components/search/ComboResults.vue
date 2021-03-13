@@ -11,7 +11,7 @@
         <div class="flex items-center flex-grow bg-dark">
           <ColorIdentity :colors="r.colors" size="small" />
         </div>
-        <div class="flex-grow border-b-2 border-dark">
+        <div class="flex-grow border-b-2 border-light">
           <div class="py-1">
             <span class="sr-only">Cards in combo:</span>
             <CardTooltip

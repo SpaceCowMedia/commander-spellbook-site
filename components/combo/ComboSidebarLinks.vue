@@ -137,7 +137,7 @@ export default Vue.extend({
 
 <style scoped>
 .combo-button {
-  @apply w-full bg-white block mx-auto mb-4 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
+  @apply w-full bg-white block mx-auto mb-4 text-dark font-semibold py-2 px-4 border border-light rounded shadow;
 }
 
 .combo-button:hover {

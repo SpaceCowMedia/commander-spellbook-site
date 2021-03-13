@@ -2,15 +2,13 @@
   <!-- adapted from https://www.carlcassar.com/articles/add-google-analytics-to-a-nuxt-js-app/ -->
   <div
     v-if="isOpen"
-    class="fixed bottom-0 left-0 border-t border-gray-400 lg:flex items-center p-4 bg-gray-100 shadow-sm justify-center w-full"
+    class="border-b-2 border-white lg:flex items-center p-4 bg-dark shadow-lg justify-center w-full text-white"
   >
     <div class="text-5xl pb-2 leading-none text-center">🍪</div>
     <div class="lg:mx-8 text-center">
       <p>
-        Can I use cookies for analytics? Read
-        <nuxt-link class="underline" to="/privacy-policy"
-          >the privacy policy</nuxt-link
-        >
+        Can we use cookies for analytics? Read
+        <nuxt-link to="/privacy-policy">the privacy policy</nuxt-link>
         for more information.
       </p>
     </div>
@@ -65,10 +63,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.text-link {
-  text-decoration: underline;
-}
 .button {
-  @apply border border-gray-400 px-4 py-2 rounded cursor-pointer mx-2;
+  @apply border  px-4 py-2 rounded cursor-pointer mx-2;
 }
 </style>

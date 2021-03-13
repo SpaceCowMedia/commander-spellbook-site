@@ -48,7 +48,7 @@ export default Vue.extend({
   animation-name: color;
   animation-duration: 2s;
   animation-iteration-count: infinite;
-  @apply bg-gray-400 rounded inline-block;
+  @apply bg-light rounded inline-block;
 }
 
 @keyframes color {

@@ -58,7 +58,7 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="sm:hidden flex flex-row text-center mt-2 py-4 border-t border-gray-400 text-gray-700"
+      class="sm:hidden flex flex-row text-center mt-2 py-4 border-t border-light text-light"
       @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search" class="mobile-menu-button">
@@ -195,11 +195,11 @@ a {
 .search-input-icon {
   -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
-  @apply bg-gray-400 w-4 h-4 mt-1 z-10 cursor-pointer;
+  @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
 }
 
 .search-input-icon:hover {
-  @apply bg-gray-100;
+  @apply bg-light;
 }
 
 .menu-link {
@@ -211,23 +211,23 @@ a {
 }
 
 .menu-link:hover {
-  @apply text-gray-300;
+  @apply text-light;
 }
 
 .menu-link:hover .link-icon {
-  @apply bg-gray-300;
+  @apply bg-light;
 }
 
 .mobile-menu-button {
-  @apply flex flex-row flex-grow items-center w-1/2 rounded py-1 px-2 border border-gray-400 mx-2;
+  @apply flex flex-row flex-grow items-center w-1/2 rounded py-1 px-2 border border-light mx-2;
 }
 
 .mobile-menu-button:hover {
-  @apply border-gray-300 text-gray-300;
+  @apply border-light text-light;
 }
 
 .mobile-menu-button:hover .link-icon {
-  @apply bg-gray-300;
+  @apply bg-light;
 }
 
 .mobile-menu-button:nth-child(even),

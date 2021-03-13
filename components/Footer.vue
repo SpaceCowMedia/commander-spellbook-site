@@ -65,7 +65,7 @@
           >
         </div>
       </div>
-      <div class="container mt-8 text-gray-400">
+      <div class="container mt-8 text-light">
         <p class="my-4">
           Commander Spellbook may use the trademarks and other intellectual
           property of Wizards of the Coast LLC, which is permitted under
@@ -83,21 +83,9 @@
           >.
         </p>
       </div>
-      <AnalyticsCookieBanner />
     </footer>
   </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
-
-export default Vue.extend({
-  components: {
-    AnalyticsCookieBanner,
-  },
-});
-</script>
 
 <style scoped>
 .footer {
