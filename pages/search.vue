@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h1 class="sr-only">Search Results</h1>
+
     <SearchMessage
       :message="message"
       :errors="errors"
