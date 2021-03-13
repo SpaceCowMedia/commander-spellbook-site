@@ -38,3 +38,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+#main:focus {
+  outline: 0 solid transparent;
+}
+</style>
