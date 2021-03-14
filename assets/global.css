@@ -16,8 +16,24 @@ a {
   @apply container py-6;
 }
 
+/* adapted from https://codepen.io/P1N2O/pen/pyBNzX */
 .gradient {
-  @apply bg-gradient-to-r from-primary to-secondary;
+  background-size: 150% 150%;
+  animation: gradient 10s ease infinite;
+
+  @apply bg-gradient-to-br from-primary to-secondary;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .heading-title {
