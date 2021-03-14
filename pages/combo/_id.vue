@@ -117,7 +117,7 @@ export default Vue.extend({
       return {
         name: card.name,
         artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl("png"),
+        oracleImageUrl: card.getScryfallImageUrl("normal"),
       };
     });
 
