@@ -15,16 +15,16 @@
     <div class="border-b-2 border-gray-400 w-full">
       <div class="container pb-6">
         <div class="flex flex-col md:flex-row md:flex-wrap">
-          <a
+          <nuxt-link
             v-for="section in sections"
             :key="section.id"
-            :href="'#' + section.id"
+            :to="'#' + section.id"
             class="button flex-grow text-center md:w-1/4"
           >
             <div>
               {{ section.text }}
             </div>
-          </a>
+          </nuxt-link>
         </div>
 
         <p class="pl-4 pr-4">
