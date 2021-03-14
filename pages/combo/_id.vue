@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardHeader :cards-art="cardArts" :title="title" />
+    <CardHeader :cards-art="cardArts" :title="title" :subtitle="subtitle" />
 
     <CardGroup :cards="cards" />
 
@@ -82,6 +82,7 @@ type CardData = {
 
 type ComboData = {
   title: string;
+  subtitle: string;
   hasBannedCard: boolean;
   hasPreviewedCard: boolean;
   link: string;
@@ -113,7 +114,7 @@ export default Vue.extend({
       return;
     }
 
-    const cards = combo.cards.map((card: any) => {
+    const cards = combo.cards.map((card) => {
       return {
         name: card.name,
         artUrl: card.getScryfallImageUrl("art_crop"),
@@ -121,9 +122,29 @@ export default Vue.extend({
       };
     });
 
+    const title = cards
+      .map((card, index) => {
+        if (index > 2) {
+          return "";
+        }
+
+        return card.name;
+      })
+      .filter((cardName) => cardName)
+      .join(" | ");
+
+    let subtitle = "";
+
+    if (cards.length === 4) {
+      subtitle = "(and 1 other card)";
+    } else if (cards.length > 4) {
+      subtitle = `(and ${cards.length - 3} other cards)`;
+    }
+
     return {
       comboNumber,
-      title: `Combo Number ${comboNumber}`,
+      title,
+      subtitle,
       hasBannedCard: combo.hasBannedCard,
       hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
@@ -138,6 +159,7 @@ export default Vue.extend({
   data(): ComboData {
     return {
       title: "Looking up Combo",
+      subtitle: "",
       hasBannedCard: false,
       hasPreviewedCard: false,
       link: "",
@@ -154,7 +176,7 @@ export default Vue.extend({
     // for some reason, these properties aren't available here???
     // seems like a nuxt typescript issue
     // @ts-ignore
-    const title = this.cardNames.join(" | ");
+    const title = `${this.title} ${this.subtitle}`;
     // @ts-ignore
     const description = this.results.reduce((str, result) => {
       return str + `\n  * ${result}`;

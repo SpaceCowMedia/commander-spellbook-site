@@ -12,7 +12,22 @@ describe("CardHeader", () => {
       },
     });
 
-    expect(wrapper.find(".combo-title").element.textContent).toBe("combo 1");
+    expect(wrapper.find(".combo-title").element.textContent).toContain(
+      "combo 1"
+    );
+  });
+
+  it("sets subtitle", () => {
+    const wrapper = mount(CardHeader, {
+      propsData: {
+        subtitle: "subtitle",
+        cardsArt: [],
+      },
+    });
+
+    expect(wrapper.find(".combo-subtitle").element.textContent).toContain(
+      "subtitle"
+    );
   });
 
   it("sets card images", () => {

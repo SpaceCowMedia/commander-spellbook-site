@@ -212,7 +212,8 @@ describe("ComboPage", () => {
     wrapper.setData(data);
 
     expect(vm.loaded).toBe(true);
-    expect(vm.title).toBe("Combo Number 13");
+    expect(vm.title).toBe("card 1 | card 2");
+    expect(vm.subtitle).toBe("");
     expect(vm.prerequisites).toEqual(["1", "2", "3"]);
     expect(vm.steps).toEqual(["1", "2", "3"]);
     expect(vm.results).toEqual(["1", "2", "3"]);
@@ -236,6 +237,58 @@ describe("ComboPage", () => {
     expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "normal");
+  });
+
+  it("passes subtitle when there are more than 3 cards in combo", async () => {
+    const fakeCombo = spellbookApi.makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2", "card 3", "card 4"],
+    });
+    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    wrapper.setData(data);
+
+    expect(vm.title).toBe("card 1 | card 2 | card 3");
+    expect(vm.subtitle).toBe("(and 1 other card)");
+  });
+
+  it("passes plural subtitle when there are more than 4 cards in combo", async () => {
+    const fakeCombo = spellbookApi.makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2", "card 3", "card 4", "card 5"],
+    });
+    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    wrapper.setData(data);
+
+    expect(vm.title).toBe("card 1 | card 2 | card 3");
+    expect(vm.subtitle).toBe("(and 2 other cards)");
   });
 
   it("does not load data from combo when no combos is found for id", async () => {
