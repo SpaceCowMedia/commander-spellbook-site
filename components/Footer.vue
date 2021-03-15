@@ -70,7 +70,7 @@
           property of Wizards of the Coast LLC, which is permitted under
           Wizards' Fan Site Policy. For more information, please visit their
           website at
-          <a href="https://company.wizards.com/">https://company.wizards.com/</a
+          <a href="https://company.wizards.com/" target="_blank"> https://company.wizards.com/</a
           >.
         </p>
         <p class="my-4">

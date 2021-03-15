@@ -172,7 +172,7 @@
     <p>
       To exercise the access, data portability, and deletion rights described
       above, please submit a verifiable consumer request to us by
-      <a href="mailto:edhrec@edhrec.com">contacting us</a>.
+      <a target="_blank" href="mailto:edhrec@edhrec.com">contacting us</a>.
     </p>
     <p>
       Only you, or a person registered with the California Secretary of State
