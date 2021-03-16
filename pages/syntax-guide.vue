@@ -107,7 +107,8 @@
       <p>
         Aliases for the <code>coloridentity</code> key include
         <code>color_identity</code>, <code>color</code>, <code>colors</code>,
-        <code>id</code>, <code>ids</code>, <code>c</code>, and <code>ci</code>.
+        <code>commander</code>, <code>id</code>, <code>ids</code>,
+        <code>c</code>, and <code>ci</code>.
       </p>
     </SearchGuide>
 
