@@ -202,6 +202,8 @@
         <code>spellbookid:</code> will result in a query error.
       </p>
 
+      <p><code>sid:</code> is an alias for <code>spellbookid:</code>.</p>
+
       <p>
         A more useful parameter to use is <code>-spellbookid:</code>, to more
         easilly omit certain combos. For instance, for finding all combos using
@@ -445,7 +447,7 @@ export default Vue.extend({
           description: "The combo for Basalt Monolith and Mesmeric Orb.",
         },
         {
-          search: '-spellbookid:450 card="Basalt Monolith" card="Mesmeric Orb"',
+          search: '-sid:450 card="Basalt Monolith" card="Mesmeric Orb"',
           description:
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
         },
