@@ -196,7 +196,7 @@
       :snippets="idSnippets"
     >
       <p>
-        You can also search by <code>spellbookid:</code> if you want to find a
+        You can also search by <code>spellbookid:</code>, or <code>sid</code> as an alias, if you want to find a
         specific combo by its id. Using more than one
         <code>spellbookid:</code> will result in a query error.
       </p>
