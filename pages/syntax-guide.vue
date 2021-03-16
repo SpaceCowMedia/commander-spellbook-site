@@ -196,10 +196,12 @@
       :snippets="idSnippets"
     >
       <p>
-        You can also search by <code>spellbookid:</code>, or <code>sid</code> as an alias, if you want to find a
+        You can also search by <code>spellbookid:</code> if you want to find a
         specific combo by its id. Using more than one
         <code>spellbookid:</code> will result in a query error.
       </p>
+
+      <p><code>sid:</code> is an alias for <code>spellbookid:</code>.</p>
 
       <p>
         A more useful parameter to use is <code>-spellbookid:</code>, to more
@@ -444,7 +446,7 @@ export default Vue.extend({
           description: "The combo for Basalt Monolith and Mesmeric Orb.",
         },
         {
-          search: '-spellbookid:450 card="Basalt Monolith" card="Mesmeric Orb"',
+          search: '-sid:450 card="Basalt Monolith" card="Mesmeric Orb"',
           description:
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
         },
