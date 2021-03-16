@@ -95,28 +95,34 @@ describe("ComboResults", () => {
   });
 
   it("prints results for each combo", () => {
+    const TextWithMagicSymbolStub = {
+      template: "<div></div>",
+      props: ["text"],
+    };
+    // @ts-ignore
+    options.stubs.TextWithMagicSymbol = TextWithMagicSymbolStub;
     const wrapper = shallowMount(ComboResults, options);
 
     const links = wrapper.findAllComponents(RouterLinkStub);
 
-    expect(links.at(0).findAll(".result").at(0).element.textContent).toContain(
-      "result 1"
-    );
-    expect(links.at(0).findAll(".result").at(1).element.textContent).toContain(
-      "result 2"
-    );
-    expect(links.at(1).findAll(".result").at(0).element.textContent).toContain(
-      "result 3"
-    );
-    expect(links.at(1).findAll(".result").at(1).element.textContent).toContain(
-      "result 4"
-    );
-    expect(links.at(2).findAll(".result").at(0).element.textContent).toContain(
-      "result 5"
-    );
-    expect(links.at(2).findAll(".result").at(1).element.textContent).toContain(
-      "result 6"
-    );
+    expect(
+      links.at(0).findAllComponents(TextWithMagicSymbolStub).at(0).props("text")
+    ).toContain("result 1");
+    expect(
+      links.at(0).findAllComponents(TextWithMagicSymbolStub).at(1).props("text")
+    ).toContain("result 2");
+    expect(
+      links.at(1).findAllComponents(TextWithMagicSymbolStub).at(0).props("text")
+    ).toContain("result 3");
+    expect(
+      links.at(1).findAllComponents(TextWithMagicSymbolStub).at(1).props("text")
+    ).toContain("result 4");
+    expect(
+      links.at(2).findAllComponents(TextWithMagicSymbolStub).at(0).props("text")
+    ).toContain("result 5");
+    expect(
+      links.at(2).findAllComponents(TextWithMagicSymbolStub).at(1).props("text")
+    ).toContain("result 6");
   });
 
   it("prints the color identity", () => {

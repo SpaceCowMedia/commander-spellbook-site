@@ -29,7 +29,7 @@
           <span class="sr-only">Results in combo:</span>
           <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div v-for="result in r.results" class="result pl-3 pr-3">
-            {{ result }}
+            <TextWithMagicSymbol :text="result" />
           </div>
         </div>
       </div>
@@ -40,6 +40,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import CardTooltip from "@/components/CardTooltip.vue";
+import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 import ColorIdentity from "@/components/ColorIdentity.vue";
 
 export type ComboResult = {
@@ -53,6 +54,7 @@ export default Vue.extend({
   components: {
     CardTooltip,
     ColorIdentity,
+    TextWithMagicSymbol,
   },
   props: {
     results: {
