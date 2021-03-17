@@ -95,6 +95,20 @@ type ComboData = {
   results: string[];
 };
 
+const NUMBERS = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+];
+
 export default Vue.extend({
   components: {
     CardHeader,
@@ -136,9 +150,9 @@ export default Vue.extend({
     let subtitle = "";
 
     if (cards.length === 4) {
-      subtitle = "(and 1 other card)";
+      subtitle = `(and ${NUMBERS[1]} other card)`;
     } else if (cards.length > 4) {
-      subtitle = `(and ${cards.length - 3} other cards)`;
+      subtitle = `(and ${NUMBERS[cards.length - 3]} other cards)`;
     }
 
     return {

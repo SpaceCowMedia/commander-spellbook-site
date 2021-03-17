@@ -262,34 +262,51 @@ describe("ComboPage", () => {
     wrapper.setData(data);
 
     expect(vm.title).toBe("card 1 | card 2 | card 3");
-    expect(vm.subtitle).toBe("(and 1 other card)");
+    expect(vm.subtitle).toBe("(and one other card)");
   });
 
-  it("passes plural subtitle when there are more than 4 cards in combo", async () => {
-    const fakeCombo = spellbookApi.makeFakeCombo({
-      commanderSpellbookId: "13",
-      prerequisites: ["1", "2", "3"],
-      steps: ["1", "2", "3"],
-      results: ["1", "2", "3"],
-      colorIdentity: "wbr",
-      cards: ["card 1", "card 2", "card 3", "card 4", "card 5"],
-    });
-    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+  it.each`
+    numberOfCards | expectedResult
+    ${5}          | ${"two"}
+    ${6}          | ${"three"}
+    ${7}          | ${"four"}
+    ${8}          | ${"five"}
+    ${9}          | ${"six"}
+    ${10}         | ${"seven"}
+  `(
+    "includes subtitle when number of cards is $numberOfCards",
+    async ({ numberOfCards, expectedResult }) => {
+      const cards = [];
+      let index = 1;
+      while (cards.length < numberOfCards) {
+        cards.push(`card ${index}`);
+        index++;
+      }
+      const fakeCombo = spellbookApi.makeFakeCombo({
+        commanderSpellbookId: "13",
+        prerequisites: ["1", "2", "3"],
+        steps: ["1", "2", "3"],
+        results: ["1", "2", "3"],
+        colorIdentity: "wbr",
+        cards,
+      });
+      jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
 
-    const wrapper = shallowMount(ComboPage, options);
-    const vm = wrapper.vm as VueComponent;
+      const wrapper = shallowMount(ComboPage, options);
+      const vm = wrapper.vm as VueComponent;
 
-    const data = await vm.$options.asyncData({
-      params: {
-        id: "13",
-      },
-    });
+      const data = await vm.$options.asyncData({
+        params: {
+          id: "13",
+        },
+      });
 
-    wrapper.setData(data);
+      wrapper.setData(data);
 
-    expect(vm.title).toBe("card 1 | card 2 | card 3");
-    expect(vm.subtitle).toBe("(and 2 other cards)");
-  });
+      expect(vm.title).toBe("card 1 | card 2 | card 3");
+      expect(vm.subtitle).toBe(`(and ${expectedResult} other cards)`);
+    }
+  );
 
   it("does not load data from combo when no combos is found for id", async () => {
     jest
