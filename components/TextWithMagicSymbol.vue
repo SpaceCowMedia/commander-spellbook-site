@@ -1,17 +1,16 @@
 <template>
   <span>
     <!-- eslint-disable-next-line vue/require-v-for-key -->
-    <span v-for="item in items">
+    <span v-for="item in items" :class="item.nodeType + '-container'">
       <span v-if="item.nodeType === 'image'">
-        <img
+        <span class="sr-only">
+          ({{ item.manaSymbol }} magic symbol) &nbsp; </span
+        ><img
           aria-hidden="true"
           class="magic-symbol"
           :src="item.value"
           :alt="'Magic Symbol (' + item.manaSymbol + ')'"
         />
-        <span class="sr-only">
-          ({{ item.manaSymbol }} magic symbol) &nbsp;
-        </span>
       </span>
       <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
         <CardLink v-if="includeCardLinks" :name="item.value">{{
@@ -119,7 +118,11 @@ img.magic-symbol {
   height: 1em;
 
   /* adjust the position so it fits more naturally with the text around it */
-  margin-top: -0.3em;
+  margin-top: -0.2em;
   @apply inline;
+}
+
+.image-container + .image-container {
+  @apply ml-1;
 }
 </style>
