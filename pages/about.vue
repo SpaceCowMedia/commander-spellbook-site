@@ -24,7 +24,9 @@
 
     <ul>
       <li>
-        <a target="_blank" href="https://github.com/Commander-Spellbook/website"
+        <a
+          target="_blank"
+          href="https://github.com/Commander-Spellbook/website-v2"
           >Website Source Code on GitHub</a
         >
       </li>
