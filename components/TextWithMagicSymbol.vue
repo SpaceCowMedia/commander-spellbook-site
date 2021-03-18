@@ -63,7 +63,7 @@ export default Vue.extend({
         matchableValuesString += "|";
       }
 
-      matchableValuesString = `(${matchableValuesString}:mana[^:]+:)`;
+      matchableValuesString = `(${matchableValuesString}:mana[^:]+:|{[^}]+})`;
 
       const matchableValuesRegex = new RegExp(matchableValuesString, "g");
 
@@ -77,10 +77,10 @@ export default Vue.extend({
               value,
             };
           }
-          const manaMatch = value.match(/:mana([^:]+):/);
+          const manaMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
 
           if (manaMatch) {
-            const manaSymbol = manaMatch[1];
+            const manaSymbol = manaMatch[1] || manaMatch[2];
 
             return {
               nodeType: "image",
