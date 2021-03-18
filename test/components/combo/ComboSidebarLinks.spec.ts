@@ -146,7 +146,7 @@ describe("ComboSidebarLinks", () => {
 
       expect(spellbookApi.search).toBeCalledTimes(1);
       expect(spellbookApi.search).toBeCalledWith(
-        `-id:fake-id card="card 1" card="card 2"`
+        `-spellbookid:fake-id card="card 1" card="card 2"`
       );
     });
 
@@ -215,7 +215,7 @@ describe("ComboSidebarLinks", () => {
       expect(pushSpy).toBeCalledWith({
         path: "/search",
         query: {
-          q: `-id:fake-id card="card 1" card="card 2"`,
+          q: `-spellbookid:fake-id card="card 1" card="card 2"`,
         },
       });
     });

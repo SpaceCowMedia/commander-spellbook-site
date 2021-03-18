@@ -206,7 +206,7 @@ a {
 }
 
 .menu-link {
-  @apply items-center flex-row px-4 pr-2 text-white border-l border-white;
+  @apply items-center flex-row px-4 text-white border-l border-white;
 }
 
 .menu-link:last-of-type {

@@ -11,8 +11,28 @@
       @mouseover="hoveredOverCardIndex = index"
       @mouseout="hoveredOverCardIndex = -1"
     >
-      <CardLink :name="card.name" @focus="hoveredOverCardIndex = index">
-        <img :src="card.oracleImageUrl" :alt="card.name" />
+      <CardLink
+        :name="card.name"
+        class="relative"
+        @focus="hoveredOverCardIndex = index"
+      >
+        <Flipper :flipped="loaded[index]">
+          <template slot="front">
+            <img
+              class="back-card"
+              src="~/assets/images/card-back.png"
+              :alt="card.name"
+            />
+          </template>
+          <template slot="back">
+            <img
+              class="front-card"
+              :src="card.oracleImageUrl"
+              :alt="card.name"
+              @load="onImgLoad(index)"
+            />
+          </template>
+        </Flipper>
       </CardLink>
     </div>
   </div>
@@ -21,10 +41,12 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import CardLink from "@/components/CardLink.vue";
+import Flipper from "@/components/Flipper.vue";
 
 export default Vue.extend({
   components: {
     CardLink,
+    Flipper,
   },
   props: {
     cards: {
@@ -37,6 +59,7 @@ export default Vue.extend({
   data() {
     return {
       hoveredOverCardIndex: -1,
+      loaded: [] as boolean[],
     };
   },
   methods: {
@@ -49,6 +72,10 @@ export default Vue.extend({
         index - 8 === this.hoveredOverCardIndex
       );
     },
+    onImgLoad(index: number): void {
+      this.loaded[index] = true;
+      this.$forceUpdate();
+    },
   },
 });
 </script>
@@ -59,8 +86,15 @@ export default Vue.extend({
 }
 
 .card-images .card-img-wrapper img {
-  transition: all 1s ease;
-  @apply relative rounded-lg top-0;
+  @apply rounded-xl relative top-0 transition-all duration-1000 ease-in-out;
+}
+
+.card-images .card-img-wrapper.expand img {
+  top: 295px;
+}
+
+.card-back.loaded {
+  @apply bg-opacity-0;
 }
 
 .card-images .card-img-wrapper {
@@ -70,14 +104,12 @@ export default Vue.extend({
 .card-images .card-img-wrapper:nth-child(1n + 5) {
   margin-top: -30%;
 }
+
 .card-images .card-img-wrapper:nth-child(4n + 1) {
   @apply pl-0 pr-2;
 }
+
 .card-images .card-img-wrapper:nth-child(4n) {
   @apply pr-0 pl-2;
-}
-
-.card-images .card-img-wrapper.expand img {
-  top: 87%;
 }
 </style>

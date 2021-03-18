@@ -167,20 +167,20 @@ describe("ComboPage", () => {
     expect(wrapper.find(".banned-warning").exists()).toBe(true);
   });
 
-  it("includes warning about spoiled cards if combo contains them", async () => {
+  it("includes warning about previewed cards if combo contains them", async () => {
     const wrapper = shallowMount(ComboPage, options);
 
     await wrapper.setData({
-      hasSpoiledCard: false,
+      hasPreviewedCard: false,
     });
 
-    expect(wrapper.find(".spoiled-warning").exists()).toBe(false);
+    expect(wrapper.find(".previewed-warning").exists()).toBe(false);
 
     await wrapper.setData({
-      hasSpoiledCard: true,
+      hasPreviewedCard: true,
     });
 
-    expect(wrapper.find(".spoiled-warning").exists()).toBe(true);
+    expect(wrapper.find(".previewed-warning").exists()).toBe(true);
   });
 
   it("looks up combo from page number param", async () => {
@@ -212,7 +212,8 @@ describe("ComboPage", () => {
     wrapper.setData(data);
 
     expect(vm.loaded).toBe(true);
-    expect(vm.title).toBe("Combo Number 13");
+    expect(vm.title).toBe("card 1 | card 2");
+    expect(vm.subtitle).toBe("");
     expect(vm.prerequisites).toEqual(["1", "2", "3"]);
     expect(vm.steps).toEqual(["1", "2", "3"]);
     expect(vm.results).toEqual(["1", "2", "3"]);
@@ -232,11 +233,80 @@ describe("ComboPage", () => {
 
     expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2, "png");
+    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2, "normal");
     expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "png");
+    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "normal");
   });
+
+  it("passes subtitle when there are more than 3 cards in combo", async () => {
+    const fakeCombo = spellbookApi.makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2", "card 3", "card 4"],
+    });
+    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    wrapper.setData(data);
+
+    expect(vm.title).toBe("card 1 | card 2 | card 3");
+    expect(vm.subtitle).toBe("(and one other card)");
+  });
+
+  it.each`
+    numberOfCards | expectedResult
+    ${5}          | ${"two"}
+    ${6}          | ${"three"}
+    ${7}          | ${"four"}
+    ${8}          | ${"five"}
+    ${9}          | ${"six"}
+    ${10}         | ${"seven"}
+  `(
+    "includes subtitle when number of cards is $numberOfCards",
+    async ({ numberOfCards, expectedResult }) => {
+      const cards = [];
+      let index = 1;
+      while (cards.length < numberOfCards) {
+        cards.push(`card ${index}`);
+        index++;
+      }
+      const fakeCombo = spellbookApi.makeFakeCombo({
+        commanderSpellbookId: "13",
+        prerequisites: ["1", "2", "3"],
+        steps: ["1", "2", "3"],
+        results: ["1", "2", "3"],
+        colorIdentity: "wbr",
+        cards,
+      });
+      jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+
+      const wrapper = shallowMount(ComboPage, options);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        params: {
+          id: "13",
+        },
+      });
+
+      wrapper.setData(data);
+
+      expect(vm.title).toBe("card 1 | card 2 | card 3");
+      expect(vm.subtitle).toBe(`(and ${expectedResult} other cards)`);
+    }
+  );
 
   it("does not load data from combo when no combos is found for id", async () => {
     jest

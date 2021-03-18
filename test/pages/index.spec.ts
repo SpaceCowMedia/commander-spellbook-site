@@ -66,21 +66,21 @@ describe("HomePage", () => {
     expect($router.push).toBeCalledWith("/combo/435");
   });
 
-  it("redirects to search results page when query is a spoiled", () => {
+  it("redirects to search results page when query is a previewed", () => {
     $route.query.q = "spoiled";
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:spoiled");
+    expect($router.push).toBeCalledWith("/search?q=is:previewed");
   });
 
-  it("redirects to search results page when status param is a spoiled", () => {
+  it("redirects to search results page when status param is spoiled", () => {
     $route.query.q = "card:Sydri";
     $route.query.status = "spoiled";
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:spoiled");
+    expect($router.push).toBeCalledWith("/search?q=is:previewed");
   });
 
   it("redirects to search results page when query is a banned", () => {

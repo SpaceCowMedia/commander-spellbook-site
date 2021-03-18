@@ -115,7 +115,7 @@ describe("AdvancedSearchPage", () => {
             operator: ":",
           },
         ],
-        spoiled: "exclude",
+        previewed: "exclude",
         banned: "is",
       });
 
@@ -125,7 +125,7 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:spoiled is:banned`,
+          q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:previewed is:banned`,
         },
       });
     });
@@ -301,7 +301,7 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
-    it("only applies spoiled property when `include` is not used", () => {
+    it("only applies previewed property when `include` is not used", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
           $router,
@@ -314,7 +314,7 @@ describe("AdvancedSearchPage", () => {
         },
       });
       wrapper.setData({
-        spoiled: "include",
+        previewed: "include",
       });
 
       (wrapper.vm as VueComponent).submit();
@@ -322,26 +322,26 @@ describe("AdvancedSearchPage", () => {
       expect($router.push).not.toBeCalled();
 
       wrapper.setData({
-        spoiled: "exclude",
+        previewed: "exclude",
       });
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: "exclude:spoiled",
+          q: "exclude:previewed",
         },
       });
 
       wrapper.setData({
-        spoiled: "is",
+        previewed: "is",
       });
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
         path: "/search",
         query: {
-          q: "is:spoiled",
+          q: "is:previewed",
         },
       });
     });
@@ -733,17 +733,17 @@ describe("AdvancedSearchPage", () => {
       const vm = wrapper.vm as VueComponent;
 
       wrapper.setData({
-        spoiled: "include",
+        previewed: "include",
         banned: "exclude",
       });
 
-      const spoiledInput = wrapper
+      const previewedInput = wrapper
         .findAllComponents(FakeRadioSearchInput)
         .at(0);
       const bannedInput = wrapper.findAllComponents(FakeRadioSearchInput).at(1);
 
-      await spoiledInput.vm.$emit("update-radio", "is");
-      expect(vm.spoiled).toBe("is");
+      await previewedInput.vm.$emit("update-radio", "is");
+      expect(vm.previewed).toBe("is");
 
       await bannedInput.vm.$emit("update-radio", "is");
 

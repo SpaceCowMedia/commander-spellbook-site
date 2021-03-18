@@ -499,6 +499,8 @@ describe("SearchPage", () => {
 
       await vm.updateSearchResults("query");
 
+      expect(vm.redirecting).toBe(true);
+
       expect($router.replace).toBeCalledWith({
         path: "/combo/1",
         query: {

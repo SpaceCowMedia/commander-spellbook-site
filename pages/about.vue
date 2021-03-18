@@ -26,7 +26,7 @@
       <li>
         <a
           target="_blank"
-          href="https://github.com/Commander-Spellbook/website-v1"
+          href="https://github.com/Commander-Spellbook/website-v2"
           >Website Source Code on GitHub</a
         >
       </li>
@@ -47,7 +47,7 @@
         >
       </li>
       <li>
-        <a href="https://archidekt.com/user/17861" target="_blank"
+        <a href="https://www.moxfield.com/users/goldshot20" target="_blank"
           >Goldshot20</a
         >
       </li>

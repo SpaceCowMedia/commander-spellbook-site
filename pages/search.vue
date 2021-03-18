@@ -54,7 +54,7 @@
         />
       </div>
 
-      <NoCombosFound v-else :loaded="loaded" />
+      <NoCombosFound v-else :loaded="loaded && !redirecting" />
     </div>
   </div>
 </template>
@@ -72,6 +72,7 @@ import type { ComboResult } from "../components/search/ComboResults.vue";
 
 type Data = {
   loaded: boolean;
+  redirecting: boolean;
   page: number;
   maxNumberOfCombosPerPage: number;
   message: string;
@@ -92,6 +93,7 @@ export default Vue.extend({
   data(): Data {
     return {
       loaded: false,
+      redirecting: false,
       page: 1,
       maxNumberOfCombosPerPage: 78,
       message: "",
@@ -243,6 +245,7 @@ export default Vue.extend({
       } = await spellbookApi.search(query);
 
       if (combos.length === 1) {
+        this.redirecting = true;
         this.$router.replace({
           path: `/combo/${combos[0].commanderSpellbookId}`,
           query: { q: query },

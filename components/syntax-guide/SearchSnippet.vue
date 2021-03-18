@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="link">
     <div class="search-snippet">
-      <div class="search-snippet-header">{{ search }}</div>
+      <div class="search-snippet-header gradient">{{ search }}</div>
       <p class="description">{{ description }}</p>
     </div>
   </nuxt-link>
@@ -44,6 +44,6 @@ a {
 }
 
 .search-snippet .search-snippet-header {
-  @apply text-dark border-dark bg-primary pb-2 pt-1 font-mono;
+  @apply text-dark border-dark border-b-2 py-1 font-mono;
 }
 </style>

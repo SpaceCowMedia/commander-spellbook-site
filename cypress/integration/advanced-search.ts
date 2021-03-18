@@ -129,11 +129,11 @@ describe("Advanced Search Page", () => {
   it("can search for previewed combos", () => {
     cy.visit("/advanced-search");
 
-    cy.get("#spoiled-combos input[type='radio']").last().check();
+    cy.get("#previewed-combos input[type='radio']").last().check();
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should("include", "/search?q=is%3Aspoiled");
+    cy.url().should("include", "/search?q=is%3Apreviewed");
   });
 
   it("can search for banned combos", () => {

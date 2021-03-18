@@ -15,7 +15,17 @@ describe("CardGroup", () => {
       },
     });
 
-    const imgs = wrapper.findAll(".card-img-wrapper img");
+    const imgs = wrapper.findAll(".card-img-wrapper img.front-card");
+
+    expect(imgs.at(0).attributes("src")).toBe(
+      "https://example.com/oracle1.png"
+    );
+    expect(imgs.at(1).attributes("src")).toBe(
+      "https://example.com/oracle2.png"
+    );
+    expect(imgs.at(2).attributes("src")).toBe(
+      "https://example.com/oracle3.png"
+    );
 
     expect(imgs.at(0).attributes("src")).toBe(
       "https://example.com/oracle1.png"

@@ -85,7 +85,7 @@ export default Vue.extend({
       return this.cards.reduce((accum, name) => {
         // TODO support single quote
         return accum + ` card="${name}"`;
-      }, `-id:${this.comboId}`);
+      }, `-spellbookid:${this.comboId}`);
     },
   },
   methods: {

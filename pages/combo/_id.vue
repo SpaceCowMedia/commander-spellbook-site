@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardHeader :cards-art="cardArts" :title="title" />
+    <CardHeader :cards-art="cardArts" :title="title" :subtitle="subtitle" />
 
     <CardGroup :cards="cards" />
 
@@ -50,7 +50,7 @@
           WARNING: Combo contains cards that are banned in Commander
         </div>
 
-        <div v-if="hasSpoiledCard" class="spoiled-warning">
+        <div v-if="hasPreviewedCard" class="previewed-warning">
           WARNING: Combo contains cards that are from a forthcoming set (and not
           yet legal in Commander)
         </div>
@@ -82,8 +82,9 @@ type CardData = {
 
 type ComboData = {
   title: string;
+  subtitle: string;
   hasBannedCard: boolean;
-  hasSpoiledCard: boolean;
+  hasPreviewedCard: boolean;
   link: string;
   loaded: boolean;
   comboNumber: string;
@@ -93,6 +94,20 @@ type ComboData = {
   steps: string[];
   results: string[];
 };
+
+const NUMBERS = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+];
 
 export default Vue.extend({
   components: {
@@ -113,19 +128,39 @@ export default Vue.extend({
       return;
     }
 
-    const cards = combo.cards.map((card: any) => {
+    const cards = combo.cards.map((card) => {
       return {
         name: card.name,
         artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl("png"),
+        oracleImageUrl: card.getScryfallImageUrl("normal"),
       };
     });
 
+    const title = cards
+      .map((card, index) => {
+        if (index > 2) {
+          return "";
+        }
+
+        return card.name;
+      })
+      .filter((cardName) => cardName)
+      .join(" | ");
+
+    let subtitle = "";
+
+    if (cards.length === 4) {
+      subtitle = `(and ${NUMBERS[1]} other card)`;
+    } else if (cards.length > 4) {
+      subtitle = `(and ${NUMBERS[cards.length - 3]} other cards)`;
+    }
+
     return {
       comboNumber,
-      title: `Combo Number ${comboNumber}`,
+      title,
+      subtitle,
       hasBannedCard: combo.hasBannedCard,
-      hasSpoiledCard: combo.hasSpoiledCard,
+      hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
       loaded: true,
@@ -138,8 +173,9 @@ export default Vue.extend({
   data(): ComboData {
     return {
       title: "Looking up Combo",
+      subtitle: "",
       hasBannedCard: false,
-      hasSpoiledCard: false,
+      hasPreviewedCard: false,
       link: "",
       loaded: false,
       comboNumber: "0",
@@ -154,7 +190,7 @@ export default Vue.extend({
     // for some reason, these properties aren't available here???
     // seems like a nuxt typescript issue
     // @ts-ignore
-    const title = this.cardNames.join(" | ");
+    const title = `${this.title} ${this.subtitle}`;
     // @ts-ignore
     const description = this.results.reduce((str, result) => {
       return str + `\n  * ${result}`;
@@ -261,7 +297,7 @@ export default Vue.extend({
   @apply text-danger font-semibold;
 }
 
-.spoiled-warning {
+.previwed-warning {
   @apply font-semibold;
 }
 </style>

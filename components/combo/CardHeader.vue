@@ -10,7 +10,10 @@
     </div>
     <div class="mask"></div>
     <div class="combo-title-wrapper">
-      <h1 class="combo-title">{{ title }}</h1>
+      <h1 class="heading-title combo-title">{{ title }}</h1>
+      <h2 v-if="subtitle" class="heading-title combo-subtitle">
+        {{ subtitle }}
+      </h2>
     </div>
   </header>
 </template>
@@ -21,6 +24,10 @@ import Vue, { PropType } from "vue";
 export default Vue.extend({
   props: {
     title: {
+      type: String,
+      default: "",
+    },
+    subtitle: {
       type: String,
       default: "",
     },
@@ -41,40 +48,50 @@ export default Vue.extend({
 
 <style scoped>
 .header {
-  position: relative;
-  background: #222;
-  overflow: hidden;
   animation-name: color;
   animation-duration: 2s;
   animation-iteration-count: infinite;
-  @apply w-full justify-center;
+  @apply relative bg-primary w-full justify-center overflow-hidden;
 }
 
 .card-wrapper {
-  background-size: cover;
-  background-position: center;
-  @apply h-full flex-grow;
+  @apply h-full flex-grow bg-center bg-cover;
 }
 
 .mask,
 .combo-title-wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @apply absolute top-0 bottom-0 left-0 right-0;
 }
 
 .mask {
-  background: black;
-  opacity: 0.65;
+  @apply bg-dark opacity-75;
 }
 
 .combo-title-wrapper {
-  font-family: monospace;
-  font-weight: 300;
-  font-size: 50px;
-  @apply flex justify-center content-center items-center text-center text-white;
+  @apply flex flex-col justify-center content-center items-center text-center text-white;
+}
+
+.heading-title.combo-title,
+.heading-title.combo-subtitle {
+  @apply text-white text-xl -mt-2;
+}
+
+@media (min-width: 768px) {
+  .heading-title.combo-title {
+    @apply text-2xl;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heading-title.combo-title {
+    @apply text-3xl;
+  }
+}
+
+@media (min-width: 1280px) {
+  .heading-title.combo-title {
+    @apply text-4xl;
+  }
 }
 
 @keyframes color {
