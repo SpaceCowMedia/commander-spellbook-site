@@ -45,7 +45,7 @@
         >
       </li>
       <li>
-        <a href="https://archidekt.com/user/17861" target="_blank"
+        <a href="https://www.moxfield.com/users/goldshot20" target="_blank"
           >Goldshot20</a
         >
       </li>
