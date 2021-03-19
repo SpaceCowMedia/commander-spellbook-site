@@ -54,7 +54,11 @@ jobs:
 
       - name: Deploy 🛫
         if: ${{ github.event_name != 'pull_request'}}
-        uses: peaceiris/actions-gh-pages@v3
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+        # TODO update the s3 bucket and the distribution id when ready to go to prod
+        run: aws s3 sync ./dist/ s3://beta.commanderspellbook.com --delete
+        run: aws cloudfront create-invalidation --distribution-id EVBX9AN9E8TTS --paths "/*"
