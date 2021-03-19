@@ -49,11 +49,9 @@ jobs:
         run: npm run test:integration
 
       - name: Generate 🏗️
-        if: ${{ github.event_name != 'pull_request'}}
         run: npm run generate
 
       - name: Deploy 🛫
-        if: ${{ github.event_name != 'pull_request'}}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
