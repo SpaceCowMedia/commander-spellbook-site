@@ -11,7 +11,7 @@
       :total-results="totalResults"
     />
 
-    <div v-if="paginatedResults.length > 0" class="border-b border-gray-400">
+    <div v-if="paginatedResults.length > 0" class="border-b border-light">
       <div class="container sm:flex flex-row justify-center">
         <Select
           id="sort-combos-select"
