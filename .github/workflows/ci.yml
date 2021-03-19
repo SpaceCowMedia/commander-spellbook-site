@@ -58,7 +58,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Deploy 🛫
-        # TODO update the s3 bucket and the distribution id when ready to go to prod
+      - name: Deploy to S3 🛫
+        # TODO update the s3 bucket when ready to go to prod
         run: aws s3 sync ./dist/ s3://beta.commanderspellbook.com --delete
+
+      - name: Bust Cloudfront Cache 👥
+        # TODO update the distribution id when ready to go to prod
         run: aws cloudfront create-invalidation --distribution-id EVBX9AN9E8TTS --paths "/*"
