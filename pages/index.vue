@@ -47,7 +47,7 @@ export default Vue.extend({
     }
 
     if (query === "spoiled" || status === "spoiled") {
-      this.$router.push("/search?q=is:spoiled");
+      this.$router.push("/search?q=is:previewed");
       return;
     }
 

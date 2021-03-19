@@ -1,9 +1,9 @@
 <template>
   <div class="text-white w-full bg-center bg-cover" :class="containerClass">
     <div
-      class="bg-black bg-opacity-75 w-full h-screen flex flex-col items-center justify-center text-center"
+      class="bg-dark bg-opacity-75 w-full h-screen flex flex-col items-center justify-center text-center pb-16"
     >
-      <h1 class="hero-title">{{ mainMessage }}</h1>
+      <h1 class="heading-title hero-title">{{ mainMessage }}</h1>
       <h2 class="hero-subtitle">{{ subMessage }}</h2>
     </div>
   </div>
@@ -32,15 +32,12 @@ export default Vue.extend({
 
 <style scoped>
 .hero-title,
-.hero-subtitle,
-.helper-text {
+.hero-subtitle {
   animation: 3s appear;
 }
 
 .hero-title {
-  font-family: monospace;
-  font-size: 100px;
-  @apply font-light;
+  @apply text-white;
 }
 
 .hero-subtitle {

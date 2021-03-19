@@ -10,7 +10,7 @@ describe("CardLink", () => {
     });
 
     expect(wrapper.find("a").attributes("href")).toBe(
-      "https://scryfall.com/search?q=name%3D%22Card%20Name%22"
+      "https://scryfall.com/search?q=%21%22Card%20Name%22"
     );
   });
 
@@ -22,7 +22,7 @@ describe("CardLink", () => {
     });
 
     expect(wrapper.find("a").attributes("href")).toBe(
-      "https://scryfall.com/search?q=name%3D%27Card%20Name%20with%20%22quotes%22%27"
+      "https://scryfall.com/search?q=%21%27Card%20Name%20with%20%22quotes%22%27"
     );
   });
 

@@ -80,13 +80,13 @@
         />
       </div>
 
-      <div id="spoiled-combos" class="container">
+      <div id="previewed-combos" class="container">
         <RadioSearchInput
-          label="Spoiled / Previewed Combos"
-          :checked-value="spoiled"
-          :options="spoiledOptions"
-          form-name="spoiled"
-          @update-radio="updateRadio('spoiled', $event)"
+          label="Previewed / Spoiled Combos"
+          :checked-value="previewed"
+          :options="previewedOptions"
+          form-name="previewed"
+          @update-radio="updateRadio('previewed', $event)"
         />
       </div>
 
@@ -171,13 +171,13 @@ type Data = {
 
   validationError: string;
 
-  spoiled: string;
-  spoiledOptions: OperatorOption[];
+  previewed: string;
+  previewedOptions: OperatorOption[];
   banned: string;
   bannedOptions: OperatorOption[];
 };
 
-const DEFAULT_SPOILED_VALUE = "include";
+const DEFAULT_PREVIEWED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
 
 export default Vue.extend({
@@ -263,8 +263,8 @@ export default Vue.extend({
         { value: "=-number", label: "Contains exactly x (number)" },
       ],
 
-      spoiled: DEFAULT_SPOILED_VALUE,
-      spoiledOptions: [
+      previewed: DEFAULT_PREVIEWED_VALUE,
+      previewedOptions: [
         {
           value: "include",
           label:
@@ -276,7 +276,7 @@ export default Vue.extend({
         },
         {
           value: "is",
-          label: "Only show combos with newly previwed cards",
+          label: "Only show combos with newly previewed cards",
         },
       ],
 
@@ -363,8 +363,8 @@ export default Vue.extend({
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
 
-      if (this.spoiled !== DEFAULT_SPOILED_VALUE) {
-        query += ` ${this.spoiled}:spoiled`;
+      if (this.previewed !== DEFAULT_PREVIEWED_VALUE) {
+        query += ` ${this.previewed}:previewed`;
       }
       if (this.banned !== DEFAULT_BANNED_VALUE) {
         query += ` ${this.banned}:banned`;
@@ -444,7 +444,7 @@ export default Vue.extend({
     removeInput(model: TextInputModelTypes, index: number): void {
       this[model].splice(index, 1);
     },
-    updateRadio(model: "banned" | "spoiled", value: string): void {
+    updateRadio(model: "banned" | "previewed", value: string): void {
       this[model] = value;
     },
   },

@@ -13,7 +13,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(0);
   });
 
-  it("renders image", () => {
+  it("renders image emoji syntax", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manar:",
@@ -26,10 +26,36 @@ describe("TextWithMagicSymbol", () => {
     ).toMatch(/R\.svg$/);
   });
 
-  it("renders longer symbols", () => {
+  it("renders image with Scryfall syntax", () => {
+    const wrapper = mount(TextWithMagicSymbol, {
+      propsData: {
+        text: "{r}",
+      },
+    });
+    expect(wrapper.findAll(".text").length).toBe(0);
+    expect(wrapper.findAll(".magic-symbol").length).toBe(1);
+    expect(
+      (wrapper.find(".magic-symbol").element as HTMLImageElement).src
+    ).toMatch(/R\.svg$/);
+  });
+
+  it("renders longer symbols in emoji syntax", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
         text: ":manachaos:",
+      },
+    });
+    expect(wrapper.findAll(".text").length).toBe(0);
+    expect(wrapper.findAll(".magic-symbol").length).toBe(1);
+    expect(
+      (wrapper.find(".magic-symbol").element as HTMLImageElement).src
+    ).toMatch(/CHAOS\.svg$/);
+  });
+
+  it("renders longer symbols in Scryfall syntax", () => {
+    const wrapper = mount(TextWithMagicSymbol, {
+      propsData: {
+        text: "{chaos}",
       },
     });
     expect(wrapper.findAll(".text").length).toBe(0);

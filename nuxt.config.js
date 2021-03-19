@@ -1,4 +1,4 @@
-const config = {
+export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
 
@@ -19,7 +19,11 @@ const config = {
       },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicons/favicon.ico" },
+      {
+        rel: "icon",
+        type: "image/x-icon",
+        href: "/favicons/favicon.ico",
+      },
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
@@ -79,11 +83,3 @@ const config = {
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 };
-
-if (process.env.NODE_ENV !== "development") {
-  config.router = {
-    base: "/website-v2/",
-  };
-}
-
-export default config;

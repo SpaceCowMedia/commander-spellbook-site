@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-full">
+  <div class="max-w-full -mb-56">
     <Not-Found-Error v-if="error.statusCode === 404" />
     <Unknown-Error v-else />
   </div>
