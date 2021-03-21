@@ -9,7 +9,7 @@ describe("makeFakeCombo", () => {
     const combo = makeFakeCombo();
 
     expect(combo.commanderSpellbookId).toBe("123");
-    expect(combo.permalink).toBe("https://commanderspellbook.com/?id=123");
+    expect(combo.permalink).toBe("https://commanderspellbook.com/combo/123");
 
     expect(combo.cards).toBeInstanceOf(CardGrouping);
     expect(combo.cards.length).toBe(2);
@@ -44,7 +44,7 @@ describe("makeFakeCombo", () => {
 
     expect(combo.commanderSpellbookId).toBe("custom-id");
     expect(combo.permalink).toBe(
-      "https://commanderspellbook.com/?id=custom-id"
+      "https://commanderspellbook.com/combo/custom-id"
     );
   });
 
