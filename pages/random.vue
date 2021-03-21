@@ -10,7 +10,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SplashPage from "@/components/SplashPage.vue";
-import spellbookApi from "commander-spellbook";
+import random from "@/lib/api/random";
 
 export default Vue.extend({
   components: {
@@ -19,7 +19,7 @@ export default Vue.extend({
   layout: "splash",
 
   async mounted(): Promise<void> {
-    const randomCombo = await spellbookApi.random();
+    const randomCombo = await random();
 
     this.$router.replace({
       path: `/combo/${randomCombo.commanderSpellbookId}`,

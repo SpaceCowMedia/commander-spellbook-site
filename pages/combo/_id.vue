@@ -72,7 +72,7 @@ import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
 import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
-import spellbookApi from "commander-spellbook";
+import findById from "@/lib/api/find-by-id";
 
 type CardData = {
   name: string;
@@ -122,7 +122,7 @@ export default Vue.extend({
     let combo;
 
     try {
-      combo = await spellbookApi.findById(comboNumber);
+      combo = await findById(comboNumber);
     } catch (err) {
       // TODO redirect to 404 page??
       return;

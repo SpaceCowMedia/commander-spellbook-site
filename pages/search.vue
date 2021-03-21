@@ -66,7 +66,7 @@ import NoCombosFound from "@/components/search/NoCombosFound.vue";
 import Pagination from "@/components/search/Pagination.vue";
 import SearchMessage from "@/components/search/SearchMessage.vue";
 import Select, { Option } from "@/components/Select.vue";
-import spellbookApi from "commander-spellbook";
+import search from "@/lib/api/search";
 
 import type { ComboResult } from "../components/search/ComboResults.vue";
 
@@ -236,13 +236,7 @@ export default Vue.extend({
         query: { q: query },
       });
 
-      const {
-        message,
-        sort,
-        order,
-        errors,
-        combos,
-      } = await spellbookApi.search(query);
+      const { message, sort, order, errors, combos } = await search(query);
 
       if (combos.length === 1) {
         this.redirecting = true;

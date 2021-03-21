@@ -78,7 +78,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import spellbookApi from "commander-spellbook";
+import getAllCombos from "@/lib/api/get-all-combos";
 
 export default Vue.extend({
   props: {
@@ -118,7 +118,7 @@ export default Vue.extend({
       (this.$refs.searchInput as HTMLInputElement).focus();
     },
     async lookupNumberOfCombos(): Promise<void> {
-      const combos = await spellbookApi.getAllCombos();
+      const combos = await getAllCombos();
 
       this.numberOfCombos = String(combos.length);
     },

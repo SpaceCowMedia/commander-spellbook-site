@@ -1,9 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import SearchPage from "@/pages/search.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import search from "@/lib/api/search";
 import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, Router, VueComponent } from "../types";
+
+jest.mock("@/lib/api/search");
 
 describe("SearchPage", () => {
   let $route: Route;
@@ -17,7 +20,7 @@ describe("SearchPage", () => {
   }[];
 
   beforeEach(() => {
-    jest.spyOn(spellbookApi, "search").mockResolvedValue({
+    mocked(search).mockResolvedValue({
       sort: "colors",
       order: "ascending",
       combos: [],
@@ -103,7 +106,7 @@ describe("SearchPage", () => {
       };
       // @ts-ignore
       wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-      mocked(spellbookApi.search).mockResolvedValue({
+      mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         sort: "colors",
@@ -425,7 +428,7 @@ describe("SearchPage", () => {
 
   describe("updateSearchResults", () => {
     beforeEach(() => {
-      mocked(spellbookApi.search).mockResolvedValue({
+      mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         sort: "colors",
@@ -438,15 +441,15 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      mocked(spellbookApi.search).mockResolvedValue({
+      mocked(search).mockResolvedValue({
         combos: [
-          spellbookApi.makeFakeCombo({
+          makeFakeCombo({
             cards: ["a", "b", "c"],
             results: ["result 1", "result 2"],
             colorIdentity: "rb",
             commanderSpellbookId: "1",
           }),
-          spellbookApi.makeFakeCombo({
+          makeFakeCombo({
             cards: ["d", "e", "f"],
             results: ["result 3", "result 4"],
             colorIdentity: "wb",
@@ -460,7 +463,7 @@ describe("SearchPage", () => {
       });
 
       await vm.updateSearchResults("query");
-      expect(spellbookApi.search).toBeCalledWith("query");
+      expect(search).toBeCalledWith("query");
 
       expect(vm.paginatedResults).toEqual([
         {
@@ -482,9 +485,9 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      mocked(spellbookApi.search).mockResolvedValue({
+      mocked(search).mockResolvedValue({
         combos: [
-          spellbookApi.makeFakeCombo({
+          makeFakeCombo({
             cards: ["a", "b", "c"],
             results: ["result 1", "result 2"],
             colorIdentity: "rb",

@@ -1,8 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import findById from "@/lib/api/find-by-id";
+import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, Router, VueComponent } from "../../types";
+
+jest.mock("@/lib/api/find-by-id");
 
 describe("ComboPage", () => {
   let options: MountOptions;
@@ -184,7 +188,7 @@ describe("ComboPage", () => {
   });
 
   it("looks up combo from page number param", async () => {
-    const fakeCombo = spellbookApi.makeFakeCombo({
+    const fakeCombo = makeFakeCombo({
       commanderSpellbookId: "13",
       prerequisites: ["1", "2", "3"],
       steps: ["1", "2", "3"],
@@ -192,7 +196,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2"],
     });
-    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+    mocked(findById).mockResolvedValue(fakeCombo);
 
     jest.spyOn(fakeCombo.cards[0], "getScryfallImageUrl");
     jest.spyOn(fakeCombo.cards[1], "getScryfallImageUrl");
@@ -206,8 +210,8 @@ describe("ComboPage", () => {
       },
     });
 
-    expect(spellbookApi.findById).toBeCalledTimes(1);
-    expect(spellbookApi.findById).toBeCalledWith("13");
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13");
 
     wrapper.setData(data);
 
@@ -240,7 +244,7 @@ describe("ComboPage", () => {
   });
 
   it("passes subtitle when there are more than 3 cards in combo", async () => {
-    const fakeCombo = spellbookApi.makeFakeCombo({
+    const fakeCombo = makeFakeCombo({
       commanderSpellbookId: "13",
       prerequisites: ["1", "2", "3"],
       steps: ["1", "2", "3"],
@@ -248,7 +252,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2", "card 3", "card 4"],
     });
-    jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+    mocked(findById).mockResolvedValue(fakeCombo);
 
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;
@@ -282,7 +286,7 @@ describe("ComboPage", () => {
         cards.push(`card ${index}`);
         index++;
       }
-      const fakeCombo = spellbookApi.makeFakeCombo({
+      const fakeCombo = makeFakeCombo({
         commanderSpellbookId: "13",
         prerequisites: ["1", "2", "3"],
         steps: ["1", "2", "3"],
@@ -290,7 +294,7 @@ describe("ComboPage", () => {
         colorIdentity: "wbr",
         cards,
       });
-      jest.spyOn(spellbookApi, "findById").mockResolvedValue(fakeCombo);
+      mocked(findById).mockResolvedValue(fakeCombo);
 
       const wrapper = shallowMount(ComboPage, options);
       const vm = wrapper.vm as VueComponent;
@@ -309,9 +313,7 @@ describe("ComboPage", () => {
   );
 
   it("does not load data from combo when no combos is found for id", async () => {
-    jest
-      .spyOn(spellbookApi, "findById")
-      .mockRejectedValue(new Error("not found"));
+    mocked(findById).mockRejectedValue(new Error("not found"));
 
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;
@@ -322,8 +324,8 @@ describe("ComboPage", () => {
       },
     });
 
-    expect(spellbookApi.findById).toBeCalledTimes(1);
-    expect(spellbookApi.findById).toBeCalledWith("13");
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13");
 
     expect(data).toBeFalsy();
   });

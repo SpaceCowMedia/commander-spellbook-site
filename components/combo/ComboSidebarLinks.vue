@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import spellbookApi from "commander-spellbook";
+import search from "@/lib/api/search";
 
 export default Vue.extend({
   props: {
@@ -115,7 +115,7 @@ export default Vue.extend({
       });
     },
     async lookupSimiliarCombos(): Promise<void> {
-      const result = await spellbookApi.search(this.similiarSearchString);
+      const result = await search(this.similiarSearchString);
 
       this.hasSimiliarCombos = result.combos.length > 0;
     },
