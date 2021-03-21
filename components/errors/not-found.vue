@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import getRandomItemFromArray from "../lib/random-from-array";
+import getRandomItemFromArray from "@/lib/random-from-array";
 import ErrorBaseComponent from "./error-base.vue";
 
 const notFoundTemplates = [
