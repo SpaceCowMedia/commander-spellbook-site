@@ -24,7 +24,8 @@
 <script lang="ts">
 import Vue from "vue";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
-import spellbookApi from "commander-spellbook";
+import autocomplete from "@/lib/api/autocomplete";
+import search from "@/lib/api/search";
 
 type Data = {
   items: { text: string; numberOfCombos: number; ids: string[] }[];
@@ -46,16 +47,13 @@ export default Vue.extend({
     TextWithMagicSymbol,
   },
   async asyncData({ params }) {
-    const autocompleteType = params.type as Parameters<
-      typeof spellbookApi.autocomplete
-    >[0];
-    const options = await spellbookApi.autocomplete(autocompleteType, "");
+    const autocompleteType = params.type as Parameters<typeof autocomplete>[0];
+    const options = await autocomplete(autocompleteType, "");
 
     const items = await Promise.all(
       options.map((payload) => {
-        return spellbookApi
-          .search(formatSearch(payload.value, autocompleteType))
-          .then((searchResults) => {
+        return search(formatSearch(payload.value, autocompleteType)).then(
+          (searchResults) => {
             const combos = searchResults.combos;
 
             return {
@@ -63,7 +61,8 @@ export default Vue.extend({
               numberOfCombos: combos.length,
               ids: combos.map((c) => c.commanderSpellbookId),
             };
-          });
+          }
+        );
       })
     );
 

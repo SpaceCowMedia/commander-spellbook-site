@@ -1,4 +1,4 @@
-import getRandomItemFromArray from "@/components/lib/random-from-array";
+import getRandomItemFromArray from "@/lib/random-from-array";
 
 describe("getRandomItemFromArray", () => {
   it("returns a random item from the array", () => {

@@ -1,8 +1,12 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboHomePage from "@/pages/meta/combos.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import getAllCombos from "@/lib/api/get-all-combos";
+import { mocked } from "ts-jest/utils";
 
 import type { VueComponent } from "../../types";
+
+jest.mock("@/lib/api/get-all-combos");
 
 describe("ComboHomePage", () => {
   describe("lookupCombos", () => {
@@ -14,16 +18,16 @@ describe("ComboHomePage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      jest.spyOn(spellbookApi, "getAllCombos").mockResolvedValue([
-        spellbookApi.makeFakeCombo({
+      mocked(getAllCombos).mockResolvedValue([
+        makeFakeCombo({
           cards: ["card 1", "card 2"],
           commanderSpellbookId: "1",
         }),
-        spellbookApi.makeFakeCombo({
+        makeFakeCombo({
           cards: ["card 3", "card 4", "card 5", "card 6"],
           commanderSpellbookId: "2",
         }),
-        spellbookApi.makeFakeCombo({
+        makeFakeCombo({
           cards: ["card 7", "card 8", "card 9"],
           commanderSpellbookId: "3",
         }),

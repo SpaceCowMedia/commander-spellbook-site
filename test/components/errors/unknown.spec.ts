@@ -1,10 +1,10 @@
 import { shallowMount } from "@vue/test-utils";
-import getRandomItemFromArray from "@/components/lib/random-from-array";
+import getRandomItemFromArray from "@/lib/random-from-array";
 import UnknownErrorComponent from "@/components/errors/unknown.vue";
 import ErrorBaseComponent from "@/components/errors/error-base.vue";
 
 import { mocked } from "ts-jest/utils";
-jest.mock("@/components/lib/random-from-array");
+jest.mock("@/lib/random-from-array");
 
 describe("UnknownErrorComponent", () => {
   it("sets a random background class", () => {

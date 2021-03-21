@@ -1,9 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import search from "@/lib/api/search";
 
 import { mocked } from "ts-jest/utils";
 import type { VueComponent } from "../../types";
+
+jest.mock("@/lib/api/search");
 
 describe("ComboSidebarLinks", () => {
   beforeEach(() => {
@@ -123,7 +126,7 @@ describe("ComboSidebarLinks", () => {
 
   describe("lookupSimiliarCombos", () => {
     beforeEach(() => {
-      jest.spyOn(spellbookApi, "search").mockResolvedValue({
+      mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         sort: "colors",
@@ -144,8 +147,8 @@ describe("ComboSidebarLinks", () => {
 
       await vm.lookupSimiliarCombos();
 
-      expect(spellbookApi.search).toBeCalledTimes(1);
-      expect(spellbookApi.search).toBeCalledWith(
+      expect(search).toBeCalledTimes(1);
+      expect(search).toBeCalledWith(
         `-spellbookid:fake-id card="card 1" card="card 2"`
       );
     });
@@ -166,8 +169,8 @@ describe("ComboSidebarLinks", () => {
     });
 
     it("sets hasSimiliarCombos to true when combos return from search", async () => {
-      mocked(spellbookApi.search).mockResolvedValue({
-        combos: [spellbookApi.makeFakeCombo()],
+      mocked(search).mockResolvedValue({
+        combos: [makeFakeCombo()],
         message: "",
         sort: "colors",
         order: "descending",

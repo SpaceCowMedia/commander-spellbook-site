@@ -1,10 +1,11 @@
 import { mount } from "@vue/test-utils";
 import SearchBar from "@/components/SearchBar.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import getAllCombos from "@/lib/api/get-all-combos";
 import { mocked } from "ts-jest/utils";
 import type { MountOptions, Route, Router, VueComponent } from "../types";
 
-jest.mock("commander-spellbook");
+jest.mock("@/lib/api/get-all-combos");
 
 describe("SearchBar", () => {
   let wrapperOptions: MountOptions;
@@ -92,9 +93,9 @@ describe("SearchBar", () => {
   describe("lookupNumberOfCombos", () => {
     it("sets numberOfCombos to the number of combos found in spellbook api", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
-      const mockCombo = spellbookApi.makeFakeCombo();
+      const mockCombo = makeFakeCombo();
 
-      mocked(spellbookApi.getAllCombos).mockResolvedValue([mockCombo]);
+      mocked(getAllCombos).mockResolvedValue([mockCombo]);
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")

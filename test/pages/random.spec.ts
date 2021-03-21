@@ -1,16 +1,20 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
 import RandomPage from "@/pages/random.vue";
-import spellbookApi from "commander-spellbook";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import random from "@/lib/api/random";
+import { mocked } from "ts-jest/utils";
 
 import type { Router } from "../types";
+
+jest.mock("@/lib/api/random");
 
 describe("RandomPage", () => {
   let $router: Router;
 
   beforeEach(() => {
-    jest.spyOn(spellbookApi, "random").mockResolvedValue(
-      spellbookApi.makeFakeCombo({
+    mocked(random).mockResolvedValue(
+      makeFakeCombo({
         commanderSpellbookId: "123",
       })
     );
@@ -32,7 +36,7 @@ describe("RandomPage", () => {
 
     await flushPromises();
 
-    expect(spellbookApi.random).toBeCalledTimes(1);
+    expect(random).toBeCalledTimes(1);
     expect($router.replace).toBeCalledTimes(1);
     expect($router.replace).toBeCalledWith({
       path: `/combo/123`,

@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import spellbookApi from "commander-spellbook";
+import getAllCombos from "@/lib/api/get-all-combos";
 
 type ComboInfo = {
   id: string;
@@ -48,7 +48,7 @@ export default Vue.extend({
   },
   methods: {
     async lookupCombos() {
-      const combos = await spellbookApi.getAllCombos();
+      const combos = await getAllCombos();
 
       this.links.push(
         ...combos.map((c) => {
