@@ -51,6 +51,8 @@ jobs:
       - name: Generate 🏗️
         if: ${{ github.event_name != 'pull_request'}}
         run: npm run generate
+        env:
+          NODE_ENV: production
 
       - name: Configure AWS Credentials ㊙️
         if: ${{ github.event_name != 'pull_request'}}
