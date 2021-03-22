@@ -55,7 +55,7 @@ export default Vue.extend({
 }
 
 .card-wrapper {
-  @apply h-full flex-grow bg-center bg-cover;
+  @apply h-full flex-grow bg-top bg-cover;
 }
 
 .mask,
