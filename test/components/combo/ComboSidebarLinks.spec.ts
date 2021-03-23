@@ -246,7 +246,7 @@ describe("ComboSidebarLinks", () => {
 
       expect(eventSpy).toBeCalledTimes(1);
       expect(eventSpy).toBeCalledWith(
-        "Find Other Combos Using These Cards Button Clicked",
+        "Combos Using These Cards Button Clicked",
         {
           event_category: "Combo Detail Page Actions",
         }

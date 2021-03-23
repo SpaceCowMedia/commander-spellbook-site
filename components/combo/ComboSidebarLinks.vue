@@ -120,7 +120,7 @@ export default Vue.extend({
       this.hasSimiliarCombos = result.combos.length > 0;
     },
     goToSimiliarCombos(): void {
-      this.$gtag.event("Find Other Combos Using These Cards Button Clicked", {
+      this.$gtag.event("Combos Using These Cards Button Clicked", {
         event_category: "Combo Detail Page Actions",
       });
 
