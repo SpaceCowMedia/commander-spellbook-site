@@ -71,6 +71,7 @@ describe("SearchBar", () => {
     expect(links.at(0).props("to")).toBe("/");
     expect(links.at(1).props("to")).toBe("/advanced-search");
     expect(links.at(2).props("to")).toBe("/syntax-guide");
+    expect(links.at(3).props("to")).toBe("/random");
 
     await wrapper.setProps({
       onHomePage: true,
