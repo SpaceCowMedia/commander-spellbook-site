@@ -49,15 +49,15 @@
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           <div class="sr-only">Menu</div>
         </button>
-        <nuxt-link to="/advanced-search" class="hidden sm:flex menu-link">
+        <nuxt-link to="/advanced-search" class="hidden md:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
           Advanced
         </nuxt-link>
-        <nuxt-link to="/syntax-guide" class="hidden sm:flex menu-link">
+        <nuxt-link to="/syntax-guide" class="hidden md:flex menu-link">
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
-        <nuxt-link to="/random" class="hidden sm:flex menu-link">
+        <nuxt-link to="/random" class="hidden md:flex menu-link">
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </nuxt-link>
@@ -65,7 +65,7 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="sm:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
+      class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
       @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search" class="mobile-menu-button">
