@@ -7,7 +7,6 @@ import {
   CommanderSpellbookCombos,
   CommanderSpellbookAPIResponse,
 } from "@/lib/api/types";
-import superagent from "superagent";
 
 import { mocked } from "ts-jest/utils";
 
@@ -15,11 +14,9 @@ jest.mock("@/lib/api/normalize-database-value");
 
 describe("api", () => {
   let values: CommanderSpellbookCombos;
-  let response: {
-    body: CommanderSpellbookAPIResponse;
-  };
 
   beforeEach(() => {
+    process.server = false;
     mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
       return str;
     });
@@ -93,23 +90,34 @@ describe("api", () => {
         },
       ],
     } as CommanderSpellbookAPIResponse;
-    response = { body };
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    jest.spyOn(superagent, "get").mockResolvedValue(response);
+    window.fetch = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        json: jest.fn().mockResolvedValue(body),
+      });
+    });
   });
 
   afterEach(() => {
     resetCache();
+    process.server = true;
   });
 
-  it("looks up google sheets api", async () => {
+  it("looks up data from api endpoint", async () => {
     await lookup();
 
-    expect(superagent.get).toBeCalledWith(
-      expect.stringContaining("sheets.googleapis.com")
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("/combo-data.json")
     );
+  });
+
+  it("does not use fetch when on the server", async () => {
+    process.server = true;
+
+    await lookup();
+
+    expect(window.fetch).not.toBeCalled();
   });
 
   it("caches result after first lookup", async () => {
@@ -117,24 +125,26 @@ describe("api", () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mocked(superagent.get).mockResolvedValue({
-      body: {
-        spreadsheetId: "foo-2",
-        valueRanges: [
-          {
-            range: "bar",
-            majorDimension: "ROWS",
-            values: [],
-          },
-        ],
-      },
+    mocked(window.fetch).mockImplementation(() => {
+      return Promise.resolve({
+        json: jest.fn().mockResolvedValue({
+          spreadsheetId: "foo-2",
+          valueRanges: [
+            {
+              range: "bar",
+              majorDimension: "ROWS",
+              values: [],
+            },
+          ],
+        }),
+      });
     });
 
     const secondResult = await lookup();
 
     expect(firstResult).toBe(secondResult);
 
-    expect(superagent.get).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledTimes(1);
   });
 
   it("can do a fresh lookup when resetting the cache manually", async () => {
@@ -142,17 +152,19 @@ describe("api", () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mocked(superagent.get).mockResolvedValue({
-      body: {
-        spreadsheetId: "foo-2",
-        valueRanges: [
-          {
-            range: "bar",
-            majorDimension: "ROWS",
-            values: [],
-          },
-        ],
-      },
+    mocked(window.fetch).mockImplementation(() => {
+      return Promise.resolve({
+        json: jest.fn().mockResolvedValue({
+          spreadsheetId: "foo-2",
+          valueRanges: [
+            {
+              range: "bar",
+              majorDimension: "ROWS",
+              values: [],
+            },
+          ],
+        }),
+      });
     });
 
     resetCache();
@@ -161,7 +173,7 @@ describe("api", () => {
 
     expect(firstResult).not.toBe(secondResult);
 
-    expect(superagent.get).toBeCalledTimes(2);
+    expect(window.fetch).toBeCalledTimes(2);
   });
 
   it("formats spreadsheet into usable object", async () => {

@@ -6,7 +6,13 @@ import random from "@/lib/api/random";
 import autocomplete from "@/lib/api/autocomplete";
 import getAllCombos from "@/lib/api/get-all-combos";
 
-describe("Commander Spellbook", () => {
+describe("API Module", () => {
+  beforeEach(() => {
+    // requires the combo-data.json file to be downloaded
+    // from postinstall task when setting up project
+    process.server = true;
+  });
+
   describe("findById", () => {
     it("returns a specified combo", async () => {
       const combo = await findById("1");

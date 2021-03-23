@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "husky install",
+    "postinstall": "husky install && npm run copy-google-sheets",
     "dev": "nuxt",
     "prebuild": "prettier --write .",
     "build": "nuxt build",
     "start": "nuxt start",
+    "copy-google-sheets": "node scripts/copy-google-sheets.js",
+    "pregenerate": "npm run copy-google-sheets",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext .ts,.vue .",
     "lint:style": "stylelint **/*.{vue,css}",
@@ -25,7 +27,6 @@
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "scryfall-client": "^0.18.6",
-    "superagent": "^6.1.0",
     "vue-gtag": "^1.11.0"
   },
   "devDependencies": {
@@ -39,7 +40,6 @@
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/tailwindcss": "^4.0.1",
     "@types/jest": "^26.0.21",
-    "@types/superagent": "^4.1.10",
     "@vue/test-utils": "^1.1.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",

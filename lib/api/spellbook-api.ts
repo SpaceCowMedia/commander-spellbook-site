@@ -1,24 +1,21 @@
-import superagent from "superagent";
 import normalizeDatabaseValue from "./normalize-database-value";
 import CardGrouping from "./models/card-grouping";
 import SpellbookList from "./models/list";
 import ColorIdentity from "./models/color-identity";
 import type {
-  CommanderSpellbookCombos,
   CommanderSpellbookAPIResponse,
   FormattedApiResponse,
 } from "./types";
 
-const API_ENDPOINT =
-  "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E";
+const LOCAL_API_ENDPOINT = "/combo-data.json";
 
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
 
 function formatApiResponse(
-  apiResponse: CommanderSpellbookCombos
+  apiResponse: CommanderSpellbookAPIResponse
 ): FormattedApiResponse[] {
-  return apiResponse
+  return apiResponse.valueRanges[0].values
     .filter((combo) => {
       // ensures the spreadsheet has all values needed
       // in particular, the first card and a color identity
@@ -69,14 +66,20 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
     return cachedPromise;
   }
 
-  cachedPromise = superagent
-    .get(API_ENDPOINT)
-    .then((res) => {
-      const apiResponse = res.body as CommanderSpellbookAPIResponse;
-
-      return apiResponse.valueRanges[0].values;
-    })
-    .then((values) => formatApiResponse(values));
+  // on the server, we pull in the file we download from the Google Sheets API
+  // on the browser, we fetch that same file using a network request
+  // this ensures that the data remains in sync between the server and the browser
+  if (process.server) {
+    const json = require("../../static/combo-data.json") as CommanderSpellbookAPIResponse;
+    cachedPromise = Promise.resolve(formatApiResponse(json));
+  } else {
+    cachedPromise = window
+      .fetch(LOCAL_API_ENDPOINT)
+      .then((res) => {
+        return res.json();
+      })
+      .then(formatApiResponse);
+  }
 
   useCachedResponse = true;
 
