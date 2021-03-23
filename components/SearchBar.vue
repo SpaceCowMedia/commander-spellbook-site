@@ -76,7 +76,7 @@
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax
       </nuxt-link>
-      <nuxt-link to="/syntax-guide" class="mobile-menu-button">
+      <nuxt-link to="/random" class="mobile-menu-button">
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
       </nuxt-link>
