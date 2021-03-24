@@ -4,8 +4,8 @@
       <div class="w-full">
         <Logo />
 
-        <h2 class="font-title my-3 text-xl sm:text-3xl md:text-4xl">
-          THE SEARCH ENGINE FOR EDH COMBOS
+        <h2 class="font-title my-1 sm:my-3 text-2xl sm:text-3xl md:text-4xl">
+          The Search Engine for EDH Combos
         </h2>
 
         <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
