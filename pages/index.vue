@@ -4,7 +4,7 @@
       <div class="w-full">
         <Logo />
 
-        <h2 class="font-title sm:my-1 text-xl sm:text-3xl md:text-4xl">
+        <h2 class="font-title my-3 text-xl sm:text-3xl md:text-4xl">
           THE SEARCH ENGINE FOR EDH COMBOS
         </h2>
 
