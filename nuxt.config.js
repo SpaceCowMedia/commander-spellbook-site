@@ -75,7 +75,7 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [],
+  modules: ["@nuxtjs/google-fonts"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
@@ -85,5 +85,12 @@ export default {
 
   tailwindcss: {
     jit: true,
+  },
+
+  googleFonts: {
+    families: {
+      "Josefin+Sans": [400],
+      Roboto: [400],
+    },
   },
 };

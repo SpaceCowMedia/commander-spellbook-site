@@ -1,7 +1,5 @@
 html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
-  @apply bg-white;
+  @apply bg-white font-body;
 }
 
 a {
@@ -38,7 +36,7 @@ a {
 }
 
 .heading-title {
-  @apply font-mono text-center text-4xl text-dark uppercase;
+  @apply font-title text-center text-4xl text-dark uppercase;
 }
 
 .button {

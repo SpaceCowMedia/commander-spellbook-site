@@ -12,6 +12,10 @@ module.exports = {
         danger: "#C54329",
         warning: "#FFC580",
       },
+      fontFamily: {
+        title: "'Josefin Sans', sans-serif",
+        body: "Roboto, sans-serif",
+      },
     },
   },
   variants: {
