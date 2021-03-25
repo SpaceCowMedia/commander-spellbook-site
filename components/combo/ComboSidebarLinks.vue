@@ -3,7 +3,7 @@
     <button
       id="copy-combo-button"
       ref="copyButton"
-      class="combo-button"
+      class="button"
       type="button"
       @click="copyComboLink"
     >
@@ -13,7 +13,7 @@
     <button
       v-if="hasSimiliarCombos"
       id="has-similiar-combos"
-      class="combo-button"
+      class="button"
       @click="goToSimiliarCombos"
     >
       Find Other Combos Using These Cards
@@ -136,14 +136,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.combo-button {
-  @apply w-full bg-white block mx-auto mb-4 text-dark font-semibold py-2 px-4 border border-light rounded shadow;
-}
-
-.combo-button:hover {
-  @apply bg-gray-100;
-}
-
 .hidden-combo-link-input {
   left: -25%;
   top: -25%;
