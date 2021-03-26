@@ -1,6 +1,8 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
     <CopyComboLinkButton :combo-link="comboLink" />
+    <BuyComboButton :cards="cards" vendor="tcgplayer" />
+    <BuyComboButton :cards="cards" vendor="cardkingdom" />
     <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
   </div>
 </template>
@@ -9,11 +11,13 @@
 import Vue, { PropType } from "vue";
 import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
+import BuyComboButton from "@/components/combo/BuyComboButton.vue";
 
 export default Vue.extend({
   components: {
     CopyComboLinkButton,
     SimiliarCombosButton,
+    BuyComboButton,
   },
   props: {
     cards: {

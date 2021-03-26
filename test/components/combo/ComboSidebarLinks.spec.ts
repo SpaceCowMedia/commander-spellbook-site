@@ -16,6 +16,30 @@ describe("ComboSidebarLinks", () => {
     expect(wrapper.findComponent(CopyComboLinkButtonStub).exists()).toBe(true);
   });
 
+  it("creates 2 buy this combo buttons", () => {
+    const BuyComboButtonStub = {
+      template: "<div></div>",
+      props: ["vendor", "cards"],
+    };
+    const wrapper = shallowMount(ComboSidebarLinks, {
+      stubs: {
+        BuyComboButton: BuyComboButtonStub,
+      },
+      propsData: {
+        comboLink: "https://example.com/combo/3",
+        comboId: "fake-id",
+        cards: ["card 1", "card 2"],
+      },
+    });
+
+    const buttons = wrapper.findAllComponents(BuyComboButtonStub);
+
+    expect(buttons.at(0).props("vendor")).toBe("tcgplayer");
+    expect(buttons.at(0).props("cards")).toEqual(["card 1", "card 2"]);
+    expect(buttons.at(1).props("vendor")).toBe("cardkingdom");
+    expect(buttons.at(1).props("cards")).toEqual(["card 1", "card 2"]);
+  });
+
   it("creates a 'Find Other Combos Using These Cards' button when there are related searches", () => {
     const SimiliarCombosButtonStub = { template: "<div></div>" };
     const wrapper = shallowMount(ComboSidebarLinks, {
