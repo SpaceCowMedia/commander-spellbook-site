@@ -166,7 +166,7 @@ export default Vue.extend({
 }
 
 .input {
-  @apply border px-3 flex-grow;
+  @apply border px-3 flex-grow appearance-none rounded-none;
 }
 
 .input-button {
