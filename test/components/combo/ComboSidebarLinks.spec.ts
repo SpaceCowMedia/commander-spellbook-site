@@ -17,13 +17,13 @@ describe("ComboSidebarLinks", () => {
   });
 
   it("creates buy this combo buttons", () => {
-    const BuyComboButtonStub = {
+    const BuyComboButtonsStub = {
       template: "<div></div>",
       props: ["cards"],
     };
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
-        BuyComboButton: BuyComboButtonStub,
+        BuyComboButtons: BuyComboButtonsStub,
       },
       propsData: {
         comboLink: "https://example.com/combo/3",
@@ -32,8 +32,8 @@ describe("ComboSidebarLinks", () => {
       },
     });
 
-    expect(wrapper.findComponent(BuyComboButtonStub).exists()).toBe(true);
-    expect(wrapper.findComponent(BuyComboButtonStub).props("cards")).toEqual([
+    expect(wrapper.findComponent(BuyComboButtonsStub).exists()).toBe(true);
+    expect(wrapper.findComponent(BuyComboButtonsStub).props("cards")).toEqual([
       "card 1",
       "card 2",
     ]);

@@ -1,9 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
-import BuyComboButton from "@/components/combo/BuyComboButton.vue";
+import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
 
 describe("BuyComboButton", () => {
   it("creates a TCGPlayer button", () => {
-    const wrapper = shallowMount(BuyComboButton, {
+    const wrapper = shallowMount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },
@@ -18,7 +18,7 @@ describe("BuyComboButton", () => {
   });
 
   it("creates a Card Kingdom button", () => {
-    const wrapper = shallowMount(BuyComboButton, {
+    const wrapper = shallowMount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },
