@@ -8,15 +8,15 @@
       class="my-2"
       :class="'input-wrapper-' + index"
     >
-      <div class="flex">
+      <div class="sm:flex">
         <Select
           :id="label + '-select-' + index"
           v-model="input.operator"
           :label="'Modifier for ' + label"
           :select-background-class="
             input.error
-              ? 'border-danger border border-r-0'
-              : 'border-dark border border-r-0'
+              ? 'border-danger border border-b-0 sm:border-b sm:border-r-0'
+              : 'border-dark border border-b-0 sm:border-b sm:border-r-0'
           "
           :options="operatorOptions"
           :class="{
@@ -24,7 +24,7 @@
           }"
         />
 
-        <div class="w-full flex-grow flex flex-row">
+        <div class="w-full flex-grow flex flex-col sm:flex-row">
           <label class="sr-only" aria-hidden="true" :for="getInputId(index)">{{
             inputLabel
           }}</label>
@@ -41,33 +41,35 @@
             :placeholder="getPlaceholder(input.operator)"
           />
 
-          <button
-            v-if="inputs.length > 1"
-            type="button"
-            class="minus-button input-button"
-            :class="{
-              ['minus-button-' + index]: true,
-              'bg-dark border-dark': !input.error,
-              'bg-danger border-danger': input.error,
-            }"
-            @click.prevent="removeInput(index)"
-          >
-            <span class="sr-only">Remove this search query</span>
-            <span aria-hidden="true">−</span>
-          </button>
-          <button
-            type="button"
-            class="plus-button input-button rounded-r-sm"
-            :class="{
-              ['plus-button-' + index]: true,
-              'bg-dark border-dark': !input.error,
-              'bg-danger border-danger': input.error,
-            }"
-            @click.prevent="addInput(index)"
-          >
-            <span class="sr-only">Add a new search query of this type</span>
-            <span aria-hidden="true">+</span>
-          </button>
+          <div class="flex">
+            <button
+              v-if="inputs.length > 1"
+              type="button"
+              class="minus-button input-button"
+              :class="{
+                ['minus-button-' + index]: true,
+                'bg-dark border-dark': !input.error,
+                'bg-danger border-danger': input.error,
+              }"
+              @click.prevent="removeInput(index)"
+            >
+              <span class="sr-only">Remove this search query</span>
+              <span aria-hidden="true">−</span>
+            </button>
+            <button
+              type="button"
+              class="plus-button input-button sm:rounded-r-sm"
+              :class="{
+                ['plus-button-' + index]: true,
+                'bg-dark border-dark': !input.error,
+                'bg-danger border-danger': input.error,
+              }"
+              @click.prevent="addInput(index)"
+            >
+              <span class="sr-only">Add a new search query of this type</span>
+              <span aria-hidden="true">+</span>
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -166,10 +168,10 @@ export default Vue.extend({
 }
 
 .input {
-  @apply border px-3 flex-grow appearance-none rounded-none;
+  @apply border px-3 py-2 flex-grow appearance-none rounded-none;
 }
 
 .input-button {
-  @apply px-2 text-white flex flex-row items-center text-3xl border;
+  @apply px-2 text-white flex flex-row items-center text-3xl border flex-grow justify-center;
 }
 </style>
