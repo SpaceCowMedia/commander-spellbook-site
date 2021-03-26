@@ -1,9 +1,10 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
-    <CopyComboLinkButton :combo-link="comboLink" />
-    <BuyComboButton :cards="cards" vendor="tcgplayer" />
-    <BuyComboButton :cards="cards" vendor="cardkingdom" />
-    <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
+    <BuyComboButton :cards="cards" class="pb-1 border-b border-light" />
+    <div class="mt-1">
+      <CopyComboLinkButton :combo-link="comboLink" />
+      <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
+    </div>
   </div>
 </template>
 
