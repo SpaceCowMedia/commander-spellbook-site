@@ -3,7 +3,7 @@
     <button
       id="copy-combo-button"
       ref="copyButton"
-      class="button"
+      class="button w-full"
       type="button"
       @click="copyComboLink"
     >

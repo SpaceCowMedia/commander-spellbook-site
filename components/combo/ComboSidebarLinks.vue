@@ -5,7 +5,7 @@
     <button
       v-if="hasSimiliarCombos"
       id="has-similiar-combos"
-      class="button"
+      class="button w-full"
       @click="goToSimiliarCombos"
     >
       Find Other Combos Using These Cards

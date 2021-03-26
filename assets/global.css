@@ -43,6 +43,10 @@ a {
   @apply m-4 inline-block py-2 px-3 bg-transparent text-link border-2 border-primary rounded-sm no-underline;
 }
 
+.button.w-full {
+  @apply mx-0 my-2;
+}
+
 .button:hover {
   @apply bg-link text-white border-link;
 }
