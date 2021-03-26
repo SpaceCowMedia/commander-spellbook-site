@@ -86,13 +86,15 @@
 import Vue, { PropType } from "vue";
 import Select from "@/components/Select.vue";
 
+type MultiSearchInputValue = { value: string; operator: string }[];
+
 export default Vue.extend({
   components: {
     Select,
   },
   props: {
-    inputs: {
-      type: Array as PropType<{ value: string; operator: string }[]>,
+    value: {
+      type: Array as PropType<MultiSearchInputValue>,
       default() {
         return [];
       },
@@ -117,6 +119,10 @@ export default Vue.extend({
         return [];
       },
     },
+    defaultOperator: {
+      type: String,
+      default: ":",
+    },
   },
   computed: {
     inputLabel(): string {
@@ -130,13 +136,24 @@ export default Vue.extend({
 
       return this.label;
     },
+    inputs: {
+      get(): MultiSearchInputValue {
+        return this.value;
+      },
+      set(value: MultiSearchInputValue): void {
+        this.$emit("input", value);
+      },
+    },
   },
   methods: {
     addInput(index: number): void {
-      this.$emit("add-input", index);
+      this.inputs.splice(index + 1, 0, {
+        value: "",
+        operator: this.defaultOperator,
+      });
     },
     removeInput(index: number): void {
-      this.$emit("remove-input", index);
+      this.inputs.splice(index, 1);
     },
     getInputId(index: number): string {
       return `${this.label}-input-${index}`;
