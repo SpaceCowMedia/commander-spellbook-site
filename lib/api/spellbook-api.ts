@@ -4,7 +4,9 @@ import type {
   FormattedApiResponse,
 } from "./types";
 
-const LOCAL_API_ENDPOINT = "/api/combo-data.json";
+const GOOGLE_SHEETS_API_ENDPOINT =
+  "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E";
+const LOCAL_BACKUP_API_ENDPOINT = "/api/combo-data.json";
 
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
@@ -22,9 +24,12 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
     cachedPromise = Promise.resolve(formatApiResponse(json));
   } else {
     cachedPromise = window
-      .fetch(LOCAL_API_ENDPOINT)
-      .then((res) => {
-        return res.json();
+      .fetch(GOOGLE_SHEETS_API_ENDPOINT)
+      .then((res) => res.json())
+      .catch(() => {
+        return window
+          .fetch(LOCAL_BACKUP_API_ENDPOINT)
+          .then((res) => res.json());
       })
       .then(formatApiResponse);
   }
