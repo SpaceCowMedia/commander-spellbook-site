@@ -1,6 +1,11 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
-    <BuyComboButtons :cards="cards" class="pb-1 border-b border-light" />
+    <BuyComboButtons
+      :cards="cards"
+      :tcgplayer-price="tcgplayerPrice"
+      :cardkingdom-price="cardkingdomPrice"
+      class="pb-1 border-b border-light"
+    />
     <div class="mt-1">
       <CopyComboLinkButton :combo-link="comboLink" />
       <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
@@ -32,6 +37,14 @@ export default Vue.extend({
       default: "",
     },
     comboId: {
+      type: String,
+      default: "",
+    },
+    tcgplayerPrice: {
+      type: String,
+      default: "",
+    },
+    cardkingdomPrice: {
       type: String,
       default: "",
     },

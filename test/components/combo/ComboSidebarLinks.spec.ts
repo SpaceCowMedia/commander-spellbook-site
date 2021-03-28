@@ -19,7 +19,7 @@ describe("ComboSidebarLinks", () => {
   it("creates buy this combo buttons", () => {
     const BuyComboButtonsStub = {
       template: "<div></div>",
-      props: ["cards"],
+      props: ["cards", "tcgplayerPrice", "cardkingdomPrice"],
     };
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
@@ -29,6 +29,8 @@ describe("ComboSidebarLinks", () => {
         comboLink: "https://example.com/combo/3",
         comboId: "fake-id",
         cards: ["card 1", "card 2"],
+        tcgplayerPrice: "123.45",
+        cardkingdomPrice: "67.89",
       },
     });
 
@@ -37,6 +39,12 @@ describe("ComboSidebarLinks", () => {
       "card 1",
       "card 2",
     ]);
+    expect(
+      wrapper.findComponent(BuyComboButtonsStub).props("tcgplayerPrice")
+    ).toBe("123.45");
+    expect(
+      wrapper.findComponent(BuyComboButtonsStub).props("cardkingdomPrice")
+    ).toBe("67.89");
   });
 
   it("creates a 'Find Other Combos Using These Cards' button when there are related searches", () => {
