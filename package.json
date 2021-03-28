@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && npm run copy-google-sheets",
+    "postinstall": "husky install && npm run pregenerate",
     "dev": "nuxt",
     "prebuild": "prettier --write .",
     "build": "nuxt build",
