@@ -7,7 +7,7 @@ import type {
   FormattedApiResponse,
 } from "./types";
 
-const LOCAL_API_ENDPOINT = "/combo-data.json";
+const LOCAL_API_ENDPOINT = "/api/combo-data.json";
 
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
@@ -70,7 +70,7 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
   // on the browser, we fetch that same file using a network request
   // this ensures that the data remains in sync between the server and the browser
   if (process.server) {
-    const json = require("../../static/combo-data.json") as CommanderSpellbookAPIResponse;
+    const json = require("../../static/api/combo-data.json") as CommanderSpellbookAPIResponse;
     cachedPromise = Promise.resolve(formatApiResponse(json));
   } else {
     cachedPromise = window

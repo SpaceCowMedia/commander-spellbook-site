@@ -8,6 +8,6 @@ getData(
   "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E"
 ).then((data) => {
   const minified = JSON.stringify(data);
-  fs.writeFileSync("./static/combo-data.json", minified);
-  log("/static/combo-data.json written", "green");
+  fs.writeFileSync("./static/api/combo-data.json", minified);
+  log("/static/api/combo-data.json written", "green");
 });

@@ -6,6 +6,6 @@ log("Looking up price data from EDHRec");
 
 getData("https://edhrec.com/api/prices/").then((data) => {
   const minified = JSON.stringify(data);
-  fs.writeFileSync("./static/price-data.json", minified);
-  log("/static/price-data.json written", "green");
+  fs.writeFileSync("./static/api/price-data.json", minified);
+  log("/static/api/price-data.json written", "green");
 });

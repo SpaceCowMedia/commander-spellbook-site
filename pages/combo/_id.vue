@@ -128,7 +128,7 @@ export default Vue.extend({
     const comboNumber = params.id;
     let combo;
 
-    const priceJSON = require("../../static/price-data.json");
+    const priceJSON = require("../../static/api/price-data.json");
 
     try {
       combo = await findById(comboNumber);
