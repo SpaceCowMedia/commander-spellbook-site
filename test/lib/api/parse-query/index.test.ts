@@ -557,21 +557,24 @@ describe("parseQuery", () => {
     );
   });
 
-  it.each(["spellbookid", "sid"])("parses %s query into spellbook id", (id) => {
-    const result = parseQuery(`${id}:12345`);
+  it.each(["spellbookid", "sid", "sbid"])(
+    "parses %s query into spellbook id",
+    (id) => {
+      const result = parseQuery(`${id}:12345`);
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        errors: [],
-        id: {
-          includeFilters: ["12345"],
-          excludeFilters: [],
-        },
-      })
-    );
-  });
+      expect(result).toEqual(
+        expect.objectContaining({
+          errors: [],
+          id: {
+            includeFilters: ["12345"],
+            excludeFilters: [],
+          },
+        })
+      );
+    }
+  );
 
-  it.each(["-spellbookid", "-sid"])(
+  it.each(["-spellbookid", "-sid", "-sbid"])(
     "parses %s query into spellbook id",
     (id) => {
       const result = parseQuery(`${id}:12345`);
