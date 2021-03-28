@@ -24,7 +24,7 @@
           ></path>
         </svg>
 
-        TCGplayer
+        TCGplayer {{ tcgplayerPriceLabel }}
       </a>
       <span class="mx-1"></span>
       <a
@@ -48,7 +48,7 @@
           </g>
         </svg>
 
-        Card Kingdom
+        Card Kingdom {{ cardkingdomPriceLabel }}
       </a>
     </div>
   </div>
@@ -64,6 +64,14 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+    tcgplayerPrice: {
+      type: String,
+      default: "",
+    },
+    cardkingdomPrice: {
+      type: String,
+      default: "",
     },
   },
   computed: {
@@ -84,10 +92,18 @@ export default Vue.extend({
       // TODO some of these query params will change to identify the source as commander spellbook
       return `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=${cardQuery}`;
     },
+    tcgplayerPriceLabel(): string {
+      if (Number(this.tcgplayerPrice) <= 0) {
+        return "";
+      }
+      return `($${this.tcgplayerPrice})`;
+    },
+    cardkingdomPriceLabel(): string {
+      if (Number(this.cardkingdomPrice) <= 0) {
+        return "";
+      }
+      return `($${this.cardkingdomPrice})`;
+    },
   },
 });
 </script>
-
-<style scoped>
-/* TODO */
-</style>
