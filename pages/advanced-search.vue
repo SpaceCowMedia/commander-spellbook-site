@@ -20,6 +20,7 @@
           v-model="cards"
           label="Card Name"
           :operator-options="cardOperatorOptions"
+          :autocomplete-options="cardNameAutocompletes"
         />
       </div>
 
@@ -39,6 +40,7 @@
           default-placeholder="ex: wug, temur, colorless, black"
           label="Color Identity"
           :operator-options="colorIdentityOperatorOptions"
+          :autocomplete-options="colorAutocompletes"
         />
       </div>
 
@@ -66,6 +68,7 @@
           default-placeholder="ex: win the game"
           label="Result"
           :operator-options="comboDataOperatorOptions"
+          :autocomplete-options="resultAutocompletes"
         />
       </div>
 
@@ -124,6 +127,7 @@ import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
+import autocomplete from "@/lib/api/autocomplete";
 
 type InputData = {
   value: string;
@@ -136,7 +140,17 @@ type OperatorOption = {
   placeholder?: string;
 };
 
+type AutoCompleteOption = {
+  value: string;
+  label: string;
+  alias?: RegExp;
+};
+
 type Data = {
+  cardNameAutocompletes: AutoCompleteOption[];
+  resultAutocompletes: AutoCompleteOption[];
+  colorAutocompletes: AutoCompleteOption[];
+
   cards: InputData[];
   cardOperatorOptions: OperatorOption[];
 
@@ -168,28 +182,153 @@ export default Vue.extend({
     MultiSearchInput,
     RadioSearchInput,
   },
-  data(): Data {
+  async asyncData(): Promise<Data> {
+    const cardNameAutocompletes = await autocomplete("cards", "");
+    const resultAutocompletes = await autocomplete("results", "");
+    const colorAutocompletes = await autocomplete("colors", "");
+
     return {
+      cardNameAutocompletes,
+      resultAutocompletes,
+      colorAutocompletes,
       cards: [{ value: "", operator: ":" }],
       cardOperatorOptions: [
         {
           value: ":",
-          label: "Contains card with name",
+          label: "Has card with name",
           placeholder: "ex: isochron",
         },
         {
           value: "=",
-          label: "Contains card with exact name",
+          label: "Has card with exact name",
           placeholder: "ex: basalt monolith",
         },
         {
           value: ":-exclude",
-          label: "Does not contain card with name",
+          label: "Does not have card with name",
           placeholder: "ex: isochron",
         },
         {
           value: "=-exclude",
-          label: "Does not contain card with exact name",
+          label: "Does not have card with exact name",
+          placeholder: "ex: basalt monolith",
+        },
+      ],
+
+      cardAmounts: [{ value: "", operator: "=-number" }],
+      cardAmountOperatorOptions: [
+        { value: "=-number", label: "Contains exactly x cards (number)" },
+        { value: ">-number", label: "Contains more than x cards (number)" },
+        { value: "<-number", label: "Contains less than x cards (number)" },
+      ],
+
+      colorIdentity: [{ value: "", operator: ":" }],
+      colorIdentityOperatorOptions: [
+        {
+          value: ":",
+          label: "Is within the color identity",
+        },
+        {
+          value: "=",
+          label: "Is exactly the color identity",
+        },
+        {
+          value: ":-exclude",
+          label: "Is not within the color identity",
+        },
+        {
+          value: "=-exclude",
+          label: "Is not exactly the color identity",
+        },
+        { value: ">-number", label: "Contains more than x colors (number)" },
+        { value: "<-number", label: "Contains less than x colors (number)" },
+        { value: "=-number", label: "Contains exactly x colors (number)" },
+      ],
+
+      prerequisites: [{ value: "", operator: ":" }],
+      steps: [{ value: "", operator: ":" }],
+      results: [{ value: "", operator: ":" }],
+      comboDataOperatorOptions: [
+        {
+          value: ":",
+          label: "Contains the phrase",
+          placeholder: "ex: mana, untap, additional",
+        },
+        { value: "=", label: "Is exactly" },
+        {
+          value: ":-exclude",
+          label: "Does not contain the phrase",
+          placeholder: "ex: mana, untap, additional",
+        },
+        { value: "=-exclude", label: "Is not exactly" },
+        { value: ">-number", label: "Contains more than x (number)" },
+        { value: "<-number", label: "Contains less than x (number)" },
+        { value: "=-number", label: "Contains exactly x (number)" },
+      ],
+
+      previewed: DEFAULT_PREVIEWED_VALUE,
+      previewedOptions: [
+        {
+          value: "include",
+          label:
+            "Include combos with newly previewed cards in search results (default search behavior)",
+        },
+        {
+          value: "exclude",
+          label: "Exclude combos with newly previewed cards in search results",
+        },
+        {
+          value: "is",
+          label: "Only show combos with newly previewed cards",
+        },
+      ],
+
+      banned: DEFAULT_BANNED_VALUE,
+      bannedOptions: [
+        {
+          value: "exclude",
+          label:
+            "Exclude combos with banned cards in search results (default search behavior)",
+        },
+        {
+          value: "include",
+          label: "Include combos with banned cards in search results",
+        },
+        {
+          value: "is",
+          label: "Only show combos with banned cards",
+        },
+      ],
+
+      validationError: "",
+    };
+  },
+  data() {
+    // TODO solve this duplicate data thing
+    return {
+      cardNameAutocompletes: [],
+      resultAutocompletes: [],
+      colorAutocompletes: [],
+      cards: [{ value: "", operator: ":" }],
+      cardOperatorOptions: [
+        {
+          value: ":",
+          label: "Has card with name",
+          placeholder: "ex: isochron",
+        },
+        {
+          value: "=",
+          label: "Has card with exact name",
+          placeholder: "ex: basalt monolith",
+        },
+        {
+          value: ":-exclude",
+          label: "Does not have card with name",
+          placeholder: "ex: isochron",
+        },
+        {
+          value: "=-exclude",
+          label: "Does not have card with exact name",
           placeholder: "ex: basalt monolith",
         },
       ],

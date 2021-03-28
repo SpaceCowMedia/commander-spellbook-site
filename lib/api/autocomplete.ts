@@ -246,7 +246,9 @@ function collect(items: string[]): AutoCompleteOption[] {
           (piece) => normalizeStringInput(item) === normalizeStringInput(piece)
         )
       ) {
-        collection.push(item);
+        if (!item.trim().match(/^[(*]/)) {
+          collection.push(item.trim());
+        }
       }
       return collection;
     }, [] as string[])

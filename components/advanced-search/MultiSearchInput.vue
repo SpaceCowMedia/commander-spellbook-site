@@ -25,20 +25,14 @@
         />
 
         <div class="w-full flex-grow flex flex-col sm:flex-row">
-          <label class="sr-only" aria-hidden="true" :for="getInputId(index)">{{
-            inputLabel
-          }}</label>
-          <input
-            :id="getInputId(index)"
+          <AutocompleteInput
             v-model="input.value"
-            class="input"
-            :class="{
-              ['input-' + index]: true,
-              'border-dark': !input.error,
-              'border-danger': input.error,
-            }"
-            type="text"
+            :input-id="getInputId(index)"
             :placeholder="getPlaceholder(input.operator)"
+            :label="inputLabel"
+            :autocomplete-options="autocompleteOptions"
+            :error="input.error"
+            :active="input.operator === '='"
           />
 
           <div class="flex">
@@ -84,17 +78,25 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
 import Select from "@/components/Select.vue";
 
 type MultiSearchInputValue = { value: string; operator: string }[];
 
 export default Vue.extend({
   components: {
+    AutocompleteInput,
     Select,
   },
   props: {
     value: {
       type: Array as PropType<MultiSearchInputValue>,
+      default() {
+        return [];
+      },
+    },
+    autocompleteOptions: {
+      type: Array as PropType<{ value: string; label: string }[]>,
       default() {
         return [];
       },
@@ -182,10 +184,6 @@ export default Vue.extend({
 <style scoped>
 .input-label {
   @apply font-semibold;
-}
-
-.input {
-  @apply border px-3 py-2 flex-grow appearance-none rounded-none;
 }
 
 .input-button {
