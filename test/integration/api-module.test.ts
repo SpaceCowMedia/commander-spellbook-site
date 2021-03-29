@@ -6,11 +6,21 @@ import random from "@/lib/api/random";
 import autocomplete from "@/lib/api/autocomplete";
 import getAllCombos from "@/lib/api/get-all-combos";
 
+const json = require("../../static/api/combo-data.json");
+
 describe("API Module", () => {
   beforeEach(() => {
-    // requires the combo-data.json file to be downloaded
-    // from postinstall task when setting up project
-    process.server = true;
+    // we have to mock the fetch here since jest does not
+    // have fetch in its API. Easy enough to just skip the
+    // network request and provide the static data anyway
+    // @ts-ignore
+    window.fetch = () => {
+      return Promise.resolve({
+        json: () => {
+          return Promise.resolve(json);
+        },
+      });
+    };
   });
 
   describe("findById", () => {

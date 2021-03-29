@@ -1,8 +1,5 @@
 import formatApiResponse from "./format-api-response";
-import type {
-  CommanderSpellbookAPIResponse,
-  FormattedApiResponse,
-} from "./types";
+import type { FormattedApiResponse } from "./types";
 
 const GOOGLE_SHEETS_API_ENDPOINT =
   "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E";
@@ -16,23 +13,17 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
     return cachedPromise;
   }
 
-  // on the server, we pull in the file we download from the Google Sheets API
-  // on the browser, we fetch that same file using a network request
-  // this ensures that the data remains in sync between the server and the browser
-  if (process.server) {
-    const json = require("../../static/api/combo-data.json") as CommanderSpellbookAPIResponse;
-    cachedPromise = Promise.resolve(formatApiResponse(json));
-  } else {
-    cachedPromise = window
-      .fetch(GOOGLE_SHEETS_API_ENDPOINT)
-      .then((res) => res.json())
-      .catch(() => {
-        return window
-          .fetch(LOCAL_BACKUP_API_ENDPOINT)
-          .then((res) => res.json());
-      })
-      .then(formatApiResponse);
-  }
+  cachedPromise = fetch(GOOGLE_SHEETS_API_ENDPOINT)
+    .then((res) => res.json())
+    .catch(() => {
+      // we fall back here in the case that we start getting rate
+      // limited by Google Sheets. Unlikely to happen, but still
+      // possible. Using the Google Sheets version first ensures
+      // we get the most up to date data.
+      // https://developers.google.com/sheets/api/limits
+      return fetch(LOCAL_BACKUP_API_ENDPOINT).then((res) => res.json());
+    })
+    .then(formatApiResponse);
 
   useCachedResponse = true;
 

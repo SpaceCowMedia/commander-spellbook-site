@@ -65,14 +65,6 @@ describe("api", () => {
     );
   });
 
-  it("does not use fetch when on the server", async () => {
-    process.server = true;
-
-    await lookup();
-
-    expect(window.fetch).not.toBeCalled();
-  });
-
   it("caches result after first lookup", async () => {
     const firstResult = await lookup();
 
