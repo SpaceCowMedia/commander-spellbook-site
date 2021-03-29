@@ -1,12 +1,14 @@
 import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
+import getPriceData from "@/lib/api/get-price-data";
 import findById from "@/lib/api/find-by-id";
 import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, Router, VueComponent } from "../../types";
 
 jest.mock("@/lib/api/find-by-id");
+jest.mock("@/lib/api/get-price-data");
 
 describe("ComboPage", () => {
   let options: MountOptions;
@@ -36,6 +38,7 @@ describe("ComboPage", () => {
         ComboResults: true,
       },
     };
+    mocked(getPriceData).mockResolvedValue({});
   });
 
   it("starts in loaded false state", () => {

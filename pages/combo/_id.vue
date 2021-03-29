@@ -75,6 +75,7 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
+import getPriceData from "@/lib/api/get-price-data";
 
 type Price = {
   tcgplayer: string;
@@ -128,7 +129,7 @@ export default Vue.extend({
     const comboNumber = params.id;
     let combo;
 
-    const priceJSON = require("../../static/api/price-data.json");
+    const priceJSON = await getPriceData();
 
     try {
       combo = await findById(comboNumber);
