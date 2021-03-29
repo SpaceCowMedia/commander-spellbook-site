@@ -94,7 +94,7 @@
           <button
             id="advanced-search-submit-button"
             type="submit"
-            class="border border-primary text-link p-4 rounded-l-sm hover:bg-primary hover:text-white"
+            class="border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white"
           >
             Search&nbsp;With&nbsp;Query
           </button>
