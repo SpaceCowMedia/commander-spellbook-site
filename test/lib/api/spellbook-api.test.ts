@@ -120,6 +120,7 @@ describe("api", () => {
     expect(window.fetch).not.toBeCalled();
   });
 
+
   it("caches result after first lookup", async () => {
     const firstResult = await lookup();
 
@@ -145,6 +146,35 @@ describe("api", () => {
     expect(firstResult).toBe(secondResult);
 
     expect(window.fetch).toBeCalledTimes(1);
+  });
+
+  jest.useFakeTimers();
+
+  it("waits one second before loading the combo", async () => {
+    //call lookup once so that we cache a result
+    await lookup();
+
+    //on the second lookup call we should already have a cached result, so useCachedResponse should be truthy
+    await lookup();
+
+    //Testing to see that setTimeout is a. called, and b. only called when useCachedResponse is true
+    expect(setTimeout).toHaveBeenCalledTimes(1); 
+    
+    //checking to see that the delay was one second.
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+  });
+
+  jest.useFakeTimers();
+
+  it("does not make each combo wait one second when server is rendering", async () => {
+    process.server = true; 
+
+    await lookup();
+    //looking up twice to set useCachedResponse to true
+    await lookup();
+
+    //expect(loookupApi).toReturn(cachedPromise) (should we add something like this?)
+    expect(setTimeout).not.toHaveBeenCalled();
   });
 
   it("can do a fresh lookup when resetting the cache manually", async () => {

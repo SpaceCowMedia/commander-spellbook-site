@@ -63,13 +63,14 @@ function formatApiResponse(
 
 export default function lookupApi(): Promise<FormattedApiResponse[]> {
   if (useCachedResponse) {
-    let delay = new Promise((resolve, reject) => {
+    if (process.server) {
+      return cachedPromise;
+    }
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve(cachedPromise);
-      }, 1000)
+      }, 1000);
     });
-  
-    return delay;
   }
 
   // on the server, we pull in the file we download from the Google Sheets API
