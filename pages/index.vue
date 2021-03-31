@@ -98,7 +98,7 @@ export default Vue.extend({
 }
 
 .button {
-  @apply bg-dark text-white mx-0 mt-1 mb-0 flex-grow border-dark;
+  @apply bg-dark text-white mx-0 mt-2 mb-0 flex-grow border-dark;
 }
 
 .button:hover {
@@ -107,7 +107,7 @@ export default Vue.extend({
 
 @media (min-width: 768px) {
   .button {
-    @apply ml-1;
+    @apply ml-2;
   }
 
   .button:first-child {
