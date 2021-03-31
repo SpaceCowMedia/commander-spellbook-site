@@ -4,7 +4,7 @@
     <p v-for="(item, index) in items" :key="index" class="p-2 my-1">
       <TextWithMagicSymbol :text="item.text" />
       -
-      <nuxt-link :to="{ path: '/search', query: { q: search(item.text) } }">
+      <nuxt-link :to="{ path: '/search', query: { q: search(item.value) } }">
         {{ item.numberOfCombos }} combo<span v-if="item.numberOfCombos > 1"
           >s</span
         >
@@ -28,7 +28,12 @@ import autocomplete from "@/lib/api/autocomplete";
 import search from "@/lib/api/search";
 
 type Data = {
-  items: { text: string; numberOfCombos: number; ids: string[] }[];
+  items: {
+    text: string;
+    value: string;
+    numberOfCombos: number;
+    ids: string[];
+  }[];
   autocompleteType: string;
 };
 
@@ -58,6 +63,7 @@ export default Vue.extend({
 
             return {
               text: payload.label,
+              value: payload.value,
               numberOfCombos: combos.length,
               ids: combos.map((c) => c.commanderSpellbookId),
             };
