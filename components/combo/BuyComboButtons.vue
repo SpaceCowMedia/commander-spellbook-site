@@ -83,13 +83,11 @@ export default Vue.extend({
     cardkingdomLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("\n"));
 
-      // TODO some of these query params will change to identify the source as commander spellbook
       return `https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=clipboard&utm_campaign=edhrec&c=${cardQuery}`;
     },
     tcgPlayerLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("||"));
 
-      // TODO some of these query params will change to identify the source as commander spellbook
       return `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=${cardQuery}`;
     },
     tcgplayerPriceLabel(): string {
