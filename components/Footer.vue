@@ -62,6 +62,7 @@
           <a href="https://github.com/Commander-Spellbook" target="_blank"
             >Github</a
           >
+          <a href="https://edhrec.com" target="_blank">EDHREC</a>
         </div>
       </div>
       <div class="container mt-8 text-light">
