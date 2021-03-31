@@ -124,6 +124,14 @@ describe("ColorIdentity", () => {
       expect(ci.is(["g", "u", "w"])).toBe(false);
     });
 
+    it("returns true for colorless when color is 'c'", () => {
+      const ci = new ColorIdentity("c");
+
+      expect(ci.is([])).toBe(true);
+      expect(ci.is(["c"])).toBe(true);
+      expect(ci.is(["u"])).toBe(false);
+    });
+
     it("returns true when colors match exactly (regardless of order)", () => {
       const ci = new ColorIdentity("wub");
 
