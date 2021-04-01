@@ -1,26 +1,29 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
-    <CopyComboLinkButton :combo-link="comboLink" />
-
-    <button
-      v-if="hasSimiliarCombos"
-      id="has-similiar-combos"
-      class="button w-full"
-      @click="goToSimiliarCombos"
-    >
-      Find Other Combos Using These Cards
-    </button>
+    <BuyComboButtons
+      :cards="cards"
+      :tcgplayer-price="tcgplayerPrice"
+      :cardkingdom-price="cardkingdomPrice"
+      class="pb-1 border-b border-light"
+    />
+    <div class="mt-1">
+      <CopyComboLinkButton :combo-link="comboLink" />
+      <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import search from "@/lib/api/search";
 import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
+import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
+import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
 
 export default Vue.extend({
   components: {
     CopyComboLinkButton,
+    SimiliarCombosButton,
+    BuyComboButtons,
   },
   props: {
     cards: {
@@ -37,61 +40,14 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-  },
-  data() {
-    return {
-      hasSimiliarCombos: false,
-    };
-  },
-  async fetch() {
-    await this.lookupSimiliarCombos();
-  },
-
-  computed: {
-    similiarSearchString(): string {
-      return this.cards.reduce((accum, name) => {
-        // TODO support single quote
-        return accum + ` card="${name}"`;
-      }, `-spellbookid:${this.comboId}`);
+    tcgplayerPrice: {
+      type: String,
+      default: "",
     },
-  },
-  methods: {
-    async lookupSimiliarCombos(): Promise<void> {
-      const result = await search(this.similiarSearchString);
-
-      this.hasSimiliarCombos = result.combos.length > 0;
-    },
-    goToSimiliarCombos(): void {
-      this.$gtag.event("Combos Using These Cards Button Clicked", {
-        event_category: "Combo Detail Page Actions",
-      });
-
-      this.$router.push({
-        path: "/search",
-        query: {
-          q: this.similiarSearchString,
-        },
-      });
+    cardkingdomPrice: {
+      type: String,
+      default: "",
     },
   },
 });
 </script>
-
-<style scoped>
-.hidden-combo-link-input {
-  left: -25%;
-  top: -25%;
-  @apply fixed;
-}
-
-.copy-combo-notification {
-  /* Tailwind 2 class: -bottom-20 */
-  bottom: -5rem;
-  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-4 bg-black text-white;
-}
-
-.copy-combo-notification.show {
-  /* Tailwind 2 class: bottom-4 */
-  bottom: 1rem;
-}
-</style>

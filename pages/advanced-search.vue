@@ -17,66 +17,55 @@
     <form @submit.prevent="submit">
       <div id="card-name-inputs" class="container">
         <MultiSearchInput
-          :inputs="cards"
+          v-model="cards"
           label="Card Name"
           :operator-options="cardOperatorOptions"
-          @add-input="addInput('cards', $event)"
-          @remove-input="removeInput('cards', $event)"
         />
       </div>
 
       <div id="card-amount-inputs" class="container">
         <MultiSearchInput
-          :inputs="cardAmounts"
+          v-model="cardAmounts"
           label="Number of Cards"
           plural-label="Number of Cards"
           :operator-options="cardAmountOperatorOptions"
-          @add-input="addInput('cardAmounts', $event)"
-          @remove-input="removeInput('cardAmounts', $event)"
+          default-operator="=-number"
         />
       </div>
 
       <div id="color-identity-inputs" class="container">
         <MultiSearchInput
-          :inputs="colorIdentity"
+          v-model="colorIdentity"
           default-placeholder="ex: wug, temur, colorless, black"
           label="Color Identity"
           :operator-options="colorIdentityOperatorOptions"
-          @add-input="addInput('colorIdentity', $event)"
-          @remove-input="removeInput('colorIdentity', $event)"
         />
       </div>
 
       <div id="prerequisite-inputs" class="container">
         <MultiSearchInput
-          :inputs="prerequisites"
+          v-model="prerequisites"
           default-placeholder="all permanents on the battlefield"
           label="Prerequisite"
           :operator-options="comboDataOperatorOptions"
-          @add-input="addInput('prerequisites', $event)"
-          @remove-input="removeInput('prerequisites', $event)"
         />
       </div>
 
       <div id="step-inputs" class="container">
         <MultiSearchInput
-          :inputs="steps"
+          v-model="steps"
           default-placeholder="ex: intruder alarm triggers as well"
           label="Step"
           :operator-options="comboDataOperatorOptions"
-          @add-input="addInput('steps', $event)"
-          @remove-input="removeInput('steps', $event)"
         />
       </div>
 
       <div id="result-inputs" class="container">
         <MultiSearchInput
-          :inputs="results"
+          v-model="results"
           default-placeholder="ex: win the game"
           label="Result"
           :operator-options="comboDataOperatorOptions"
-          @add-input="addInput('results', $event)"
-          @remove-input="removeInput('results', $event)"
         />
       </div>
 
@@ -105,7 +94,7 @@
           <button
             id="advanced-search-submit-button"
             type="submit"
-            class="border border-primary text-link p-4 rounded-l-sm hover:bg-primary hover:text-white"
+            class="border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white"
           >
             Search&nbsp;With&nbsp;Query
           </button>
@@ -146,13 +135,6 @@ type OperatorOption = {
   label: string;
   placeholder?: string;
 };
-type TextInputModelTypes =
-  | "cards"
-  | "cardAmounts"
-  | "colorIdentity"
-  | "prerequisites"
-  | "steps"
-  | "results";
 
 type Data = {
   cards: InputData[];
@@ -430,19 +412,6 @@ export default Vue.extend({
       this.results.forEach(val);
 
       return hasValidationError;
-    },
-    addInput(model: TextInputModelTypes, index: number): void {
-      let operator = ":";
-
-      if (model === "cardAmounts") {
-        // the cardAmounts model has a different default operator than
-        // the rest of them
-        operator = "=-number";
-      }
-      this[model].splice(index + 1, 0, { operator, value: "" });
-    },
-    removeInput(model: TextInputModelTypes, index: number): void {
-      this[model].splice(index, 1);
     },
     updateRadio(model: "banned" | "previewed", value: string): void {
       this[model] = value;

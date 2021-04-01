@@ -36,6 +36,26 @@ describe("comboDataFilter", () => {
       expect(result.length).toBe(0);
     });
 
+    it(`includes data exactly for ${dataType} with = method`, () => {
+      params[dataType].includeFilters.push({
+        method: "=",
+        value: "data",
+      });
+
+      jest
+        .spyOn(combos[0][dataType], "includesValueExactly")
+        .mockReturnValue(true);
+
+      let result = filterComboData(combos, params);
+
+      expect(result.length).toBe(1);
+
+      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(false);
+      result = filterComboData(combos, params);
+
+      expect(result.length).toBe(0);
+    });
+
     it(`excludes data for ${dataType}`, () => {
       params[dataType].excludeFilters.push({
         method: ":",
@@ -49,6 +69,26 @@ describe("comboDataFilter", () => {
       expect(result.length).toBe(1);
 
       mocked(combos[0][dataType].includesValue).mockReturnValue(true);
+      result = filterComboData(combos, params);
+
+      expect(result.length).toBe(0);
+    });
+
+    it(`excludes data exactly for ${dataType} with = method`, () => {
+      params[dataType].excludeFilters.push({
+        method: "=",
+        value: "data",
+      });
+
+      jest
+        .spyOn(combos[0][dataType], "includesValueExactly")
+        .mockReturnValue(false);
+
+      let result = filterComboData(combos, params);
+
+      expect(result.length).toBe(1);
+
+      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(true);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);

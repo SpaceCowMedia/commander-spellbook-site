@@ -50,4 +50,20 @@ describe("Combo Detail Page", () => {
       "https://commanderspellbook.com/?id=450"
     );
   });
+
+  it("can buy combo on TCGplayer", () => {
+    cy.visit("/combo/450");
+
+    cy.get("#tcg-buy-this-combo")
+      .should("have.attr", "href")
+      .and("include", "https://www.tcgplayer.com/massentry");
+  });
+
+  it("can buy combo on Card Kingdom", () => {
+    cy.visit("/combo/450");
+
+    cy.get("#ck-buy-this-combo")
+      .should("have.attr", "href")
+      .and("include", "https://www.cardkingdom.com/builder");
+  });
 });

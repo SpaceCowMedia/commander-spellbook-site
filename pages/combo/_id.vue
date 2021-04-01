@@ -41,7 +41,7 @@
         />
       </div>
 
-      <aside class="w-full sm:w-1/3 text-center">
+      <aside class="w-full md:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
@@ -59,6 +59,8 @@
           :combo-id="comboNumber"
           :combo-link="link"
           :cards="cardNames"
+          :tcgplayer-price="prices.tcgplayer"
+          :cardkingdom-price="prices.cardkingdom"
         />
       </aside>
     </div>
@@ -73,7 +75,12 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
+import getPriceData from "@/lib/api/get-price-data";
 
+type Price = {
+  tcgplayer: string;
+  cardkingdom: string;
+};
 type CardData = {
   name: string;
   oracleImageUrl: string;
@@ -89,6 +96,7 @@ type ComboData = {
   loaded: boolean;
   comboNumber: string;
   cards: CardData[];
+  prices: Price;
   colorIdentity: string[];
   prerequisites: string[];
   steps: string[];
@@ -121,6 +129,8 @@ export default Vue.extend({
     const comboNumber = params.id;
     let combo;
 
+    const priceJSON = await getPriceData();
+
     try {
       combo = await findById(comboNumber);
     } catch (err) {
@@ -135,6 +145,21 @@ export default Vue.extend({
         oracleImageUrl: card.getScryfallImageUrl("normal"),
       };
     });
+
+    const prices = {
+      tcgplayer: combo.cards
+        .reduce((total, card) => {
+          const price = priceJSON[card.name]?.tcgplayer.price || 0;
+          return total + price;
+        }, 0)
+        .toFixed(2),
+      cardkingdom: combo.cards
+        .reduce((total, card) => {
+          const price = priceJSON[card.name]?.cardkingdom.price || 0;
+          return total + price;
+        }, 0)
+        .toFixed(2),
+    };
 
     const title = cards
       .map((card, index) => {
@@ -163,6 +188,7 @@ export default Vue.extend({
       hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
+      prices,
       loaded: true,
       prerequisites: Array.from(combo.prerequisites),
       steps: Array.from(combo.steps),
@@ -180,6 +206,10 @@ export default Vue.extend({
       loaded: false,
       comboNumber: "0",
       cards: [],
+      prices: {
+        tcgplayer: "0.00",
+        cardkingdom: "0.00",
+      },
       colorIdentity: [],
       prerequisites: [],
       steps: [],

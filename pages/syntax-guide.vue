@@ -202,7 +202,10 @@
         <code>spellbookid:</code> will result in a query error.
       </p>
 
-      <p><code>sid:</code> is an alias for <code>spellbookid:</code>.</p>
+      <p>
+        <code>sid:</code> and <code>sbid:</code> are aliases for
+        <code>spellbookid:</code>.
+      </p>
 
       <p>
         A more useful parameter to use is <code>-spellbookid:</code>, to more

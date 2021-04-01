@@ -1,65 +1,12 @@
-import normalizeDatabaseValue from "./normalize-database-value";
-import CardGrouping from "./models/card-grouping";
-import SpellbookList from "./models/list";
-import ColorIdentity from "./models/color-identity";
-import type {
-  CommanderSpellbookAPIResponse,
-  FormattedApiResponse,
-} from "./types";
+import formatApiResponse from "./format-api-response";
+import type { FormattedApiResponse } from "./types";
 
-const LOCAL_API_ENDPOINT = "/combo-data.json";
+const GOOGLE_SHEETS_API_ENDPOINT =
+  "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E";
+const LOCAL_BACKUP_API_ENDPOINT = "/api/combo-data.json";
 
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
-
-function formatApiResponse(
-  apiResponse: CommanderSpellbookAPIResponse
-): FormattedApiResponse[] {
-  return apiResponse.valueRanges[0].values
-    .filter((combo) => {
-      // ensures the spreadsheet has all values needed
-      // in particular, the first card and a color identity
-      return combo.length > 13 && combo[1] && combo[11];
-    })
-    .map((combo) => {
-      return combo.map(normalizeDatabaseValue);
-    })
-    .map((combo) => {
-      const id = combo[0];
-      const cardNames = [
-        combo[1],
-        combo[2],
-        combo[3],
-        combo[4],
-        combo[5],
-        combo[6],
-        combo[7],
-        combo[8],
-        combo[9],
-        combo[10],
-      ].filter((cardName) => cardName);
-
-      const cards = CardGrouping.create(cardNames);
-      const colorIdentity = new ColorIdentity(combo[11]);
-      const prerequisites = SpellbookList.create(combo[12]);
-      const steps = SpellbookList.create(combo[13]);
-      const results = SpellbookList.create(combo[14]);
-      const hasBannedCard = combo[15].toLowerCase() === "true";
-      const hasSpoiledCard = combo[16].toLowerCase() === "true";
-
-      return {
-        commanderSpellbookId: id,
-        permalink: `https://commanderspellbook.com/?id=${id}`,
-        cards,
-        colorIdentity,
-        prerequisites,
-        steps,
-        results,
-        hasBannedCard,
-        hasSpoiledCard,
-      };
-    });
-}
 
 export default function lookupApi(): Promise<FormattedApiResponse[]> {
   if (useCachedResponse) {
@@ -73,20 +20,17 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
     });
   }
 
-  // on the server, we pull in the file we download from the Google Sheets API
-  // on the browser, we fetch that same file using a network request
-  // this ensures that the data remains in sync between the server and the browser
-  if (process.server) {
-    const json = require("../../static/combo-data.json") as CommanderSpellbookAPIResponse;
-    cachedPromise = Promise.resolve(formatApiResponse(json));
-  } else {
-    cachedPromise = window
-      .fetch(LOCAL_API_ENDPOINT)
-      .then((res) => {
-        return res.json();
-      })
-      .then(formatApiResponse);
-  }
+  cachedPromise = fetch(GOOGLE_SHEETS_API_ENDPOINT)
+    .then((res) => res.json())
+    .catch(() => {
+      // we fall back here in the case that we start getting rate
+      // limited by Google Sheets. Unlikely to happen, but still
+      // possible. Using the Google Sheets version first ensures
+      // we get the most up to date data.
+      // https://developers.google.com/sheets/api/limits
+      return fetch(LOCAL_BACKUP_API_ENDPOINT).then((res) => res.json());
+    })
+    .then(formatApiResponse);
 
   useCachedResponse = true;
 

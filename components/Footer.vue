@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- cool wavy effect taken from this free template: https://www.tailwindtoolbox.com/templates/landing-page-demo.php -->
-    <div class="relative -mt-24 lg:-mt-64">
+    <div class="relative md:-mt-24 lg:-mt-48">
       <svg
         viewBox="0 0 1428 174"
         version="1.1"
@@ -62,6 +62,7 @@
           <a href="https://github.com/Commander-Spellbook" target="_blank"
             >Github</a
           >
+          <a href="https://edhrec.com" target="_blank">EDHREC</a>
         </div>
       </div>
       <div class="container mt-8 text-light">
