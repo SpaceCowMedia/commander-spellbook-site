@@ -6,6 +6,7 @@
         :href="tcgPlayerLink"
         target="_blank"
         class="button w-full flex-shrink"
+        @click="onClick('TCGplayer')"
       >
         <!-- SVG from EDHRec.com -->
         <svg
@@ -32,6 +33,7 @@
         :href="cardkingdomLink"
         target="_blank"
         class="button w-full flex-shrink"
+        @click="onClick('Card Kingdom')"
       >
         <!-- SVG from EDHRec.com -->
         <svg
@@ -101,6 +103,13 @@ export default Vue.extend({
         return "";
       }
       return `($${this.cardkingdomPrice})`;
+    },
+  },
+  methods: {
+    onClick(kind: "TCGplayer" | "Card Kingdom"): void {
+      this.$gtag.event(`Buy on ${kind} button clicked`, {
+        event_category: "Combo Detail Page Actions",
+      });
     },
   },
 });
