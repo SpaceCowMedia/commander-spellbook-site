@@ -12,7 +12,7 @@ describe("api", () => {
   let body: CommanderSpellbookAPIResponse;
 
   beforeEach(() => {
-    process.server = false;
+    process.server = true;
     mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
       return str;
     });
@@ -39,7 +39,6 @@ describe("api", () => {
 
   afterEach(() => {
     resetCache();
-    process.server = true;
   });
 
   it("looks up data from api endpoint", async () => {
@@ -92,7 +91,8 @@ describe("api", () => {
     expect(window.fetch).toBeCalledTimes(1);
   });
 
-  it("waits one second before loading the combo", async () => {
+  it("waits one second before loading the combo when not on the server", async () => {
+    process.server = false;
     jest.useFakeTimers();
 
     let cachedLookupHasCompleted = false;
@@ -120,8 +120,8 @@ describe("api", () => {
   });
 
   it("does not make each combo wait one second when server is rendering", async () => {
-    jest.useFakeTimers();
     process.server = true;
+    jest.useFakeTimers();
 
     let cachedLookupHasCompleted = false;
 
