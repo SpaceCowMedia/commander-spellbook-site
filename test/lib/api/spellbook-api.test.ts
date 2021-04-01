@@ -12,7 +12,7 @@ describe("api", () => {
   let body: CommanderSpellbookAPIResponse;
 
   beforeEach(() => {
-    process.server = false;
+    process.server = true;
     mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
       return str;
     });
@@ -39,7 +39,6 @@ describe("api", () => {
 
   afterEach(() => {
     resetCache();
-    process.server = true;
   });
 
   it("looks up data from api endpoint", async () => {
@@ -90,6 +89,52 @@ describe("api", () => {
     expect(firstResult).toBe(secondResult);
 
     expect(window.fetch).toBeCalledTimes(1);
+  });
+
+  it("waits one second before loading the combo when not on the server", async () => {
+    process.server = false;
+    jest.useFakeTimers();
+
+    let cachedLookupHasCompleted = false;
+
+    jest.useFakeTimers();
+
+    await lookup();
+    lookup().then(() => {
+      cachedLookupHasCompleted = true;
+    });
+
+    expect(cachedLookupHasCompleted).toBe(false);
+
+    await Promise.resolve().then(() => jest.advanceTimersByTime(999));
+
+    expect(cachedLookupHasCompleted).toBe(false);
+
+    // promises work weirdly with fake timers, we have to do this twice,
+    // once to complete the timeout time set in the code and once again
+    // to prompt the promise to complete and resolve
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+
+    expect(cachedLookupHasCompleted).toBe(true);
+  });
+
+  it("does not make each combo wait one second when server is rendering", async () => {
+    process.server = true;
+    jest.useFakeTimers();
+
+    let cachedLookupHasCompleted = false;
+
+    await lookup();
+    lookup().then(() => {
+      cachedLookupHasCompleted = true;
+    });
+
+    // got to do this to make sure the Promise actually resolves
+    // in the context of using fake timers
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+
+    expect(cachedLookupHasCompleted).toBe(true);
   });
 
   it("can do a fresh lookup when resetting the cache manually", async () => {

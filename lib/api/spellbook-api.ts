@@ -10,7 +10,14 @@ let useCachedResponse = false;
 
 export default function lookupApi(): Promise<FormattedApiResponse[]> {
   if (useCachedResponse) {
-    return cachedPromise;
+    if (process.server) {
+      return cachedPromise;
+    }
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(cachedPromise);
+      }, 1000);
+    });
   }
 
   cachedPromise = fetch(GOOGLE_SHEETS_API_ENDPOINT)
