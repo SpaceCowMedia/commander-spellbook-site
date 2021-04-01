@@ -1,19 +1,19 @@
 <template>
-  <a :href="link" :target="target" @focus="$emit('focus')"><slot /></a>
+  <ExternalLink :to="link" @focus="$emit('focus')"><slot /></ExternalLink>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 
 export default Vue.extend({
+  components: {
+    ExternalLink,
+  },
   props: {
     name: {
       type: String,
       default: "",
-    },
-    target: {
-      type: String,
-      default: "_blank",
     },
   },
   computed: {

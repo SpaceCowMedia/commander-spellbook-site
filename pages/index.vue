@@ -29,11 +29,10 @@
       </div>
 
       <div class="button-links flex md:w-2/3 m-auto">
-        <a
+        <ExternalLink
           class="button"
-          href="https://www.patreon.com/commanderspellbook"
-          target="_blank"
-          >Join our Patreon</a
+          to="https://www.patreon.com/commanderspellbook"
+          >Join our Patreon</ExternalLink
         >
       </div>
     </div>
@@ -43,11 +42,13 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchBar from "@/components/SearchBar.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 import Logo from "@/components/Logo.vue";
 import search from "@/lib/api/search";
 
 export default Vue.extend({
   components: {
+    ExternalLink,
     SearchBar,
     Logo,
   },

@@ -26,29 +26,6 @@ describe("CardLink", () => {
     );
   });
 
-  it("defaults target to _blank", () => {
-    expect(
-      mount(CardLink, {
-        propsData: {
-          name: "Card Name",
-        },
-      })
-        .find("a")
-        .attributes("target")
-    ).toBe("_blank");
-
-    expect(
-      mount(CardLink, {
-        propsData: {
-          name: "Card Name",
-          target: "_top",
-        },
-      })
-        .find("a")
-        .attributes("target")
-    ).toBe("_top");
-  });
-
   it("passes on focus event to component using cardlink", async () => {
     const spy = jest.fn();
     const wrapper = mount(CardLink, {

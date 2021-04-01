@@ -52,17 +52,17 @@
           <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
-          <a href="https://www.patreon.com/commanderspellbook" target="_blank"
-            >Patreon</a
+          <ExternalLink to="https://www.patreon.com/commanderspellbook"
+            >Patreon</ExternalLink
           >
-          <a href="https://discord.gg/DkAyVJG" target="_blank">Discord</a>
-          <a href="https://twitter.com/CommanderSpell" target="_blank"
-            >Twitter</a
+          <ExternalLink to="https://discord.gg/DkAyVJG">Discord</ExternalLink>
+          <ExternalLink to="https://twitter.com/CommanderSpell"
+            >Twitter</ExternalLink
           >
-          <a href="https://github.com/Commander-Spellbook" target="_blank"
-            >Github</a
+          <ExternalLink to="https://github.com/Commander-Spellbook"
+            >Github</ExternalLink
           >
-          <a href="https://edhrec.com" target="_blank">EDHREC</a>
+          <ExternalLink to="https://edhrec.com">EDHREC</ExternalLink>
         </div>
       </div>
       <div class="container mt-8 text-light">
@@ -71,22 +71,34 @@
           property of Wizards of the Coast LLC, which is permitted under
           Wizards' Fan Site Policy. For more information, please visit their
           website at
-          <a href="https://company.wizards.com/" target="_blank">
-            https://company.wizards.com/</a
+          <ExternalLink to="https://company.wizards.com/">
+            https://company.wizards.com/</ExternalLink
           >.
         </p>
         <p class="my-4">
           Commander Spellbook utilizes icons provided by
-          <a href="https://fontawesome.com/" target="_blank"> Font Awesome</a>.
-          Licensing information may be found here:
-          <a href="https://fontawesome.com/license" target="_blank">
-            https://fontawesome.com/license</a
+          <ExternalLink to="https://fontawesome.com/">
+            Font Awesome</ExternalLink
+          >. Licensing information may be found here:
+          <ExternalLink to="https://fontawesome.com/license">
+            https://fontawesome.com/license</ExternalLink
           >.
         </p>
       </div>
     </footer>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import ExternalLink from "@/components/ExternalLink.vue";
+
+export default Vue.extend({
+  components: {
+    ExternalLink,
+  },
+});
+</script>
 
 <style scoped>
 .footer {

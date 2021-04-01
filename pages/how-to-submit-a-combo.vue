@@ -8,18 +8,14 @@
     <h1 class="heading-title">Want to submit a combo?</h1>
     <p>
       At this time, combo submissions (and updates) are only being accepted via
-      <a target="_blank" href="https://discord.gg/KDnvP5f">Discord</a>, as we've
-      learned from experience that many of them require a discussion. If your
-      combo isn't listed here, or if you've found a bug with one of our combos,
-      please join us on Discord to contribute to the catalog.
+      <ExternalLink to="https://discord.gg/KDnvP5f">Discord</ExternalLink>, as
+      we've learned from experience that many of them require a discussion. If
+      your combo isn't listed here, or if you've found a bug with one of our
+      combos, please join us on Discord to contribute to the catalog.
     </p>
     <div class="text-center">
-      <a
-        role="button"
-        class="button"
-        target="_blank"
-        href="https://discord.gg/KDnvP5f"
-        >Join us on Discord</a
+      <ExternalLink role="button" class="button" to="https://discord.gg/KDnvP5f"
+        >Join us on Discord</ExternalLink
       >
     </div>
   </div>
@@ -28,10 +24,12 @@
 <script lang="ts">
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 
 export default Vue.extend({
   components: {
     ArtCircle,
+    ExternalLink,
   },
 });
 </script>

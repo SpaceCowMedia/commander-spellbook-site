@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="lg:flex">
-      <a
+      <ExternalLink
         id="tcg-buy-this-combo"
-        :href="tcgPlayerLink"
-        target="_blank"
+        :to="tcgPlayerLink"
         class="button w-full flex-shrink"
         @click="onClick('TCGplayer')"
       >
@@ -26,12 +25,11 @@
         </svg>
 
         TCGplayer {{ tcgplayerPriceLabel }}
-      </a>
+      </ExternalLink>
       <span class="mx-1"></span>
-      <a
+      <ExternalLink
         id="ck-buy-this-combo"
-        :href="cardkingdomLink"
-        target="_blank"
+        :to="cardkingdomLink"
         class="button w-full flex-shrink"
         @click="onClick('Card Kingdom')"
       >
@@ -51,15 +49,19 @@
         </svg>
 
         Card Kingdom {{ cardkingdomPriceLabel }}
-      </a>
+      </ExternalLink>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 
 export default Vue.extend({
+  components: {
+    ExternalLink,
+  },
   props: {
     cards: {
       type: Array as PropType<string[]>,

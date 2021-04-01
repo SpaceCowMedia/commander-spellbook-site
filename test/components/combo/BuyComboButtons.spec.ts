@@ -1,9 +1,9 @@
-import { shallowMount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
 
 describe("BuyComboButton", () => {
   it("creates a TCGplayer button", () => {
-    const wrapper = shallowMount(BuyComboButtons, {
+    const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },
@@ -36,7 +36,7 @@ describe("BuyComboButton", () => {
 
   it("fires a google analytics event when TCGplayer button is clicked", async () => {
     const spy = jest.fn();
-    const wrapper = shallowMount(BuyComboButtons, {
+    const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },
@@ -56,7 +56,7 @@ describe("BuyComboButton", () => {
   });
 
   it("creates a Card Kingdom button", () => {
-    const wrapper = shallowMount(BuyComboButtons, {
+    const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },
@@ -72,7 +72,7 @@ describe("BuyComboButton", () => {
 
   it("fires a google analytics event when Card Kingdom button is clicked", async () => {
     const spy = jest.fn();
-    const wrapper = shallowMount(BuyComboButtons, {
+    const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
       },

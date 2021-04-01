@@ -48,10 +48,9 @@
       does not apply to, and we cannot control the activities of, such other
       advertisers or web sites. You may find a comprehensive listing of these
       privacy policies and their links here:
-      <a
-        href="https://www.privacypolicyonline.com/privacy-policy-links/"
-        target="_blank"
-        >Privacy Policy Links</a
+      <ExternalLink
+        to="https://www.privacypolicyonline.com/privacy-policy-links/"
+        >Privacy Policy Links</ExternalLink
       >
     </p>
 
@@ -172,7 +171,7 @@
     <p>
       To exercise the access, data portability, and deletion rights described
       above, please submit a verifiable consumer request to us by
-      <a href="mailto:edhrec@edhrec.com">contacting us</a>.
+      <ExternalLink to="mailto:edhrec@edhrec.com">contacting us</ExternalLink>.
     </p>
     <p>
       Only you, or a person registered with the California Secretary of State
@@ -455,10 +454,12 @@
 <script lang="ts">
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 
 export default Vue.extend({
   components: {
     ArtCircle,
+    ExternalLink,
   },
 });
 </script>
