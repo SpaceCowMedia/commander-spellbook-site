@@ -121,6 +121,62 @@ describe("TextWithMagicSymbol", () => {
     ).toBe("Card Name 1");
   });
 
+  it("renders cards with links when short names are used", () => {
+    const CardTooltipStub = {
+      template: "<div><slot /></div>",
+      props: ["cardName"],
+    };
+    const CardLinkStub = {
+      template: "<a><slot /></a>",
+      props: ["name"],
+    };
+    const wrapper = mount(TextWithMagicSymbol, {
+      stubs: {
+        CardTooltip: CardTooltipStub,
+        CardLink: CardLinkStub,
+      },
+      propsData: {
+        cardsInCombo: [
+          "Bar, Comma Card",
+          "Foo The Use of Articles",
+          "Baz of something",
+        ],
+        includeCardLinks: true,
+        text:
+          "Some text that has Bar and also some that has Foo as well and Baz too",
+      },
+    });
+
+    const tooltips = wrapper.findAllComponents(CardTooltipStub);
+
+    expect(tooltips.at(0).props("cardName")).toBe("Bar, Comma Card");
+    expect(tooltips.at(0).findComponent(CardLinkStub).props("name")).toBe(
+      "Bar, Comma Card"
+    );
+    expect(
+      (tooltips.at(0).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Bar");
+
+    expect(tooltips.at(1).props("cardName")).toBe("Foo The Use of Articles");
+    expect(tooltips.at(1).findComponent(CardLinkStub).props("name")).toBe(
+      "Foo The Use of Articles"
+    );
+    expect(
+      (tooltips.at(1).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Foo");
+
+    expect(tooltips.at(2).props("cardName")).toBe("Baz of something");
+    expect(tooltips.at(2).findComponent(CardLinkStub).props("name")).toBe(
+      "Baz of something"
+    );
+    expect(
+      (tooltips.at(2).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Baz");
+  });
+
   it("renders text, cards and images together", () => {
     const CardTooltipStub = {
       template: "<div></div>",
@@ -131,9 +187,8 @@ describe("TextWithMagicSymbol", () => {
         CardTooltip: CardTooltipStub,
       },
       propsData: {
-        cardsInCombo: ["Card Name 1", "Card Name 2"],
-        text:
-          "some words, :manar: and Card Name 1 :manau: some Card Name 2 words",
+        cardsInCombo: ["Card, Name 1", "Card Name 2"],
+        text: "some words, :manar: and Card :manau: some Card Name 2 words",
       },
     });
     const textNodes = wrapper.findAll(".text");
@@ -150,7 +205,7 @@ describe("TextWithMagicSymbol", () => {
     expect(textNodes.at(4).element.textContent).toBe(" words");
     expect((imgNodes.at(0).element as HTMLImageElement).src).toMatch(/R\.svg$/);
     expect((imgNodes.at(1).element as HTMLImageElement).src).toMatch(/U\.svg$/);
-    expect(tooltipNodes.at(0).props("cardName")).toBe("Card Name 1");
+    expect(tooltipNodes.at(0).props("cardName")).toBe("Card, Name 1");
     expect(tooltipNodes.at(1).props("cardName")).toBe("Card Name 2");
   });
 });
