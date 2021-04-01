@@ -140,10 +140,12 @@ describe("TextWithMagicSymbol", () => {
           "Bar, Comma Card",
           "Foo The Use of Articles",
           "Baz of something",
+          "A Split // Card Here",
+          "The Frog Monster",
         ],
         includeCardLinks: true,
         text:
-          "Some text that has Bar and also some that has Foo as well and Baz too",
+          "Some text that has Bar and also some that has Foo as well and Baz too and A Split some space Card Here as well Frog Monster but not Monster but Frog works",
       },
     });
 
@@ -175,6 +177,42 @@ describe("TextWithMagicSymbol", () => {
       (tooltips.at(2).findComponent(CardLinkStub).find("a")
         .element as HTMLAnchorElement).textContent
     ).toBe("Baz");
+
+    expect(tooltips.at(3).props("cardName")).toBe("A Split // Card Here");
+    expect(tooltips.at(3).findComponent(CardLinkStub).props("name")).toBe(
+      "A Split // Card Here"
+    );
+    expect(
+      (tooltips.at(3).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("A Split");
+
+    expect(tooltips.at(4).props("cardName")).toBe("A Split // Card Here");
+    expect(tooltips.at(4).findComponent(CardLinkStub).props("name")).toBe(
+      "A Split // Card Here"
+    );
+    expect(
+      (tooltips.at(4).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Card Here");
+
+    expect(tooltips.at(5).props("cardName")).toBe("The Frog Monster");
+    expect(tooltips.at(5).findComponent(CardLinkStub).props("name")).toBe(
+      "The Frog Monster"
+    );
+    expect(
+      (tooltips.at(5).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Frog Monster");
+
+    expect(tooltips.at(6).props("cardName")).toBe("The Frog Monster");
+    expect(tooltips.at(6).findComponent(CardLinkStub).props("name")).toBe(
+      "The Frog Monster"
+    );
+    expect(
+      (tooltips.at(6).findComponent(CardLinkStub).find("a")
+        .element as HTMLAnchorElement).textContent
+    ).toBe("Frog");
   });
 
   it("renders text, cards and images together", () => {

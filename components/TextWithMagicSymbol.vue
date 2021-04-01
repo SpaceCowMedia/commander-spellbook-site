@@ -117,18 +117,22 @@ export default Vue.extend({
         });
     },
     cardShortNames(): string[] {
-      return this.cardsInCombo
-        .map((name) => {
-          if (name.match(/^[^,]+,/)) {
-            return name.split(",")[0];
-          }
-          if (name.match(/^[^\s]+\s(the|of)\s/i)) {
-            return name.split(/\s(the|of)/i)[0];
-          }
+      return this.cardsInCombo.reduce((list, name) => {
+        if (name.match(/^[^,]+,/)) {
+          list.push(name.split(",")[0]);
+        } else if (name.match(/^[^\s]+\s(the|of)\s/i)) {
+          list.push(name.split(/\s(the|of)/i)[0]);
+        } else if (name.includes(" // ")) {
+          list.push(...name.split(" // "));
+        } else if (name.match(/^the/i)) {
+          const restOfName = name.split(/^the /i)[1];
 
-          return "";
-        })
-        .filter((name) => name);
+          list.push(restOfName);
+          list.push(restOfName.split(" ")[0]);
+        }
+
+        return list;
+      }, [] as string[]);
     },
   },
   methods: {
