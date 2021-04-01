@@ -1,4 +1,7 @@
 export default {
+  router: {
+    trailingSlash: false,
+  },
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
 
