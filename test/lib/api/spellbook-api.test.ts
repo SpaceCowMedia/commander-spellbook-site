@@ -95,30 +95,46 @@ describe("api", () => {
   it("waits one second before loading the combo", async () => {
     jest.useFakeTimers();
 
-    // call lookup once so that we cache a result
+    let cachedLookupHasCompleted = false;
+
+    jest.useFakeTimers();
+
     await lookup();
+    lookup().then(() => {
+      cachedLookupHasCompleted = true;
+    });
 
-    // on the second lookup call we should already have a cached result, so useCachedResponse should be truthy
-    await lookup();
+    expect(cachedLookupHasCompleted).toBe(false);
 
-    // Testing to see that setTimeout is a. called, and b. only called when useCachedResponse is true
-    expect(setTimeout).toHaveBeenCalledTimes(1);
+    await Promise.resolve().then(() => jest.advanceTimersByTime(999));
 
-    // checking to see that the delay was one second.
-    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+    expect(cachedLookupHasCompleted).toBe(false);
+
+    // promises work weirdly with fake timers, we have to do this twice,
+    // once to complete the timeout time set in the code and once again
+    // to prompt the promise to complete and resolve
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+
+    expect(cachedLookupHasCompleted).toBe(true);
   });
 
   it("does not make each combo wait one second when server is rendering", async () => {
     jest.useFakeTimers();
-
     process.server = true;
 
-    await lookup();
-    // looking up twice to set useCachedResponse to true
-    await lookup();
+    let cachedLookupHasCompleted = false;
 
-    // expect(loookupApi).toReturn(cachedPromise) (should we add something like this?)
-    expect(setTimeout).not.toHaveBeenCalled();
+    await lookup();
+    lookup().then(() => {
+      cachedLookupHasCompleted = true;
+    });
+
+    // got to do this to make sure the Promise actually resolves
+    // in the context of using fake timers
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+
+    expect(cachedLookupHasCompleted).toBe(true);
   });
 
   it("can do a fresh lookup when resetting the cache manually", async () => {
