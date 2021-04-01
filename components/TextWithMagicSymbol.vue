@@ -124,8 +124,8 @@ export default Vue.extend({
           list.push(name.split(/\s(the|of)/i)[0]);
         } else if (name.includes(" // ")) {
           list.push(...name.split(" // "));
-        } else if (name.match(/^the/i)) {
-          const restOfName = name.split(/^the /i)[1];
+        } else if (name.match(/^the\s/i)) {
+          const restOfName = name.split(/^the\s/i)[1];
 
           list.push(restOfName);
           list.push(restOfName.split(" ")[0]);
