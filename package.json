@@ -11,7 +11,7 @@
     "copy-google-sheets": "npx ts-node -O '{\"module\":\"commonjs\"}' scripts/copy-google-sheets",
     "download-edhrec-price-data": "npx ts-node -O '{\"module\":\"commonjs\"}' scripts/download-edhrec-price-data",
     "pregenerate": "npm run copy-google-sheets && npm run download-edhrec-price-data",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate --fail-on-error",
     "lint:js": "eslint --ext .ts,.vue .",
     "lint:style": "stylelint **/*.{vue,css}",
     "lint": "npm run lint:js && npm run lint:style",
