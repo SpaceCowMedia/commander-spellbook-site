@@ -42,8 +42,17 @@ a {
 .button {
   @apply m-4 inline-block py-2 px-3 bg-transparent text-link border-2 border-primary rounded-sm no-underline;
 }
+
 .button svg {
   @apply inline-block mr-1 fill-current;
+}
+
+.button.disabled {
+  @apply bg-light text-dark border-dark cursor-not-allowed;
+}
+
+.button.disabled:hover {
+  @apply bg-light text-dark border-dark;
 }
 
 .button.w-full {
