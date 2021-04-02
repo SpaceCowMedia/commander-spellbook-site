@@ -37,6 +37,19 @@ describe("ExternalLink", () => {
     ).toBe("_top");
   });
 
+  it("does not include an href prop if disabled", () => {
+    expect(
+      mount(ExternalLink, {
+        propsData: {
+          to: "https://example.com",
+          disabled: true,
+        },
+      })
+        .find("a")
+        .attributes("href")
+    ).toBeFalsy();
+  });
+
   it("passes on focus event to component using it", async () => {
     const spy = jest.fn();
     const wrapper = mount(ExternalLink, {

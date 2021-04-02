@@ -1,6 +1,6 @@
 <template>
   <a
-    :href="to"
+    :href="href"
     :target="target"
     rel="noopener"
     @click="$emit('click')"
@@ -21,6 +21,18 @@ export default Vue.extend({
     target: {
       type: String,
       default: "_blank",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    href(): void | string {
+      if (this.disabled) {
+        return;
+      }
+      return this.to;
     },
   },
 });
