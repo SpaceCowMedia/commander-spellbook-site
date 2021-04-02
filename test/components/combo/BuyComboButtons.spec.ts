@@ -6,6 +6,7 @@ describe("BuyComboButton", () => {
     const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
+        tcgplayerPrice: "40.32",
       },
     });
 
@@ -15,23 +16,41 @@ describe("BuyComboButton", () => {
     expect(tcgButton.attributes("href")).toBe(
       "https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=1%20card%201%7C%7C1%20card%202%7C%7C1%20card%203"
     );
+    expect(tcgButton.text()).toContain("($40.32)");
   });
 
-  it("includes TCGplayer price if available", async () => {
+  it("disables tcgplayer button if no price", async () => {
+    const ExternalLinkStub = {
+      template: "<div><slot/></div>",
+      props: ["disabled", "to"],
+    };
     const wrapper = shallowMount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
         tcgplayerPrice: "",
       },
+      stubs: {
+        ExternalLink: ExternalLinkStub,
+      },
     });
 
-    expect(wrapper.find("#tcg-buy-this-combo").text()).not.toContain("$");
+    expect(
+      wrapper.findAllComponents(ExternalLinkStub).at(0).props("disabled")
+    ).toBe(true);
+    expect(wrapper.find("#tcg-buy-this-combo").text()).toContain(
+      "(Out of Stock)"
+    );
 
     await wrapper.setProps({
       tcgplayerPrice: "40.32",
     });
 
-    expect(wrapper.find("#tcg-buy-this-combo").text()).toContain("($40.32)");
+    expect(
+      wrapper.findAllComponents(ExternalLinkStub).at(0).props("disabled")
+    ).toBe(false);
+    expect(wrapper.find("#tcg-buy-this-combo").text()).not.toContain(
+      "(Out of Stock)"
+    );
   });
 
   it("fires a google analytics event when TCGplayer button is clicked", async () => {
@@ -39,6 +58,7 @@ describe("BuyComboButton", () => {
     const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
+        tcgplayerPrice: "123.45",
       },
       mocks: {
         $gtag: {
@@ -59,6 +79,7 @@ describe("BuyComboButton", () => {
     const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
+        cardkingdomPrice: "123.45",
       },
     });
 
@@ -68,6 +89,7 @@ describe("BuyComboButton", () => {
     expect(ckButton.attributes("href")).toBe(
       "https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=clipboard&utm_campaign=edhrec&c=1%20card%201%0A1%20card%202%0A1%20card%203"
     );
+    expect(ckButton.text()).toContain("($123.45)");
   });
 
   it("fires a google analytics event when Card Kingdom button is clicked", async () => {
@@ -75,6 +97,7 @@ describe("BuyComboButton", () => {
     const wrapper = mount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
+        cardkingdomPrice: "123.45",
       },
       mocks: {
         $gtag: {
@@ -91,20 +114,37 @@ describe("BuyComboButton", () => {
     });
   });
 
-  it("includes Card Kingdom price if available", async () => {
+  it("disables Card Kingdom button if price is not available", async () => {
+    const ExternalLinkStub = {
+      template: "<div><slot/></div>",
+      props: ["disabled", "to"],
+    };
     const wrapper = shallowMount(BuyComboButtons, {
       propsData: {
         cards: ["card 1", "card 2", "card 3"],
         cardkingdomPrice: "",
       },
+      stubs: {
+        ExternalLink: ExternalLinkStub,
+      },
     });
 
-    expect(wrapper.find("#ck-buy-this-combo").text()).not.toContain("$");
+    expect(
+      wrapper.findAllComponents(ExternalLinkStub).at(1).props("disabled")
+    ).toBe(true);
+    expect(wrapper.find("#ck-buy-this-combo").text()).toContain(
+      "(Out of Stock)"
+    );
 
     await wrapper.setProps({
       cardkingdomPrice: "40.32",
     });
 
-    expect(wrapper.find("#ck-buy-this-combo").text()).toContain("($40.32)");
+    expect(
+      wrapper.findAllComponents(ExternalLinkStub).at(1).props("disabled")
+    ).toBe(false);
+    expect(wrapper.find("#ck-buy-this-combo").text()).not.toContain(
+      "(Out of Stock)"
+    );
   });
 });

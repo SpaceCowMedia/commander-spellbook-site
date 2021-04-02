@@ -5,6 +5,8 @@
         id="tcg-buy-this-combo"
         :to="tcgPlayerLink"
         class="button w-full flex-shrink"
+        :class="{ disabled: tcgPlayerOutOfStock }"
+        :disabled="tcgPlayerOutOfStock"
         @click="onClick('TCGplayer')"
       >
         <!-- SVG from EDHRec.com -->
@@ -31,6 +33,8 @@
         id="ck-buy-this-combo"
         :to="cardkingdomLink"
         class="button w-full flex-shrink"
+        :class="{ disabled: cardkingdomOutOfStock }"
+        :disabled="cardkingdomOutOfStock"
         @click="onClick('Card Kingdom')"
       >
         <!-- SVG from EDHRec.com -->
@@ -95,16 +99,22 @@ export default Vue.extend({
       return `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=${cardQuery}`;
     },
     tcgplayerPriceLabel(): string {
-      if (Number(this.tcgplayerPrice) <= 0) {
-        return "";
+      if (this.tcgPlayerOutOfStock) {
+        return "(Out of Stock)";
       }
       return `($${this.tcgplayerPrice})`;
     },
+    tcgPlayerOutOfStock(): boolean {
+      return this.tcgplayerPrice === "";
+    },
     cardkingdomPriceLabel(): string {
-      if (Number(this.cardkingdomPrice) <= 0) {
-        return "";
+      if (this.cardkingdomOutOfStock) {
+        return "(Out of Stock)";
       }
       return `($${this.cardkingdomPrice})`;
+    },
+    cardkingdomOutOfStock(): boolean {
+      return this.cardkingdomPrice === "";
     },
   },
   methods: {
