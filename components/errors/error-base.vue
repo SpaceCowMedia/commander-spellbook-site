@@ -5,6 +5,7 @@
     >
       <h1 class="heading-title hero-title">{{ mainMessage }}</h1>
       <h2 class="hero-subtitle">{{ subMessage }}</h2>
+      <nuxt-link to="/" class="button">Go to Home Page</nuxt-link>
     </div>
   </div>
 </template>
@@ -42,6 +43,10 @@ export default Vue.extend({
 
 .hero-subtitle {
   @apply font-light text-4xl mt-5 mb-5;
+}
+
+.button {
+  @apply text-white;
 }
 
 @keyframes appear {
