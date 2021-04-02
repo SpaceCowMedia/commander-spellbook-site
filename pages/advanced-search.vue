@@ -10,7 +10,7 @@
 
       <p class="text-center">
         For more information on the syntax for searches,
-        <nuxt-link to="/syntax-guide">check out the Syntax Guide.</nuxt-link>
+        <nuxt-link to="/syntax-guide/">check out the Syntax Guide.</nuxt-link>
       </p>
     </div>
 
@@ -373,7 +373,7 @@ export default Vue.extend({
       }
 
       this.$router.push({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `${this.query}`,
         },

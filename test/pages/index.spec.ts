@@ -52,7 +52,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=card:Sydri");
+    expect($router.push).toBeCalledWith("/search/?q=card:Sydri");
   });
 
   it("redirects to combo page when q query is a number", () => {
@@ -60,7 +60,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/combo/435");
+    expect($router.push).toBeCalledWith("/combo/435/");
   });
 
   it("redirects to combo page when id query is a number", () => {
@@ -68,7 +68,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/combo/435");
+    expect($router.push).toBeCalledWith("/combo/435/");
   });
 
   it("redirects to search results page when query is a previewed", () => {
@@ -76,7 +76,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:previewed");
+    expect($router.push).toBeCalledWith("/search/?q=is:previewed");
   });
 
   it("redirects to search results page when status param is spoiled", () => {
@@ -85,7 +85,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:previewed");
+    expect($router.push).toBeCalledWith("/search/?q=is:previewed");
   });
 
   it("redirects to search results page when query is a banned", () => {
@@ -93,7 +93,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:banned");
+    expect($router.push).toBeCalledWith("/search/?q=is:banned");
   });
 
   it("redirects to search results page when status param is a banned", () => {
@@ -102,7 +102,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:banned");
+    expect($router.push).toBeCalledWith("/search/?q=is:banned");
   });
 
   it("displays previewed combos button when there are previews", async () => {

@@ -22,7 +22,7 @@ export default Vue.extend({
     const randomCombo = await random();
 
     this.$router.replace({
-      path: `/combo/${randomCombo.commanderSpellbookId}`,
+      path: `/combo/${randomCombo.commanderSpellbookId}/`,
     });
   },
 });

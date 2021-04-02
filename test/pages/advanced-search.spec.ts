@@ -123,7 +123,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:previewed is:banned`,
         },
@@ -155,7 +155,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card:"card 1" card:"card 2"`,
         },
@@ -182,7 +182,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card:'Card with "symbols"'`,
         },
@@ -209,7 +209,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card=card123`,
         },
@@ -236,7 +236,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card123`,
         },
@@ -267,7 +267,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `cards>5 colors>5 prerequisites>5 steps>5 results>5`,
         },
@@ -294,7 +294,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `-card:"card 1"`,
         },
@@ -327,7 +327,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "exclude:previewed",
         },
@@ -339,7 +339,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "is:previewed",
         },
@@ -372,7 +372,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "include:banned",
         },
@@ -384,7 +384,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "is:banned",
         },

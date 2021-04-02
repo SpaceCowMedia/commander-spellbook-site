@@ -241,7 +241,7 @@ export default Vue.extend({
       if (combos.length === 1) {
         this.redirecting = true;
         this.$router.replace({
-          path: `/combo/${combos[0].commanderSpellbookId}`,
+          path: `/combo/${combos[0].commanderSpellbookId}/`,
           query: { q: query },
         });
         return;

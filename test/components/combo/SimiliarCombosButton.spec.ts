@@ -135,7 +135,7 @@ describe("SimiliarCombosButton", () => {
 
       expect(pushSpy).toBeCalledTimes(1);
       expect(pushSpy).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `-spellbookid:fake-id card="card 1" card="card 2"`,
         },

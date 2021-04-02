@@ -52,7 +52,7 @@ describe("ComboPage", () => {
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
-      path: "/combo-not-found",
+      path: "/combo-not-found/",
     });
   });
 

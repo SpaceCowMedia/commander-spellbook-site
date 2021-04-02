@@ -49,15 +49,15 @@
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           <div class="sr-only">Menu</div>
         </button>
-        <nuxt-link to="/advanced-search" class="hidden md:flex menu-link">
+        <nuxt-link to="/advanced-search/" class="hidden md:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
           Advanced
         </nuxt-link>
-        <nuxt-link to="/syntax-guide" class="hidden md:flex menu-link">
+        <nuxt-link to="/syntax-guide/" class="hidden md:flex menu-link">
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
-        <nuxt-link to="/random" class="hidden md:flex menu-link">
+        <nuxt-link to="/random/" class="hidden md:flex menu-link">
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </nuxt-link>
@@ -68,15 +68,15 @@
       class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
       @click="toggleMenu"
     >
-      <nuxt-link to="/advanced-search" class="mobile-menu-button">
+      <nuxt-link to="/advanced-search/" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
         Advanced
       </nuxt-link>
-      <nuxt-link to="/syntax-guide" class="mobile-menu-button">
+      <nuxt-link to="/syntax-guide/" class="mobile-menu-button">
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax
       </nuxt-link>
-      <nuxt-link to="/random" class="mobile-menu-button">
+      <nuxt-link to="/random/" class="mobile-menu-button">
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
       </nuxt-link>
@@ -152,7 +152,7 @@ export default Vue.extend({
       });
 
       this.$router.push({
-        path: "/search",
+        path: "/search/",
         query: {
           q: this.query,
         },

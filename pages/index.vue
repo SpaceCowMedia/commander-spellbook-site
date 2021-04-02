@@ -10,18 +10,18 @@
       <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
 
       <div class="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
-        <nuxt-link to="/advanced-search" class="button md:m-1">
+        <nuxt-link to="/advanced-search/" class="button md:m-1">
           Advanced Search
         </nuxt-link>
-        <nuxt-link to="/syntax-guide" class="button md:m-1">
+        <nuxt-link to="/syntax-guide/" class="button md:m-1">
           Syntax Guide
         </nuxt-link>
-        <nuxt-link to="/random" class="random-button button md:m-1">
+        <nuxt-link to="/random/" class="random-button button md:m-1">
           Random Combo
         </nuxt-link>
         <nuxt-link
           v-if="showPreviewLink"
-          to="/search?q=is:previewed"
+          :to="{ path: '/search/', query: { q: 'is:previewed' } }"
           class="previwed-combos-button button md:m-1"
         >
           Strixhaven Combos
@@ -70,17 +70,17 @@ export default Vue.extend({
     const { status, id } = this.$route.query;
 
     if (Number(query) > 0 || Number(id) > 0) {
-      this.$router.push(`/combo/${id || query}`);
+      this.$router.push(`/combo/${id || query}/`);
       return;
     }
 
     if (query === "spoiled" || status === "spoiled") {
-      this.$router.push("/search?q=is:previewed");
+      this.$router.push("/search/?q=is:previewed");
       return;
     }
 
     if (query === "banned" || status === "banned") {
-      this.$router.push("/search?q=is:banned");
+      this.$router.push("/search/?q=is:banned");
       return;
     }
 
@@ -88,7 +88,7 @@ export default Vue.extend({
       return;
     }
 
-    this.$router.push(`/search?q=${query}`);
+    this.$router.push(`/search/?q=${query}`);
   },
 });
 </script>

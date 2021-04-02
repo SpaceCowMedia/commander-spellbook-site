@@ -1,6 +1,6 @@
 describe("Combo Detail Page", () => {
   it("includes combo data", () => {
-    cy.visit("/combo/450");
+    cy.visit("/combo/450/");
 
     cy.get("#combo-cards ol li").should((items) => {
       expect(items).to.have.length(2);
@@ -26,7 +26,7 @@ describe("Combo Detail Page", () => {
   });
 
   it("can copy page url to clipboard", () => {
-    cy.visit("/combo/450");
+    cy.visit("/combo/450/");
 
     cy.get("#copy-combo-button").click();
 
@@ -52,7 +52,7 @@ describe("Combo Detail Page", () => {
   });
 
   it("can buy combo on TCGplayer", () => {
-    cy.visit("/combo/450");
+    cy.visit("/combo/450/");
 
     cy.get("#tcg-buy-this-combo")
       .should("have.attr", "href")
@@ -60,7 +60,7 @@ describe("Combo Detail Page", () => {
   });
 
   it("can buy combo on Card Kingdom", () => {
-    cy.visit("/combo/450");
+    cy.visit("/combo/450/");
 
     cy.get("#ck-buy-this-combo")
       .should("have.attr", "href")

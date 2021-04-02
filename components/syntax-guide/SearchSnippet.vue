@@ -23,7 +23,12 @@ export default Vue.extend({
   },
   computed: {
     link() {
-      return `/search?q=${this.search}`;
+      return {
+        path: "/search/",
+        query: {
+          q: this.search,
+        },
+      };
     },
   },
 });

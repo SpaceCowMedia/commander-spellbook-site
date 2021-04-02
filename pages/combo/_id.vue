@@ -327,7 +327,7 @@ export default Vue.extend({
   mounted() {
     if (!this.loaded) {
       this.$router.push({
-        path: "/combo-not-found",
+        path: "/combo-not-found/",
       });
     }
   },

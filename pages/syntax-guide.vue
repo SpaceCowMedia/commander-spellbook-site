@@ -211,7 +211,7 @@
         A more useful parameter to use is <code>-spellbookid:</code>, to more
         easilly omit certain combos. For instance, for finding all combos using
         Basalt Monolith and Mesmeric Orb except
-        <nuxt-link to="/combo/450">combo 450</nuxt-link>.
+        <nuxt-link to="/combo/450/">combo 450</nuxt-link>.
       </p>
     </SearchGuide>
 
