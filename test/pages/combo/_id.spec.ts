@@ -246,6 +246,98 @@ describe("ComboPage", () => {
     expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "normal");
   });
 
+  it("looks up prices for combo", async () => {
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
+    mocked(getPriceData).mockResolvedValue({
+      "card 1": {
+        tcgplayer: { price: 123.45 },
+        cardkingdom: { price: 67.89 },
+      },
+      "card 2": {
+        tcgplayer: { price: 123.45 },
+        cardkingdom: { price: 67.89 },
+      },
+    });
+    const ComboSidebarLinksStub = {
+      template: "<div></div>",
+      props: ["tcgplayerPrice", "cardkingdomPrice"],
+    };
+    // @ts-ignore
+    options.stubs.ComboSidebarLinks = ComboSidebarLinksStub;
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    await wrapper.setData(data);
+
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("tcgplayerPrice")
+    ).toBe("246.90");
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("cardkingdomPrice")
+    ).toBe("135.78");
+  });
+
+  it("does not pass prices if a card is missing from price data", async () => {
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
+    mocked(getPriceData).mockResolvedValue({
+      // @ts-ignore
+      "card 1": {
+        tcgplayer: { price: 123.45 },
+      },
+      "card 2": {
+        tcgplayer: { price: 123.45 },
+        cardkingdom: { price: 67.89 },
+      },
+    });
+    const ComboSidebarLinksStub = {
+      template: "<div></div>",
+      props: ["tcgplayerPrice", "cardkingdomPrice"],
+    };
+    // @ts-ignore
+    options.stubs.ComboSidebarLinks = ComboSidebarLinksStub;
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    await wrapper.setData(data);
+
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("tcgplayerPrice")
+    ).toBe("246.90");
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("cardkingdomPrice")
+    ).toBe("");
+  });
+
   it("passes subtitle when there are more than 3 cards in combo", async () => {
     const fakeCombo = makeFakeCombo({
       commanderSpellbookId: "13",

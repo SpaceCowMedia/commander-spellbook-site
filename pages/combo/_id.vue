@@ -146,19 +146,39 @@ export default Vue.extend({
       };
     });
 
+    function parsePriceData(kind: "tcgplayer" | "cardkingdom"): string {
+      const price = cards.reduce((total, card) => {
+        if (total < 0) {
+          return total;
+        }
+
+        let config;
+
+        if (kind === "tcgplayer") {
+          config = priceJSON[card.name]?.tcgplayer;
+        } else if (kind === "cardkingdom") {
+          config = priceJSON[card.name]?.cardkingdom;
+        }
+
+        const price = config?.price || 0;
+
+        if (!price) {
+          return -1;
+        }
+        return total + price;
+      }, 0);
+
+      if (price === -1) {
+        // indicates that the price for at least one card is not available
+        return "";
+      }
+
+      return price.toFixed(2);
+    }
+
     const prices = {
-      tcgplayer: combo.cards
-        .reduce((total, card) => {
-          const price = priceJSON[card.name]?.tcgplayer.price || 0;
-          return total + price;
-        }, 0)
-        .toFixed(2),
-      cardkingdom: combo.cards
-        .reduce((total, card) => {
-          const price = priceJSON[card.name]?.cardkingdom.price || 0;
-          return total + price;
-        }, 0)
-        .toFixed(2),
+      tcgplayer: parsePriceData("tcgplayer"),
+      cardkingdom: parsePriceData("cardkingdom"),
     };
 
     const title = cards
