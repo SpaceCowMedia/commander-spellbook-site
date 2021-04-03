@@ -75,7 +75,7 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
-import getPriceData from "@/lib/api/get-price-data";
+import getExternalCardData from "@/lib/get-external-card-data";
 
 type Price = {
   tcgplayer: string;
@@ -85,6 +85,10 @@ type CardData = {
   name: string;
   oracleImageUrl: string;
   artUrl: string;
+  prices: {
+    tcgplayer: number;
+    cardkingdom: number;
+  };
 };
 
 type ComboData = {
@@ -129,8 +133,6 @@ export default Vue.extend({
     const comboNumber = params.id;
     let combo;
 
-    const priceJSON = await getPriceData();
-
     try {
       combo = await findById(comboNumber);
     } catch (err) {
@@ -139,10 +141,13 @@ export default Vue.extend({
     }
 
     const cards = combo.cards.map((card) => {
+      const externalCardData = getExternalCardData(card);
+
       return {
         name: card.name,
-        artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl("normal"),
+        artUrl: externalCardData.images.artCrop,
+        oracleImageUrl: externalCardData.images.oracle,
+        prices: externalCardData.prices,
       };
     });
 
@@ -152,19 +157,20 @@ export default Vue.extend({
           return total;
         }
 
-        let config;
+        let price: number;
 
         if (kind === "tcgplayer") {
-          config = priceJSON[card.name]?.tcgplayer;
+          price = Number(card.prices.tcgplayer);
         } else if (kind === "cardkingdom") {
-          config = priceJSON[card.name]?.cardkingdom;
+          price = Number(card.prices.cardkingdom);
+        } else {
+          price = 0;
         }
-
-        const price = config?.price || 0;
 
         if (!price) {
           return -1;
         }
+
         return total + price;
       }, 0);
 
