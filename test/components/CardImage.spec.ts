@@ -30,7 +30,9 @@ describe("CardImage", () => {
     expect(wrapper.find(".front-card").attributes("alt")).toBe("Card Name");
   });
 
-  it("sets loaded state when card image loads", async () => {
+  it("sets flipped state when card image loads and 300 milliseconds have passed", async () => {
+    jest.useFakeTimers();
+
     const FlipperStub = {
       template:
         "<div><slot name='front'></slot><slot name='back'></slot></div>",
@@ -51,6 +53,10 @@ describe("CardImage", () => {
     expect(flipper.props("flipped")).toBe(false);
 
     await wrapper.find(".front-card").trigger("load");
+
+    expect(flipper.props("flipped")).toBe(false);
+
+    await Promise.resolve().then(() => jest.advanceTimersByTime(300));
 
     expect(flipper.props("flipped")).toBe(true);
   });

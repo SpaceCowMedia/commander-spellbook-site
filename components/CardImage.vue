@@ -1,5 +1,5 @@
 <template>
-  <Flipper :flipped="loaded">
+  <Flipper :flipped="loaded && readyToFlip">
     <template slot="front">
       <img class="back-card" src="~/assets/images/card-back.png" :alt="name" />
     </template>
@@ -30,7 +30,13 @@ export default Vue.extend({
   data() {
     return {
       loaded: false,
+      readyToFlip: false,
     };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.readyToFlip = true;
+    }, 300);
   },
   methods: {
     onImgLoad(): void {
