@@ -68,6 +68,22 @@ describe("autocomplete", () => {
     expect(results[0].value).toBe("result b");
   });
 
+  it("can set a limit for number of results when getting all results", async () => {
+    const results = await autocomplete("results", "", 2);
+
+    expect(results.length).toBe(2);
+    expect(results[0].value).toBe("result a");
+    expect(results[1].value).toBe("result b");
+  });
+
+  it("can set a limit for number of results when gettting a subset of results", async () => {
+    const results = await autocomplete("results", "result", 2);
+
+    expect(results.length).toBe(2);
+    expect(results[0].value).toBe("result a");
+    expect(results[1].value).toBe("result b");
+  });
+
   it("ignores capitalization and punctuation inconsistencies", async () => {
     combos[0].results[2] = "rEsUlt, c";
     combos[1].results[0] = "rEsUlt, a";

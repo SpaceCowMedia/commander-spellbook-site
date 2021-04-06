@@ -49,7 +49,8 @@ function collect(items: string[]): AutoCompleteOption[] {
 
 export default async function autocomplete(
   paramType: "cards" | "colors" | "results",
-  partial: string
+  partial: string,
+  limit = Infinity
 ): Promise<AutoCompleteOption[]> {
   let options: AutoCompleteOption[];
 
@@ -80,21 +81,38 @@ export default async function autocomplete(
   partial = normalizeStringInput(partial);
 
   if (!partial) {
+    if (limit < Infinity) {
+      return options.slice(0, limit);
+    }
     return options;
   }
 
+  let numberOfItems = 0;
+
   return options.filter((option) => {
+    if (numberOfItems >= limit) {
+      return false;
+    }
+
     const mainMatch = option.value.includes(partial);
 
     if (mainMatch) {
-      return mainMatch;
+      numberOfItems++;
+      return true;
     }
 
     if (!option.alias) {
       return false;
     }
 
-    return partial.match(option.alias);
+    const partialMatch = partial.match(option.alias);
+
+    if (partialMatch) {
+      numberOfItems++;
+      return true;
+    }
+
+    return false;
   });
 }
 
