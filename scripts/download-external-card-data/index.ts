@@ -20,7 +20,9 @@ Promise.all([getScryfallData(), getEDHRecPrices()]).then((responses) => {
   const [scryfallData, edhrecData] = responses;
 
   Object.keys(scryfallData).forEach((cardName) => {
-    const priceData = edhrecData[cardName] || { tcgplayer: 0, cardkingdom: 0 };
+    const priceData = edhrecData[cardName] || {
+      prices: { tcgplayer: 0, cardkingdom: 0 },
+    };
     const sfData = scryfallData[cardName];
 
     data.push({
