@@ -8,9 +8,9 @@
     <h1 class="heading-title">About Commander Spellbook</h1>
 
     <p>
-      The Commander Spellbook project exists to catalog all reasonable
-      Commander/EDH combos and to make them easily available across all modern
-      digital platforms. This community driven project is used to power
+      The Commander Spellbook project is a search engine for Commander/EDH
+      combos and to make them easily available across all modern digital
+      platforms. This community driven project is used to power
       <ExternalLink to="https://edhrec.com/combos">
         EDHREC's Combo Feature</ExternalLink
       >.

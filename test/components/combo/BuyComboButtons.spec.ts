@@ -14,7 +14,7 @@ describe("BuyComboButton", () => {
 
     expect(tcgButton.text()).toContain("TCGplayer");
     expect(tcgButton.attributes("href")).toBe(
-      "https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=1%20card%201%7C%7C1%20card%202%7C%7C1%20card%203"
+      "https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=commanderspellbook&utm_source=EDHREC&c=1%20card%201%7C%7C1%20card%202%7C%7C1%20card%203"
     );
     expect(tcgButton.text()).toContain("($40.32)");
   });
@@ -87,7 +87,7 @@ describe("BuyComboButton", () => {
 
     expect(ckButton.text()).toContain("Card Kingdom");
     expect(ckButton.attributes("href")).toBe(
-      "https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=clipboard&utm_campaign=edhrec&c=1%20card%201%0A1%20card%202%0A1%20card%203"
+      "https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=1%20card%201%0A1%20card%202%0A1%20card%203"
     );
     expect(ckButton.text()).toContain("($123.45)");
   });
