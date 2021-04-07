@@ -42,6 +42,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import VueSocialSharing from "vue-social-sharing";
+
+Vue.use(VueSocialSharing);
 
 export default Vue.extend({
   props: {

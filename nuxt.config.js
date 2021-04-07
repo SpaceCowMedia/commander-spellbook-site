@@ -75,7 +75,8 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/google-fonts"],
+  // socail-sharing (https://www.npmjs.com/package/vue-social-sharing)
+  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
