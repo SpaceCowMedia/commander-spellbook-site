@@ -1,3 +1,5 @@
+const isWindows = process.platform === "win32";
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
@@ -88,7 +90,7 @@ export default {
   },
 
   tailwindcss: {
-    jit: true,
+    jit: !isWindows,
   },
 
   googleFonts: {
