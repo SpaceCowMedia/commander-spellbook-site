@@ -113,16 +113,24 @@ export default Vue.extend({
 }
 
 .link-collection {
-  @apply flex flex-grow flex-col;
+  @apply flex flex-grow flex-col mb-4;
+}
+
+.link-collection:first-child {
+  @apply ml-0;
+}
+
+.link-collection:last-child {
+  @apply mr-0;
 }
 
 h6 {
-  /* text-decoration: underline; */
-  display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-end: 100px;
-  border-bottom: 1px solid;
-  @apply text-primary;
+  @apply block text-white font-title uppercase border-b border-white mb-2;
+}
+
+@media (min-width: 768px) {
+  .link-collection {
+    @apply mx-4 w-1/3;
+  }
 }
 </style>
