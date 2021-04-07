@@ -127,7 +127,7 @@ import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
-import autocomplete from "@/lib/api/autocomplete";
+import colorAutocompletes from "@/lib/api/color-autocompletes";
 
 type InputData = {
   value: string;
@@ -182,133 +182,13 @@ export default Vue.extend({
     MultiSearchInput,
     RadioSearchInput,
   },
-  async asyncData(): Promise<Data> {
-    const cardNameAutocompletes = await autocomplete("cards", "");
-    const resultAutocompletes = await autocomplete("results", "");
-    const colorAutocompletes = await autocomplete("colors", "");
-
-    return {
-      cardNameAutocompletes,
-      resultAutocompletes,
-      colorAutocompletes,
-      cards: [{ value: "", operator: ":" }],
-      cardOperatorOptions: [
-        {
-          value: ":",
-          label: "Has card with name",
-          placeholder: "ex: isochron",
-        },
-        {
-          value: "=",
-          label: "Has card with exact name",
-          placeholder: "ex: basalt monolith",
-        },
-        {
-          value: ":-exclude",
-          label: "Does not have card with name",
-          placeholder: "ex: isochron",
-        },
-        {
-          value: "=-exclude",
-          label: "Does not have card with exact name",
-          placeholder: "ex: basalt monolith",
-        },
-      ],
-
-      cardAmounts: [{ value: "", operator: "=-number" }],
-      cardAmountOperatorOptions: [
-        { value: "=-number", label: "Contains exactly x cards (number)" },
-        { value: ">-number", label: "Contains more than x cards (number)" },
-        { value: "<-number", label: "Contains less than x cards (number)" },
-      ],
-
-      colorIdentity: [{ value: "", operator: ":" }],
-      colorIdentityOperatorOptions: [
-        {
-          value: ":",
-          label: "Is within the color identity",
-        },
-        {
-          value: "=",
-          label: "Is exactly the color identity",
-        },
-        {
-          value: ":-exclude",
-          label: "Is not within the color identity",
-        },
-        {
-          value: "=-exclude",
-          label: "Is not exactly the color identity",
-        },
-        { value: ">-number", label: "Contains more than x colors (number)" },
-        { value: "<-number", label: "Contains less than x colors (number)" },
-        { value: "=-number", label: "Contains exactly x colors (number)" },
-      ],
-
-      prerequisites: [{ value: "", operator: ":" }],
-      steps: [{ value: "", operator: ":" }],
-      results: [{ value: "", operator: ":" }],
-      comboDataOperatorOptions: [
-        {
-          value: ":",
-          label: "Contains the phrase",
-          placeholder: "ex: mana, untap, additional",
-        },
-        { value: "=", label: "Is exactly" },
-        {
-          value: ":-exclude",
-          label: "Does not contain the phrase",
-          placeholder: "ex: mana, untap, additional",
-        },
-        { value: "=-exclude", label: "Is not exactly" },
-        { value: ">-number", label: "Contains more than x (number)" },
-        { value: "<-number", label: "Contains less than x (number)" },
-        { value: "=-number", label: "Contains exactly x (number)" },
-      ],
-
-      previewed: DEFAULT_PREVIEWED_VALUE,
-      previewedOptions: [
-        {
-          value: "include",
-          label:
-            "Include combos with newly previewed cards in search results (default search behavior)",
-        },
-        {
-          value: "exclude",
-          label: "Exclude combos with newly previewed cards in search results",
-        },
-        {
-          value: "is",
-          label: "Only show combos with newly previewed cards",
-        },
-      ],
-
-      banned: DEFAULT_BANNED_VALUE,
-      bannedOptions: [
-        {
-          value: "exclude",
-          label:
-            "Exclude combos with banned cards in search results (default search behavior)",
-        },
-        {
-          value: "include",
-          label: "Include combos with banned cards in search results",
-        },
-        {
-          value: "is",
-          label: "Only show combos with banned cards",
-        },
-      ],
-
-      validationError: "",
-    };
-  },
-  data() {
+  data(): Data {
     // TODO solve this duplicate data thing
     return {
-      cardNameAutocompletes: [],
-      resultAutocompletes: [],
-      colorAutocompletes: [],
+      cardNameAutocompletes: require("../static/api/card-names.json"),
+      resultAutocompletes: require("../static/api/results.json"),
+      colorAutocompletes,
+
       cards: [{ value: "", operator: ":" }],
       cardOperatorOptions: [
         {

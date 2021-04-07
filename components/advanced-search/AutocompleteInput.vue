@@ -14,7 +14,6 @@
         'border-danger': error,
       }"
       @input="onChange"
-      @focus="onChange"
       @blur="close"
       @keydown.down="onArrowDown"
       @keydown.up="onArrowUp"
@@ -24,13 +23,13 @@
       autocorrect="off"
       spellcheck="false"
     />
-    <ul class="autocomplete-results" v-show="isOpen" ref="autocompleteResults">
-      <li v-if="loading" class="autocomplete-result animate-pulse">
-        Loading...
-      </li>
+    <ul
+      class="autocomplete-results"
+      v-show="isOpen && autocompleteItems.length > 0"
+      ref="autocompleteResults"
+    >
       <li
         v-for="(item, i) in autocompleteItems"
-        v-show="!loading"
         :key="i"
         :class="{ 'is-active': i === arrowCounter }"
         class="autocomplete-result"
@@ -106,23 +105,19 @@ export default Vue.extend({
     },
   },
   mounted() {
-    // document.addEventListener("click", this.handleClickOutside);
+    document.addEventListener("click", this.handleClickOutside);
   },
   destroyed() {
-    // document.removeEventListener("click", this.handleClickOutside);
+    document.removeEventListener("click", this.handleClickOutside);
   },
   methods: {
     onChange(): void {
       if (!this.active) {
         return;
       }
-      // this.close();
-
-      this.isOpen = true;
-      this.lookupAutocomplete(this.value);
+      this.lookupAutocomplete();
     },
     choose(choice: string): void {
-      console.log("choice called", choice);
       this.$emit("input", choice);
       this.close();
     },
@@ -172,42 +167,72 @@ export default Vue.extend({
       ref.scrollTop = li.offsetTop - 50;
     },
     onEnter(e: KeyboardEvent): void {
-      e.preventDefault();
-
       const choice = this.autocompleteItems[this.arrowCounter];
 
       if (!choice) {
+        // allow the form to be submitted if enter was used without a selection
         return;
       }
 
+      e.preventDefault();
+
       this.choose(choice.value);
     },
-    lookupAutocomplete(value: string): void {
+    lookupAutocomplete(): void {
       if (!this.active) {
         return;
       }
 
-      this.loading = true;
+      if (!this.value) {
+        this.close();
+        return;
+      }
 
       if (this.autocompleteTimeout) {
         clearTimeout(this.autocompleteTimeout);
       }
       this.autocompleteTimeout = setTimeout(() => {
-        const partial = normalizeStringInput(value);
-        this.autocompleteItems = this.autocompleteOptions.filter((option) => {
-          const mainMatch = option.value.includes(partial);
+        if (!this.value) {
+          this.close();
+          return;
+        }
+        const partial = normalizeStringInput(this.value);
+        this.autocompleteItems = [];
+        const options = this.autocompleteOptions
+          .filter((option) => {
+            const mainMatch = option.value.includes(partial);
+            if (mainMatch || (option.alias && partial.match(option.alias))) {
+              return true;
+            }
 
-          if (mainMatch) {
-            return mainMatch;
-          }
-
-          if (!option.alias) {
             return false;
-          }
+          })
+          .sort((a, b) => {
+            const indexA = a.value.indexOf(partial);
+            const indexB = b.value.indexOf(partial);
 
-          return partial.match(option.alias);
-        });
-        this.loading = false;
+            if (indexA === indexB) {
+              return 0;
+            }
+
+            if (indexA === -1) {
+              return 1;
+            }
+            if (indexB === -1) {
+              return -1;
+            }
+
+            if (indexA < indexB) {
+              return -1;
+            } else if (indexB < indexA) {
+              return 1;
+            }
+
+            return 0;
+          });
+        this.autocompleteItems = options.slice(0, 20);
+
+        this.isOpen = true;
       }, 150);
     },
   },
@@ -220,7 +245,7 @@ export default Vue.extend({
 }
 
 .autocomplete-results {
-  @apply p-0 m-0 bg-white border border-light overflow-auto h-48 absolute w-full z-10;
+  @apply p-0 m-0 bg-white border border-light overflow-auto max-h-48 absolute w-full z-10;
 }
 
 .autocomplete-result {

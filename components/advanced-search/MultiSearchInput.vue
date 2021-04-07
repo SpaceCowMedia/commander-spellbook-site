@@ -32,7 +32,7 @@
             :label="inputLabel"
             :autocomplete-options="autocompleteOptions"
             :error="input.error"
-            :active="input.operator === '='"
+            :active="autocompleteOptions.length > 0"
           />
 
           <div class="flex">
