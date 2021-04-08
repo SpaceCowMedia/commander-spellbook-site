@@ -54,13 +54,20 @@
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
-          <h6>Other</h6>
-          <ExternalLink to="https://www.patreon.com/commanderspellbook"
-            >Patreon</ExternalLink
-          >
+          <h6>Social</h6>
           <ExternalLink to="https://discord.gg/DkAyVJG">Discord</ExternalLink>
           <ExternalLink to="https://twitter.com/CommanderSpell"
             >Twitter</ExternalLink
+          >
+          <ExternalLink
+            to="https://www.instagram.com/commanderspellbook/?igshid=nr2h1mc20w79"
+            >Instagram</ExternalLink
+          >
+        </div>
+        <div class="link-collection">
+          <h6>More</h6>
+          <ExternalLink to="https://www.patreon.com/commanderspellbook"
+            >Patreon</ExternalLink
           >
           <ExternalLink to="https://github.com/Commander-Spellbook"
             >Github</ExternalLink
