@@ -296,27 +296,27 @@ export default Vue.extend({
         },
         {
           hid: "twitter-card",
-          property: "twitter:card",
+          name: "twitter:card",
           content: "summary_large_image",
         },
         {
           hid: "twitter-url",
-          property: "twitter:url",
+          name: "twitter:url",
           content: link,
         },
         {
           hid: "twitter-title",
-          property: "twitter:title",
+          name: "twitter:title",
           content: title,
         },
         {
           hid: "twitter-description",
-          property: "twitter:description",
+          name: "twitter:description",
           content: description,
         },
         {
           hid: "twitter-image",
-          property: "twitter:image",
+          name: "twitter:image",
           content: logo,
         },
       ],
