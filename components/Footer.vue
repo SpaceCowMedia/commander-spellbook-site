@@ -54,7 +54,7 @@
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
-          <h6>Other</h6>
+          <h6>Community</h6>
           <ExternalLink to="https://www.patreon.com/commanderspellbook"
             >Patreon</ExternalLink
           >
