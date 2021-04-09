@@ -70,11 +70,12 @@
       </div>
       <div class="container mt-8 text-light">
         <p class="my-4">
-          Commander Spellbook may use the trademarks and other intellectual
-          property of Wizards of the Coast LLC, which is permitted under
-          Wizards' Fan Site Policy. For more information, please visit their
-          <ExternalLink to="https://company.wizards.com/">website</ExternalLink
-          >.
+          Commander Spellbook is unofficial Fan Content permitted under the
+          <ExternalLink
+            to="https://company.wizards.com/en/legal/fancontentpolicy"
+            >Fan Content Policy</ExternalLink
+          >. Not approved/endorsed by Wizards. Portions of the materials used
+          are property of Wizards of the Coast. ©Wizards of the Coast LLC.
         </p>
         <p class="my-4">
           Commander Spellbook utilizes icons provided by
