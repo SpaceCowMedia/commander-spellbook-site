@@ -83,11 +83,7 @@ export default {
   axios: {},
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {
-    options: {
-      fix: true,
-    },
-  },
+  build: {},
 
   tailwindcss: {
     jit: !isWindows,
