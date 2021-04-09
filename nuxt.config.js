@@ -1,12 +1,17 @@
 const isWindows = process.platform === "win32";
 
+const title = "Commander Spellbook: Combo Database for Commander (EDH)";
+const description =
+  "The Premier Magic: the Gathering Combo Database for the Commander / Elder Dragon Highlander (EDH) Format.";
+const linkPreviewImage = "https://beta.commanerspellbook.com/link-preview.png";
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: "Commander Spellbook",
+    title,
     htmlAttrs: {
       lang: "en",
     },
@@ -16,8 +21,64 @@ export default {
       {
         hid: "description",
         name: "description",
-        content:
-          "The Premier Magic: the Gathering Combo Database for the Commander / Elder Dragon Highlander (EDH) Format.",
+        content: description,
+      },
+      // Open Graph / Facebook
+      {
+        hid: "og-type",
+        property: "og:type",
+        content: "website",
+      },
+      {
+        hid: "og-url",
+        property: "og:url",
+        content: "https://commanderspellbook.com/",
+      },
+      {
+        hid: "og-title",
+        property: "og:title",
+        content: title,
+      },
+      {
+        hid: "og-site_name",
+        property: "og:site_name",
+        content: title,
+      },
+      {
+        hid: "og-description",
+        property: "og:description",
+        content: description,
+      },
+      {
+        hid: "og-image",
+        property: "og:image",
+        content: linkPreviewImage,
+      },
+      // Twitter metatags
+      {
+        hid: "twitter-card",
+        property: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        hid: "twitter-url",
+        property: "twitter:url",
+        content: "https://commanderspellbook.com/",
+      },
+      {
+        hid: "twitter-title",
+        property: "twitter:title",
+        content: title,
+      },
+      {
+        hid: "twitter-description",
+        property: "twitter:description",
+        content: description,
+      },
+      {
+        hid: "twitter-image",
+        property: "twitter:image",
+        content: linkPreviewImage,
       },
     ],
     link: [
