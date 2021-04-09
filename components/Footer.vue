@@ -65,7 +65,7 @@
           <ExternalLink to="https://github.com/Commander-Spellbook"
             >Github</ExternalLink
           >
-          <ExternalLink to="https://edhrec.com">EDHREC</ExternalLink>
+          <ExternalLink to="https://edhrec.com/combos">EDHREC</ExternalLink>
         </div>
       </div>
       <div class="container mt-8 text-light">
