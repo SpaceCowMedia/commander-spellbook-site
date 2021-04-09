@@ -43,7 +43,7 @@ describe("parseColorIdentity", () => {
             {
               key: "-ci",
               value: "4",
-              message: `The key "-ci" does not support operator "${operator}".`,
+              message: `The color identity key "-ci" does not support operator "${operator}".`,
             },
           ],
           colorIdentity: {
@@ -56,19 +56,21 @@ describe("parseColorIdentity", () => {
     }
   );
 
-  it("ignores color identity when number is greater than 5", () => {
+  it("errors if color identity when number is greater than 5", () => {
     parseColorIdentity(searchParams, "ci", ":", "6");
 
     expect(searchParams).toEqual(
       expect.objectContaining({
-        errors: [],
+        errors: [
+          {
+            key: "ci",
+            value: "6",
+            message:
+              'The value "6" is invalid for the color identity key "ci".',
+          },
+        ],
         colorIdentity: {
-          includeFilters: [
-            {
-              method: ":",
-              value: [],
-            },
-          ],
+          includeFilters: [],
           excludeFilters: [],
           sizeFilters: [],
         },
@@ -76,19 +78,21 @@ describe("parseColorIdentity", () => {
     );
   });
 
-  it("ignores color identity when number is less than 0", () => {
+  it("errors if color identity when number is less than 0", () => {
     parseColorIdentity(searchParams, "ci", ":", "-1");
 
     expect(searchParams).toEqual(
       expect.objectContaining({
-        errors: [],
+        errors: [
+          {
+            key: "ci",
+            value: "-1",
+            message:
+              'The value "-1" is invalid for the color identity key "ci".',
+          },
+        ],
         colorIdentity: {
-          includeFilters: [
-            {
-              method: ":",
-              value: [],
-            },
-          ],
+          includeFilters: [],
           excludeFilters: [],
           sizeFilters: [],
         },
@@ -141,4 +145,26 @@ describe("parseColorIdentity", () => {
       );
     }
   );
+
+  it("errors if an invalid value is passed", () => {
+    parseColorIdentity(searchParams, "ci", ":", "foo");
+
+    expect(searchParams).toEqual(
+      expect.objectContaining({
+        errors: [
+          {
+            key: "ci",
+            value: "foo",
+            message:
+              'The value "foo" is invalid for the color identity key "ci".',
+          },
+        ],
+        colorIdentity: {
+          excludeFilters: [],
+          includeFilters: [],
+          sizeFilters: [],
+        },
+      })
+    );
+  });
 });
