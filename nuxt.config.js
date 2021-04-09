@@ -3,7 +3,7 @@ const isWindows = process.platform === "win32";
 const title = "Commander Spellbook: Combo Database for Commander (EDH)";
 const description =
   "The Premier Magic: the Gathering Combo Database for the Commander / Elder Dragon Highlander (EDH) Format.";
-const linkPreviewImage = "https://beta.commanerspellbook.com/link-preview.png";
+const linkPreviewImage = "https://commanerspellbook.com/link-preview.png";
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
