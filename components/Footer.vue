@@ -73,18 +73,15 @@
           Commander Spellbook may use the trademarks and other intellectual
           property of Wizards of the Coast LLC, which is permitted under
           Wizards' Fan Site Policy. For more information, please visit their
-          website at
-          <ExternalLink to="https://company.wizards.com/">
-            https://company.wizards.com/</ExternalLink
+          <ExternalLink to="https://company.wizards.com/">website</ExternalLink
           >.
         </p>
         <p class="my-4">
           Commander Spellbook utilizes icons provided by
           <ExternalLink to="https://fontawesome.com/">
             Font Awesome</ExternalLink
-          >. Licensing information may be found here:
-          <ExternalLink to="https://fontawesome.com/license">
-            https://fontawesome.com/license</ExternalLink
+          >. Licensing information may be found
+          <ExternalLink to="https://fontawesome.com/license"> here</ExternalLink
           >.
         </p>
       </div>
