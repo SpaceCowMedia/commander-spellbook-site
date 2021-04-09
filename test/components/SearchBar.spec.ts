@@ -100,13 +100,13 @@ describe("SearchBar", () => {
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
-      ).toBe("Search .... combos");
+      ).toBe("Search thousands of EDH combos");
 
       await (wrapper.vm as VueComponent).lookupNumberOfCombos();
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
-      ).toBe("Search 1 combos");
+      ).toBe("Search 1 EDH combos");
     });
   });
 
