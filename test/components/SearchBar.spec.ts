@@ -69,8 +69,9 @@ describe("SearchBar", () => {
     const links = wrapper.findAllComponents(NuxtLinkStub);
 
     expect(links.at(0).props("to")).toBe("/");
-    expect(links.at(1).props("to")).toBe("/advanced-search");
-    expect(links.at(2).props("to")).toBe("/syntax-guide");
+    expect(links.at(1).props("to")).toBe("/advanced-search/");
+    expect(links.at(2).props("to")).toBe("/syntax-guide/");
+    expect(links.at(3).props("to")).toBe("/random/");
 
     await wrapper.setProps({
       onHomePage: true,
@@ -99,13 +100,13 @@ describe("SearchBar", () => {
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
-      ).toBe("Search .... combos");
+      ).toBe("Search thousands of EDH combos");
 
       await (wrapper.vm as VueComponent).lookupNumberOfCombos();
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")
-      ).toBe("Search 1 combos");
+      ).toBe("Search 1 EDH combos");
     });
   });
 
@@ -137,7 +138,7 @@ describe("SearchBar", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "card:Rashmi",
         },

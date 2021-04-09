@@ -1,59 +1,30 @@
 <template>
   <div class="mt-4 mb-4 w-full rounded overflow-hidden">
-    <button
-      id="copy-combo-button"
-      ref="copyButton"
-      class="combo-button"
-      type="button"
-      @click="copyComboLink"
-    >
-      Copy Combo Link
-    </button>
-
-    <button
-      v-if="hasSimiliarCombos"
-      id="has-similiar-combos"
-      class="combo-button"
-      @click="goToSimiliarCombos"
-    >
-      Find Other Combos Using These Cards
-    </button>
-
-    <!-- accessibility compliance software may see this as an
-      issue since there is no label for it. But it's hidden
-      from screenreaders and hidden on the page. It only needs
-      to be a text input in order to make the copy code work -->
-    <input
-      ref="copyInput"
-      aria-hidden="true"
-      type="hidden"
-      class="hidden-combo-link-input"
-      :value="comboLink"
+    <BuyComboButtons
+      :cards="cards"
+      :tcgplayer-price="tcgplayerPrice"
+      :cardkingdom-price="cardkingdomPrice"
+      class="pb-1 border-b border-light"
     />
-    <!-- This is a bit convoluated, but to get the notification we want
-    to animate correctly, we it to be always on screen (but out of frame)
-    to slide up from the bottom, screen readers need it to appear to read
-    the message to the user. Therfore, we have 2 version, one that is not
-    visible in the UI but alerts the user with a screenreader, and one
-    that is visible in the UI, but is hidden to screen readers. -->
-    <div v-if="showCopyNotification" role="alert" class="sr-only">
-      Combo link copied to your clipboard
-    </div>
-    <div
-      aria-hidden="true"
-      class="copy-combo-notification w-full md:w-1/2"
-      :class="{ show: showCopyNotification }"
-    >
-      Combo link copied to your clipboard!
+    <div class="mt-1">
+      <CopyComboLinkButton :combo-link="comboLink" />
+      <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import search from "@/lib/api/search";
+import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
+import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
+import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
 
 export default Vue.extend({
+  components: {
+    CopyComboLinkButton,
+    SimiliarCombosButton,
+    BuyComboButtons,
+  },
   props: {
     cards: {
       type: Array as PropType<string[]>,
@@ -69,95 +40,14 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-  },
-  data() {
-    return {
-      showCopyNotification: false,
-      hasSimiliarCombos: false,
-    };
-  },
-  async fetch() {
-    await this.lookupSimiliarCombos();
-  },
-
-  computed: {
-    similiarSearchString(): string {
-      return this.cards.reduce((accum, name) => {
-        // TODO support single quote
-        return accum + ` card="${name}"`;
-      }, `-spellbookid:${this.comboId}`);
+    tcgplayerPrice: {
+      type: String,
+      default: "",
     },
-  },
-  methods: {
-    copyComboLink(): void {
-      // kind of convoluted, but the hidden input needs to be
-      // text so we can actually copy from it, but when it's
-      // text, accessibility programs flag it for not having a label
-      // or being usable, even when set to aria-hidden, so we quickly
-      // set it to text and back to hidden again
-      const copyInput = this.$refs.copyInput as HTMLInputElement;
-      copyInput.type = "text";
-      copyInput.select();
-      document.execCommand("copy");
-      copyInput.type = "hidden";
-
-      this.showCopyNotification = true;
-      this.$gtag.event("Copy Combo Link Clicked", {
-        event_category: "Combo Detail Page Actions",
-      });
-
-      setTimeout(() => {
-        this.showCopyNotification = false;
-      }, 2000);
-
-      window.requestAnimationFrame(() => {
-        (this.$refs.copyButton as HTMLButtonElement).blur();
-      });
-    },
-    async lookupSimiliarCombos(): Promise<void> {
-      const result = await search(this.similiarSearchString);
-
-      this.hasSimiliarCombos = result.combos.length > 0;
-    },
-    goToSimiliarCombos(): void {
-      this.$gtag.event("Find Other Combos Using These Cards Button Clicked", {
-        event_category: "Combo Detail Page Actions",
-      });
-
-      this.$router.push({
-        path: "/search",
-        query: {
-          q: this.similiarSearchString,
-        },
-      });
+    cardkingdomPrice: {
+      type: String,
+      default: "",
     },
   },
 });
 </script>
-
-<style scoped>
-.combo-button {
-  @apply w-full bg-white block mx-auto mb-4 text-dark font-semibold py-2 px-4 border border-light rounded shadow;
-}
-
-.combo-button:hover {
-  @apply bg-gray-100;
-}
-
-.hidden-combo-link-input {
-  left: -25%;
-  top: -25%;
-  @apply fixed;
-}
-
-.copy-combo-notification {
-  /* Tailwind 2 class: -bottom-20 */
-  bottom: -5rem;
-  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-4 bg-black text-white;
-}
-
-.copy-combo-notification.show {
-  /* Tailwind 2 class: bottom-4 */
-  bottom: 1rem;
-}
-</style>

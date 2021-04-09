@@ -7,7 +7,7 @@ describe("MultiSearchInput", () => {
   it("creates an input", () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -27,7 +27,7 @@ describe("MultiSearchInput", () => {
   it("creates an operator selector for input", async () => {
     const wrapper = mount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -56,13 +56,13 @@ describe("MultiSearchInput", () => {
 
     await options.at(2).setSelected();
 
-    expect(wrapper.props("inputs")[0].operator).toBe(">");
+    expect(wrapper.props("value")[0].operator).toBe(">");
   });
 
   it("includes error if provided", () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -93,11 +93,10 @@ describe("MultiSearchInput", () => {
     );
   });
 
-  it("emits add-input event when plus button is clicked", async () => {
-    const spy = jest.fn();
+  it("calls addInput when plus button is clicked", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -112,32 +111,31 @@ describe("MultiSearchInput", () => {
           },
         ],
       },
-      mocks: {
-        $emit: spy,
-      },
     });
+    const vm = wrapper.vm as VueComponent;
+
+    const spy = jest.spyOn(vm, "addInput");
 
     await wrapper.findAll(".plus-button").at(0).trigger("click");
 
     expect(spy).toBeCalledTimes(1);
-    expect(spy).toBeCalledWith("add-input", 0);
+    expect(spy).toBeCalledWith(0);
 
     await wrapper.findAll(".plus-button").at(1).trigger("click");
 
     expect(spy).toBeCalledTimes(2);
-    expect(spy).toBeCalledWith("add-input", 1);
+    expect(spy).toBeCalledWith(1);
 
     await wrapper.findAll(".plus-button").at(2).trigger("click");
 
     expect(spy).toBeCalledTimes(3);
-    expect(spy).toBeCalledWith("add-input", 2);
+    expect(spy).toBeCalledWith(2);
   });
 
-  it("emits remove-input event when plus button is clicked", async () => {
-    const spy = jest.fn();
+  it("calls removeInput when minus button is clicked", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -152,32 +150,32 @@ describe("MultiSearchInput", () => {
           },
         ],
       },
-      mocks: {
-        $emit: spy,
-      },
     });
+    const vm = wrapper.vm as VueComponent;
+
+    const spy = jest.spyOn(vm, "removeInput").mockImplementation();
 
     await wrapper.findAll(".minus-button").at(0).trigger("click");
 
     expect(spy).toBeCalledTimes(1);
-    expect(spy).toBeCalledWith("remove-input", 0);
+    expect(spy).toBeCalledWith(0);
 
     await wrapper.findAll(".minus-button").at(1).trigger("click");
 
     expect(spy).toBeCalledTimes(2);
-    expect(spy).toBeCalledWith("remove-input", 1);
+    expect(spy).toBeCalledWith(1);
 
     await wrapper.findAll(".minus-button").at(2).trigger("click");
 
     expect(spy).toBeCalledTimes(3);
-    expect(spy).toBeCalledWith("remove-input", 2);
+    expect(spy).toBeCalledWith(2);
   });
 
   it("automatically updates label to be plural", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
         label: "Label",
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -188,7 +186,7 @@ describe("MultiSearchInput", () => {
 
     expect(wrapper.find(".input-label").text()).toBe("Label");
     await wrapper.setProps({
-      inputs: [
+      value: [
         { value: "1", operator: ":" },
         { value: "2", operator: ":" },
       ],
@@ -201,7 +199,7 @@ describe("MultiSearchInput", () => {
       propsData: {
         label: "Mouse",
         pluralLabel: "Mice",
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -212,7 +210,7 @@ describe("MultiSearchInput", () => {
 
     expect(wrapper.find(".input-label").text()).toBe("Mouse");
     await wrapper.setProps({
-      inputs: [
+      value: [
         { value: "1", operator: ":" },
         { value: "2", operator: ":" },
       ],
@@ -223,7 +221,7 @@ describe("MultiSearchInput", () => {
   it("only displays minus button when there are multiple inputs", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
-        inputs: [
+        value: [
           {
             value: "",
             operator: ":",
@@ -235,7 +233,7 @@ describe("MultiSearchInput", () => {
     expect(wrapper.findAll(".minus-button").length).toBe(0);
 
     await wrapper.setProps({
-      inputs: [
+      value: [
         { value: "1", operator: ":" },
         { value: "2", operator: ":" },
       ],
@@ -244,7 +242,7 @@ describe("MultiSearchInput", () => {
     expect(wrapper.findAll(".minus-button").length).toBe(2);
 
     await wrapper.setProps({
-      inputs: [
+      value: [
         { value: "1", operator: ":" },
         { value: "2", operator: ":" },
         { value: "3", operator: ":" },
@@ -254,43 +252,72 @@ describe("MultiSearchInput", () => {
     expect(wrapper.findAll(".minus-button").length).toBe(3);
 
     await wrapper.setProps({
-      inputs: [{ value: "1", operator: ":" }],
+      value: [{ value: "1", operator: ":" }],
     });
 
     expect(wrapper.findAll(".minus-button").length).toBe(0);
   });
 
   describe("addInput", () => {
-    it("emits add-input event", () => {
-      const spy = jest.fn();
+    it("adds inputs after the specified index", () => {
+      const value = [
+        { value: "1", operator: ":" },
+        { value: "2", operator: ":" },
+        { value: "3", operator: ":" },
+      ];
       const wrapper = shallowMount(MultiSearchInput, {
-        mocks: {
-          $emit: spy,
+        propsData: {
+          value,
         },
       });
       const vm = wrapper.vm as VueComponent;
 
-      vm.addInput(5);
+      vm.addInput(1);
 
-      expect(spy).toBeCalledTimes(1);
-      expect(spy).toBeCalledWith("add-input", 5);
+      expect(value.length).toBe(4);
+      expect(value[2]).toEqual({ value: "", operator: ":" });
+    });
+
+    it("uses the specified default operator prop if provided", () => {
+      const value = [
+        { value: "1", operator: ":" },
+        { value: "2", operator: ":" },
+        { value: "3", operator: ":" },
+      ];
+      const wrapper = shallowMount(MultiSearchInput, {
+        propsData: {
+          value,
+          defaultOperator: ">",
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      vm.addInput(1);
+
+      expect(value.length).toBe(4);
+      expect(value[2]).toEqual({ value: "", operator: ">" });
     });
   });
 
   describe("removeInput", () => {
-    it("emits remove-input event", () => {
-      const spy = jest.fn();
+    it("removes input", () => {
+      const value = [
+        { value: "1", operator: ":" },
+        { value: "2", operator: ":" },
+        { value: "3", operator: ":" },
+      ];
       const wrapper = shallowMount(MultiSearchInput, {
-        mocks: {
-          $emit: spy,
+        propsData: {
+          value,
         },
       });
       const vm = wrapper.vm as VueComponent;
 
-      vm.removeInput(5);
+      vm.removeInput(1);
 
-      expect(spy).toBeCalledTimes(1);
-      expect(spy).toBeCalledWith("remove-input", 5);
+      expect(value.length).toBe(2);
+      expect(value[0]).toEqual({ value: "1", operator: ":" });
+      expect(value[1]).toEqual({ value: "3", operator: ":" });
     });
   });
 

@@ -42,7 +42,7 @@ describe("SearchPage", () => {
       },
     ];
     $route = {
-      path: "/search",
+      path: "/search/",
       query: {},
     };
     $router = {
@@ -340,7 +340,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: { q: "ci:temur sort:results", page: "1" },
       });
     });
@@ -355,7 +355,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: { q: "sort:results ci:temur", page: "1" },
       });
     });
@@ -371,7 +371,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: { q: "ci:temur order:descending", page: "1" },
       });
     });
@@ -386,7 +386,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: { q: "order:descending ci:temur", page: "1" },
       });
     });
@@ -505,7 +505,7 @@ describe("SearchPage", () => {
       expect(vm.redirecting).toBe(true);
 
       expect($router.replace).toBeCalledWith({
-        path: "/combo/1",
+        path: "/combo/1/",
         query: {
           q: "query",
         },
@@ -557,7 +557,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "card:Arjun",
           page: "4",
@@ -574,7 +574,7 @@ describe("SearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "Sydri",
           page: "4",

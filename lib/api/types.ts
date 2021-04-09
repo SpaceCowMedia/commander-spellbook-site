@@ -93,3 +93,8 @@ export type SearchParameters = {
   order?: "ascending" | "descending";
   errors: SearchError[];
 };
+
+export type EDHRecData = Record<
+  string,
+  { cardkingdom: { price: number }; tcgplayer: { price: number } }
+>;

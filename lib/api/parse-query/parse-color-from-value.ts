@@ -2,7 +2,7 @@ import type { ColorIdentityColors } from "../types";
 
 export default function parseColorFromValue(
   val: string
-): ColorIdentityColors[] {
+): ColorIdentityColors[] | false {
   const normalizedValue = val.replace(/[\s-]/g, "").toLowerCase();
 
   switch (normalizedValue) {
@@ -97,10 +97,14 @@ export default function parseColorFromValue(
   const matches = normalizedValue.match(/[wubrg]/g);
 
   if (!matches) {
-    return [];
+    return false;
   }
 
   const uniqueMatches = new Set(matches);
+
+  if (uniqueMatches.size < matches.length) {
+    return false;
+  }
 
   return Array.from(uniqueMatches) as ColorIdentityColors[];
 }

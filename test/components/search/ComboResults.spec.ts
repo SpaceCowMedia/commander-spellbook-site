@@ -44,9 +44,9 @@ describe("ComboResults", () => {
     const links = wrapper.findAllComponents(RouterLinkStub);
 
     expect(links.length).toBe(3);
-    expect(links.at(0).props("to")).toBe("/combo/1");
-    expect(links.at(1).props("to")).toBe("/combo/2");
-    expect(links.at(2).props("to")).toBe("/combo/3");
+    expect(links.at(0).props("to")).toBe("/combo/1/");
+    expect(links.at(1).props("to")).toBe("/combo/2/");
+    expect(links.at(2).props("to")).toBe("/combo/3/");
   });
 
   it("creates a card tooltip for each name", () => {

@@ -11,7 +11,7 @@ import Vue from "vue";
 import getRandomItemFromArray from "@/lib/random-from-array";
 import ErrorBaseComponent from "./error-base.vue";
 
-const backgroundOptions = ["apocalypse", "obliterate"];
+const backgroundOptions = ["apocalypse", "obliterate", "book-burning"];
 
 export default Vue.extend({
   components: {
@@ -35,5 +35,9 @@ export default Vue.extend({
 
 .obliterate {
   background-image: url("~assets/images/unknown-errors/obliterate.jpg");
+}
+
+.book-burning {
+  background-image: url("~assets/images/unknown-errors/book-burning.jpg");
 }
 </style>

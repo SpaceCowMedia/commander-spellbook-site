@@ -8,7 +8,7 @@
     <div class="lg:mx-8 text-center">
       <p>
         Can we use cookies for analytics? Read
-        <nuxt-link to="/privacy-policy">the privacy policy</nuxt-link>
+        <nuxt-link to="/privacy-policy/">the privacy policy</nuxt-link>
         for more information.
       </p>
     </div>

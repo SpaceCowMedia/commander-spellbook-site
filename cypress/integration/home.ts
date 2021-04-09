@@ -4,7 +4,7 @@ describe("Home Page", () => {
 
     cy.get("input[name=q]").type("mesmeric result:infinite{enter}");
 
-    cy.url().should("include", "/search");
+    cy.url().should("include", "/search/");
   });
 
   it("can load a random combo", () => {
@@ -12,6 +12,6 @@ describe("Home Page", () => {
 
     cy.get("a.random-button").click();
 
-    cy.url().should("include", "/combo");
+    cy.url().should("include", "/combo/");
   });
 });

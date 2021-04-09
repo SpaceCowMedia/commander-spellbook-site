@@ -7,19 +7,19 @@
     -->
     <div id="combo-links">
       <p v-for="link in links" :key="link.id">
-        <nuxt-link :to="'/combo/' + link.id">{{ link.names }}</nuxt-link>
+        <nuxt-link :to="'/combo/' + link.id + '/'">{{ link.names }}</nuxt-link>
       </p>
     </div>
 
     <div id="meta-links">
       <p class="py-4">
-        <nuxt-link to="/meta/cards">See all cards</nuxt-link>
+        <nuxt-link to="/meta/cards/">See all cards</nuxt-link>
       </p>
       <p class="py-4">
-        <nuxt-link to="/meta/colors">See all colors</nuxt-link>
+        <nuxt-link to="/meta/colors/">See all colors</nuxt-link>
       </p>
       <p class="py-4">
-        <nuxt-link to="/meta/results">See all results</nuxt-link>
+        <nuxt-link to="/meta/results/">See all results</nuxt-link>
       </p>
     </div>
   </div>

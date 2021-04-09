@@ -41,7 +41,7 @@
         />
       </div>
 
-      <aside class="w-full sm:w-1/3 text-center">
+      <aside class="w-full md:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
@@ -59,6 +59,8 @@
           :combo-id="comboNumber"
           :combo-link="link"
           :cards="cardNames"
+          :tcgplayer-price="prices.tcgplayer"
+          :cardkingdom-price="prices.cardkingdom"
         />
       </aside>
     </div>
@@ -73,11 +75,20 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
+import getExternalCardData from "@/lib/get-external-card-data";
 
+type Price = {
+  tcgplayer: string;
+  cardkingdom: string;
+};
 type CardData = {
   name: string;
   oracleImageUrl: string;
   artUrl: string;
+  prices: {
+    tcgplayer: number;
+    cardkingdom: number;
+  };
 };
 
 type ComboData = {
@@ -89,6 +100,7 @@ type ComboData = {
   loaded: boolean;
   comboNumber: string;
   cards: CardData[];
+  prices: Price;
   colorIdentity: string[];
   prerequisites: string[];
   steps: string[];
@@ -129,12 +141,51 @@ export default Vue.extend({
     }
 
     const cards = combo.cards.map((card) => {
+      const externalCardData = getExternalCardData(card);
+
       return {
         name: card.name,
-        artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl("normal"),
+        artUrl: externalCardData.images.artCrop,
+        oracleImageUrl: externalCardData.images.oracle,
+        prices: externalCardData.prices,
       };
     });
+
+    function parsePriceData(kind: "tcgplayer" | "cardkingdom"): string {
+      const price = cards.reduce((total, card) => {
+        if (total < 0) {
+          return total;
+        }
+
+        let price: number;
+
+        if (kind === "tcgplayer") {
+          price = Number(card.prices.tcgplayer);
+        } else if (kind === "cardkingdom") {
+          price = Number(card.prices.cardkingdom);
+        } else {
+          price = 0;
+        }
+
+        if (!price) {
+          return -1;
+        }
+
+        return total + price;
+      }, 0);
+
+      if (price === -1) {
+        // indicates that the price for at least one card is not available
+        return "";
+      }
+
+      return price.toFixed(2);
+    }
+
+    const prices = {
+      tcgplayer: parsePriceData("tcgplayer"),
+      cardkingdom: parsePriceData("cardkingdom"),
+    };
 
     const title = cards
       .map((card, index) => {
@@ -163,6 +214,7 @@ export default Vue.extend({
       hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
       cards,
+      prices,
       loaded: true,
       prerequisites: Array.from(combo.prerequisites),
       steps: Array.from(combo.steps),
@@ -180,6 +232,10 @@ export default Vue.extend({
       loaded: false,
       comboNumber: "0",
       cards: [],
+      prices: {
+        tcgplayer: "0.00",
+        cardkingdom: "0.00",
+      },
       colorIdentity: [],
       prerequisites: [],
       steps: [],
@@ -277,7 +333,7 @@ export default Vue.extend({
   mounted() {
     if (!this.loaded) {
       this.$router.push({
-        path: "/combo-not-found",
+        path: "/combo-not-found/",
       });
     }
   },

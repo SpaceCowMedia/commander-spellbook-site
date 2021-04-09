@@ -1,26 +1,39 @@
 <template>
-  <div class="relative gradient pb-40 md:pb-8">
-    <div class="container relative md:h-screen z-10">
-      <div class="w-full">
-        <Logo />
+  <div class="container relative md:h-screen z-10">
+    <div class="w-full">
+      <Logo />
 
-        <h2 class="sm:my-2 font-mono text-xl sm:text-3xl md:text-4xl">
-          THE SEARCH ENGINE FOR EDH COMBOS
-        </h2>
+      <h2 class="font-title my-1 sm:my-3 text-2xl sm:text-3xl md:text-4xl">
+        The Search Engine for EDH Combos
+      </h2>
 
-        <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
+      <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
 
-        <div class="links md:block flex flex-col">
-          <nuxt-link to="/advanced-search" class="button">
-            Advanced Search
-          </nuxt-link>
-          <nuxt-link to="/syntax-guide" class="button">
-            Syntax Guide
-          </nuxt-link>
-          <nuxt-link to="/random" class="random-button button">
-            Random Combo
-          </nuxt-link>
-        </div>
+      <div class="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
+        <nuxt-link to="/advanced-search/" class="button md:m-1">
+          Advanced Search
+        </nuxt-link>
+        <nuxt-link to="/syntax-guide/" class="button md:m-1">
+          Syntax Guide
+        </nuxt-link>
+        <nuxt-link to="/random/" class="random-button button md:m-1">
+          Random Combo
+        </nuxt-link>
+        <nuxt-link
+          v-if="showPreviewLink"
+          :to="{ path: '/search/', query: { q: 'is:previewed' } }"
+          class="previwed-combos-button button md:m-1"
+        >
+          Strixhaven Combos
+        </nuxt-link>
+      </div>
+
+      <div class="button-links flex md:w-2/3 m-auto">
+        <ExternalLink
+          class="button"
+          to="https://www.patreon.com/commanderspellbook"
+          >Join our Patreon</ExternalLink
+        >
       </div>
     </div>
   </div>
@@ -29,30 +42,45 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchBar from "@/components/SearchBar.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 import Logo from "@/components/Logo.vue";
+import search from "@/lib/api/search";
 
 export default Vue.extend({
   components: {
+    ExternalLink,
     SearchBar,
     Logo,
   },
   layout: "landing",
+  async asyncData() {
+    const result = await search("is:previewed");
+
+    return {
+      showPreviewLink: result.combos.length > 0,
+    };
+  },
+  data() {
+    return {
+      showPreviewLink: false,
+    };
+  },
   mounted() {
     const query = this.$route.query.q;
     const { status, id } = this.$route.query;
 
     if (Number(query) > 0 || Number(id) > 0) {
-      this.$router.push(`/combo/${id || query}`);
+      this.$router.push(`/combo/${id || query}/`);
       return;
     }
 
     if (query === "spoiled" || status === "spoiled") {
-      this.$router.push("/search?q=is:previewed");
+      this.$router.push("/search/?q=is:previewed");
       return;
     }
 
     if (query === "banned" || status === "banned") {
-      this.$router.push("/search?q=is:banned");
+      this.$router.push("/search/?q=is:banned");
       return;
     }
 
@@ -60,7 +88,7 @@ export default Vue.extend({
       return;
     }
 
-    this.$router.push(`/search?q=${query}`);
+    this.$router.push(`/search/?q=${query}`);
   },
 });
 </script>
@@ -71,10 +99,20 @@ export default Vue.extend({
 }
 
 .button {
-  @apply bg-dark text-white;
+  @apply bg-dark text-white mx-0 mt-2 mb-0 flex-grow border-dark;
 }
 
 .button:hover {
-  @apply bg-transparent text-dark border-dark;
+  @apply bg-transparent text-dark;
+}
+
+@media (min-width: 768px) {
+  .button {
+    @apply ml-2;
+  }
+
+  .button:first-child {
+    @apply ml-0;
+  }
 }
 </style>

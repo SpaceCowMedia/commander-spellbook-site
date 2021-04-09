@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="gradient">
     <AnalyticsCookieBanner />
     <main>
       <Nuxt />

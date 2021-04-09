@@ -123,7 +123,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `cardname card="card 2" cards>3 -card="card 4" ci:temur pre:"pre 1" prerequisites>2 step:"step 1" steps>3 result:"result 1" result="result 2" exclude:previewed is:banned`,
         },
@@ -155,7 +155,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card:"card 1" card:"card 2"`,
         },
@@ -182,7 +182,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card:'Card with "symbols"'`,
         },
@@ -209,7 +209,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card=card123`,
         },
@@ -236,7 +236,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `card123`,
         },
@@ -267,7 +267,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `cards>5 colors>5 prerequisites>5 steps>5 results>5`,
         },
@@ -294,7 +294,7 @@ describe("AdvancedSearchPage", () => {
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: `-card:"card 1"`,
         },
@@ -327,7 +327,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "exclude:previewed",
         },
@@ -339,7 +339,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "is:previewed",
         },
@@ -372,7 +372,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "include:banned",
         },
@@ -384,7 +384,7 @@ describe("AdvancedSearchPage", () => {
       (wrapper.vm as VueComponent).submit();
 
       expect($router.push).toBeCalledWith({
-        path: "/search",
+        path: "/search/",
         query: {
           q: "is:banned",
         },
@@ -599,121 +599,6 @@ describe("AdvancedSearchPage", () => {
       expect(cardAmounts[2].error).toBe(
         "Contains a non-integer. Use a full number instead."
       );
-    });
-  });
-
-  describe("addInput", () => {
-    it("adds an input at specified index", async () => {
-      const FakeMultiSearchInput = {
-        template: "<div></div>",
-        props: ["label", "placeholder"],
-      };
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        stubs: {
-          ArtCircle: true,
-          NuxtLink: true,
-          MultiSearchInput: FakeMultiSearchInput,
-          RadioSearchInput: true,
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      wrapper.setData({
-        cards: [{ value: "1", operator: "=" }],
-      });
-
-      const cardsInput = wrapper.findAllComponents(FakeMultiSearchInput).at(0);
-
-      await cardsInput.vm.$emit("add-input", 0);
-
-      expect(vm.cards[0].value).toBe("1");
-      expect(vm.cards[0].operator).toBe("=");
-      expect(vm.cards[1].value).toBe("");
-      expect(vm.cards[1].operator).toBe(":");
-
-      wrapper.setData({
-        cards: [
-          { value: "1", operator: "=" },
-          { value: "2", operator: ">" },
-          { value: "3", operator: "<" },
-        ],
-      });
-
-      await cardsInput.vm.$emit("add-input", 1);
-
-      expect(vm.cards[0].value).toBe("1");
-      expect(vm.cards[0].operator).toBe("=");
-      expect(vm.cards[1].value).toBe("2");
-      expect(vm.cards[1].operator).toBe(">");
-      expect(vm.cards[2].value).toBe("");
-      expect(vm.cards[2].operator).toBe(":");
-      expect(vm.cards[3].value).toBe("3");
-      expect(vm.cards[3].operator).toBe("<");
-    });
-
-    it("uses custom operator for cardAmounts model", async () => {
-      const FakeMultiSearchInput = {
-        template: "<div></div>",
-        props: ["label", "placeholder"],
-      };
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        stubs: {
-          ArtCircle: true,
-          NuxtLink: true,
-          MultiSearchInput: FakeMultiSearchInput,
-          RadioSearchInput: true,
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      wrapper.setData({
-        cardAmounts: [{ value: "1", operator: ">-number" }],
-      });
-
-      await wrapper
-        .findAllComponents(FakeMultiSearchInput)
-        .at(1)
-        .vm.$emit("add-input", 0);
-
-      expect(vm.cardAmounts[0].value).toBe("1");
-      expect(vm.cardAmounts[0].operator).toBe(">-number");
-      expect(vm.cardAmounts[1].value).toBe("");
-      expect(vm.cardAmounts[1].operator).toBe("=-number");
-    });
-  });
-
-  describe("removeInput", () => {
-    it("removes an input at specified index", async () => {
-      const FakeMultiSearchInput = {
-        template: "<div></div>",
-        props: ["label", "placeholder"],
-      };
-      const wrapper = shallowMount(AdvancedSearchPage, {
-        stubs: {
-          ArtCircle: true,
-          NuxtLink: true,
-          MultiSearchInput: FakeMultiSearchInput,
-          RadioSearchInput: true,
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      wrapper.setData({
-        cards: [
-          { value: "1", operator: "=" },
-          { value: "2", operator: ">" },
-          { value: "3", operator: "<" },
-        ],
-      });
-
-      const cardsInput = wrapper.findAllComponents(FakeMultiSearchInput).at(0);
-
-      await cardsInput.vm.$emit("remove-input", 1);
-
-      expect(vm.cards[0].value).toBe("1");
-      expect(vm.cards[0].operator).toBe("=");
-      expect(vm.cards[1].value).toBe("3");
-      expect(vm.cards[1].operator).toBe("<");
     });
   });
 

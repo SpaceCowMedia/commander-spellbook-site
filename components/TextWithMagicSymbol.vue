@@ -12,8 +12,11 @@
           :alt="'Magic Symbol (' + item.manaSymbol + ')'"
         />
       </span>
-      <CardTooltip v-else-if="item.nodeType === 'card'" :card-name="item.value">
-        <CardLink v-if="includeCardLinks" :name="item.value">{{
+      <CardTooltip
+        v-else-if="item.nodeType === 'card'"
+        :card-name="item.cardName"
+      >
+        <CardLink v-if="includeCardLinks" :name="item.cardName">{{
           item.value
         }}</CardLink>
         <span v-else>{{ item.value }}</span></CardTooltip
@@ -31,6 +34,7 @@ import scryfall from "scryfall-client";
 
 type NodeConfig = {
   nodeType: "image" | "card" | "text";
+  cardName?: string;
   value: string;
 };
 
@@ -57,10 +61,14 @@ export default Vue.extend({
   },
   computed: {
     items(): NodeConfig[] {
-      let matchableValuesString = this.cardsInCombo.join("|");
+      let matchableValuesString = "";
 
-      if (matchableValuesString) {
-        matchableValuesString += "|";
+      if (this.cardsInCombo.length > 0) {
+        matchableValuesString = `${this.cardsInCombo.join("|")}|`;
+
+        if (this.cardShortNames.length > 0) {
+          matchableValuesString += `${this.cardShortNames.join("|")}|`;
+        }
       }
 
       matchableValuesString = `(${matchableValuesString}:mana[^:]+:|{[^}]+})`;
@@ -74,8 +82,21 @@ export default Vue.extend({
           if (this.cardsInCombo.includes(value.trim())) {
             return {
               nodeType: "card",
+              cardName: value,
               value,
             };
+          } else if (this.cardShortNames.includes(value.trim())) {
+            const fullName = this.cardsInCombo.find((card) =>
+              card.includes(value.trim())
+            );
+
+            if (fullName) {
+              return {
+                nodeType: "card",
+                cardName: fullName,
+                value,
+              };
+            }
           }
           const manaMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
 
@@ -94,6 +115,24 @@ export default Vue.extend({
             value,
           };
         });
+    },
+    cardShortNames(): string[] {
+      return this.cardsInCombo.reduce((list, name) => {
+        if (name.match(/^[^,]+,/)) {
+          list.push(name.split(",")[0]);
+        } else if (name.match(/^[^\s]+\s(the|of)\s/i)) {
+          list.push(name.split(/\s(the|of)/i)[0]);
+        } else if (name.includes(" // ")) {
+          list.push(...name.split(" // "));
+        } else if (name.match(/^the\s/i)) {
+          const restOfName = name.split(/^the\s/i)[1];
+
+          list.push(restOfName);
+          list.push(restOfName.split(" ")[0]);
+        }
+
+        return list;
+      }, [] as string[]);
     },
   },
   methods: {

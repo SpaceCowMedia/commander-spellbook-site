@@ -15,6 +15,10 @@ export default function filterComboData(
     if (searchParams[dataType].includeFilters.length > 0) {
       combos = combos.filter((combo) => {
         return searchParams[dataType].includeFilters.every((filter) => {
+          if (filter.method === "=") {
+            return combo[dataType].includesValueExactly(filter.value);
+          }
+
           return combo[dataType].includesValue(filter.value);
         });
       });
@@ -23,6 +27,10 @@ export default function filterComboData(
     if (searchParams[dataType].excludeFilters.length > 0) {
       combos = combos.filter((combo) => {
         return !searchParams[dataType].excludeFilters.find((filter) => {
+          if (filter.method === "=") {
+            return combo[dataType].includesValueExactly(filter.value);
+          }
+
           return combo[dataType].includesValue(filter.value);
         });
       });

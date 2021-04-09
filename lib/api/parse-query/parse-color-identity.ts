@@ -14,7 +14,7 @@ export default function parseColorIdentity(
       params.errors.push({
         key,
         value,
-        message: `The key "${key}" does not support operator "${operator}".`,
+        message: `The color identity key "${key}" does not support operator "${operator}".`,
       });
 
       return;
@@ -28,10 +28,21 @@ export default function parseColorIdentity(
     return;
   }
 
+  const identity = parseColorFromValue(value);
+
+  if (!identity) {
+    params.errors.push({
+      key,
+      value,
+      message: `The value "${value}" is invalid for the color identity key "${key}".`,
+    });
+    return;
+  }
+
   if (isNegativeKey) {
     params.colorIdentity.excludeFilters.push({
       method: operator,
-      value: parseColorFromValue(value),
+      value: identity,
     });
 
     return;
@@ -39,6 +50,6 @@ export default function parseColorIdentity(
 
   params.colorIdentity.includeFilters.push({
     method: operator,
-    value: parseColorFromValue(value),
+    value: identity,
   });
 }

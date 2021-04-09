@@ -1,7 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import HomePage from "@/pages/index.vue";
+import search from "@/lib/api/search";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
+import { mocked } from "ts-jest/utils";
 
-import type { MountOptions, Route, Router } from "../types";
+import type { MountOptions, Route, Router, VueComponent } from "../types";
+
+jest.mock("@/lib/api/search");
 
 describe("HomePage", () => {
   let $route: Route;
@@ -47,7 +52,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=card:Sydri");
+    expect($router.push).toBeCalledWith("/search/?q=card:Sydri");
   });
 
   it("redirects to combo page when q query is a number", () => {
@@ -55,7 +60,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/combo/435");
+    expect($router.push).toBeCalledWith("/combo/435/");
   });
 
   it("redirects to combo page when id query is a number", () => {
@@ -63,7 +68,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/combo/435");
+    expect($router.push).toBeCalledWith("/combo/435/");
   });
 
   it("redirects to search results page when query is a previewed", () => {
@@ -71,7 +76,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:previewed");
+    expect($router.push).toBeCalledWith("/search/?q=is:previewed");
   });
 
   it("redirects to search results page when status param is spoiled", () => {
@@ -80,7 +85,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:previewed");
+    expect($router.push).toBeCalledWith("/search/?q=is:previewed");
   });
 
   it("redirects to search results page when query is a banned", () => {
@@ -88,7 +93,7 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:banned");
+    expect($router.push).toBeCalledWith("/search/?q=is:banned");
   });
 
   it("redirects to search results page when status param is a banned", () => {
@@ -97,6 +102,57 @@ describe("HomePage", () => {
     shallowMount(HomePage, wrapperOptions);
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/search?q=is:banned");
+    expect($router.push).toBeCalledWith("/search/?q=is:banned");
+  });
+
+  it("displays previewed combos button when there are previews", async () => {
+    const wrapper = shallowMount(HomePage, wrapperOptions);
+
+    expect(wrapper.find(".previwed-combos-button").exists()).toBe(false);
+
+    await wrapper.setData({
+      showPreviewLink: true,
+    });
+
+    expect(wrapper.find(".previwed-combos-button").exists()).toBe(true);
+  });
+
+  describe("asyncData", () => {
+    beforeEach(() => {
+      mocked(search).mockResolvedValue({
+        sort: "colors",
+        order: "ascending",
+        combos: [],
+        message: "",
+        errors: [],
+      });
+    });
+
+    it("sets showPreviewLink to true when there is at least one previwed combo", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      mocked(search).mockResolvedValue({
+        sort: "colors",
+        order: "ascending",
+        combos: [],
+        message: "",
+        errors: [],
+      });
+      const resultWithoutCombos = await vm.$options.asyncData();
+
+      expect(resultWithoutCombos.showPreviewLink).toBe(false);
+
+      mocked(search).mockResolvedValue({
+        sort: "colors",
+        order: "ascending",
+        combos: [makeFakeCombo()],
+        message: "",
+        errors: [],
+      });
+      const resultWithCombos = await vm.$options.asyncData();
+
+      expect(resultWithCombos.showPreviewLink).toBe(true);
+    });
   });
 });

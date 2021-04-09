@@ -202,13 +202,16 @@
         <code>spellbookid:</code> will result in a query error.
       </p>
 
-      <p><code>sid:</code> is an alias for <code>spellbookid:</code>.</p>
+      <p>
+        <code>sid:</code> and <code>sbid:</code> are aliases for
+        <code>spellbookid:</code>.
+      </p>
 
       <p>
         A more useful parameter to use is <code>-spellbookid:</code>, to more
         easilly omit certain combos. For instance, for finding all combos using
         Basalt Monolith and Mesmeric Orb except
-        <nuxt-link to="/combo/450">combo 450</nuxt-link>.
+        <nuxt-link to="/combo/450/">combo 450</nuxt-link>.
       </p>
     </SearchGuide>
 

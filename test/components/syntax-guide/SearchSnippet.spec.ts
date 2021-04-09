@@ -15,7 +15,10 @@ describe("SearchSnippet", () => {
 
     const link = wrapper.findComponent(RouterLinkStub);
 
-    expect(link.props("to")).toBe("/search?q=ci:wub card:mind");
+    expect(link.props("to")).toEqual({
+      path: "/search/",
+      query: { q: "ci:wub card:mind" },
+    });
   });
 
   it("renders search and description", () => {

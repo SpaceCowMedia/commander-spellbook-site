@@ -32,7 +32,7 @@
           class="main-search-input"
           :class="inputClasses"
           name="q"
-          :placeholder="`Search ${numberOfCombos} combos`"
+          :placeholder="`Search ${numberOfCombos} EDH combos`"
           autocomplete="on"
           autocapitalize="none"
           autocorrect="off"
@@ -49,28 +49,36 @@
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           <div class="sr-only">Menu</div>
         </button>
-        <nuxt-link to="/advanced-search" class="hidden sm:flex menu-link">
+        <nuxt-link to="/advanced-search/" class="hidden md:flex menu-link">
           <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
           Advanced
         </nuxt-link>
-        <nuxt-link to="/syntax-guide" class="hidden sm:flex menu-link">
+        <nuxt-link to="/syntax-guide/" class="hidden md:flex menu-link">
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
+        </nuxt-link>
+        <nuxt-link to="/random/" class="hidden md:flex menu-link">
+          <div class="random-icon link-icon" aria-hidden="true"></div>
+          Random
         </nuxt-link>
       </div>
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="sm:hidden flex flex-row text-center mt-2 py-4 border-t border-light text-light"
+      class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
       @click="toggleMenu"
     >
-      <nuxt-link to="/advanced-search" class="mobile-menu-button">
+      <nuxt-link to="/advanced-search/" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
         Advanced
       </nuxt-link>
-      <nuxt-link to="/syntax-guide" class="mobile-menu-button">
+      <nuxt-link to="/syntax-guide/" class="mobile-menu-button">
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax
+      </nuxt-link>
+      <nuxt-link to="/random/" class="mobile-menu-button">
+        <div class="random-icon link-icon" aria-hidden="true"></div>
+        Random
       </nuxt-link>
     </div>
   </div>
@@ -91,7 +99,7 @@ export default Vue.extend({
     return {
       showMobileMenu: false,
       query: "",
-      numberOfCombos: "....",
+      numberOfCombos: "thousands of",
     };
   },
   async fetch() {
@@ -144,7 +152,7 @@ export default Vue.extend({
       });
 
       this.$router.push({
-        path: "/search",
+        path: "/search/",
         query: {
           q: this.query,
         },
@@ -195,6 +203,11 @@ a {
   mask: url("~assets/svgs/question-solid.svg") no-repeat center;
 }
 
+.random-icon {
+  -webkit-mask: url("~assets/svgs/random-solid.svg") no-repeat center;
+  mask: url("~assets/svgs/random-solid.svg") no-repeat center;
+}
+
 .search-input-icon {
   -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
@@ -222,7 +235,7 @@ a {
 }
 
 .mobile-menu-button {
-  @apply flex flex-row flex-grow items-center w-1/2 rounded py-1 px-2 border border-light mx-2;
+  @apply flex flex-row flex-grow items-center w-1/3 rounded py-1 px-2 border border-light mx-2;
 }
 
 .mobile-menu-button:hover {
@@ -239,6 +252,10 @@ a {
 }
 .mobile-menu-button:nth-child(odd) {
   @apply ml-0;
+}
+
+.mobile-menu-button:nth-child(n + 3) {
+  @apply mt-2;
 }
 
 @media (min-width: 640px) {

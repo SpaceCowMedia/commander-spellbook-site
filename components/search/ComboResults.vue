@@ -4,7 +4,7 @@
       v-for="r in results"
       ref="comboLinks"
       :key="'combo_' + r.id"
-      :to="'/combo/' + r.id"
+      :to="'/combo/' + r.id + '/'"
       class="combo-result w-full md:w-1/4"
     >
       <div class="flex flex-col">

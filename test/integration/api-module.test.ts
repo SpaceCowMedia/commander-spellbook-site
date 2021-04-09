@@ -6,7 +6,27 @@ import random from "@/lib/api/random";
 import autocomplete from "@/lib/api/autocomplete";
 import getAllCombos from "@/lib/api/get-all-combos";
 
-describe("Commander Spellbook", () => {
+const json = require("../../static/api/combo-data.json");
+
+describe("API Module", () => {
+  beforeEach(() => {
+    // set this so we don't delay these tests with
+    // the artificial delay we do on the browser
+    process.server = true;
+
+    // we have to mock the fetch here since jest does not
+    // have fetch in its API. Easy enough to just skip the
+    // network request and provide the static data anyway
+    // @ts-ignore
+    window.fetch = () => {
+      return Promise.resolve({
+        json: () => {
+          return Promise.resolve(json);
+        },
+      });
+    };
+  });
+
   describe("findById", () => {
     it("returns a specified combo", async () => {
       const combo = await findById("1");

@@ -2,11 +2,13 @@ import { shallowMount } from "@vue/test-utils";
 import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import findById from "@/lib/api/find-by-id";
+import getExternalCardData from "@/lib/get-external-card-data";
 import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, Router, VueComponent } from "../../types";
 
 jest.mock("@/lib/api/find-by-id");
+jest.mock("@/lib/get-external-card-data");
 
 describe("ComboPage", () => {
   let options: MountOptions;
@@ -36,6 +38,17 @@ describe("ComboPage", () => {
         ComboResults: true,
       },
     };
+    mocked(getExternalCardData).mockReturnValue({
+      name: "",
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 0,
+        cardkingdom: 0,
+      },
+    });
   });
 
   it("starts in loaded false state", () => {
@@ -49,7 +62,7 @@ describe("ComboPage", () => {
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
-      path: "/combo-not-found",
+      path: "/combo-not-found/",
     });
   });
 
@@ -225,22 +238,139 @@ describe("ComboPage", () => {
     expect(vm.cards).toEqual([
       {
         name: "card 1",
-        artUrl: expect.stringMatching("exact=card%201"),
-        oracleImageUrl: expect.stringMatching("exact=card%201"),
+        artUrl: expect.stringMatching("artcrop.png"),
+        oracleImageUrl: expect.stringMatching("oracle.png"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
       },
       {
         name: "card 2",
-        artUrl: expect.stringMatching("exact=card%202"),
-        oracleImageUrl: expect.stringMatching("exact=card%202"),
+        artUrl: expect.stringMatching("artcrop.png"),
+        oracleImageUrl: expect.stringMatching("oracle.png"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
       },
     ]);
+  });
 
-    expect(fakeCombo.cards[0].getScryfallImageUrl).toBeCalledTimes(2);
-    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[0].getScryfallImageUrl).nthCalledWith(2, "normal");
-    expect(fakeCombo.cards[1].getScryfallImageUrl).toBeCalledTimes(2);
-    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(1, "art_crop");
-    expect(fakeCombo.cards[1].getScryfallImageUrl).nthCalledWith(2, "normal");
+  it("looks up prices for combo", async () => {
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
+    mocked(getExternalCardData).mockReturnValueOnce({
+      name: "card 1",
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+    });
+    mocked(getExternalCardData).mockReturnValueOnce({
+      name: "card 2",
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+    });
+    const ComboSidebarLinksStub = {
+      template: "<div></div>",
+      props: ["tcgplayerPrice", "cardkingdomPrice"],
+    };
+    // @ts-ignore
+    options.stubs.ComboSidebarLinks = ComboSidebarLinksStub;
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    await wrapper.setData(data);
+
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("tcgplayerPrice")
+    ).toBe("246.90");
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("cardkingdomPrice")
+    ).toBe("135.78");
+  });
+
+  it("does not pass prices if a card is missing from price data", async () => {
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
+    mocked(getExternalCardData).mockReturnValueOnce({
+      name: "card 1",
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 0,
+      },
+    });
+    mocked(getExternalCardData).mockReturnValueOnce({
+      name: "card 2",
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+    });
+    const ComboSidebarLinksStub = {
+      template: "<div></div>",
+      props: ["tcgplayerPrice", "cardkingdomPrice"],
+    };
+    // @ts-ignore
+    options.stubs.ComboSidebarLinks = ComboSidebarLinksStub;
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    await wrapper.setData(data);
+
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("tcgplayerPrice")
+    ).toBe("246.90");
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("cardkingdomPrice")
+    ).toBe("");
   });
 
   it("passes subtitle when there are more than 3 cards in combo", async () => {

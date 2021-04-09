@@ -1,7 +1,7 @@
 <template>
   <span @mousemove="mousemove" @mouseout="mouseout">
     <div v-if="hover" class="card-tooltip" :style="{ left, top }">
-      <img v-if="cardName" :src="imgSrc" />
+      <CardImage v-if="cardName" :name="cardName" :img="imgSrc" />
     </div>
     <slot />
   </span>
@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import CardImage from "@/components/CardImage.vue";
 
 type TooltipData = {
   hover: boolean;
@@ -17,6 +18,9 @@ type TooltipData = {
 };
 
 export default Vue.extend({
+  components: {
+    CardImage,
+  },
   props: {
     cardName: {
       type: String,
@@ -32,7 +36,7 @@ export default Vue.extend({
   },
   computed: {
     imgSrc(): string {
-      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image`;
+      return `https://api.scryfall.com/cards/named?exact=${this.cardName}&format=image&version=normal`;
     },
   },
   methods: {

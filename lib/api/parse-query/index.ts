@@ -63,10 +63,12 @@ function collectKeywordedQueries(
     switch (key) {
       case "spellbookid":
       case "sid":
+      case "sbid":
         params.id.includeFilters.push(value);
         break;
       case "-spellbookid":
       case "-sid":
+      case "-sbid":
         params.id.excludeFilters.push(value);
         break;
       case "is":

@@ -22,13 +22,22 @@ describe("CardTooltip", () => {
   });
 
   it("reveals and hides tooltip on mousemove and mouseout", async () => {
+    const CardImageStub = {
+      template: "<div></div>",
+      props: ["name", "img"],
+    };
+    // @ts-ignore
+    options.stubs = {
+      CardImage: CardImageStub,
+    };
     const wrapper = shallowMount(CardTooltip, options);
 
     await wrapper.find("span").trigger("mousemove");
     expect(wrapper.find(".card-tooltip").exists()).toBe(true);
-    const img = wrapper.find(".card-tooltip img").element as HTMLImageElement;
-    expect(img.src).toBe(
-      "https://api.scryfall.com/cards/named?exact=Sydri&format=image"
+    const img = wrapper.findComponent(CardImageStub);
+    expect(img.props("name")).toBe("Sydri");
+    expect(img.props("img")).toBe(
+      "https://api.scryfall.com/cards/named?exact=Sydri&format=image&version=normal"
     );
 
     await wrapper.find("span").trigger("mouseout");

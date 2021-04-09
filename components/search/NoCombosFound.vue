@@ -16,10 +16,10 @@
       </p>
 
       <div>
-        <nuxt-link to="/advanced-search" class="button">
+        <nuxt-link to="/advanced-search/" class="button">
           Advanced Search
         </nuxt-link>
-        <nuxt-link to="/syntax-guide" class="button"> Syntax Guide </nuxt-link>
+        <nuxt-link to="/syntax-guide/" class="button"> Syntax Guide </nuxt-link>
       </div>
     </div>
   </SplashPage>

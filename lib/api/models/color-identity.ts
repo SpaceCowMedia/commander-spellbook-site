@@ -61,6 +61,10 @@ export default class ColorIdentity {
   }
 
   is(colors: ColorIdentityColors[]): boolean {
+    if (this.isColorless()) {
+      return colors.length === 0 || (colors.length === 1 && colors[0] === "c");
+    }
+
     if (this.colors.length !== new Set(colors).size) {
       return false;
     }
