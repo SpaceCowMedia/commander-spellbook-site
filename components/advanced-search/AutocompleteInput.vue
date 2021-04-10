@@ -3,37 +3,37 @@
   <div class="autocomplete-container">
     <label class="sr-only" aria-hidden="true" :for="inputId">{{ label }}</label>
     <input
-      v-model="localValue"
       :id="inputId"
+      ref="input"
+      v-model="localValue"
       type="text"
       :placeholder="placeholder"
-      ref="input"
       class="input"
       :class="{
         'border-dark': !error,
         'border-danger': error,
       }"
-      @input="onChange"
-      @blur="close"
-      @keydown.down="onArrowDown"
-      @keydown.up="onArrowUp"
-      @keydown.enter="onEnter"
       autocomplete="off"
       autocapitalize="none"
       autocorrect="off"
       spellcheck="false"
+      @input="onChange"
+      @blur="onBlur"
+      @keydown.down="onArrowDown"
+      @keydown.up="onArrowUp"
+      @keydown.enter="onEnter"
     />
     <ul
-      class="autocomplete-results"
-      v-show="isOpen && autocompleteItems.length > 0"
+      v-show="matchingAutocompleteOptions.length > 0"
       ref="autocompleteResults"
+      class="autocomplete-results"
     >
       <li
-        v-for="(item, i) in autocompleteItems"
+        v-for="(item, i) in matchingAutocompleteOptions"
         :key="i"
         :class="{ 'is-active': i === arrowCounter }"
         class="autocomplete-result"
-        @click="choose(item.value)"
+        @click="choose(item)"
       >
         <TextWithMagicSymbol :text="item.label" />
       </li>
@@ -47,6 +47,12 @@ import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 
 import normalizeStringInput from "@/lib/api/normalize-string-input";
 
+type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
+
+const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
+const AUTOCOMPLETE_DELAY = 150;
+const BLUR_CLOSE_DELAY = 100;
+
 export default Vue.extend({
   components: {
     TextWithMagicSymbol,
@@ -57,16 +63,10 @@ export default Vue.extend({
       default: "",
     },
     autocompleteOptions: {
-      type: Array as PropType<
-        { value: string; label: string; alias?: RegExp }[]
-      >,
+      type: Array as PropType<AutoCompleteOption[]>,
       default() {
         return [];
       },
-    },
-    active: {
-      type: Boolean,
-      default: false,
     },
     inputId: {
       type: String,
@@ -87,11 +87,10 @@ export default Vue.extend({
   },
   data() {
     return {
-      isOpen: false,
       arrowCounter: -1,
       loading: false,
       autocompleteTimeout: (0 as unknown) as ReturnType<typeof setTimeout>,
-      autocompleteItems: [] as { value: string; label: string }[],
+      matchingAutocompleteOptions: [] as { value: string; label: string }[],
     };
   },
   computed: {
@@ -103,12 +102,9 @@ export default Vue.extend({
         this.$emit("input", value);
       },
     },
-  },
-  mounted() {
-    document.addEventListener("click", this.handleClickOutside);
-  },
-  destroyed() {
-    document.removeEventListener("click", this.handleClickOutside);
+    active(): boolean {
+      return this.autocompleteOptions.length > 0;
+    },
   },
   methods: {
     onChange(): void {
@@ -117,8 +113,24 @@ export default Vue.extend({
       }
       this.lookupAutocomplete();
     },
-    choose(choice: string): void {
-      this.$emit("input", choice);
+    onBlur(): void {
+      if (!this.active) {
+        return;
+      }
+
+      // this needs to be in a set timeout
+      // so the action to choose can still reference
+      // the autocomplete options, if it's not in a
+      // set timeout, clicking the option causes the
+      // blur event to fire first, and prevents the
+      // click event from even happening because the
+      // menu closes before the click occurs
+      setTimeout(() => {
+        this.close();
+      }, BLUR_CLOSE_DELAY);
+    },
+    choose(choice: AutoCompleteOption): void {
+      this.$emit("input", choice.value);
       this.close();
     },
     close(): void {
@@ -129,19 +141,12 @@ export default Vue.extend({
       }
 
       this.arrowCounter = -1;
-      setTimeout(() => {
-        this.isOpen = false;
-      }, 300);
-    },
-    handleClickOutside(event: MouseEvent): void {
-      if (!this.$el.contains(event.target as HTMLElement)) {
-        this.close();
-      }
+      this.matchingAutocompleteOptions = [];
     },
     onArrowDown(e: KeyboardEvent): void {
       e.preventDefault();
 
-      if (this.arrowCounter + 1 < this.autocompleteItems.length) {
+      if (this.arrowCounter + 1 < this.matchingAutocompleteOptions.length) {
         this.arrowCounter = this.arrowCounter + 1;
       }
 
@@ -167,7 +172,7 @@ export default Vue.extend({
       ref.scrollTop = li.offsetTop - 50;
     },
     onEnter(e: KeyboardEvent): void {
-      const choice = this.autocompleteItems[this.arrowCounter];
+      const choice = this.matchingAutocompleteOptions[this.arrowCounter];
 
       if (!choice) {
         // allow the form to be submitted if enter was used without a selection
@@ -176,7 +181,7 @@ export default Vue.extend({
 
       e.preventDefault();
 
-      this.choose(choice.value);
+      this.choose(choice);
     },
     lookupAutocomplete(): void {
       if (!this.active) {
@@ -196,20 +201,21 @@ export default Vue.extend({
           this.close();
           return;
         }
-        const partial = normalizeStringInput(this.value);
-        this.autocompleteItems = [];
-        const options = this.autocompleteOptions
-          .filter((option) => {
-            const mainMatch = option.value.includes(partial);
-            if (mainMatch || (option.alias && partial.match(option.alias))) {
-              return true;
-            }
 
-            return false;
+        const normalizedValue = normalizeStringInput(this.value);
+        this.matchingAutocompleteOptions = [];
+
+        const totalOptions = this.autocompleteOptions
+          .filter((option) => {
+            const mainMatch = option.value.includes(normalizedValue);
+
+            return (
+              mainMatch || (option.alias && normalizedValue.match(option.alias))
+            );
           })
           .sort((a, b) => {
-            const indexA = a.value.indexOf(partial);
-            const indexB = b.value.indexOf(partial);
+            const indexA = a.value.indexOf(normalizedValue);
+            const indexB = b.value.indexOf(normalizedValue);
 
             if (indexA === indexB) {
               return 0;
@@ -230,10 +236,12 @@ export default Vue.extend({
 
             return 0;
           });
-        this.autocompleteItems = options.slice(0, 20);
 
-        this.isOpen = true;
-      }, 150);
+        this.matchingAutocompleteOptions = totalOptions.slice(
+          0,
+          MAX_NUMBER_OF_MATCHING_RESULTS
+        );
+      }, AUTOCOMPLETE_DELAY);
     },
   },
 });
