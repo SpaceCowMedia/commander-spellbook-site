@@ -51,7 +51,7 @@ type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
-const BLUR_CLOSE_DELAY = 100;
+const BLUR_CLOSE_DELAY = 1000;
 
 export default Vue.extend({
   components: {

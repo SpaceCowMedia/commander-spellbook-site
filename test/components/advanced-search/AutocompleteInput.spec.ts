@@ -243,7 +243,7 @@ describe("AutocompleteInput", () => {
 
       expect(closeSpy).not.toBeCalled();
 
-      jest.advanceTimersByTime(99);
+      jest.advanceTimersByTime(999);
 
       expect(closeSpy).not.toBeCalled();
 
