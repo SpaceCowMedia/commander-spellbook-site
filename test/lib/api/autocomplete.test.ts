@@ -107,9 +107,9 @@ describe("autocomplete", () => {
 
     expect(colors.length).toBe(2);
     expect(colors[0].value).toBe("mono red");
-    expect(colors[0].label).toBe("Mono Red :manar:");
+    expect(colors[0].label).toBe("Mono Red {r}");
     expect(colors[1].value).toBe("sans red");
-    expect(colors[1].label).toBe("Sans Red :manag::manaw::manau::manab:");
+    expect(colors[1].label).toBe("Sans Red {g}{w}{u}{b}");
   });
 
   it("can find colors with aliases", async () => {
@@ -131,9 +131,7 @@ describe("autocomplete", () => {
 
     expect(colors.length).toBe(1);
     expect(colors[0].value).toBe("five color");
-    expect(colors[0].label).toBe(
-      "Five Color :manaw::manau::manab::manar::manag:"
-    );
+    expect(colors[0].label).toBe("Five Color {w}{u}{b}{r}{g}");
   });
 
   it("can find azorius when misspelled", async () => {

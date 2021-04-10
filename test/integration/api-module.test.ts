@@ -311,14 +311,14 @@ describe("API Module", () => {
     });
 
     it("looks up specific result in combos", async () => {
-      const { combos } = await search("results:Infinite res:':mana'");
+      const { combos } = await search("results:Infinite res:mana");
 
       expect(combos.length).toBeGreaterThan(0);
       const hasWordInfiniteInResult = combos.every((combo) => {
         return combo.results.find(
           (res) =>
             res.toLowerCase().includes("infinite") ||
-            res.toLowerCase().includes(":mana")
+            res.toLowerCase().includes("mana")
         );
       });
 
