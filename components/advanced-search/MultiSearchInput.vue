@@ -31,7 +31,7 @@
             :placeholder="getPlaceholder(input.operator)"
             :label="inputLabel"
             :autocomplete-options="autocompleteOptions"
-            :error="input.error"
+            :has-error="Boolean(input.error)"
           />
 
           <div class="flex">

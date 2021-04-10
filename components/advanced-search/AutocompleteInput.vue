@@ -10,8 +10,8 @@
       :placeholder="placeholder"
       class="input"
       :class="{
-        'border-dark': !error,
-        'border-danger': error,
+        'border-dark': !hasError,
+        'border-danger': hasError,
       }"
       autocomplete="off"
       autocapitalize="none"
@@ -80,9 +80,9 @@ export default Vue.extend({
       type: String,
       default: "",
     },
-    error: {
-      type: String,
-      default: "",
+    hasError: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

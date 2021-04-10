@@ -27,14 +27,14 @@ describe("AutocompleteInput", () => {
   it("applies border classes for error and non-error state", async () => {
     const wrapper = shallowMount(AutocompleteInput, {
       propsData: {
-        error: "",
+        hasError: false,
       },
     });
 
     expect(wrapper.find("input").classes()).toContain("border-dark");
     expect(wrapper.find("input").classes()).not.toContain("border-danger");
 
-    await wrapper.setProps({ error: "error" });
+    await wrapper.setProps({ hasError: true });
 
     expect(wrapper.find("input").classes()).toContain("border-danger");
     expect(wrapper.find("input").classes()).not.toContain("border-dark");
