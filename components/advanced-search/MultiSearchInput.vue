@@ -162,7 +162,7 @@ export default Vue.extend({
       this.inputs.splice(index, 1);
     },
     getInputId(index: number): string {
-      return `${this.label}-input-${index}`;
+      return `${this.label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
     },
     getPlaceholder(operator: string): string {
       const isNumber = operator.split("-")[1] === "number";

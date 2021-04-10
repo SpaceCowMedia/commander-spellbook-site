@@ -18,7 +18,7 @@ describe("MultiSearchInput", () => {
           },
         ],
         operatorOptions: [{ value: ":", label: "operator label" }],
-        label: "Label",
+        label: "Label Name",
         defaultPlaceholder: "Placeholder",
       },
       stubs: {
@@ -28,9 +28,9 @@ describe("MultiSearchInput", () => {
 
     const inputs = wrapper.findAllComponents(AutocompleteInputStub);
     expect(inputs.length).toBe(1);
-    expect(inputs.at(0).props("label")).toBe("Label");
+    expect(inputs.at(0).props("label")).toBe("Label Name");
     expect(inputs.at(0).props("placeholder")).toBe("Placeholder");
-    expect(inputs.at(0).props("inputId")).toBe("Label-input-0");
+    expect(inputs.at(0).props("inputId")).toBe("label-name-input-0");
   });
 
   it("creates an operator selector for input", async () => {
