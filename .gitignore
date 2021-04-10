@@ -97,3 +97,4 @@ cypress/screenshots
 # remove once the transition to a SQL database is complete
 static/api/*.json
 external-card-data/*.json
+autocomplete-data/*.json

@@ -183,10 +183,9 @@ export default Vue.extend({
     RadioSearchInput,
   },
   data(): Data {
-    // TODO solve this duplicate data thing
     return {
-      cardNameAutocompletes: require("../static/api/card-names.json"),
-      resultAutocompletes: require("../static/api/results.json"),
+      cardNameAutocompletes: require("../autocomplete-data/card-names.json"),
+      resultAutocompletes: require("../autocomplete-data/results.json"),
       colorAutocompletes,
 
       cards: [{ value: "", operator: ":" }],
