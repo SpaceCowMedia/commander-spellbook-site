@@ -21,7 +21,7 @@
     "test:integration": "npm start & wait-on http://localhost:3000 && npm run cy:run"
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint",
+    "*.{js,ts,vue}": "eslint",
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
