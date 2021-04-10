@@ -254,7 +254,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .autocomplete-container {
   @apply relative flex-grow;
 }
