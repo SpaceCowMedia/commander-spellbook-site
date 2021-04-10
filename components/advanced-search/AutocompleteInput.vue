@@ -117,13 +117,12 @@ export default Vue.extend({
         return;
       }
 
-      // this needs to be in a set timeout
-      // so the action to choose can still reference
-      // the autocomplete options, if it's not in a
-      // set timeout, clicking the option causes the
-      // blur event to fire first, and prevents the
-      // click event from even happening because the
-      // menu closes before the click occurs
+      // this needs to be in a timeout so the action
+      // to choose can still reference the autocomplete
+      // options, if it's not in a timeout, clicking
+      // the option causes the blur event to fire first,
+      // and prevents the click event from even happening
+      // because the menu closes before the click occurs
       setTimeout(() => {
         this.close();
       }, BLUR_CLOSE_DELAY);
