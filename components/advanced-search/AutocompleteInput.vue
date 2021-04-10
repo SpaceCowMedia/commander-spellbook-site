@@ -88,7 +88,6 @@ export default Vue.extend({
   data() {
     return {
       arrowCounter: -1,
-      loading: false,
       autocompleteTimeout: (0 as unknown) as ReturnType<typeof setTimeout>,
       matchingAutocompleteOptions: [] as { value: string; label: string }[],
     };
