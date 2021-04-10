@@ -41,6 +41,7 @@
           label="Color Identity"
           :operator-options="colorIdentityOperatorOptions"
           :autocomplete-options="colorAutocompletes"
+          :use-value-for-autocomplete-input="true"
         />
       </div>
 

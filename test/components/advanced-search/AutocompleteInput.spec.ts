@@ -308,9 +308,29 @@ describe("AutocompleteInput", () => {
       expect(closeSpy).toBeCalledTimes(1);
     });
 
-    it("emits the value from the autocomplete option", () => {
+    it("emits the label from the autocomplete option", () => {
       const emitSpy = jest.fn();
       const wrapper = shallowMount(AutocompleteInput, {
+        mocks: {
+          $emit: emitSpy,
+        },
+      });
+
+      (wrapper.vm as VueComponent).choose({
+        value: "foo",
+        label: "Foo",
+      });
+
+      expect(emitSpy).toBeCalledTimes(1);
+      expect(emitSpy).toBeCalledWith("input", "Foo");
+    });
+
+    it("emits the value from the autocomplete option when configured", () => {
+      const emitSpy = jest.fn();
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          useValueForInput: true,
+        },
         mocks: {
           $emit: emitSpy,
         },

@@ -32,6 +32,7 @@
             :label="inputLabel"
             :autocomplete-options="autocompleteOptions"
             :has-error="Boolean(input.error)"
+            :use-value-for-input="useValueForAutocompleteInput"
           />
 
           <div class="flex">
@@ -99,6 +100,10 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+    useValueForAutocompleteInput: {
+      type: Boolean,
+      default: false,
     },
     label: {
       type: String,

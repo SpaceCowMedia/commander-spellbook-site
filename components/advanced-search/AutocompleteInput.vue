@@ -85,6 +85,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    useValueForInput: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -132,7 +136,8 @@ export default Vue.extend({
       this.arrowCounter = index;
     },
     choose(choice: AutoCompleteOption): void {
-      this.$emit("input", choice.value);
+      const value = this.useValueForInput ? choice.value : choice.label;
+      this.$emit("input", value);
       this.close();
     },
     close(): void {
