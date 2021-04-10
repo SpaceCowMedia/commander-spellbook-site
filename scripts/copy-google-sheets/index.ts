@@ -2,12 +2,8 @@ import fs from "fs";
 import formatApiResponse from "../../lib/api/format-api-response";
 import getData from "../shared/get";
 import log from "../shared/log";
+import type { CommanderSpellbookAPIResponse } from "../../lib/api/types";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
-
-import type {
-  CommanderSpellbookAPIResponse,
-  FormattedApiResponse,
-} from "../../lib/api/types";
 
 log("Fetching Combo data from Google Sheets");
 
@@ -22,12 +18,9 @@ getData(
   fs.writeFileSync("./static/api/combo-data.json", JSON.stringify(rawData));
   log("/static/api/combo-data.json written", "green");
 
-  log("Writing /autocomplete-data/card-names.json");
-  fs.writeFileSync(
-    "./autocomplete-data/card-names.json",
-    JSON.stringify(cardNames)
-  );
-  log("/autocomplete-data/card-names.json written", "green");
+  log("Writing /autocomplete-data/cards.json");
+  fs.writeFileSync("./autocomplete-data/cards.json", JSON.stringify(cardNames));
+  log("/autocomplete-data/cards.json written", "green");
 
   log("Writing /autocomplete-data/results.json");
   fs.writeFileSync("./autocomplete-data/results.json", JSON.stringify(results));

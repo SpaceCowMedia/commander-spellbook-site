@@ -184,7 +184,7 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      cardNameAutocompletes: require("../autocomplete-data/card-names.json"),
+      cardNameAutocompletes: require("../autocomplete-data/cards.json"),
       resultAutocompletes: require("../autocomplete-data/results.json"),
       colorAutocompletes,
 

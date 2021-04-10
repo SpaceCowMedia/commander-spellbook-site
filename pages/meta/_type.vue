@@ -1,6 +1,9 @@
 <template>
   <div class="container py-4">
     <h1 class="heading-title text-center py-4">{{ autocompleteType }}</h1>
+    <p v-if="items.length === 0">
+      No metadata found for {{ autocompleteType }}...
+    </p>
     <p v-for="(item, index) in items" :key="index" class="p-2 my-1">
       <TextWithMagicSymbol :text="item.text" />
       -
@@ -24,7 +27,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
-import autocomplete from "@/lib/api/autocomplete";
+import colorOptions from "@/lib/api/color-autocompletes";
 import search from "@/lib/api/search";
 
 type Data = {
@@ -52,8 +55,20 @@ export default Vue.extend({
     TextWithMagicSymbol,
   },
   async asyncData({ params }) {
-    const autocompleteType = params.type as Parameters<typeof autocomplete>[0];
-    const options = await autocomplete(autocompleteType, "");
+    let options: Array<{ value: string; label: string }> = [];
+    const autocompleteType = params.type;
+
+    try {
+      if (autocompleteType === "colors") {
+        options = colorOptions;
+      } else if (autocompleteType === "cards") {
+        options = require("../../autocomplete-data/cards.json");
+      } else if (autocompleteType === "results") {
+        options = require("../../autocomplete-data/results.json");
+      }
+    } catch (e) {
+      options = [];
+    }
 
     const items = await Promise.all(
       options.map((payload) => {

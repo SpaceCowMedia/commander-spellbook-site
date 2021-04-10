@@ -3,7 +3,6 @@
 import findById from "@/lib/api/find-by-id";
 import search from "@/lib/api/search";
 import random from "@/lib/api/random";
-import autocomplete from "@/lib/api/autocomplete";
 import getAllCombos from "@/lib/api/get-all-combos";
 
 const json = require("../../static/api/combo-data.json");
@@ -389,59 +388,6 @@ describe("API Module", () => {
       expect(combos[0].prerequisites).toBeTruthy();
       expect(combos[0].steps).toBeTruthy();
       expect(combos[0].results).toBeTruthy();
-    });
-  });
-
-  describe("autocomplete", () => {
-    it("returns all card names", async () => {
-      const names = await autocomplete("cards", "");
-
-      expect(names.length).toBeGreaterThan(2500);
-    });
-
-    it("returns card names that match partially", async () => {
-      const names = await autocomplete("cards", "mind");
-
-      expect(names.length).toBeLessThan(50);
-      names.forEach((name) => {
-        expect(name.value).toContain("mind");
-      });
-    });
-
-    it("returns card names that match exactly (regardless of capitalization and puntuation)", async () => {
-      const names = await autocomplete("cards", "sydri galvanic genius");
-
-      expect(names.length).toBe(1);
-      expect(names[0].value).toBe("sydri galvanic genius");
-      expect(names[0].label).toBe("Sydri, Galvanic Genius");
-    });
-
-    it("returns all results", async () => {
-      const results = await autocomplete("results", "");
-
-      expect(results.length).toBeGreaterThan(700);
-    });
-
-    it("returns results that match partially", async () => {
-      const results = await autocomplete("results", "infinite");
-
-      expect(results.length).toBeLessThan(700);
-      results.forEach((result) => {
-        expect(result.value.toLowerCase()).toContain("infinite");
-      });
-    });
-
-    it("returns all colors", async () => {
-      const colors = await autocomplete("colors", "");
-
-      // 32 + 5 entries for sans-color + 5 entries for alternate 4 color combo names
-      expect(colors.length).toBe(42);
-    });
-
-    it("returns colors that match partially", async () => {
-      const colors = await autocomplete("colors", "sans");
-
-      expect(colors.length).toBe(5);
     });
   });
 });
