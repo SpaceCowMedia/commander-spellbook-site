@@ -138,6 +138,35 @@ describe("AutocompleteInput", () => {
     });
   });
 
+  it("sets arrow counter when autocomplete item is hovered over", async () => {
+    const onAutocompleteItemHoverSpy = jest.spyOn(
+      (AutocompleteInput as VueComponent).options.methods,
+      "onAutocompleteItemHover"
+    );
+    const options = [
+      { value: "1", label: "Label 1" },
+      { value: "2", label: "Label 2" },
+      { value: "3", label: "Label 3" },
+    ];
+    const wrapper = shallowMount(AutocompleteInput, {
+      propsData: {
+        autocompleteOptions: options,
+      },
+    });
+    const vm = wrapper.vm as VueComponent;
+
+    await wrapper.setData({
+      matchingAutocompleteOptions: options,
+    });
+
+    const items = wrapper.findAll(".autocomplete-results li");
+
+    await items.at(1).trigger("mouseover");
+
+    expect(onAutocompleteItemHoverSpy).toBeCalledTimes(1);
+    expect(onAutocompleteItemHoverSpy).toBeCalledWith(1);
+  });
+
   it.each`
     method           | event
     ${"onChange"}    | ${"input"}
@@ -201,6 +230,17 @@ describe("AutocompleteInput", () => {
       (wrapper.vm as VueComponent).onChange();
 
       expect(lookupAutocompleteSpy).toBeCalledTimes(1);
+    });
+  });
+
+  describe("onAutocompleteItemHover", () => {
+    it("sets arrow counter to index", () => {
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      vm.onAutocompleteItemHover(3);
+
+      expect(vm.arrowCounter).toBe(3);
     });
   });
 

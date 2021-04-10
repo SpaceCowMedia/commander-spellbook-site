@@ -34,6 +34,7 @@
         :class="{ 'is-active': i === arrowCounter }"
         class="autocomplete-result"
         @click="choose(item)"
+        @mouseover="onAutocompleteItemHover(i)"
       >
         <TextWithMagicSymbol :text="item.label" />
       </li>
@@ -126,6 +127,9 @@ export default Vue.extend({
       setTimeout(() => {
         this.close();
       }, BLUR_CLOSE_DELAY);
+    },
+    onAutocompleteItemHover(index: number): void {
+      this.arrowCounter = index;
     },
     choose(choice: AutoCompleteOption): void {
       this.$emit("input", choice.value);
@@ -258,8 +262,7 @@ export default Vue.extend({
   @apply text-left p-2 cursor-pointer;
 }
 
-.autocomplete-result.is-active,
-.autocomplete-result:hover {
+.autocomplete-result.is-active {
   @apply bg-link text-white;
 }
 
