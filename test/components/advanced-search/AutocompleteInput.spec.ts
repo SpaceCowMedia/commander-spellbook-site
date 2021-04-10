@@ -153,7 +153,6 @@ describe("AutocompleteInput", () => {
         autocompleteOptions: options,
       },
     });
-    const vm = wrapper.vm as VueComponent;
 
     await wrapper.setData({
       matchingAutocompleteOptions: options,
