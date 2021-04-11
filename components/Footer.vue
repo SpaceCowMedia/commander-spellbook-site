@@ -42,19 +42,19 @@
     <footer class="footer">
       <div class="container md:flex flex-row text-center md:text-left">
         <div class="link-collection">
-          <h6>Combos</h6>
+          <header>Combos</header>
           <nuxt-link to="/advanced-search/">Advanced Search</nuxt-link>
           <nuxt-link to="/syntax-guide/">Syntax Guide</nuxt-link>
           <nuxt-link to="/random/">Random Combo</nuxt-link>
         </div>
         <div class="link-collection">
-          <h6>Commander Spellbook</h6>
+          <header>Commander Spellbook</header>
           <nuxt-link to="/about/">About</nuxt-link>
           <nuxt-link to="/how-to-submit-a-combo/">Combo Submission</nuxt-link>
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
-          <h6>Community</h6>
+          <header>Community</header>
           <ExternalLink to="https://www.patreon.com/commanderspellbook"
             >Patreon</ExternalLink
           >
@@ -81,8 +81,10 @@
           Commander Spellbook utilizes icons provided by
           <ExternalLink to="https://fontawesome.com/">
             Font Awesome</ExternalLink
-          >. Licensing information may be found
-          <ExternalLink to="https://fontawesome.com/license"> here</ExternalLink
+          >
+          according to the
+          <ExternalLink to="https://fontawesome.com/license"
+            >Font Awesome License</ExternalLink
           >.
         </p>
       </div>
@@ -122,7 +124,7 @@ export default Vue.extend({
   @apply mr-0;
 }
 
-h6 {
+header {
   @apply block text-white font-title uppercase border-b border-white mb-2;
 }
 
