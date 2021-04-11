@@ -47,7 +47,9 @@
               }"
               @click.prevent="removeInput(index)"
             >
-              <span class="sr-only">Remove this search query</span>
+              <span class="sr-only"
+                >Remove {{ input.value }} search query for {{ label }}</span
+              >
               <span aria-hidden="true">−</span>
             </button>
             <button
@@ -60,7 +62,9 @@
               }"
               @click.prevent="addInput(index)"
             >
-              <span class="sr-only">Add a new search query of this type</span>
+              <span class="sr-only"
+                >Add an additional search query for {{ label }}</span
+              >
               <span aria-hidden="true">+</span>
             </button>
           </div>
