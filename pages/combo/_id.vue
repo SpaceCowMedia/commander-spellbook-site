@@ -254,7 +254,7 @@ export default Vue.extend({
     // @ts-ignore
     const link = this.link;
     // @ts-ignore
-    const logo = this.cardArts[0];
+    const firstCardArt = this.cardArts[0];
 
     return {
       title,
@@ -265,19 +265,9 @@ export default Vue.extend({
           content: description,
         },
         {
-          hid: "og-type",
-          property: "og:type",
-          content: "website",
-        },
-        {
           hid: "og-url",
           property: "og:url",
           content: link,
-        },
-        {
-          hid: "og-site_name",
-          property: "og:site_name",
-          content: "Commander Spellbook: Combo Database for Commander (EDH)",
         },
         {
           hid: "og-title",
@@ -292,12 +282,7 @@ export default Vue.extend({
         {
           hid: "og-image",
           property: "og:image",
-          content: logo,
-        },
-        {
-          hid: "twitter-card",
-          name: "twitter:card",
-          content: "summary_large_image",
+          content: firstCardArt,
         },
         {
           hid: "twitter-url",
@@ -317,7 +302,7 @@ export default Vue.extend({
         {
           hid: "twitter-image",
           name: "twitter:image",
-          content: logo,
+          content: firstCardArt,
         },
       ],
     };

@@ -1,8 +1,8 @@
 const isWindows = process.platform === "win32";
 
-const title = "Commander Spellbook: Combo Database for Commander (EDH)";
+const title = "Commander Spellbook: The Search Engine for EDH Combos";
 const description =
-  "The Premier Magic: the Gathering Combo Database for the Commander / Elder Dragon Highlander (EDH) Format.";
+  "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://beta.commanderspellbook.com/link-preview.png";
 
 export default {
