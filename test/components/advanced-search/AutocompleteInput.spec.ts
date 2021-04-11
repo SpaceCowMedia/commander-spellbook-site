@@ -76,6 +76,52 @@ describe("AutocompleteInput", () => {
     expect(items.at(1).props("text")).toBe("Label 3");
   });
 
+  it("updates screen reader message when autocomplete options are browsed", async () => {
+    const options = [
+      { value: "1", label: "Label 1" },
+      { value: "2", label: "Label 2" },
+      { value: "3", label: "Label 3" },
+    ];
+    const wrapper = shallowMount(AutocompleteInput, {
+      propsData: {
+        autocompleteOptions: options,
+      },
+    });
+
+    await wrapper.setData({
+      matchingAutocompleteOptions: options,
+    });
+
+    const message = wrapper.find(".autocomplete-sr-message");
+
+    expect(message.text()).toBe("");
+
+    await wrapper.setProps({
+      value: "foo",
+    });
+
+    expect(message.text()).toContain("3 matches found for foo.");
+
+    await wrapper.setData({
+      arrowCounter: 0,
+    });
+
+    expect(message.text()).toContain("Label 1 (1/3)");
+
+    await wrapper.setData({
+      arrowCounter: 1,
+    });
+
+    expect(message.text()).toContain("Label 2 (2/3)");
+
+    await wrapper.setData({
+      arrowCounter: -1,
+      matchingAutocompleteOptions: [{ value: "foo", label: "foo" }],
+    });
+
+    expect(message.text()).toContain("1 match found for foo.");
+  });
+
   it("marks item as active when the arrow counter matches it", async () => {
     const options = [
       { value: "1", label: "Label 1" },
@@ -173,8 +219,10 @@ describe("AutocompleteInput", () => {
     ${"onArrowDown"} | ${"keydown.down"}
     ${"onArrowUp"}   | ${"keydown.up"}
     ${"onEnter"}     | ${"keydown.enter"}
+    ${"onTab"}       | ${"keydown.tab"}
+    ${"close"}       | ${"keydown.escape"}
   `(
-    "calls $method when an $event fires on the input",
+    "calls $method when an $event event fires on the input",
     async ({ method, event }) => {
       const options = [
         { value: "1", label: "Label 1" },
@@ -455,7 +503,7 @@ describe("AutocompleteInput", () => {
       expect(spy).toBeCalledTimes(1);
     });
 
-    it("decrements arrow counter as long as arrow counter is greater than 0", () => {
+    it("decrements arrow counter as long as arrow counter is greater than or equal to 0", () => {
       const event = { preventDefault: jest.fn() };
       const wrapper = shallowMount(AutocompleteInput);
       const vm = wrapper.vm as VueComponent;
@@ -476,7 +524,7 @@ describe("AutocompleteInput", () => {
       vm.onArrowUp(event);
       vm.onArrowUp(event);
       vm.onArrowUp(event);
-      expect(vm.arrowCounter).toBe(0);
+      expect(vm.arrowCounter).toBe(-1);
     });
 
     it("scrolls to selection", () => {
@@ -622,6 +670,66 @@ describe("AutocompleteInput", () => {
       vm.onEnter({ preventDefault: eventSpy });
 
       expect(eventSpy).toBeCalledTimes(1);
+      expect(chooseSpy).toBeCalledTimes(1);
+      expect(chooseSpy).toBeCalledWith({
+        value: "2",
+        label: "2",
+      });
+    });
+  });
+
+  describe("onTab", () => {
+    it("noops if no autocomplete option correspondes to the current arrow counter", async () => {
+      const chooseSpy = jest.spyOn(
+        (AutocompleteInput as VueComponent).options.methods,
+        "choose"
+      );
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        arrowCounter: 4,
+        matchingAutocompleteOptions: [
+          {
+            value: "1",
+            label: "1",
+          },
+          {
+            value: "2",
+            label: "2",
+          },
+        ],
+      });
+
+      vm.onTab();
+
+      expect(chooseSpy).not.toBeCalled();
+    });
+
+    it("chooses the selected autocomplete choice", async () => {
+      const chooseSpy = jest.spyOn(
+        (AutocompleteInput as VueComponent).options.methods,
+        "choose"
+      );
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        arrowCounter: 1,
+        matchingAutocompleteOptions: [
+          {
+            value: "1",
+            label: "1",
+          },
+          {
+            value: "2",
+            label: "2",
+          },
+        ],
+      });
+
+      vm.onTab();
+
       expect(chooseSpy).toBeCalledTimes(1);
       expect(chooseSpy).toBeCalledWith({
         value: "2",

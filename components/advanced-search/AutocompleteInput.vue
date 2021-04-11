@@ -22,7 +22,16 @@
       @keydown.down="onArrowDown"
       @keydown.up="onArrowUp"
       @keydown.enter="onEnter"
+      @keydown.tab="onTab"
+      @keydown.escape="close"
     />
+    <div
+      role="status"
+      aria-live="polite"
+      class="sr-only autocomplete-sr-message"
+    >
+      {{ screenReaderSelectionText }}
+    </div>
     <ul
       v-show="matchingAutocompleteOptions.length > 0"
       ref="autocompleteResults"
@@ -109,6 +118,21 @@ export default Vue.extend({
     active(): boolean {
       return this.autocompleteOptions.length > 0;
     },
+    screenReaderSelectionText(): string {
+      if (this.matchingAutocompleteOptions.length === 0 || !this.value) {
+        return "";
+      }
+      const total = this.matchingAutocompleteOptions.length;
+      const option = this.matchingAutocompleteOptions[this.arrowCounter];
+
+      if (!option) {
+        return `${total} match${total > 1 ? "es" : ""} found for ${
+          this.value
+        }. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
+      }
+
+      return `${option.label} (${this.arrowCounter + 1}/${total})`;
+    },
   },
   methods: {
     onChange(): void {
@@ -162,7 +186,7 @@ export default Vue.extend({
     onArrowUp(e: KeyboardEvent): void {
       e.preventDefault();
 
-      if (this.arrowCounter > 0) {
+      if (this.arrowCounter >= 0) {
         this.arrowCounter = this.arrowCounter - 1;
       }
 
@@ -189,6 +213,13 @@ export default Vue.extend({
       e.preventDefault();
 
       this.choose(choice);
+    },
+    onTab(): void {
+      const choice = this.matchingAutocompleteOptions[this.arrowCounter];
+
+      if (choice) {
+        this.choose(choice);
+      }
     },
     lookupAutocomplete(): void {
       if (!this.active) {
