@@ -19,6 +19,7 @@
               : 'border-dark border border-b-0 sm:border-b sm:border-r-0'
           "
           :options="operatorOptions"
+          class="sm:w-1/2 flex-grow"
           :class="{
             ['select-' + index]: true,
           }"
