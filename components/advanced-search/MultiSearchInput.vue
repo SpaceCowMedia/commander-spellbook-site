@@ -25,20 +25,14 @@
         />
 
         <div class="w-full flex-grow flex flex-col sm:flex-row">
-          <label class="sr-only" aria-hidden="true" :for="getInputId(index)">{{
-            inputLabel
-          }}</label>
-          <input
-            :id="getInputId(index)"
+          <AutocompleteInput
             v-model="input.value"
-            class="input"
-            :class="{
-              ['input-' + index]: true,
-              'border-dark': !input.error,
-              'border-danger': input.error,
-            }"
-            type="text"
+            :input-id="getInputId(index)"
             :placeholder="getPlaceholder(input.operator)"
+            :label="inputLabel"
+            :autocomplete-options="autocompleteOptions"
+            :has-error="Boolean(input.error)"
+            :use-value-for-input="useValueForAutocompleteInput"
           />
 
           <div class="flex">
@@ -53,7 +47,9 @@
               }"
               @click.prevent="removeInput(index)"
             >
-              <span class="sr-only">Remove this search query</span>
+              <span class="sr-only"
+                >Remove {{ input.value }} search query for {{ label }}</span
+              >
               <span aria-hidden="true">−</span>
             </button>
             <button
@@ -66,7 +62,9 @@
               }"
               @click.prevent="addInput(index)"
             >
-              <span class="sr-only">Add a new search query of this type</span>
+              <span class="sr-only"
+                >Add an additional search query for {{ label }}</span
+              >
               <span aria-hidden="true">+</span>
             </button>
           </div>
@@ -84,12 +82,14 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
 import Select from "@/components/Select.vue";
 
 type MultiSearchInputValue = { value: string; operator: string }[];
 
 export default Vue.extend({
   components: {
+    AutocompleteInput,
     Select,
   },
   props: {
@@ -98,6 +98,16 @@ export default Vue.extend({
       default() {
         return [];
       },
+    },
+    autocompleteOptions: {
+      type: Array as PropType<{ value: string; label: string }[]>,
+      default() {
+        return [];
+      },
+    },
+    useValueForAutocompleteInput: {
+      type: Boolean,
+      default: false,
     },
     label: {
       type: String,
@@ -156,7 +166,7 @@ export default Vue.extend({
       this.inputs.splice(index, 1);
     },
     getInputId(index: number): string {
-      return `${this.label}-input-${index}`;
+      return `${this.label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
     },
     getPlaceholder(operator: string): string {
       const isNumber = operator.split("-")[1] === "number";
@@ -182,10 +192,6 @@ export default Vue.extend({
 <style scoped>
 .input-label {
   @apply font-semibold;
-}
-
-.input {
-  @apply border px-3 py-2 flex-grow appearance-none rounded-none;
 }
 
 .input-button {

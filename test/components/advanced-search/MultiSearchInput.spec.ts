@@ -5,6 +5,10 @@ import type { VueComponent } from "../../types";
 
 describe("MultiSearchInput", () => {
   it("creates an input", () => {
+    const AutocompleteInputStub = {
+      template: "<div><input /></div>",
+      props: ["label", "inputId", "placeholder"],
+    };
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
         value: [
@@ -14,14 +18,19 @@ describe("MultiSearchInput", () => {
           },
         ],
         operatorOptions: [{ value: ":", label: "operator label" }],
-        label: "Label",
+        label: "Label Name",
+        defaultPlaceholder: "Placeholder",
+      },
+      stubs: {
+        AutocompleteInput: AutocompleteInputStub,
       },
     });
 
-    expect(wrapper.findAll("input.input").length).toBe(1);
-    expect(wrapper.findAll(".input-label").length).toBe(1);
-
-    expect(wrapper.find(".input-label").text()).toBe("Label");
+    const inputs = wrapper.findAllComponents(AutocompleteInputStub);
+    expect(inputs.length).toBe(1);
+    expect(inputs.at(0).props("label")).toBe("Label Name");
+    expect(inputs.at(0).props("placeholder")).toBe("Placeholder");
+    expect(inputs.at(0).props("inputId")).toBe("label-name-input-0");
   });
 
   it("creates an operator selector for input", async () => {

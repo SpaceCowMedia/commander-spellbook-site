@@ -20,6 +20,7 @@
           v-model="cards"
           label="Card Name"
           :operator-options="cardOperatorOptions"
+          :autocomplete-options="cardNameAutocompletes"
         />
       </div>
 
@@ -39,6 +40,8 @@
           default-placeholder="ex: wug, temur, colorless, black"
           label="Color Identity"
           :operator-options="colorIdentityOperatorOptions"
+          :autocomplete-options="colorAutocompletes"
+          :use-value-for-autocomplete-input="true"
         />
       </div>
 
@@ -66,6 +69,7 @@
           default-placeholder="ex: win the game"
           label="Result"
           :operator-options="comboDataOperatorOptions"
+          :autocomplete-options="resultAutocompletes"
         />
       </div>
 
@@ -124,6 +128,7 @@ import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
+import colorAutocompletes from "@/lib/api/color-autocompletes";
 
 type InputData = {
   value: string;
@@ -136,7 +141,17 @@ type OperatorOption = {
   placeholder?: string;
 };
 
+type AutoCompleteOption = {
+  value: string;
+  label: string;
+  alias?: RegExp;
+};
+
 type Data = {
+  cardNameAutocompletes: AutoCompleteOption[];
+  resultAutocompletes: AutoCompleteOption[];
+  colorAutocompletes: AutoCompleteOption[];
+
   cards: InputData[];
   cardOperatorOptions: OperatorOption[];
 
@@ -170,26 +185,30 @@ export default Vue.extend({
   },
   data(): Data {
     return {
+      cardNameAutocompletes: require("../autocomplete-data/cards.json"),
+      resultAutocompletes: require("../autocomplete-data/results.json"),
+      colorAutocompletes,
+
       cards: [{ value: "", operator: ":" }],
       cardOperatorOptions: [
         {
           value: ":",
-          label: "Contains card with name",
+          label: "Has card with name",
           placeholder: "ex: isochron",
         },
         {
           value: "=",
-          label: "Contains card with exact name",
+          label: "Has card with exact name",
           placeholder: "ex: basalt monolith",
         },
         {
           value: ":-exclude",
-          label: "Does not contain card with name",
+          label: "Does not have card with name",
           placeholder: "ex: isochron",
         },
         {
           value: "=-exclude",
-          label: "Does not contain card with exact name",
+          label: "Does not have card with exact name",
           placeholder: "ex: basalt monolith",
         },
       ],
