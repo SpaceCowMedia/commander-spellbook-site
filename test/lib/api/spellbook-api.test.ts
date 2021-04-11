@@ -92,7 +92,11 @@ describe("api", () => {
   });
 
   it("waits one second before loading the combo when not on the server", async () => {
+    const oldNodeEnv = process.env.NODE_ENV;
+
     process.server = false;
+    process.env.NODE_ENV = "production";
+
     jest.useFakeTimers();
 
     let cachedLookupHasCompleted = false;
@@ -117,6 +121,8 @@ describe("api", () => {
     await Promise.resolve().then(() => jest.advanceTimersByTime(1));
 
     expect(cachedLookupHasCompleted).toBe(true);
+
+    process.env.NODE_ENV = oldNodeEnv;
   });
 
   it("does not make each combo wait one second when server is rendering", async () => {
@@ -135,6 +141,27 @@ describe("api", () => {
     await Promise.resolve().then(() => jest.advanceTimersByTime(1));
 
     expect(cachedLookupHasCompleted).toBe(true);
+  });
+
+  it("does not make each combo wait one second when NODE_ENV is not production", async () => {
+    const oldNodeEnv = process.env.NODE_ENV;
+
+    process.env.NODE_ENV = "development";
+    jest.useFakeTimers();
+
+    let cachedLookupHasCompleted = false;
+
+    await lookup();
+    lookup().then(() => {
+      cachedLookupHasCompleted = true;
+    });
+
+    // got to do this to make sure the Promise actually resolves
+    // in the context of using fake timers
+    await Promise.resolve().then(() => jest.advanceTimersByTime(1));
+
+    expect(cachedLookupHasCompleted).toBe(true);
+    process.env.NODE_ENV = oldNodeEnv;
   });
 
   it("can do a fresh lookup when resetting the cache manually", async () => {
