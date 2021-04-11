@@ -3,6 +3,7 @@
     <!-- cool wavy effect taken from this free template: https://www.tailwindtoolbox.com/templates/landing-page-demo.php -->
     <div class="relative md:-mt-24 lg:-mt-48">
       <svg
+        aria-hidden="true"
         viewBox="0 0 1428 174"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -42,19 +43,19 @@
     <footer class="footer">
       <div class="container md:flex flex-row text-center md:text-left">
         <div class="link-collection">
-          <header>Combos</header>
+          <h3>Combos</h3>
           <nuxt-link to="/advanced-search/">Advanced Search</nuxt-link>
           <nuxt-link to="/syntax-guide/">Syntax Guide</nuxt-link>
           <nuxt-link to="/random/">Random Combo</nuxt-link>
         </div>
         <div class="link-collection">
-          <header>Commander Spellbook</header>
+          <h3>Commander Spellbook</h3>
           <nuxt-link to="/about/">About</nuxt-link>
           <nuxt-link to="/how-to-submit-a-combo/">Combo Submission</nuxt-link>
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
-          <header>Community</header>
+          <h3>Community</h3>
           <ExternalLink to="https://www.patreon.com/commanderspellbook"
             >Patreon</ExternalLink
           >
@@ -124,7 +125,7 @@ export default Vue.extend({
   @apply mr-0;
 }
 
-header {
+h3 {
   @apply block text-white font-title uppercase border-b border-white mb-2;
 }
 
