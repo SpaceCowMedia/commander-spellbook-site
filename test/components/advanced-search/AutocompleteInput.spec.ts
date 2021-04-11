@@ -154,7 +154,11 @@ describe("AutocompleteInput", () => {
     expect(items.at(2).classes()).not.toContain("is-active");
   });
 
-  it("chooses item when option is clicked", async () => {
+  it("calls onClick with item when clicked", async () => {
+    const onClickSpy = jest.spyOn(
+      (AutocompleteInput as VueComponent).options.methods,
+      "onClick"
+    );
     const options = [
       { value: "1", label: "Label 1" },
       { value: "2", label: "Label 2" },
@@ -165,9 +169,6 @@ describe("AutocompleteInput", () => {
         autocompleteOptions: options,
       },
     });
-    const vm = wrapper.vm as VueComponent;
-
-    jest.spyOn(vm, "choose");
 
     await wrapper.setData({
       matchingAutocompleteOptions: options,
@@ -177,8 +178,8 @@ describe("AutocompleteInput", () => {
 
     await items.at(1).trigger("click");
 
-    expect(vm.choose).toBeCalledTimes(1);
-    expect(vm.choose).toBeCalledWith({
+    expect(onClickSpy).toBeCalledTimes(1);
+    expect(onClickSpy).toBeCalledWith({
       value: "2",
       label: "Label 2",
     });
@@ -735,6 +736,42 @@ describe("AutocompleteInput", () => {
         value: "2",
         label: "2",
       });
+    });
+  });
+
+  describe("onClick", () => {
+    it("chooses the selected autocomplete choice", () => {
+      const chooseSpy = jest.spyOn(
+        (AutocompleteInput as VueComponent).options.methods,
+        "choose"
+      );
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      vm.onClick({
+        value: "2",
+        label: "2",
+      });
+
+      expect(chooseSpy).toBeCalledTimes(1);
+      expect(chooseSpy).toBeCalledWith({
+        value: "2",
+        label: "2",
+      });
+    });
+
+    it("focuses back on input", () => {
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+      const input = wrapper.find("input").element;
+      const focusSpy = jest.spyOn(input, "focus");
+
+      vm.onClick({
+        value: "2",
+        label: "2",
+      });
+
+      expect(focusSpy).toBeCalledTimes(1);
     });
   });
 

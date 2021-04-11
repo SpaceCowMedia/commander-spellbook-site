@@ -42,7 +42,7 @@
         :key="i"
         :class="{ 'is-active': i === arrowCounter }"
         class="autocomplete-result"
-        @click="choose(item)"
+        @click="onClick(item)"
         @mouseover="onAutocompleteItemHover(i)"
       >
         <TextWithMagicSymbol :text="item.label" />
@@ -219,6 +219,14 @@ export default Vue.extend({
 
       if (choice) {
         this.choose(choice);
+      }
+    },
+    onClick(item: AutoCompleteOption) {
+      this.choose(item);
+      const input = this.$refs.input as HTMLInputElement;
+
+      if (input) {
+        input.focus();
       }
     },
     lookupAutocomplete(): void {
