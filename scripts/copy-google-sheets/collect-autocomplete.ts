@@ -5,27 +5,51 @@ type AutoCompleteOption = {
   value: string;
   label: string;
 };
+type AutoCompleteOptionWithCount = {
+  value: string;
+  label: string;
+  count: number;
+};
 
-function collectAutocompletes(items: string[]): AutoCompleteOption[] {
+function collectAutocompletes(
+  items: string[],
+  limit = 1
+): AutoCompleteOption[] {
   return items
     .reduce((collection, item) => {
-      if (
-        !collection.find(
-          (piece) => normalizeStringInput(item) === normalizeStringInput(piece)
-        )
-      ) {
-        if (!item.trim().match(/^[(*]/)) {
-          collection.push(item.trim());
-        }
+      const itemInCollection = collection.find(
+        (piece) =>
+          normalizeStringInput(item) === normalizeStringInput(piece.value)
+      );
+
+      if (itemInCollection) {
+        itemInCollection.count++;
+      } else if (!item.trim().match(/^[(*]/)) {
+        collection.push({
+          value: normalizeStringInput(item),
+          label: item.trim(),
+          count: 1,
+        });
       }
       return collection;
-    }, [] as string[])
-    .sort()
+    }, [] as AutoCompleteOptionWithCount[])
+    .filter((option) => {
+      return option.count >= limit;
+    })
     .map((option) => {
       return {
-        value: normalizeStringInput(option),
-        label: option,
+        value: option.value,
+        label: option.label,
       };
+    })
+    .sort((a, b) => {
+      if (a.value > b.value) {
+        return 1;
+      } else if (a.value < b.value) {
+        return -1;
+      }
+
+      return 0;
     });
 }
 
@@ -40,5 +64,8 @@ export function collectCardNames(
 export function collectResults(
   combos: FormattedApiResponse[]
 ): AutoCompleteOption[] {
-  return collectAutocompletes(combos.map((c) => Array.from(c.results)).flat());
+  return collectAutocompletes(
+    combos.map((c) => Array.from(c.results)).flat(),
+    30
+  );
 }
