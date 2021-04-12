@@ -42,11 +42,6 @@
         <ExternalLink to="https://twitter.com/lappermedic">Lapper</ExternalLink>
       </li>
       <li>
-        <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
-          >Senior Edificer</ExternalLink
-        >
-      </li>
-      <li>
         <ExternalLink to="https://www.moxfield.com/users/goldshot20"
           >Goldshot20</ExternalLink
         >
@@ -60,6 +55,12 @@
         <ExternalLink to="https://twitter.com/rosequartz_26"
           >Jaelyn Rosenquist</ExternalLink
         >
+      </li>
+      <li>
+        <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
+          >Senior Edificer</ExternalLink
+        >
+        (emeritus)
       </li>
     </ul>
   </div>
