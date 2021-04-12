@@ -1,6 +1,4 @@
-# Commander Spellbook Website V2
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/16f0307b-ca59-4282-bff6-a4fde147a869/deploy-status)](https://app.netlify.com/sites/commander-spellbook-beta/deploys)
+# Commander Spellbook Website
 
 ## Installation Requirements
 

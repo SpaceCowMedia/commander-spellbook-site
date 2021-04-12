@@ -1,8 +1,8 @@
 const isWindows = process.platform === "win32";
 
-const title = "Commander Spellbook: Combo Database for Commander (EDH)";
+const title = "Commander Spellbook: The Search Engine for EDH Combos";
 const description =
-  "The Premier Magic: the Gathering Combo Database for the Commander / Elder Dragon Highlander (EDH) Format.";
+  "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
 export default {
@@ -57,27 +57,27 @@ export default {
       // Twitter metatags
       {
         hid: "twitter-card",
-        property: "twitter:card",
+        name: "twitter:card",
         content: "summary_large_image",
       },
       {
         hid: "twitter-url",
-        property: "twitter:url",
+        name: "twitter:url",
         content: "https://commanderspellbook.com/",
       },
       {
         hid: "twitter-title",
-        property: "twitter:title",
+        name: "twitter:title",
         content: title,
       },
       {
         hid: "twitter-description",
-        property: "twitter:description",
+        name: "twitter:description",
         content: description,
       },
       {
         hid: "twitter-image",
-        property: "twitter:image",
+        name: "twitter:image",
         content: linkPreviewImage,
       },
     ],

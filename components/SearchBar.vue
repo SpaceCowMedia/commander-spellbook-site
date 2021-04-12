@@ -33,7 +33,7 @@
           :class="inputClasses"
           name="q"
           :placeholder="`Search ${numberOfCombos} EDH combos`"
-          autocomplete="on"
+          autocomplete="off"
           autocapitalize="none"
           autocorrect="off"
           spellcheck="false"

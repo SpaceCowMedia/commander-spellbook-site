@@ -24,7 +24,7 @@
           :to="{ path: '/search/', query: { q: 'is:previewed' } }"
           class="previwed-combos-button button md:m-1"
         >
-          Strixhaven Combos
+          Strixhaven & C21 Combos
         </nuxt-link>
       </div>
 
