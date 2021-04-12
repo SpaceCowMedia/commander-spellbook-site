@@ -39,6 +39,9 @@
     <strong>Sincerely, the Community Admins,</strong>
     <ul class="ml-4 list-inside">
       <li>
+        <ExternalLink to="https://twitter.com/lappermedic">Lapper</ExternalLink>
+      </li>
+      <li>
         <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
           >Senior Edificer</ExternalLink
         >
@@ -54,7 +57,9 @@
         >
       </li>
       <li>
-        <ExternalLink to="https://twitter.com/lappermedic">Lapper</ExternalLink>
+        <ExternalLink to="https://twitter.com/rosequartz_26"
+          >Jaelyn Rosenquist</ExternalLink
+        >
       </li>
     </ul>
   </div>
