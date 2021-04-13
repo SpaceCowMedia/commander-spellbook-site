@@ -7,6 +7,7 @@ describe("ComboSidebarLinks", () => {
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
         CopyComboLinkButton: CopyComboLinkButtonStub,
+        NuxtLink: true,
       },
       propsData: {
         comboLink: "https://example.com/combo/3",
@@ -24,6 +25,7 @@ describe("ComboSidebarLinks", () => {
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
         BuyComboButtons: BuyComboButtonsStub,
+        NuxtLink: true,
       },
       propsData: {
         comboLink: "https://example.com/combo/3",
@@ -52,6 +54,7 @@ describe("ComboSidebarLinks", () => {
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
         SimiliarCombosButton: SimiliarCombosButtonStub,
+        NuxtLink: true,
       },
       propsData: {
         comboLink: "https://example.com/combo/3",

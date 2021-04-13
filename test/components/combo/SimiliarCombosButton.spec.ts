@@ -24,10 +24,35 @@ describe("SimiliarCombosButton", () => {
     expect(wrapper.find("#has-similiar-combos").exists()).toBe(false);
 
     await wrapper.setData({
-      hasSimiliarCombos: true,
+      numberOfSimiliarCombos: 3,
     });
 
     expect(wrapper.find("#has-similiar-combos").exists()).toBe(true);
+  });
+
+  it("reports how many similiar combs there are", async () => {
+    const wrapper = shallowMount(SimiliarCombosButton, {
+      propsData: {
+        comboId: "fake-id",
+        cards: ["card 1", "card 2"],
+      },
+    });
+
+    await wrapper.setData({
+      numberOfSimiliarCombos: 1,
+    });
+
+    expect(wrapper.find("#has-similiar-combos").text()).toBe(
+      "View Another Combo Using these Cards"
+    );
+
+    await wrapper.setData({
+      numberOfSimiliarCombos: 99,
+    });
+
+    expect(wrapper.find("#has-similiar-combos").text()).toBe(
+      "Find 99 Other Combos Using These Cards"
+    );
   });
 
   describe("lookupSimiliarCombos", () => {
