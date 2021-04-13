@@ -5,7 +5,7 @@
     class="button w-full"
     @click="goToSimiliarCombos"
   >
-    Find Other Combos Using These Cards
+    {{ text }}
   </button>
 </template>
 
@@ -28,13 +28,22 @@ export default Vue.extend({
   },
   data() {
     return {
-      hasSimiliarCombos: false,
+      numberOfSimiliarCombos: 0,
     };
   },
   async fetch() {
     await this.lookupSimiliarCombos();
   },
   computed: {
+    text(): string {
+      if (this.numberOfSimiliarCombos === 1) {
+        return "View Another Combo Using these Cards";
+      }
+      return `Find ${this.numberOfSimiliarCombos} Other Combos Using These Cards`;
+    },
+    hasSimiliarCombos(): boolean {
+      return this.numberOfSimiliarCombos > 0;
+    },
     similiarSearchString(): string {
       return this.cards.reduce((accum, name) => {
         let quotes = '"';
@@ -51,7 +60,7 @@ export default Vue.extend({
     async lookupSimiliarCombos(): Promise<void> {
       const result = await search(this.similiarSearchString);
 
-      this.hasSimiliarCombos = result.combos.length > 0;
+      this.numberOfSimiliarCombos = result.combos.length;
     },
     goToSimiliarCombos(): void {
       this.$gtag.event("Combos Using These Cards Button Clicked", {
