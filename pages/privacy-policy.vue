@@ -14,7 +14,7 @@
       use it.
     </p>
 
-    <h2>Log Files</h2>
+    <h2 class="heading-subtitle">Log Files</h2>
 
     <p>
       Like many other websites, we makes use of log files. These files merely
@@ -29,7 +29,7 @@
       identifiable.
     </p>
 
-    <h2>Cookies and Web Beacon</h2>
+    <h2 class="heading-subtitle">Cookies and Web Beacon</h2>
 
     <p>
       We use cookies to store information about visitors' preferences, to record
@@ -39,7 +39,7 @@
       their browser.
     </p>
 
-    <h2>Third Party Privacy Policies</h2>
+    <h2 class="heading-subtitle">Third Party Privacy Policies</h2>
 
     <p>
       You should consult the respective privacy policies of these third-party ad
@@ -54,7 +54,7 @@
       >
     </p>
 
-    <h2>Children's Information</h2>
+    <h2 class="heading-subtitle">Children's Information</h2>
 
     <p>
       We believe it is important to provide added protection for children
@@ -68,7 +68,7 @@
       promptly remove such information from our records.
     </p>
 
-    <h2>Online Privacy Policy Only</h2>
+    <h2 class="heading-subtitle">Online Privacy Policy Only</h2>
 
     <p>
       This privacy policy applies only to our online activities and is valid for
@@ -79,7 +79,7 @@
 
     <hr />
 
-    <h2>For California Residents: CCPA Information</h2>
+    <h2 class="heading-subtitle">For California Residents: CCPA Information</h2>
 
     <p>
       This Privacy Notice for California Residents supplements the information
@@ -442,7 +442,7 @@
       information we collect with third parties.
     </p>
 
-    <h2>Consent</h2>
+    <h2 class="heading-subtitle">Consent</h2>
 
     <p>
       By using our website, you hereby consent to our privacy policy and agree
@@ -465,16 +465,12 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-h2 {
-  @apply my-4 text-3xl font-semibold;
-}
-
 h3 {
-  @apply my-4 text-2xl font-semibold;
+  @apply my-4 text-xl font-bold;
 }
 
 h4 {
-  @apply mt-4 text-xl font-semibold;
+  @apply mt-4 text-lg font-bold;
 }
 
 p {
@@ -486,7 +482,7 @@ ul {
 }
 
 hr {
-  @apply mt-6 mb-2;
+  @apply my-6;
 }
 
 table th {

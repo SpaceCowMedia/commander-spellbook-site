@@ -1,0 +1,601 @@
+<template>
+  <div class="static-page">
+    <ArtCircle
+      card-name="Stet, Draconic Proofreader"
+      artist="Dmitry Burmak"
+      class="m-auto md:block hidden"
+    />
+    <h1 class="heading-title">The Official™ Commander Spellbook Style Guide</h1>
+    <h2 class="heading-subtitle text-center mt-0">
+      By The Commander Spellbook Mod Team
+    </h2>
+    <h2 class="heading-subtitle text-center mt-0">
+      (Don't ask why I decided to format this vaguely like a lab report. I felt
+      like it, okay?)
+    </h2>
+
+    <p class="pt-12">
+      If you have any questions, comments, or concerns about this document, ask
+      one of the mods on the
+      <ExternalLink to="https://discord.com/invite/F2kkt7pETB"
+        >Commander Spellbook Discord server</ExternalLink
+      >.
+    </p>
+
+    <p>
+      This document should be considered a constant work-in-progress, and while
+      things that are in the document should be considered accurate, they can be
+      changed at any time as our policies change.
+    </p>
+
+    <p>
+      If there is something you feel should be covered by the document that
+      isn't, please let us know so that we at the spellbook can implement
+      whatever needs to be implemented.
+    </p>
+
+    <hr />
+
+    <h3 class="heading-subtitle">General Formatting Rules</h3>
+
+    <h4 id="card-names">Card Names</h4>
+    <ul>
+      <li>
+        All card names should be written out in full. No abbreviations,
+        nicknames, etc
+
+        <ul>
+          <li>
+            The exception to this rule is legendary card names, where you can
+            truncate everything after the comma. If the legendary card name does
+            not have a comma in it, if the card's most recent printing has the
+            legendary name abbreviated, you can abbreviate it. If it fits
+            neither of those criteria, if it has its whole name spelled out on
+            it, tough luck, spell it out anyway. Otherwise, feel free to ask the
+            mods on discord.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="mana-symbol-order">Mana Symbol Order in Prerequisites and Steps</h4>
+    <ul>
+      <li>
+        When writing costs, always write generic mana symbols first (The
+        exception is the x symbol, which comes before generic symbols).
+      </li>
+      <li>
+        Colorless and mono-colored mana symbols always are listed at the end on
+        a cost, with colorless coming before the colors.
+
+        <ul>
+          <li>
+            For 2 allied colors, the one that comes first in WUBRG order is
+            written first, with G being considered to come before W. (If you do
+            not feel like figuring it out yourself, check how EDHRec has the
+            symbols listed under "Color ID")
+          </li>
+          <li>
+            For 2 enemy colors, the one that would only have to advance 2
+            positions forward in WUBRG order (rather than 3) comes first (If you
+            do not feel like figuring it out yourself, check how EDHRec has the
+            symbols listed under "Color ID").
+          </li>
+          <li>
+            For 3 colors, the primary color of the wedge/shard (the enemy of
+            both in the wedge, the ally of both in the shard) goes in the
+            middle, and the two colors on the left and right are placed based on
+            where they are positioned in the color pie relative to the primary
+            color. (If you do not feel like figuring it out yourself, check how
+            EDHRec has the symbols listed under "Color ID")
+          </li>
+          <li>
+            For 4 colors, they are listed in WUBRG order starting with the one
+            after the missing color. (If you do not feel like figuring it out
+            yourself, check how EDHRec has the symbols listed under "Color ID")
+          </li>
+        </ul>
+      </li>
+      <li>
+        Phyrexian mana symbols are treated the same way as colored mana symbols
+        are, but should be placed before normal colored mana symbols. The
+        notation for it is:
+        <ul>
+          <li>
+            <TextWithMagicSymbol text="{wp}" />
+            <code>{wp}</code>
+          </li>
+          <li><TextWithMagicSymbol text="{up}" /> <code>{up}</code></li>
+          <li><TextWithMagicSymbol text="{bp}" /> <code>{bp}</code></li>
+          <li><TextWithMagicSymbol text="{rp}" /> <code>{rp}</code></li>
+          <li><TextWithMagicSymbol text="{gp}" /> <code>{gp}</code></li>
+        </ul>
+      </li>
+      <li>
+        Energy is not a mana symbol and should not be grouped with mana symbols.
+      </li>
+      <li>
+        All other unmentioned mana symbols should go between the generic and
+        colored mana symbols
+      </li>
+    </ul>
+
+    <h4 id="attached-equipped-fortified-enchanted">
+      Attached, Equipped, Fortified, and Enchanted
+    </h4>
+    <ul>
+      <li>
+        Attach is the verb, and should be used when an equipment, aura, or
+        fortification is being attached to something
+
+        <ul>
+          <li>
+            An example for an equipment would be "Activate the ~1 equip ability,
+            attaching it to ~2"
+          </li>
+          <li>
+            The verbs equip, enchant, and fortify should not be used to describe
+            attaching something to a permanent or card.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Equipped, enchanted, and fortified describe the permanent that has an
+        equipment, aura, or fortification attached to them, respectively.
+
+        <ul>
+          <li>Attached should never be used in these cases</li>
+        </ul>
+      </li>
+      <li>When describing the</li>
+    </ul>
+
+    <h4 id="capitalization">Capitalization</h4>
+    <ul>
+      <li>
+        Proper nouns (names of people, places, and things) and beginnings of
+        sentences need to be capitalized.
+      </li>
+      <li>
+        Card subtypes must be capitalized, meaning stuff like Aura, Treasure,
+        Locus, and Elf.
+
+        <ul>
+          <li>
+            Note that this does not apply to card types or supertypes. Why? Good
+            question. But if you look at Magic cards, that's how they do things.
+            Presumably, it is because something like "enchantment" is just a
+            word or "basic" is just an adjective, which subtypes are treated as
+            names.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="numbers-numerals">Numbers vs. Numerals</h4>
+    <ul>
+      <li>
+        Numbers that could be written with a singular English word (like one, or
+        twenty) should be spelled out, while multi-word numbers (like 24) should
+        be written as numerals
+
+        <ul>
+          <li>
+            If it is in a context where a Magic card would use a numeral, such
+            as with +1/+1 counters, disregard the previous rule and write the
+            numerals anyway. If you are not sure, try and find a recently
+            printed Magic card that uses the terminology.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="contractions">Contractions</h4>
+    <ul>
+      <li>Don't [sic] use contractions. Like, ever.</li>
+      <li>Cannot [sic] is a contraction. Don't [sic] use it.</li>
+    </ul>
+
+    <hr />
+
+    <h3 class="heading-subtitle">Card Names</h3>
+
+    <h4 id="general-card-names">General</h4>
+    <ul>
+      <li>
+        All card names should be written out in full. No abbreviations,
+        nicknames, etc.
+
+        <ul>
+          <li>
+            Note that this is different from how they are handled in other
+            sections of the combo, where abbreviations or shortenings are
+            permitted in some cases.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Adventure cards should only be listed as the front half of the hard
+      </li>
+      <li>Split cards should be written as "Side 1 // Side 2"</li>
+      <li>
+        Flip Cards (the ones you rotate from Kamigawa) should only be listed as
+        the unflipped "side" of the card
+      </li>
+      <li>
+        Modal DFCs and Transforming DFCs should only be listed as the front face
+        of the card.
+      </li>
+    </ul>
+
+    <h4 id="name-ordering">Card Name Ordering</h4>
+    <ul>
+      <li>
+        The least replaceable piece of a combo should be the farthest to the
+        left, becoming more replaceable as you move to the right
+      </li>
+    </ul>
+
+    <hr />
+
+    <h3 class="heading-subtitle">Prerequisites</h3>
+
+    <h4 id="card-zones">Cards and Zones</h4>
+    <ul>
+      <li>
+        If all cards are in the same zone, it should be written as "All cards in
+        [zone name]." or in the case of the battlefield "All permanents on the
+        battlefield."
+      </li>
+      <li>
+        If there is one card in a specific zone, it should be written as "[card
+        name] in [zone name]." or in the case of the battlefield "[card name] on
+        the battlefield."
+
+        <ul>
+          <li>
+            For multiple cards in the same zone, it should be written as "[card
+            name], and [card name] in [zone name]." Additional cards can be
+            added to that clause as needed.
+          </li>
+        </ul>
+      </li>
+      <li>No cards may begin a combo on the stack.</li>
+    </ul>
+
+    <h4 id="pre-ordering">Prerequisite Ordering</h4>
+    <ul>
+      <li>What zones the cards you require begin in always comes first.</li>
+      <li>The mana required for the combo always comes last</li>
+      <li>
+        Miscellaneous results go in between; a more defined hierarchy may
+        eventually be defined.
+      </li>
+    </ul>
+
+    <h4 id="summoning-sickness">Summoning Sickness</h4>
+    <ul>
+      <li>
+        When you have a creature on the battlefield that must either attack or
+        use an activated ability, one should say "~ does not have summoning
+        sickness."
+      </li>
+      <li>
+        Noncreature permanents do not suffer from summoning sickness and
+        therefore do not need to mention summoning sickness
+
+        <ul>
+          <li>
+            The exception being when it transitions between the two, in which
+            case, if it becomes a creature, it will need to not have summoning
+            sickness
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="modal-double-faced">
+      Modal Double-Faced Cards and Transforming Double-Faced Cards
+    </h4>
+    <ul>
+      <li>
+        When only using the front side of a card, the back side of the card can
+        be ignored entirely
+      </li>
+    </ul>
+
+    <hr />
+
+    <h3 class="heading-subtitle">Steps</h3>
+
+    <h4 id="dividing-steps">Dividing up Steps</h4>
+    <ul>
+      <li>
+        Each individual action taken by the player should be its own step.
+      </li>
+      <li>
+        Each individual trigger occurring and resolving should also be its own
+        step.
+
+        <ul>
+          <li>
+            When there are multiple triggers triggering at the same time, there
+            should be a step listing all of the triggers that occurred, followed
+            by each trigger being resolved in its own step.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="cost-and-effects">Costs and Effects</h4>
+    <ul>
+      <li>
+        Steps involving casting spells or activating abilities can be broken
+        into two parts: cost and effect, and the parts should generally be
+        separated by a comma.
+
+        <ul>
+          <li>
+            Activating an ability where the only cost is tapping that permanent
+            works a bit differently. In that case, you merge the cost and
+            effect, saying; "Tap ~1 for {~2}:" or "Tap ~ to …"
+          </li>
+        </ul>
+      </li>
+      <li>
+        Some cases may cause things to take place between an effect going onto
+        the stack and the resolution of said effects. See the
+        <a href="#delayed-resolution">Delayed Resolution section</a> for more
+        info.
+      </li>
+      <li>
+        Mana payments generally do not need to be written out as part of costs
+        (See the <a href="#adding-spending-mana">Spending Mana section</a> for
+        more info)
+      </li>
+    </ul>
+
+    <h4 id="delayed-resolution">Delayed Resolution</h4>
+    <ul>
+      <li>
+        Sometimes, you will need to delay the resolution of a trigger, activated
+        ability, or spell that has been cast due to casting spell(s) or
+        activating ability(ies) in response, or trigger(s) going onto the stack.
+      </li>
+      <li>
+        This can be broken down into multiple steps: how to handle referring to
+        the item being put onto the stack, how to handle intervening
+        triggers/actions, and how to handle the resolution of the original
+        effect.
+
+        <ul>
+          <li>
+            When referring to the item being put onto the stack
+
+            <ul>
+              <li>For a trigger, say "~ triggers."</li>
+              <li>
+                For casting a spell, say "Cast ~." Make sure to include any
+                costs that need mentioning.
+              </li>
+              <li>
+                For activating an ability, say "Activate ~." Make sure to
+                include any costs that need mentioning.
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            When referring to the step immediately afterwards
+
+            <ul>
+              <li>
+                For an intervening trigger, nothing special is needed. Just use
+                the standard "~ triggers" and deal with the trigger as normal.
+              </li>
+              <li>
+                For an intervening spell cast or ability activation, say "In
+                response, " then continue resolving the spell or ability
+                activation as normal.
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            When resolving the original effect
+
+            <ul>
+              <li>
+                For a trigger, say "Resolve the ~ trigger, " then continue with
+                the effect of said trigger (If the card name starts with the
+                word "the", instead say "Resolve ~'s trigger")
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        For resolving a spell, say "Resolve ~, " then continue with the effects
+        of the spell as needed.
+      </li>
+      <li>
+        For resolving an activated ability, say "Resolve the ~ ability, " then
+        continue with the effect of said trigger
+
+        <ul>
+          <li>
+            If the card name starts with the word "the", instead say "Resolve
+            ~'s ability"
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="adding-spending-mana">Adding, Spending, and Not Spending Mana</h4>
+    <ul>
+      <li>
+        All combos need to say how much mana and what kinds of mana are added
+        when mana is added.
+      </li>
+      <li>
+        Combos that involve the creation of infinite mana via a loop of some
+        kind should state what kinds of mana is being spent and in what
+        quantities said types of mana are being spent.
+        <ul>
+          <li>
+            The amount of unspent mana should only be referenced when directly
+            pertinent to the cards involved, such as with Doubling Cube.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Combos that spend a finite amount of mana a singular time do not need to
+        say how much mana is being spent, just that the spell is being cast or
+        that the ability is being activated.
+      </li>
+      <li>
+        Mana that is left unspent should be referred to as unspent mana. For
+        example, a step that leaves two black mana unspent should end with
+        "leaving {b}{b} unspent."
+
+        <ul>
+          <li>The mana pool no longer exists and should not be referenced</li>
+          <li>
+            "Floating" mana is a slang term that refers to the same thing, and
+            should not be used.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="repeats">Repeats</h4>
+    <ul>
+      <li>
+        When every step within a combo makes up an infinite loop, the last step
+        of the combo should read "repeat".
+      </li>
+      <li>
+        When all but the first number of steps make up an infinite loop, the
+        last step of the combo should read "repeat from step ~"
+      </li>
+      <li>
+        When a certain group of steps need to be repeated that do not fit into
+        either category, the step following the last step in the loop should
+        read "repeat steps ~1 through ~2.
+      </li>
+    </ul>
+
+    <hr />
+
+    <h3 class="heading-subtitle">Results</h3>
+
+    <h4 id="general-results">General Results</h4>
+    <ul>
+      <li>
+        Results should be formatted as they are in the search tips of the
+        website.
+
+        <ul>
+          <li>
+            There are two current exceptions: infinite copies (which we do not
+            do at all) and infinite loot (which we use infinite looting for).
+            Note that at the time you are reading this, these mistakes may have
+            already been corrected.
+          </li>
+        </ul>
+      </li>
+      <li>
+        If the result you're looking at is not in the search tips of the
+        website, search the website for another combo that has a similar result
+        and see what was done in that case. Note that there is no guarantee that
+        said combo will be formatted or worded correctly.
+      </li>
+    </ul>
+
+    <h4 id="extra-turns">Extra Turns</h4>
+    <ul>
+      <li>
+        Extra turns are considered infinite despite the fact that you eventually
+        deck yourself due to card draw
+      </li>
+      <li>
+        Effects that occur once or twice per extra turn are not considered
+        infinite.
+
+        <ul>
+          <li>
+            For example, playing a land on each of your extra turns is not
+            infinite landfall.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr />
+
+    <h3 class="heading-subtitle">Glossary</h3>
+
+    <h4 id="zone-names">Zone Names</h4>
+    <ul>
+      <li>Battlefield</li>
+      <li>Graveyard</li>
+      <li>Library</li>
+      <li>Hand</li>
+      <li>Exile</li>
+      <li>The command zone</li>
+      <li>The stack</li>
+      <li>The ante zone</li>
+    </ul>
+
+    <h4 id="unofficial-terms">Unofficial MTG Terms Used</h4>
+
+    <ul>
+      <li>ETB: Enters the battlefield</li>
+      <li>LTB: Leaves the battlefield</li>
+      <li>Loot/ing: Draw a card, then discard a card</li>
+      <li>Rummage/ing: Discard a card, then draw a card</li>
+    </ul>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import ArtCircle from "@/components/ArtCircle.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
+import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
+
+export default Vue.extend({
+  components: {
+    ArtCircle,
+    ExternalLink,
+    TextWithMagicSymbol,
+  },
+});
+</script>
+<style scoped>
+p {
+  @apply my-2;
+}
+
+h4 {
+  @apply text-lg mt-4 mb-2 font-bold;
+}
+
+ul {
+  @apply list-disc list-inside;
+}
+
+ul ul {
+  @apply ml-8;
+}
+
+hr {
+  @apply my-4;
+}
+
+code {
+  @apply bg-gray-200 px-1 mx-1;
+}
+</style>
