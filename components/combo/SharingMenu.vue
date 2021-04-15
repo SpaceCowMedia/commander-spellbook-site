@@ -84,8 +84,7 @@ export default Vue.extend({
     comboURL: () => {
       // window is undefined in node because it is a browser property
       if (typeof window !== "undefined") {
-        const url = window.location.href;
-        return url;
+        return window.location.href;
       }
     },
   },
