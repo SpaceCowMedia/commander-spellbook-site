@@ -1,4 +1,4 @@
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
 
 describe("ComboSidebarLinks", () => {
@@ -64,5 +64,22 @@ describe("ComboSidebarLinks", () => {
     });
 
     expect(wrapper.findComponent(SimiliarCombosButtonStub).exists()).toBe(true);
+  });
+
+  it("creates a 'Report Error' button", () => {
+    const wrapper = shallowMount(ComboSidebarLinks, {
+      stubs: {
+        NuxtLink: RouterLinkStub,
+      },
+      propsData: {
+        comboLink: "https://example.com/combo/3",
+        comboId: "fake-id",
+        cards: ["card 1", "card 2"],
+      },
+    });
+
+    expect(wrapper.findComponent(RouterLinkStub).props("to")).toBe(
+      "/report-error?comboId=fake-id"
+    );
   });
 });
