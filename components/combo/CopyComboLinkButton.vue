@@ -9,7 +9,6 @@
     >
       Copy Combo Link
     </button>
-
     <!-- accessibility compliance software may see this as an
       issue since there is no label for it. But it's hidden
       from screenreaders and hidden on the page. It only needs
@@ -42,9 +41,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VueSocialSharing from "vue-social-sharing";
-
-Vue.use(VueSocialSharing);
 
 export default Vue.extend({
   props: {

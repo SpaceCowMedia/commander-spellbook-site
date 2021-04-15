@@ -8,6 +8,7 @@
     />
     <div class="mt-1">
       <CopyComboLinkButton :combo-link="comboLink" />
+      <ShareComboButton />
       <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
     </div>
   </div>
@@ -18,12 +19,14 @@ import Vue, { PropType } from "vue";
 import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
+import ShareComboButton from "@/components/combo/ShareComboButton.vue";
 
 export default Vue.extend({
   components: {
     CopyComboLinkButton,
     SimiliarCombosButton,
     BuyComboButtons,
+    ShareComboButton,
   },
   props: {
     cards: {
