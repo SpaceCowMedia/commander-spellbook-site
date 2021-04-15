@@ -52,6 +52,9 @@
           <h3>Commander Spellbook</h3>
           <nuxt-link to="/about/">About</nuxt-link>
           <nuxt-link to="/how-to-submit-a-combo/">Combo Submission</nuxt-link>
+          <nuxt-link to="/report-error/"
+            >Report an Error with a Combo</nuxt-link
+          >
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
