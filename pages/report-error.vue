@@ -70,6 +70,6 @@ export default Vue.extend({
 
 <style scoped>
 pre {
-  @apply my-4 bg-gray-200 p-4;
+  @apply my-4 bg-gray-200 p-4 overflow-x-auto;
 }
 </style>
