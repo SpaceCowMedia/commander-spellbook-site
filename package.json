@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "husky install",
+    "postinstall": "husky install && npm run pregenerate",
     "predev": "npm run download-data",
     "dev": "nuxt",
     "prebuild": "prettier --write .",
