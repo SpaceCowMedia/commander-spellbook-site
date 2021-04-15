@@ -147,7 +147,6 @@
           <li>Attached should never be used in these cases</li>
         </ul>
       </li>
-      <li>When describing the</li>
     </ul>
 
     <h4 id="capitalization">Capitalization</h4>
