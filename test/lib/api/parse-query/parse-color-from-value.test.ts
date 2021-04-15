@@ -1,22 +1,16 @@
 import parseColorFromValue from "@/lib/api/parse-query/parse-color-from-value";
 
 describe("parseColorFromValue", () => {
-  it("returns an empty array when nothing matches", () => {
+  it("returns false when value does not match", () => {
     const input = "acdefhijklmnopqstvxyz";
 
-    expect(parseColorFromValue(input)).toEqual([]);
+    expect(parseColorFromValue(input)).toEqual(false);
   });
 
-  it("pulls out only acceptable colors", () => {
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  it("returns false when multiple color values are used", () => {
+    const alphabet = "ww";
 
-    expect(parseColorFromValue(alphabet)).toEqual(["b", "g", "r", "u", "w"]);
-  });
-
-  it("ignores duplicates", () => {
-    const input = "wwwuuuwwwwb";
-
-    expect(parseColorFromValue(input)).toEqual(["w", "u", "b"]);
+    expect(parseColorFromValue(alphabet)).toEqual(false);
   });
 
   it.each`

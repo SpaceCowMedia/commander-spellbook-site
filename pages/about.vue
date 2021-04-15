@@ -1,16 +1,16 @@
 <template>
   <div class="static-page">
     <ArtCircle
-      card-name="Aeon Chronicler"
-      artist="Dan Dos Santos"
+      card-name="Codie, Vociferous Codex"
+      artist="Daniel Ljunggren"
       class="m-auto md:block hidden"
     />
     <h1 class="heading-title">About Commander Spellbook</h1>
 
     <p>
-      The Commander Spellbook project exists to catalog all reasonable
-      Commander/EDH combos and to make them easily available across all modern
-      digital platforms. This community driven project is used to power
+      The Commander Spellbook project is a search engine for Commander/EDH
+      combos and to make them easily available across all modern digital
+      platforms. This community driven project is used to power
       <ExternalLink to="https://edhrec.com/combos">
         EDHREC's Combo Feature</ExternalLink
       >.
@@ -39,9 +39,7 @@
     <strong>Sincerely, the Community Admins,</strong>
     <ul class="ml-4 list-inside">
       <li>
-        <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
-          >Senior Edificer</ExternalLink
-        >
+        <ExternalLink to="https://twitter.com/lappermedic">Lapper</ExternalLink>
       </li>
       <li>
         <ExternalLink to="https://www.moxfield.com/users/goldshot20"
@@ -54,7 +52,15 @@
         >
       </li>
       <li>
-        <ExternalLink to="https://twitter.com/lappermedic">Lapper</ExternalLink>
+        <ExternalLink to="https://twitter.com/rosequartz_26"
+          >Jaelyn Rosenquist</ExternalLink
+        >
+      </li>
+      <li>
+        <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
+          >Senior Edificer</ExternalLink
+        >
+        (emeritus)
       </li>
     </ul>
   </div>

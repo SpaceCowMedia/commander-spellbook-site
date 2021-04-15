@@ -91,12 +91,12 @@ export default Vue.extend({
     cardkingdomLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("\n"));
 
-      return `https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=clipboard&utm_campaign=edhrec&c=${cardQuery}`;
+      return `https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=${cardQuery}`;
     },
     tcgPlayerLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("||"));
 
-      return `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=clipboard&utm_source=EDHREC&c=${cardQuery}`;
+      return `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=commanderspellbook&utm_source=EDHREC&c=${cardQuery}`;
     },
     tcgplayerPriceLabel(): string {
       if (this.tcgPlayerOutOfStock) {

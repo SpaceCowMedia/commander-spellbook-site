@@ -16,23 +16,11 @@
         class="relative"
         @focus="hoveredOverCardIndex = index"
       >
-        <Flipper :flipped="loaded[index]">
-          <template slot="front">
-            <img
-              class="back-card"
-              src="~/assets/images/card-back.png"
-              :alt="card.name"
-            />
-          </template>
-          <template slot="back">
-            <img
-              class="front-card"
-              :src="card.oracleImageUrl"
-              :alt="card.name"
-              @load="onImgLoad(index)"
-            />
-          </template>
-        </Flipper>
+        <CardImage
+          class="card-img"
+          :name="card.name"
+          :img="card.oracleImageUrl"
+        />
       </CardLink>
     </div>
   </div>
@@ -41,12 +29,12 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import CardLink from "@/components/CardLink.vue";
-import Flipper from "@/components/Flipper.vue";
+import CardImage from "@/components/CardImage.vue";
 
 export default Vue.extend({
   components: {
     CardLink,
-    Flipper,
+    CardImage,
   },
   props: {
     cards: {
@@ -72,10 +60,6 @@ export default Vue.extend({
         index - 8 === this.hoveredOverCardIndex
       );
     },
-    onImgLoad(index: number): void {
-      this.loaded[index] = true;
-      this.$forceUpdate();
-    },
   },
 });
 </script>
@@ -85,16 +69,12 @@ export default Vue.extend({
   @apply relative flex-wrap -mt-20 mb-4;
 }
 
-.card-images .card-img-wrapper img {
+.card-images .card-img-wrapper .card-img {
   @apply rounded-xl relative top-0 transition-all duration-1000 ease-in-out;
 }
 
-.card-images .card-img-wrapper.expand img {
+.card-images .card-img-wrapper.expand .card-img {
   top: 295px;
-}
-
-.card-back.loaded {
-  @apply bg-opacity-0;
 }
 
 .card-images .card-img-wrapper {

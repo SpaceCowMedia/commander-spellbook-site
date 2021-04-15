@@ -96,3 +96,5 @@ cypress/screenshots
 # temporary so we don't have to rely on Google Sheets to run the site
 # remove once the transition to a SQL database is complete
 static/api/*.json
+external-card-data/*.json
+autocomplete-data/*.json

@@ -64,10 +64,8 @@ jobs:
 
       - name: Deploy to S3 🛫
         if: ${{ github.event_name != 'pull_request'}}
-        # TODO update the s3 bucket when ready to go to prod
-        run: aws s3 sync ./dist/ s3://beta.commanderspellbook.com --delete
+        run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
         if: ${{ github.event_name != 'pull_request'}}
-        # TODO update the distribution id when ready to go to prod
-        run: aws cloudfront create-invalidation --distribution-id EVBX9AN9E8TTS --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"

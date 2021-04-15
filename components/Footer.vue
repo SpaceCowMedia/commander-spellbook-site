@@ -3,6 +3,7 @@
     <!-- cool wavy effect taken from this free template: https://www.tailwindtoolbox.com/templates/landing-page-demo.php -->
     <div class="relative md:-mt-24 lg:-mt-48">
       <svg
+        aria-hidden="true"
         viewBox="0 0 1428 174"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -42,16 +43,22 @@
     <footer class="footer">
       <div class="container md:flex flex-row text-center md:text-left">
         <div class="link-collection">
+          <h3>Combos</h3>
           <nuxt-link to="/advanced-search/">Advanced Search</nuxt-link>
           <nuxt-link to="/syntax-guide/">Syntax Guide</nuxt-link>
           <nuxt-link to="/random/">Random Combo</nuxt-link>
         </div>
         <div class="link-collection">
+          <h3>Commander Spellbook</h3>
           <nuxt-link to="/about/">About</nuxt-link>
           <nuxt-link to="/how-to-submit-a-combo/">Combo Submission</nuxt-link>
+          <nuxt-link to="/report-error/"
+            >Report an Error with a Combo</nuxt-link
+          >
           <nuxt-link to="/privacy-policy/">Privacy Policy</nuxt-link>
         </div>
         <div class="link-collection">
+          <h3>Community</h3>
           <ExternalLink to="https://www.patreon.com/commanderspellbook"
             >Patreon</ExternalLink
           >
@@ -62,26 +69,26 @@
           <ExternalLink to="https://github.com/Commander-Spellbook"
             >Github</ExternalLink
           >
-          <ExternalLink to="https://edhrec.com">EDHREC</ExternalLink>
+          <ExternalLink to="https://edhrec.com/combos">EDHREC</ExternalLink>
         </div>
       </div>
       <div class="container mt-8 text-light">
         <p class="my-4">
-          Commander Spellbook may use the trademarks and other intellectual
-          property of Wizards of the Coast LLC, which is permitted under
-          Wizards' Fan Site Policy. For more information, please visit their
-          website at
-          <ExternalLink to="https://company.wizards.com/">
-            https://company.wizards.com/</ExternalLink
-          >.
+          Commander Spellbook is unofficial Fan Content permitted under the
+          <ExternalLink
+            to="https://company.wizards.com/en/legal/fancontentpolicy"
+            >Fan Content Policy</ExternalLink
+          >. Not approved/endorsed by Wizards. Portions of the materials used
+          are property of Wizards of the Coast. ©Wizards of the Coast LLC.
         </p>
         <p class="my-4">
           Commander Spellbook utilizes icons provided by
           <ExternalLink to="https://fontawesome.com/">
             Font Awesome</ExternalLink
-          >. Licensing information may be found here:
-          <ExternalLink to="https://fontawesome.com/license">
-            https://fontawesome.com/license</ExternalLink
+          >
+          according to the
+          <ExternalLink to="https://fontawesome.com/license"
+            >Font Awesome License</ExternalLink
           >.
         </p>
       </div>
@@ -110,6 +117,24 @@ export default Vue.extend({
 }
 
 .link-collection {
-  @apply flex flex-grow flex-col;
+  @apply flex flex-grow flex-col mb-4;
+}
+
+.link-collection:first-child {
+  @apply ml-0;
+}
+
+.link-collection:last-child {
+  @apply mr-0;
+}
+
+h3 {
+  @apply block text-white font-title uppercase border-b border-white mb-2;
+}
+
+@media (min-width: 768px) {
+  .link-collection {
+    @apply mx-4 w-1/3;
+  }
 }
 </style>

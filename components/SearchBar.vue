@@ -32,8 +32,8 @@
           class="main-search-input"
           :class="inputClasses"
           name="q"
-          :placeholder="`Search ${numberOfCombos} combos`"
-          autocomplete="on"
+          :placeholder="`Search ${numberOfCombos} EDH combos`"
+          autocomplete="off"
           autocapitalize="none"
           autocorrect="off"
           spellcheck="false"
@@ -99,7 +99,7 @@ export default Vue.extend({
     return {
       showMobileMenu: false,
       query: "",
-      numberOfCombos: "....",
+      numberOfCombos: "thousands of",
     };
   },
   async fetch() {

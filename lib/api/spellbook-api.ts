@@ -10,7 +10,7 @@ let useCachedResponse = false;
 
 export default function lookupApi(): Promise<FormattedApiResponse[]> {
   if (useCachedResponse) {
-    if (process.server) {
+    if (process.server || process.env.NODE_ENV !== "production") {
       return cachedPromise;
     }
     return new Promise((resolve) => {

@@ -3,17 +3,17 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#card-name-inputs input.input").should("have.length", 1);
-    cy.get("#card-name-inputs input.input-0").type("mesmeric");
+    cy.get("#card-name-input-0").type("mesmeric");
 
     cy.get("#card-name-inputs .plus-button-0").click();
     cy.get("#card-name-inputs input.input").should("have.length", 2);
 
     cy.get("#card-name-inputs .select-1 select").select("=");
-    cy.get("#card-name-inputs input.input-1").type("basalt monolith");
+    cy.get("#card-name-input-1").type("basalt monolith");
 
     cy.get("#card-name-inputs .plus-button-0").click();
 
-    cy.get("#card-name-inputs input.input-1").type("emry");
+    cy.get("#card-name-input-1").type("emry");
     cy.get("#card-name-inputs .select-1 select").select(":-exclude");
 
     cy.get("#advanced-search-submit-button").click();
@@ -28,13 +28,13 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#card-amount-inputs input.input").should("have.length", 1);
-    cy.get("#card-amount-inputs input.input-0").type("3");
+    cy.get("#number-of-cards-input-0").type("3");
 
     cy.get("#card-amount-inputs .plus-button-0").click();
     cy.get("#card-amount-inputs input.input").should("have.length", 2);
 
     cy.get("#card-amount-inputs .select-1 select").select("<-number");
-    cy.get("#card-amount-inputs input.input-1").type("5");
+    cy.get("#number-of-cards-input-1").type("5");
 
     cy.get("#advanced-search-submit-button").click();
 
@@ -45,17 +45,17 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#color-identity-inputs input.input").should("have.length", 1);
-    cy.get("#color-identity-inputs input.input-0").type("wubr");
+    cy.get("#color-identity-input-0").type("wubr");
 
     cy.get("#color-identity-inputs .plus-button-0").click();
     cy.get("#color-identity-inputs input.input").should("have.length", 2);
 
     cy.get("#color-identity-inputs .select-1 select").select("=");
-    cy.get("#color-identity-inputs input.input-1").type("grixis");
+    cy.get("#color-identity-input-1").type("grixis");
 
     cy.get("#color-identity-inputs .plus-button-0").click();
 
-    cy.get("#color-identity-inputs input.input-1").type("2");
+    cy.get("#color-identity-input-1").type("2");
     cy.get("#color-identity-inputs .select-1 select").select(">-number");
 
     cy.get("#advanced-search-submit-button").click();
@@ -70,12 +70,12 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#prerequisite-inputs input.input").should("have.length", 1);
-    cy.get("#prerequisite-inputs input.input-0").type("mana");
+    cy.get("#prerequisite-input-0").type("mana");
 
     cy.get("#prerequisite-inputs button").click();
     cy.get("#prerequisite-inputs input.input").should("have.length", 2);
 
-    cy.get("#prerequisite-inputs input.input-1").type("untap all");
+    cy.get("#prerequisite-input-1").type("untap all");
     cy.get("#prerequisite-inputs .select-1 select").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
@@ -90,12 +90,12 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#step-inputs input.input").should("have.length", 1);
-    cy.get("#step-inputs input.input-0").type("mana");
+    cy.get("#step-input-0").type("mana");
 
     cy.get("#step-inputs button").click();
     cy.get("#step-inputs input.input").should("have.length", 2);
 
-    cy.get("#step-inputs input.input-1").type("untap all");
+    cy.get("#step-input-1").type("untap all");
     cy.get("#step-inputs .select-1 select").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
@@ -110,12 +110,12 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#result-inputs input.input").should("have.length", 1);
-    cy.get("#result-inputs input.input-0").type("mana");
+    cy.get("#result-input-0").type("mana");
 
     cy.get("#result-inputs button").click();
     cy.get("#result-inputs input.input").should("have.length", 2);
 
-    cy.get("#result-inputs input.input-1").type("untap all");
+    cy.get("#result-input-1").type("untap all");
     cy.get("#result-inputs .select-1 select").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
@@ -160,8 +160,8 @@ describe("Advanced Search Page", () => {
   it("prevents searches when invalid queries are used", () => {
     cy.visit("/advanced-search/");
 
-    cy.get("#result-inputs input.input-0").type(`mana ' " mana`);
-    cy.get("#step-inputs input.input-0").type("not a number");
+    cy.get("#result-input-0").type(`mana ' " mana`);
+    cy.get("#step-input-0").type("not a number");
     cy.get("#step-inputs .select-0 select").select("=-number");
 
     cy.get("#advanced-search-submit-button").click();
