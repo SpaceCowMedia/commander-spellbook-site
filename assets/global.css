@@ -39,6 +39,10 @@ a {
   @apply font-title text-center text-4xl text-dark uppercase;
 }
 
+.heading-subtitle {
+  @apply text-2xl font-title text-center;
+}
+
 .button {
   @apply m-4 inline-block py-2 px-3 bg-transparent text-link border-2 border-primary rounded-sm no-underline;
 }
