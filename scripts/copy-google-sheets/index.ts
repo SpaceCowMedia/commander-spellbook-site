@@ -8,7 +8,7 @@ import { collectCardNames, collectResults } from "./collect-autocomplete";
 log("Fetching Combo data from Google Sheets");
 
 getData(
-  "https://sheets.googleapis.com/v4/spreadsheets/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/values:batchGet?ranges=combos!A2:Q&key=AIzaSyDzQ0jCf3teHnUK17ubaLaV6rcWf9ZjG5E"
+  "https://sheets.googleapis.com/v4/spreadsheets/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/values:batchGet?ranges=combos!A2:Q&key=AIzaSyBD_rcme5Ff37Evxa4eW5BFQZkmTbgpHew"
 ).then((rawData) => {
   const combos = formatApiResponse(rawData as CommanderSpellbookAPIResponse);
   const cardNames = collectCardNames(combos);
