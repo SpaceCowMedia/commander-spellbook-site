@@ -9,6 +9,12 @@
     <div class="mt-1">
       <CopyComboLinkButton :combo-link="comboLink" />
       <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
+      <nuxt-link
+        id="report-error-button"
+        class="button w-full"
+        :to="'/report-error?comboId=' + comboId"
+        >Report an Error with this Combo</nuxt-link
+      >
     </div>
   </div>
 </template>
