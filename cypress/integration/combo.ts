@@ -44,10 +44,9 @@ describe("Combo Detail Page", () => {
         });
     });
 
-    // TODO this will change when underlying api module is updated to get the real id
     cy.get("#paste-helper").should(
       "have.value",
-      "https://commanderspellbook.com/combo/450"
+      "https://commanderspellbook.com/combo/450/"
     );
   });
 
