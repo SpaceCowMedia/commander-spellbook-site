@@ -18,9 +18,11 @@ import Vue from "vue";
 import SharingMenu from "@/components/combo/SharingMenu.vue";
 
 export default Vue.extend({
-  Data: () => ({
-    showMenu: false,
-  }),
+  data() {
+    return {
+      showMenu: false,
+    };
+  },
   components: {
     SharingMenu,
   },
