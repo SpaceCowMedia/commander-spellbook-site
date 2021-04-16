@@ -1,30 +1,5 @@
 <template>
   <div>
-    <head>
-      <!-- Twitter -->
-      <meta property="twitter:title" content="Commander Spellbook" />
-      <meta property="twitter:description" content="Combo #__" />
-      <meta
-        property="twitter:image"
-        content="img"
-        src="Aeon Chronicler-Dan Dos Santos.jpg"
-      />
-      <meta property="twitter:card" content="summary_large_image" />
-
-      <!-- Facebook/Reddit -->
-      <meta property="og:title" content="Commander Spellbook" />
-      <meta
-        property="og:description"
-        content="should probably write a function
-      that populates this with a combo number, primary card, and primary result"
-      />
-      <meta
-        property="og:image"
-        content="img"
-        src="Aeon Chronicler-Dan Dos Santos.jpg"
-      />
-    </head>
-
     <button>
       <ShareNetwork
         network="Twitter"
