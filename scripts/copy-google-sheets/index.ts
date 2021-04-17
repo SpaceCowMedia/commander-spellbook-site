@@ -1,5 +1,6 @@
 import fs from "fs";
 import formatApiResponse from "../../lib/api/format-api-response";
+import transformGoogleSheetsData from "../../lib/api/transform-google-sheets-data";
 import getData from "../shared/get";
 import log from "../shared/log";
 import type { CommanderSpellbookAPIResponse } from "../../lib/api/types";
@@ -10,7 +11,10 @@ log("Fetching Combo data from Google Sheets");
 getData(
   "https://sheets.googleapis.com/v4/spreadsheets/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/values:batchGet?ranges=combos!A2:Q&key=AIzaSyBD_rcme5Ff37Evxa4eW5BFQZkmTbgpHew"
 ).then((rawData) => {
-  const combos = formatApiResponse(rawData as CommanderSpellbookAPIResponse);
+  const compressedData = transformGoogleSheetsData(
+    rawData as CommanderSpellbookAPIResponse
+  );
+  const combos = formatApiResponse(compressedData);
   const cardNames = collectCardNames(combos);
   const results = collectResults(combos);
 

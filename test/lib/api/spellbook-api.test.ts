@@ -1,24 +1,25 @@
 import lookup, { resetCache } from "@/lib/api/spellbook-api";
-import normalizeDatabaseValue from "@/lib/api/normalize-database-value";
 import formatApiResponse from "@/lib/api/format-api-response";
+import transformGoogleSheetsData from "@/lib/api/transform-google-sheets-data";
 import { CommanderSpellbookAPIResponse } from "@/lib/api/types";
 
 import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/api/normalize-database-value");
 jest.mock("@/lib/api/format-api-response");
+jest.mock("@/lib/api/transform-google-sheets-data");
 
 describe("api", () => {
   let body: CommanderSpellbookAPIResponse;
 
   beforeEach(() => {
     process.server = true;
-    mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
-      return str;
-    });
+    // got to do it this way so the test about not returning
+    // the same result when reseting the cache works
     mocked(formatApiResponse).mockImplementation(() => {
       return [];
     });
+    mocked(transformGoogleSheetsData).mockReturnValue([]);
     body = {
       spreadsheetId: "foo-1",
       valueRanges: [
@@ -194,9 +195,25 @@ describe("api", () => {
   });
 
   it("formats spreadsheet into usable object", async () => {
+    const compressedData = [
+      {
+        d: "1",
+        c: ["a", "b"],
+        i: "r,w",
+        p: "p",
+        s: "s",
+        r: "r",
+        o: 1,
+      },
+    ];
+
+    mocked(transformGoogleSheetsData).mockReturnValue(compressedData);
+
     await lookup();
 
+    expect(transformGoogleSheetsData).toBeCalledTimes(1);
     expect(formatApiResponse).toBeCalledTimes(1);
-    expect(formatApiResponse).toBeCalledWith(body);
+    expect(transformGoogleSheetsData).toBeCalledWith(body);
+    expect(formatApiResponse).toBeCalledWith(compressedData);
   });
 });

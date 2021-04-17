@@ -1,3 +1,4 @@
+import transformGoogleSheetsData from "./transform-google-sheets-data";
 import formatApiResponse from "./format-api-response";
 import type { FormattedApiResponse } from "./types";
 
@@ -30,6 +31,7 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
       // https://developers.google.com/sheets/api/limits
       return fetch(LOCAL_BACKUP_API_ENDPOINT).then((res) => res.json());
     })
+    .then(transformGoogleSheetsData)
     .then(formatApiResponse);
 
   useCachedResponse = true;
