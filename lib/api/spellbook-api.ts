@@ -9,7 +9,20 @@ const LOCAL_BACKUP_API_ENDPOINT = "/api/combo-data.json";
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
 
-export default function lookupApi(): Promise<FormattedApiResponse[]> {
+function fetchFromGoogleSheets(): Promise<FormattedApiResponse[]> {
+  return fetch(GOOGLE_SHEETS_API_ENDPOINT)
+    .then((res) => res.json())
+    .then(transformGoogleSheetsData)
+    .then(formatApiResponse);
+}
+
+export default function lookupApi(
+  useGoogleSheetsEndpoint = false
+): Promise<FormattedApiResponse[]> {
+  if (useGoogleSheetsEndpoint) {
+    return fetchFromGoogleSheets();
+  }
+
   if (useCachedResponse) {
     if (process.server || process.env.NODE_ENV !== "production") {
       return cachedPromise;
@@ -21,18 +34,13 @@ export default function lookupApi(): Promise<FormattedApiResponse[]> {
     });
   }
 
-  cachedPromise = fetch(GOOGLE_SHEETS_API_ENDPOINT)
-    .then((res) => res.json())
-    .catch(() => {
-      // we fall back here in the case that we start getting rate
-      // limited by Google Sheets. Unlikely to happen, but still
-      // possible. Using the Google Sheets version first ensures
-      // we get the most up to date data.
-      // https://developers.google.com/sheets/api/limits
-      return fetch(LOCAL_BACKUP_API_ENDPOINT).then((res) => res.json());
-    })
-    .then(transformGoogleSheetsData)
-    .then(formatApiResponse);
+  if (process.server) {
+    cachedPromise = fetchFromGoogleSheets();
+  } else {
+    cachedPromise = fetch(LOCAL_BACKUP_API_ENDPOINT)
+      .then((res) => res.json())
+      .then(formatApiResponse);
+  }
 
   useCachedResponse = true;
 

@@ -19,7 +19,10 @@ getData(
   const results = collectResults(combos);
 
   log("Writing /static/api/combo-data.json");
-  fs.writeFileSync("./static/api/combo-data.json", JSON.stringify(rawData));
+  fs.writeFileSync(
+    "./static/api/combo-data.json",
+    JSON.stringify(compressedData)
+  );
   log("/static/api/combo-data.json written", "green");
 
   log("Writing /autocomplete-data/cards.json");

@@ -51,18 +51,54 @@ describe("api", () => {
     );
   });
 
-  it("looks up data from local version of combo datas when fetch to google fails", async () => {
-    mocked(window.fetch).mockRejectedValueOnce(new Error("422"));
+  it("looks up data from local version of combo data when not on the server", async () => {
+    process.server = false;
 
     await lookup();
 
-    expect(window.fetch).toBeCalledTimes(2);
-    expect(window.fetch).toBeCalledWith(
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).not.toBeCalledWith(
       expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
     );
     expect(window.fetch).toBeCalledWith(
       expect.stringContaining("/api/combo-data.json")
     );
+  });
+
+  it("looks up from Google Sheets when not on the server when told to use Google Sheets endpoint", async () => {
+    process.server = false;
+
+    await lookup(true);
+
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
+    );
+    expect(window.fetch).not.toBeCalledWith(
+      expect.stringContaining("/api/combo-data.json")
+    );
+  });
+
+  it("ignores cache when using the google sheets endpoint", async () => {
+    process.server = false;
+
+    await lookup();
+
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("/api/combo-data.json")
+    );
+
+    await lookup(true);
+
+    expect(window.fetch).toBeCalledTimes(2);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
+    );
+
+    await lookup(true);
+
+    expect(window.fetch).toBeCalledTimes(3);
   });
 
   it("caches result after first lookup", async () => {
