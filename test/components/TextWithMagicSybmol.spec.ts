@@ -39,6 +39,19 @@ describe("TextWithMagicSymbol", () => {
     ).toMatch(/R\.svg$/);
   });
 
+  it("renders image with Scryfall syntax for hybrid mana", () => {
+    const wrapper = mount(TextWithMagicSymbol, {
+      propsData: {
+        text: "{G/U}",
+      },
+    });
+    expect(wrapper.findAll(".text").length).toBe(0);
+    expect(wrapper.findAll(".magic-symbol").length).toBe(1);
+    expect(
+      (wrapper.find(".magic-symbol").element as HTMLImageElement).src
+    ).toMatch(/GU\.svg$/);
+  });
+
   it("renders longer symbols in emoji syntax", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
