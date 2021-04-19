@@ -5,7 +5,7 @@ import parseTags from "./parse-tags";
 import parseSort from "./parse-sort";
 import parseOrder from "./parse-order";
 
-const OPERATORS = [":", "=", ">=", "<=", "<", ">"];
+const OPERATORS = [":", "=>", "=<", "=", ">=", "<=", "<", ">"];
 const OPERATOR_REGEX = new RegExp(`(${OPERATORS.join("|")})`);
 
 function collectKeywordedQueries(
@@ -25,7 +25,7 @@ function collectKeywordedQueries(
   // this regex pretty complex, thanks to @lejeunerenard for help with it
   // (-)? optional negative sign
   // \b(\w+) a word boundary and any number of word characters
-  // (:|=|>=|<=|>|<) the operators we look for
+  // (:|=<|>=|=|>=|<=|>|<) the operators we look for
   // (['"]?) an optional capture for either a single or double quote
   // ( an open capture group
   //   (?:.(?!\4))+. any number of characters that do not match \4, the captured quote
@@ -35,13 +35,13 @@ function collectKeywordedQueries(
   // \4 the closing single or double quote
   const queries =
     query.match(
-      /(-)?\b(\w+)(:|=|>=|<=|>|<)(['"]?)((?:.(?!\4))+.|[^\s]+)\4/gi
+      /(-)?\b(\w+)(:|=<|=>|=|>=|<=|>|<)(['"]?)((?:.(?!\4))+.|[^\s]+)\4/gi
     ) || [];
 
   queries.forEach((group) => {
     newQuery = newQuery.replace(group, "");
 
-    const operator = (group.match(OPERATOR_REGEX) || [":"])[0];
+    let operator = (group.match(OPERATOR_REGEX) || [":"])[0];
     const indexOfOperator = group.indexOf(operator);
     const key = group
       .substring(0, indexOfOperator)
@@ -51,6 +51,13 @@ function collectKeywordedQueries(
       indexOfOperator + operator.length,
       group.length
     );
+
+    // automatically handle typos like this
+    if (operator === "=<") {
+      operator = "<=";
+    } else if (operator === "=>") {
+      operator = ">=";
+    }
 
     if (value.length > 2) {
       const firstChar = value.charAt(0);
