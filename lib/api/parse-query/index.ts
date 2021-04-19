@@ -47,7 +47,10 @@ function collectKeywordedQueries(
       .substring(0, indexOfOperator)
       .toLowerCase()
       .replace(/_/g, "");
-    let value = group.substring(indexOfOperator + 1, group.length);
+    let value = group.substring(
+      indexOfOperator + operator.length,
+      group.length
+    );
 
     if (value.length > 2) {
       const firstChar = value.charAt(0);
