@@ -38,7 +38,7 @@ describe("BuyComboButton", () => {
       wrapper.findAllComponents(ExternalLinkStub).at(0).props("disabled")
     ).toBe(true);
     expect(wrapper.find("#tcg-buy-this-combo").text()).toContain(
-      "(Out of Stock)"
+      "(Unavailable)"
     );
 
     await wrapper.setProps({
@@ -49,7 +49,7 @@ describe("BuyComboButton", () => {
       wrapper.findAllComponents(ExternalLinkStub).at(0).props("disabled")
     ).toBe(false);
     expect(wrapper.find("#tcg-buy-this-combo").text()).not.toContain(
-      "(Out of Stock)"
+      "(Unavailable)"
     );
   });
 
@@ -133,7 +133,7 @@ describe("BuyComboButton", () => {
       wrapper.findAllComponents(ExternalLinkStub).at(1).props("disabled")
     ).toBe(true);
     expect(wrapper.find("#ck-buy-this-combo").text()).toContain(
-      "(Out of Stock)"
+      "(Unavailable)"
     );
 
     await wrapper.setProps({
@@ -144,7 +144,7 @@ describe("BuyComboButton", () => {
       wrapper.findAllComponents(ExternalLinkStub).at(1).props("disabled")
     ).toBe(false);
     expect(wrapper.find("#ck-buy-this-combo").text()).not.toContain(
-      "(Out of Stock)"
+      "(Unavailable)"
     );
   });
 });
