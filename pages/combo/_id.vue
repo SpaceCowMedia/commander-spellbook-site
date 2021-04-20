@@ -2,7 +2,7 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" :subtitle="subtitle" />
 
-    <CardGroup :cards="cards" />
+    <CardGroup v-if="loaded" :cards="cards" />
 
     <div class="container md:flex flex-row">
       <div class="w-full md:w-2/3">
@@ -41,7 +41,7 @@
         />
       </div>
 
-      <aside class="w-full md:w-1/3 text-center">
+      <aside v-if="loaded" class="w-full md:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
