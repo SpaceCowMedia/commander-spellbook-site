@@ -92,8 +92,6 @@ type CardData = {
 };
 
 type ComboData = {
-  title: string;
-  subtitle: string;
   hasBannedCard: boolean;
   hasPreviewedCard: boolean;
   link: string;
@@ -187,29 +185,8 @@ export default Vue.extend({
       cardkingdom: parsePriceData("cardkingdom"),
     };
 
-    const title = cards
-      .map((card, index) => {
-        if (index > 2) {
-          return "";
-        }
-
-        return card.name;
-      })
-      .filter((cardName) => cardName)
-      .join(" | ");
-
-    let subtitle = "";
-
-    if (cards.length === 4) {
-      subtitle = `(and ${NUMBERS[1]} other card)`;
-    } else if (cards.length > 4) {
-      subtitle = `(and ${NUMBERS[cards.length - 3]} other cards)`;
-    }
-
     return {
       comboNumber,
-      title,
-      subtitle,
       hasBannedCard: combo.hasBannedCard,
       hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
@@ -224,8 +201,6 @@ export default Vue.extend({
   },
   data(): ComboData {
     return {
-      title: "Looking up Combo",
-      subtitle: "",
       hasBannedCard: false,
       hasPreviewedCard: false,
       link: "",
@@ -313,6 +288,23 @@ export default Vue.extend({
     },
     cardArts(): string[] {
       return this.cards.map((c) => c.artUrl);
+    },
+    title(): string {
+      if (this.cardNames.length === 0) {
+        return "Looking up Combo";
+      }
+
+      return this.cardNames.slice(0, 3).join(" | ");
+    },
+    subtitle(): string {
+      if (this.cards.length < 4) {
+        return "";
+      }
+      if (this.cards.length === 4) {
+        return `(and ${NUMBERS[1]} other card)`;
+      }
+
+      return `(and ${NUMBERS[this.cards.length - 3]} other cards)`;
     },
   },
   mounted() {
