@@ -61,7 +61,7 @@ describe("api", () => {
       expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
     );
     expect(window.fetch).toBeCalledWith(
-      expect.stringContaining("/api/combo-data.json")
+      expect.stringContaining("/api/combo-data.json?cache-bust=")
     );
   });
 
@@ -86,7 +86,7 @@ describe("api", () => {
 
     expect(window.fetch).toBeCalledTimes(1);
     expect(window.fetch).toBeCalledWith(
-      expect.stringContaining("/api/combo-data.json")
+      expect.stringContaining("/api/combo-data.json?cache-bust=")
     );
 
     await lookup(true);

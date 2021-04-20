@@ -37,7 +37,9 @@ export default function lookupApi(
   if (process.server) {
     cachedPromise = fetchFromGoogleSheets();
   } else {
-    cachedPromise = fetch(LOCAL_BACKUP_API_ENDPOINT)
+    cachedPromise = fetch(
+      LOCAL_BACKUP_API_ENDPOINT + "?cache-bust=" + Math.random()
+    )
       .then((res) => res.json())
       .then(formatApiResponse);
   }
