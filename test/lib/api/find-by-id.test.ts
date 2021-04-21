@@ -40,6 +40,16 @@ describe("findById", () => {
     expect(combo2).toBe(combos[1]);
   });
 
+  it("can pass the useGoogleSheetsEndpoint flag", async () => {
+    await findById("1");
+
+    expect(lookup).toBeCalledWith(false);
+
+    await findById("2", true);
+
+    expect(lookup).toBeCalledWith(true);
+  });
+
   it("rejects when combo cannot be found", async () => {
     expect.assertions(1);
 

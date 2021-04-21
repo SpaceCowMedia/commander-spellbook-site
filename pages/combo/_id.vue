@@ -2,7 +2,7 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" :subtitle="subtitle" />
 
-    <CardGroup :cards="cards" />
+    <CardGroup v-if="loaded" :cards="cards" />
 
     <div class="container md:flex flex-row">
       <div class="w-full md:w-2/3">
@@ -41,7 +41,7 @@
         />
       </div>
 
-      <aside class="w-full md:w-1/3 text-center">
+      <aside v-if="loaded" class="w-full md:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
@@ -307,12 +307,55 @@ export default Vue.extend({
       return `(and ${NUMBERS[this.cards.length - 3]} other cards)`;
     },
   },
-  mounted() {
-    if (!this.loaded) {
+  async mounted() {
+    if (this.loaded && !this.$route.query.preview) {
+      return;
+    }
+
+    this.cards = [];
+    this.prerequisites = [];
+    this.steps = [];
+    this.results = [];
+    this.link = "";
+    this.loaded = false;
+
+    let combo;
+
+    try {
+      combo = await findById(this.$route.params.id, true);
+    } catch (err) {
       this.$router.push({
         path: "/combo-not-found/",
       });
+
+      return;
     }
+
+    this.comboNumber = combo.commanderSpellbookId;
+    this.hasBannedCard = combo.hasBannedCard;
+    this.hasPreviewedCard = combo.hasSpoiledCard;
+    this.link = combo.permalink;
+    this.cards = combo.cards.map((card) => {
+      return {
+        name: card.name,
+        artUrl: card.getScryfallImageUrl("art_crop"),
+        oracleImageUrl: card.getScryfallImageUrl("normal"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      };
+    });
+    this.prerequisites = Array.from(combo.prerequisites);
+    this.steps = Array.from(combo.steps);
+    this.results = Array.from(combo.results);
+    this.colorIdentity = Array.from(combo.colorIdentity.colors);
+    this.prices = {
+      tcgplayer: "",
+      cardkingdom: "",
+    };
+
+    this.loaded = true;
   },
 });
 </script>

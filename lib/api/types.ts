@@ -15,6 +15,17 @@ export type CommanderSpellbookAPIResponse = {
   ];
 };
 
+export type CompressedApiResponse = {
+  d: string; // spellbook iD
+  c: string[]; // Card names
+  i: string; // color Identity
+  p: string; // Prerequisites
+  s: string; // Steps
+  r: string; // Results
+  b?: number; // Banned
+  o?: number; // spOiled
+};
+
 export type FormattedApiResponse = {
   commanderSpellbookId: string;
   permalink: string;

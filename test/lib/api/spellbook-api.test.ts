@@ -1,24 +1,25 @@
 import lookup, { resetCache } from "@/lib/api/spellbook-api";
-import normalizeDatabaseValue from "@/lib/api/normalize-database-value";
 import formatApiResponse from "@/lib/api/format-api-response";
+import transformGoogleSheetsData from "@/lib/api/transform-google-sheets-data";
 import { CommanderSpellbookAPIResponse } from "@/lib/api/types";
 
 import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/api/normalize-database-value");
 jest.mock("@/lib/api/format-api-response");
+jest.mock("@/lib/api/transform-google-sheets-data");
 
 describe("api", () => {
   let body: CommanderSpellbookAPIResponse;
 
   beforeEach(() => {
     process.server = true;
-    mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
-      return str;
-    });
+    // got to do it this way so the test about not returning
+    // the same result when reseting the cache works
     mocked(formatApiResponse).mockImplementation(() => {
       return [];
     });
+    mocked(transformGoogleSheetsData).mockReturnValue([]);
     body = {
       spreadsheetId: "foo-1",
       valueRanges: [
@@ -50,18 +51,54 @@ describe("api", () => {
     );
   });
 
-  it("looks up data from local version of combo datas when fetch to google fails", async () => {
-    mocked(window.fetch).mockRejectedValueOnce(new Error("422"));
+  it("looks up data from local version of combo data when not on the server", async () => {
+    process.server = false;
 
     await lookup();
+
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).not.toBeCalledWith(
+      expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
+    );
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("/api/combo-data.json?cache-bust=")
+    );
+  });
+
+  it("looks up from Google Sheets when not on the server when told to use Google Sheets endpoint", async () => {
+    process.server = false;
+
+    await lookup(true);
+
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
+    );
+    expect(window.fetch).not.toBeCalledWith(
+      expect.stringContaining("/api/combo-data.json")
+    );
+  });
+
+  it("ignores cache when using the google sheets endpoint", async () => {
+    process.server = false;
+
+    await lookup();
+
+    expect(window.fetch).toBeCalledTimes(1);
+    expect(window.fetch).toBeCalledWith(
+      expect.stringContaining("/api/combo-data.json?cache-bust=")
+    );
+
+    await lookup(true);
 
     expect(window.fetch).toBeCalledTimes(2);
     expect(window.fetch).toBeCalledWith(
       expect.stringContaining("https://sheets.googleapis.com/v4/spreadsheets")
     );
-    expect(window.fetch).toBeCalledWith(
-      expect.stringContaining("/api/combo-data.json")
-    );
+
+    await lookup(true);
+
+    expect(window.fetch).toBeCalledTimes(3);
   });
 
   it("caches result after first lookup", async () => {
@@ -194,9 +231,25 @@ describe("api", () => {
   });
 
   it("formats spreadsheet into usable object", async () => {
+    const compressedData = [
+      {
+        d: "1",
+        c: ["a", "b"],
+        i: "r,w",
+        p: "p",
+        s: "s",
+        r: "r",
+        o: 1,
+      },
+    ];
+
+    mocked(transformGoogleSheetsData).mockReturnValue(compressedData);
+
     await lookup();
 
+    expect(transformGoogleSheetsData).toBeCalledTimes(1);
     expect(formatApiResponse).toBeCalledTimes(1);
-    expect(formatApiResponse).toBeCalledWith(body);
+    expect(transformGoogleSheetsData).toBeCalledWith(body);
+    expect(formatApiResponse).toBeCalledWith(compressedData);
   });
 });

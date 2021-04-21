@@ -26,6 +26,11 @@ describe("ComboPage", () => {
       push: jest.fn(),
     };
     options = {
+      data() {
+        return {
+          loaded: true,
+        };
+      },
       mocks: {
         $route,
         $router,
@@ -51,19 +56,178 @@ describe("ComboPage", () => {
     });
   });
 
-  it("starts in loaded false state", () => {
-    const wrapper = shallowMount(ComboPage, options);
+  it("does not attempt to find combo by id when state is already marked as loaded", () => {
+    shallowMount(ComboPage, options);
 
-    expect((wrapper.vm as VueComponent).loaded).toBe(false);
+    expect(findById).not.toBeCalled();
   });
 
-  it("redirects on mount when loaded", () => {
+  it("redirects on mount when loading state is false and client side lookup to Google Sheets data fails", async () => {
+    mocked(findById).mockRejectedValue(new Error("foo"));
+    // remove the loaded: true supplied by asyncData
+    // @ts-ignore
+    delete options.data;
     shallowMount(ComboPage, options);
+
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13", true);
+
+    // allow findById call to finish
+    await new Promise(setImmediate);
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
       path: "/combo-not-found/",
     });
+  });
+
+  it("redirects on mount when preview query param is inlcluded and client side lookup to Google Sheets data fails", async () => {
+    mocked(findById).mockRejectedValue(new Error("foo"));
+    $route.query.preview = "true";
+    shallowMount(ComboPage, options);
+
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13", true);
+
+    // allow findById call to finish
+    await new Promise(setImmediate);
+
+    expect($router.push).toBeCalledTimes(1);
+    expect($router.push).toBeCalledWith({
+      path: "/combo-not-found/",
+    });
+  });
+
+  it("sets data to combo data found on Google Sheets when loaded is not true", async () => {
+    mocked(findById).mockResolvedValue(
+      makeFakeCombo({
+        commanderSpellbookId: "13",
+        hasBannedCard: true,
+        hasSpoiledCard: true,
+        cards: ["card 1", "card 2", "card 3"],
+        prerequisites: ["pre 1", "pre 2"],
+        steps: ["step 1", "step 2"],
+        results: ["res 1", "res 2"],
+        colorIdentity: "wr",
+      })
+    );
+    // remove the loaded: true supplied by asyncData
+    // @ts-ignore
+    delete options.data;
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13", true);
+
+    // allow findById call to finish
+    await new Promise(setImmediate);
+
+    expect($router.push).not.toBeCalled();
+
+    expect(vm.comboNumber).toBe("13");
+    expect(vm.hasBannedCard).toBe(true);
+    expect(vm.hasPreviewedCard).toBe(true);
+    expect(vm.link).toBe("https://commanderspellbook.com/combo/13/");
+    expect(vm.cards).toEqual([
+      {
+        name: "card 1",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+      {
+        name: "card 2",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+      {
+        name: "card 3",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+    ]);
+    expect(vm.prerequisites).toEqual(["pre 1", "pre 2"]);
+    expect(vm.steps).toEqual(["step 1", "step 2"]);
+    expect(vm.results).toEqual(["res 1", "res 2"]);
+    expect(vm.colorIdentity).toEqual(["r", "w"]);
+    expect(vm.loaded).toBe(true);
+  });
+
+  it("sets data to combo data found on Google Sheets when preview query param is set to true", async () => {
+    mocked(findById).mockResolvedValue(
+      makeFakeCombo({
+        commanderSpellbookId: "13",
+        hasBannedCard: true,
+        hasSpoiledCard: true,
+        cards: ["card 1", "card 2", "card 3"],
+        prerequisites: ["pre 1", "pre 2"],
+        steps: ["step 1", "step 2"],
+        results: ["res 1", "res 2"],
+        colorIdentity: "wr",
+      })
+    );
+    $route.query.preview = "true";
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    expect(findById).toBeCalledTimes(1);
+    expect(findById).toBeCalledWith("13", true);
+
+    // allow findById call to finish
+    await new Promise(setImmediate);
+
+    expect($router.push).not.toBeCalled();
+
+    expect(vm.comboNumber).toBe("13");
+    expect(vm.hasBannedCard).toBe(true);
+    expect(vm.hasPreviewedCard).toBe(true);
+    expect(vm.link).toBe("https://commanderspellbook.com/combo/13/");
+    expect(vm.cards).toEqual([
+      {
+        name: "card 1",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+      {
+        name: "card 2",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+      {
+        name: "card 3",
+        artUrl: expect.stringContaining("scryfall.com"),
+        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        prices: {
+          tcgplayer: 0,
+          cardkingdom: 0,
+        },
+      },
+    ]);
+    expect(vm.prerequisites).toEqual(["pre 1", "pre 2"]);
+    expect(vm.steps).toEqual(["step 1", "step 2"]);
+    expect(vm.results).toEqual(["res 1", "res 2"]);
+    expect(vm.colorIdentity).toEqual(["r", "w"]);
+    expect(vm.loaded).toBe(true);
   });
 
   it("creates a card header component", async () => {
