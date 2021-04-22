@@ -3,6 +3,7 @@ import getExternalCardData from "@/lib/get-external-card-data";
 describe("getExternalCardData", () => {
   it("returns card data for combo when it exists in cache", () => {
     expect(getExternalCardData("Sydri, Galvanic Genius")).toEqual({
+      isFeatured: false,
       images: {
         artCrop: expect.stringContaining("scryfall.com/file"),
         oracle: expect.stringContaining("scryfall.com/file"),
@@ -16,6 +17,7 @@ describe("getExternalCardData", () => {
 
   it("returns empty card data for combo when it does not exist in cache", () => {
     expect(getExternalCardData("unknown card name")).toEqual({
+      isFeatured: false,
       images: {
         artCrop:
           "https://api.scryfall.com/cards/named?format=image&exact=unknown%20card%20name&version=art_crop",

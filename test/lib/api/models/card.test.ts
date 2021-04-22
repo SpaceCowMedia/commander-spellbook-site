@@ -10,6 +10,7 @@ jest.mock("@/lib/get-external-card-data");
 describe("Card", () => {
   beforeEach(() => {
     mocked(getExternalCardData).mockReturnValue({
+      isFeatured: false,
       images: {
         oracle: "https://c1.scryfall.com/file/oracle.jpg",
         artCrop: "https://c1.scryfall.com/file/art.jpg",

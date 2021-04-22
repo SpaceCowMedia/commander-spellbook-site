@@ -6,6 +6,7 @@ const CARD_IMAGE_NAMED_BASE_URL =
   "https://api.scryfall.com/cards/named?format=image&exact=";
 
 export type ExternalCardData = {
+  isFeatured: boolean;
   images: {
     oracle: string;
     artCrop: string;
@@ -28,6 +29,7 @@ export default function getExternalCardData(
     )}&version=`;
 
     return {
+      isFeatured: false,
       images: {
         oracle: `${baseImage}normal`,
         artCrop: `${baseImage}art_crop`,
@@ -40,6 +42,7 @@ export default function getExternalCardData(
   }
 
   return {
+    isFeatured: externalCardData.f === 1,
     images: {
       oracle: externalCardData.i.o,
       artCrop: externalCardData.i.a,

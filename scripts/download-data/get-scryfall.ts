@@ -118,6 +118,10 @@ type RawScryfallResponse = Array<{
 type ScryfallData = Record<
   string,
   {
+    setData: {
+      reprint: boolean;
+      setCode: string;
+    };
     images: {
       oracle: string;
       artCrop: string;
@@ -176,6 +180,10 @@ export default async function getScryfallData(): Promise<ScryfallData> {
       }
     }
     cards[normalizeCardName(card.name)] = {
+      setData: {
+        reprint: card.reprint,
+        setCode: card.set,
+      },
       images: {
         oracle: images.normal,
         artCrop: images.art_crop,

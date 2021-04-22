@@ -7,6 +7,7 @@ import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
 
 type CardData = {
+  f?: 1; // whether the combo should be featured
   i: {
     // images
     o: string; // oracle
@@ -55,6 +56,20 @@ Promise.all([
           a: sfData.images.artCrop,
         },
       };
+
+      if (!sfData.setData.reprint) {
+        const setCode = sfData.setData.setCode;
+
+        // right now, our "fetured" combo is any combos that
+        // are not reprints that have a set code of
+        // commander 2021 or strixhaven. This will need
+        // to be updated when the next preview season comes
+        // around (mh2). Maybe by then there will be a
+        // way to do this automatically?
+        if (setCode === "c21" || setCode === "stx") {
+          cardData[name].f = 1;
+        }
+      }
     } catch (e) {
       log(
         `"${name}" could not be found in Scryfall's data. It's possible the name is misspelled. Skipping it when creating card data.`,
