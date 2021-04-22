@@ -1,8 +1,11 @@
 import normalizeCardName from "@/lib/normalize-card-name";
-import type Card from "@/lib/api/models/card";
 
-type ExternalCardData = {
-  name: string;
+const cardData = require("../external-card-data/cards.json");
+
+const CARD_IMAGE_NAMED_BASE_URL =
+  "https://api.scryfall.com/cards/named?format=image&exact=";
+
+export type ExternalCardData = {
   images: {
     oracle: string;
     artCrop: string;
@@ -13,18 +16,21 @@ type ExternalCardData = {
   };
 };
 
-export default function getExternalCardData(card: Card): ExternalCardData {
-  const name = normalizeCardName(card.name);
-  let externalCardData: ExternalCardData;
+export default function getExternalCardData(
+  cardName: string
+): ExternalCardData {
+  const name = normalizeCardName(cardName);
+  const externalCardData = cardData[name];
 
-  try {
-    externalCardData = require(`../external-card-data/${name}.json`);
-  } catch (err) {
-    externalCardData = {
-      name,
+  if (!externalCardData) {
+    const baseImage = `${CARD_IMAGE_NAMED_BASE_URL}${encodeURIComponent(
+      cardName
+    )}&version=`;
+
+    return {
       images: {
-        artCrop: card.getScryfallImageUrl("art_crop"),
-        oracle: card.getScryfallImageUrl("normal"),
+        oracle: `${baseImage}normal`,
+        artCrop: `${baseImage}art_crop`,
       },
       prices: {
         tcgplayer: 0,
@@ -33,5 +39,14 @@ export default function getExternalCardData(card: Card): ExternalCardData {
     };
   }
 
-  return externalCardData;
+  return {
+    images: {
+      oracle: externalCardData.i.o,
+      artCrop: externalCardData.i.a,
+    },
+    prices: {
+      tcgplayer: externalCardData.p.t,
+      cardkingdom: externalCardData.p.c,
+    },
+  };
 }

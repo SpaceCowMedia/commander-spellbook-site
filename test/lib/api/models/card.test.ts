@@ -1,12 +1,43 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import scryfall from "scryfall-client";
 import Card from "@/lib/api/models/card";
+import getExternalCardData from "@/lib/get-external-card-data";
+
+import { mocked } from "ts-jest/utils";
+
+jest.mock("@/lib/get-external-card-data");
 
 describe("Card", () => {
+  beforeEach(() => {
+    mocked(getExternalCardData).mockReturnValue({
+      images: {
+        oracle: "https://c1.scryfall.com/file/oracle.jpg",
+        artCrop: "https://c1.scryfall.com/file/art.jpg",
+      },
+      prices: {
+        tcgplayer: 123,
+        cardkingdom: 456,
+      },
+    });
+  });
+
   it("has a name attribute", () => {
     const card = new Card("Sydri, Galvanic Genius");
 
     expect(card.name).toEqual("Sydri, Galvanic Genius");
+  });
+
+  it("external card data", () => {
+    const card = new Card("Sydri, Galvanic Genius");
+
+    expect(card.externalData.images.oracle).toBe(
+      "https://c1.scryfall.com/file/oracle.jpg"
+    );
+    expect(card.externalData.images.artCrop).toBe(
+      "https://c1.scryfall.com/file/art.jpg"
+    );
+    expect(card.externalData.prices.tcgplayer).toBe(123);
+    expect(card.externalData.prices.cardkingdom).toBe(456);
   });
 
   describe("matchesName", () => {
@@ -78,24 +109,6 @@ describe("Card", () => {
       expect(scryfall.getCard).toBeCalledWith(
         "Sydri, Galvanic Genius",
         "exactName"
-      );
-    });
-  });
-
-  describe("getScryfallImageUrl", () => {
-    it("returns a url for the card image", () => {
-      const card = new Card("Sydri, Galvanic Genius");
-
-      expect(card.getScryfallImageUrl()).toBe(
-        "https://api.scryfall.com/cards/named?format=image&exact=Sydri%2C%20Galvanic%20Genius"
-      );
-    });
-
-    it("can pass a version string", () => {
-      const card = new Card("Sydri, Galvanic Genius");
-
-      expect(card.getScryfallImageUrl("art_crop")).toBe(
-        "https://api.scryfall.com/cards/named?format=image&exact=Sydri%2C%20Galvanic%20Genius&version=art_crop"
       );
     });
   });

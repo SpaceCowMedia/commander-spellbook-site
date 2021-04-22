@@ -1,6 +1,6 @@
 import normalizeStringInput from "../../lib/api/normalize-string-input";
 
-import type { FormattedApiResponse } from "../../lib/api/types";
+import type { CompressedApiResponse } from "../../lib/api/types";
 type AutoCompleteOption = {
   value: string;
   label: string;
@@ -54,18 +54,17 @@ function collectAutocompletes(
 }
 
 export function collectCardNames(
-  combos: FormattedApiResponse[]
+  combos: CompressedApiResponse[]
 ): AutoCompleteOption[] {
-  return collectAutocompletes(
-    combos.map((c) => c.cards.map((card) => card.name)).flat()
-  );
+  return collectAutocompletes(combos.map((combo) => combo.c).flat());
 }
 
 export function collectResults(
-  combos: FormattedApiResponse[]
+  combos: CompressedApiResponse[]
 ): AutoCompleteOption[] {
-  return collectAutocompletes(
-    combos.map((c) => Array.from(c.results)).flat(),
-    30
-  );
+  const flattenedResults = combos
+    .map((c) => c.r.split(/\.\s?/).filter((result) => result.trim()))
+    .flat();
+
+  return collectAutocompletes(flattenedResults, 30);
 }

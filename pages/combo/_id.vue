@@ -75,7 +75,6 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
-import getExternalCardData from "@/lib/get-external-card-data";
 
 type Price = {
   tcgplayer: string;
@@ -139,13 +138,11 @@ export default Vue.extend({
     }
 
     const cards = combo.cards.map((card) => {
-      const externalCardData = getExternalCardData(card);
-
       return {
         name: card.name,
-        artUrl: externalCardData.images.artCrop,
-        oracleImageUrl: externalCardData.images.oracle,
-        prices: externalCardData.prices,
+        artUrl: card.externalData.images.artCrop,
+        oracleImageUrl: card.externalData.images.oracle,
+        prices: card.externalData.prices,
       };
     });
 
@@ -338,12 +335,9 @@ export default Vue.extend({
     this.cards = combo.cards.map((card) => {
       return {
         name: card.name,
-        artUrl: card.getScryfallImageUrl("art_crop"),
-        oracleImageUrl: card.getScryfallImageUrl("normal"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
+        artUrl: card.externalData.images.artCrop,
+        oracleImageUrl: card.externalData.images.oracle,
+        prices: card.externalData.prices,
       };
     });
     this.prerequisites = Array.from(combo.prerequisites);

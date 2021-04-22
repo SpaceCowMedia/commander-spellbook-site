@@ -1,5 +1,3 @@
-"use strict";
-
 import findById from "@/lib/api/find-by-id";
 import search from "@/lib/api/search";
 import random from "@/lib/api/random";
