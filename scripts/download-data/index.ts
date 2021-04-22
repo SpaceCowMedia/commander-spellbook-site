@@ -1,4 +1,5 @@
 import fs from "fs";
+import normalizeCardName from "../../lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
 import getEDHRecPrices from "./get-edhrec-prices";
@@ -6,14 +7,15 @@ import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
 
 type CardData = {
-  name: string;
-  images: {
-    oracle: string;
-    artCrop: string;
+  i: {
+    // images
+    o: string; // oracle
+    a: string; // art
   };
-  prices: {
-    tcgplayer: number;
-    cardkingdom: number;
+  p: {
+    // prices
+    t: number; // tcgplayer
+    c: number; // cardkingdom
   };
 };
 
@@ -22,7 +24,7 @@ Promise.all([
   getScryfallData(),
   getEDHRecPrices(),
 ]).then((responses) => {
-  const data = [] as CardData[];
+  const cardData: Record<string, CardData> = {};
   const [compressedData, scryfallData, edhrecData] = responses;
   const cardNames = collectCardNames(compressedData);
   const results = collectResults(compressedData);
@@ -35,31 +37,35 @@ Promise.all([
   fs.writeFileSync("./autocomplete-data/results.json", JSON.stringify(results));
   log("/autocomplete-data/results.json written", "green");
 
-  Object.keys(scryfallData).forEach((cardName) => {
-    const priceData = edhrecData[cardName] || {
+  cardNames.forEach((autocompleteOption) => {
+    const name = normalizeCardName(autocompleteOption.label);
+    const sfData = scryfallData[name];
+    const priceData = edhrecData[name] || {
       prices: { tcgplayer: 0, cardkingdom: 0 },
     };
-    const sfData = scryfallData[cardName];
 
-    data.push({
-      name: cardName,
-      ...priceData,
-      ...sfData,
-    });
+    try {
+      cardData[name] = {
+        p: {
+          t: priceData.prices.tcgplayer,
+          c: priceData.prices.cardkingdom,
+        },
+        i: {
+          o: sfData.images.oracle,
+          a: sfData.images.artCrop,
+        },
+      };
+    } catch (e) {
+      log(
+        `"${name}" could not be found in Scryfall's data. It's possible the name is misspelled. Skipping it when creating card data.`,
+        "red"
+      );
+    }
   });
 
-  data.forEach((cardData) => {
-    const minified = JSON.stringify(cardData);
-    const fileName = `/external-card-data/${cardData.name}.json`;
-
-    fs.writeFile(`.${fileName}`, minified, (err) => {
-      if (err) {
-        log(`Something went wrong writing ${fileName}`, "red");
-        return;
-      }
-      log(`${fileName} written`, "green");
-    });
-  });
+  log("Writing /external-card-data/cards.json");
+  fs.writeFileSync("./external-card-data/cards.json", JSON.stringify(cardData));
+  log("/external-card-data/cards.json written", "green");
 
   log("Writing /static/api/combo-data.json");
   fs.writeFileSync(

@@ -44,7 +44,6 @@ describe("ComboPage", () => {
       },
     };
     mocked(getExternalCardData).mockReturnValue({
-      name: "",
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -99,6 +98,16 @@ describe("ComboPage", () => {
   });
 
   it("sets data to combo data found on Google Sheets when loaded is not true", async () => {
+    mocked(getExternalCardData).mockReturnValue({
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 0,
+        cardkingdom: 0,
+      },
+    });
     mocked(findById).mockResolvedValue(
       makeFakeCombo({
         commanderSpellbookId: "13",
@@ -132,8 +141,8 @@ describe("ComboPage", () => {
     expect(vm.cards).toEqual([
       {
         name: "card 1",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -141,8 +150,8 @@ describe("ComboPage", () => {
       },
       {
         name: "card 2",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -150,8 +159,8 @@ describe("ComboPage", () => {
       },
       {
         name: "card 3",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -197,8 +206,8 @@ describe("ComboPage", () => {
     expect(vm.cards).toEqual([
       {
         name: "card 1",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -206,8 +215,8 @@ describe("ComboPage", () => {
       },
       {
         name: "card 2",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -215,8 +224,8 @@ describe("ComboPage", () => {
       },
       {
         name: "card 3",
-        artUrl: expect.stringContaining("scryfall.com"),
-        oracleImageUrl: expect.stringContaining("scryfall.com"),
+        artUrl: expect.stringContaining("artcrop.png"),
+        oracleImageUrl: expect.stringContaining("oracle.png"),
         prices: {
           tcgplayer: 0,
           cardkingdom: 0,
@@ -375,9 +384,6 @@ describe("ComboPage", () => {
     });
     mocked(findById).mockResolvedValue(fakeCombo);
 
-    jest.spyOn(fakeCombo.cards[0], "getScryfallImageUrl");
-    jest.spyOn(fakeCombo.cards[1], "getScryfallImageUrl");
-
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;
 
@@ -422,6 +428,27 @@ describe("ComboPage", () => {
   });
 
   it("looks up prices for combo", async () => {
+    mocked(getExternalCardData).mockReturnValueOnce({
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+    });
+    mocked(getExternalCardData).mockReturnValueOnce({
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+    });
+
     const fakeCombo = makeFakeCombo({
       commanderSpellbookId: "13",
       prerequisites: ["1", "2", "3"],
@@ -431,28 +458,6 @@ describe("ComboPage", () => {
       cards: ["card 1", "card 2"],
     });
     mocked(findById).mockResolvedValue(fakeCombo);
-    mocked(getExternalCardData).mockReturnValueOnce({
-      name: "card 1",
-      images: {
-        artCrop: "https://example.com/artcrop.png",
-        oracle: "https://example.com/oracle.png",
-      },
-      prices: {
-        tcgplayer: 123.45,
-        cardkingdom: 67.89,
-      },
-    });
-    mocked(getExternalCardData).mockReturnValueOnce({
-      name: "card 2",
-      images: {
-        artCrop: "https://example.com/artcrop.png",
-        oracle: "https://example.com/oracle.png",
-      },
-      prices: {
-        tcgplayer: 123.45,
-        cardkingdom: 67.89,
-      },
-    });
     const ComboSidebarLinksStub = {
       template: "<div></div>",
       props: ["tcgplayerPrice", "cardkingdomPrice"],
@@ -480,17 +485,7 @@ describe("ComboPage", () => {
   });
 
   it("does not pass prices if a card is missing from price data", async () => {
-    const fakeCombo = makeFakeCombo({
-      commanderSpellbookId: "13",
-      prerequisites: ["1", "2", "3"],
-      steps: ["1", "2", "3"],
-      results: ["1", "2", "3"],
-      colorIdentity: "wbr",
-      cards: ["card 1", "card 2"],
-    });
-    mocked(findById).mockResolvedValue(fakeCombo);
     mocked(getExternalCardData).mockReturnValueOnce({
-      name: "card 1",
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -501,7 +496,6 @@ describe("ComboPage", () => {
       },
     });
     mocked(getExternalCardData).mockReturnValueOnce({
-      name: "card 2",
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -511,6 +505,16 @@ describe("ComboPage", () => {
         cardkingdom: 67.89,
       },
     });
+
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
     const ComboSidebarLinksStub = {
       template: "<div></div>",
       props: ["tcgplayerPrice", "cardkingdomPrice"],
