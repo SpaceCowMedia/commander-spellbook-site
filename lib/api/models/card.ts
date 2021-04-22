@@ -27,6 +27,10 @@ export default class Card {
     return scryfall.getCard(this.name, "exactName");
   }
 
+  isFeatured(): boolean {
+    return this.externalData.isFeatured;
+  }
+
   toString(): string {
     return this.name;
   }

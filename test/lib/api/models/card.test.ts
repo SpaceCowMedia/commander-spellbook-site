@@ -114,6 +114,31 @@ describe("Card", () => {
     });
   });
 
+  describe("isFeatured", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isFeatured()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isFeatured: true,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isFeatured()).toBe(true);
+    });
+  });
+
   describe("toString", () => {
     it("returns the raw name", () => {
       const card = new Card("Sydri, Galvanic Genius");
