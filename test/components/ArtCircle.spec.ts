@@ -17,6 +17,20 @@ describe("ArtCircle", () => {
     );
   });
 
+  it("handles ' character in card name", () => {
+    const wrapper = mount(ArtCircle, {
+      propsData: {
+        cardName: "Card's Name",
+      },
+    });
+
+    // Not really sure what to do here to test the actual stuff
+    // since the image requires get mocked in the jest moduleNameWrapper
+    expect((wrapper.vm as VueComponent).computedStyle.backgroundImage).toBe(
+      'url("file-name")'
+    );
+  });
+
   it("includes artist as title", () => {
     const wrapper = mount(ArtCircle, {
       propsData: {
