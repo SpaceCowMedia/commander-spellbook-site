@@ -24,7 +24,7 @@ import ComboResults, {
   ComboResult,
 } from "@/components/search/ComboResults.vue";
 import ArtCircle from "@/components/ArtCircle.vue";
-import getAllCombos from "@/lib/api/get-all-combos";
+import getFeaturedCombos from "@/lib/api/get-featured-combos";
 
 type Data = {
   combos: ComboResult[];
@@ -36,22 +36,18 @@ export default Vue.extend({
     ComboResults,
   },
   async asyncData(): Promise<Data> {
-    const allCombos = await getAllCombos();
-    const featuredCombos = allCombos
-      .filter((combo) => {
-        return combo.cards.isFeatured();
-      })
-      .map((combo) => {
-        return {
-          id: combo.commanderSpellbookId,
-          names: combo.cards.map((c) => c.name),
-          results: Array.from(combo.results),
-          colors: Array.from(combo.colorIdentity.colors),
-        };
-      });
+    const featuredCombos = await getFeaturedCombos();
+    const combos = featuredCombos.map((combo) => {
+      return {
+        id: combo.commanderSpellbookId,
+        names: combo.cards.map((c) => c.name),
+        results: Array.from(combo.results),
+        colors: Array.from(combo.colorIdentity.colors),
+      };
+    });
 
     return {
-      combos: featuredCombos,
+      combos,
     };
   },
   data(): Data {
