@@ -182,7 +182,7 @@ export default async function getScryfallData(): Promise<ScryfallData> {
       }
     }
     const isFromUpcomingSet =
-      !card.reprint && new Date(card.released_at) > new Date("2021-04-22");
+      !card.reprint && new Date(card.released_at) > new Date();
     cards[normalizeCardName(card.name)] = {
       setData: {
         reprint: card.reprint,
