@@ -1,5 +1,6 @@
 import formatApiResponse from "@/lib/api/format-api-response";
 import Card from "@/lib/api/models/card";
+import CardGrouping from "@/lib/api/models/card-grouping";
 import SpellbookList from "@/lib/api/models/list";
 import ColorIdentity from "@/lib/api/models/color-identity";
 import { CompressedApiResponse } from "@/lib/api/types";
@@ -24,7 +25,6 @@ describe("api", () => {
         p: "prereq",
         s: "step",
         r: "result",
-        b: 1,
       },
       {
         d: "3",
@@ -38,12 +38,20 @@ describe("api", () => {
         p: "prereq",
         s: "step",
         r: "result",
-        o: 1,
       },
     ];
   });
 
   it("formats compressed data into usable object", () => {
+    const isBannedSpy = jest.spyOn(CardGrouping.prototype, "isBanned");
+    const isPreviewSpy = jest.spyOn(CardGrouping.prototype, "isPreview");
+
+    isBannedSpy.mockReturnValueOnce(false);
+    isBannedSpy.mockReturnValueOnce(true);
+    isPreviewSpy.mockReturnValueOnce(false);
+    isPreviewSpy.mockReturnValueOnce(false);
+    isPreviewSpy.mockReturnValueOnce(true);
+
     const combos = formatApiResponse(values);
 
     expect(combos[0]).toEqual(

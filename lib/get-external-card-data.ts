@@ -15,6 +15,8 @@ export type ExternalCardData = {
     tcgplayer: number;
     cardkingdom: number;
   };
+  isBanned: boolean;
+  isPreview: boolean;
 };
 
 export default function getExternalCardData(
@@ -29,6 +31,8 @@ export default function getExternalCardData(
     )}&version=`;
 
     return {
+      isPreview: false,
+      isBanned: false,
       isFeatured: false,
       images: {
         oracle: `${baseImage}normal`,
@@ -42,6 +46,8 @@ export default function getExternalCardData(
   }
 
   return {
+    isBanned: externalCardData.b === 1,
+    isPreview: externalCardData.s === 1,
     isFeatured: externalCardData.f === 1,
     images: {
       oracle: externalCardData.i.o,

@@ -8,6 +8,8 @@ import { collectCardNames, collectResults } from "./collect-autocomplete";
 
 type CardData = {
   f?: 1; // whether the combo should be featured
+  b?: 1; // whether the combo is banned in commander
+  s?: 1; // whether the combo is a preview for an upcoming set
   i: {
     // images
     o: string; // oracle
@@ -69,6 +71,13 @@ Promise.all([
         if (setCode === "c21" || setCode === "stx") {
           cardData[name].f = 1;
         }
+      }
+
+      if (sfData.isBanned) {
+        cardData[name].b = 1;
+      }
+      if (sfData.isPreview) {
+        cardData[name].s = 1;
       }
     } catch (e) {
       log(

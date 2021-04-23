@@ -35,8 +35,6 @@ export default function transformGoogleSheetsData(
       const prerequisites = combo[12];
       const steps = combo[13];
       const results = combo[14];
-      const hasBannedCard = combo[15].toLowerCase() === "true";
-      const hasSpoiledCard = combo[16].toLowerCase() === "true";
 
       const data: CompressedApiResponse = {
         d: id,
@@ -46,14 +44,6 @@ export default function transformGoogleSheetsData(
         s: steps,
         r: results,
       };
-
-      if (hasBannedCard) {
-        data.b = 1;
-      }
-
-      if (hasSpoiledCard) {
-        data.o = 1;
-      }
 
       return data;
     });

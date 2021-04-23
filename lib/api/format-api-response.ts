@@ -13,8 +13,8 @@ export default function formatApiResponse(
     const prerequisites = SpellbookList.create(combo.p);
     const steps = SpellbookList.create(combo.s);
     const results = SpellbookList.create(combo.r);
-    const hasBannedCard = combo.b === 1;
-    const hasSpoiledCard = combo.o === 1;
+    const hasBannedCard = cards.isBanned();
+    const hasSpoiledCard = cards.isPreview();
 
     return {
       commanderSpellbookId: id,

@@ -92,11 +92,7 @@ describe("api", () => {
   it("formats spreadsheet into usable object", () => {
     const combos = transformGoogleSheetsData(body);
 
-    expect(combos[0]).toEqual(
-      expect.objectContaining({
-        d: "1",
-      })
-    );
+    expect(combos[0].d).toBe("1");
     expect(combos[0].c.length).toBe(2);
     expect(combos[0].c[0]).toBe("Guilded Lotus");
     expect(combos[0].c[1]).toBe("Voltaic Servant");
@@ -104,15 +100,8 @@ describe("api", () => {
     expect(combos[0].p).toBe("prereq 1. prereq 2. prereq 3");
     expect(combos[0].s).toBe("step 1. step 2. step 3");
     expect(combos[0].r).toBe("result 1. result 2. result 3");
-    expect(combos[0].b).toBeFalsy();
-    expect(combos[0].o).toBeFalsy();
 
-    expect(combos[1]).toEqual(
-      expect.objectContaining({
-        d: "2",
-        b: 1,
-      })
-    );
+    expect(combos[1].d).toBe("2");
     expect(combos[1].c.length).toBe(3);
     expect(combos[1].c[0]).toBe("Mindmoil");
     expect(combos[1].c[1]).toBe("Psychosis Crawler");
@@ -121,14 +110,8 @@ describe("api", () => {
     expect(combos[1].p).toBe("prereq");
     expect(combos[1].s).toBe("step");
     expect(combos[1].r).toBe("result");
-    expect(combos[1].o).toBeFalsy();
 
-    expect(combos[2]).toEqual(
-      expect.objectContaining({
-        d: "3",
-        o: 1,
-      })
-    );
+    expect(combos[2].d).toBe("3");
     expect(combos[2].c.length).toBe(4);
     expect(combos[2].c[0]).toBe("Sidar Kondo of Jamurra");
     expect(combos[2].c[1]).toBe("Tana the Bloodsower");
@@ -138,7 +121,6 @@ describe("api", () => {
     expect(combos[2].p).toBe("prereq");
     expect(combos[2].s).toBe("step");
     expect(combos[2].r).toBe("result");
-    expect(combos[2].b).toBeFalsy();
   });
 
   it("ignores combo results with fewer than the correct number of columns in the spreadsheet", () => {

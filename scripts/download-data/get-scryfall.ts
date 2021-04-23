@@ -126,6 +126,8 @@ type ScryfallData = Record<
       oracle: string;
       artCrop: string;
     };
+    isBanned: boolean;
+    isPreview: boolean;
   }
 >;
 
@@ -179,6 +181,8 @@ export default async function getScryfallData(): Promise<ScryfallData> {
         return cards;
       }
     }
+    const isFromUpcomingSet =
+      !card.reprint && new Date(card.released_at) > new Date("2021-04-22");
     cards[normalizeCardName(card.name)] = {
       setData: {
         reprint: card.reprint,
@@ -188,7 +192,10 @@ export default async function getScryfallData(): Promise<ScryfallData> {
         oracle: images.normal,
         artCrop: images.art_crop,
       },
+      isBanned: card.legalities.commander === "banned",
+      isPreview: isFromUpcomingSet,
     };
+
     return cards;
   }, {} as ScryfallData);
 

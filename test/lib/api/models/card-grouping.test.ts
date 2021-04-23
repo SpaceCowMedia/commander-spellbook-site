@@ -9,6 +9,8 @@ jest.mock("@/lib/get-external-card-data");
 describe("CardGrouping", () => {
   beforeEach(() => {
     mocked(getExternalCardData).mockReturnValue({
+      isBanned: false,
+      isPreview: false,
       isFeatured: false,
       images: {
         oracle: "https://c1.scryfall.com/file/oracle.jpg",
@@ -93,21 +95,52 @@ describe("CardGrouping", () => {
     });
 
     it("returns true if at least one cards is featured", () => {
-      mocked(getExternalCardData).mockReturnValueOnce({
-        isFeatured: true,
-        images: {
-          oracle: "https://c1.scryfall.com/file/oracle.jpg",
-          artCrop: "https://c1.scryfall.com/file/art.jpg",
-        },
-        prices: {
-          tcgplayer: 123,
-          cardkingdom: 456,
-        },
-      });
+      jest
+        .spyOn(Card.prototype, "isFeatured")
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
 
       const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
 
       expect(group.isFeatured()).toBe(true);
+    });
+  });
+
+  describe("isBanned", () => {
+    it("returns false if no cards are featured", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(group.isBanned()).toBe(false);
+    });
+
+    it("returns true if at least one cards is featured", () => {
+      jest
+        .spyOn(Card.prototype, "isBanned")
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
+
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(group.isBanned()).toBe(true);
+    });
+  });
+
+  describe("isPreview", () => {
+    it("returns false if no cards are featured", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(group.isPreview()).toBe(false);
+    });
+
+    it("returns true if at least one cards is featured", () => {
+      jest
+        .spyOn(Card.prototype, "isPreview")
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
+
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(group.isPreview()).toBe(true);
     });
   });
 
