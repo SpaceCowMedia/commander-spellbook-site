@@ -6,6 +6,7 @@ const CARD_IMAGE_NAMED_BASE_URL =
   "https://api.scryfall.com/cards/named?format=image&exact=";
 
 export type ExternalCardData = {
+  isFeatured: boolean;
   images: {
     oracle: string;
     artCrop: string;
@@ -14,6 +15,8 @@ export type ExternalCardData = {
     tcgplayer: number;
     cardkingdom: number;
   };
+  isBanned: boolean;
+  isPreview: boolean;
 };
 
 export default function getExternalCardData(
@@ -28,6 +31,9 @@ export default function getExternalCardData(
     )}&version=`;
 
     return {
+      isPreview: false,
+      isBanned: false,
+      isFeatured: false,
       images: {
         oracle: `${baseImage}normal`,
         artCrop: `${baseImage}art_crop`,
@@ -40,6 +46,9 @@ export default function getExternalCardData(
   }
 
   return {
+    isBanned: externalCardData.b === 1,
+    isPreview: externalCardData.s === 1,
+    isFeatured: externalCardData.f === 1,
     images: {
       oracle: externalCardData.i.o,
       artCrop: externalCardData.i.a,

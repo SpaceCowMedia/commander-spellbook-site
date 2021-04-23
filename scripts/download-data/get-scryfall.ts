@@ -118,10 +118,16 @@ type RawScryfallResponse = Array<{
 type ScryfallData = Record<
   string,
   {
+    setData: {
+      reprint: boolean;
+      setCode: string;
+    };
     images: {
       oracle: string;
       artCrop: string;
     };
+    isBanned: boolean;
+    isPreview: boolean;
   }
 >;
 
@@ -175,12 +181,21 @@ export default async function getScryfallData(): Promise<ScryfallData> {
         return cards;
       }
     }
+    const isFromUpcomingSet =
+      !card.reprint && new Date(card.released_at) > new Date();
     cards[normalizeCardName(card.name)] = {
+      setData: {
+        reprint: card.reprint,
+        setCode: card.set,
+      },
       images: {
         oracle: images.normal,
         artCrop: images.art_crop,
       },
+      isBanned: card.legalities.commander === "banned",
+      isPreview: isFromUpcomingSet,
     };
+
     return cards;
   }, {} as ScryfallData);
 

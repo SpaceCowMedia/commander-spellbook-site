@@ -10,6 +10,9 @@ jest.mock("@/lib/get-external-card-data");
 describe("Card", () => {
   beforeEach(() => {
     mocked(getExternalCardData).mockReturnValue({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         oracle: "https://c1.scryfall.com/file/oracle.jpg",
         artCrop: "https://c1.scryfall.com/file/art.jpg",
@@ -110,6 +113,87 @@ describe("Card", () => {
         "Sydri, Galvanic Genius",
         "exactName"
       );
+    });
+  });
+
+  describe("isFeatured", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isFeatured()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: false,
+        isPreview: false,
+        isFeatured: true,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isFeatured()).toBe(true);
+    });
+  });
+
+  describe("isBanned", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isBanned()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: true,
+        isPreview: false,
+        isFeatured: false,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isBanned()).toBe(true);
+    });
+  });
+
+  describe("isPreview", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isPreview()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: false,
+        isPreview: true,
+        isFeatured: false,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isPreview()).toBe(true);
     });
   });
 

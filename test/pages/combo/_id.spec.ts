@@ -44,6 +44,9 @@ describe("ComboPage", () => {
       },
     };
     mocked(getExternalCardData).mockReturnValue({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -99,6 +102,9 @@ describe("ComboPage", () => {
 
   it("sets data to combo data found on Google Sheets when loaded is not true", async () => {
     mocked(getExternalCardData).mockReturnValue({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -429,6 +435,9 @@ describe("ComboPage", () => {
 
   it("looks up prices for combo", async () => {
     mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -439,6 +448,9 @@ describe("ComboPage", () => {
       },
     });
     mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -486,6 +498,9 @@ describe("ComboPage", () => {
 
   it("does not pass prices if a card is missing from price data", async () => {
     mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",
@@ -496,6 +511,9 @@ describe("ComboPage", () => {
       },
     });
     mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
       images: {
         artCrop: "https://example.com/artcrop.png",
         oracle: "https://example.com/oracle.png",

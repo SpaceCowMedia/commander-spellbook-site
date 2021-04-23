@@ -29,6 +29,18 @@ export default class CardGrouping extends Array<Card> {
     return Boolean(this.find((c) => c.matchesNameExactly(cardName)));
   }
 
+  isFeatured(): boolean {
+    return Boolean(this.find((c) => c.isFeatured()));
+  }
+
+  isBanned(): boolean {
+    return Boolean(this.find((c) => c.isBanned()));
+  }
+
+  isPreview(): boolean {
+    return Boolean(this.find((c) => c.isPreview()));
+  }
+
   toString(): string {
     return this.join(" | ");
   }
