@@ -1,12 +1,46 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import scryfall from "scryfall-client";
 import Card from "@/lib/api/models/card";
+import getExternalCardData from "@/lib/get-external-card-data";
+
+import { mocked } from "ts-jest/utils";
+
+jest.mock("@/lib/get-external-card-data");
 
 describe("Card", () => {
+  beforeEach(() => {
+    mocked(getExternalCardData).mockReturnValue({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
+      images: {
+        oracle: "https://c1.scryfall.com/file/oracle.jpg",
+        artCrop: "https://c1.scryfall.com/file/art.jpg",
+      },
+      prices: {
+        tcgplayer: 123,
+        cardkingdom: 456,
+      },
+    });
+  });
+
   it("has a name attribute", () => {
     const card = new Card("Sydri, Galvanic Genius");
 
     expect(card.name).toEqual("Sydri, Galvanic Genius");
+  });
+
+  it("external card data", () => {
+    const card = new Card("Sydri, Galvanic Genius");
+
+    expect(card.externalData.images.oracle).toBe(
+      "https://c1.scryfall.com/file/oracle.jpg"
+    );
+    expect(card.externalData.images.artCrop).toBe(
+      "https://c1.scryfall.com/file/art.jpg"
+    );
+    expect(card.externalData.prices.tcgplayer).toBe(123);
+    expect(card.externalData.prices.cardkingdom).toBe(456);
   });
 
   describe("matchesName", () => {
@@ -82,21 +116,84 @@ describe("Card", () => {
     });
   });
 
-  describe("getScryfallImageUrl", () => {
-    it("returns a url for the card image", () => {
-      const card = new Card("Sydri, Galvanic Genius");
+  describe("isFeatured", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
 
-      expect(card.getScryfallImageUrl()).toBe(
-        "https://api.scryfall.com/cards/named?format=image&exact=Sydri%2C%20Galvanic%20Genius"
-      );
+      expect(card.isFeatured()).toBe(false);
     });
 
-    it("can pass a version string", () => {
-      const card = new Card("Sydri, Galvanic Genius");
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: false,
+        isPreview: false,
+        isFeatured: true,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
 
-      expect(card.getScryfallImageUrl("art_crop")).toBe(
-        "https://api.scryfall.com/cards/named?format=image&exact=Sydri%2C%20Galvanic%20Genius&version=art_crop"
-      );
+      expect(card.isFeatured()).toBe(true);
+    });
+  });
+
+  describe("isBanned", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isBanned()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: true,
+        isPreview: false,
+        isFeatured: false,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isBanned()).toBe(true);
+    });
+  });
+
+  describe("isPreview", () => {
+    it("returns false when card is not featured", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isPreview()).toBe(false);
+    });
+
+    it("returns true when card is featured", () => {
+      mocked(getExternalCardData).mockReturnValue({
+        isBanned: false,
+        isPreview: true,
+        isFeatured: false,
+        images: {
+          oracle: "https://c1.scryfall.com/file/oracle.jpg",
+          artCrop: "https://c1.scryfall.com/file/art.jpg",
+        },
+        prices: {
+          tcgplayer: 123,
+          cardkingdom: 456,
+        },
+      });
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.isPreview()).toBe(true);
     });
   });
 

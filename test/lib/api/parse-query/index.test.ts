@@ -212,6 +212,42 @@ describe("parseQuery", () => {
     );
   });
 
+  it.each([":", "=", ">=", "<=", "<", ">"])(
+    "parses %s operator",
+    (operator) => {
+      parseQuery(`card${operator}name`);
+
+      expect(parseComboData).toBeCalledWith(
+        expect.anything(),
+        "card",
+        operator,
+        "name"
+      );
+    }
+  );
+
+  it("transforms =< operator to <=", () => {
+    parseQuery("card=<name");
+
+    expect(parseComboData).toBeCalledWith(
+      expect.anything(),
+      "card",
+      "<=",
+      "name"
+    );
+  });
+
+  it("transforms => operator to >=", () => {
+    parseQuery("card=>name");
+
+    expect(parseComboData).toBeCalledWith(
+      expect.anything(),
+      "card",
+      ">=",
+      "name"
+    );
+  });
+
   it("can parse a mix of all queries", () => {
     const result = parseQuery(
       "Kiki ci:wbr -ci=br card:Daxos spellbookid:12345 card:'Grave Titan' card:\"Akroma\" unknown:value -card:Food prerequisites:prereq steps:step results:result -prerequisites:xprereq -steps:xstep -result:xresult is:banned -exclude:spoiled sort:colors order:descending"

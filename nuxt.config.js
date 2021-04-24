@@ -154,7 +154,7 @@ export default {
   googleFonts: {
     families: {
       "Josefin+Sans": [400],
-      Roboto: [400],
+      Roboto: [400, 700],
     },
   },
 };

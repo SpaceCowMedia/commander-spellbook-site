@@ -51,11 +51,11 @@
       </p>
       <p>
         You can lookup longer names for cards by using the
-        <code>card:</code> or <code>cards:</code> keys with single
-        (<code>'</code>) or double (<code>"</code>) quotes. This will find
-        combos that contain cards with names that include the whole phrase. For
-        instance, <code>card:dream</code>, will include combos that contain the
-        card Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
+        <code>card</code> key with single (<code>'</code>) or double
+        (<code>"</code>) quotes. This will find combos that contain cards with
+        names that include the whole phrase. For instance,
+        <code>card:dream</code>, will include combos that contain the card
+        Sickening Dreams, Dream Stalker, Dreamtail Heron, etc. If
         <code>card:"dream stalk"</code> is used, then only combos that contain
         Dream Stalker wil lbe displayed.
       </p>
@@ -64,7 +64,7 @@
         <code>card=</code> instead.
       </p>
       <p>
-        Use <code>-card:</code> To find combos that do not include a certain
+        Use <code>-card</code> To find combos that do not include a certain
         card.
       </p>
       <p>
@@ -72,6 +72,8 @@
         <code>&gt;=</code>, <code>&lt;=</code> operators can also be used with
         numbers to to find combos restricted by the number of cards.
       </p>
+
+      <p>An alias for <code>card</code> is <code>cards</code>.</p>
     </SearchGuide>
 
     <SearchGuide
@@ -124,7 +126,7 @@
       </p>
 
       <p>
-        You can also use <code>-prerequisites:</code> to find combos that do not
+        You can also use <code>-prerequisites</code> to find combos that do not
         contain the value passed.
       </p>
 
@@ -152,7 +154,7 @@
       </p>
 
       <p>
-        You can also use <code>-steps:</code> to find combos that do not contain
+        You can also use <code>-steps</code> to find combos that do not contain
         steps with the value passed.
       </p>
 
@@ -177,7 +179,7 @@
       </p>
 
       <p>
-        You can also use <code>-results:</code> to find combos that do not
+        You can also use <code>-results</code> to find combos that do not
         contain results with the value passed.
       </p>
 
@@ -197,18 +199,18 @@
       :snippets="idSnippets"
     >
       <p>
-        You can also search by <code>spellbookid:</code> if you want to find a
+        You can also search by <code>spellbookid</code> if you want to find a
         specific combo by its id. Using more than one
-        <code>spellbookid:</code> will result in a query error.
+        <code>spellbookid</code> will result in a query error.
       </p>
 
       <p>
-        <code>sid:</code> and <code>sbid:</code> are aliases for
-        <code>spellbookid:</code>.
+        <code>sid</code> and <code>sbid</code> are aliases for
+        <code>spellbookid</code>.
       </p>
 
       <p>
-        A more useful parameter to use is <code>-spellbookid:</code>, to more
+        A more useful parameter to use is <code>-spellbookid</code>, to more
         easilly omit certain combos. For instance, for finding all combos using
         Basalt Monolith and Mesmeric Orb except
         <nuxt-link to="/combo/450/">combo 450</nuxt-link>.

@@ -1,5 +1,3 @@
-"use strict";
-
 import findById from "@/lib/api/find-by-id";
 import search from "@/lib/api/search";
 import random from "@/lib/api/random";
@@ -9,10 +7,6 @@ const json = require("../../static/api/combo-data.json");
 
 describe("API Module", () => {
   beforeEach(() => {
-    // set this so we don't delay these tests with
-    // the artificial delay we do on the browser
-    process.server = true;
-
     // we have to mock the fetch here since jest does not
     // have fetch in its API. Easy enough to just skip the
     // network request and provide the static data anyway

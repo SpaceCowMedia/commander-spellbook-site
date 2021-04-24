@@ -101,7 +101,7 @@ export default Vue.extend({
           const manaMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
 
           if (manaMatch) {
-            const manaSymbol = manaMatch[1] || manaMatch[2];
+            const manaSymbol = (manaMatch[1] || manaMatch[2]).replace("/", "");
 
             return {
               nodeType: "image",

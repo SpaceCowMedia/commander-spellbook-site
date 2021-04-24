@@ -31,10 +31,10 @@
     </div>
     <div
       aria-hidden="true"
-      class="copy-combo-notification w-full md:w-1/2"
+      class="copy-combo-notification gradient w-full md:w-1/2"
       :class="{ show: showCopyNotification }"
     >
-      Combo link copied to your clipboard!
+      <div class="bg-dark p-4">Combo link copied to your clipboard!</div>
     </div>
   </div>
 </template>
@@ -94,7 +94,7 @@ export default Vue.extend({
 .copy-combo-notification {
   /* Tailwind 2 class: -bottom-20 */
   bottom: -5rem;
-  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-4 bg-black text-white;
+  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-1 text-white z-50;
 }
 
 .copy-combo-notification.show {

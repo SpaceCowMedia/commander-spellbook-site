@@ -1,59 +1,32 @@
-import fs from "fs";
-import path from "path";
 import getExternalCardData from "@/lib/get-external-card-data";
-import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-describe("normalizeCardName", () => {
-  beforeEach(() => {
-    fs.writeFileSync(
-      path.resolve(__dirname, "..", "..", "external-card-data", "card 1.json"),
-      JSON.stringify({
-        name: "card 1",
-        images: {
-          artCrop: "https://example.com/art.png",
-          oracle: "https://example.com/oracle.png",
-        },
-        prices: {
-          tcgplayer: 123.45,
-          cardkingdom: 67.89,
-        },
-      })
-    );
-  });
-
+describe("getExternalCardData", () => {
   it("returns card data for combo when it exists in cache", () => {
-    const fakeCombo = makeFakeCombo({
-      cards: ["Card 1", "Card 2"],
-    });
-
-    expect(getExternalCardData(fakeCombo.cards[0])).toEqual({
-      name: "card 1",
+    expect(getExternalCardData("Sydri, Galvanic Genius")).toEqual({
+      isPreview: false,
+      isBanned: false,
+      isFeatured: false,
       images: {
-        artCrop: "https://example.com/art.png",
-        oracle: "https://example.com/oracle.png",
+        artCrop: expect.stringContaining("scryfall.com/file"),
+        oracle: expect.stringContaining("scryfall.com/file"),
       },
       prices: {
-        tcgplayer: 123.45,
-        cardkingdom: 67.89,
+        tcgplayer: expect.any(Number),
+        cardkingdom: expect.any(Number),
       },
     });
   });
 
   it("returns empty card data for combo when it does not exist in cache", () => {
-    const fakeCombo = makeFakeCombo({
-      cards: ["Card 1", "Card 2"],
-    });
-
-    const card2 = fakeCombo.cards[1];
-    jest.spyOn(card2, "getScryfallImageUrl").mockImplementation((kind) => {
-      return `https://c1.scryfall.com/${kind}.png`;
-    });
-
-    expect(getExternalCardData(card2)).toEqual({
-      name: "card 2",
+    expect(getExternalCardData("unknown card name")).toEqual({
+      isFeatured: false,
+      isPreview: false,
+      isBanned: false,
       images: {
-        artCrop: "https://c1.scryfall.com/art_crop.png",
-        oracle: "https://c1.scryfall.com/normal.png",
+        artCrop:
+          "https://api.scryfall.com/cards/named?format=image&exact=unknown%20card%20name&version=art_crop",
+        oracle:
+          "https://api.scryfall.com/cards/named?format=image&exact=unknown%20card%20name&version=normal",
       },
       prices: {
         tcgplayer: 0,

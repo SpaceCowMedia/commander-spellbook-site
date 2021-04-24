@@ -22,7 +22,7 @@ export default function makeFakeCombo(
 
   return {
     commanderSpellbookId: id,
-    permalink: `https://commanderspellbook.com/combo/${id}`,
+    permalink: `https://commanderspellbook.com/combo/${id}/`,
     cards: CardGrouping.create(options.cards || ["card 1", "card 2"]),
     colorIdentity: new ColorIdentity(options.colorIdentity || "wub"),
     prerequisites: SpellbookList.create(

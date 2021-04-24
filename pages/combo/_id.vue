@@ -2,7 +2,7 @@
   <div>
     <CardHeader :cards-art="cardArts" :title="title" :subtitle="subtitle" />
 
-    <CardGroup :cards="cards" />
+    <CardGroup v-if="loaded" :cards="cards" />
 
     <div class="container md:flex flex-row">
       <div class="w-full md:w-2/3">
@@ -41,7 +41,7 @@
         />
       </div>
 
-      <aside class="w-full md:w-1/3 text-center">
+      <aside v-if="loaded" class="w-full md:w-1/3 text-center">
         <div id="combo-color-identity" class="my-4 hidden md:block">
           <ColorIdentity :colors="colorIdentity" />
         </div>
@@ -75,7 +75,6 @@ import CardHeader from "@/components/combo/CardHeader.vue";
 import CardGroup from "@/components/combo/CardGroup.vue";
 import ComboList from "@/components/combo/ComboList.vue";
 import findById from "@/lib/api/find-by-id";
-import getExternalCardData from "@/lib/get-external-card-data";
 
 type Price = {
   tcgplayer: string;
@@ -92,8 +91,6 @@ type CardData = {
 };
 
 type ComboData = {
-  title: string;
-  subtitle: string;
   hasBannedCard: boolean;
   hasPreviewedCard: boolean;
   link: string;
@@ -141,13 +138,11 @@ export default Vue.extend({
     }
 
     const cards = combo.cards.map((card) => {
-      const externalCardData = getExternalCardData(card);
-
       return {
         name: card.name,
-        artUrl: externalCardData.images.artCrop,
-        oracleImageUrl: externalCardData.images.oracle,
-        prices: externalCardData.prices,
+        artUrl: card.externalData.images.artCrop,
+        oracleImageUrl: card.externalData.images.oracle,
+        prices: card.externalData.prices,
       };
     });
 
@@ -187,29 +182,8 @@ export default Vue.extend({
       cardkingdom: parsePriceData("cardkingdom"),
     };
 
-    const title = cards
-      .map((card, index) => {
-        if (index > 2) {
-          return "";
-        }
-
-        return card.name;
-      })
-      .filter((cardName) => cardName)
-      .join(" | ");
-
-    let subtitle = "";
-
-    if (cards.length === 4) {
-      subtitle = `(and ${NUMBERS[1]} other card)`;
-    } else if (cards.length > 4) {
-      subtitle = `(and ${NUMBERS[cards.length - 3]} other cards)`;
-    }
-
     return {
       comboNumber,
-      title,
-      subtitle,
       hasBannedCard: combo.hasBannedCard,
       hasPreviewedCard: combo.hasSpoiledCard,
       link: combo.permalink,
@@ -224,8 +198,6 @@ export default Vue.extend({
   },
   data(): ComboData {
     return {
-      title: "Looking up Combo",
-      subtitle: "",
       hasBannedCard: false,
       hasPreviewedCard: false,
       link: "",
@@ -314,13 +286,70 @@ export default Vue.extend({
     cardArts(): string[] {
       return this.cards.map((c) => c.artUrl);
     },
+    title(): string {
+      if (this.cardNames.length === 0) {
+        return "Looking up Combo";
+      }
+
+      return this.cardNames.slice(0, 3).join(" | ");
+    },
+    subtitle(): string {
+      if (this.cards.length < 4) {
+        return "";
+      }
+      if (this.cards.length === 4) {
+        return `(and ${NUMBERS[1]} other card)`;
+      }
+
+      return `(and ${NUMBERS[this.cards.length - 3]} other cards)`;
+    },
   },
-  mounted() {
-    if (!this.loaded) {
+  async mounted() {
+    if (this.loaded && !this.$route.query.preview) {
+      return;
+    }
+
+    this.cards = [];
+    this.prerequisites = [];
+    this.steps = [];
+    this.results = [];
+    this.link = "";
+    this.loaded = false;
+
+    let combo;
+
+    try {
+      combo = await findById(this.$route.params.id, true);
+    } catch (err) {
       this.$router.push({
         path: "/combo-not-found/",
       });
+
+      return;
     }
+
+    this.comboNumber = combo.commanderSpellbookId;
+    this.hasBannedCard = combo.hasBannedCard;
+    this.hasPreviewedCard = combo.hasSpoiledCard;
+    this.link = combo.permalink;
+    this.cards = combo.cards.map((card) => {
+      return {
+        name: card.name,
+        artUrl: card.externalData.images.artCrop,
+        oracleImageUrl: card.externalData.images.oracle,
+        prices: card.externalData.prices,
+      };
+    });
+    this.prerequisites = Array.from(combo.prerequisites);
+    this.steps = Array.from(combo.steps);
+    this.results = Array.from(combo.results);
+    this.colorIdentity = Array.from(combo.colorIdentity.colors);
+    this.prices = {
+      tcgplayer: "",
+      cardkingdom: "",
+    };
+
+    this.loaded = true;
   },
 });
 </script>

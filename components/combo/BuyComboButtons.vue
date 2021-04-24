@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     tcgplayerPriceLabel(): string {
       if (this.tcgPlayerOutOfStock) {
-        return "(Out of Stock)";
+        return "(Unavailable)";
       }
       return `($${this.tcgplayerPrice})`;
     },
@@ -109,7 +109,7 @@ export default Vue.extend({
     },
     cardkingdomPriceLabel(): string {
       if (this.cardkingdomOutOfStock) {
-        return "(Out of Stock)";
+        return "(Unavailable)";
       }
       return `($${this.cardkingdomPrice})`;
     },

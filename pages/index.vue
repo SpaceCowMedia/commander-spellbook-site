@@ -19,11 +19,7 @@
         <nuxt-link to="/random/" class="random-button button md:m-1">
           Random Combo
         </nuxt-link>
-        <nuxt-link
-          v-if="showPreviewLink"
-          :to="{ path: '/search/', query: { q: 'is:previewed' } }"
-          class="previwed-combos-button button md:m-1"
-        >
+        <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
           Strixhaven & C21 Combos
         </nuxt-link>
       </div>
@@ -44,7 +40,6 @@ import Vue from "vue";
 import SearchBar from "@/components/SearchBar.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
 import Logo from "@/components/Logo.vue";
-import search from "@/lib/api/search";
 
 export default Vue.extend({
   components: {
@@ -53,18 +48,6 @@ export default Vue.extend({
     Logo,
   },
   layout: "landing",
-  async asyncData() {
-    const result = await search("is:previewed");
-
-    return {
-      showPreviewLink: result.combos.length > 0,
-    };
-  },
-  data() {
-    return {
-      showPreviewLink: false,
-    };
-  },
   mounted() {
     const query = this.$route.query.q;
     const { status, id } = this.$route.query;

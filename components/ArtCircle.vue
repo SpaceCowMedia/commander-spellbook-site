@@ -32,7 +32,7 @@ export default Vue.extend({
   computed: {
     computedStyle(): Record<string, string> {
       return {
-        backgroundImage: `url('${this.imgSrc}')`,
+        backgroundImage: `url(${this.imgSrc})`,
         height: `${this.size}rem`,
         width: `${this.size}rem`,
       };
@@ -44,7 +44,17 @@ export default Vue.extend({
       return this.title ? this.title : this.credit;
     },
     imgSrc(): string {
-      return require(`~/assets/images/art-circles/${this.cardName}-${this.artist}.jpg`);
+      let quotes = "'";
+
+      if (this.cardName.includes("'")) {
+        quotes = '"';
+      }
+
+      return (
+        quotes +
+        require(`~/assets/images/art-circles/${this.cardName}-${this.artist}.jpg`) +
+        quotes
+      );
     },
   },
 });

@@ -1,12 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import HomePage from "@/pages/index.vue";
-import search from "@/lib/api/search";
-import makeFakeCombo from "@/lib/api/make-fake-combo";
-import { mocked } from "ts-jest/utils";
 
-import type { MountOptions, Route, Router, VueComponent } from "../types";
-
-jest.mock("@/lib/api/search");
+import type { MountOptions, Route, Router } from "../types";
 
 describe("HomePage", () => {
   let $route: Route;
@@ -103,56 +98,5 @@ describe("HomePage", () => {
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith("/search/?q=is:banned");
-  });
-
-  it("displays previewed combos button when there are previews", async () => {
-    const wrapper = shallowMount(HomePage, wrapperOptions);
-
-    expect(wrapper.find(".previwed-combos-button").exists()).toBe(false);
-
-    await wrapper.setData({
-      showPreviewLink: true,
-    });
-
-    expect(wrapper.find(".previwed-combos-button").exists()).toBe(true);
-  });
-
-  describe("asyncData", () => {
-    beforeEach(() => {
-      mocked(search).mockResolvedValue({
-        sort: "colors",
-        order: "ascending",
-        combos: [],
-        message: "",
-        errors: [],
-      });
-    });
-
-    it("sets showPreviewLink to true when there is at least one previwed combo", async () => {
-      const wrapper = shallowMount(HomePage, wrapperOptions);
-      const vm = wrapper.vm as VueComponent;
-
-      mocked(search).mockResolvedValue({
-        sort: "colors",
-        order: "ascending",
-        combos: [],
-        message: "",
-        errors: [],
-      });
-      const resultWithoutCombos = await vm.$options.asyncData();
-
-      expect(resultWithoutCombos.showPreviewLink).toBe(false);
-
-      mocked(search).mockResolvedValue({
-        sort: "colors",
-        order: "ascending",
-        combos: [makeFakeCombo()],
-        message: "",
-        errors: [],
-      });
-      const resultWithCombos = await vm.$options.asyncData();
-
-      expect(resultWithCombos.showPreviewLink).toBe(true);
-    });
   });
 });
