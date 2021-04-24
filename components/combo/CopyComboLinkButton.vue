@@ -7,7 +7,7 @@
       type="button"
       @click="copyComboLink"
     >
-      Copy Combo Link Testing Testing
+      Copy Combo Link
     </button>
     <!-- accessibility compliance software may see this as an
       issue since there is no label for it. But it's hidden

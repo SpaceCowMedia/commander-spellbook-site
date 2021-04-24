@@ -8,8 +8,9 @@
     >
       Share combo
     </button>
-
-    <SharingMenu v-if="showMenu" />
+    <transition name="slide">
+      <SharingMenu v-if="showMenu" />
+    </transition>
   </div>
 </template>
 
@@ -33,3 +34,15 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s ease;
+}
+.slide-enter,
+.slide-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="menu">
     <button>
       <ShareNetwork
         network="Twitter"
@@ -65,3 +65,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.menu {
+  @apply border border-primary;
+}
+</style>
