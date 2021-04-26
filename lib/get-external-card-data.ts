@@ -17,6 +17,7 @@ export type ExternalCardData = {
   };
   isBanned: boolean;
   isPreview: boolean;
+  edhrecLink: string;
 };
 
 export default function getExternalCardData(
@@ -42,6 +43,7 @@ export default function getExternalCardData(
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "",
     };
   }
 
@@ -57,5 +59,6 @@ export default function getExternalCardData(
       tcgplayer: externalCardData.p.t,
       cardkingdom: externalCardData.p.c,
     },
+    edhrecLink: externalCardData.e,
   };
 }

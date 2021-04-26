@@ -128,6 +128,7 @@ type ScryfallData = Record<
     };
     isBanned: boolean;
     isPreview: boolean;
+    edhrecPermalink: string;
   }
 >;
 
@@ -194,6 +195,7 @@ export default async function getScryfallData(): Promise<ScryfallData> {
       },
       isBanned: card.legalities.commander === "banned",
       isPreview: isFromUpcomingSet,
+      edhrecPermalink: card.related_uris.edhrec,
     };
 
     return cards;

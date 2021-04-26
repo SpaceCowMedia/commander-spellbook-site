@@ -55,6 +55,7 @@ describe("ComboPage", () => {
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
   });
 
@@ -113,6 +114,7 @@ describe("ComboPage", () => {
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(findById).mockResolvedValue(
       makeFakeCombo({
@@ -446,6 +448,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
@@ -459,6 +462,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
 
     const fakeCombo = makeFakeCombo({
@@ -509,6 +513,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
@@ -522,6 +527,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
 
     const fakeCombo = makeFakeCombo({

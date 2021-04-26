@@ -21,6 +21,7 @@ describe("Card", () => {
         tcgplayer: 123,
         cardkingdom: 456,
       },
+      edhrecLink: "https//edhrec.com/card",
     });
   });
 
@@ -136,6 +137,7 @@ describe("Card", () => {
           tcgplayer: 123,
           cardkingdom: 456,
         },
+        edhrecLink: "https//edhrec.com/card",
       });
       const card = new Card("Arjun, the Shifting Flame");
 
@@ -163,6 +165,7 @@ describe("Card", () => {
           tcgplayer: 123,
           cardkingdom: 456,
         },
+        edhrecLink: "https//edhrec.com/card",
       });
       const card = new Card("Arjun, the Shifting Flame");
 
@@ -190,6 +193,7 @@ describe("Card", () => {
           tcgplayer: 123,
           cardkingdom: 456,
         },
+        edhrecLink: "https//edhrec.com/card",
       });
       const card = new Card("Arjun, the Shifting Flame");
 

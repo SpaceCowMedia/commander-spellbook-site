@@ -20,6 +20,7 @@ type CardData = {
     t: number; // tcgplayer
     c: number; // cardkingdom
   };
+  e: string; // edhrec permalink for card
 };
 
 Promise.all([
@@ -57,6 +58,7 @@ Promise.all([
           o: sfData.images.oracle,
           a: sfData.images.artCrop,
         },
+        e: sfData.edhrecPermalink,
       };
 
       if (!sfData.setData.reprint) {
