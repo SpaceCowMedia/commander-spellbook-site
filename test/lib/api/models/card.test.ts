@@ -201,6 +201,14 @@ describe("Card", () => {
     });
   });
 
+  describe("getEdhrecLink", () => {
+    it("returns the edhrec link", () => {
+      const card = new Card("Arjun, the Shifting Flame");
+
+      expect(card.getEdhrecLink()).toBe("https//edhrec.com/card");
+    });
+  });
+
   describe("toString", () => {
     it("returns the raw name", () => {
       const card = new Card("Sydri, Galvanic Genius");

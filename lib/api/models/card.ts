@@ -39,6 +39,10 @@ export default class Card {
     return this.externalData.isPreview;
   }
 
+  getEdhrecLink(): string {
+    return this.externalData.edhrecLink;
+  }
+
   toString(): string {
     return this.name;
   }
