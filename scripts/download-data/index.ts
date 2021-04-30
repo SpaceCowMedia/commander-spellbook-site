@@ -3,6 +3,7 @@ import normalizeCardName from "../../lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
 import getEDHRecPrices from "./get-edhrec-prices";
+import getEDHRecComboData from "./get-edhrec-combo-data";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
 
@@ -27,9 +28,15 @@ Promise.all([
   getGoogleSheetsComboData(),
   getScryfallData(),
   getEDHRecPrices(),
+  getEDHRecComboData(),
 ]).then((responses) => {
   const cardData: Record<string, CardData> = {};
-  const [compressedData, scryfallData, edhrecData] = responses;
+  const [
+    compressedData,
+    scryfallData,
+    edhrecPriceData,
+    edhrecComboData,
+  ] = responses;
   const cardNames = collectCardNames(compressedData);
   const results = collectResults(compressedData);
 
@@ -44,7 +51,7 @@ Promise.all([
   cardNames.forEach((autocompleteOption) => {
     const name = normalizeCardName(autocompleteOption.label);
     const sfData = scryfallData[name];
-    const priceData = edhrecData[name] || {
+    const priceData = edhrecPriceData[name] || {
       prices: { tcgplayer: 0, cardkingdom: 0 },
     };
 
@@ -92,6 +99,13 @@ Promise.all([
   log("Writing /external-data/cards.json");
   fs.writeFileSync("./external-data/cards.json", JSON.stringify(cardData));
   log("/external-data/cards.json written", "green");
+
+  log("Writing /external-data/edhrec-combos.json");
+  fs.writeFileSync(
+    "./external-data/edhrec-combos.json",
+    JSON.stringify(edhrecComboData)
+  );
+  log("/external-data/edhrec-combos.json written", "green");
 
   log("Writing /static/api/combo-data.json");
   fs.writeFileSync(
