@@ -61,6 +61,7 @@
           :cards="cardNames"
           :tcgplayer-price="prices.tcgplayer"
           :cardkingdom-price="prices.cardkingdom"
+          :edhrec-link="edhrecLink"
         />
       </aside>
     </div>
@@ -102,6 +103,7 @@ type ComboData = {
   prerequisites: string[];
   steps: string[];
   results: string[];
+  edhrecLink: string;
 };
 
 const NUMBERS = [
@@ -194,6 +196,7 @@ export default Vue.extend({
       steps: Array.from(combo.steps),
       results: Array.from(combo.results),
       colorIdentity: Array.from(combo.colorIdentity.colors),
+      edhrecLink: combo.edhrecLink || "",
     };
   },
   data(): ComboData {
@@ -212,6 +215,7 @@ export default Vue.extend({
       prerequisites: [],
       steps: [],
       results: [],
+      edhrecLink: "",
     };
   },
   head() {
