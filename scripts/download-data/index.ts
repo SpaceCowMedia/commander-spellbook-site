@@ -89,9 +89,9 @@ Promise.all([
     }
   });
 
-  log("Writing /external-card-data/cards.json");
-  fs.writeFileSync("./external-card-data/cards.json", JSON.stringify(cardData));
-  log("/external-card-data/cards.json written", "green");
+  log("Writing /external-data/cards.json");
+  fs.writeFileSync("./external-data/cards.json", JSON.stringify(cardData));
+  log("/external-data/cards.json written", "green");
 
   log("Writing /static/api/combo-data.json");
   fs.writeFileSync(
