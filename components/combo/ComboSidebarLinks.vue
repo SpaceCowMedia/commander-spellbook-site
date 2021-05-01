@@ -9,6 +9,7 @@
     <div class="mt-1">
       <CopyComboLinkButton :combo-link="comboLink" />
       <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
+      <EdhrecLink v-if="edhrecLink" :link="edhrecLink" />
       <nuxt-link
         id="report-error-button"
         class="button w-full"
@@ -24,12 +25,14 @@ import Vue, { PropType } from "vue";
 import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
+import EdhrecLink from "@/components/combo/EdhrecLink.vue";
 
 export default Vue.extend({
   components: {
     CopyComboLinkButton,
     SimiliarCombosButton,
     BuyComboButtons,
+    EdhrecLink,
   },
   props: {
     cards: {
@@ -39,6 +42,10 @@ export default Vue.extend({
       },
     },
     comboLink: {
+      type: String,
+      default: "",
+    },
+    edhrecLink: {
       type: String,
       default: "",
     },

@@ -2,8 +2,6 @@ import getData from "../shared/get";
 import log from "../shared/log";
 import normalizeCardName from "../../lib/normalize-card-name";
 
-log("Looking up price data from EDHRec");
-
 type Price = {
   price: number | string;
   url: string;
@@ -29,6 +27,8 @@ type PriceData = Record<
 >;
 
 export default async function getEDHRecPrices(): Promise<PriceData> {
+  log("Looking up price data from EDHRec");
+
   const rawData = (await getData(
     "https://edhrec.com/api/prices/"
   )) as RawEDHRecResponse;

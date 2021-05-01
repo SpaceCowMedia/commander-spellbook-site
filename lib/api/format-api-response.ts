@@ -3,6 +3,8 @@ import SpellbookList from "./models/list";
 import ColorIdentity from "./models/color-identity";
 import type { CompressedApiResponse, FormattedApiResponse } from "./types";
 
+const edhrecComboData = require("../../external-data/edhrec-combos.json");
+
 export default function formatApiResponse(
   apiResponse: CompressedApiResponse[]
 ): FormattedApiResponse[] {
@@ -16,7 +18,7 @@ export default function formatApiResponse(
     const hasBannedCard = cards.isBanned();
     const hasSpoiledCard = cards.isPreview();
 
-    return {
+    const data = {
       commanderSpellbookId: id,
       permalink: `https://commanderspellbook.com/combo/${id}/`,
       cards,
@@ -26,6 +28,12 @@ export default function formatApiResponse(
       results,
       hasBannedCard,
       hasSpoiledCard,
-    };
+    } as FormattedApiResponse;
+
+    if (id in edhrecComboData) {
+      data.edhrecLink = `https://edhrec.com/combos/${edhrecComboData[id].slug}`;
+    }
+
+    return data;
   });
 }

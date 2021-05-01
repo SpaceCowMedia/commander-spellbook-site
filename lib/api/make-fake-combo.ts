@@ -13,6 +13,7 @@ type FakeComboOptions = {
   results?: string[];
   hasBannedCard?: boolean;
   hasSpoiledCard?: boolean;
+  edhrecLink?: boolean;
 };
 
 export default function makeFakeCombo(
@@ -20,7 +21,7 @@ export default function makeFakeCombo(
 ): FormattedApiResponse {
   const id = options.commanderSpellbookId || "123";
 
-  return {
+  const payload = {
     commanderSpellbookId: id,
     permalink: `https://commanderspellbook.com/combo/${id}/`,
     cards: CardGrouping.create(options.cards || ["card 1", "card 2"]),
@@ -34,5 +35,11 @@ export default function makeFakeCombo(
     ),
     hasBannedCard: options.hasBannedCard || false,
     hasSpoiledCard: options.hasSpoiledCard || false,
-  };
+  } as FormattedApiResponse;
+
+  if (options.edhrecLink !== false) {
+    payload.edhrecLink = `https://edhrec.com/combos/${payload.colorIdentity.toString()}/${id}`;
+  }
+
+  return payload;
 }

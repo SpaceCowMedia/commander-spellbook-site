@@ -10,6 +10,7 @@ describe("makeFakeCombo", () => {
 
     expect(combo.commanderSpellbookId).toBe("123");
     expect(combo.permalink).toBe("https://commanderspellbook.com/combo/123/");
+    expect(combo.edhrecLink).toBe("https://edhrec.com/combos/wub/123");
 
     expect(combo.cards).toBeInstanceOf(CardGrouping);
     expect(combo.cards.length).toBe(2);
@@ -106,5 +107,13 @@ describe("makeFakeCombo", () => {
     expect(combo.results[0]).toBe("custom result 1");
     expect(combo.results[1]).toBe("custom result 2");
     expect(combo.results[2]).toBe("custom result 3");
+  });
+
+  it("can opt out of an edhrecLink", () => {
+    const combo = makeFakeCombo({
+      edhrecLink: false,
+    });
+
+    expect(combo.edhrecLink).toBeFalsy();
   });
 });
