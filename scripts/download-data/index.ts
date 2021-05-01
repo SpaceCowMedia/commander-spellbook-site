@@ -2,8 +2,8 @@ import fs from "fs";
 import normalizeCardName from "../../lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
-import getEDHRecPrices from "./get-edhrec-prices";
-import getEDHRecComboData from "./get-edhrec-combo-data";
+import getEDHRECPrices from "./get-edhrec-prices";
+import getEDHRECComboData from "./get-edhrec-combo-data";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
 
@@ -27,8 +27,8 @@ type CardData = {
 Promise.all([
   getGoogleSheetsComboData(),
   getScryfallData(),
-  getEDHRecPrices(),
-  getEDHRecComboData(),
+  getEDHRECPrices(),
+  getEDHRECComboData(),
 ]).then((responses) => {
   const cardData: Record<string, CardData> = {};
   const [

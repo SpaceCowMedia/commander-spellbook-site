@@ -10,8 +10,8 @@ type ComboData = Record<
   }
 >;
 
-export default async function getEDHRecPrices(): Promise<ComboData> {
-  log("Looking up EDHRec combo data");
+export default async function getEDHRECPrices(): Promise<ComboData> {
+  log("Looking up EDHREC combo data");
 
   const rawData = (await getData(
     "https://edhrec.com/data/spellbook_counts.json"

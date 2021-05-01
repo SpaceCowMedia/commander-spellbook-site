@@ -107,7 +107,7 @@ export type SearchParameters = {
   errors: SearchError[];
 };
 
-export type EDHRecData = Record<
+export type EDHRECData = Record<
   string,
   { cardkingdom: { price: number }; tcgplayer: { price: number } }
 >;

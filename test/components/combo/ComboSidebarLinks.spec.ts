@@ -66,7 +66,7 @@ describe("ComboSidebarLinks", () => {
     expect(wrapper.findComponent(SimiliarCombosButtonStub).exists()).toBe(true);
   });
 
-  it("creates a 'View on EDHRec' button when there is an EDHRec link", async () => {
+  it("creates a 'View on EDHREC' button when there is an EDHREC link", async () => {
     const EdhrecLinkStub = { template: "<div><slot/></div>" };
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
