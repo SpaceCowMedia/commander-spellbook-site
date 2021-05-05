@@ -7,6 +7,8 @@
       type="button"
       @click="copyComboLink"
     >
+      <!-- fas fa-clone would be better, investigate why font awesome class varients arent working -->
+      <i class="fa fa-clone"></i>
       Copy Combo Link
     </button>
     <!-- accessibility compliance software may see this as an

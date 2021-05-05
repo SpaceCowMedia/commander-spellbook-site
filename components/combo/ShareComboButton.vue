@@ -38,7 +38,7 @@ export default Vue.extend({
 <style scoped>
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.5s ease;
+  transition: all 0.6s ease;
 }
 .slide-enter,
 .slide-leave-to {
