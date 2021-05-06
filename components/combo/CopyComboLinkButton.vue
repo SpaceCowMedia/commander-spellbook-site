@@ -8,6 +8,7 @@
       @click="copyComboLink"
     >
       <!-- fas fa-clone would be better, investigate why font awesome class varients arent working -->
+      <!-- this is a version 4 vs version 5 issue with font awesome, fix later -->
       <i class="fa fa-clone"></i>
       Copy Combo Link
     </button>

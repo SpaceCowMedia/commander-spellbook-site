@@ -1,5 +1,5 @@
 <template>
-  <div class="border-2 border-primary rounded-sm p-2" id="share-network-list">
+  <div class="border-2 border-primary rounded-sm p-2">
     <!-- FontAwesome icons -->
     <link
       rel="stylesheet"
@@ -13,8 +13,10 @@
       title="insert combo title here!"
       hashtags="EDH,CommanderSpellbook"
     >
-      <i class="fa fa-twitter"></i>
-      <span> Twitter </span>
+      <span>
+        <i class="fa fa-twitter"></i>
+        Twitter
+      </span>
     </ShareNetwork>
 
     <ShareNetwork
@@ -22,8 +24,10 @@
       :url="comboURL"
       title="Commander Spellbook Combo #__"
     >
-      <i class="fa fa-reddit-alien"></i>
-      <span>Reddit</span>
+      <span>
+        <i class="fa fa-reddit-alien"></i>
+        Reddit
+      </span>
     </ShareNetwork>
 
     <ShareNetwork
@@ -34,8 +38,10 @@
       quote="dolor sit amet"
       hashtags="CommanderSpellbook"
     >
-      <i class="fa fa-facebook-square"></i>
-      <span>Facebook</span>
+      <span>
+        <i class="fa fa-facebook-square"></i>
+        Facebook
+      </span>
     </ShareNetwork>
 
     <CopyComboLinkButton :combo-link="comboLink" />
@@ -71,15 +77,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-#share-netowrk-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 1000px;
-  margin: auto;
-}
-
 a[class^="share-network-"] {
   /* This is what I stole from the VSS docs as a reference point 
   flex:none; 
@@ -97,7 +94,6 @@ a[class^="share-network-"] {
   @apply m-4 inline-block py-2 px-3 bg-transparent text-link border-2 border-primary rounded-sm no-underline;
 
   display: flex;
-  overflow: hidden;
 }
 
 a[class^="share-network-"]:hover {
