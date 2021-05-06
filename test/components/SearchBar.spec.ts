@@ -71,13 +71,37 @@ describe("SearchBar", () => {
     expect(links.at(0).props("to")).toBe("/");
     expect(links.at(1).props("to")).toBe("/advanced-search/");
     expect(links.at(2).props("to")).toBe("/syntax-guide/");
-    expect(links.at(3).props("to")).toBe("/random/");
+    expect(links.at(3).props("to")).toEqual({ path: "/random/" });
 
     await wrapper.setProps({
       onHomePage: true,
     });
 
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
+  });
+
+  it("applies q query if applicable to random button", async () => {
+    const NuxtLinkStub = {
+      props: ["to"],
+      template: "<div></div>",
+    };
+    // @ts-ignore
+    wrapperOptions.stubs.NuxtLink = NuxtLinkStub;
+    const wrapper = mount(SearchBar, wrapperOptions);
+
+    const links = wrapper.findAllComponents(NuxtLinkStub);
+    const randomButton = links.at(3);
+
+    expect(randomButton.props("to")).toEqual({ path: "/random/" });
+
+    await wrapper.setData({
+      query: "search",
+    });
+
+    expect(randomButton.props("to")).toEqual({
+      path: "/random/",
+      query: { q: "search" },
+    });
   });
 
   it("toggles link menu when menu button is clicked", async () => {

@@ -57,7 +57,7 @@
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
-        <nuxt-link to="/random/" class="hidden md:flex menu-link">
+        <nuxt-link :to="randomLink" class="hidden md:flex menu-link">
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </nuxt-link>
@@ -88,6 +88,13 @@
 import Vue from "vue";
 import getAllCombos from "@/lib/api/get-all-combos";
 
+type NuxtLinkTo = {
+  path: string;
+  query?: {
+    q?: string | (string | null)[];
+  };
+};
+
 export default Vue.extend({
   props: {
     onHomePage: {
@@ -111,6 +118,15 @@ export default Vue.extend({
         return "text-2xl text-center";
       }
       return "pl-8 -ml-6";
+    },
+    randomLink(): NuxtLinkTo {
+      const link: NuxtLinkTo = { path: "/random/" };
+
+      if (this.query) {
+        link.query = { q: this.query };
+      }
+
+      return link;
     },
   },
   watch: {

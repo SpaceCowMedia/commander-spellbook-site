@@ -5,12 +5,12 @@ import makeFakeCombo from "@/lib/api/make-fake-combo";
 import random from "@/lib/api/random";
 import { mocked } from "ts-jest/utils";
 
-import type { Router } from "../types";
+import type { Route, Router } from "../types";
 
 jest.mock("@/lib/api/random");
 
 describe("RandomPage", () => {
-  let $router: Router;
+  let $route: Route, $router: Router;
 
   beforeEach(() => {
     mocked(random).mockResolvedValue(
@@ -18,6 +18,9 @@ describe("RandomPage", () => {
         commanderSpellbookId: "123",
       })
     );
+    $route = {
+      query: {},
+    };
     $router = {
       push: jest.fn(),
       replace: jest.fn(),
@@ -27,6 +30,7 @@ describe("RandomPage", () => {
   it("redirects to a random combo", async () => {
     shallowMount(RandomPage, {
       mocks: {
+        $route,
         $router,
       },
       stubs: {
@@ -40,6 +44,31 @@ describe("RandomPage", () => {
     expect($router.replace).toBeCalledTimes(1);
     expect($router.replace).toBeCalledWith({
       path: `/combo/123/`,
+    });
+  });
+
+  it("redirects to a random combo with query", async () => {
+    $route.query.q = "search";
+    shallowMount(RandomPage, {
+      mocks: {
+        $route,
+        $router,
+      },
+      stubs: {
+        SplashPage: true,
+      },
+    });
+
+    await flushPromises();
+
+    expect(random).toBeCalledTimes(1);
+    expect(random).toBeCalledWith("search");
+    expect($router.replace).toBeCalledTimes(1);
+    expect($router.replace).toBeCalledWith({
+      path: `/combo/123/`,
+      query: {
+        q: "search",
+      },
     });
   });
 });
