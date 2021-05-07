@@ -47,6 +47,27 @@ describe("RandomPage", () => {
     });
   });
 
+  it("redirects to a not found page when random throws an error combo", async () => {
+    mocked(random).mockRejectedValue("no combo");
+    shallowMount(RandomPage, {
+      mocks: {
+        $route,
+        $router,
+      },
+      stubs: {
+        SplashPage: true,
+      },
+    });
+
+    await flushPromises();
+
+    expect(random).toBeCalledTimes(1);
+    expect($router.replace).toBeCalledTimes(1);
+    expect($router.replace).toBeCalledWith({
+      path: "/combo-not-found",
+    });
+  });
+
   it("redirects to a random combo with query", async () => {
     $route.query.q = "search";
     shallowMount(RandomPage, {

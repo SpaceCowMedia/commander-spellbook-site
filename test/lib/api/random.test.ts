@@ -49,4 +49,22 @@ describe("random", () => {
     expect(Math.floor).toBeCalledTimes(1);
     expect(Math.random).toBeCalledTimes(1);
   });
+
+  it("throws an error when no combos can be found", async () => {
+    expect.assertions(1);
+
+    mocked(search).mockResolvedValue({
+      errors: [],
+      message: "message",
+      sort: "",
+      order: "",
+      combos: [],
+    });
+
+    try {
+      await random("query");
+    } catch (err) {
+      expect(err.message).toBe("No combos found for query: query");
+    }
+  });
 });
