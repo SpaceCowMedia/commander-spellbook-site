@@ -11,8 +11,10 @@ describe("SearchBar", () => {
   let wrapperOptions: MountOptions;
   let $route: Route;
   let $router: Router;
+  let $emit: jest.SpyInstance;
 
   beforeEach(() => {
+    $emit = jest.fn();
     $route = {
       path: "",
       query: {},
@@ -25,6 +27,7 @@ describe("SearchBar", () => {
         NuxtLink: true,
       },
       mocks: {
+        $emit,
         $route,
         $router,
         $gtag: {
@@ -34,14 +37,13 @@ describe("SearchBar", () => {
     };
   });
 
-  it("sets query from the query param if available", () => {
+  it("sets query from the query param when mounting", () => {
     $route.query.q = "card:sydri";
     // @ts-ignore
     jest.spyOn(SearchBar.options.methods, "setQueryFromUrl");
     const wrapper = mount(SearchBar, wrapperOptions);
     const vm = wrapper.vm as VueComponent;
 
-    expect(vm.query).toBe("card:sydri");
     // @ts-ignore
     expect(SearchBar.options.methods.setQueryFromUrl).toBeCalledTimes(1);
   });
@@ -94,8 +96,8 @@ describe("SearchBar", () => {
 
     expect(randomButton.props("to")).toEqual({ path: "/random/" });
 
-    await wrapper.setData({
-      query: "search",
+    await wrapper.setProps({
+      value: "search",
     });
 
     expect(randomButton.props("to")).toEqual({
@@ -146,7 +148,7 @@ describe("SearchBar", () => {
     it("noops when the query is made up of blank spaces", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
-      await wrapper.setData({ query: "      " });
+      await wrapper.setProps({ value: "      " });
 
       (wrapper.vm as VueComponent).onSubmit();
 
@@ -156,7 +158,7 @@ describe("SearchBar", () => {
     it("redirects to /search with query", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
 
-      await wrapper.setData({ query: "card:Rashmi" });
+      await wrapper.setProps({ value: "card:Rashmi" });
 
       (wrapper.vm as VueComponent).onSubmit();
 
@@ -174,7 +176,7 @@ describe("SearchBar", () => {
       const eventSpy = wrapperOptions.mocks.$gtag.event;
       const wrapper = mount(SearchBar, wrapperOptions);
 
-      await wrapper.setData({ query: "card:Rashmi" });
+      await wrapper.setProps({ value: "card:Rashmi" });
 
       (wrapper.vm as VueComponent).onSubmit();
 
@@ -186,48 +188,56 @@ describe("SearchBar", () => {
   });
 
   describe("setQueryFromUrl", () => {
-    it("sets query to empty string when there is no query in url", () => {
+    it("updates query to empty string when there is no query in url", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      wrapper.setData({
-        query: "foo",
+      await wrapper.setProps({
+        value: "foo",
       });
 
+      expect(vm.query).toBe("foo");
+
+      $emit.mockReset();
       vm.setQueryFromUrl();
 
-      expect(vm.query).toBe("");
+      expect($emit).toBeCalledTimes(1);
+      expect($emit).toBeCalledWith("input", "");
     });
 
-    it("sets query to empty string when the query in the url is not a string", () => {
+    it("updates query to empty string when the query in the url is not a string", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
       // @ts-ignore
       $route.query.q = ["card:sydri"];
 
-      wrapper.setData({
-        query: "foo",
+      await wrapper.setProps({
+        value: "foo",
       });
 
+      $emit.mockReset();
       vm.setQueryFromUrl();
 
-      expect(vm.query).toBe("");
+      expect($emit).toBeCalledTimes(1);
+      expect($emit).toBeCalledWith("input", "");
     });
 
-    it("sets query to query string when the query in the url is a string", () => {
+    it("updates query to query string when the query in the url is a string", async () => {
       const wrapper = mount(SearchBar, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
       $route.query.q = "some-query";
 
-      wrapper.setData({
-        query: "foo",
+      await wrapper.setProps({
+        value: "foo",
       });
 
+      $emit.mockReset();
       vm.setQueryFromUrl();
 
-      expect(vm.query).toBe("some-query");
+      expect($emit).toBeCalledTimes(1);
+      expect($emit).toBeCalledWith("input", "some-query");
     });
   });
 

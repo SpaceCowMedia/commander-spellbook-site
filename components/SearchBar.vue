@@ -97,6 +97,10 @@ type NuxtLinkTo = {
 
 export default Vue.extend({
   props: {
+    value: {
+      type: String,
+      default: "",
+    },
     onHomePage: {
       type: Boolean,
       default: false,
@@ -105,7 +109,6 @@ export default Vue.extend({
   data() {
     return {
       showMobileMenu: false,
-      query: "",
       numberOfCombos: "thousands of",
     };
   },
@@ -113,6 +116,14 @@ export default Vue.extend({
     await this.lookupNumberOfCombos();
   },
   computed: {
+    query: {
+      get(): string {
+        return this.value;
+      },
+      set(value: string): void {
+        this.$emit("input", value);
+      },
+    },
     inputClasses(): string {
       if (this.onHomePage) {
         return "text-2xl text-center";
