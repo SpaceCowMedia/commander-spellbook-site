@@ -41,8 +41,7 @@ describe("SearchBar", () => {
     $route.query.q = "card:sydri";
     // @ts-ignore
     jest.spyOn(SearchBar.options.methods, "setQueryFromUrl");
-    const wrapper = mount(SearchBar, wrapperOptions);
-    const vm = wrapper.vm as VueComponent;
+    mount(SearchBar, wrapperOptions);
 
     // @ts-ignore
     expect(SearchBar.options.methods.setQueryFromUrl).toBeCalledTimes(1);
