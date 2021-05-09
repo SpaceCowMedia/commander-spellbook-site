@@ -19,11 +19,26 @@ export default Vue.extend({
   layout: "splash",
 
   async mounted(): Promise<void> {
-    const randomCombo = await random();
+    let query = this.$route.query.q;
+    if (typeof query !== "string") {
+      query = "";
+    }
+    const router = this.$router;
 
-    this.$router.replace({
-      path: `/combo/${randomCombo.commanderSpellbookId}/`,
-    });
+    try {
+      const randomCombo = await random(query);
+      const params: Parameters<typeof router.replace>[0] = {
+        path: `/combo/${randomCombo.commanderSpellbookId}/`,
+      };
+
+      if (query) {
+        params.query = { q: query };
+      }
+
+      router.replace(params);
+    } catch (err) {
+      router.replace({ path: "/combo-not-found" });
+    }
   },
 });
 </script>

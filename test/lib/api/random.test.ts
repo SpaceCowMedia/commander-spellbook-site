@@ -1,24 +1,42 @@
 import random from "@/lib/api/random";
-import lookup from "@/lib/api/spellbook-api";
+import search from "@/lib/api/search";
+import getAllCombos from "@/lib/api/get-all-combos";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
 import { mocked } from "ts-jest/utils";
-jest.mock("@/lib/api/spellbook-api");
+jest.mock("@/lib/api/search");
+jest.mock("@/lib/api/get-all-combos");
 
 describe("random", () => {
   let combos: FormattedApiResponse[];
 
   beforeEach(() => {
     combos = [makeFakeCombo(), makeFakeCombo()];
-    mocked(lookup).mockResolvedValue(combos);
+    mocked(search).mockResolvedValue({
+      errors: [],
+      message: "message",
+      sort: "",
+      order: "",
+      combos,
+    });
+    mocked(getAllCombos).mockResolvedValue(combos);
   });
 
-  it("looks up combos from api", async () => {
+  it("looks up all combos", async () => {
     await random();
 
-    expect(lookup).toBeCalledTimes(1);
+    expect(search).toBeCalledTimes(0);
+    expect(getAllCombos).toBeCalledTimes(1);
+  });
+
+  it("looks up combos from search with a query", async () => {
+    await random("query");
+
+    expect(getAllCombos).toBeCalledTimes(0);
+    expect(search).toBeCalledTimes(1);
+    expect(search).toBeCalledWith("query");
   });
 
   it("returns a random combo", async () => {
@@ -30,5 +48,23 @@ describe("random", () => {
     expect(combos).toContain(combo);
     expect(Math.floor).toBeCalledTimes(1);
     expect(Math.random).toBeCalledTimes(1);
+  });
+
+  it("throws an error when no combos can be found", async () => {
+    expect.assertions(1);
+
+    mocked(search).mockResolvedValue({
+      errors: [],
+      message: "message",
+      sort: "",
+      order: "",
+      combos: [],
+    });
+
+    try {
+      await random("query");
+    } catch (err) {
+      expect(err.message).toBe("No combos found for query: query");
+    }
   });
 });
