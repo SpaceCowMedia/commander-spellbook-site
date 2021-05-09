@@ -20,9 +20,9 @@
         <nuxt-link to="/syntax-guide/" class="button md:m-1">
           Syntax Guide
         </nuxt-link>
-        <nuxt-link to="/random/" class="random-button button md:m-1">
+        <RandomButton :query="query" class="random-button button md:m-1">
           Random Combo
-        </nuxt-link>
+        </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
           Strixhaven & C21 Combos
         </nuxt-link>
@@ -41,6 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import RandomButton from "@/components/RandomButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
 import Logo from "@/components/Logo.vue";
@@ -48,6 +49,7 @@ import Logo from "@/components/Logo.vue";
 export default Vue.extend({
   components: {
     ExternalLink,
+    RandomButton,
     SearchBar,
     Logo,
   },

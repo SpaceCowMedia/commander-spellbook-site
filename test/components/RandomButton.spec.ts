@@ -31,4 +31,19 @@ describe("RandomButton", () => {
       },
     });
   });
+
+  it("does not includes query in link when it is just blank space", () => {
+    const wrapper = mount(RandomButton, {
+      stubs: {
+        NuxtLink: RouterLinkStub,
+      },
+      propsData: {
+        query: "       ",
+      },
+    });
+
+    expect(wrapper.findComponent(RouterLinkStub).props("to")).toEqual({
+      path: "/random/",
+    });
+  });
 });

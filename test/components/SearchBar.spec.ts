@@ -64,8 +64,14 @@ describe("SearchBar", () => {
       props: ["to"],
       template: "<div></div>",
     };
+    const RandomButtonStub = {
+      props: ["query"],
+      template: "<div><slot /></div>",
+    };
     // @ts-ignore
     wrapperOptions.stubs.NuxtLink = NuxtLinkStub;
+    // @ts-ignore
+    wrapperOptions.stubs.RandomButton = RandomButtonStub;
     const wrapper = mount(SearchBar, wrapperOptions);
 
     const links = wrapper.findAllComponents(NuxtLinkStub);
@@ -73,37 +79,33 @@ describe("SearchBar", () => {
     expect(links.at(0).props("to")).toBe("/");
     expect(links.at(1).props("to")).toBe("/advanced-search/");
     expect(links.at(2).props("to")).toBe("/syntax-guide/");
-    expect(links.at(3).props("to")).toEqual({ path: "/random/" });
+    expect(wrapper.findComponent(RandomButtonStub)).toBeTruthy();
 
     await wrapper.setProps({
       onHomePage: true,
     });
 
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
+    expect(wrapper.findComponent(RandomButtonStub).exists()).toBe(false);
   });
 
   it("applies q query if applicable to random button", async () => {
-    const NuxtLinkStub = {
-      props: ["to"],
-      template: "<div></div>",
+    const RandomButtonStub = {
+      props: ["query"],
+      template: "<div><slot /></div>",
     };
     // @ts-ignore
-    wrapperOptions.stubs.NuxtLink = NuxtLinkStub;
+    wrapperOptions.stubs.RandomButton = RandomButtonStub;
     const wrapper = mount(SearchBar, wrapperOptions);
+    const randomButton = wrapper.findComponent(RandomButtonStub);
 
-    const links = wrapper.findAllComponents(NuxtLinkStub);
-    const randomButton = links.at(3);
-
-    expect(randomButton.props("to")).toEqual({ path: "/random/" });
+    expect(randomButton.props("query")).toEqual("");
 
     await wrapper.setProps({
       value: "search",
     });
 
-    expect(randomButton.props("to")).toEqual({
-      path: "/random/",
-      query: { q: "search" },
-    });
+    expect(randomButton.props("query")).toEqual("search");
   });
 
   it("toggles link menu when menu button is clicked", async () => {

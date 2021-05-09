@@ -57,10 +57,10 @@
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
-        <nuxt-link :to="randomLink" class="hidden md:flex menu-link">
+        <RandomButton :query="query" class="hidden md:flex menu-link">
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
-        </nuxt-link>
+        </RandomButton>
       </div>
     </form>
     <div
@@ -76,26 +76,23 @@
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax
       </nuxt-link>
-      <nuxt-link to="/random/" class="mobile-menu-button">
+      <RandomButton :query="query" class="mobile-menu-button">
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
-      </nuxt-link>
+      </RandomButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import RandomButton from "@/components/RandomButton.vue";
 import getAllCombos from "@/lib/api/get-all-combos";
 
-type NuxtLinkTo = {
-  path: string;
-  query?: {
-    q?: string | (string | null)[];
-  };
-};
-
 export default Vue.extend({
+  components: {
+    RandomButton,
+  },
   props: {
     value: {
       type: String,
@@ -129,15 +126,6 @@ export default Vue.extend({
         return "text-2xl text-center";
       }
       return "pl-8 -ml-6";
-    },
-    randomLink(): NuxtLinkTo {
-      const link: NuxtLinkTo = { path: "/random/" };
-
-      if (this.query) {
-        link.query = { q: this.query };
-      }
-
-      return link;
     },
   },
   watch: {
