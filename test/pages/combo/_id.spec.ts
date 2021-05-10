@@ -55,6 +55,7 @@ describe("ComboPage", () => {
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
   });
 
@@ -113,6 +114,7 @@ describe("ComboPage", () => {
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(findById).mockResolvedValue(
       makeFakeCombo({
@@ -433,7 +435,7 @@ describe("ComboPage", () => {
     ]);
   });
 
-  it("looks up prices for combo", async () => {
+  it("adds edhrec link", async () => {
     mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
@@ -446,6 +448,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
@@ -459,6 +462,69 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
+    });
+
+    const fakeCombo = makeFakeCombo({
+      commanderSpellbookId: "13",
+      prerequisites: ["1", "2", "3"],
+      steps: ["1", "2", "3"],
+      results: ["1", "2", "3"],
+      colorIdentity: "wbr",
+      cards: ["card 1", "card 2"],
+    });
+    mocked(findById).mockResolvedValue(fakeCombo);
+    const ComboSidebarLinksStub = {
+      template: "<div></div>",
+      props: ["edhrecLink"],
+    };
+    // @ts-ignore
+    options.stubs.ComboSidebarLinks = ComboSidebarLinksStub;
+
+    const wrapper = shallowMount(ComboPage, options);
+    const vm = wrapper.vm as VueComponent;
+
+    const data = await vm.$options.asyncData({
+      params: {
+        id: "13",
+      },
+    });
+
+    await wrapper.setData(data);
+
+    expect(
+      wrapper.findComponent(ComboSidebarLinksStub).props("edhrecLink")
+    ).toContain("https://edhrec.com/combos/");
+  });
+
+  it("looks up prices for combo", async () => {
+    mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+      edhrecLink: "https://edhrec.com/card",
+    });
+    mocked(getExternalCardData).mockReturnValueOnce({
+      isBanned: false,
+      isPreview: false,
+      isFeatured: false,
+      images: {
+        artCrop: "https://example.com/artcrop.png",
+        oracle: "https://example.com/oracle.png",
+      },
+      prices: {
+        tcgplayer: 123.45,
+        cardkingdom: 67.89,
+      },
+      edhrecLink: "https://edhrec.com/card",
     });
 
     const fakeCombo = makeFakeCombo({
@@ -509,6 +575,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 0,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
     mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
@@ -522,6 +589,7 @@ describe("ComboPage", () => {
         tcgplayer: 123.45,
         cardkingdom: 67.89,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
 
     const fakeCombo = makeFakeCombo({

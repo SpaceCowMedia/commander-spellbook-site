@@ -1,6 +1,6 @@
 import normalizeCardName from "@/lib/normalize-card-name";
 
-const cardData = require("../external-card-data/cards.json");
+const cardData = require("../external-data/cards.json");
 
 const CARD_IMAGE_NAMED_BASE_URL =
   "https://api.scryfall.com/cards/named?format=image&exact=";
@@ -17,6 +17,7 @@ export type ExternalCardData = {
   };
   isBanned: boolean;
   isPreview: boolean;
+  edhrecLink: string;
 };
 
 export default function getExternalCardData(
@@ -42,6 +43,7 @@ export default function getExternalCardData(
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "",
     };
   }
 
@@ -57,5 +59,6 @@ export default function getExternalCardData(
       tcgplayer: externalCardData.p.t,
       cardkingdom: externalCardData.p.c,
     },
+    edhrecLink: externalCardData.e,
   };
 }

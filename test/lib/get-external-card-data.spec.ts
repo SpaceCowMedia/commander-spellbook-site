@@ -14,6 +14,7 @@ describe("getExternalCardData", () => {
         tcgplayer: expect.any(Number),
         cardkingdom: expect.any(Number),
       },
+      edhrecLink: expect.stringContaining("edhrec.com"),
     });
   });
 
@@ -32,6 +33,7 @@ describe("getExternalCardData", () => {
         tcgplayer: 0,
         cardkingdom: 0,
       },
+      edhrecLink: "",
     });
   });
 });

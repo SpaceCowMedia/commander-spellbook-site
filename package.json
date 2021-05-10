@@ -9,7 +9,6 @@
     "prebuild": "prettier --write .",
     "build": "nuxt build",
     "start": "nuxt start",
-    "download-external-card-data": "npx ts-node scripts/download-external-card-data",
     "download-data": "npx ts-node scripts/download-data",
     "pregenerate": "npm run download-data",
     "generate": "nuxt generate --fail-on-error",

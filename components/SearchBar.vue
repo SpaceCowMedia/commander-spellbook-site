@@ -57,10 +57,10 @@
           <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
           Syntax
         </nuxt-link>
-        <nuxt-link to="/random/" class="hidden md:flex menu-link">
+        <RandomButton :query="query" class="hidden md:flex menu-link">
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
-        </nuxt-link>
+        </RandomButton>
       </div>
     </form>
     <div
@@ -76,20 +76,28 @@
         <div class="syntax-guide-icon link-icon" aria-hidden="true"></div>
         Syntax
       </nuxt-link>
-      <nuxt-link to="/random/" class="mobile-menu-button">
+      <RandomButton :query="query" class="mobile-menu-button">
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
-      </nuxt-link>
+      </RandomButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import RandomButton from "@/components/RandomButton.vue";
 import getAllCombos from "@/lib/api/get-all-combos";
 
 export default Vue.extend({
+  components: {
+    RandomButton,
+  },
   props: {
+    value: {
+      type: String,
+      default: "",
+    },
     onHomePage: {
       type: Boolean,
       default: false,
@@ -98,7 +106,6 @@ export default Vue.extend({
   data() {
     return {
       showMobileMenu: false,
-      query: "",
       numberOfCombos: "thousands of",
     };
   },
@@ -106,6 +113,14 @@ export default Vue.extend({
     await this.lookupNumberOfCombos();
   },
   computed: {
+    query: {
+      get(): string {
+        return this.value;
+      },
+      set(value: string): void {
+        this.$emit("input", value);
+      },
+    },
     inputClasses(): string {
       if (this.onHomePage) {
         return "text-2xl text-center";

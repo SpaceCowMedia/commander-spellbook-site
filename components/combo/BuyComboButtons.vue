@@ -9,7 +9,7 @@
         :disabled="tcgPlayerOutOfStock"
         @click="onClick('TCGplayer')"
       >
-        <!-- SVG from EDHRec.com -->
+        <!-- SVG from EDHREC.com -->
         <svg
           aria-hidden="true"
           class=""
@@ -37,7 +37,7 @@
         :disabled="cardkingdomOutOfStock"
         @click="onClick('Card Kingdom')"
       >
-        <!-- SVG from EDHRec.com -->
+        <!-- SVG from EDHREC.com -->
         <svg
           aria-hidden="true"
           height="12"

@@ -7,7 +7,11 @@
         The Search Engine for EDH Combos
       </h2>
 
-      <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
+      <SearchBar
+        v-model="query"
+        :on-home-page="true"
+        class="bg-white mt-4 md:w-2/3 h-20"
+      />
 
       <div class="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
         <nuxt-link to="/advanced-search/" class="button md:m-1">
@@ -16,9 +20,9 @@
         <nuxt-link to="/syntax-guide/" class="button md:m-1">
           Syntax Guide
         </nuxt-link>
-        <nuxt-link to="/random/" class="random-button button md:m-1">
+        <RandomButton :query="query" class="random-button button md:m-1">
           Random Combo
-        </nuxt-link>
+        </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
           Strixhaven & C21 Combos
         </nuxt-link>
@@ -37,6 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import RandomButton from "@/components/RandomButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
 import Logo from "@/components/Logo.vue";
@@ -44,10 +49,14 @@ import Logo from "@/components/Logo.vue";
 export default Vue.extend({
   components: {
     ExternalLink,
+    RandomButton,
     SearchBar,
     Logo,
   },
   layout: "landing",
+  data() {
+    return { query: "" };
+  },
   mounted() {
     const query = this.$route.query.q;
     const { status, id } = this.$route.query;

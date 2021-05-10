@@ -20,6 +20,7 @@ describe("CardGrouping", () => {
         tcgplayer: 123,
         cardkingdom: 456,
       },
+      edhrecLink: "https://edhrec.com/card",
     });
   });
 

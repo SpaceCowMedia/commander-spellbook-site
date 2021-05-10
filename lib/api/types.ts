@@ -24,6 +24,7 @@ export type CompressedApiResponse = {
   r: string; // Results
   b?: number; // Banned
   o?: number; // spOiled
+  e?: string; // EDHREC link
 };
 
 export type FormattedApiResponse = {
@@ -36,6 +37,7 @@ export type FormattedApiResponse = {
   results: SpellbookList;
   hasBannedCard: boolean;
   hasSpoiledCard: boolean;
+  edhrecLink?: string;
 };
 
 export type ColorIdentityColors = "w" | "u" | "b" | "r" | "g" | "c";
@@ -105,7 +107,7 @@ export type SearchParameters = {
   errors: SearchError[];
 };
 
-export type EDHRecData = Record<
+export type EDHRECData = Record<
   string,
   { cardkingdom: { price: number }; tcgplayer: { price: number } }
 >;

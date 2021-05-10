@@ -1,8 +1,13 @@
 import { mount } from "@vue/test-utils";
 import CardLink from "@/components/CardLink.vue";
+import Card from "@/lib/api/models/card";
 
 describe("CardLink", () => {
-  it("creates a scryfall link from name", () => {
+  it("creates an edhrec link from name", () => {
+    jest
+      .spyOn(Card.prototype, "getEdhrecLink")
+      .mockReturnValue("https://edhrec.com/card-name");
+
     const wrapper = mount(CardLink, {
       propsData: {
         name: "Card Name",
@@ -10,11 +15,27 @@ describe("CardLink", () => {
     });
 
     expect(wrapper.find("a").attributes("href")).toBe(
+      "https://edhrec.com/card-name"
+    );
+  });
+
+  it("falls back to scryfall link when edhrec link is not avialable", () => {
+    jest.spyOn(Card.prototype, "getEdhrecLink").mockReturnValue("");
+
+    const wrapper = mount(CardLink, {
+      propsData: {
+        name: "Card Name",
+      },
+    });
+
+    expect(wrapper.find("a").attributes("href")).toContain(
       "https://scryfall.com/search?q=%21%22Card%20Name%22"
     );
   });
 
-  it("uses single quotes if card name contains double qotes", () => {
+  it("uses single quotes for scryhfall link if card name contains double qotes", () => {
+    jest.spyOn(Card.prototype, "getEdhrecLink").mockReturnValue("");
+
     const wrapper = mount(CardLink, {
       propsData: {
         name: 'Card Name with "quotes"',

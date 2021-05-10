@@ -72,13 +72,13 @@
           <li>
             For 2 allied colors, the one that comes first in WUBRG order is
             written first, with G being considered to come before W. (If you do
-            not feel like figuring it out yourself, check how EDHRec has the
+            not feel like figuring it out yourself, check how EDHREC has the
             symbols listed under "Color ID")
           </li>
           <li>
             For 2 enemy colors, the one that would only have to advance 2
             positions forward in WUBRG order (rather than 3) comes first (If you
-            do not feel like figuring it out yourself, check how EDHRec has the
+            do not feel like figuring it out yourself, check how EDHREC has the
             symbols listed under "Color ID").
           </li>
           <li>
@@ -87,12 +87,12 @@
             middle, and the two colors on the left and right are placed based on
             where they are positioned in the color pie relative to the primary
             color. (If you do not feel like figuring it out yourself, check how
-            EDHRec has the symbols listed under "Color ID")
+            EDHREC has the symbols listed under "Color ID")
           </li>
           <li>
             For 4 colors, they are listed in WUBRG order starting with the one
             after the missing color. (If you do not feel like figuring it out
-            yourself, check how EDHRec has the symbols listed under "Color ID")
+            yourself, check how EDHREC has the symbols listed under "Color ID")
           </li>
         </ul>
       </li>

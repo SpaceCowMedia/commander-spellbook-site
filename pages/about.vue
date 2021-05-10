@@ -30,7 +30,7 @@
       </li>
       <li>
         <ExternalLink
-          to="https://docs.google.com/spreadsheets/d/1JJo8MzkpuhfvsaKVFVlOoNymscCt-Aw-1sob2IhpwXY/"
+          to="https://docs.google.com/spreadsheets/d/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/"
           >Combo Database Backend on Google Sheets</ExternalLink
         >
       </li>

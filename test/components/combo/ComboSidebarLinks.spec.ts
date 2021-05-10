@@ -66,6 +66,27 @@ describe("ComboSidebarLinks", () => {
     expect(wrapper.findComponent(SimiliarCombosButtonStub).exists()).toBe(true);
   });
 
+  it("creates a 'View on EDHREC' button when there is an EDHREC link", async () => {
+    const EdhrecLinkStub = { template: "<div><slot/></div>" };
+    const wrapper = shallowMount(ComboSidebarLinks, {
+      stubs: {
+        EdhrecLink: EdhrecLinkStub,
+        NuxtLink: true,
+      },
+      propsData: {
+        comboLink: "https://example.com/combo/3",
+        comboId: "fake-id",
+        cards: ["card 1", "card 2"],
+      },
+    });
+
+    expect(wrapper.findComponent(EdhrecLinkStub).exists()).toBe(false);
+
+    await wrapper.setProps({ edhrecLink: "https://edhrec.com/combos/w/123" });
+
+    expect(wrapper.findComponent(EdhrecLinkStub).exists()).toBe(true);
+  });
+
   it("creates a 'Report Error' button", () => {
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
