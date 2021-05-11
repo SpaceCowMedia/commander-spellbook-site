@@ -7,7 +7,6 @@
       class="pb-1 border-b border-light"
     />
     <div class="mt-1">
-      <ShareComboButton />
       <SimiliarCombosButton :cards="cards" :combo-id="comboId" />
       <EdhrecLink v-if="edhrecLink" :link="edhrecLink" />
       <nuxt-link
@@ -16,6 +15,7 @@
         :to="'/report-error?comboId=' + comboId"
         >Report an Error with this Combo</nuxt-link
       >
+      <ShareComboButtons />
     </div>
   </div>
 </template>
@@ -24,14 +24,14 @@
 import Vue, { PropType } from "vue";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import BuyComboButtons from "@/components/combo/BuyComboButtons.vue";
-import ShareComboButton from "@/components/combo/ShareComboButton.vue";
+import ShareComboButtons from "@/components/combo/ShareComboButtons.vue";
 import EdhrecLink from "@/components/combo/EdhrecLink.vue";
 
 export default Vue.extend({
   components: {
     SimiliarCombosButton,
     BuyComboButtons,
-    ShareComboButton,
+    ShareComboButtons,
     EdhrecLink,
   },
   props: {
