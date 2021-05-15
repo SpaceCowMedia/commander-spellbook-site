@@ -34,35 +34,14 @@ describe("CardTooltip", () => {
     });
   });
 
-  it("is hidden by default", () => {
+  it("adds card image as the tooltip", () => {
     const wrapper = shallowMount(CardTooltip, options);
 
-    expect(wrapper.find(".card-tooltip").exists()).toBe(false);
-  });
-
-  it("reveals and hides tooltip on mousemove and mouseout", async () => {
-    const wrapper = shallowMount(CardTooltip, options);
-
-    await wrapper.find("span").trigger("mousemove");
     expect(wrapper.find(".card-tooltip").exists()).toBe(true);
     const img = wrapper.find("img");
     expect(img.attributes("alt")).toBe("Sydri");
     expect(img.attributes("src")).toBe(
       "https://c1.scryfall.com/file/oracle.jpg"
     );
-
-    await wrapper.find("span").trigger("mouseout");
-    expect(wrapper.find(".card-tooltip").exists()).toBe(false);
-  });
-
-  it("sets the tooltip position based on the mousemove event", async () => {
-    const wrapper = shallowMount(CardTooltip, options);
-
-    await wrapper.find("span").trigger("mousemove", {
-      clientX: 23,
-      clientY: 12,
-    });
-    expect(wrapper.find(".card-tooltip").element.style.left).toBe("73px");
-    expect(wrapper.find(".card-tooltip").element.style.top).toBe("-18px");
   });
 });
