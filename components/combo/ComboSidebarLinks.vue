@@ -15,7 +15,7 @@
         :to="'/report-error?comboId=' + comboId"
         >Report an Error with this Combo</nuxt-link
       >
-      <ShareComboButtons />
+      <ShareComboButtons :combo-link="comboLink" />
     </div>
   </div>
 </template>
