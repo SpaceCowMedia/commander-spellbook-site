@@ -28,6 +28,7 @@
     "core-js": "^3.11.0",
     "nuxt": "^2.15.4",
     "scryfall-client": "^0.18.6",
+    "v-tooltip": "^2.1.3",
     "vue-gtag": "^1.11.0",
     "vue-social-sharing": "^3.0.7"
   },

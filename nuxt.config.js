@@ -125,6 +125,7 @@ export default {
       src: "./plugins/google-analytics.ts",
       mode: "client",
     },
+    "~/plugins/vue-tooltip.ts",
   ],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
