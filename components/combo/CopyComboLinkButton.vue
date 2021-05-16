@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <button
-      id="copy-combo-button"
-      ref="copyButton"
-      type="button"
-      @click="copyComboLink"
-    >
-      <slot />
-    </button>
+  <button
+    id="copy-combo-button"
+    ref="copyButton"
+    type="button"
+    @click="copyComboLink"
+  >
+    <slot />
     <!-- accessibility compliance software may see this as an
       issue since there is no label for it. But it's hidden
       from screenreaders and hidden on the page. It only needs
@@ -35,7 +33,7 @@
     >
       <div class="bg-dark p-4">Combo link copied to your clipboard!</div>
     </div>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
