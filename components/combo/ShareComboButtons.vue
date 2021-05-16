@@ -66,11 +66,9 @@ export default Vue.extend({
   },
   computed: {
     hashtags(): string {
-      // TODO what hashtags?
-      return "CommanderSpellbook,EDH,Combos";
+      return "commanderspellbook";
     },
     text(): string {
-      // TODO what text here?
       return "Check out this combo!";
     },
   },
