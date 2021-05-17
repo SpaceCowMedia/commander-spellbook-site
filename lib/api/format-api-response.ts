@@ -32,6 +32,7 @@ export default function formatApiResponse(
 
     if (id in edhrecComboData) {
       data.edhrecLink = `https://edhrec.com/combos/${edhrecComboData[id].slug}`;
+      data.numberOfEDHRECDecks = edhrecComboData[id].numberOfDecks;
     }
 
     return data;

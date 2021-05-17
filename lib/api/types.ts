@@ -38,6 +38,7 @@ export type FormattedApiResponse = {
   hasBannedCard: boolean;
   hasSpoiledCard: boolean;
   edhrecLink?: string;
+  numberOfEDHRECDecks?: number;
 };
 
 export type ColorIdentityColors = "w" | "u" | "b" | "r" | "g" | "c";
