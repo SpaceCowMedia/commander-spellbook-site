@@ -2,11 +2,11 @@ import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboSidebarLinks from "@/components/combo/ComboSidebarLinks.vue";
 
 describe("ComboSidebarLinks", () => {
-  it("creates a copy combo button", () => {
-    const CopyComboLinkButtonStub = { template: "<div></div>" };
+  it("creates a share this combo section", () => {
+    const ShareComboButtonsStub = { template: "<div></div>" };
     const wrapper = shallowMount(ComboSidebarLinks, {
       stubs: {
-        CopyComboLinkButton: CopyComboLinkButtonStub,
+        ShareComboButtons: ShareComboButtonsStub,
         NuxtLink: true,
       },
       propsData: {
@@ -14,7 +14,7 @@ describe("ComboSidebarLinks", () => {
       },
     });
 
-    expect(wrapper.findComponent(CopyComboLinkButtonStub).exists()).toBe(true);
+    expect(wrapper.findComponent(ShareComboButtonsStub).exists()).toBe(true);
   });
 
   it("creates buy this combo buttons", () => {

@@ -125,6 +125,7 @@ export default {
       src: "./plugins/google-analytics.ts",
       mode: "client",
     },
+    "~/plugins/vue-tooltip.ts",
   ],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
@@ -138,7 +139,7 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/google-fonts"],
+  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},

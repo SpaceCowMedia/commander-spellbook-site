@@ -72,3 +72,70 @@ a {
     @apply text-5xl my-4;
   }
 }
+
+/* v-tooltip styles */
+.tooltip {
+  @apply block z-50;
+}
+
+.tooltip .tooltip-inner {
+  @apply text-white bg-dark rounded p-2;
+}
+
+.tooltip .tooltip-arrow {
+  @apply w-0 h-0 border border-dark z-10 absolute m-2;
+}
+
+.tooltip[x-placement^="top"] {
+  @apply mb-2;
+}
+
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 0.25rem 0.25rem 0 0.25rem;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: calc(50% - 0.25rem);
+  @apply my-0 -bottom-1;
+}
+
+.tooltip[x-placement^="bottom"] {
+  @apply mt-2;
+}
+
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 0.25rem 0.25rem 0.25rem;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  left: calc(50% - 0.25rem);
+  @apply my-0 -top-1;
+}
+
+.tooltip[x-placement^="right"] {
+  @apply ml-2;
+}
+
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 0.25rem 0.25rem 0.25rem 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  top: calc(50% - 0.25rem);
+  @apply mx-0 -left-1;
+}
+
+.tooltip[x-placement^="left"] {
+  @apply mr-2;
+}
+
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 0.25rem 0 0.25rem 0.25rem;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  top: calc(50% - 0.25rem);
+  @apply mx-0 -right-1;
+}
+
+/* end v-tooltip styles */
