@@ -53,4 +53,51 @@ describe("ShareComboButtons", () => {
     expect(buttons.at(2).props("network")).toBe("Facebook");
     expect(buttons.at(2).props("url")).toBe("https://example.com/combo/123");
   });
+
+  it("emits analytics event when social network is opened", async () => {
+    const spy = jest.fn();
+    const ShareNetworkStub = {
+      template: "<div></div>",
+      props: ["url", "network"],
+    };
+    const wrapper = shallowMount(ShareComboButtons, {
+      stubs: {
+        ShareNetwork: ShareNetworkStub,
+      },
+      propsData: {
+        comboLink: "https://example.com/combo/123",
+      },
+      directives: {
+        tooltip: {},
+      },
+      mocks: {
+        $gtag: {
+          event: spy,
+        },
+      },
+    });
+
+    const buttons = wrapper.findAllComponents(ShareNetworkStub);
+
+    await buttons.at(0).vm.$emit("open");
+
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith("Share on Twitter", {
+      event_category: "Combo Detail Page Actions",
+    });
+
+    await buttons.at(1).vm.$emit("open");
+
+    expect(spy).toBeCalledTimes(2);
+    expect(spy).toBeCalledWith("Share on Reddit", {
+      event_category: "Combo Detail Page Actions",
+    });
+
+    await buttons.at(2).vm.$emit("open");
+
+    expect(spy).toBeCalledTimes(3);
+    expect(spy).toBeCalledWith("Share on Facebook", {
+      event_category: "Combo Detail Page Actions",
+    });
+  });
 });

@@ -20,6 +20,7 @@
         :hashtags="hashtags"
         tag="button"
         twitter-user="CommanderSpell"
+        @open="onOpen('Twitter')"
       >
         <div class="link-icon twitter-icon"></div>
       </ShareNetwork>
@@ -31,6 +32,7 @@
         :url="comboLink"
         :title="text"
         tag="button"
+        @open="onOpen('Reddit')"
       >
         <div class="link-icon reddit-icon"></div>
       </ShareNetwork>
@@ -40,9 +42,10 @@
         class="button share-network"
         network="Facebook"
         :url="comboLink"
-        :description="text"
+        :title="text"
         :hashtags="hashtags"
         tag="button"
+        @open="onOpen('Facebook')"
       >
         <div class="link-icon facebook-icon"></div>
       </ShareNetwork>
@@ -70,6 +73,13 @@ export default Vue.extend({
     },
     text(): string {
       return "Check out this combo!";
+    },
+  },
+  methods: {
+    onOpen(network: string): void {
+      this.$gtag.event(`Share on ${network}`, {
+        event_category: "Combo Detail Page Actions",
+      });
     },
   },
 });
