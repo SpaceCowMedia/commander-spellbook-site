@@ -87,7 +87,7 @@ export default Vue.extend({
 
 <style scoped>
 .share-network.button {
-  @apply flex items-center justify-center w-1/3 text-center mx-1 text-xl;
+  @apply flex items-center justify-center w-1/3 text-center mx-1 mt-1 text-xl;
 }
 
 .share-network:first-child {
