@@ -1,6 +1,6 @@
 <template>
   <span @mousemove="mousemove" @mouseout="mouseout">
-    <div v-if="hover" class="card-tooltip" :style="{ left, top }">
+    <div v-if="active" class="card-tooltip" :style="{ left, top }">
       <img v-if="cardName" :src="url" :alt="cardName" />
     </div>
     <slot />
@@ -11,13 +11,6 @@
 import Vue from "vue";
 import getExternalCardData from "@/lib/get-external-card-data";
 
-type TooltipData = {
-  url: string;
-  hover: boolean;
-  left: string;
-  top: string;
-};
-
 export default Vue.extend({
   props: {
     cardName: {
@@ -25,22 +18,29 @@ export default Vue.extend({
       default: "",
     },
   },
-  data(): TooltipData {
+  data() {
     return {
-      url: getExternalCardData(this.cardName).images.oracle,
-      hover: false,
+      active: false,
       left: "0px",
       top: "0px",
+      url: getExternalCardData(this.cardName).images.oracle,
     };
   },
   methods: {
     mousemove(event: MouseEvent): void {
-      this.hover = true;
-      this.left = event.clientX + 50 + "px";
+      const displayOnRightSide = window.innerWidth / 2 - event.clientX > 0;
+
+      this.active = true;
       this.top = event.clientY - 30 + "px";
+
+      if (displayOnRightSide) {
+        this.left = event.clientX + 50 + "px";
+      } else {
+        this.left = event.clientX - 290 + "px";
+      }
     },
     mouseout(): void {
-      this.hover = false;
+      this.active = false;
     },
   },
 });
@@ -51,9 +51,9 @@ export default Vue.extend({
   pointer-events: none;
   position: fixed;
   z-index: 9000000;
+  overflow: hidden;
   border-radius: 4.75% / 3.5%;
   height: 340px;
   width: 244px;
-  overflow: hidden;
 }
 </style>

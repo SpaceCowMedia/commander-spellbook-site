@@ -45,6 +45,7 @@ describe("CardTooltip", () => {
 
     await wrapper.find("span").trigger("mousemove");
     expect(wrapper.find(".card-tooltip").exists()).toBe(true);
+
     const img = wrapper.find("img");
     expect(img.attributes("alt")).toBe("Sydri");
     expect(img.attributes("src")).toBe(
@@ -55,14 +56,28 @@ describe("CardTooltip", () => {
     expect(wrapper.find(".card-tooltip").exists()).toBe(false);
   });
 
-  it("sets the tooltip position based on the mousemove event", async () => {
+  it("sets the tooltip position based on the mousemove event and window width", async () => {
     const wrapper = shallowMount(CardTooltip, options);
+    const halfWindowSize = Math.floor(window.innerWidth / 2);
+    const mouseOnLeftSide = halfWindowSize - 10;
+    const mouseOnRightSide = halfWindowSize + 10;
 
     await wrapper.find("span").trigger("mousemove", {
-      clientX: 23,
+      clientX: mouseOnLeftSide,
       clientY: 12,
     });
-    expect(wrapper.find(".card-tooltip").element.style.left).toBe("73px");
+    expect(wrapper.find(".card-tooltip").element.style.left).toBe(
+      `${mouseOnLeftSide + 50}px`
+    );
     expect(wrapper.find(".card-tooltip").element.style.top).toBe("-18px");
+
+    await wrapper.find("span").trigger("mousemove", {
+      clientX: mouseOnRightSide,
+      clientY: 50,
+    });
+    expect(wrapper.find(".card-tooltip").element.style.left).toBe(
+      `${mouseOnRightSide - 290}px`
+    );
+    expect(wrapper.find(".card-tooltip").element.style.top).toBe("20px");
   });
 });
