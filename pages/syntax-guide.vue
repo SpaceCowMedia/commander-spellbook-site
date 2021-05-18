@@ -298,13 +298,19 @@
       :snippets="sortOrderSnippets"
     >
       <p>
-        By default, combo results will be sorted by color identity, starting
-        with the fewest colors and going to the most colors. Use
+        By default, combo results will be sorted by popularity (the number of
+        decks the combo is in according to
+        <ExternalLink to="https://edhrec.com/">EDHREC</ExternalLink>), starting
+        with combos in the most decks and going to the least. Use
         <code>sort</code> to change the criteria for sorting the combos.
         Available options are:
       </p>
 
       <ul class="list-disc list-inside ml-4 mb-4">
+        <li>
+          <code>colors</code> (or <code>ci</code>, <code>color-identity</code>,
+          <code>color</code>)
+        </li>
         <li><code>results</code> (or <code>number-of-results</code>)</li>
         <li><code>steps</code> (or <code>number-of-steps</code>)</li>
 
@@ -313,17 +319,13 @@
         </li>
 
         <li><code>cards</code> (or <code>number-of-cards</code>)</li>
-
-        <li>
-          <code>colors</code> (or <code>ci</code>, <code>color-identity</code>,
-          <code> color</code>)
-        </li>
       </ul>
 
       <p>
-        By default, the combo results are ordered in ascending order. Use
-        <code>order:descending</code> or <code>order:desc</code> to reverse the
-        order.
+        By default, when sorted by popularity, the combo results are ordered in
+        descending order. All other sort options order the results in ascending
+        order instead. Use
+        <code>order</code> to alter the default behavior.
       </p>
     </SearchGuide>
   </div>
@@ -530,9 +532,14 @@ export default Vue.extend({
             "Combos with the grixis color identity sorted by the number of cards in them.",
         },
         {
-          search: "steps<3 sort:results order:descending",
+          search: "steps<3 sort:colors order:descending",
           description:
-            "Combos with fewer than 3 steps sorted by number of results, starting with the most results and going to the fewest results.",
+            "Combos with fewer than 3 steps sorted by color identity, starting with the most colors and going to the fewest.",
+        },
+        {
+          search: "decks>100 sort:results",
+          description:
+            "Combos that are in more than 100 decks, sorted by number of results in ascending order.",
         },
       ],
     };

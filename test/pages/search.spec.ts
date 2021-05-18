@@ -21,8 +21,8 @@ describe("SearchPage", () => {
 
   beforeEach(() => {
     mocked(search).mockResolvedValue({
-      sort: "colors",
-      order: "ascending",
+      sort: "popularity",
+      order: "descending",
       combos: [],
       message: "",
       errors: [],
@@ -109,7 +109,7 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
-        sort: "colors",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
@@ -346,7 +346,7 @@ describe("SearchPage", () => {
     });
 
     it("updates existing sort option in query when sort is updated", async () => {
-      $route.query.q = "sort:colors ci:temur";
+      $route.query.q = "sort:popularity ci:temur";
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
@@ -366,28 +366,28 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
-        order: "descending",
+        order: "ascending",
       });
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
         path: "/search/",
-        query: { q: "ci:temur order:descending", page: "1" },
+        query: { q: "ci:temur order:ascending", page: "1" },
       });
     });
 
     it("updates existing order option in query when order is updated", async () => {
-      $route.query.q = "order:ascending ci:temur";
+      $route.query.q = "order:descending ci:temur";
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
-        order: "descending",
+        order: "ascending",
       });
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
         path: "/search/",
-        query: { q: "order:descending ci:temur", page: "1" },
+        query: { q: "order:ascending ci:temur", page: "1" },
       });
     });
   });
@@ -431,7 +431,7 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
-        sort: "colors",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
@@ -457,7 +457,7 @@ describe("SearchPage", () => {
           }),
         ],
         message: "",
-        sort: "colors",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
@@ -494,8 +494,8 @@ describe("SearchPage", () => {
             commanderSpellbookId: "1",
           }),
         ],
-        sort: "colors",
-        order: "ascending",
+        sort: "popularity",
+        order: "descending",
         message: "",
         errors: [],
       });

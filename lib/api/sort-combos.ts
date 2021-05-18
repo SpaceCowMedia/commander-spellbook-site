@@ -44,6 +44,25 @@ function handleSortingByColorIdentity(
   };
 }
 
+function handleSortingByPopularity(
+  firstCombo: FormattedApiResponse,
+  secondCombo: FormattedApiResponse
+): SortingMeta {
+  const firstDecks = Number(firstCombo.numberOfEDHRECDecks);
+  const secondDecks = Number(secondCombo.numberOfEDHRECDecks);
+  const isEqual = firstDecks === secondDecks;
+  const firstRemainsFirst = firstDecks > secondDecks;
+
+  if (isEqual) {
+    return handleSortingByColorIdentity(firstCombo, secondCombo);
+  }
+
+  return {
+    isEqual,
+    firstRemainsFirst,
+  };
+}
+
 export default function sortCombos(
   combos: FormattedApiResponse[],
   by: string,
@@ -70,6 +89,9 @@ export default function sortCombos(
         break;
       case "colors":
         meta = handleSortingByColorIdentity(firstCombo, secondCombo);
+        break;
+      case "popularity":
+        meta = handleSortingByPopularity(firstCombo, secondCombo);
         break;
     }
 

@@ -250,4 +250,101 @@ describe("search", () => {
     expect(sortedCombos[3].commanderSpellbookId).toBe("4");
     expect(sortedCombos[4].commanderSpellbookId).toBe("5");
   });
+
+  it("sorts combos by number of decks on EDHREC", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        numberOfEDHRECDecks: 3,
+      })
+    );
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    const sortedCombos = await sortCombos(combos, "popularity", "ascending");
+
+    expect(sortedCombos.length).toBe(3);
+
+    sortedCombos.forEach((combo, index) => {
+      expect(combo.commanderSpellbookId).toBe(String(index + 1));
+    });
+  });
+
+  it("sorts combos by number of decks on EDHREC", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        numberOfEDHRECDecks: 3,
+      })
+    );
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    const sortedCombos = await sortCombos(combos, "popularity", "descending");
+
+    expect(sortedCombos.length).toBe(3);
+
+    sortedCombos.forEach((combo, index) => {
+      expect(combo.commanderSpellbookId).toBe(String(3 - index));
+    });
+  });
+
+  it("sorts combos with identical decks by color identities and then by number of cards", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+        cards: ["1"],
+        colorIdentity: "wubrg",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        cards: ["1", "2", "3", "4"],
+        colorIdentity: "c",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        cards: ["1", "2"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        cards: ["1"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+        cards: ["1", "2", "3"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 0,
+      })
+    );
+
+    const sortedCombos = await sortCombos(combos, "popularity", "ascending");
+
+    expect(sortedCombos[0].commanderSpellbookId).toBe("4");
+    expect(sortedCombos[1].commanderSpellbookId).toBe("1");
+    expect(sortedCombos[2].commanderSpellbookId).toBe("2");
+    expect(sortedCombos[3].commanderSpellbookId).toBe("3");
+    expect(sortedCombos[4].commanderSpellbookId).toBe("5");
+  });
 });

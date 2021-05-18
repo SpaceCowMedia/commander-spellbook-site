@@ -99,8 +99,8 @@ export default Vue.extend({
       message: "",
       errors: "",
       combos: [],
-      sort: "colors",
-      order: "ascending",
+      sort: "popularity",
+      order: "descending",
     };
   },
   computed: {
@@ -149,6 +149,7 @@ export default Vue.extend({
     },
     sortOptions(): Option[] {
       return [
+        { value: "popularity", label: "Sort by popularity" },
         { value: "colors", label: "Sort by color identity" },
         {
           value: "cards",

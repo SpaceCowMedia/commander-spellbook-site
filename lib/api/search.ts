@@ -13,9 +13,13 @@ import type { SearchResults } from "./types";
 
 export default async function search(query = ""): Promise<SearchResults> {
   const searchParams = parseQuery(query);
-  const sort = searchParams.sort || "colors";
-  const order = searchParams.order || "ascending";
+  const sort = searchParams.sort || "popularity";
+  let order = searchParams.order;
   const { errors } = searchParams;
+
+  if (!order) {
+    order = sort === "popularity" ? "descending" : "ascending";
+  }
 
   if (!validateSearchParams(searchParams)) {
     return {
