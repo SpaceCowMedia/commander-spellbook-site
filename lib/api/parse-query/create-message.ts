@@ -124,6 +124,14 @@ export default function creaetMessage(
     );
   });
 
+  params.edhrecDecks.sizeFilters.forEach((filter) => {
+    addToMessage(
+      `the number of decks running the combo according to EDHREC ${numberOperatorAsWord(
+        filter.method
+      )} ${filter.value}`
+    );
+  });
+
   if (params.tags.banned) {
     switch (params.tags.banned) {
       case "include":

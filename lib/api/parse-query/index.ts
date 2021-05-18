@@ -1,6 +1,7 @@
 import type { SearchParameters } from "../types";
 import parseColorIdentity from "./parse-color-identity";
 import parseComboData from "./parse-combo-data";
+import parseEDHRECdecks from "./parse-edhrec-decks";
 import parseTags from "./parse-tags";
 import parseSort from "./parse-sort";
 import parseOrder from "./parse-order";
@@ -131,6 +132,11 @@ function collectKeywordedQueries(
       case "-results":
         parseComboData(params, key, operator, value);
         break;
+      case "popularity":
+      case "deck":
+      case "decks":
+        parseEDHRECdecks(params, key, operator, value);
+        break;
       case "sort":
         parseSort(params, operator, value);
         break;
@@ -197,6 +203,9 @@ export default function parseQuery(query: string): SearchParameters {
       sizeFilters: [],
       includeFilters: [],
       excludeFilters: [],
+    },
+    edhrecDecks: {
+      sizeFilters: [],
     },
     tags: {},
     errors: [],

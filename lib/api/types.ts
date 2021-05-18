@@ -57,7 +57,7 @@ export type SearchResults = {
   message: string;
 };
 
-type SizeFilter = {
+export type SizeFilter = {
   method: string;
   value: number;
 };
@@ -98,6 +98,9 @@ export type SearchParameters = {
     sizeFilters: SizeFilter[];
     includeFilters: ColorIdentityValueFilter[];
     excludeFilters: ColorIdentityValueFilter[];
+  };
+  edhrecDecks: {
+    sizeFilters: SizeFilter[];
   };
   tags: {
     banned?: TagValue;

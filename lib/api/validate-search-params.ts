@@ -26,6 +26,10 @@ export default function validateSearchParams(
     return true;
   }
 
+  if (params.edhrecDecks.sizeFilters.length > 0) {
+    return true;
+  }
+
   if (
     params.id.includeFilters.length > 0 ||
     params.id.excludeFilters.length > 0

@@ -1,12 +1,14 @@
 import parseQuery from "@/lib/api/parse-query";
 import parseColorIdentity from "@/lib/api/parse-query/parse-color-identity";
 import parseComboData from "@/lib/api/parse-query/parse-combo-data";
+import parseEDHRECDecks from "@/lib/api/parse-query/parse-edhrec-decks";
 import parseTags from "@/lib/api/parse-query/parse-tags";
 import parseOrder from "@/lib/api/parse-query/parse-order";
 import parseSort from "@/lib/api/parse-query/parse-sort";
 
 jest.mock("@/lib/api/parse-query/parse-color-identity");
 jest.mock("@/lib/api/parse-query/parse-combo-data");
+jest.mock("@/lib/api/parse-query/parse-edhrec-decks");
 jest.mock("@/lib/api/parse-query/parse-tags");
 jest.mock("@/lib/api/parse-query/parse-order");
 jest.mock("@/lib/api/parse-query/parse-sort");
@@ -164,6 +166,9 @@ describe("parseQuery", () => {
         excludeFilters: [],
         sizeFilters: [],
       },
+      edhrecDecks: {
+        sizeFilters: [],
+      },
       tags: {},
       errors: [],
     });
@@ -250,7 +255,7 @@ describe("parseQuery", () => {
 
   it("can parse a mix of all queries", () => {
     const result = parseQuery(
-      "Kiki ci:wbr -ci=br card:Daxos spellbookid:12345 card:'Grave Titan' card:\"Akroma\" unknown:value -card:Food prerequisites:prereq steps:step results:result -prerequisites:xprereq -steps:xstep -result:xresult is:banned -exclude:spoiled sort:colors order:descending"
+      "Kiki ci:wbr -ci=br card:Daxos spellbookid:12345 card:'Grave Titan' card:\"Akroma\" unknown:value -card:Food prerequisites:prereq steps:step results:result -prerequisites:xprereq -steps:xstep -result:xresult decks>30 is:banned -exclude:spoiled sort:colors order:descending"
     );
 
     expect(parseComboData).toBeCalledTimes(11);
@@ -335,6 +340,13 @@ describe("parseQuery", () => {
       "br"
     );
 
+    expect(parseEDHRECDecks).toBeCalledWith(
+      expect.anything(),
+      "decks",
+      ">",
+      "30"
+    );
+
     expect(parseTags).toBeCalledWith(expect.anything(), "is", ":", "banned");
     expect(parseTags).toBeCalledWith(
       expect.anything(),
@@ -365,7 +377,7 @@ describe("parseQuery", () => {
 
   it("ignores capitalization on keys", () => {
     const result = parseQuery(
-      "Kiki CI:wbr CARD:Daxos SPELLBOOKID:12345 CARD:'Grave Titan' CARD:\"Akroma\" UNKNOWN:value -CARD:Food PREREQUISITES:prereq STEPS:step RESULTS:result -PREREQUISITES:xprereq -STEPS:xstep -RESULT:xresult iS:banned -eXcludE:spoiled"
+      "Kiki CI:wbr CARD:Daxos SPELLBOOKID:12345 CARD:'Grave Titan' CARD:\"Akroma\" UNKNOWN:value -CARD:Food PREREQUISITES:prereq STEPS:step RESULTS:result -PREREQUISITES:xprereq -STEPS:xstep -RESULT:xresult DeckS>30 iS:banned -eXcludE:spoiled"
     );
 
     expect(parseComboData).toBeCalledTimes(11);
@@ -442,6 +454,13 @@ describe("parseQuery", () => {
       "ci",
       ":",
       "wbr"
+    );
+
+    expect(parseEDHRECDecks).toBeCalledWith(
+      expect.anything(),
+      "decks",
+      ">",
+      "30"
     );
 
     expect(parseTags).toBeCalledWith(expect.anything(), "is", ":", "banned");
@@ -471,7 +490,7 @@ describe("parseQuery", () => {
 
   it("ignores underscores in keys", () => {
     const result = parseQuery(
-      "Kiki c_i:wbr c_ar_d:Daxos spellbook_i_d:12345 ca_rd:'Grave Titan' ca_rd:\"Akroma\" unknow_n:value -c_ard:Food _prere_quisit_es_:prereq st_eps:step r_esu_lts:result -prer_equisites:xprereq -ste_ps:xstep -res_ult:xresult i_s:banned -ex_clu_de:spoiled"
+      "Kiki c_i:wbr c_ar_d:Daxos spellbook_i_d:12345 ca_rd:'Grave Titan' ca_rd:\"Akroma\" unknow_n:value -c_ard:Food _prere_quisit_es_:prereq st_eps:step r_esu_lts:result -prer_equisites:xprereq -ste_ps:xstep -res_ult:xresult d_e_cks>30 i_s:banned -ex_clu_de:spoiled"
     );
 
     expect(parseComboData).toBeCalledTimes(11);
@@ -548,6 +567,13 @@ describe("parseQuery", () => {
       "ci",
       ":",
       "wbr"
+    );
+
+    expect(parseEDHRECDecks).toBeCalledWith(
+      expect.anything(),
+      "decks",
+      ">",
+      "30"
     );
 
     expect(parseTags).toBeCalledWith(expect.anything(), "is", ":", "banned");
@@ -733,6 +759,27 @@ describe("parseQuery", () => {
       "excluded thing"
     );
   });
+
+  it.each(["popularity", "deck", "decks"])(
+    "parses %s through EDHREC deck data parser",
+    (kind) => {
+      parseQuery(`${kind}>25 ${kind}<30`);
+
+      expect(parseEDHRECDecks).toBeCalledTimes(2);
+      expect(parseEDHRECDecks).toBeCalledWith(
+        expect.anything(),
+        kind,
+        ">",
+        "25"
+      );
+      expect(parseEDHRECDecks).toBeCalledWith(
+        expect.anything(),
+        kind,
+        "<",
+        "30"
+      );
+    }
+  );
 
   it.each([
     "is",

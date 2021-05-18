@@ -14,6 +14,7 @@ type FakeComboOptions = {
   hasBannedCard?: boolean;
   hasSpoiledCard?: boolean;
   edhrecLink?: boolean;
+  numberOfEDHRECDecks?: number;
 };
 
 export default function makeFakeCombo(
@@ -40,6 +41,11 @@ export default function makeFakeCombo(
   if (options.edhrecLink !== false) {
     payload.edhrecLink = `https://edhrec.com/combos/${payload.colorIdentity.toString()}/${id}`;
   }
+
+  payload.numberOfEDHRECDecks =
+    typeof options.numberOfEDHRECDecks === "number"
+      ? options.numberOfEDHRECDecks
+      : 35;
 
   return payload;
 }

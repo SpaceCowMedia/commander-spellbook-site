@@ -218,6 +218,30 @@
     </SearchGuide>
 
     <SearchGuide
+      heading="Popularity"
+      heading-card-name="Korvold, Fae-Cursed King"
+      heading-artist-name="Wisnu Tan"
+      :snippets="popularitySnippets"
+    >
+      <p>
+        You can also search by <code>popularity</code> to find combos by the
+        number of decks that contain the combo according to
+        <ExternalLink to="https://edhrec.com/">EDHREC</ExternalLink>.
+      </p>
+
+      <p>
+        Use the <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators when constructing your
+        search.
+      </p>
+
+      <p>
+        <code>deck</code> and <code>decks</code> are aliases for
+        <code>popularity</code>.
+      </p>
+    </SearchGuide>
+
+    <SearchGuide
       id="previewed"
       heading="Previewed / Spoiled"
       heading-card-name="Spoils of Adventure"
@@ -308,11 +332,13 @@
 <script lang="ts">
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
+import ExternalLink from "@/components/ExternalLink.vue";
 import SearchGuide from "@/components/syntax-guide/SearchGuide.vue";
 
 export default Vue.extend({
   components: {
     ArtCircle,
+    ExternalLink,
     SearchGuide,
   },
   data() {
@@ -341,6 +367,10 @@ export default Vue.extend({
         {
           id: "spellbook-id",
           text: "Combo Identifier",
+        },
+        {
+          id: "popularity",
+          text: "Popularity",
         },
         {
           id: "previewed",
@@ -455,6 +485,18 @@ export default Vue.extend({
           search: '-sid:450 card="Basalt Monolith" card="Mesmeric Orb"',
           description:
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
+        },
+      ],
+      popularitySnippets: [
+        {
+          search: "popularity>1000",
+          description:
+            "Combos that are in more than 1000 decks according to EDHREC.",
+        },
+        {
+          search: "decks<10",
+          description:
+            "Combos that are in less than 10 decks according to EDHREC.",
         },
       ],
       previewedSnippets: [

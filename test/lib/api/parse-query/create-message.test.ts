@@ -180,6 +180,31 @@ describe("createMessage", () => {
     });
   });
 
+  describe("edhrecDecks", () => {
+    it.each`
+      method  | text
+      ${"="}  | ${"is"}
+      ${">"}  | ${"is greater than"}
+      ${"<"}  | ${"is less than"}
+      ${">="} | ${"is greater than or equal to"}
+      ${"<="} | ${"is less than or equal to"}
+    `(
+      "creates a message for searches that include decks using the %method operator",
+      ({ method, text }) => {
+        searchParams.edhrecDecks.sizeFilters.push({
+          method,
+          value: 5,
+        });
+
+        const message = createMessage(combos, searchParams);
+
+        expect(message).toContain(
+          `where the number of decks running the combo according to EDHREC ${text} 5`
+        );
+      }
+    );
+  });
+
   describe("tags", () => {
     it("creates a message for searches that include banned cards", () => {
       searchParams.tags.banned = "include";
