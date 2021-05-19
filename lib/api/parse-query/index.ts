@@ -8,6 +8,27 @@ import parseOrder from "./parse-order";
 const OPERATORS = [":", "=>", "=<", "=", ">=", "<=", "<", ">"];
 const OPERATOR_REGEX = new RegExp(`(${OPERATORS.join("|")})`);
 
+function removeQuotes(value: string): string {
+  value = value.trim();
+
+  // not enough characters to be surrounded by quotes
+  if (value.length < 3) {
+    return value;
+  }
+
+  const firstChar = value.charAt(0);
+  const lastChar = value.charAt(value.length - 1);
+
+  if (
+    (firstChar === "'" && lastChar === "'") ||
+    (firstChar === '"' && lastChar === '"')
+  ) {
+    return value.substring(1, value.length - 1);
+  }
+
+  return value;
+}
+
 function collectKeywordedQueries(
   params: SearchParameters,
   query: string
@@ -59,16 +80,7 @@ function collectKeywordedQueries(
       operator = ">=";
     }
 
-    if (value.length > 2) {
-      const firstChar = value.charAt(0);
-      const lastChar = value.charAt(value.length - 1);
-      if (
-        (firstChar === "'" && lastChar === "'") ||
-        (firstChar === '"' && lastChar === '"')
-      ) {
-        value = value.substring(1, value.length - 1);
-      }
-    }
+    value = removeQuotes(value);
 
     switch (key) {
       case "spellbookid":
@@ -153,16 +165,17 @@ function collectPlainNameQueries(
   params: SearchParameters,
   query: string
 ): void {
-  const alphanumericQuery = query.replace(/[^\w\d\s]/g, "");
+  const simpilfiedQuery = query.replace(/[^\w\d\s"']/g, "");
 
   const queries =
-    alphanumericQuery.match(
+    simpilfiedQuery.match(
       // (^|\s) - either starts at the beginning of the line or begins with a space
       // ([\w\d]+) -the captured word
-      /(^|\s)([\w\d]+)/gi
+      /(^|\s)(['"]?)((?:.(?!\2))+.|[^\s]+)\2/gi
     ) || [];
 
   queries.forEach((value) => {
+    value = removeQuotes(value);
     parseComboData(params, "card", ":", value.trim());
   });
 }

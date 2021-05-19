@@ -44,7 +44,7 @@ describe("parseQuery", () => {
       expect.anything(),
       "card",
       ":",
-      "Jhoiras"
+      "Jhoira's"
     );
     expect(parseComboData).toBeCalledWith(
       expect.anything(),
@@ -56,7 +56,7 @@ describe("parseQuery", () => {
       expect.anything(),
       "card",
       ":",
-      "Senseis"
+      "Sensei's"
     );
     expect(parseComboData).toBeCalledWith(
       expect.anything(),
@@ -72,10 +72,28 @@ describe("parseQuery", () => {
     );
   });
 
+  it("parses cards with single quotes enclosed in double quotes in the name in plain text", () => {
+    parseQuery(`"Jhoira's Familiar" "Sensei's Divining Top"`);
+
+    expect(parseComboData).toBeCalledTimes(2);
+    expect(parseComboData).toBeCalledWith(
+      expect.anything(),
+      "card",
+      ":",
+      "Jhoira's Familiar"
+    );
+    expect(parseComboData).toBeCalledWith(
+      expect.anything(),
+      "card",
+      ":",
+      "Sensei's Divining Top"
+    );
+  });
+
   it("parses cards with double quotes in the name in plain text", () => {
     parseQuery('Kongming, "Sleeping Dragon" Opalescence');
 
-    expect(parseComboData).toBeCalledTimes(4);
+    expect(parseComboData).toBeCalledTimes(3);
     expect(parseComboData).toBeCalledWith(
       expect.anything(),
       "card",
@@ -86,13 +104,25 @@ describe("parseQuery", () => {
       expect.anything(),
       "card",
       ":",
-      "Sleeping"
+      "Sleeping Dragon"
     );
     expect(parseComboData).toBeCalledWith(
       expect.anything(),
       "card",
       ":",
-      "Dragon"
+      "Opalescence"
+    );
+  });
+
+  it("parses cards with double quotes enclosed in single quotes in the name in plain text", () => {
+    parseQuery(`'Kongming, "Sleeping Dragon"' Opalescence`);
+
+    expect(parseComboData).toBeCalledTimes(2);
+    expect(parseComboData).toBeCalledWith(
+      expect.anything(),
+      "card",
+      ":",
+      'Kongming "Sleeping Dragon"'
     );
     expect(parseComboData).toBeCalledWith(
       expect.anything(),
