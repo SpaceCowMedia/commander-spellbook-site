@@ -43,6 +43,7 @@ export default Vue.extend({
         names: combo.cards.map((c) => c.name),
         results: Array.from(combo.results),
         colors: Array.from(combo.colorIdentity.colors),
+        numberOfDecks: combo.numberOfEDHRECDecks || 0,
       };
     });
 

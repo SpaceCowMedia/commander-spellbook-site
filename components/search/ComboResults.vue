@@ -8,8 +8,12 @@
       class="combo-result w-full md:w-1/4"
     >
       <div class="flex flex-col">
-        <div class="flex items-center flex-grow bg-dark text-white">
+        <div class="flex items-center flex-grow flex-col bg-dark text-white">
           <ColorIdentity :colors="r.colors" size="small" />
+
+          <div v-if="r.numberOfDecks" class="combo-deck-count">
+            in {{ r.numberOfDecks }} decks
+          </div>
         </div>
         <div class="flex-grow border-b-2 border-light">
           <div class="py-1">
@@ -48,6 +52,7 @@ export type ComboResult = {
   names: string[];
   results: string[];
   colors: string[];
+  numberOfDecks: number;
 };
 
 export default Vue.extend({

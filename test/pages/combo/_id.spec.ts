@@ -309,9 +309,12 @@ describe("ComboPage", () => {
           oracleImageUrl: "https://example.com/card-2",
         },
       ],
+      numberOfDecks: 14,
     });
 
     const lists = wrapper.findAllComponents(ComboListStub);
+
+    expect(lists.length).toBe(5);
 
     expect(lists.at(0).props("iterations")).toEqual(["Card 1", "Card 2"]);
     expect(lists.at(0).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
@@ -321,6 +324,32 @@ describe("ComboPage", () => {
     expect(lists.at(2).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
     expect(lists.at(3).props("iterations")).toEqual(["result 1", "result 2"]);
     expect(lists.at(3).props("cardsInCombo")).toEqual(["Card 1", "Card 2"]);
+    expect(lists.at(4).props("iterations")).toEqual([
+      "In 14 decks according to EDHREC.",
+    ]);
+  });
+
+  it("does not include metadata if no metadata info is available", async () => {
+    const ComboListStub = {
+      template: "<div></div>",
+      props: ["title"],
+    };
+    // @ts-ignore
+    options.stubs.ComboList = ComboListStub;
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      numberOfDecks: 0,
+    });
+
+    const lists = wrapper.findAllComponents(ComboListStub);
+
+    expect(lists.length).toBe(4);
+
+    expect(lists.at(0).props("title")).toEqual("Cards");
+    expect(lists.at(1).props("title")).toEqual("Prerequisites");
+    expect(lists.at(2).props("title")).toEqual("Steps");
+    expect(lists.at(3).props("title")).toEqual("Results");
   });
 
   it("adds a ColorIdentity component", async () => {

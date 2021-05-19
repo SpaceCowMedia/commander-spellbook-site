@@ -258,6 +258,7 @@ export default Vue.extend({
           colors: Array.from(c.colorIdentity.colors),
           results: Array.from(c.results),
           id: String(c.commanderSpellbookId),
+          numberOfDecks: c.numberOfEDHRECDecks || 0,
         };
       });
     },

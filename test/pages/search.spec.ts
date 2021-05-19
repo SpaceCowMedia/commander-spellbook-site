@@ -448,12 +448,14 @@ describe("SearchPage", () => {
             results: ["result 1", "result 2"],
             colorIdentity: "rb",
             commanderSpellbookId: "1",
+            numberOfEDHRECDecks: 12,
           }),
           makeFakeCombo({
             cards: ["d", "e", "f"],
             results: ["result 3", "result 4"],
             colorIdentity: "wb",
             commanderSpellbookId: "2",
+            numberOfEDHRECDecks: 20,
           }),
         ],
         message: "",
@@ -471,12 +473,14 @@ describe("SearchPage", () => {
           colors: ["b", "r"],
           results: ["result 1", "result 2"],
           id: "1",
+          numberOfDecks: 12,
         },
         {
           names: ["d", "e", "f"],
           colors: ["w", "b"],
           results: ["result 3", "result 4"],
           id: "2",
+          numberOfDecks: 20,
         },
       ]);
     });

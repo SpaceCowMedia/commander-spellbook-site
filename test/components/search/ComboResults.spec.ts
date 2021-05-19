@@ -152,4 +152,20 @@ describe("ComboResults", () => {
     ]);
     expect(links.at(2).findComponent(CIStub).props("colors")).toEqual(["c"]);
   });
+
+  it("prints the number of decks on EDHREC if available", () => {
+    // @ts-ignore
+    options.propsData.results[0].numberOfDecks = 14;
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".combo-deck-count").exists()).toBe(true);
+    expect(links.at(0).find(".combo-deck-count").text()).toContain(
+      "in 14 decks"
+    );
+
+    expect(links.at(1).find(".combo-deck-count").exists()).toBe(false);
+    expect(links.at(2).find(".combo-deck-count").exists()).toBe(false);
+  });
 });
