@@ -115,22 +115,20 @@ type RawScryfallResponse = Array<{
     mtgtop8: string;
   };
 }>;
-type ScryfallData = Record<
-  string,
-  {
-    setData: {
-      reprint: boolean;
-      setCode: string;
-    };
-    images: {
-      oracle: string;
-      artCrop: string;
-    };
-    isBanned: boolean;
-    isPreview: boolean;
-    edhrecPermalink: string;
-  }
->;
+export type ScryfallEntry = {
+  setData: {
+    reprint: boolean;
+    setCode: string;
+  };
+  images: {
+    oracle: string;
+    artCrop: string;
+  };
+  isBanned: boolean;
+  isPreview: boolean;
+  edhrecPermalink: string;
+};
+type ScryfallData = Record<string, ScryfallEntry>;
 
 export default async function getScryfallData(): Promise<ScryfallData> {
   log("Fetching Scryfall Bulk Data URI");
