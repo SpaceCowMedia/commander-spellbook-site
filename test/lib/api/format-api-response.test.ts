@@ -122,7 +122,7 @@ describe("api", () => {
         r: "result 1. result 2. result 3",
       },
     ])[0];
-    expect(response.edhrecLink).toBeFalsy();
-    expect(response.numberOfEDHRECDecks).toBeFalsy();
+    expect(response.edhrecLink).toBe("");
+    expect(response.numberOfEDHRECDecks).toBe(0);
   });
 });

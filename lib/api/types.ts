@@ -37,8 +37,8 @@ export type FormattedApiResponse = {
   results: SpellbookList;
   hasBannedCard: boolean;
   hasSpoiledCard: boolean;
-  edhrecLink?: string;
-  numberOfEDHRECDecks?: number;
+  edhrecLink: string;
+  numberOfEDHRECDecks: number;
 };
 
 export type ColorIdentityColors = "w" | "u" | "b" | "r" | "g" | "c";
