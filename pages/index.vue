@@ -24,7 +24,7 @@
           Random Combo
         </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
-          Strixhaven & C21 Combos
+          MH2 Combos
         </nuxt-link>
       </div>
 

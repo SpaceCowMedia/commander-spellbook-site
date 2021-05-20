@@ -2,6 +2,7 @@ import fs from "fs";
 import normalizeCardName from "../../lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
+import isFeatured from "./is-featured";
 import getEDHRECPrices from "./get-edhrec-prices";
 import getEDHRECComboData from "./get-edhrec-combo-data";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
@@ -68,18 +69,8 @@ Promise.all([
         e: sfData.edhrecPermalink,
       };
 
-      if (!sfData.setData.reprint) {
-        const setCode = sfData.setData.setCode;
-
-        // right now, our "fetured" combo is any combos that
-        // are not reprints that have a set code of
-        // commander 2021 or strixhaven. This will need
-        // to be updated when the next preview season comes
-        // around (mh2). Maybe by then there will be a
-        // way to do this automatically?
-        if (setCode === "c21" || setCode === "stx") {
-          cardData[name].f = 1;
-        }
+      if (isFeatured(sfData)) {
+        cardData[name].f = 1;
       }
 
       if (sfData.isBanned) {
