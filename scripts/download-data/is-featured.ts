@@ -1,7 +1,7 @@
 import type { ScryfallEntry } from "./get-scryfall";
 
 export default function isFeatured(sfData: ScryfallEntry): boolean {
-  if (!sfData.setData.reprint) {
+  if (sfData.setData.reprint) {
     return false;
   }
 
