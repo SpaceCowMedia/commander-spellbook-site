@@ -7,6 +7,11 @@ export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
   "results",
 ];
 
+const PRICE_VENDOR_MAP: Record<"tcgplayer" | "cardkingdom", string> = {
+  tcgplayer: "TCGPlayer",
+  cardkingdom: "Card Kingdom",
+};
+
 function numberOperatorAsWord(operator: string): string {
   switch (operator) {
     case "=":
@@ -123,6 +128,18 @@ export default function creaetMessage(
       )} "${filter.value.join("")}"`
     );
   });
+
+  params.price.filters.forEach((filter) => {
+    addToMessage(
+      `the price ${numberOperatorAsWord(filter.method)} $${filter.value.toFixed(
+        2
+      )}`
+    );
+  });
+
+  if (params.price.filters.length > 0 && params.price.vendor) {
+    message += ` (according to ${PRICE_VENDOR_MAP[params.price.vendor]})`;
+  }
 
   if (params.tags.banned) {
     switch (params.tags.banned) {
