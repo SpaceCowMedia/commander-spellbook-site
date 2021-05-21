@@ -8,7 +8,7 @@ export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
 ];
 
 const PRICE_VENDOR_MAP: Record<"tcgplayer" | "cardkingdom", string> = {
-  tcgplayer: "TCGPlayer",
+  tcgplayer: "TCGplayer",
   cardkingdom: "Card Kingdom",
 };
 

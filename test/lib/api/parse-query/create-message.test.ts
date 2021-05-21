@@ -216,7 +216,7 @@ describe("createMessage", () => {
     it("does not include vendor info when specified without price filters", () => {
       searchParams.price.vendor = "tcgplayer";
 
-      expect(createMessage(combos, searchParams)).not.toContain("TCGPlayer");
+      expect(createMessage(combos, searchParams)).not.toContain("TCGplayer");
     });
 
     it("includes vendor if specified", () => {
@@ -227,7 +227,7 @@ describe("createMessage", () => {
       });
 
       expect(createMessage(combos, searchParams)).toContain(
-        "the price is greater than $5.00 (according to TCGPlayer)"
+        "the price is greater than $5.00 (according to TCGplayer)"
       );
 
       searchParams.price.vendor = "cardkingdom";
