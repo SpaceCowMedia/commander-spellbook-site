@@ -50,6 +50,9 @@ describe("CardLink", () => {
   it("passes on focus event to component using cardlink", async () => {
     const spy = jest.fn();
     const wrapper = mount(CardLink, {
+      // element needs to be in the DOM to get the focus event
+      // https://stackoverflow.com/a/53042010/2601552
+      attachTo: document.body,
       propsData: {
         name: "Card Name",
       },

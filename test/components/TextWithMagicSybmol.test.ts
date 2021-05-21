@@ -129,8 +129,10 @@ describe("TextWithMagicSymbol", () => {
       "Card Name 1"
     );
     expect(
-      (tooltip.findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltip.findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Card Name 1");
   });
 
@@ -157,8 +159,7 @@ describe("TextWithMagicSymbol", () => {
           "The Frog Monster",
         ],
         includeCardLinks: true,
-        text:
-          "Some text that has Bar and also some that has Foo as well and Baz too and A Split some space Card Here as well Frog Monster but not Monster but Frog works",
+        text: "Some text that has Bar and also some that has Foo as well and Baz too and A Split some space Card Here as well Frog Monster but not Monster but Frog works",
       },
     });
 
@@ -169,8 +170,10 @@ describe("TextWithMagicSymbol", () => {
       "Bar, Comma Card"
     );
     expect(
-      (tooltips.at(0).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(0).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Bar");
 
     expect(tooltips.at(1).props("cardName")).toBe("Foo The Use of Articles");
@@ -178,8 +181,10 @@ describe("TextWithMagicSymbol", () => {
       "Foo The Use of Articles"
     );
     expect(
-      (tooltips.at(1).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(1).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Foo");
 
     expect(tooltips.at(2).props("cardName")).toBe("Baz of something");
@@ -187,8 +192,10 @@ describe("TextWithMagicSymbol", () => {
       "Baz of something"
     );
     expect(
-      (tooltips.at(2).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(2).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Baz");
 
     expect(tooltips.at(3).props("cardName")).toBe("A Split // Card Here");
@@ -196,8 +203,10 @@ describe("TextWithMagicSymbol", () => {
       "A Split // Card Here"
     );
     expect(
-      (tooltips.at(3).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(3).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("A Split");
 
     expect(tooltips.at(4).props("cardName")).toBe("A Split // Card Here");
@@ -205,8 +214,10 @@ describe("TextWithMagicSymbol", () => {
       "A Split // Card Here"
     );
     expect(
-      (tooltips.at(4).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(4).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Card Here");
 
     expect(tooltips.at(5).props("cardName")).toBe("The Frog Monster");
@@ -214,8 +225,10 @@ describe("TextWithMagicSymbol", () => {
       "The Frog Monster"
     );
     expect(
-      (tooltips.at(5).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(5).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Frog Monster");
 
     expect(tooltips.at(6).props("cardName")).toBe("The Frog Monster");
@@ -223,8 +236,10 @@ describe("TextWithMagicSymbol", () => {
       "The Frog Monster"
     );
     expect(
-      (tooltips.at(6).findComponent(CardLinkStub).find("a")
-        .element as HTMLAnchorElement).textContent
+      (
+        tooltips.at(6).findComponent(CardLinkStub).find("a")
+          .element as HTMLAnchorElement
+      ).textContent
     ).toBe("Frog");
   });
 

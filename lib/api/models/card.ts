@@ -6,7 +6,7 @@ import getExternalCardData, {
 
 export default class Card {
   name: string;
-  externalData: ExternalCardData;
+  private externalData: ExternalCardData;
   private normalizedName: string;
 
   constructor(cardName: string) {
@@ -25,6 +25,14 @@ export default class Card {
 
   getScryfallData(): ReturnType<typeof scryfall.getCard> {
     return scryfall.getCard(this.name, "exactName");
+  }
+
+  getImageUrl(kind: "artCrop" | "oracle"): string {
+    return this.externalData.images[kind];
+  }
+
+  getPrice(kind: "tcgplayer" | "cardkingdom"): number {
+    return this.externalData.prices[kind];
   }
 
   isFeatured(): boolean {

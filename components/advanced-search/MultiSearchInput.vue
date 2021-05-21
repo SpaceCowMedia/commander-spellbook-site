@@ -73,7 +73,15 @@
       </div>
       <div
         v-if="input.error"
-        class="input-error text-danger w-full py-2 px-4 text-center rounded-b-sm"
+        class="
+          input-error
+          text-danger
+          w-full
+          py-2
+          px-4
+          text-center
+          rounded-b-sm
+        "
       >
         {{ input.error }}
       </div>

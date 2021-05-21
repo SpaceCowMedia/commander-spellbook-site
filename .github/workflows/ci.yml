@@ -11,51 +11,88 @@ on:
     - cron: "0 */4 * * *"
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [14]
-
+  install:
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
 
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v2.1.2
+        # only install dependencies using
+        # https://github.com/cypress-io/github-action
+        # will restore / create folders
+        #   ~/.npm
+        #   ~/.cache/Cypress
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
         with:
-          node-version: ${{ matrix.node }}
+          runTests: false
 
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2
+  linter:
+    runs-on: ubuntu-20.04
+    needs: install
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies 👨🏻‍💻
-        run: npm ci
+          runTests: false
 
       - name: Run linter 👀
         run: npm run lint
 
+  unit-tests:
+    runs-on: ubuntu-20.04
+    needs: install
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+
       - name: Run unit tests 🧪
         run: npm test
 
-      - name: Run Integration tests 🧪
+  integration-tests:
+    runs-on: ubuntu-20.04
+    needs: install
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+
+      - name: Run Integration tests 💻
         run: npm run test:integration
 
+  deploy:
+    # only deploy from the main branch
+    if: github.ref == 'refs/heads/main'
+    concurrency: production_deploy
+    runs-on: ubuntu-20.04
+    needs: [install, linter, unit-tests, integration-tests]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+
       - name: Generate 🏗️
-        if: ${{ github.event_name != 'pull_request'}}
         run: npm run generate
         env:
           NODE_ENV: production
 
       - name: Configure AWS Credentials ㊙️
-        if: ${{ github.event_name != 'pull_request'}}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -63,7 +100,6 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3 🛫
-        if: ${{ github.event_name != 'pull_request'}}
         run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥

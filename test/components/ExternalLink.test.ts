@@ -53,6 +53,9 @@ describe("ExternalLink", () => {
   it("passes on focus event to component using it", async () => {
     const spy = jest.fn();
     const wrapper = mount(ExternalLink, {
+      // element needs to be in the DOM to get the focus event
+      // https://stackoverflow.com/a/53042010/2601552
+      attachTo: document.body,
       propsData: {
         to: "https://example.com",
       },

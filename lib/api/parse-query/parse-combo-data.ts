@@ -2,12 +2,8 @@ import normalizeStringInput from "../normalize-string-input";
 
 import type { SearchParameters } from "../types";
 
-export const COMBO_DATA_TYPES: [
-  "cards",
-  "prerequisites",
-  "steps",
-  "results"
-] = ["cards", "prerequisites", "steps", "results"];
+export const COMBO_DATA_TYPES: ["cards", "prerequisites", "steps", "results"] =
+  ["cards", "prerequisites", "steps", "results"];
 const SUPPORTED_OPERATORS_FOR_DATA = [":", "="];
 
 export default function parseComboData(

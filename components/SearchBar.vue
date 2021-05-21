@@ -65,7 +65,15 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
+      class="
+        md:hidden
+        flex flex-wrap flex-row
+        text-center
+        mt-2
+        py-4
+        border-t border-light
+        text-light
+      "
       @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search/" class="mobile-menu-button">

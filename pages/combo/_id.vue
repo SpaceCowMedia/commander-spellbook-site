@@ -149,9 +149,12 @@ export default Vue.extend({
     const cards = combo.cards.map((card) => {
       return {
         name: card.name,
-        artUrl: card.externalData.images.artCrop,
-        oracleImageUrl: card.externalData.images.oracle,
-        prices: card.externalData.prices,
+        artUrl: card.getImageUrl("artCrop"),
+        oracleImageUrl: card.getImageUrl("oracle"),
+        prices: {
+          tcgplayer: card.getPrice("tcgplayer"),
+          cardkingdom: card.getPrice("cardkingdom"),
+        },
       };
     });
 
@@ -357,9 +360,12 @@ export default Vue.extend({
     this.cards = combo.cards.map((card) => {
       return {
         name: card.name,
-        artUrl: card.externalData.images.artCrop,
-        oracleImageUrl: card.externalData.images.oracle,
-        prices: card.externalData.prices,
+        artUrl: card.getImageUrl("artCrop"),
+        oracleImageUrl: card.getImageUrl("oracle"),
+        prices: {
+          tcgplayer: card.getPrice("tcgplayer"),
+          cardkingdom: card.getPrice("cardkingdom"),
+        },
       };
     });
     this.prerequisites = Array.from(combo.prerequisites);

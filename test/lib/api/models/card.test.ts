@@ -31,17 +31,36 @@ describe("Card", () => {
     expect(card.name).toEqual("Sydri, Galvanic Genius");
   });
 
-  it("external card data", () => {
-    const card = new Card("Sydri, Galvanic Genius");
+  describe("getImageUrl", () => {
+    it("gets the art crop url", () => {
+      const card = new Card("Sydri, Galvanic Genius");
 
-    expect(card.externalData.images.oracle).toBe(
-      "https://c1.scryfall.com/file/oracle.jpg"
-    );
-    expect(card.externalData.images.artCrop).toBe(
-      "https://c1.scryfall.com/file/art.jpg"
-    );
-    expect(card.externalData.prices.tcgplayer).toBe(123);
-    expect(card.externalData.prices.cardkingdom).toBe(456);
+      expect(card.getImageUrl("oracle")).toBe(
+        "https://c1.scryfall.com/file/oracle.jpg"
+      );
+    });
+
+    it("gets the oracle image url", () => {
+      const card = new Card("Sydri, Galvanic Genius");
+
+      expect(card.getImageUrl("artCrop")).toBe(
+        "https://c1.scryfall.com/file/art.jpg"
+      );
+    });
+  });
+
+  describe("getPrice", () => {
+    it("gets the tcgplayer price", () => {
+      const card = new Card("Sydri, Galvanic Genius");
+
+      expect(card.getPrice("tcgplayer")).toBe(123);
+    });
+
+    it("gets the cardkigndom price", () => {
+      const card = new Card("Sydri, Galvanic Genius");
+
+      expect(card.getPrice("cardkingdom")).toBe(456);
+    });
   });
 
   describe("matchesName", () => {

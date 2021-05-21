@@ -12,11 +12,11 @@ We encourage you to copy this data so it lives on!
 
 **Sincerely, the Community Admins:**
 
-* [Lapper](https://twitter.com/lappermedic)
-* [Goldshot20](https://www.moxfield.com/users/goldshot20)
-* [AppleSaws](https://www.moxfield.com/users/AppleSaws)
-* [Jaelyn Rosenquist](https://twitter.com/rosequartz_26)
-* [Senior Edificer (Emeritus)](https://www.moxfield.com/users/SeniorEdificer)
+- [Lapper](https://twitter.com/lappermedic)
+- [Goldshot20](https://www.moxfield.com/users/goldshot20)
+- [AppleSaws](https://www.moxfield.com/users/AppleSaws)
+- [Jaelyn Rosenquist](https://twitter.com/rosequartz_26)
+- [Senior Edificer (Emeritus)](https://www.moxfield.com/users/SeniorEdificer)
 
 ## Installation Requirements
 
