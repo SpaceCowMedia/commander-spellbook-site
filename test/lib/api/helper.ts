@@ -35,6 +35,9 @@ export function makeSearchParams(
         includeFilters: [],
         excludeFilters: [],
       },
+      price: {
+        filters: [],
+      },
       tags: {},
       errors: [],
     },

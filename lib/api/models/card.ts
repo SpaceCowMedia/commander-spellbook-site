@@ -32,7 +32,7 @@ export default class Card {
   }
 
   getPrice(kind: "tcgplayer" | "cardkingdom"): number {
-    return this.externalData.prices[kind] || 0;
+    return this.externalData.prices[kind];
   }
 
   isFeatured(): boolean {

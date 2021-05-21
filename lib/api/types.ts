@@ -98,6 +98,10 @@ export type SearchParameters = {
     includeFilters: ColorIdentityValueFilter[];
     excludeFilters: ColorIdentityValueFilter[];
   };
+  price: {
+    vendor?: "tcgplayer" | "cardkingdom";
+    filters: SizeFilter[];
+  };
   tags: {
     banned?: TagValue;
     spoiled?: TagValue;
