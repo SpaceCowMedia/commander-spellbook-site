@@ -50,6 +50,9 @@ jobs:
 
       - name: Generate 🏗️
         if: ${{ github.event_name != 'pull_request'}}
+        concurrency:
+          group: "production_deploy"
+          cancel-in-progress: true
         run: npm run generate
         env:
           NODE_ENV: production
@@ -64,8 +67,14 @@ jobs:
 
       - name: Deploy to S3 🛫
         if: ${{ github.event_name != 'pull_request'}}
+        concurrency:
+          group: "production_deploy"
+          cancel-in-progress: true
         run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
+        concurrency:
+          group: "production_deploy"
+          cancel-in-progress: true
         if: ${{ github.event_name != 'pull_request'}}
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
