@@ -46,6 +46,9 @@ jobs:
         run: npm test
 
       - name: Run Integration tests 🧪
+        concurrency:
+          group: ${{ github.head_ref }}
+          cancel-in-progress: true
         run: npm run test:integration
 
       - name: Generate 🏗️
