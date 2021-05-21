@@ -10,6 +10,10 @@ on:
   schedule:
     - cron: "0 */4 * * *"
 
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   install:
     runs-on: ubuntu-20.04
@@ -73,9 +77,11 @@ jobs:
         run: npm run test:integration
 
   deploy:
-    if: ${{ github.event_name != 'pull_request'}}
+    # only deploy from the main branch
+    if: github.ref == 'refs/heads/main'
+    concurrency: production_deploy
     runs-on: ubuntu-20.04
-    needs: [linter, unit-tests, integration-tests]
+    needs: [install, linter, unit-tests, integration-tests]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
