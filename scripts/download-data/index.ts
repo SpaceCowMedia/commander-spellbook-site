@@ -32,12 +32,8 @@ Promise.all([
   getEDHRECComboData(),
 ]).then((responses) => {
   const cardData: Record<string, CardData> = {};
-  const [
-    compressedData,
-    scryfallData,
-    edhrecPriceData,
-    edhrecComboData,
-  ] = responses;
+  const [compressedData, scryfallData, edhrecPriceData, edhrecComboData] =
+    responses;
   const cardNames = collectCardNames(compressedData);
   const results = collectResults(compressedData);
 

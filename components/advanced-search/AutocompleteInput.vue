@@ -102,7 +102,7 @@ export default Vue.extend({
   data() {
     return {
       arrowCounter: -1,
-      autocompleteTimeout: (0 as unknown) as ReturnType<typeof setTimeout>,
+      autocompleteTimeout: 0 as unknown as ReturnType<typeof setTimeout>,
       matchingAutocompleteOptions: [] as { value: string; label: string }[],
     };
   },

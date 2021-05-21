@@ -132,6 +132,9 @@ describe("CardGroup", () => {
 
   it("expands the card fourth from it's position when focused", async () => {
     const wrapper = mount(CardGroup, {
+      // element needs to be in the DOM to get the focus event
+      // https://stackoverflow.com/a/53042010/2601552
+      attachTo: document.body,
       propsData: {
         cards: [
           { name: "card 1", oracleImageUrl: "https://example.com/oracle1.png" },
