@@ -56,3 +56,17 @@ jobs:
 
       - name: Run unit tests 🧪
         run: npm test
+
+  integration-tests:
+    needs: install
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+
+      - name: Run Integration tests 💻
+        run: npm run test:integration
