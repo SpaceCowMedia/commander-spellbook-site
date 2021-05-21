@@ -12,57 +12,29 @@ on:
 
 jobs:
   install:
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
 
-			# only install dependencies using
-			# https://github.com/cypress-io/github-action
-			# will restore / create folders
-			#   ~/.npm
-			#   ~/.cache/Cypress
-			- name: Install 📦
-				uses: cypress-io/github-action@v2
-				with:
-					runTests: false
+        # only install dependencies using
+        # https://github.com/cypress-io/github-action
+        # will restore / create folders
+        #   ~/.npm
+        #   ~/.cache/Cypress
+      - name: Install 📦
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
 
-	linter:
-		needs: install
-		steps:
+  linter:
+    needs: install
+    steps:
       - name: Run linter 👀
         run: npm run lint
 
-	unit-tests:
-		needs: install
-		steps:
+  unit-tests:
+    needs: install
+    steps:
       - name: Run unit tests 🧪
         run: npm test
-
-	integration-tests:
-		needs: install
-		steps:
-      - name: Run Integration tests 🧪
-        run: npm run test:integration
-
-	deploy:
-		if: ${{ github.event_name != 'pull_request'}}
-		needs: [linter, unit-tests, integration-tests]
-		steps:
-      - name: Generate 🏗️
-        run: npm run generate
-        env:
-          NODE_ENV: production
-
-      - name: Configure AWS Credentials ㊙️
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Deploy to S3 🛫
-        run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
-
-      - name: Bust Cloudfront Cache 👥
-        if: ${{ github.event_name != 'pull_request'}}
-        run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
