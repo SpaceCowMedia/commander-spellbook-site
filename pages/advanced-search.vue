@@ -73,6 +73,26 @@
         />
       </div>
 
+      <div id="price-inputs" class="container">
+        <MultiSearchInput
+          v-model="price"
+          label="Price"
+          plural-label="Price"
+          :operator-options="priceOptions"
+          default-operator="<-number"
+        />
+      </div>
+
+      <div id="vendor" class="container" v-if="price.length > 0">
+        <RadioSearchInput
+          label="Card Vendor"
+          :checked-value="vendor"
+          :options="vendorOptions"
+          form-name="vendor"
+          @update-radio="updateRadio('vendor', $event)"
+        />
+      </div>
+
       <div id="previewed-combos" class="container">
         <RadioSearchInput
           label="Previewed / Spoiled Combos"
@@ -182,6 +202,12 @@ type Data = {
   results: InputData[];
   comboDataOperatorOptions: OperatorOption[];
 
+  price: InputData[];
+  priceOptions: OperatorOption[];
+
+  vendor: string;
+  vendorOptions: OperatorOption[];
+
   validationError: string;
 
   previewed: string;
@@ -192,6 +218,7 @@ type Data = {
 
 const DEFAULT_PREVIEWED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
+const DEFAULT_VENDOR_VALUE = "cardkingdom";
 
 export default Vue.extend({
   components: {
@@ -280,6 +307,25 @@ export default Vue.extend({
         { value: "=-number", label: "Contains exactly x (number)" },
       ],
 
+      price: [{ value: "", operator: "<-number" }],
+      priceOptions: [
+        { value: "<-number", label: "Costs less than" },
+        { value: ">-number", label: "Costs more than" },
+        { value: "=-number", label: "Costs exactly" },
+      ],
+
+      vendor: DEFAULT_VENDOR_VALUE,
+      vendorOptions: [
+        {
+          value: "cardkingdom",
+          label: "Card Kingdom",
+        },
+        {
+          value: "tcgplayer",
+          label: "TCGplayer",
+        },
+      ],
+
       previewed: DEFAULT_PREVIEWED_VALUE,
       previewedOptions: [
         {
@@ -362,7 +408,7 @@ export default Vue.extend({
               keyInQuery = "colors";
             } else if (keyInQuery === "pre") {
               keyInQuery = "prerequisites";
-            } else {
+            } else if (keyInQuery !== "price") {
               keyInQuery += "s";
             }
           } else if (isExclusionOperator) {
@@ -379,12 +425,19 @@ export default Vue.extend({
       this.prerequisites.forEach(makeQueryFunction("pre"));
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
+      this.price.forEach(makeQueryFunction("price"));
 
       if (this.previewed !== DEFAULT_PREVIEWED_VALUE) {
         query += ` ${this.previewed}:previewed`;
       }
       if (this.banned !== DEFAULT_BANNED_VALUE) {
         query += ` ${this.banned}:banned`;
+      }
+      if (
+        this.vendor !== DEFAULT_VENDOR_VALUE &&
+        this.price.find((option) => option.value)
+      ) {
+        query += ` vendor:${this.vendor}`;
       }
 
       query = query.trim();
@@ -445,10 +498,11 @@ export default Vue.extend({
       this.prerequisites.forEach(val);
       this.steps.forEach(val);
       this.results.forEach(val);
+      this.price.forEach(val);
 
       return hasValidationError;
     },
-    updateRadio(model: "banned" | "previewed", value: string): void {
+    updateRadio(model: "banned" | "previewed" | "vendor", value: string): void {
       this[model] = value;
     },
   },
