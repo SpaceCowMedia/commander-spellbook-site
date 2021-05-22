@@ -83,7 +83,7 @@
         />
       </div>
 
-      <div id="vendor" class="container" v-if="hasAPriceInQuery">
+      <div v-if="hasAPriceInQuery" id="vendor" class="container">
         <RadioSearchInput
           label="Card Vendor"
           :checked-value="vendor"
