@@ -44,6 +44,53 @@ describe("AdvancedSearchPage", () => {
     );
   });
 
+  it("only renders vendor when price is added to query", async () => {
+    const wrapper = shallowMount(AdvancedSearchPage, {
+      mocks: {
+        $router,
+      },
+      stubs: {
+        ArtCircle: true,
+        NuxtLink: true,
+        MultiSearchInput: true,
+        RadioSearchInput: true,
+      },
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(false);
+
+    await wrapper.setData({
+      price: [{ value: "1", operator: "<-number" }],
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(true);
+
+    await wrapper.setData({
+      price: [
+        { value: "     ", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+      ],
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(false);
+
+    await wrapper.setData({
+      price: [
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "3", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+      ],
+    });
+    expect(wrapper.find("#vendor").exists()).toBe(true);
+  });
+
   describe("submit", () => {
     it("redirects to search with query based on data", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
@@ -673,7 +720,9 @@ describe("AdvancedSearchPage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      wrapper.setData({
+      await wrapper.setData({
+        // need a price to expose the vendor radio button
+        price: [{ value: "3", operator: "<-number" }],
         vendor: "cardkingdom",
         previewed: "include",
         banned: "exclude",

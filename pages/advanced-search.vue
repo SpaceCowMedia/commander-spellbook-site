@@ -83,7 +83,7 @@
         />
       </div>
 
-      <div id="vendor" class="container" v-if="price.length > 0">
+      <div id="vendor" class="container" v-if="hasAPriceInQuery">
         <RadioSearchInput
           label="Card Vendor"
           :checked-value="vendor"
@@ -433,16 +433,16 @@ export default Vue.extend({
       if (this.banned !== DEFAULT_BANNED_VALUE) {
         query += ` ${this.banned}:banned`;
       }
-      if (
-        this.vendor !== DEFAULT_VENDOR_VALUE &&
-        this.price.find((option) => option.value)
-      ) {
+      if (this.vendor !== DEFAULT_VENDOR_VALUE && this.hasAPriceInQuery) {
         query += ` vendor:${this.vendor}`;
       }
 
       query = query.trim();
 
       return query;
+    },
+    hasAPriceInQuery(): boolean {
+      return Boolean(this.price.find((option) => option.value.trim()));
     },
   },
   methods: {
