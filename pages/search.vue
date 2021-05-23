@@ -150,6 +150,7 @@ export default Vue.extend({
     sortOptions(): Option[] {
       return [
         { value: "colors", label: "Sort by color identity" },
+        { value: "price", label: "Sort by price" },
         {
           value: "cards",
           label: "Sort by number of cards",
