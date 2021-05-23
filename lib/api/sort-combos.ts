@@ -44,6 +44,26 @@ function handleSortingByColorIdentity(
   };
 }
 
+function handleSortingByPrice(
+  firstCombo: FormattedApiResponse,
+  secondCombo: FormattedApiResponse
+): SortingMeta {
+  // TODO vendor
+  const firstPrice = firstCombo.cards.getPrice("cardkingdom");
+  const secondPrice = secondCombo.cards.getPrice("cardkingdom");
+  const isEqual = firstPrice === secondPrice;
+  const firstRemainsFirst = firstPrice > secondPrice;
+
+  if (isEqual) {
+    return handleSortingByColorIdentity(firstCombo, secondCombo);
+  }
+
+  return {
+    isEqual,
+    firstRemainsFirst,
+  };
+}
+
 export default function sortCombos(
   combos: FormattedApiResponse[],
   by: string,
@@ -70,6 +90,9 @@ export default function sortCombos(
         break;
       case "colors":
         meta = handleSortingByColorIdentity(firstCombo, secondCombo);
+        break;
+      case "price":
+        meta = handleSortingByPrice(firstCombo, secondCombo);
         break;
     }
 
