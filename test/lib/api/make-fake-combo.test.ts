@@ -116,4 +116,13 @@ describe("makeFakeCombo", () => {
 
     expect(combo.edhrecLink).toBeFalsy();
   });
+
+  it("can overwrite the getPrice function", () => {
+    const combo = makeFakeCombo({
+      price: 20,
+    });
+
+    expect(combo.cards.getPrice("tcgplayer")).toBe(20);
+    expect(combo.cards.getPrice("cardkingdom")).toBe(20);
+  });
 });
