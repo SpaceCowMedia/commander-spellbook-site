@@ -36,7 +36,7 @@ export default async function search(query = ""): Promise<SearchResults> {
   combos = filterSize(combos, searchParams);
   combos = filterPrice(combos, searchParams);
   combos = filterTags(combos, searchParams);
-  combos = sortCombos(combos, sort, order);
+  combos = sortCombos(combos, { by: sort, order });
 
   return {
     errors,

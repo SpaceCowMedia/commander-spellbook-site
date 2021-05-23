@@ -29,7 +29,10 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, "foo", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "foo",
+      order: "ascending",
+    });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("3");
     expect(sortedCombos[1].commanderSpellbookId).toBe("2");
@@ -57,7 +60,10 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, "id", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "id",
+      order: "ascending",
+    });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("1");
     expect(sortedCombos[1].commanderSpellbookId).toBe("2");
@@ -85,7 +91,10 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, "id", "descending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "id",
+      order: "descending",
+    });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("5");
     expect(sortedCombos[1].commanderSpellbookId).toBe("4");
@@ -120,7 +129,10 @@ describe("search", () => {
         })
       );
 
-      const sortedCombos = await sortCombos(combos, kind, "ascending");
+      const sortedCombos = await sortCombos(combos, {
+        by: kind,
+        order: "ascending",
+      });
 
       expect(sortedCombos[0].commanderSpellbookId).toBe("1");
       expect(sortedCombos[1].commanderSpellbookId).toBe("2");
@@ -156,7 +168,10 @@ describe("search", () => {
         })
       );
 
-      const sortedCombos = await sortCombos(combos, kind, "descending");
+      const sortedCombos = await sortCombos(combos, {
+        by: kind,
+        order: "descending",
+      });
 
       expect(sortedCombos[0].commanderSpellbookId).toBe("5");
       expect(sortedCombos[1].commanderSpellbookId).toBe("4");
@@ -180,7 +195,10 @@ describe("search", () => {
 
     expect(combos.length).toBe(32);
 
-    const sortedCombos = await sortCombos(combos, "colors", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "colors",
+      order: "ascending",
+    });
 
     expect(sortedCombos.length).toBe(32);
 
@@ -204,7 +222,10 @@ describe("search", () => {
 
     expect(combos.length).toBe(32);
 
-    const sortedCombos = await sortCombos(combos, "colors", "descending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "colors",
+      order: "descending",
+    });
 
     expect(sortedCombos.length).toBe(32);
 
@@ -242,7 +263,10 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, "colors", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "colors",
+      order: "ascending",
+    });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("1");
     expect(sortedCombos[1].commanderSpellbookId).toBe("2");
@@ -285,7 +309,10 @@ describe("search", () => {
     // randomize order
     combos.sort(() => 0.5 - Math.random());
 
-    const sortedCombos = await sortCombos(combos, "price", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "price",
+      order: "ascending",
+    });
 
     expect(sortedCombos.length).toBe(7);
 
@@ -328,7 +355,10 @@ describe("search", () => {
     // randomize order
     combos.sort(() => 0.5 - Math.random());
 
-    const sortedCombos = await sortCombos(combos, "price", "descending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "price",
+      order: "descending",
+    });
 
     expect(sortedCombos.length).toBe(7);
 
@@ -371,7 +401,10 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, "price", "ascending");
+    const sortedCombos = await sortCombos(combos, {
+      by: "price",
+      order: "ascending",
+    });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("4");
     expect(sortedCombos[1].commanderSpellbookId).toBe("1");

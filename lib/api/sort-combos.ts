@@ -7,6 +7,11 @@ type SortingMeta = {
   firstRemainsFirst: boolean;
 };
 
+type SortOptions = {
+  by: string;
+  order: "ascending" | "descending";
+};
+
 function handleSortingForNumberOfElements(
   firstCombo: FormattedApiResponse,
   secondCombo: FormattedApiResponse,
@@ -66,8 +71,7 @@ function handleSortingByPrice(
 
 export default function sortCombos(
   combos: FormattedApiResponse[],
-  by: string,
-  order: "ascending" | "descending"
+  { by, order }: SortOptions
 ): FormattedApiResponse[] {
   combos = combos.sort((firstCombo, secondCombo) => {
     let meta = {

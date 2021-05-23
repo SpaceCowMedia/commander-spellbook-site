@@ -133,7 +133,10 @@ describe("search", () => {
     const result = await search("Sydri Arjun Rashmi");
 
     expect(sortCombos).toBeCalledTimes(1);
-    expect(sortCombos).toBeCalledWith(expect.anything(), "colors", "ascending");
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "colors",
+      order: "ascending",
+    });
 
     expect(result.sort).toBe("colors");
     expect(result.order).toBe("ascending");
@@ -150,7 +153,10 @@ describe("search", () => {
     const result = await search("Sydri Arjun Rashmi");
 
     expect(sortCombos).toBeCalledTimes(1);
-    expect(sortCombos).toBeCalledWith(expect.anything(), "cards", "descending");
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "cards",
+      order: "descending",
+    });
 
     expect(result.sort).toBe("cards");
     expect(result.order).toBe("descending");
