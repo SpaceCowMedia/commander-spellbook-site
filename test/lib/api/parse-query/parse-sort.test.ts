@@ -9,14 +9,19 @@ describe("parseSort", () => {
     searchParams = makeSearchParams();
   });
 
-  it.each(["results", "steps", "prerequisites", "cards", "id", "colors"])(
-    "suports %s",
-    (kind) => {
-      parseSort(searchParams, ":", kind);
+  it.each([
+    "results",
+    "steps",
+    "prerequisites",
+    "cards",
+    "id",
+    "colors",
+    "price",
+  ])("suports %s", (kind) => {
+    parseSort(searchParams, ":", kind);
 
-      expect(searchParams.sort).toEqual(kind);
-    }
-  );
+    expect(searchParams.sort).toEqual(kind);
+  });
 
   it.each(["color", "ci", "coloridentity", "color-identity"])(
     "supports %s as alias for colors",
@@ -26,6 +31,12 @@ describe("parseSort", () => {
       expect(searchParams.sort).toEqual("colors");
     }
   );
+
+  it("supports usd as alias for price", () => {
+    parseSort(searchParams, "=", "usd");
+
+    expect(searchParams.sort).toEqual("price");
+  });
 
   it("provides error if invalid value is used for sort", () => {
     parseSort(searchParams, ":", "foo");
