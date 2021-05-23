@@ -10,6 +10,7 @@ type SortingMeta = {
 type SortOptions = {
   by: string;
   order: "ascending" | "descending";
+  vendor: "cardkingdom" | "tcgplayer";
 };
 
 function handleSortingForNumberOfElements(
@@ -51,11 +52,11 @@ function handleSortingByColorIdentity(
 
 function handleSortingByPrice(
   firstCombo: FormattedApiResponse,
-  secondCombo: FormattedApiResponse
+  secondCombo: FormattedApiResponse,
+  vendor: "cardkingdom" | "tcgplayer"
 ): SortingMeta {
-  // TODO vendor
-  const firstPrice = firstCombo.cards.getPrice("cardkingdom");
-  const secondPrice = secondCombo.cards.getPrice("cardkingdom");
+  const firstPrice = firstCombo.cards.getPrice(vendor);
+  const secondPrice = secondCombo.cards.getPrice(vendor);
   const isEqual = firstPrice === secondPrice;
   const firstRemainsFirst = firstPrice > secondPrice;
 
@@ -71,7 +72,7 @@ function handleSortingByPrice(
 
 export default function sortCombos(
   combos: FormattedApiResponse[],
-  { by, order }: SortOptions
+  { by, order, vendor }: SortOptions
 ): FormattedApiResponse[] {
   combos = combos.sort((firstCombo, secondCombo) => {
     let meta = {
@@ -96,7 +97,7 @@ export default function sortCombos(
         meta = handleSortingByColorIdentity(firstCombo, secondCombo);
         break;
       case "price":
-        meta = handleSortingByPrice(firstCombo, secondCombo);
+        meta = handleSortingByPrice(firstCombo, secondCombo, vendor);
         break;
     }
 

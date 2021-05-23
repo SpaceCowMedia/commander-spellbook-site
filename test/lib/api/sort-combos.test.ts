@@ -3,6 +3,8 @@ import sortCombos from "@/lib/api/sort-combos";
 import COLOR_ORDER from "@/lib/api/color-combo-order";
 import { FormattedApiResponse } from "@/lib/api/types";
 
+import { mocked } from "ts-jest/utils";
+
 describe("search", () => {
   let combos: FormattedApiResponse[];
 
@@ -32,6 +34,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "foo",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("3");
@@ -63,6 +66,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "id",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("1");
@@ -94,6 +98,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "id",
       order: "descending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("5");
@@ -132,6 +137,7 @@ describe("search", () => {
       const sortedCombos = await sortCombos(combos, {
         by: kind,
         order: "ascending",
+        vendor: "cardkingdom",
       });
 
       expect(sortedCombos[0].commanderSpellbookId).toBe("1");
@@ -171,6 +177,7 @@ describe("search", () => {
       const sortedCombos = await sortCombos(combos, {
         by: kind,
         order: "descending",
+        vendor: "cardkingdom",
       });
 
       expect(sortedCombos[0].commanderSpellbookId).toBe("5");
@@ -198,6 +205,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "colors",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos.length).toBe(32);
@@ -225,6 +233,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "colors",
       order: "descending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos.length).toBe(32);
@@ -266,6 +275,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "colors",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("1");
@@ -312,6 +322,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "price",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos.length).toBe(7);
@@ -358,6 +369,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "price",
       order: "descending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos.length).toBe(7);
@@ -404,6 +416,7 @@ describe("search", () => {
     const sortedCombos = await sortCombos(combos, {
       by: "price",
       order: "ascending",
+      vendor: "cardkingdom",
     });
 
     expect(sortedCombos[0].commanderSpellbookId).toBe("4");
@@ -411,5 +424,40 @@ describe("search", () => {
     expect(sortedCombos[2].commanderSpellbookId).toBe("2");
     expect(sortedCombos[3].commanderSpellbookId).toBe("3");
     expect(sortedCombos[4].commanderSpellbookId).toBe("5");
+  });
+
+  it("sorts price by vendor passed in", () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        price: 2,
+      })
+    );
+
+    jest.spyOn(combos[0].cards, "getPrice");
+
+    sortCombos(combos, {
+      by: "price",
+      order: "ascending",
+      vendor: "cardkingdom",
+    });
+
+    expect(combos[0].cards.getPrice).toBeCalledWith("cardkingdom");
+    expect(combos[0].cards.getPrice).not.toBeCalledWith("tcgplayer");
+
+    mocked(combos[0].cards.getPrice).mockClear();
+
+    sortCombos(combos, {
+      by: "price",
+      order: "ascending",
+      vendor: "tcgplayer",
+    });
+
+    expect(combos[0].cards.getPrice).not.toBeCalledWith("cardkingdom");
+    expect(combos[0].cards.getPrice).toBeCalledWith("tcgplayer");
   });
 });

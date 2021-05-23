@@ -16,6 +16,7 @@ export default async function search(query = ""): Promise<SearchResults> {
   const searchParams = parseQuery(query);
   const sort = searchParams.sort || "colors";
   const order = searchParams.order || "ascending";
+  const vendor = searchParams.price.vendor || "cardkingdom";
   const { errors } = searchParams;
 
   if (!validateSearchParams(searchParams)) {
@@ -36,7 +37,7 @@ export default async function search(query = ""): Promise<SearchResults> {
   combos = filterSize(combos, searchParams);
   combos = filterPrice(combos, searchParams);
   combos = filterTags(combos, searchParams);
-  combos = sortCombos(combos, { by: sort, order });
+  combos = sortCombos(combos, { by: sort, order, vendor });
 
   return {
     errors,
