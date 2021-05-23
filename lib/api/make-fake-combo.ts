@@ -42,7 +42,7 @@ export default function makeFakeCombo(
     payload.edhrecLink = `https://edhrec.com/combos/${payload.colorIdentity.toString()}/${id}`;
   }
 
-  if (options.price !== null) {
+  if (options.price != null) {
     payload.cards.getPrice = function () {
       return options.price as number;
     };
