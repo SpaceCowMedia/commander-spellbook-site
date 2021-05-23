@@ -241,6 +241,11 @@
         <li><code>tcgplayer</code></li>
       </ul>
 
+      <p>
+        Combos where the price is not available are omitted from search results
+        when using the <code>price</code> parameter.
+      </p>
+
       <p><code>usd</code> is an alias for <code>price</code>.</p>
     </SearchGuide>
 
@@ -308,6 +313,8 @@
       </p>
 
       <ul>
+        <li><code>price</code> (or <code>usd</code>)</li>
+
         <li><code>results</code> (or <code>number-of-results</code>)</li>
         <li><code>steps</code> (or <code>number-of-steps</code>)</li>
 
@@ -327,6 +334,11 @@
         By default, the combo results are ordered in ascending order. Use
         <code>order:descending</code> or <code>order:desc</code> to reverse the
         order.
+      </p>
+
+      <p>
+        When sorting by price, combos with no price available are treated as
+        having a price of 0.
       </p>
     </SearchGuide>
   </div>
@@ -525,6 +537,11 @@ export default Vue.extend({
         },
       ],
       sortOrderSnippets: [
+        {
+          search: "results=1 sort:price order:descending",
+          description:
+            "Combos with exactly one result, sorted by most expensive to least expensive.",
+        },
         {
           search: "ci:grixis sort:cards",
           description:
