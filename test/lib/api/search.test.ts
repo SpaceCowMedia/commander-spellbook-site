@@ -10,6 +10,7 @@ import filterTags from "@/lib/api/search-filters/tags";
 import sortCombos from "@/lib/api/sort-combos";
 import parseQuery from "@/lib/api/parse-query";
 import validateSearchParams from "@/lib/api/validate-search-params";
+import type { SortValue } from "@/lib/api/types";
 import { mocked } from "ts-jest/utils";
 import { makeSearchParams } from "./helper";
 
@@ -142,6 +143,50 @@ describe("search", () => {
     expect(result.sort).toBe("colors");
     expect(result.order).toBe("ascending");
   });
+
+  it.each(["prerequisites", "steps", "results", "cards", "id"] as SortValue[])(
+    "orders %s in ascending order",
+    async (sort) => {
+      mocked(parseQuery).mockReturnValue(
+        makeSearchParams({
+          sort,
+        })
+      );
+      const result = await search("Sydri Arjun Rashmi");
+
+      expect(sortCombos).toBeCalledTimes(1);
+      expect(sortCombos).toBeCalledWith(expect.anything(), {
+        by: sort,
+        order: "ascending",
+        vendor: "cardkingdom",
+      });
+
+      expect(result.sort).toBe(sort);
+      expect(result.order).toBe("ascending");
+    }
+  );
+
+  it.each(["price"] as SortValue[])(
+    "orders %s in descending order",
+    async (sort) => {
+      mocked(parseQuery).mockReturnValue(
+        makeSearchParams({
+          sort,
+        })
+      );
+      const result = await search("Sydri Arjun Rashmi");
+
+      expect(sortCombos).toBeCalledTimes(1);
+      expect(sortCombos).toBeCalledWith(expect.anything(), {
+        by: sort,
+        order: "descending",
+        vendor: "cardkingdom",
+      });
+
+      expect(result.sort).toBe(sort);
+      expect(result.order).toBe("descending");
+    }
+  );
 
   it("specifies cardkingdom as default vendor", async () => {
     mocked(parseQuery).mockReturnValue(

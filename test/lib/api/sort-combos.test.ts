@@ -1,7 +1,7 @@
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import sortCombos from "@/lib/api/sort-combos";
 import COLOR_ORDER from "@/lib/api/color-combo-order";
-import { FormattedApiResponse } from "@/lib/api/types";
+import { FormattedApiResponse, SortValue } from "@/lib/api/types";
 
 import { mocked } from "ts-jest/utils";
 
@@ -32,6 +32,7 @@ describe("search", () => {
     );
 
     const sortedCombos = await sortCombos(combos, {
+      // @ts-ignore
       by: "foo",
       order: "ascending",
       vendor: "cardkingdom",
@@ -108,7 +109,7 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("1");
   });
 
-  it.each(["cards", "prerequisites", "steps", "results"])(
+  it.each(["cards", "prerequisites", "steps", "results"] as SortValue[])(
     "sorts combos by number of %s",
     async (kind) => {
       combos.push(
@@ -148,7 +149,7 @@ describe("search", () => {
     }
   );
 
-  it.each(["cards", "prerequisites", "steps", "results"])(
+  it.each(["cards", "prerequisites", "steps", "results"] as SortValue[])(
     "sorts combos by number of %s in descending order",
     async (kind) => {
       combos.push(

@@ -1,5 +1,5 @@
 import parseSort from "@/lib/api/parse-query/parse-sort";
-import type { SearchParameters } from "@/lib/api/types";
+import type { SearchParameters, SortValue } from "@/lib/api/types";
 import { makeSearchParams } from "../helper";
 
 describe("parseSort", () => {
@@ -17,7 +17,7 @@ describe("parseSort", () => {
     "id",
     "colors",
     "price",
-  ])("suports %s", (kind) => {
+  ] as SortValue[])("suports %s", (kind) => {
     parseSort(searchParams, ":", kind);
 
     expect(searchParams.sort).toEqual(kind);

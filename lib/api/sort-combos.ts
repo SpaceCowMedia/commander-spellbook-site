@@ -1,6 +1,11 @@
 import COLOR_ORDER from "./color-combo-order";
 
-import type { FormattedApiResponse } from "./types";
+import type {
+  FormattedApiResponse,
+  OrderValue,
+  SortValue,
+  VendorValue,
+} from "./types";
 
 type SortingMeta = {
   isEqual: boolean;
@@ -8,9 +13,9 @@ type SortingMeta = {
 };
 
 type SortOptions = {
-  by: string;
-  order: "ascending" | "descending";
-  vendor: "cardkingdom" | "tcgplayer";
+  by: SortValue;
+  order: OrderValue;
+  vendor: VendorValue;
 };
 
 function handleSortingForNumberOfElements(
@@ -53,7 +58,7 @@ function handleSortingByColorIdentity(
 function handleSortingByPrice(
   firstCombo: FormattedApiResponse,
   secondCombo: FormattedApiResponse,
-  vendor: "cardkingdom" | "tcgplayer"
+  vendor: VendorValue
 ): SortingMeta {
   const firstPrice = firstCombo.cards.getPrice(vendor);
   const secondPrice = secondCombo.cards.getPrice(vendor);

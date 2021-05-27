@@ -1,3 +1,4 @@
+import type { VendorValue } from "../types";
 import Card from "./card";
 
 // based on https://blog.simontest.net/extend-array-with-typescript-965cc1134b3
@@ -41,7 +42,7 @@ export default class CardGrouping extends Array<Card> {
     return Boolean(this.find((c) => c.isPreview()));
   }
 
-  getPrice(kind: "tcgplayer" | "cardkingdom"): number {
+  getPrice(kind: VendorValue): number {
     let hasNoPrice = false;
 
     const price = this.reduce((total, card) => {
@@ -69,7 +70,7 @@ export default class CardGrouping extends Array<Card> {
   // is not actually available to purchase at that vendor
   // and we return an empty string as the price of the combo
   // (which gets interpretted as not available in the UI)
-  getPriceAsString(kind: "tcgplayer" | "cardkingdom"): string {
+  getPriceAsString(kind: VendorValue): string {
     const price = this.getPrice(kind);
 
     if (price <= 0) {

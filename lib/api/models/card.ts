@@ -4,6 +4,8 @@ import getExternalCardData, {
   ExternalCardData,
 } from "../../get-external-card-data";
 
+import type { VendorValue } from "../types";
+
 export default class Card {
   name: string;
   private externalData: ExternalCardData;
@@ -31,7 +33,7 @@ export default class Card {
     return this.externalData.images[kind];
   }
 
-  getPrice(kind: "tcgplayer" | "cardkingdom"): number {
+  getPrice(kind: VendorValue): number {
     return this.externalData.prices[kind];
   }
 

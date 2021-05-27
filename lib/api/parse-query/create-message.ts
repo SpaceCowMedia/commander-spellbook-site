@@ -1,4 +1,8 @@
-import type { FormattedApiResponse, SearchParameters } from "../types";
+import type {
+  FormattedApiResponse,
+  SearchParameters,
+  VendorValue,
+} from "../types";
 
 export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
   "cards",
@@ -7,7 +11,7 @@ export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
   "results",
 ];
 
-const PRICE_VENDOR_MAP: Record<"tcgplayer" | "cardkingdom", string> = {
+const PRICE_VENDOR_MAP: Record<VendorValue, string> = {
   tcgplayer: "TCGplayer",
   cardkingdom: "Card Kingdom",
 };
