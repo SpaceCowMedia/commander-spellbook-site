@@ -10,23 +10,12 @@ import sortCombos from "./sort-combos";
 import createMessage from "./parse-query/create-message";
 import validateSearchParams from "./validate-search-params";
 
-import type { SearchResults, OrderValue, SortValue } from "./types";
-
-const ORDER_DEFAULTS: Record<SortValue, OrderValue> = {
-  prerequisites: "ascending",
-  steps: "ascending",
-  results: "ascending",
-  cards: "ascending",
-  colors: "ascending",
-  id: "ascending",
-
-  price: "descending",
-};
+import type { SearchResults } from "./types";
 
 export default async function search(query = ""): Promise<SearchResults> {
   const searchParams = parseQuery(query);
   const sort = searchParams.sort || "colors";
-  const order = searchParams.order || ORDER_DEFAULTS[sort];
+  const order = searchParams.order || "auto";
   const vendor = searchParams.price.vendor || "cardkingdom";
   const { errors } = searchParams;
 

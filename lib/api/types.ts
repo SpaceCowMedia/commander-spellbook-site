@@ -49,7 +49,7 @@ export type SortValue =
   | "colors"
   | "id"
   | "price";
-export type OrderValue = "ascending" | "descending";
+export type OrderValue = "auto" | "ascending" | "descending";
 export type VendorValue = "tcgplayer" | "cardkingdom";
 
 export type SearchError = {

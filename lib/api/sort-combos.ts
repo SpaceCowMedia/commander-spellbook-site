@@ -18,6 +18,17 @@ type SortOptions = {
   vendor: VendorValue;
 };
 
+const ORDER_DEFAULTS: Record<SortValue, OrderValue> = {
+  prerequisites: "ascending",
+  steps: "ascending",
+  results: "ascending",
+  cards: "ascending",
+  colors: "ascending",
+  id: "ascending",
+
+  price: "descending",
+};
+
 function handleSortingForNumberOfElements(
   firstCombo: FormattedApiResponse,
   secondCombo: FormattedApiResponse,
@@ -79,6 +90,10 @@ export default function sortCombos(
   combos: FormattedApiResponse[],
   { by, order, vendor }: SortOptions
 ): FormattedApiResponse[] {
+  if (order === "auto") {
+    order = ORDER_DEFAULTS[by];
+  }
+
   combos = combos.sort((firstCombo, secondCombo) => {
     let meta = {
       isEqual: false,

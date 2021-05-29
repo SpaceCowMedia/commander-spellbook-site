@@ -12,7 +12,7 @@ describe("search", () => {
     combos = [];
   });
 
-  it("maintains original order when unsupported sort by value is used", async () => {
+  it("maintains original order when unsupported sort by value is used", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "3",
@@ -31,7 +31,7 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       // @ts-ignore
       by: "foo",
       order: "ascending",
@@ -45,7 +45,7 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("4");
   });
 
-  it("sorts combos by id", async () => {
+  it("sorts combos by id", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "3",
@@ -64,7 +64,7 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "id",
       order: "ascending",
       vendor: "cardkingdom",
@@ -77,7 +77,7 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("5");
   });
 
-  it("sorts combos by id in descending order", async () => {
+  it("sorts combos by id in descending order", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "3",
@@ -96,7 +96,7 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "id",
       order: "descending",
       vendor: "cardkingdom",
@@ -111,7 +111,7 @@ describe("search", () => {
 
   it.each(["cards", "prerequisites", "steps", "results"] as SortValue[])(
     "sorts combos by number of %s",
-    async (kind) => {
+    (kind) => {
       combos.push(
         makeFakeCombo({
           commanderSpellbookId: "3",
@@ -135,7 +135,7 @@ describe("search", () => {
         })
       );
 
-      const sortedCombos = await sortCombos(combos, {
+      const sortedCombos = sortCombos(combos, {
         by: kind,
         order: "ascending",
         vendor: "cardkingdom",
@@ -151,7 +151,7 @@ describe("search", () => {
 
   it.each(["cards", "prerequisites", "steps", "results"] as SortValue[])(
     "sorts combos by number of %s in descending order",
-    async (kind) => {
+    (kind) => {
       combos.push(
         makeFakeCombo({
           commanderSpellbookId: "3",
@@ -175,7 +175,7 @@ describe("search", () => {
         })
       );
 
-      const sortedCombos = await sortCombos(combos, {
+      const sortedCombos = sortCombos(combos, {
         by: kind,
         order: "descending",
         vendor: "cardkingdom",
@@ -189,7 +189,7 @@ describe("search", () => {
     }
   );
 
-  it("sorts combos by color identity (using the order displayed on EDHREC)", async () => {
+  it("sorts combos by color identity (using the order displayed on EDHREC)", () => {
     COLOR_ORDER.forEach((color, index) => {
       combos.push(
         makeFakeCombo({
@@ -203,7 +203,7 @@ describe("search", () => {
 
     expect(combos.length).toBe(32);
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "colors",
       order: "ascending",
       vendor: "cardkingdom",
@@ -216,7 +216,7 @@ describe("search", () => {
     });
   });
 
-  it("sorts combos by color identity in descending order (using reverse order displayed on EDHREC)", async () => {
+  it("sorts combos by color identity in descending order (using reverse order displayed on EDHREC)", () => {
     COLOR_ORDER.forEach((color, index) => {
       combos.push(
         makeFakeCombo({
@@ -231,7 +231,7 @@ describe("search", () => {
 
     expect(combos.length).toBe(32);
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "colors",
       order: "descending",
       vendor: "cardkingdom",
@@ -244,7 +244,7 @@ describe("search", () => {
     });
   });
 
-  it("sorts combos with identical color identities by number of cards", async () => {
+  it("sorts combos with identical color identities by number of cards", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "5",
@@ -273,7 +273,7 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "colors",
       order: "ascending",
       vendor: "cardkingdom",
@@ -286,7 +286,7 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("5");
   });
 
-  it("sorts combos by price in ascending order", async () => {
+  it("sorts combos by price in ascending order", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "1",
@@ -320,7 +320,7 @@ describe("search", () => {
     // randomize order
     combos.sort(() => 0.5 - Math.random());
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "price",
       order: "ascending",
       vendor: "cardkingdom",
@@ -333,7 +333,7 @@ describe("search", () => {
     });
   });
 
-  it("sorts combos by price in descending order", async () => {
+  it("sorts combos by price in descending order", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "1",
@@ -367,7 +367,7 @@ describe("search", () => {
     // randomize order
     combos.sort(() => 0.5 - Math.random());
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "price",
       order: "descending",
       vendor: "cardkingdom",
@@ -380,7 +380,7 @@ describe("search", () => {
     });
   });
 
-  it("sorts combos with identical prices by color identities and then by number of cards", async () => {
+  it("sorts combos with identical prices by color identities and then by number of cards", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "5",
@@ -414,7 +414,7 @@ describe("search", () => {
       })
     );
 
-    const sortedCombos = await sortCombos(combos, {
+    const sortedCombos = sortCombos(combos, {
       by: "price",
       order: "ascending",
       vendor: "cardkingdom",
@@ -460,5 +460,123 @@ describe("search", () => {
 
     expect(combos[0].cards.getPrice).not.toBeCalledWith("cardkingdom");
     expect(combos[0].cards.getPrice).toBeCalledWith("tcgplayer");
+  });
+
+  it.each(["prerequisites", "steps", "results", "cards"] as SortValue[])(
+    "orders %s in ascending order when an auto order is passed",
+    (sort) => {
+      combos.push(
+        makeFakeCombo({
+          commanderSpellbookId: "1",
+          [sort]: ["1"],
+        }),
+        makeFakeCombo({
+          commanderSpellbookId: "2",
+          [sort]: ["1", "2"],
+        }),
+        makeFakeCombo({
+          commanderSpellbookId: "3",
+          [sort]: ["1", "2", "3"],
+        }),
+        makeFakeCombo({
+          commanderSpellbookId: "4",
+          [sort]: ["1", "2", "3", "4"],
+        }),
+        makeFakeCombo({
+          commanderSpellbookId: "5",
+          [sort]: ["1", "2", "3", "4", "5"],
+        })
+      );
+
+      // randomize order
+      combos.sort(() => 0.5 - Math.random());
+
+      sortCombos(combos, {
+        by: sort,
+        order: "auto",
+        vendor: "cardkingdom",
+      });
+
+      expect(combos[0].commanderSpellbookId).toBe("1");
+      expect(combos[1].commanderSpellbookId).toBe("2");
+      expect(combos[2].commanderSpellbookId).toBe("3");
+      expect(combos[3].commanderSpellbookId).toBe("4");
+      expect(combos[4].commanderSpellbookId).toBe("5");
+    }
+  );
+
+  it("orders id in asecnding order when auto order is used", () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+      })
+    );
+
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    sortCombos(combos, {
+      by: "id",
+      order: "auto",
+      vendor: "cardkingdom",
+    });
+
+    expect(combos[0].commanderSpellbookId).toBe("1");
+    expect(combos[1].commanderSpellbookId).toBe("2");
+    expect(combos[2].commanderSpellbookId).toBe("3");
+    expect(combos[3].commanderSpellbookId).toBe("4");
+    expect(combos[4].commanderSpellbookId).toBe("5");
+  });
+
+  it("orders price in descending order when auto order is used", () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+        price: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        price: 3,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        price: 4,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        price: 5,
+      })
+    );
+
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    sortCombos(combos, {
+      by: "price",
+      order: "auto",
+      vendor: "cardkingdom",
+    });
+
+    expect(combos[0].commanderSpellbookId).toBe("1");
+    expect(combos[1].commanderSpellbookId).toBe("2");
+    expect(combos[2].commanderSpellbookId).toBe("3");
+    expect(combos[3].commanderSpellbookId).toBe("4");
+    expect(combos[4].commanderSpellbookId).toBe("5");
   });
 });
