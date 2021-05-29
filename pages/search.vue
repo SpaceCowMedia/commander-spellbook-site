@@ -13,24 +13,24 @@
 
     <div v-if="paginatedResults.length > 0" class="border-b border-light">
       <div class="container sm:flex flex-row items-center justify-center">
-        <div class="mr-2">Sorted by</div>
+        <div class="mr-2 sm:mt-0 mt-2" aria-hidden="true">Sorted by</div>
         <Select
           id="sort-combos-select"
           v-model="sort"
           class="my-2 sm:mr-2"
           select-background-class="border-dark border-2"
           select-text-class="text-dark"
-          label="Sort Combos"
+          label="Change how combos are sorted"
           :options="sortOptions"
         />
-        <div class="mx-1">:</div>
+        <div class="mx-1 hidden sm:block" aria-hidden="true">:</div>
         <Select
           id="order-combos-select"
           v-model="order"
           class="sm:m-2"
           select-background-class="border-dark border-2"
           select-text-class="text-dark"
-          label="Order Combos"
+          label="Change sort direction, ascending or descending"
           :options="orderOptions"
         />
         <div class="flex-grow"></div>
