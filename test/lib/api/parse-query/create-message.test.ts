@@ -180,6 +180,64 @@ describe("createMessage", () => {
     });
   });
 
+  describe("price", () => {
+    it.each`
+      method  | text
+      ${"="}  | ${"is"}
+      ${">"}  | ${"is greater than"}
+      ${"<"}  | ${"is less than"}
+      ${">="} | ${"is greater than or equal to"}
+      ${"<="} | ${"is less than or equal to"}
+    `(
+      "creates a message for searches that include price using the %method operator",
+      ({ method, text }) => {
+        searchParams.price.filters.push({
+          method,
+          value: 5,
+        });
+
+        const message = createMessage(combos, searchParams);
+
+        expect(message).toContain(`the price ${text} $5.00`);
+      }
+    );
+
+    it("reduces the decminals in price to 2 fixed places", () => {
+      searchParams.price.filters.push({
+        method: ">",
+        value: 5.018112,
+      });
+
+      const message = createMessage(combos, searchParams);
+
+      expect(message).toContain("the price is greater than $5.02");
+    });
+
+    it("does not include vendor info when specified without price filters", () => {
+      searchParams.price.vendor = "tcgplayer";
+
+      expect(createMessage(combos, searchParams)).not.toContain("TCGplayer");
+    });
+
+    it("includes vendor if specified", () => {
+      searchParams.price.vendor = "tcgplayer";
+      searchParams.price.filters.push({
+        method: ">",
+        value: 5,
+      });
+
+      expect(createMessage(combos, searchParams)).toContain(
+        "the price is greater than $5.00 (according to TCGplayer)"
+      );
+
+      searchParams.price.vendor = "cardkingdom";
+
+      expect(createMessage(combos, searchParams)).toContain(
+        "the price is greater than $5.00 (according to Card Kingdom)"
+      );
+    });
+  });
+
   describe("tags", () => {
     it("creates a message for searches that include banned cards", () => {
       searchParams.tags.banned = "include";

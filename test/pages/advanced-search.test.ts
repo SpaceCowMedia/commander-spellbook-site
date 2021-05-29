@@ -44,6 +44,53 @@ describe("AdvancedSearchPage", () => {
     );
   });
 
+  it("only renders vendor when price is added to query", async () => {
+    const wrapper = shallowMount(AdvancedSearchPage, {
+      mocks: {
+        $router,
+      },
+      stubs: {
+        ArtCircle: true,
+        NuxtLink: true,
+        MultiSearchInput: true,
+        RadioSearchInput: true,
+      },
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(false);
+
+    await wrapper.setData({
+      price: [{ value: "1", operator: "<-number" }],
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(true);
+
+    await wrapper.setData({
+      price: [
+        { value: "     ", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+      ],
+    });
+
+    expect(wrapper.find("#vendor").exists()).toBe(false);
+
+    await wrapper.setData({
+      price: [
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "3", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+        { value: "", operator: "<-number" },
+      ],
+    });
+    expect(wrapper.find("#vendor").exists()).toBe(true);
+  });
+
   describe("submit", () => {
     it("redirects to search with query based on data", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
@@ -391,6 +438,62 @@ describe("AdvancedSearchPage", () => {
       });
     });
 
+    it("only applies vendor property when `cardkingdom` is not used and price exists", () => {
+      const wrapper = shallowMount(AdvancedSearchPage, {
+        mocks: {
+          $router,
+        },
+        stubs: {
+          ArtCircle: true,
+          NuxtLink: true,
+          MultiSearchInput: true,
+          RadioSearchInput: true,
+        },
+      });
+      wrapper.setData({
+        vendor: "cardkingdom",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        vendor: "tcgplayer",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).not.toBeCalled();
+
+      wrapper.setData({
+        price: [{ value: "1", operator: ">-number" }],
+        vendor: "cardkingdom",
+      });
+
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search/",
+        query: {
+          q: "price>1",
+        },
+      });
+
+      wrapper.setData({
+        price: [{ value: "1", operator: ">-number" }],
+        vendor: "tcgplayer",
+      });
+      (wrapper.vm as VueComponent).submit();
+
+      expect($router.push).toBeCalledWith({
+        path: "/search/",
+        query: {
+          q: "price>1 vendor:tcgplayer",
+        },
+      });
+    });
+
     it("prevents submission if query is empty", () => {
       const wrapper = shallowMount(AdvancedSearchPage, {
         mocks: {
@@ -617,15 +720,21 @@ describe("AdvancedSearchPage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      wrapper.setData({
+      await wrapper.setData({
+        // need a price to expose the vendor radio button
+        price: [{ value: "3", operator: "<-number" }],
+        vendor: "cardkingdom",
         previewed: "include",
         banned: "exclude",
       });
 
-      const previewedInput = wrapper
-        .findAllComponents(FakeRadioSearchInput)
-        .at(0);
-      const bannedInput = wrapper.findAllComponents(FakeRadioSearchInput).at(1);
+      const radioButtons = wrapper.findAllComponents(FakeRadioSearchInput);
+      const vendorInput = radioButtons.at(0);
+      const previewedInput = radioButtons.at(1);
+      const bannedInput = radioButtons.at(2);
+
+      await vendorInput.vm.$emit("update-radio", "tcgplayer");
+      expect(vm.vendor).toBe("tcgplayer");
 
       await previewedInput.vm.$emit("update-radio", "is");
       expect(vm.previewed).toBe("is");

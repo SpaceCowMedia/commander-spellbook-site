@@ -218,6 +218,38 @@
     </SearchGuide>
 
     <SearchGuide
+      heading="Price"
+      heading-card-name="Smothering Tithe"
+      heading-artist-name="Mark Behm"
+      :snippets="priceSnippets"
+    >
+      <p>
+        The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
+        <code>&gt;=</code>, <code>&lt;=</code> operators can be used with
+        <code>price</code> to to find combos restricted by the price of the
+        combo.
+      </p>
+
+      <p>
+        By default, the Card Kingdom price will be used when searching for
+        combos. You can use <code>vendor</code> to override this behavior.
+        Possible values are:
+      </p>
+
+      <ul>
+        <li><code>cardkingdom</code></li>
+        <li><code>tcgplayer</code></li>
+      </ul>
+
+      <p>
+        Combos where the price is not available are omitted from search results
+        when using the <code>price</code> parameter.
+      </p>
+
+      <p><code>usd</code> is an alias for <code>price</code>.</p>
+    </SearchGuide>
+
+    <SearchGuide
       id="previewed"
       heading="Previewed / Spoiled"
       heading-card-name="Spoils of Adventure"
@@ -280,7 +312,9 @@
         Available options are:
       </p>
 
-      <ul class="list-disc list-inside ml-4 mb-4">
+      <ul>
+        <li><code>price</code> (or <code>usd</code>)</li>
+
         <li><code>results</code> (or <code>number-of-results</code>)</li>
         <li><code>steps</code> (or <code>number-of-steps</code>)</li>
 
@@ -300,6 +334,11 @@
         By default, the combo results are ordered in ascending order. Use
         <code>order:descending</code> or <code>order:desc</code> to reverse the
         order.
+      </p>
+
+      <p>
+        When sorting by price, combos with no price available are treated as
+        having a price of 0.
       </p>
     </SearchGuide>
   </div>
@@ -341,6 +380,10 @@ export default Vue.extend({
         {
           id: "spellbook-id",
           text: "Combo Identifier",
+        },
+        {
+          id: "price",
+          text: "Price",
         },
         {
           id: "previewed",
@@ -457,6 +500,18 @@ export default Vue.extend({
             "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
         },
       ],
+      priceSnippets: [
+        {
+          search: "price<5",
+          description:
+            "Combos where the entire price of the combo is less than $5.00 according to Card Kingdom.",
+        },
+        {
+          search: "usd>100 vendor:tcgplayer",
+          description:
+            "Combos where the entire price of the combo is greater than $100.00 according to TCGplayer.",
+        },
+      ],
       previewedSnippets: [
         {
           search: "exclude:previewed",
@@ -483,6 +538,11 @@ export default Vue.extend({
       ],
       sortOrderSnippets: [
         {
+          search: "results=1 sort:price order:descending",
+          description:
+            "Combos with exactly one result, sorted by most expensive to least expensive.",
+        },
+        {
           search: "ci:grixis sort:cards",
           description:
             "Combos with the grixis color identity sorted by the number of cards in them.",
@@ -501,5 +561,9 @@ export default Vue.extend({
 <style scoped>
 code {
   @apply bg-gray-200 text-dark px-1;
+}
+
+ul {
+  @apply list-disc list-inside ml-4 mb-4;
 }
 </style>

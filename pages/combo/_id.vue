@@ -145,8 +145,8 @@ export default Vue.extend({
     });
 
     const prices = {
-      tcgplayer: cardGroup.getPrice("tcgplayer"),
-      cardkingdom: cardGroup.getPrice("cardkingdom"),
+      tcgplayer: cardGroup.getPriceAsString("tcgplayer"),
+      cardkingdom: cardGroup.getPriceAsString("cardkingdom"),
     };
 
     return {

@@ -126,6 +126,28 @@ describe("Advanced Search Page", () => {
     );
   });
 
+  it("can search by price", () => {
+    cy.visit("/advanced-search/");
+
+    cy.get("#price-inputs input.input").should("have.length", 1);
+    cy.get("#price-input-0").type("3");
+
+    cy.get("#price-inputs button").click();
+    cy.get("#price-inputs input.input").should("have.length", 2);
+
+    cy.get("#price-input-1").type("2");
+    cy.get("#price-inputs .select-1 select").select("=-number");
+
+    cy.get("#vendor input[type='radio']").last().check();
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.url().should(
+      "include",
+      "/search/?q=price%3C3%20price%3D2%20vendor%3Atcgplayer"
+    );
+  });
+
   it("can search for previewed combos", () => {
     cy.visit("/advanced-search/");
 

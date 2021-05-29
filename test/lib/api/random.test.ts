@@ -17,8 +17,8 @@ describe("random", () => {
     mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
-      sort: "",
-      order: "",
+      sort: "colors",
+      order: "ascending",
       combos,
     });
     mocked(getAllCombos).mockResolvedValue(combos);
@@ -56,8 +56,8 @@ describe("random", () => {
     mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
-      sort: "",
-      order: "",
+      sort: "colors",
+      order: "ascending",
       combos: [],
     });
 

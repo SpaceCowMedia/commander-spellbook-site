@@ -1,4 +1,4 @@
-import type { SearchParameters } from "../types";
+import type { SearchParameters, SortValue } from "../types";
 import normalizeStringInput from "../normalize-string-input";
 
 const SUPPORTED_OPERATORS = [":", "="];
@@ -35,6 +35,7 @@ export default function parseSort(
     case "steps":
     case "results":
     case "cards":
+    case "id":
       // make no changes to value
       break;
     case "ci":
@@ -43,7 +44,9 @@ export default function parseSort(
     case "colors":
       value = "colors";
       break;
-    case "id":
+    case "usd":
+    case "price":
+      value = "price";
       break;
     default:
       params.errors.push({
@@ -54,5 +57,5 @@ export default function parseSort(
       return;
   }
 
-  params.sort = value;
+  params.sort = value as SortValue;
 }

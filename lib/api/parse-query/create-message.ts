@@ -1,4 +1,8 @@
-import type { FormattedApiResponse, SearchParameters } from "../types";
+import type {
+  FormattedApiResponse,
+  SearchParameters,
+  VendorValue,
+} from "../types";
 
 export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
   "cards",
@@ -6,6 +10,11 @@ export const DATA_TYPES: ["cards", "prerequisites", "steps", "results"] = [
   "steps",
   "results",
 ];
+
+const PRICE_VENDOR_MAP: Record<VendorValue, string> = {
+  tcgplayer: "TCGplayer",
+  cardkingdom: "Card Kingdom",
+};
 
 function numberOperatorAsWord(operator: string): string {
   switch (operator) {
@@ -123,6 +132,18 @@ export default function creaetMessage(
       )} "${filter.value.join("")}"`
     );
   });
+
+  params.price.filters.forEach((filter) => {
+    addToMessage(
+      `the price ${numberOperatorAsWord(filter.method)} $${filter.value.toFixed(
+        2
+      )}`
+    );
+  });
+
+  if (params.price.filters.length > 0 && params.price.vendor) {
+    message += ` (according to ${PRICE_VENDOR_MAP[params.price.vendor]})`;
+  }
 
   if (params.tags.banned) {
     switch (params.tags.banned) {
