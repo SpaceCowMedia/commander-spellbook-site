@@ -3,6 +3,7 @@ import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import findById from "@/lib/api/find-by-id";
 import getExternalCardData from "@/lib/get-external-card-data";
+import flushPromises from "flush-promises";
 import { mocked } from "ts-jest/utils";
 
 import type { MountOptions, Route, Router, VueComponent } from "../../types";
@@ -76,7 +77,7 @@ describe("ComboPage", () => {
     expect(findById).toBeCalledWith("13", true);
 
     // allow findById call to finish
-    await new Promise(setImmediate);
+    await flushPromises();
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
@@ -93,7 +94,7 @@ describe("ComboPage", () => {
     expect(findById).toBeCalledWith("13", true);
 
     // allow findById call to finish
-    await new Promise(setImmediate);
+    await flushPromises();
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith({
@@ -138,7 +139,7 @@ describe("ComboPage", () => {
     expect(findById).toBeCalledWith("13", true);
 
     // allow findById call to finish
-    await new Promise(setImmediate);
+    await flushPromises();
 
     expect($router.push).not.toBeCalled();
 
@@ -191,7 +192,7 @@ describe("ComboPage", () => {
     expect(findById).toBeCalledWith("13", true);
 
     // allow findById call to finish
-    await new Promise(setImmediate);
+    await flushPromises();
 
     expect($router.push).not.toBeCalled();
 
