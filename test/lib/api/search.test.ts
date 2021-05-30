@@ -4,6 +4,7 @@ import lookup from "@/lib/api/spellbook-api";
 import filterColorIdentity from "@/lib/api/search-filters/color-identity";
 import filterComboData from "@/lib/api/search-filters/combo-data";
 import filterSize from "@/lib/api/search-filters/size";
+import filterPrice from "@/lib/api/search-filters/price";
 import filterIds from "@/lib/api/search-filters/ids";
 import filterTags from "@/lib/api/search-filters/tags";
 import sortCombos from "@/lib/api/sort-combos";
@@ -16,6 +17,7 @@ jest.mock("@/lib/api/spellbook-api");
 jest.mock("@/lib/api/search-filters/color-identity");
 jest.mock("@/lib/api/search-filters/combo-data");
 jest.mock("@/lib/api/search-filters/size");
+jest.mock("@/lib/api/search-filters/price");
 jest.mock("@/lib/api/search-filters/ids");
 jest.mock("@/lib/api/search-filters/tags");
 jest.mock("@/lib/api/sort-combos");
@@ -38,6 +40,7 @@ describe("search", () => {
     mocked(filterColorIdentity).mockReturnValue([combo]);
     mocked(filterComboData).mockReturnValue([combo]);
     mocked(filterSize).mockReturnValue([combo]);
+    mocked(filterPrice).mockReturnValue([combo]);
     mocked(filterIds).mockReturnValue([combo]);
     mocked(filterTags).mockReturnValue([combo]);
     mocked(sortCombos).mockReturnValue([combo]);
@@ -114,24 +117,71 @@ describe("search", () => {
     expect(filterSize).toBeCalledTimes(1);
   });
 
+  it("filters by price", async () => {
+    await search("Sydri Arjun Rashmi");
+
+    expect(filterPrice).toBeCalledTimes(1);
+  });
+
   it("filters by tags", async () => {
     await search("Sydri Arjun Rashmi");
 
     expect(filterTags).toBeCalledTimes(1);
   });
 
-  it("sorts by popularity in ascending order by default", async () => {
+  it("sorts by popularity in auto order by default", async () => {
     const result = await search("Sydri Arjun Rashmi");
 
     expect(sortCombos).toBeCalledTimes(1);
-    expect(sortCombos).toBeCalledWith(
-      expect.anything(),
-      "popularity",
-      "descending"
-    );
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "popularity",
+      order: "auto",
+      vendor: "cardkingdom",
+    });
 
     expect(result.sort).toBe("popularity");
+    expect(result.order).toBe("auto");
+  });
+
+  it("specifies cardkingdom as default vendor", async () => {
+    mocked(parseQuery).mockReturnValue(
+      makeSearchParams({
+        sort: "price",
+        order: "descending",
+      })
+    );
+    const result = await search("Sydri Arjun Rashmi");
+
+    expect(sortCombos).toBeCalledTimes(1);
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "price",
+      order: "descending",
+      vendor: "cardkingdom",
+    });
+
+    expect(result.sort).toBe("price");
     expect(result.order).toBe("descending");
+
+    mocked(sortCombos).mockClear();
+
+    mocked(parseQuery).mockReturnValue(
+      makeSearchParams({
+        sort: "price",
+        order: "descending",
+        price: {
+          vendor: "tcgplayer",
+          filters: [],
+        },
+      })
+    );
+    await search("Sydri Arjun Rashmi");
+
+    expect(sortCombos).toBeCalledTimes(1);
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "price",
+      order: "descending",
+      vendor: "tcgplayer",
+    });
   });
 
   it("can sort by specific attributes and order in descending order", async () => {
@@ -145,37 +195,15 @@ describe("search", () => {
     const result = await search("Sydri Arjun Rashmi");
 
     expect(sortCombos).toBeCalledTimes(1);
-    expect(sortCombos).toBeCalledWith(expect.anything(), "cards", "descending");
+    expect(sortCombos).toBeCalledWith(expect.anything(), {
+      by: "cards",
+      order: "descending",
+      vendor: "cardkingdom",
+    });
 
     expect(result.sort).toBe("cards");
     expect(result.order).toBe("descending");
   });
-
-  it("orders popularity in descending order", async () => {
-    const defaultResult = await search("Sydri Arjun Rashmi");
-
-    expect(defaultResult.sort).toBe("popularity");
-    expect(defaultResult.order).toBe("descending");
-
-    const explicitResult = await search("Sydri Arjun Rashmi sort:popularity");
-
-    expect(explicitResult.sort).toBe("popularity");
-    expect(explicitResult.order).toBe("descending");
-  });
-
-  it.each(["cards", "results", "steps", "prerequisites", "colors"])(
-    "orders %s in ascending order by default",
-    async (kind) => {
-      mocked(parseQuery).mockReturnValue(
-        makeSearchParams({
-          sort: kind,
-        })
-      );
-      const result = await search(`Sydri Asrjun Rashmi sort:${kind}`);
-
-      expect(result.order).toBe("ascending");
-    }
-  );
 
   it("includes errors", async () => {
     mocked(parseQuery).mockReturnValue(

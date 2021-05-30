@@ -58,7 +58,7 @@ describe("SearchBar", () => {
     expect(vm.onSubmit).toBeCalledTimes(1);
   });
 
-  it("can opt out of navigation links", async () => {
+  it("does not display navigation links when on home page", async () => {
     const NuxtLinkStub = {
       props: ["to"],
       template: "<div></div>",
@@ -86,6 +86,22 @@ describe("SearchBar", () => {
 
     expect(wrapper.findComponent(NuxtLinkStub).exists()).toBe(false);
     expect(wrapper.findComponent(RandomButtonStub).exists()).toBe(false);
+  });
+
+  it("includes the autofocus attribute on home page", async () => {
+    const wrapper = mount(SearchBar, wrapperOptions);
+
+    expect(
+      wrapper.find("#search-bar-input").attributes("autofocus")
+    ).toBeFalsy();
+
+    await wrapper.setProps({
+      onHomePage: true,
+    });
+
+    expect(
+      wrapper.find("#search-bar-input").attributes("autofocus")
+    ).toBeTruthy();
   });
 
   it("applies q query if applicable to random button", async () => {

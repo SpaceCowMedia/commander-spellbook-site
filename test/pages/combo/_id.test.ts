@@ -151,28 +151,16 @@ describe("ComboPage", () => {
         name: "card 1",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
       {
         name: "card 2",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
       {
         name: "card 3",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
     ]);
     expect(vm.prerequisites).toEqual(["pre 1", "pre 2"]);
@@ -216,28 +204,16 @@ describe("ComboPage", () => {
         name: "card 1",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
       {
         name: "card 2",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
       {
         name: "card 3",
         artUrl: expect.stringContaining("artcrop.png"),
         oracleImageUrl: expect.stringContaining("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
     ]);
     expect(vm.prerequisites).toEqual(["pre 1", "pre 2"]);
@@ -447,19 +423,11 @@ describe("ComboPage", () => {
         name: "card 1",
         artUrl: expect.stringMatching("artcrop.png"),
         oracleImageUrl: expect.stringMatching("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
       {
         name: "card 2",
         artUrl: expect.stringMatching("artcrop.png"),
         oracleImageUrl: expect.stringMatching("oracle.png"),
-        prices: {
-          tcgplayer: 0,
-          cardkingdom: 0,
-        },
       },
     ]);
   });

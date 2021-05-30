@@ -37,6 +37,10 @@ export default function validateSearchParams(
     return true;
   }
 
+  if (params.price.filters.length > 0) {
+    return true;
+  }
+
   if (params.tags.banned || params.tags.spoiled) {
     return true;
   }

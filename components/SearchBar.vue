@@ -37,6 +37,7 @@
           autocapitalize="none"
           autocorrect="off"
           spellcheck="false"
+          :autofocus="onHomePage"
         />
       </div>
       <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center">

@@ -91,10 +91,6 @@ type CardData = {
   name: string;
   oracleImageUrl: string;
   artUrl: string;
-  prices: {
-    tcgplayer: number;
-    cardkingdom: number;
-  };
 };
 
 type ComboData = {
@@ -146,52 +142,18 @@ export default Vue.extend({
       return;
     }
 
-    const cards = combo.cards.map((card) => {
+    const cardGroup = combo.cards;
+    const cards = cardGroup.map((card) => {
       return {
         name: card.name,
         artUrl: card.getImageUrl("artCrop"),
         oracleImageUrl: card.getImageUrl("oracle"),
-        prices: {
-          tcgplayer: card.getPrice("tcgplayer"),
-          cardkingdom: card.getPrice("cardkingdom"),
-        },
       };
     });
 
-    function parsePriceData(kind: "tcgplayer" | "cardkingdom"): string {
-      const price = cards.reduce((total, card) => {
-        if (total < 0) {
-          return total;
-        }
-
-        let price: number;
-
-        if (kind === "tcgplayer") {
-          price = Number(card.prices.tcgplayer);
-        } else if (kind === "cardkingdom") {
-          price = Number(card.prices.cardkingdom);
-        } else {
-          price = 0;
-        }
-
-        if (!price) {
-          return -1;
-        }
-
-        return total + price;
-      }, 0);
-
-      if (price === -1) {
-        // indicates that the price for at least one card is not available
-        return "";
-      }
-
-      return price.toFixed(2);
-    }
-
     const prices = {
-      tcgplayer: parsePriceData("tcgplayer"),
-      cardkingdom: parsePriceData("cardkingdom"),
+      tcgplayer: cardGroup.getPriceAsString("tcgplayer"),
+      cardkingdom: cardGroup.getPriceAsString("cardkingdom"),
     };
 
     return {
@@ -362,10 +324,6 @@ export default Vue.extend({
         name: card.name,
         artUrl: card.getImageUrl("artCrop"),
         oracleImageUrl: card.getImageUrl("oracle"),
-        prices: {
-          tcgplayer: card.getPrice("tcgplayer"),
-          cardkingdom: card.getPrice("cardkingdom"),
-        },
       };
     });
     this.prerequisites = Array.from(combo.prerequisites);

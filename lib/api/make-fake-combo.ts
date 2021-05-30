@@ -13,6 +13,7 @@ type FakeComboOptions = {
   results?: string[];
   hasBannedCard?: boolean;
   hasSpoiledCard?: boolean;
+  price?: number;
   edhrecLink?: boolean;
   numberOfEDHRECDecks?: number;
 };
@@ -46,6 +47,12 @@ export default function makeFakeCombo(
     edhrecLink,
     numberOfEDHRECDecks,
   } as FormattedApiResponse;
+
+  if (options.price != null) {
+    payload.cards.getPrice = function () {
+      return options.price as number;
+    };
+  }
 
   return payload;
 }

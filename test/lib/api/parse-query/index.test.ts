@@ -2,6 +2,7 @@ import parseQuery from "@/lib/api/parse-query";
 import parseColorIdentity from "@/lib/api/parse-query/parse-color-identity";
 import parseComboData from "@/lib/api/parse-query/parse-combo-data";
 import parseEDHRECDecks from "@/lib/api/parse-query/parse-edhrec-decks";
+import parsePriceData from "@/lib/api/parse-query/parse-price-data";
 import parseTags from "@/lib/api/parse-query/parse-tags";
 import parseOrder from "@/lib/api/parse-query/parse-order";
 import parseSort from "@/lib/api/parse-query/parse-sort";
@@ -9,6 +10,7 @@ import parseSort from "@/lib/api/parse-query/parse-sort";
 jest.mock("@/lib/api/parse-query/parse-color-identity");
 jest.mock("@/lib/api/parse-query/parse-combo-data");
 jest.mock("@/lib/api/parse-query/parse-edhrec-decks");
+jest.mock("@/lib/api/parse-query/parse-price-data");
 jest.mock("@/lib/api/parse-query/parse-tags");
 jest.mock("@/lib/api/parse-query/parse-order");
 jest.mock("@/lib/api/parse-query/parse-sort");
@@ -198,6 +200,9 @@ describe("parseQuery", () => {
       },
       edhrecDecks: {
         sizeFilters: [],
+      },
+      price: {
+        filters: [],
       },
       tags: {},
       errors: [],
@@ -808,6 +813,17 @@ describe("parseQuery", () => {
         "<",
         "30"
       );
+    }
+  );
+
+  it.each(["price", "usd", "vendor"])(
+    "parses %s through price parser",
+    (kind) => {
+      parseQuery(`${kind}>25 ${kind}<30`);
+
+      expect(parsePriceData).toBeCalledTimes(2);
+      expect(parsePriceData).toBeCalledWith(expect.anything(), kind, ">", "25");
+      expect(parsePriceData).toBeCalledWith(expect.anything(), kind, "<", "30");
     }
   );
 

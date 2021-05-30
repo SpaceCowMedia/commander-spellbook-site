@@ -174,7 +174,7 @@ describe("CardGrouping", () => {
       expect(spy).not.toBeCalledWith("tcgplayer");
     });
 
-    it("returns 0 if any individual card price returns 0", () => {
+    it("returns an empty string if any individual card price returns 0", () => {
       const spy = jest.spyOn(Card.prototype, "getPrice");
       spy.mockReturnValueOnce(1.01);
       spy.mockReturnValueOnce(0);
@@ -183,6 +183,42 @@ describe("CardGrouping", () => {
       const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
 
       expect(group.getPrice("cardkingdom")).toBe(0);
+    });
+  });
+
+  describe("getPriceAsString", () => {
+    it("gets the combined tcgplayer price of the cards as a string", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      jest.spyOn(group, "getPrice").mockReturnValue(6.49);
+
+      expect(group.getPriceAsString("tcgplayer")).toBe("6.49");
+      expect(group.getPrice).toBeCalledWith("tcgplayer");
+    });
+
+    it("gets the combined cardkingdom price of the cards", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      jest.spyOn(group, "getPrice").mockReturnValue(6.49);
+
+      expect(group.getPriceAsString("cardkingdom")).toBe("6.49");
+      expect(group.getPrice).toBeCalledWith("cardkingdom");
+    });
+
+    it("returns an empty string if any individual card price returns 0", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      jest.spyOn(group, "getPrice").mockReturnValue(0);
+
+      expect(group.getPriceAsString("cardkingdom")).toBe("");
+    });
+
+    it("fixes price to 2 decimal points", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      jest.spyOn(group, "getPrice").mockReturnValue(6.4982);
+
+      expect(group.getPriceAsString("cardkingdom")).toBe("6.50");
     });
   });
 

@@ -1,10 +1,33 @@
 import COLOR_ORDER from "./color-combo-order";
 
-import type { FormattedApiResponse } from "./types";
+import type {
+  FormattedApiResponse,
+  OrderValue,
+  SortValue,
+  VendorValue,
+} from "./types";
 
 type SortingMeta = {
   isEqual: boolean;
   firstRemainsFirst: boolean;
+};
+
+type SortOptions = {
+  by: SortValue;
+  order: OrderValue;
+  vendor: VendorValue;
+};
+
+const ORDER_DEFAULTS: Record<SortValue, OrderValue> = {
+  prerequisites: "ascending",
+  steps: "ascending",
+  results: "ascending",
+  cards: "ascending",
+  colors: "ascending",
+  id: "ascending",
+
+  popularity: "descending",
+  price: "descending",
 };
 
 function handleSortingForNumberOfElements(
@@ -63,11 +86,34 @@ function handleSortingByPopularity(
   };
 }
 
+function handleSortingByPrice(
+  firstCombo: FormattedApiResponse,
+  secondCombo: FormattedApiResponse,
+  vendor: VendorValue
+): SortingMeta {
+  const firstPrice = firstCombo.cards.getPrice(vendor);
+  const secondPrice = secondCombo.cards.getPrice(vendor);
+  const isEqual = firstPrice === secondPrice;
+  const firstRemainsFirst = firstPrice > secondPrice;
+
+  if (isEqual) {
+    return handleSortingByColorIdentity(firstCombo, secondCombo);
+  }
+
+  return {
+    isEqual,
+    firstRemainsFirst,
+  };
+}
+
 export default function sortCombos(
   combos: FormattedApiResponse[],
-  by: string,
-  order: "ascending" | "descending"
+  { by, order, vendor }: SortOptions
 ): FormattedApiResponse[] {
+  if (order === "auto") {
+    order = ORDER_DEFAULTS[by];
+  }
+
   combos = combos.sort((firstCombo, secondCombo) => {
     let meta = {
       isEqual: false,
@@ -92,6 +138,9 @@ export default function sortCombos(
         break;
       case "popularity":
         meta = handleSortingByPopularity(firstCombo, secondCombo);
+        break;
+      case "price":
+        meta = handleSortingByPrice(firstCombo, secondCombo, vendor);
         break;
     }
 

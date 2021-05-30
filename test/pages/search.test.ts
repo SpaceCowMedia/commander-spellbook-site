@@ -366,28 +366,49 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
-        order: "ascending",
+        order: "descending",
       });
 
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
         path: "/search/",
-        query: { q: "ci:temur order:ascending", page: "1" },
+        query: { q: "ci:temur order:descending" },
       });
     });
 
     it("updates existing order option in query when order is updated", async () => {
-      $route.query.q = "order:descending ci:temur";
+      $route.query.q = "order:ascending ci:temur";
+      const wrapper = shallowMount(SearchPage, wrapperOptions);
+
+      await wrapper.setData({
+        order: "descending",
+      });
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith({
+        path: "/search/",
+        query: { q: "ci:temur order:descending" },
+      });
+    });
+
+    it("removes order option in query when order is auto", async () => {
+      $route.query.q = "order:ascending ci:temur";
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
         order: "ascending",
       });
 
+      $router.push.mockClear();
+
+      await wrapper.setData({
+        order: "auto",
+      });
+
       expect($router.push).toBeCalledTimes(1);
       expect($router.push).toBeCalledWith({
         path: "/search/",
-        query: { q: "order:ascending ci:temur", page: "1" },
+        query: { q: "ci:temur" },
       });
     });
   });

@@ -1,5 +1,5 @@
 import parseSort from "@/lib/api/parse-query/parse-sort";
-import type { SearchParameters } from "@/lib/api/types";
+import type { SearchParameters, SortValue } from "@/lib/api/types";
 import { makeSearchParams } from "../helper";
 
 describe("parseSort", () => {
@@ -17,7 +17,8 @@ describe("parseSort", () => {
     "id",
     "colors",
     "popularity",
-  ])("suports %s", (kind) => {
+    "price",
+  ] as SortValue[])("suports %s", (kind) => {
     parseSort(searchParams, ":", kind);
 
     expect(searchParams.sort).toEqual(kind);
@@ -36,6 +37,12 @@ describe("parseSort", () => {
     parseSort(searchParams, "=", kind);
 
     expect(searchParams.sort).toEqual("popularity");
+  });
+
+  it("supports usd as alias for price", () => {
+    parseSort(searchParams, "=", "usd");
+
+    expect(searchParams.sort).toEqual("price");
   });
 
   it("provides error if invalid value is used for sort", () => {

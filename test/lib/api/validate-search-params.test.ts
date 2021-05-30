@@ -223,6 +223,23 @@ describe("validateSearchParams", () => {
     ).toBe(true);
   });
 
+  it("returns true when price has at least one filter", () => {
+    expect(
+      validateSearchParams(
+        makeSearchParams({
+          price: {
+            filters: [
+              {
+                method: ">",
+                value: 1,
+              },
+            ],
+          },
+        })
+      )
+    ).toBe(true);
+  });
+
   it("returns true when tags have at least one value", () => {
     expect(
       validateSearchParams(

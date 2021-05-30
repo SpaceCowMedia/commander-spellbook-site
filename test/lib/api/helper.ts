@@ -38,6 +38,9 @@ export function makeSearchParams(
       edhrecDecks: {
         sizeFilters: [],
       },
+      price: {
+        filters: [],
+      },
       tags: {},
       errors: [],
     },

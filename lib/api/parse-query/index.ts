@@ -2,6 +2,7 @@ import type { SearchParameters } from "../types";
 import parseColorIdentity from "./parse-color-identity";
 import parseComboData from "./parse-combo-data";
 import parseEDHRECdecks from "./parse-edhrec-decks";
+import parsePriceData from "./parse-price-data";
 import parseTags from "./parse-tags";
 import parseSort from "./parse-sort";
 import parseOrder from "./parse-order";
@@ -149,6 +150,11 @@ function collectKeywordedQueries(
       case "decks":
         parseEDHRECdecks(params, key, operator, value);
         break;
+      case "price":
+      case "usd":
+      case "vendor":
+        parsePriceData(params, key, operator, value);
+        break;
       case "sort":
         parseSort(params, operator, value);
         break;
@@ -219,6 +225,9 @@ export default function parseQuery(query: string): SearchParameters {
     },
     edhrecDecks: {
       sizeFilters: [],
+    },
+    price: {
+      filters: [],
     },
     tags: {},
     errors: [],

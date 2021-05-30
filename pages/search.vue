@@ -12,23 +12,25 @@
     />
 
     <div v-if="paginatedResults.length > 0" class="border-b border-light">
-      <div class="container sm:flex flex-row justify-center">
+      <div class="container sm:flex flex-row items-center justify-center">
+        <div class="mr-2 sm:mt-0 mt-2" aria-hidden="true">Sorted by</div>
         <Select
           id="sort-combos-select"
           v-model="sort"
           class="my-2 sm:mr-2"
           select-background-class="border-dark border-2"
           select-text-class="text-dark"
-          label="Sort Combos"
+          label="Change how combos are sorted"
           :options="sortOptions"
         />
+        <div class="mx-1 hidden sm:block" aria-hidden="true">:</div>
         <Select
           id="order-combos-select"
           v-model="order"
           class="sm:m-2"
           select-background-class="border-dark border-2"
           select-text-class="text-dark"
-          label="Order Combos"
+          label="Change sort direction, ascending or descending"
           :options="orderOptions"
         />
         <div class="flex-grow"></div>
@@ -68,6 +70,7 @@ import SearchMessage from "@/components/search/SearchMessage.vue";
 import Select, { Option } from "@/components/Select.vue";
 import search from "@/lib/api/search";
 
+import type { SortValue, OrderValue } from "@/lib/api/types";
 import type { ComboResult } from "../components/search/ComboResults.vue";
 
 type Data = {
@@ -78,8 +81,8 @@ type Data = {
   message: string;
   errors: string;
   combos: ComboResult[];
-  sort: string;
-  order: string;
+  sort: SortValue;
+  order: OrderValue;
 };
 
 export default Vue.extend({
@@ -100,7 +103,7 @@ export default Vue.extend({
       errors: "",
       combos: [],
       sort: "popularity",
-      order: "descending",
+      order: "auto",
     };
   },
   computed: {
@@ -149,31 +152,33 @@ export default Vue.extend({
     },
     sortOptions(): Option[] {
       return [
-        { value: "popularity", label: "Sort by popularity" },
-        { value: "colors", label: "Sort by color identity" },
+        { value: "popularity", label: "Popularity" },
+        { value: "colors", label: "Color Identity" },
+        { value: "price", label: "Price" },
         {
           value: "cards",
-          label: "Sort by number of cards",
+          label: "# of Cards",
         },
         {
           value: "prerequisites",
-          label: "Sort by number of prerequisites",
+          label: "# of Prerequisites",
         },
         {
           value: "steps",
-          label: "Sort by number of steps",
+          label: "# of Steps",
         },
         {
           value: "results",
-          label: "Sort by number of results",
+          label: "# of Results",
         },
       ];
     },
 
     orderOptions(): Option[] {
       return [
-        { value: "ascending", label: "in ascending order" },
-        { value: "descending", label: "in descending order" },
+        { value: "auto", label: "Auto" },
+        { value: "ascending", label: "Asc" },
+        { value: "descending", label: "Desc" },
       ];
     },
   },
@@ -195,13 +200,17 @@ export default Vue.extend({
       });
     },
     order(): void {
-      const query = String(this.$route.query.q)
-        .replace(/((\s)?order(:|=)\w*|$)/, ` order:${this.order}`)
+      let query = String(this.$route.query.q)
+        .replace(/((\s)?order(:|=)\w*|$)/g, "")
         .trim();
+
+      if (this.order !== "auto") {
+        query = `${query} order:${this.order}`;
+      }
 
       this.$router.push({
         path: this.$route.path,
-        query: { q: query, page: "1" },
+        query: { q: query },
       });
     },
   },

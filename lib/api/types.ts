@@ -42,6 +42,17 @@ export type FormattedApiResponse = {
 };
 
 export type ColorIdentityColors = "w" | "u" | "b" | "r" | "g" | "c";
+export type SortValue =
+  | "prerequisites"
+  | "steps"
+  | "results"
+  | "cards"
+  | "colors"
+  | "id"
+  | "price"
+  | "popularity";
+export type OrderValue = "auto" | "ascending" | "descending";
+export type VendorValue = "tcgplayer" | "cardkingdom";
 
 export type SearchError = {
   key: string;
@@ -52,8 +63,8 @@ export type SearchError = {
 export type SearchResults = {
   combos: FormattedApiResponse[];
   errors: SearchError[];
-  sort: string;
-  order: string;
+  sort: SortValue;
+  order: OrderValue;
   message: string;
 };
 
@@ -102,16 +113,17 @@ export type SearchParameters = {
   edhrecDecks: {
     sizeFilters: SizeFilter[];
   };
+  price: {
+    vendor?: VendorValue;
+    filters: SizeFilter[];
+  };
   tags: {
     banned?: TagValue;
     spoiled?: TagValue;
   };
-  sort?: string;
-  order?: "ascending" | "descending";
+  sort?: SortValue;
+  order?: OrderValue;
   errors: SearchError[];
 };
 
-export type EDHRECData = Record<
-  string,
-  { cardkingdom: { price: number }; tcgplayer: { price: number } }
->;
+export type EDHRECData = Record<string, Record<VendorValue, { price: number }>>;
