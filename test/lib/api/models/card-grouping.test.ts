@@ -52,11 +52,19 @@ describe("CardGrouping", () => {
   });
 
   describe("size", () => {
-    it("retuns the number of cards in grouping", () => {
+    it("returns the number of cards in grouping", () => {
       const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
 
       expect(group.length).toBe(3);
       expect(group.size()).toBe(3);
+    });
+  });
+
+  describe("names", () => {
+    it("retuns the names of cards in grouping as array", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(group.names()).toEqual(["Card a", "Card b", "Card c"]);
     });
   });
 
