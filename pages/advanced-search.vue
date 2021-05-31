@@ -93,6 +93,16 @@
         />
       </div>
 
+      <div id="popularity-inputs" class="container">
+        <MultiSearchInput
+          v-model="popularity"
+          label="Popularity"
+          plural-label="Popularity"
+          :operator-options="popularityOptions"
+          default-operator="<-number"
+        />
+      </div>
+
       <div id="previewed-combos" class="container">
         <RadioSearchInput
           label="Previewed / Spoiled Combos"
@@ -206,6 +216,9 @@ type Data = {
   price: InputData[];
   priceOptions: OperatorOption[];
 
+  popularity: InputData[];
+  popularityOptions: OperatorOption[];
+
   vendor: string;
   vendorOptions: OperatorOption[];
 
@@ -314,6 +327,13 @@ export default Vue.extend({
         { value: "=-number", label: "Costs exactly" },
       ],
 
+      popularity: [{ value: "", operator: "<-number" }],
+      popularityOptions: [
+        { value: "<-number", label: "In less than x decks (number)" },
+        { value: ">-number", label: "In more than x decks (number)" },
+        { value: "=-number", label: "In exactly x decks (number)" },
+      ],
+
       vendor: DEFAULT_VENDOR,
       vendorOptions: [
         {
@@ -408,6 +428,8 @@ export default Vue.extend({
               keyInQuery = "colors";
             } else if (keyInQuery === "pre") {
               keyInQuery = "prerequisites";
+            } else if (keyInQuery === "popularity") {
+              keyInQuery = "decks";
             } else if (keyInQuery !== "price") {
               keyInQuery += "s";
             }
@@ -426,6 +448,7 @@ export default Vue.extend({
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
       this.price.forEach(makeQueryFunction("price"));
+      this.popularity.forEach(makeQueryFunction("popularity"));
 
       if (this.previewed !== DEFAULT_PREVIEWED_VALUE) {
         query += ` ${this.previewed}:previewed`;
@@ -499,6 +522,7 @@ export default Vue.extend({
       this.steps.forEach(val);
       this.results.forEach(val);
       this.price.forEach(val);
+      this.popularity.forEach(val);
 
       return hasValidationError;
     },
