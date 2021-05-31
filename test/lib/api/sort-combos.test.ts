@@ -109,6 +109,131 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("1");
   });
 
+  it("sorts combos by number of decks on EDHREC in descending order", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        numberOfEDHRECDecks: 3,
+      })
+    );
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    const sortedCombos = await sortCombos(combos, {
+      by: "popularity",
+      order: "descending",
+      vendor: "cardkingdom",
+    });
+
+    expect(sortedCombos.length).toBe(3);
+
+    sortedCombos.forEach((combo, index) => {
+      expect(combo.commanderSpellbookId).toBe(String(3 - index));
+    });
+  });
+
+  it("sorts combos with identical decks by color identities and then by number of cards", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+        cards: ["1"],
+        colorIdentity: "wubrg",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        cards: ["1", "2", "3", "4"],
+        colorIdentity: "c",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        cards: ["1", "2"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        cards: ["1"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+        cards: ["1", "2", "3"],
+        colorIdentity: "bug",
+        numberOfEDHRECDecks: 0,
+      })
+    );
+
+    const sortedCombos = await sortCombos(combos, {
+      by: "popularity",
+      order: "ascending",
+      vendor: "cardkingdom",
+    });
+
+    expect(sortedCombos[0].commanderSpellbookId).toBe("4");
+    expect(sortedCombos[1].commanderSpellbookId).toBe("1");
+    expect(sortedCombos[2].commanderSpellbookId).toBe("2");
+    expect(sortedCombos[3].commanderSpellbookId).toBe("3");
+    expect(sortedCombos[4].commanderSpellbookId).toBe("5");
+  });
+
+  it("sorts combos with identical prices by color identities and then by number of cards", () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+        cards: ["1"],
+        colorIdentity: "wubrg",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        cards: ["1", "2", "3", "4"],
+        colorIdentity: "c",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        cards: ["1", "2"],
+        colorIdentity: "bug",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        cards: ["1"],
+        colorIdentity: "bug",
+        price: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+        cards: ["1", "2", "3"],
+        colorIdentity: "bug",
+        price: 0,
+      })
+    );
+
+    const sortedCombos = sortCombos(combos, {
+      by: "price",
+      order: "ascending",
+      vendor: "cardkingdom",
+    });
+
+    expect(sortedCombos[0].commanderSpellbookId).toBe("4");
+    expect(sortedCombos[1].commanderSpellbookId).toBe("1");
+    expect(sortedCombos[2].commanderSpellbookId).toBe("2");
+    expect(sortedCombos[3].commanderSpellbookId).toBe("3");
+    expect(sortedCombos[4].commanderSpellbookId).toBe("5");
+  });
+
   it.each(["cards", "prerequisites", "steps", "results"] as SortValue[])(
     "sorts combos by number of %s",
     (kind) => {
@@ -286,6 +411,36 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("5");
   });
 
+  it("sorts combos by number of decks on EDHREC", async () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        numberOfEDHRECDecks: 3,
+      })
+    );
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+    const sortedCombos = await sortCombos(combos, {
+      by: "popularity",
+      order: "ascending",
+      vendor: "cardkingdom",
+    });
+
+    expect(sortedCombos.length).toBe(3);
+
+    sortedCombos.forEach((combo, index) => {
+      expect(combo.commanderSpellbookId).toBe(String(index + 1));
+    });
+  });
+
   it("sorts combos by price in ascending order", () => {
     combos.push(
       makeFakeCombo({
@@ -378,53 +533,6 @@ describe("search", () => {
     sortedCombos.forEach((combo, index) => {
       expect(combo.commanderSpellbookId).toBe(String(7 - index));
     });
-  });
-
-  it("sorts combos with identical prices by color identities and then by number of cards", () => {
-    combos.push(
-      makeFakeCombo({
-        commanderSpellbookId: "5",
-        cards: ["1"],
-        colorIdentity: "wubrg",
-        price: 1,
-      }),
-      makeFakeCombo({
-        commanderSpellbookId: "1",
-        cards: ["1", "2", "3", "4"],
-        colorIdentity: "c",
-        price: 1,
-      }),
-      makeFakeCombo({
-        commanderSpellbookId: "3",
-        cards: ["1", "2"],
-        colorIdentity: "bug",
-        price: 1,
-      }),
-      makeFakeCombo({
-        commanderSpellbookId: "2",
-        cards: ["1"],
-        colorIdentity: "bug",
-        price: 1,
-      }),
-      makeFakeCombo({
-        commanderSpellbookId: "4",
-        cards: ["1", "2", "3"],
-        colorIdentity: "bug",
-        price: 0,
-      })
-    );
-
-    const sortedCombos = sortCombos(combos, {
-      by: "price",
-      order: "ascending",
-      vendor: "cardkingdom",
-    });
-
-    expect(sortedCombos[0].commanderSpellbookId).toBe("4");
-    expect(sortedCombos[1].commanderSpellbookId).toBe("1");
-    expect(sortedCombos[2].commanderSpellbookId).toBe("2");
-    expect(sortedCombos[3].commanderSpellbookId).toBe("3");
-    expect(sortedCombos[4].commanderSpellbookId).toBe("5");
   });
 
   it("sorts price by vendor passed in", () => {
@@ -529,6 +637,46 @@ describe("search", () => {
 
     sortCombos(combos, {
       by: "id",
+      order: "auto",
+      vendor: "cardkingdom",
+    });
+
+    expect(combos[0].commanderSpellbookId).toBe("1");
+    expect(combos[1].commanderSpellbookId).toBe("2");
+    expect(combos[2].commanderSpellbookId).toBe("3");
+    expect(combos[3].commanderSpellbookId).toBe("4");
+    expect(combos[4].commanderSpellbookId).toBe("5");
+  });
+
+  it("orders decks in descending order when auto order is used", () => {
+    combos.push(
+      makeFakeCombo({
+        commanderSpellbookId: "5",
+        numberOfEDHRECDecks: 1,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "4",
+        numberOfEDHRECDecks: 2,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "3",
+        numberOfEDHRECDecks: 3,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 4,
+      }),
+      makeFakeCombo({
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 5,
+      })
+    );
+
+    // randomize order
+    combos.sort(() => 0.5 - Math.random());
+
+    sortCombos(combos, {
+      by: "popularity",
       order: "auto",
       vendor: "cardkingdom",
     });

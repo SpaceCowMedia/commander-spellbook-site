@@ -133,6 +133,14 @@ export default function creaetMessage(
     );
   });
 
+  params.edhrecDecks.sizeFilters.forEach((filter) => {
+    addToMessage(
+      `the number of decks running the combo according to EDHREC ${numberOperatorAsWord(
+        filter.method
+      )} ${filter.value}`
+    );
+  });
+
   params.price.filters.forEach((filter) => {
     addToMessage(
       `the price ${numberOperatorAsWord(filter.method)} $${filter.value.toFixed(

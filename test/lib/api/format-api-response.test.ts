@@ -106,22 +106,23 @@ describe("api", () => {
     expect(combos[2].results).toBeInstanceOf(SpellbookList);
   });
 
-  it("applies an edhrecLink property if it can be found", () => {
+  it("applies EDHREC data if it can be found", () => {
     const combos = formatApiResponse(values);
 
     expect(combos[0].edhrecLink).toContain("https://edhrec.com/combos");
+    expect(typeof combos[0].numberOfEDHRECDecks).toBe("number");
 
-    expect(
-      formatApiResponse([
-        {
-          d: "some-id-that-won't-have-an-edhrec-link",
-          c: ["Guilded Lotus", "Voltaic Servant"],
-          i: "c",
-          p: "prereq 1. prereq 2. prereq 3",
-          s: "step 1. step 2. step 3",
-          r: "result 1. result 2. result 3",
-        },
-      ])[0].edhrecLink
-    ).toBeFalsy();
+    const response = formatApiResponse([
+      {
+        d: "some-id-that-won't-have-an-edhrec-link",
+        c: ["Guilded Lotus", "Voltaic Servant"],
+        i: "c",
+        p: "prereq 1. prereq 2. prereq 3",
+        s: "step 1. step 2. step 3",
+        r: "result 1. result 2. result 3",
+      },
+    ])[0];
+    expect(response.edhrecLink).toBe("");
+    expect(response.numberOfEDHRECDecks).toBe(0);
   });
 });

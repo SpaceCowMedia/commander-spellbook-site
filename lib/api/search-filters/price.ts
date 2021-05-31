@@ -1,3 +1,4 @@
+import { DEFAULT_VENDOR } from "@/lib/constants";
 import type { SearchParameters, FormattedApiResponse } from "../types";
 
 export default function filterPrice(
@@ -8,7 +9,7 @@ export default function filterPrice(
     return combos;
   }
 
-  const vendor = params.price.vendor || "cardkingdom";
+  const vendor = params.price.vendor || DEFAULT_VENDOR;
 
   combos = combos.filter((combo) => {
     const price = combo.cards.getPrice(vendor);

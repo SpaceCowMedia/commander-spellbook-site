@@ -211,6 +211,18 @@ describe("validateSearchParams", () => {
     ).toBe(true);
   });
 
+  it("returns true when edhrecDecks has at least one filter", () => {
+    expect(
+      validateSearchParams(
+        makeSearchParams({
+          edhrecDecks: {
+            sizeFilters: [{ method: ">", value: 5 }],
+          },
+        })
+      )
+    ).toBe(true);
+  });
+
   it("returns true when price has at least one filter", () => {
     expect(
       validateSearchParams(

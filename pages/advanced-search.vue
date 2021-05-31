@@ -93,6 +93,16 @@
         />
       </div>
 
+      <div id="popularity-inputs" class="container">
+        <MultiSearchInput
+          v-model="popularity"
+          label="Popularity"
+          plural-label="Popularity"
+          :operator-options="popularityOptions"
+          default-operator="<-number"
+        />
+      </div>
+
       <div id="previewed-combos" class="container">
         <RadioSearchInput
           label="Previewed / Spoiled Combos"
@@ -165,6 +175,7 @@ import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
 import colorAutocompletes from "@/lib/api/color-autocompletes";
+import { DEFAULT_VENDOR } from "@/lib/constants";
 
 type InputData = {
   value: string;
@@ -205,6 +216,9 @@ type Data = {
   price: InputData[];
   priceOptions: OperatorOption[];
 
+  popularity: InputData[];
+  popularityOptions: OperatorOption[];
+
   vendor: string;
   vendorOptions: OperatorOption[];
 
@@ -218,7 +232,6 @@ type Data = {
 
 const DEFAULT_PREVIEWED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
-const DEFAULT_VENDOR_VALUE = "cardkingdom";
 
 export default Vue.extend({
   components: {
@@ -314,7 +327,14 @@ export default Vue.extend({
         { value: "=-number", label: "Costs exactly" },
       ],
 
-      vendor: DEFAULT_VENDOR_VALUE,
+      popularity: [{ value: "", operator: "<-number" }],
+      popularityOptions: [
+        { value: "<-number", label: "In less than x decks (number)" },
+        { value: ">-number", label: "In more than x decks (number)" },
+        { value: "=-number", label: "In exactly x decks (number)" },
+      ],
+
+      vendor: DEFAULT_VENDOR,
       vendorOptions: [
         {
           value: "cardkingdom",
@@ -408,6 +428,8 @@ export default Vue.extend({
               keyInQuery = "colors";
             } else if (keyInQuery === "pre") {
               keyInQuery = "prerequisites";
+            } else if (keyInQuery === "popularity") {
+              keyInQuery = "decks";
             } else if (keyInQuery !== "price") {
               keyInQuery += "s";
             }
@@ -426,6 +448,7 @@ export default Vue.extend({
       this.steps.forEach(makeQueryFunction("step"));
       this.results.forEach(makeQueryFunction("result"));
       this.price.forEach(makeQueryFunction("price"));
+      this.popularity.forEach(makeQueryFunction("popularity"));
 
       if (this.previewed !== DEFAULT_PREVIEWED_VALUE) {
         query += ` ${this.previewed}:previewed`;
@@ -433,7 +456,7 @@ export default Vue.extend({
       if (this.banned !== DEFAULT_BANNED_VALUE) {
         query += ` ${this.banned}:banned`;
       }
-      if (this.vendor !== DEFAULT_VENDOR_VALUE && this.hasAPriceInQuery) {
+      if (this.vendor !== DEFAULT_VENDOR && this.hasAPriceInQuery) {
         query += ` vendor:${this.vendor}`;
       }
 
@@ -499,6 +522,7 @@ export default Vue.extend({
       this.steps.forEach(val);
       this.results.forEach(val);
       this.price.forEach(val);
+      this.popularity.forEach(val);
 
       return hasValidationError;
     },

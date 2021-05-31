@@ -6,11 +6,11 @@ type ComboData = Record<
   string,
   {
     slug: string;
-    amount: number;
+    numberOfDecks: number;
   }
 >;
 
-export default async function getEDHRECPrices(): Promise<ComboData> {
+export default async function getEDHRECComboData(): Promise<ComboData> {
   log("Looking up EDHREC combo data");
 
   const rawData = (await getData(
@@ -19,7 +19,7 @@ export default async function getEDHRECPrices(): Promise<ComboData> {
 
   return Object.keys(rawData).reduce((accum, key) => {
     accum[key] = {
-      amount: rawData[key][0],
+      numberOfDecks: rawData[key][0],
       slug: rawData[key][2],
     };
 

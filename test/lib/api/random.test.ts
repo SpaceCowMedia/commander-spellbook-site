@@ -17,6 +17,7 @@ describe("random", () => {
     mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
+      vendor: "cardkingdom",
       sort: "colors",
       order: "ascending",
       combos,
@@ -56,6 +57,7 @@ describe("random", () => {
     mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
+      vendor: "cardkingdom",
       sort: "colors",
       order: "ascending",
       combos: [],

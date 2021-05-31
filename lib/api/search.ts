@@ -1,3 +1,4 @@
+import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "../constants";
 import lookupApi from "./spellbook-api";
 import parseQuery from "./parse-query";
 import filterIds from "./search-filters/ids";
@@ -14,14 +15,15 @@ import type { SearchResults } from "./types";
 
 export default async function search(query = ""): Promise<SearchResults> {
   const searchParams = parseQuery(query);
-  const sort = searchParams.sort || "colors";
-  const order = searchParams.order || "auto";
-  const vendor = searchParams.price.vendor || "cardkingdom";
+  const sort = searchParams.sort || DEFAULT_SORT;
+  const order = searchParams.order || DEFAULT_ORDER;
+  const vendor = searchParams.price.vendor || DEFAULT_VENDOR;
   const { errors } = searchParams;
 
   if (!validateSearchParams(searchParams)) {
     return {
       errors,
+      vendor,
       sort,
       order,
       combos: [],
@@ -43,6 +45,7 @@ export default async function search(query = ""): Promise<SearchResults> {
     errors,
     sort,
     order,
+    vendor,
     combos,
     message: createMessage(combos, searchParams),
   };

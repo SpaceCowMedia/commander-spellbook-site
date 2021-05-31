@@ -148,6 +148,23 @@ describe("Advanced Search Page", () => {
     );
   });
 
+  it("can search by popularity", () => {
+    cy.visit("/advanced-search/");
+
+    cy.get("#popularity-inputs input.input").should("have.length", 1);
+    cy.get("#popularity-input-0").type("3");
+
+    cy.get("#popularity-inputs button").click();
+    cy.get("#popularity-inputs input.input").should("have.length", 2);
+
+    cy.get("#popularity-input-1").type("2");
+    cy.get("#popularity-inputs .select-1 select").select("=-number");
+
+    cy.get("#advanced-search-submit-button").click();
+
+    cy.url().should("include", "/search/?q=decks%3C3%20decks%3D2");
+  });
+
   it("can search for previewed combos", () => {
     cy.visit("/advanced-search/");
 

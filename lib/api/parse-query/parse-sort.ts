@@ -44,6 +44,11 @@ export default function parseSort(
     case "colors":
       value = "colors";
       break;
+    case "deck":
+    case "decks":
+    case "popularity":
+      value = "popularity";
+      break;
     case "usd":
     case "price":
       value = "price";

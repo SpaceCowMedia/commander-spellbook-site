@@ -1,3 +1,4 @@
+import { DEFAULT_ORDER } from "../constants";
 import COLOR_ORDER from "./color-combo-order";
 
 import type {
@@ -26,6 +27,7 @@ const ORDER_DEFAULTS: Record<SortValue, OrderValue> = {
   colors: "ascending",
   id: "ascending",
 
+  popularity: "descending",
   price: "descending",
 };
 
@@ -66,6 +68,25 @@ function handleSortingByColorIdentity(
   };
 }
 
+function handleSortingByPopularity(
+  firstCombo: FormattedApiResponse,
+  secondCombo: FormattedApiResponse
+): SortingMeta {
+  const firstDecks = Number(firstCombo.numberOfEDHRECDecks);
+  const secondDecks = Number(secondCombo.numberOfEDHRECDecks);
+  const isEqual = firstDecks === secondDecks;
+  const firstRemainsFirst = firstDecks > secondDecks;
+
+  if (isEqual) {
+    return handleSortingByColorIdentity(firstCombo, secondCombo);
+  }
+
+  return {
+    isEqual,
+    firstRemainsFirst,
+  };
+}
+
 function handleSortingByPrice(
   firstCombo: FormattedApiResponse,
   secondCombo: FormattedApiResponse,
@@ -90,7 +111,7 @@ export default function sortCombos(
   combos: FormattedApiResponse[],
   { by, order, vendor }: SortOptions
 ): FormattedApiResponse[] {
-  if (order === "auto") {
+  if (order === DEFAULT_ORDER) {
     order = ORDER_DEFAULTS[by];
   }
 
@@ -115,6 +136,9 @@ export default function sortCombos(
         break;
       case "colors":
         meta = handleSortingByColorIdentity(firstCombo, secondCombo);
+        break;
+      case "popularity":
+        meta = handleSortingByPopularity(firstCombo, secondCombo);
         break;
       case "price":
         meta = handleSortingByPrice(firstCombo, secondCombo, vendor);

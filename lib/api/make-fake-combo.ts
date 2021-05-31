@@ -15,18 +15,26 @@ type FakeComboOptions = {
   hasSpoiledCard?: boolean;
   price?: number;
   edhrecLink?: boolean;
+  numberOfEDHRECDecks?: number;
 };
 
 export default function makeFakeCombo(
   options: FakeComboOptions = {}
 ): FormattedApiResponse {
   const id = options.commanderSpellbookId || "123";
+  const colorIdentity = new ColorIdentity(options.colorIdentity || "wub");
+  const edhrecLink =
+    options.edhrecLink === false
+      ? ""
+      : `https://edhrec.com/combos/${colorIdentity.toString()}/${id}`;
+  const numberOfEDHRECDecks =
+    options.numberOfEDHRECDecks != null ? options.numberOfEDHRECDecks : 35;
 
   const payload = {
     commanderSpellbookId: id,
     permalink: `https://commanderspellbook.com/combo/${id}/`,
     cards: CardGrouping.create(options.cards || ["card 1", "card 2"]),
-    colorIdentity: new ColorIdentity(options.colorIdentity || "wub"),
+    colorIdentity,
     prerequisites: SpellbookList.create(
       options.prerequisites?.join(". ") || "pre 1. pre 2"
     ),
@@ -36,11 +44,9 @@ export default function makeFakeCombo(
     ),
     hasBannedCard: options.hasBannedCard || false,
     hasSpoiledCard: options.hasSpoiledCard || false,
+    edhrecLink,
+    numberOfEDHRECDecks,
   } as FormattedApiResponse;
-
-  if (options.edhrecLink !== false) {
-    payload.edhrecLink = `https://edhrec.com/combos/${payload.colorIdentity.toString()}/${id}`;
-  }
 
   if (options.price != null) {
     payload.cards.getPrice = function () {

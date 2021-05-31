@@ -13,7 +13,11 @@ describe("sizeFilter", () => {
   let params: SearchParameters;
 
   beforeEach(() => {
-    combos = [makeFakeCombo()];
+    combos = [
+      makeFakeCombo({
+        numberOfEDHRECDecks: 30,
+      }),
+    ];
     params = makeSearchParams();
   });
 
@@ -130,6 +134,93 @@ describe("sizeFilter", () => {
       expect(result.length).toBe(1);
 
       mocked(combos[0][dataType].size).mockReturnValue(4);
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+  });
+
+  describe("edhrecDecks", () => {
+    it("can filter by number of values using =", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: "=",
+        value: 30,
+      });
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 3;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+
+    it("can filter by number of values using >", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: ">",
+        value: 3,
+      });
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 3;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+
+    it("can filter by number of values using >=", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: ">=",
+        value: 3,
+      });
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 3;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 2;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+
+    it("can filter by number of values using <", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: "<",
+        value: 31,
+      });
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 31;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+
+    it("can filter by number of values using <=", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: "<=",
+        value: 31,
+      });
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 31;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 32;
 
       result = filterSize(combos, params);
       expect(result.length).toBe(0);

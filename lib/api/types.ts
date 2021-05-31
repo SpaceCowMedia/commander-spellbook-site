@@ -37,7 +37,8 @@ export type FormattedApiResponse = {
   results: SpellbookList;
   hasBannedCard: boolean;
   hasSpoiledCard: boolean;
-  edhrecLink?: string;
+  edhrecLink: string;
+  numberOfEDHRECDecks: number;
 };
 
 export type ColorIdentityColors = "w" | "u" | "b" | "r" | "g" | "c";
@@ -48,7 +49,8 @@ export type SortValue =
   | "cards"
   | "colors"
   | "id"
-  | "price";
+  | "price"
+  | "popularity";
 export type OrderValue = "auto" | "ascending" | "descending";
 export type VendorValue = "tcgplayer" | "cardkingdom";
 
@@ -62,11 +64,12 @@ export type SearchResults = {
   combos: FormattedApiResponse[];
   errors: SearchError[];
   sort: SortValue;
+  vendor: VendorValue;
   order: OrderValue;
   message: string;
 };
 
-type SizeFilter = {
+export type SizeFilter = {
   method: string;
   value: number;
 };
@@ -107,6 +110,9 @@ export type SearchParameters = {
     sizeFilters: SizeFilter[];
     includeFilters: ColorIdentityValueFilter[];
     excludeFilters: ColorIdentityValueFilter[];
+  };
+  edhrecDecks: {
+    sizeFilters: SizeFilter[];
   };
   price: {
     vendor?: VendorValue;

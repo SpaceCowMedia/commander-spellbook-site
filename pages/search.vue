@@ -46,7 +46,11 @@
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults :results="paginatedResults" />
+        <ComboResults
+          :results="paginatedResults"
+          :sort="sort"
+          :vendor="vendor"
+        />
 
         <Pagination
           :current-page="page"
@@ -69,9 +73,14 @@ import Pagination from "@/components/search/Pagination.vue";
 import SearchMessage from "@/components/search/SearchMessage.vue";
 import Select, { Option } from "@/components/Select.vue";
 import search from "@/lib/api/search";
+import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "@/lib/constants";
 
-import type { SortValue, OrderValue } from "@/lib/api/types";
-import type { ComboResult } from "../components/search/ComboResults.vue";
+import type {
+  FormattedApiResponse,
+  SortValue,
+  OrderValue,
+  VendorValue,
+} from "@/lib/api/types";
 
 type Data = {
   loaded: boolean;
@@ -80,9 +89,10 @@ type Data = {
   maxNumberOfCombosPerPage: number;
   message: string;
   errors: string;
-  combos: ComboResult[];
+  combos: FormattedApiResponse[];
   sort: SortValue;
   order: OrderValue;
+  vendor: VendorValue;
 };
 
 export default Vue.extend({
@@ -102,8 +112,9 @@ export default Vue.extend({
       message: "",
       errors: "",
       combos: [],
-      sort: "colors",
-      order: "auto",
+      vendor: DEFAULT_VENDOR,
+      sort: DEFAULT_SORT,
+      order: DEFAULT_ORDER,
     };
   },
   computed: {
@@ -122,7 +133,7 @@ export default Vue.extend({
 
       return startingPoint;
     },
-    paginatedResults(): ComboResult[] {
+    paginatedResults(): FormattedApiResponse[] {
       let results = this.combos;
 
       if (this.totalResults > this.maxNumberOfCombosPerPage) {
@@ -152,6 +163,7 @@ export default Vue.extend({
     },
     sortOptions(): Option[] {
       return [
+        { value: "popularity", label: "Popularity" },
         { value: "colors", label: "Color Identity" },
         { value: "price", label: "Price" },
         {
@@ -203,7 +215,7 @@ export default Vue.extend({
         .replace(/((\s)?order(:|=)\w*|$)/g, "")
         .trim();
 
-      if (this.order !== "auto") {
+      if (this.order !== DEFAULT_ORDER) {
         query = `${query} order:${this.order}`;
       }
 
@@ -245,7 +257,9 @@ export default Vue.extend({
         query: { q: query },
       });
 
-      const { message, sort, order, errors, combos } = await search(query);
+      const { message, sort, order, vendor, errors, combos } = await search(
+        query
+      );
 
       if (combos.length === 1) {
         this.redirecting = true;
@@ -258,16 +272,10 @@ export default Vue.extend({
 
       this.message = message;
       this.sort = sort;
+      this.vendor = vendor;
       this.order = order;
       this.errors = errors.map((e) => e.message).join(" ");
-      this.combos = combos.map((c) => {
-        return {
-          names: c.cards.map((card) => card.name),
-          colors: Array.from(c.colorIdentity.colors),
-          results: Array.from(c.results),
-          id: String(c.commanderSpellbookId),
-        };
-      });
+      this.combos = combos;
     },
     parseSearchQuery(): string {
       const query = this.$route.query.q;

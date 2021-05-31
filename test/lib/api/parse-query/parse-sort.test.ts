@@ -16,6 +16,7 @@ describe("parseSort", () => {
     "cards",
     "id",
     "colors",
+    "popularity",
     "price",
   ] as SortValue[])("suports %s", (kind) => {
     parseSort(searchParams, ":", kind);
@@ -31,6 +32,12 @@ describe("parseSort", () => {
       expect(searchParams.sort).toEqual("colors");
     }
   );
+
+  it.each(["deck", "decks"])("supports %s as alias for popularity", (kind) => {
+    parseSort(searchParams, "=", kind);
+
+    expect(searchParams.sort).toEqual("popularity");
+  });
 
   it("supports usd as alias for price", () => {
     parseSort(searchParams, "=", "usd");

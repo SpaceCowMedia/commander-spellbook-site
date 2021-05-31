@@ -11,6 +11,7 @@ describe("makeFakeCombo", () => {
     expect(combo.commanderSpellbookId).toBe("123");
     expect(combo.permalink).toBe("https://commanderspellbook.com/combo/123/");
     expect(combo.edhrecLink).toBe("https://edhrec.com/combos/wub/123");
+    expect(combo.numberOfEDHRECDecks).toBe(35);
 
     expect(combo.cards).toBeInstanceOf(CardGrouping);
     expect(combo.cards.length).toBe(2);
@@ -115,6 +116,14 @@ describe("makeFakeCombo", () => {
     });
 
     expect(combo.edhrecLink).toBeFalsy();
+  });
+
+  it("can overwrite numberOfEDHRECDecks", () => {
+    const combo = makeFakeCombo({
+      numberOfEDHRECDecks: 0,
+    });
+
+    expect(combo.numberOfEDHRECDecks).toBe(0);
   });
 
   it("can overwrite the getPrice function", () => {

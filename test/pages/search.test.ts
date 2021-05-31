@@ -21,8 +21,9 @@ describe("SearchPage", () => {
 
   beforeEach(() => {
     mocked(search).mockResolvedValue({
-      sort: "colors",
-      order: "ascending",
+      vendor: "cardkingdom",
+      sort: "popularity",
+      order: "descending",
       combos: [],
       message: "",
       errors: [],
@@ -109,7 +110,8 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
-        sort: "colors",
+        vendor: "cardkingdom",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
@@ -127,11 +129,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       const ComboResultsStub = {
-        props: {
-          results: {
-            type: Array,
-          },
-        },
+        props: ["results", "sort", "vendor"],
         template: "<div></div>",
       };
       // @ts-ignore
@@ -143,6 +141,8 @@ describe("SearchPage", () => {
       await wrapper.setData({
         loaded: true,
         combos: fakeCombos,
+        sort: "popularity",
+        vendor: "tcgplayer",
       });
 
       expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
@@ -164,6 +164,8 @@ describe("SearchPage", () => {
           id: "2",
         },
       ]);
+      expect(comboResultsNode.props("sort")).toBe("popularity");
+      expect(comboResultsNode.props("vendor")).toBe("tcgplayer");
     });
 
     it("shows search message", async () => {
@@ -346,7 +348,7 @@ describe("SearchPage", () => {
     });
 
     it("updates existing sort option in query when sort is updated", async () => {
-      $route.query.q = "sort:colors ci:temur";
+      $route.query.q = "sort:popularity ci:temur";
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
@@ -452,33 +454,36 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
-        sort: "colors",
+        vendor: "cardkingdom",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
     });
 
-    it("populates results with cmobos from lookup", async () => {
+    it("populates results with combos from lookup", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
+      const combo1 = makeFakeCombo({
+        cards: ["a", "b", "c"],
+        results: ["result 1", "result 2"],
+        colorIdentity: "rb",
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 12,
+      });
+      const combo2 = makeFakeCombo({
+        cards: ["d", "e", "f"],
+        results: ["result 3", "result 4"],
+        colorIdentity: "wb",
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 20,
+      });
       mocked(search).mockResolvedValue({
-        combos: [
-          makeFakeCombo({
-            cards: ["a", "b", "c"],
-            results: ["result 1", "result 2"],
-            colorIdentity: "rb",
-            commanderSpellbookId: "1",
-          }),
-          makeFakeCombo({
-            cards: ["d", "e", "f"],
-            results: ["result 3", "result 4"],
-            colorIdentity: "wb",
-            commanderSpellbookId: "2",
-          }),
-        ],
+        combos: [combo1, combo2],
         message: "",
-        sort: "colors",
+        vendor: "cardkingdom",
+        sort: "popularity",
         order: "descending",
         errors: [],
       });
@@ -486,20 +491,7 @@ describe("SearchPage", () => {
       await vm.updateSearchResults("query");
       expect(search).toBeCalledWith("query");
 
-      expect(vm.paginatedResults).toEqual([
-        {
-          names: ["a", "b", "c"],
-          colors: ["b", "r"],
-          results: ["result 1", "result 2"],
-          id: "1",
-        },
-        {
-          names: ["d", "e", "f"],
-          colors: ["w", "b"],
-          results: ["result 3", "result 4"],
-          id: "2",
-        },
-      ]);
+      expect(vm.paginatedResults).toEqual([combo1, combo2]);
     });
 
     it("automatically redirects to combo page when only a single value is found", async () => {
@@ -515,8 +507,9 @@ describe("SearchPage", () => {
             commanderSpellbookId: "1",
           }),
         ],
-        sort: "colors",
-        order: "ascending",
+        vendor: "cardkingdom",
+        sort: "popularity",
+        order: "descending",
         message: "",
         errors: [],
       });

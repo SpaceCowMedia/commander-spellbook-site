@@ -39,6 +39,12 @@
           :iterations="results"
           :cards-in-combo="cardNames"
         />
+        <ComboList
+          v-if="metadata.length > 0"
+          id="combo-metadata"
+          title="Metadata"
+          :iterations="metadata"
+        />
       </div>
 
       <aside v-if="loaded" class="w-full md:w-1/3 text-center">
@@ -100,6 +106,7 @@ type ComboData = {
   steps: string[];
   results: string[];
   edhrecLink: string;
+  numberOfDecks: number;
 };
 
 const NUMBERS = [
@@ -162,6 +169,7 @@ export default Vue.extend({
       results: Array.from(combo.results),
       colorIdentity: Array.from(combo.colorIdentity.colors),
       edhrecLink: combo.edhrecLink || "",
+      numberOfDecks: combo.numberOfEDHRECDecks || 0,
     };
   },
   data(): ComboData {
@@ -181,6 +189,7 @@ export default Vue.extend({
       steps: [],
       results: [],
       edhrecLink: "",
+      numberOfDecks: 0,
     };
   },
   head() {
@@ -271,6 +280,15 @@ export default Vue.extend({
       }
 
       return `(and ${NUMBERS[this.cards.length - 3]} other cards)`;
+    },
+    metadata(): string[] {
+      const data = [];
+
+      if (this.numberOfDecks > 0) {
+        data.push(`In ${this.numberOfDecks} decks according to EDHREC.`);
+      }
+
+      return data;
     },
   },
   async mounted() {
