@@ -1,5 +1,6 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import ComboResults from "@/components/search/ComboResults.vue";
+import makeFakeCombo from "@/lib/api/make-fake-combo";
 
 import type { MountOptions } from "../../types";
 
@@ -15,24 +16,33 @@ describe("ComboResults", () => {
       },
       propsData: {
         results: [
-          {
-            names: ["card a", "card b", "card c"],
-            id: "1",
+          makeFakeCombo({
+            cards: ["card a", "card b", "card c"],
+            prerequisites: ["1"],
+            steps: ["1"],
+            commanderSpellbookId: "1",
             results: ["result 1", "result 2"],
-            colors: ["w", "b", "r"],
-          },
-          {
-            names: ["card d", "card e", "card f", "card g"],
-            id: "2",
+            colorIdentity: "wbr",
+            price: 1,
+          }),
+          makeFakeCombo({
+            cards: ["card d", "card e", "card f", "card g"],
+            prerequisites: ["1", "2"],
+            steps: ["1", "2"],
+            commanderSpellbookId: "2",
             results: ["result 3", "result 4"],
-            colors: ["g", "u"],
-          },
-          {
-            names: ["card h", "card i"],
-            id: "3",
+            colorIdentity: "gu",
+            price: 2,
+          }),
+          makeFakeCombo({
+            cards: ["card h", "card i"],
+            prerequisites: ["1", "2", "3"],
+            steps: ["1", "2", "3"],
+            commanderSpellbookId: "3",
             results: ["result 5", "result 6"],
-            colors: ["c"],
-          },
+            colorIdentity: "c",
+            price: 0,
+          }),
         ],
       },
     };
@@ -142,9 +152,9 @@ describe("ComboResults", () => {
     const links = wrapper.findAllComponents(RouterLinkStub);
 
     expect(links.at(0).findComponent(CIStub).props("colors")).toEqual([
+      "r",
       "w",
       "b",
-      "r",
     ]);
     expect(links.at(1).findComponent(CIStub).props("colors")).toEqual([
       "g",
@@ -153,19 +163,144 @@ describe("ComboResults", () => {
     expect(links.at(2).findComponent(CIStub).props("colors")).toEqual(["c"]);
   });
 
-  it("prints the number of decks on EDHREC if available", () => {
+  it("does not include sort footer when no sort option is provided", () => {
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").exists()).toBe(false);
+    expect(links.at(1).find(".sort-footer").exists()).toBe(false);
+    expect(links.at(2).find(".sort-footer").exists()).toBe(false);
+  });
+
+  it("does not include sort footer when colors is used for sort option", () => {
     // @ts-ignore
-    options.propsData.results[0].numberOfDecks = 14;
+    options.propsData.sort = "colors";
 
     const wrapper = shallowMount(ComboResults, options);
     const links = wrapper.findAllComponents(RouterLinkStub);
 
-    expect(links.at(0).find(".combo-deck-count").exists()).toBe(true);
-    expect(links.at(0).find(".combo-deck-count").text()).toContain(
-      "in 14 decks"
-    );
+    expect(links.at(0).find(".sort-footer").exists()).toBe(false);
+    expect(links.at(1).find(".sort-footer").exists()).toBe(false);
+    expect(links.at(2).find(".sort-footer").exists()).toBe(false);
+  });
 
-    expect(links.at(1).find(".combo-deck-count").exists()).toBe(false);
-    expect(links.at(2).find(".combo-deck-count").exists()).toBe(false);
+  it("prints the number of decks on EDHREC when sort option is popularity", () => {
+    // @ts-ignore
+    options.propsData.results[0].numberOfEDHRECDecks = 14;
+    // @ts-ignore
+    options.propsData.results[1].numberOfEDHRECDecks = 0;
+    // @ts-ignore
+    options.propsData.results[2].numberOfEDHRECDecks = 1;
+    // @ts-ignore
+    options.propsData.sort = "popularity";
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain(
+      "14 decks (EDHREC)"
+    );
+    expect(links.at(1).find(".sort-footer").text()).toContain(
+      "No deck data (EDHREC)"
+    );
+    expect(links.at(2).find(".sort-footer").text()).toContain(
+      "1 deck (EDHREC)"
+    );
+  });
+
+  it("prints the number of prerequisites on when sort option is prerequisites", () => {
+    // @ts-ignore
+    options.propsData.sort = "prerequisites";
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain("1 prerequisite");
+    expect(links.at(1).find(".sort-footer").text()).toContain(
+      "2 prerequisites"
+    );
+    expect(links.at(2).find(".sort-footer").text()).toContain(
+      "3 prerequisites"
+    );
+  });
+
+  it("prints the number of steps on when sort option is steps", () => {
+    // @ts-ignore
+    options.propsData.sort = "steps";
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain("1 step");
+    expect(links.at(1).find(".sort-footer").text()).toContain("2 steps");
+    expect(links.at(2).find(".sort-footer").text()).toContain("3 steps");
+  });
+
+  it("prints the number of results on when sort option is results", () => {
+    // @ts-ignore
+    options.propsData.sort = "results";
+    // @ts-ignore
+    options.propsData.results[0].results.pop();
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain("1 result");
+    expect(links.at(1).find(".sort-footer").text()).toContain("2 results");
+    expect(links.at(2).find(".sort-footer").text()).toContain("2 results");
+  });
+
+  it("prints the number of cards on when sort option is cards", () => {
+    // @ts-ignore
+    options.propsData.sort = "cards";
+    // @ts-ignore
+    options.propsData.results[2].cards.pop();
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain("3 cards");
+    expect(links.at(1).find(".sort-footer").text()).toContain("4 cards");
+    expect(links.at(2).find(".sort-footer").text()).toContain("1 card");
+  });
+
+  it("prints the number of cards on when sort option is cards", () => {
+    // @ts-ignore
+    options.propsData.sort = "price";
+
+    const wrapper = shallowMount(ComboResults, options);
+    const links = wrapper.findAllComponents(RouterLinkStub);
+
+    expect(links.at(0).find(".sort-footer").text()).toContain("$1.00");
+    expect(links.at(1).find(".sort-footer").text()).toContain("$2.00");
+    expect(links.at(2).find(".sort-footer").text()).toContain(
+      "Price Unavailable"
+    );
+  });
+
+  it("defaults price sort footer to card kingdom as vendor", () => {
+    // @ts-ignore
+    options.propsData.sort = "price";
+    // @ts-ignore
+    const priceSpy = jest.spyOn(options.propsData.results[0].cards, "getPrice");
+
+    shallowMount(ComboResults, options);
+
+    expect(priceSpy).toBeCalledWith("cardkingdom");
+    expect(priceSpy).not.toBeCalledWith("tcgplayer");
+  });
+
+  it("can specify vendor as tcgplayer for  price sort footer", () => {
+    // @ts-ignore
+    options.propsData.sort = "price";
+    // @ts-ignore
+    options.propsData.vendor = "tcgplayer";
+    // @ts-ignore
+    const priceSpy = jest.spyOn(options.propsData.results[0].cards, "getPrice");
+
+    shallowMount(ComboResults, options);
+
+    expect(priceSpy).toBeCalledWith("tcgplayer");
+    expect(priceSpy).not.toBeCalledWith("cardkingdom");
   });
 });

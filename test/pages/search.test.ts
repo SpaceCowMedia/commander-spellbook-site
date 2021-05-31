@@ -458,27 +458,26 @@ describe("SearchPage", () => {
       });
     });
 
-    it("populates results with cmobos from lookup", async () => {
+    it("populates results with combos from lookup", async () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
+      const combo1 = makeFakeCombo({
+        cards: ["a", "b", "c"],
+        results: ["result 1", "result 2"],
+        colorIdentity: "rb",
+        commanderSpellbookId: "1",
+        numberOfEDHRECDecks: 12,
+      });
+      const combo2 = makeFakeCombo({
+        cards: ["d", "e", "f"],
+        results: ["result 3", "result 4"],
+        colorIdentity: "wb",
+        commanderSpellbookId: "2",
+        numberOfEDHRECDecks: 20,
+      });
       mocked(search).mockResolvedValue({
-        combos: [
-          makeFakeCombo({
-            cards: ["a", "b", "c"],
-            results: ["result 1", "result 2"],
-            colorIdentity: "rb",
-            commanderSpellbookId: "1",
-            numberOfEDHRECDecks: 12,
-          }),
-          makeFakeCombo({
-            cards: ["d", "e", "f"],
-            results: ["result 3", "result 4"],
-            colorIdentity: "wb",
-            commanderSpellbookId: "2",
-            numberOfEDHRECDecks: 20,
-          }),
-        ],
+        combos: [combo1, combo2],
         message: "",
         sort: "popularity",
         order: "descending",
@@ -488,22 +487,7 @@ describe("SearchPage", () => {
       await vm.updateSearchResults("query");
       expect(search).toBeCalledWith("query");
 
-      expect(vm.paginatedResults).toEqual([
-        {
-          names: ["a", "b", "c"],
-          colors: ["b", "r"],
-          results: ["result 1", "result 2"],
-          id: "1",
-          numberOfDecks: 12,
-        },
-        {
-          names: ["d", "e", "f"],
-          colors: ["w", "b"],
-          results: ["result 3", "result 4"],
-          id: "2",
-          numberOfDecks: 20,
-        },
-      ]);
+      expect(vm.paginatedResults).toEqual([combo1, combo2]);
     });
 
     it("automatically redirects to combo page when only a single value is found", async () => {

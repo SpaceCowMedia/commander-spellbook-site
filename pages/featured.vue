@@ -20,14 +20,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ComboResults, {
-  ComboResult,
-} from "@/components/search/ComboResults.vue";
+import ComboResults from "@/components/search/ComboResults.vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 import getFeaturedCombos from "@/lib/api/get-featured-combos";
+import { FormattedApiResponse } from "@/lib/api/types";
 
 type Data = {
-  combos: ComboResult[];
+  combos: FormattedApiResponse[];
 };
 
 export default Vue.extend({
@@ -37,18 +36,9 @@ export default Vue.extend({
   },
   async asyncData(): Promise<Data> {
     const featuredCombos = await getFeaturedCombos();
-    const combos = featuredCombos.map((combo) => {
-      return {
-        id: combo.commanderSpellbookId,
-        names: combo.cards.map((c) => c.name),
-        results: Array.from(combo.results),
-        colors: Array.from(combo.colorIdentity.colors),
-        numberOfDecks: combo.numberOfEDHRECDecks || 0,
-      };
-    });
 
     return {
-      combos,
+      combos: featuredCombos,
     };
   },
   data(): Data {

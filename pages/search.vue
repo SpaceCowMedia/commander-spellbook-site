@@ -46,7 +46,7 @@
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults :results="paginatedResults" />
+        <ComboResults :results="paginatedResults" :sort="sort" />
 
         <Pagination
           :current-page="page"
@@ -70,8 +70,11 @@ import SearchMessage from "@/components/search/SearchMessage.vue";
 import Select, { Option } from "@/components/Select.vue";
 import search from "@/lib/api/search";
 
-import type { SortValue, OrderValue } from "@/lib/api/types";
-import type { ComboResult } from "../components/search/ComboResults.vue";
+import type {
+  FormattedApiResponse,
+  SortValue,
+  OrderValue,
+} from "@/lib/api/types";
 
 type Data = {
   loaded: boolean;
@@ -80,7 +83,7 @@ type Data = {
   maxNumberOfCombosPerPage: number;
   message: string;
   errors: string;
-  combos: ComboResult[];
+  combos: FormattedApiResponse[];
   sort: SortValue;
   order: OrderValue;
 };
@@ -122,7 +125,7 @@ export default Vue.extend({
 
       return startingPoint;
     },
-    paginatedResults(): ComboResult[] {
+    paginatedResults(): FormattedApiResponse[] {
       let results = this.combos;
 
       if (this.totalResults > this.maxNumberOfCombosPerPage) {
@@ -261,15 +264,7 @@ export default Vue.extend({
       this.sort = sort;
       this.order = order;
       this.errors = errors.map((e) => e.message).join(" ");
-      this.combos = combos.map((c) => {
-        return {
-          names: c.cards.map((card) => card.name),
-          colors: Array.from(c.colorIdentity.colors),
-          results: Array.from(c.results),
-          id: String(c.commanderSpellbookId),
-          numberOfDecks: c.numberOfEDHRECDecks || 0,
-        };
-      });
+      this.combos = combos;
     },
     parseSearchQuery(): string {
       const query = this.$route.query.q;
