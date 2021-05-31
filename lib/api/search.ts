@@ -22,6 +22,7 @@ export default async function search(query = ""): Promise<SearchResults> {
   if (!validateSearchParams(searchParams)) {
     return {
       errors,
+      vendor,
       sort,
       order,
       combos: [],
@@ -43,6 +44,7 @@ export default async function search(query = ""): Promise<SearchResults> {
     errors,
     sort,
     order,
+    vendor,
     combos,
     message: createMessage(combos, searchParams),
   };

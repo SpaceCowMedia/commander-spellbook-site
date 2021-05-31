@@ -64,6 +64,7 @@ export type SearchResults = {
   combos: FormattedApiResponse[];
   errors: SearchError[];
   sort: SortValue;
+  vendor: VendorValue;
   order: OrderValue;
   message: string;
 };

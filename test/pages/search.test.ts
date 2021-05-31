@@ -21,6 +21,7 @@ describe("SearchPage", () => {
 
   beforeEach(() => {
     mocked(search).mockResolvedValue({
+      vendor: "cardkingdom",
       sort: "popularity",
       order: "descending",
       combos: [],
@@ -109,6 +110,7 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
+        vendor: "cardkingdom",
         sort: "popularity",
         order: "descending",
         errors: [],
@@ -127,11 +129,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       const ComboResultsStub = {
-        props: {
-          results: {
-            type: Array,
-          },
-        },
+        props: ["results", "sort", "vendor"],
         template: "<div></div>",
       };
       // @ts-ignore
@@ -143,6 +141,8 @@ describe("SearchPage", () => {
       await wrapper.setData({
         loaded: true,
         combos: fakeCombos,
+        sort: "popularity",
+        vendor: "tcgplayer",
       });
 
       expect(wrapper.findComponent(NoCombosStub).exists()).toBeFalsy();
@@ -164,6 +164,8 @@ describe("SearchPage", () => {
           id: "2",
         },
       ]);
+      expect(comboResultsNode.props("sort")).toBe("popularity");
+      expect(comboResultsNode.props("vendor")).toBe("tcgplayer");
     });
 
     it("shows search message", async () => {
@@ -452,6 +454,7 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
+        vendor: "cardkingdom",
         sort: "popularity",
         order: "descending",
         errors: [],
@@ -479,6 +482,7 @@ describe("SearchPage", () => {
       mocked(search).mockResolvedValue({
         combos: [combo1, combo2],
         message: "",
+        vendor: "cardkingdom",
         sort: "popularity",
         order: "descending",
         errors: [],
@@ -503,6 +507,7 @@ describe("SearchPage", () => {
             commanderSpellbookId: "1",
           }),
         ],
+        vendor: "cardkingdom",
         sort: "popularity",
         order: "descending",
         message: "",

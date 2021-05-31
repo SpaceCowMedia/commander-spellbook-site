@@ -60,6 +60,7 @@ describe("SimiliarCombosButton", () => {
       mocked(search).mockResolvedValue({
         combos: [],
         message: "",
+        vendor: "cardkingdom",
         sort: "colors",
         order: "descending",
         errors: [],
@@ -118,6 +119,7 @@ describe("SimiliarCombosButton", () => {
       mocked(search).mockResolvedValue({
         combos: [makeFakeCombo()],
         message: "",
+        vendor: "cardkingdom",
         sort: "colors",
         order: "descending",
         errors: [],

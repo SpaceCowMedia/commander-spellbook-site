@@ -161,6 +161,7 @@ describe("search", () => {
 
     expect(result.sort).toBe("price");
     expect(result.order).toBe("descending");
+    expect(result.vendor).toBe("cardkingdom");
 
     mocked(sortCombos).mockClear();
 
@@ -174,7 +175,7 @@ describe("search", () => {
         },
       })
     );
-    await search("Sydri Arjun Rashmi");
+    const newResult = await search("Sydri Arjun Rashmi");
 
     expect(sortCombos).toBeCalledTimes(1);
     expect(sortCombos).toBeCalledWith(expect.anything(), {
@@ -182,6 +183,8 @@ describe("search", () => {
       order: "descending",
       vendor: "tcgplayer",
     });
+
+    expect(newResult.vendor).toBe("tcgplayer");
   });
 
   it("can sort by specific attributes and order in descending order", async () => {

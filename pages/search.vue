@@ -46,7 +46,11 @@
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults :results="paginatedResults" :sort="sort" />
+        <ComboResults
+          :results="paginatedResults"
+          :sort="sort"
+          :vendor="vendor"
+        />
 
         <Pagination
           :current-page="page"
@@ -74,6 +78,7 @@ import type {
   FormattedApiResponse,
   SortValue,
   OrderValue,
+  VendorValue,
 } from "@/lib/api/types";
 
 type Data = {
@@ -86,6 +91,7 @@ type Data = {
   combos: FormattedApiResponse[];
   sort: SortValue;
   order: OrderValue;
+  vendor: VendorValue;
 };
 
 export default Vue.extend({
@@ -105,6 +111,7 @@ export default Vue.extend({
       message: "",
       errors: "",
       combos: [],
+      vendor: "cardkingdom",
       sort: "popularity",
       order: "auto",
     };
@@ -249,7 +256,9 @@ export default Vue.extend({
         query: { q: query },
       });
 
-      const { message, sort, order, errors, combos } = await search(query);
+      const { message, sort, order, vendor, errors, combos } = await search(
+        query
+      );
 
       if (combos.length === 1) {
         this.redirecting = true;
@@ -262,6 +271,7 @@ export default Vue.extend({
 
       this.message = message;
       this.sort = sort;
+      this.vendor = vendor;
       this.order = order;
       this.errors = errors.map((e) => e.message).join(" ");
       this.combos = combos;
