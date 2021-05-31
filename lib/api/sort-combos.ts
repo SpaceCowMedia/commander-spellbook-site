@@ -1,3 +1,4 @@
+import { DEFAULT_ORDER } from "../constants";
 import COLOR_ORDER from "./color-combo-order";
 
 import type {
@@ -110,7 +111,7 @@ export default function sortCombos(
   combos: FormattedApiResponse[],
   { by, order, vendor }: SortOptions
 ): FormattedApiResponse[] {
-  if (order === "auto") {
+  if (order === DEFAULT_ORDER) {
     order = ORDER_DEFAULTS[by];
   }
 

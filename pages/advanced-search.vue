@@ -165,6 +165,7 @@ import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
 import colorAutocompletes from "@/lib/api/color-autocompletes";
+import { DEFAULT_VENDOR } from "@/lib/constants";
 
 type InputData = {
   value: string;
@@ -218,7 +219,6 @@ type Data = {
 
 const DEFAULT_PREVIEWED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
-const DEFAULT_VENDOR_VALUE = "cardkingdom";
 
 export default Vue.extend({
   components: {
@@ -314,7 +314,7 @@ export default Vue.extend({
         { value: "=-number", label: "Costs exactly" },
       ],
 
-      vendor: DEFAULT_VENDOR_VALUE,
+      vendor: DEFAULT_VENDOR,
       vendorOptions: [
         {
           value: "cardkingdom",
@@ -433,7 +433,7 @@ export default Vue.extend({
       if (this.banned !== DEFAULT_BANNED_VALUE) {
         query += ` ${this.banned}:banned`;
       }
-      if (this.vendor !== DEFAULT_VENDOR_VALUE && this.hasAPriceInQuery) {
+      if (this.vendor !== DEFAULT_VENDOR && this.hasAPriceInQuery) {
         query += ` vendor:${this.vendor}`;
       }
 

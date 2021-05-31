@@ -73,6 +73,7 @@ import Pagination from "@/components/search/Pagination.vue";
 import SearchMessage from "@/components/search/SearchMessage.vue";
 import Select, { Option } from "@/components/Select.vue";
 import search from "@/lib/api/search";
+import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "@/lib/constants";
 
 import type {
   FormattedApiResponse,
@@ -111,9 +112,9 @@ export default Vue.extend({
       message: "",
       errors: "",
       combos: [],
-      vendor: "cardkingdom",
-      sort: "popularity",
-      order: "auto",
+      vendor: DEFAULT_VENDOR,
+      sort: DEFAULT_SORT,
+      order: DEFAULT_ORDER,
     };
   },
   computed: {
@@ -214,7 +215,7 @@ export default Vue.extend({
         .replace(/((\s)?order(:|=)\w*|$)/g, "")
         .trim();
 
-      if (this.order !== "auto") {
+      if (this.order !== DEFAULT_ORDER) {
         query = `${query} order:${this.order}`;
       }
 

@@ -59,7 +59,12 @@ import Vue, { PropType } from "vue";
 import CardTooltip from "@/components/CardTooltip.vue";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 import ColorIdentity from "@/components/ColorIdentity.vue";
-import { FormattedApiResponse, VendorValue } from "@/lib/api/types";
+import { DEFAULT_VENDOR } from "@/lib/constants";
+import type {
+  FormattedApiResponse,
+  SortValue,
+  VendorValue,
+} from "@/lib/api/types";
 
 export default Vue.extend({
   components: {
@@ -69,12 +74,12 @@ export default Vue.extend({
   },
   props: {
     sort: {
-      type: String,
+      type: String as PropType<SortValue>,
       default: "",
     },
     vendor: {
       type: String as PropType<VendorValue>,
-      default: "cardkingdom",
+      default: DEFAULT_VENDOR,
     },
     results: {
       type: Array as PropType<FormattedApiResponse[]>,
@@ -102,10 +107,12 @@ export default Vue.extend({
       }
 
       if (this.sort === "price") {
-        if (combo.cards.getPrice(this.vendor) === 0) {
+        const vendor = this.vendor as VendorValue;
+
+        if (combo.cards.getPrice(vendor) === 0) {
           return "Price Unavailable";
         }
-        return `$${combo.cards.getPriceAsString(this.vendor)}`;
+        return `$${combo.cards.getPriceAsString(vendor)}`;
       }
 
       switch (this.sort) {
