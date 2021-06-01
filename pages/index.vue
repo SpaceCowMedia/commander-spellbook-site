@@ -23,9 +23,13 @@
         <RandomButton :query="query" class="random-button button md:m-1">
           Random Combo
         </RandomButton>
-        <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
+        <!-- TODO fix the stringify bug that requires us to use a anchor link instead of a nuxt link -->
+        <a
+          href="https://commanderspellbook.com/featured/"
+          class="previwed-combos-button button md:m-1"
+        >
           MH2 Combos
-        </nuxt-link>
+        </a>
       </div>
 
       <div class="button-links flex md:w-2/3 m-auto">
