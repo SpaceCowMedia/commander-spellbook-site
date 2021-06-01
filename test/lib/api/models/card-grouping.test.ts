@@ -60,14 +60,6 @@ describe("CardGrouping", () => {
     });
   });
 
-  describe("names", () => {
-    it("retuns the names of cards in grouping as array", () => {
-      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
-
-      expect(group.names()).toEqual(["Card a", "Card b", "Card c"]);
-    });
-  });
-
   describe("includesValue", () => {
     it("returns true when card grouping contains a partial name", () => {
       const group = CardGrouping.create(["foo", "bar", "baz"]);

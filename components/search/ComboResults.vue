@@ -15,7 +15,7 @@
           <div class="py-1">
             <span class="sr-only">Cards in combo:</span>
             <CardTooltip
-              v-for="name in r.cards.names()"
+              v-for="name in getCardNames(r)"
               :key="r.commanderSpellbookId + '_' + name"
               :card-name="name"
             >
@@ -128,6 +128,9 @@ export default Vue.extend({
       }
 
       return "";
+    },
+    getCardNames(combo: FormattedApiResponse): string[] {
+      return combo.cards.map((c) => c.name);
     },
   },
 });
