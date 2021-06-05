@@ -28,6 +28,21 @@ describe("SpellbookList", () => {
     });
   });
 
+  describe("toJSON", () => {
+    it("converts object to an array string", () => {
+      const list = SpellbookList.create("Step 1. Step 2. Step 3.");
+
+      expect(typeof list.toJSON()).toBe("string");
+
+      const array = JSON.parse(list.toJSON());
+
+      expect(array.length).toBe(3);
+      expect(array[0]).toBe("Step 1");
+      expect(array[1]).toBe("Step 2");
+      expect(array[2]).toBe("Step 3");
+    });
+  });
+
   describe("includesValue", () => {
     it("returns true if any item matches", () => {
       const list = SpellbookList.create("Step 1. Step 2. Step 3.");

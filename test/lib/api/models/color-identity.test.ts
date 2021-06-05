@@ -2,6 +2,19 @@ import COLOR_ORDER from "@/lib/api/color-combo-order";
 import ColorIdentity from "@/lib/api/models/color-identity";
 
 describe("ColorIdentity", () => {
+  describe("toJSON", () => {
+    it("converts object to an object string", () => {
+      const ci = new ColorIdentity("w,r,b");
+
+      expect(typeof ci.toJSON()).toBe("string");
+
+      const obj = JSON.parse(ci.toJSON());
+
+      expect(obj.rawString).toBe("w,r,b");
+      expect(obj.colors).toEqual(["r", "w", "b"]);
+    });
+  });
+
   it("has a colors attribute", () => {
     const ci = new ColorIdentity("w,r,b");
 

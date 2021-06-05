@@ -26,6 +26,10 @@ export default class SpellbookList extends Array<string> {
     return this.length;
   }
 
+  toJSON(): string {
+    return JSON.stringify(Array.from(this));
+  }
+
   includesValue(value: string): boolean {
     value = normalizeStringInput(value);
 

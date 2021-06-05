@@ -20,6 +20,13 @@ export default class ColorIdentity {
     this.colors = this.generateColors(colors);
   }
 
+  toJSON(): string {
+    return JSON.stringify({
+      rawString: this.rawString,
+      colors: this.colors,
+    });
+  }
+
   private generateColors(colorString: string): ColorIdentityColors[] {
     const colors = WUBRG.filter((color) => {
       return colorString.includes(color);

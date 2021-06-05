@@ -51,6 +51,18 @@ describe("CardGrouping", () => {
     });
   });
 
+  describe("toJSON", () => {
+    it("converts object to an array string", () => {
+      const group = CardGrouping.create(["Card a", "Card b", "Card c"]);
+
+      expect(typeof group.toJSON()).toBe("string");
+
+      const array = JSON.parse(group.toJSON());
+
+      expect(array.length).toBe(3);
+    });
+  });
+
   describe("size", () => {
     it("returns the number of cards in grouping", () => {
       const group = CardGrouping.create(["Card a", "Card b", "Card c"]);

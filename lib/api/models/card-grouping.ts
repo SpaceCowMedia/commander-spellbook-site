@@ -22,6 +22,10 @@ export default class CardGrouping extends Array<Card> {
     return this.length;
   }
 
+  toJSON(): string {
+    return JSON.stringify(Array.from(this));
+  }
+
   includesValue(cardName: string): boolean {
     return Boolean(this.find((c) => c.matchesName(cardName)));
   }
