@@ -24,7 +24,7 @@
           Random Combo
         </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
-          MH2 Combos
+          Forgotten Realms Combos
         </nuxt-link>
       </div>
 
