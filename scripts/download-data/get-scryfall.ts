@@ -181,7 +181,9 @@ export default async function getScryfallData(): Promise<ScryfallData> {
       }
     }
     const isFromUpcomingSet =
-      !card.reprint && new Date(card.released_at) > new Date();
+      card.legalities.commander !== "legal" &&
+      !card.reprint &&
+      new Date(card.released_at) > new Date();
     cards[normalizeCardName(card.name)] = {
       setData: {
         reprint: card.reprint,
