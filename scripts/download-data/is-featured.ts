@@ -9,5 +9,5 @@ export default function isFeatured(sfData: ScryfallEntry): boolean {
 
   // update this logic for whatever set codes we
   // want to feature on the site
-  return setCode === "afr";
+  return setCode === "afr" || setCode === "afc";
 }
