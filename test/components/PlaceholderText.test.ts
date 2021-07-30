@@ -5,7 +5,6 @@ describe("PlaceholderText", () => {
   it("creates a text-bar element with a set width", () => {
     const wrapper = shallowMount(PlaceholderText);
 
-    expect(wrapper.find(".text-bar").element.style).toBeTruthy();
     expect(wrapper.find(".text-bar").attributes("style")).toMatch(
       /width: \d*%/
     );

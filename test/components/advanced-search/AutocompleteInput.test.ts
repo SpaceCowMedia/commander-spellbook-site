@@ -763,7 +763,7 @@ describe("AutocompleteInput", () => {
     it("focuses back on input", () => {
       const wrapper = shallowMount(AutocompleteInput);
       const vm = wrapper.vm as VueComponent;
-      const input = wrapper.find("input").element;
+      const input = wrapper.find("input").element as HTMLInputElement;
       const focusSpy = jest.spyOn(input, "focus");
 
       vm.onClick({

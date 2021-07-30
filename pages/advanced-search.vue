@@ -133,8 +133,7 @@
               text-link
               p-4
               rounded-l-sm
-              hover:bg-link
-              hover:text-white
+              hover:bg-link hover:text-white
             "
           >
             Search&nbsp;With&nbsp;Query
