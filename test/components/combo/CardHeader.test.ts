@@ -44,13 +44,13 @@ describe("CardHeader", () => {
 
     const imgs = wrapper.findAll(".card-wrapper");
 
-    expect(imgs.at(0).element.style.backgroundImage).toBe(
+    expect((imgs.at(0).element as HTMLElement).style.backgroundImage).toBe(
       "url(https://example.com/art1.png)"
     );
-    expect(imgs.at(1).element.style.backgroundImage).toBe(
+    expect((imgs.at(1).element as HTMLElement).style.backgroundImage).toBe(
       "url(https://example.com/art2.png)"
     );
-    expect(imgs.at(2).element.style.backgroundImage).toBe(
+    expect((imgs.at(2).element as HTMLElement).style.backgroundImage).toBe(
       "url(https://example.com/art3.png)"
     );
   });

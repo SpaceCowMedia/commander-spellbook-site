@@ -63,8 +63,10 @@ describe("ArtCircle", () => {
       },
     });
 
-    expect(wrapper.element.style.width).toEqual("16rem");
-    expect(wrapper.element.style.height).toEqual("16rem");
+    const el = wrapper.element as HTMLElement;
+
+    expect(el.style.width).toEqual("16rem");
+    expect(el.style.height).toEqual("16rem");
   });
 
   it("accepts a size attribute", () => {
@@ -75,7 +77,9 @@ describe("ArtCircle", () => {
       },
     });
 
-    expect(wrapper.element.style.width).toEqual("10rem");
-    expect(wrapper.element.style.height).toEqual("10rem");
+    const el = wrapper.element as HTMLElement;
+
+    expect(el.style.width).toEqual("10rem");
+    expect(el.style.height).toEqual("10rem");
   });
 });

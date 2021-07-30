@@ -2,8 +2,7 @@
   <div
     class="
       w-full
-      sm:pt-32
-      sm:pb-32
+      sm:pt-32 sm:pb-32
       flex
       content-center
       justify-center

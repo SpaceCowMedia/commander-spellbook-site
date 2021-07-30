@@ -66,18 +66,16 @@ describe("CardTooltip", () => {
       clientX: mouseOnLeftSide,
       clientY: 12,
     });
-    expect(wrapper.find(".card-tooltip").element.style.left).toBe(
-      `${mouseOnLeftSide + 50}px`
-    );
-    expect(wrapper.find(".card-tooltip").element.style.top).toBe("-18px");
+    const el = wrapper.find(".card-tooltip").element as HTMLElement;
+
+    expect(el.style.left).toBe(`${mouseOnLeftSide + 50}px`);
+    expect(el.style.top).toBe("-18px");
 
     await wrapper.find("span").trigger("mousemove", {
       clientX: mouseOnRightSide,
       clientY: 50,
     });
-    expect(wrapper.find(".card-tooltip").element.style.left).toBe(
-      `${mouseOnRightSide - 290}px`
-    );
-    expect(wrapper.find(".card-tooltip").element.style.top).toBe("20px");
+    expect(el.style.left).toBe(`${mouseOnRightSide - 290}px`);
+    expect(el.style.top).toBe("20px");
   });
 });
