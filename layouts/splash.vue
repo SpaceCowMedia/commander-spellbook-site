@@ -50,5 +50,10 @@ export default Vue.extend({
     AnalyticsCookieBanner,
     SearchBar,
   },
+  watch: {
+    $route(): void {
+      (this.$refs.skipLink as HTMLAnchorElement).focus();
+    },
+  },
 });
 </script>

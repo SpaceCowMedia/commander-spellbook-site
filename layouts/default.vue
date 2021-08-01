@@ -29,8 +29,7 @@ export default Vue.extend({
   },
   watch: {
     $route(): void {
-      // @ts-ignore
-      this.$refs.skipLink.focus();
+      (this.$refs.skipLink as HTMLAnchorElement).focus();
     },
   },
 });
