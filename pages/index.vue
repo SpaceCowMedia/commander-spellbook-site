@@ -7,11 +7,7 @@
         The Search Engine for EDH Combos
       </h2>
 
-      <SearchBar
-        v-model="query"
-        :on-home-page="true"
-        class="bg-white mt-4 md:w-2/3 h-20"
-      />
+      <SearchBar :on-home-page="true" class="bg-white mt-4 md:w-2/3 h-20" />
 
       <div class="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
         <nuxt-link to="/advanced-search/" class="button md:m-1">
@@ -54,8 +50,10 @@ export default Vue.extend({
     Logo,
   },
   layout: "landing",
-  data() {
-    return { query: "" };
+  computed: {
+    query(): string {
+      return this.$store.state.query.value;
+    },
   },
   mounted() {
     const query = this.$route.query.q;

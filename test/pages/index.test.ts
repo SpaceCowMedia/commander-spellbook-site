@@ -1,11 +1,13 @@
 import { shallowMount } from "@vue/test-utils";
 import HomePage from "@/pages/index.vue";
 
-import type { MountOptions, Route, Router } from "../types";
+import { createStore } from "../utils";
+import type { MountOptions, Route, Router, Store } from "../types";
 
 describe("HomePage", () => {
   let $route: Route;
   let $router: Router;
+  let $store: Store;
   let wrapperOptions: MountOptions;
 
   beforeEach(() => {
@@ -15,10 +17,12 @@ describe("HomePage", () => {
     $router = {
       push: jest.fn(),
     };
+    $store = createStore();
     wrapperOptions = {
       mocks: {
         $route,
         $router,
+        $store,
       },
       stubs: {
         SearchBar: true,
