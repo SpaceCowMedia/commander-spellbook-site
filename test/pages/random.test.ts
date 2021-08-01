@@ -64,7 +64,7 @@ describe("RandomPage", () => {
     expect(random).toBeCalledTimes(1);
     expect($router.replace).toBeCalledTimes(1);
     expect($router.replace).toBeCalledWith({
-      path: "/combo-not-found",
+      path: "/combo-not-found/",
     });
   });
 

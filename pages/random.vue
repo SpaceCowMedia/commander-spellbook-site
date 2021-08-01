@@ -37,7 +37,7 @@ export default Vue.extend({
 
       router.replace(params);
     } catch (err) {
-      router.replace({ path: "/combo-not-found" });
+      router.replace({ path: "/combo-not-found/" });
     }
   },
 });

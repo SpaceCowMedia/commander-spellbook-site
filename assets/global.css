@@ -6,6 +6,10 @@ a {
   @apply underline text-link;
 }
 
+#main:focus {
+  outline: 0 solid transparent;
+}
+
 .container {
   @apply w-full max-w-5xl px-4 mx-auto;
 }
