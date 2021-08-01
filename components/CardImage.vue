@@ -1,7 +1,7 @@
 <template>
   <Flipper :flipped="loaded && readyToFlip">
     <template slot="front">
-      <img class="back-card" src="~/assets/images/card-back.png" :alt="name" />
+      <img class="back-card" src="~/assets/images/card-back.png" alt="" />
     </template>
     <template slot="back">
       <img class="front-card" :src="img" :alt="name" @load="onImgLoad" />

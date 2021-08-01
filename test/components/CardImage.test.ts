@@ -13,7 +13,7 @@ describe("CardImage", () => {
     expect(wrapper.find(".back-card").attributes("src")).toBe(
       "~/assets/images/card-back.png"
     );
-    expect(wrapper.find(".back-card").attributes("alt")).toBe("Card Name");
+    expect(wrapper.find(".back-card").attributes("alt")).toBe("");
   });
 
   it("creates a Flipper with a card image as the back side", () => {
