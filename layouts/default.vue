@@ -4,7 +4,7 @@
     <AnalyticsCookieBanner />
     <div class="bg-dark">
       <nav class="container">
-        <SearchBar v-model="query" />
+        <SearchBar />
       </nav>
       <div class="gradient search-bar-border"></div>
     </div>
@@ -26,11 +26,6 @@ export default Vue.extend({
     AnalyticsCookieBanner,
     SearchBar,
     Footer,
-  },
-  data() {
-    return {
-      query: "",
-    };
   },
   watch: {
     $route(): void {

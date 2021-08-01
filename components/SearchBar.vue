@@ -103,10 +103,6 @@ export default Vue.extend({
     RandomButton,
   },
   props: {
-    value: {
-      type: String,
-      default: "",
-    },
     onHomePage: {
       type: Boolean,
       default: false,
@@ -124,10 +120,10 @@ export default Vue.extend({
   computed: {
     query: {
       get(): string {
-        return this.value;
+        return this.$store.state.query.value;
       },
       set(value: string): void {
-        this.$emit("input", value);
+        this.$store.commit("query/change", value);
       },
     },
     inputClasses(): string {

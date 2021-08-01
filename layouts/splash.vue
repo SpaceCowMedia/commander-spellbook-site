@@ -4,7 +4,7 @@
     <AnalyticsCookieBanner />
     <div class="bg-dark fixed top-0 left-0 right-0">
       <nav class="container">
-        <SearchBar v-model="query" />
+        <SearchBar />
       </nav>
     </div>
     <main
