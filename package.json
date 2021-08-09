@@ -9,7 +9,7 @@
     "prebuild": "prettier --write .",
     "build": "nuxt build",
     "start": "nuxt start",
-    "download-data": "npx ts-node scripts/download-data",
+    "download-data": "ts-node scripts/download-data",
     "pregenerate": "npm run download-data",
     "generate": "nuxt generate --fail-on-error",
     "lint:js": "eslint --ext .ts,.vue .",
@@ -63,6 +63,7 @@
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^22.0.0",
     "ts-jest": "^27.0.4",
+    "ts-node": "^10.2.0",
     "vue-jest": "^3.0.4",
     "wait-on": "^6.0.0"
   }
