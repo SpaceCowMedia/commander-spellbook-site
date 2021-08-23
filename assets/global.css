@@ -71,6 +71,10 @@ a {
   @apply bg-link text-white border-link;
 }
 
+.input {
+  @apply border px-3 py-2 w-full appearance-none rounded-none;
+}
+
 @media (min-width: 640px) {
   .heading-title {
     @apply text-5xl my-4;
