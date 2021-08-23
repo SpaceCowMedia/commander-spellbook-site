@@ -16,5 +16,6 @@ export type Store = {
     query: QueryState;
   };
   commit: jest.SpyInstance;
+  dispatch: jest.SpyInstance;
 };
 export type VueComponent = Record<string, any>;

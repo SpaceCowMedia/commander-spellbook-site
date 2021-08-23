@@ -8,5 +8,6 @@ export function createStore(): Store {
       },
     },
     commit: jest.fn(),
+    dispatch: jest.fn().mockResolvedValue({}),
   };
 }
