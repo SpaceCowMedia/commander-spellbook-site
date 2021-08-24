@@ -19,4 +19,12 @@ export type Store = {
   commit: jest.SpyInstance;
   dispatch: jest.SpyInstance;
 };
+export type Firebase = {
+  auth: {
+    currentUser: {
+      email?: string;
+      displayName?: string;
+    };
+  };
+};
 export type VueComponent = Record<string, any>;

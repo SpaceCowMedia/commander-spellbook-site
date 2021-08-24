@@ -1,4 +1,4 @@
-import { Route, Store } from "./types";
+import { Firebase, Route, Store } from "./types";
 
 type CreateRouteOptions = {
   path?: string;
@@ -25,5 +25,16 @@ export function createStore(options: CreateStoreOptions = {}): Store {
     getters: options.getters || {},
     commit: jest.fn(),
     dispatch: jest.fn().mockResolvedValue({}),
+  };
+}
+
+export function createFirebase(): Firebase {
+  return {
+    auth: {
+      currentUser: {
+        email: "rashmi@example.com",
+        displayName: "Rashmi, Eternities Crafter",
+      },
+    },
   };
 }
