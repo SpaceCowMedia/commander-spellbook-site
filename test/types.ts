@@ -15,6 +15,7 @@ export type Store = {
   state: {
     query: QueryState;
   };
+  getters: Record<string, any>;
   commit: jest.SpyInstance;
   dispatch: jest.SpyInstance;
 };
