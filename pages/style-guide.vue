@@ -42,17 +42,17 @@
     <ul>
       <li>
         All card names should be written out in full. No abbreviations,
-        nicknames, etc
+        nicknames, etc.
 
         <ul>
           <li>
             The exception to this rule is legendary card names, where you can
-            truncate everything after the comma. If the legendary card name does
-            not have a comma in it, if the card's most recent printing has the
-            legendary name abbreviated, you can abbreviate it. If it fits
-            neither of those criteria, if it has its whole name spelled out on
-            it, tough luck, spell it out anyway. Otherwise, feel free to ask the
-            mods on discord.
+            truncate everything after the comma.
+              If the legendary card name does not have a comma in it, if the 
+              card's most recent printing has the legendary name abbreviated,
+              you can abbreviate it. If it fits neither of those criteria, if
+              it has its whole name spelled out on it, tough luck, spell it
+              out anyway. Otherwise, feel free to ask the mods on discord.
           </li>
         </ul>
       </li>
@@ -73,7 +73,7 @@
             For 2 allied colors, the one that comes first in WUBRG order is
             written first, with G being considered to come before W. (If you do
             not feel like figuring it out yourself, check how EDHREC has the
-            symbols listed under "Color ID")
+            symbols listed under "Color ID").
           </li>
           <li>
             For 2 enemy colors, the one that would only have to advance 2
@@ -87,12 +87,12 @@
             middle, and the two colors on the left and right are placed based on
             where they are positioned in the color pie relative to the primary
             color. (If you do not feel like figuring it out yourself, check how
-            EDHREC has the symbols listed under "Color ID")
+            EDHREC has the symbols listed under "Color ID").
           </li>
           <li>
             For 4 colors, they are listed in WUBRG order starting with the one
             after the missing color. (If you do not feel like figuring it out
-            yourself, check how EDHREC has the symbols listed under "Color ID")
+            yourself, check how EDHREC has the symbols listed under "Color ID").
           </li>
         </ul>
       </li>
@@ -116,7 +116,7 @@
       </li>
       <li>
         All other unmentioned mana symbols should go between the generic and
-        colored mana symbols
+        colored mana symbols.
       </li>
     </ul>
 
@@ -126,12 +126,12 @@
     <ul>
       <li>
         Attach is the verb, and should be used when an equipment, aura, or
-        fortification is being attached to something
+        fortification is being attached to something.
 
         <ul>
           <li>
             An example for an equipment would be "Activate the ~1 equip ability,
-            attaching it to ~2"
+            attaching it to ~2".
           </li>
           <li>
             The verbs equip, enchant, and fortify should not be used to describe
@@ -144,7 +144,9 @@
         equipment, aura, or fortification attached to them, respectively.
 
         <ul>
-          <li>Attached should never be used in these cases</li>
+          <li>
+            Attached should never be used in these cases.
+          </li>
         </ul>
       </li>
     </ul>
@@ -176,7 +178,7 @@
       <li>
         Numbers that could be written with a singular English word (like one, or
         twenty) should be spelled out, while multi-word numbers (like 24) should
-        be written as numerals
+        be written as numerals.
 
         <ul>
           <li>
@@ -191,10 +193,20 @@
 
     <h4 id="contractions">Contractions</h4>
     <ul>
-      <li>Don't [sic] use contractions. Like, ever.</li>
-      <li>Cannot [sic] is a contraction. Don't [sic] use it.</li>
+      <li>
+        Don't [sic] use contractions. Like, ever.
+      </li>
+      <li>
+        Cannot [sic] is a contraction. Don't [sic] use it.
+      </li>
     </ul>
 
+    <h4 id="card-names">Spelling</h4>
+    <ul>
+      <li>
+        The Commander Spellbook uses American English. Wizards of the Coast uses American English, and so do we.
+      </li>
+    </ul>
     <hr />
 
     <h3 class="heading-subtitle">Card Names</h3>
@@ -214,12 +226,14 @@
         </ul>
       </li>
       <li>
-        Adventure cards should only be listed as the front half of the hard
+        Adventure cards should only be listed as the front half of the card.
       </li>
-      <li>Split cards should be written as "Side 1 // Side 2"</li>
+      <li>
+        Split cards should be written as "Side 1 // Side 2".
+      </li>
       <li>
         Flip Cards (the ones you rotate from Kamigawa) should only be listed as
-        the unflipped "side" of the card
+        the unflipped "side" of the card.
       </li>
       <li>
         Modal DFCs and Transforming DFCs should only be listed as the front face
@@ -231,7 +245,7 @@
     <ul>
       <li>
         The least replaceable piece of a combo should be the farthest to the
-        left, becoming more replaceable as you move to the right
+        left, becoming more replaceable as you move to the right.
       </li>
     </ul>
 
@@ -259,13 +273,19 @@
           </li>
         </ul>
       </li>
-      <li>No cards may begin a combo on the stack.</li>
+      <li>
+        No cards may begin a combo on the stack.
+      </li>
     </ul>
 
     <h4 id="pre-ordering">Prerequisite Ordering</h4>
     <ul>
-      <li>What zones the cards you require begin in always comes first.</li>
-      <li>The mana required for the combo always comes last</li>
+      <li>
+        What zones the cards you require begin in always comes first.
+      </li>
+      <li>
+        The mana required for the combo always comes last.
+      </li>
       <li>
         Miscellaneous results go in between; a more defined hierarchy may
         eventually be defined.
@@ -281,13 +301,13 @@
       </li>
       <li>
         Noncreature permanents do not suffer from summoning sickness and
-        therefore do not need to mention summoning sickness
+        therefore do not need to mention summoning sickness.
 
         <ul>
           <li>
             The exception being when it transitions between the two, in which
             case, if it becomes a creature, it will need to not have summoning
-            sickness
+            sickness.
           </li>
         </ul>
       </li>
@@ -299,7 +319,7 @@
     <ul>
       <li>
         When only using the front side of a card, the back side of the card can
-        be ignored entirely
+        be ignored entirely.
       </li>
     </ul>
 
@@ -337,7 +357,7 @@
           <li>
             Activating an ability where the only cost is tapping that permanent
             works a bit differently. In that case, you merge the cost and
-            effect, saying; "Tap ~1 for {~2}:" or "Tap ~ to …"
+            effect, saying; "Tap ~1 for {~2}:" or "Tap ~ to …".
           </li>
         </ul>
       </li>
@@ -350,7 +370,7 @@
       <li>
         Mana payments generally do not need to be written out as part of costs
         (See the <a href="#adding-spending-mana">Spending Mana section</a> for
-        more info)
+        more info).
       </li>
     </ul>
 
@@ -369,10 +389,12 @@
 
         <ul>
           <li>
-            When referring to the item being put onto the stack
+            When referring to the item being put onto the stack:
 
             <ul>
-              <li>For a trigger, say "~ triggers."</li>
+              <li>
+                For a trigger, say "~ triggers."
+              </li>
               <li>
                 For casting a spell, say "Cast ~." Make sure to include any
                 costs that need mentioning.
@@ -386,7 +408,7 @@
         </ul>
         <ul>
           <li>
-            When referring to the step immediately afterwards
+            When referring to the step immediately afterwards:
 
             <ul>
               <li>
@@ -403,13 +425,13 @@
         </ul>
         <ul>
           <li>
-            When resolving the original effect
+            When resolving the original effect:
 
             <ul>
               <li>
                 For a trigger, say "Resolve the ~ trigger, " then continue with
                 the effect of said trigger (If the card name starts with the
-                word "the", instead say "Resolve ~'s trigger")
+                word "the", instead say "Resolve ~'s trigger").
               </li>
             </ul>
           </li>
@@ -421,12 +443,12 @@
       </li>
       <li>
         For resolving an activated ability, say "Resolve the ~ ability, " then
-        continue with the effect of said trigger
+        continue with the effect of said trigger.
 
         <ul>
           <li>
             If the card name starts with the word "the", instead say "Resolve
-            ~'s ability"
+            ~'s ability".
           </li>
         </ul>
       </li>
@@ -460,7 +482,9 @@
         "leaving {b}{b} unspent."
 
         <ul>
-          <li>The mana pool no longer exists and should not be referenced</li>
+          <li>
+            The mana pool no longer exists and should not be referenced.
+          </li>
           <li>
             "Floating" mana is a slang term that refers to the same thing, and
             should not be used.
@@ -477,12 +501,12 @@
       </li>
       <li>
         When all but the first number of steps make up an infinite loop, the
-        last step of the combo should read "repeat from step ~"
+        last step of the combo should read "repeat from step ~".
       </li>
       <li>
         When a certain group of steps need to be repeated that do not fit into
         either category, the step following the last step in the loop should
-        read "repeat steps ~1 through ~2.
+        read "repeat steps ~1 through ~2".
       </li>
     </ul>
 
@@ -517,7 +541,7 @@
     <ul>
       <li>
         Extra turns are considered infinite despite the fact that you eventually
-        deck yourself due to card draw
+        deck yourself due to card draw.
       </li>
       <li>
         Effects that occur once or twice per extra turn are not considered
