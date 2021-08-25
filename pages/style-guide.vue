@@ -5,7 +5,9 @@
       artist="Dmitry Burmak"
       class="m-auto md:block hidden"
     />
-    <h1 class="heading-title">The Official™ Commander Spellbook Style Guide</h1>
+    <h1 class="heading-title">
+      The Official™ Commander Spellbook Style Guide
+    </h1>
     <h2 class="heading-subtitle text-center mt-0">
       By The Commander Spellbook Mod Team
     </h2>
@@ -38,7 +40,9 @@
 
     <h3 class="heading-subtitle">General Formatting Rules</h3>
 
-    <h4 id="card-names">Card Names</h4>
+    <h4 id="card-names">
+      Card Names
+    </h4>
     <ul>
       <li>
         All card names should be written out in full. No abbreviations,
@@ -58,7 +62,9 @@
       </li>
     </ul>
 
-    <h4 id="mana-symbol-order">Mana Symbol Order in Prerequisites and Steps</h4>
+    <h4 id="mana-symbol-order">
+      Mana Symbol Order in Prerequisites and Steps
+    </h4>
     <ul>
       <li>
         When writing costs, always write generic mana symbols first (The
@@ -130,8 +136,8 @@
 
         <ul>
           <li>
-            An example for an equipment would be "Activate the ~1 equip ability,
-            attaching it to ~2".
+            An example for an equipment would be "Activate [the named equipment]
+            by paying [mana cost], attaching it to [target creature]".
           </li>
           <li>
             The verbs equip, enchant, and fortify should not be used to describe
@@ -201,10 +207,13 @@
       </li>
     </ul>
 
-    <h4 id="card-names">Spelling</h4>
+    <h4 id="card-names">
+      Spelling
+    </h4>
     <ul>
       <li>
-        The Commander Spellbook uses American English. Wizards of the Coast uses American English, and so do we.
+        The Commander Spellbook uses American English. Wizards of the Coast
+        uses American English, and so do we.
       </li>
     </ul>
     <hr />
@@ -220,32 +229,34 @@
         <ul>
           <li>
             Note that this is different from how they are handled in other
-            sections of the combo, where abbreviations or shortenings are
-            permitted in some cases.
+            sections of the combo, where abbreviations are permitted in some
+            cases.
           </li>
         </ul>
       </li>
       <li>
-        Adventure cards should only be listed as the front half of the card.
+        Adventure cards should only be listed as the non-adventure part of
+        the card.
       </li>
       <li>
-        Split cards should be written as "Side 1 // Side 2".
+        Split cards should be written as "[side 1] // [side 2]".
       </li>
       <li>
         Flip Cards (the ones you rotate from Kamigawa) should only be listed as
         the unflipped "side" of the card.
       </li>
       <li>
-        Modal DFCs and Transforming DFCs should only be listed as the front face
-        of the card.
+        Modal double-faced cards and transforming double-faced cards should be listed as "[front face] // [back face]".
       </li>
     </ul>
 
-    <h4 id="name-ordering">Card Name Ordering</h4>
+    <h4 id="name-ordering">
+      Card Name Ordering
+    </h4>
     <ul>
       <li>
-        The least replaceable piece of a combo should be the farthest to the
-        left, becoming more replaceable as you move to the right.
+        The least replaceable piece of a combo should be farthest to the
+        left, with less replaceable pieces further to the right.
       </li>
     </ul>
 
@@ -287,7 +298,7 @@
         The mana required for the combo always comes last.
       </li>
       <li>
-        Miscellaneous results go in between; a more defined hierarchy may
+        Miscellaneous results go in between; a more strict hierarchy may
         eventually be defined.
       </li>
     </ul>
@@ -296,8 +307,15 @@
     <ul>
       <li>
         When you have a creature on the battlefield that must either attack or
-        use an activated ability, one should say "~ does not have summoning
+        use an activated ability involving tapping as a cost, one should say "[creature name] does not have summoning
         sickness."
+        ul>
+          <li>
+            The exception to this rule is when a permanent goes from being a creature to being a noncreature. As a noncreature, it may have its activated abilities that have
+            tapping as a cost activated despite having summoning sickness. Therefore, there is no need to reference summoning sickness in such a case.
+          </li>
+        </ul>
+        
       </li>
       <li>
         Noncreature permanents do not suffer from summoning sickness and
@@ -305,9 +323,9 @@
 
         <ul>
           <li>
-            The exception being when it transitions between the two, in which
-            case, if it becomes a creature, it will need to not have summoning
-            sickness.
+            The exception to this rule is when a permanent goes from being a noncreature to being a creature. As a creature, it may only attack or have
+            its activated abilities involving tapping as a cost activated if it does not have summoning sickness. Therefore, summoning sickness should be referenced in
+            such a case. 
           </li>
         </ul>
       </li>
@@ -318,60 +336,61 @@
     </h4>
     <ul>
       <li>
-        When only using the front side of a card, the back side of the card can
-        be ignored entirely.
+        Only the faces referenced in the combo need to be referenced in the prerequisites.
       </li>
     </ul>
 
     <hr />
 
-    <h3 class="heading-subtitle">Steps</h3>
+    <h3 class="heading-subtitle">
+      Steps
+    </h3>
 
-    <h4 id="dividing-steps">Dividing up Steps</h4>
-    <ul>
-      <li>
-        Each individual action taken by the player should be its own step.
-      </li>
-      <li>
-        Each individual trigger occurring and resolving should also be its own
-        step.
-
-        <ul>
-          <li>
-            When there are multiple triggers triggering at the same time, there
-            should be a step listing all of the triggers that occurred, followed
-            by each trigger being resolved in its own step.
-          </li>
-        </ul>
-      </li>
-    </ul>
-
-    <h4 id="cost-and-effects">Costs and Effects</h4>
+    <h4 id="cost-and-effects">
+      Costs and Effects
+    </h4>
     <ul>
       <li>
         Steps involving casting spells or activating abilities can be broken
-        into two parts: cost and effect, and the parts should generally be
+        into two parts: cost and effect. The parts are generally
         separated by a comma.
+      </li>
+      <li>
+        In some cases, a triggered ability may occur in between paying the cost of and the resolution of a spell or activated ability, or priority may be held and additional
+        spells may be cast or activated abilities may be activated. See the
+        <a href="#delayed-resolution">Delayed Resolution section</a> for how this is handled.
+      </li>
+    </ul>
 
-        <ul>
+    <h4 id="dividing-steps">
+      Dividing up Steps
+    </h4>
+    <ul>
+      <li>
+        Each individual action taken by the player is its own step.
+      </li>
+      <li>
+        If there is only one trigger occuring, one spell being cast, or one ability being activated, the activation and resolution should be part of the step.
+        
+         <ul>
           <li>
-            Activating an ability where the only cost is tapping that permanent
-            works a bit differently. In that case, you merge the cost and
-            effect, saying; "Tap ~1 for {~2}:" or "Tap ~ to …".
+            If the one spell being cast or ability being activated triggers an ability before the spell or activated ability resolves, the intervening trigger is dealt with
+            immediately, and the casting/activation and resolution will each be their own steps.
           </li>
         </ul>
       </li>
       <li>
-        Some cases may cause things to take place between an effect going onto
-        the stack and the resolution of said effects. See the
-        <a href="#delayed-resolution">Delayed Resolution section</a> for more
-        info.
+        When there are multiple abilities triggering at the same time, there
+        should be a step listing all of the triggers that occurred, followed
+        by each trigger being resolved in its own step.
+        
+        <ul>
+          <li>
+            The resolving triggers should be listed in the same order as the named triggered abilities were listed.
+          </li>
+        </ul>
       </li>
-      <li>
-        Mana payments generally do not need to be written out as part of costs
-        (See the <a href="#adding-spending-mana">Spending Mana section</a> for
-        more info).
-      </li>
+
     </ul>
 
     <h4 id="delayed-resolution">Delayed Resolution</h4>
@@ -461,20 +480,11 @@
         when mana is added.
       </li>
       <li>
-        Combos that involve the creation of infinite mana via a loop of some
-        kind should state what kinds of mana is being spent and in what
+        Combos must state what kinds of mana are being spent and in what
         quantities said types of mana are being spent.
-        <ul>
-          <li>
-            The amount of unspent mana should only be referenced when directly
-            pertinent to the cards involved, such as with Doubling Cube.
-          </li>
-        </ul>
       </li>
       <li>
-        Combos that spend a finite amount of mana a singular time do not need to
-        say how much mana is being spent, just that the spell is being cast or
-        that the ability is being activated.
+        The amount of unspent mana should only be referenced when directly pertinent to the cards involved, such as with Doubling Cube.
       </li>
       <li>
         Mana that is left unspent should be referred to as unspent mana. For
@@ -483,7 +493,7 @@
 
         <ul>
           <li>
-            The mana pool no longer exists and should not be referenced.
+            The mana pool does not exist and should not be referenced.
           </li>
           <li>
             "Floating" mana is a slang term that refers to the same thing, and
