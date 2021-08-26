@@ -41,19 +41,22 @@
     <h4 id="card-names">Card Names</h4>
     <ul>
       <li>
-        All card names should be written out in full. No abbreviations,
+        All card names are written out in full. No abbreviations,
         nicknames, etc.
 
         <ul>
           <li>
-            The exception to this rule is legendary card names, where you can
-            truncate everything after the comma. If the legendary card name does
-            not have a comma in it, if the card's most recent printing has the
-            legendary name abbreviated, you can abbreviate it. If it fits
-            neither of those criteria, if it has its whole name spelled out on
-            it, tough luck, spell it out anyway. Otherwise, feel free to ask the
-            mods on discord.
+            The exception to this rule is legendary card names. If there is a version of the card that shortens the name and there are no more recent printings of said card
+            that does not shorten the name (not including oddities like weirdly worded Secret Lairs or stuff like the List that does not update wording), you may abbreviate
+            the card name.
           </li>
+            <li>
+              This is not the case when there are two cards that would be abbreviated the same way. For example, if a combo has two cards that would be abbreviated
+              "Jace", then the full name of each card is spelled out.
+            </li>
+            <li>
+              This is not the case in the "Card Names" section of a combo, where card names are always written out in full.
+            </li>
         </ul>
       </li>
     </ul>
@@ -61,38 +64,39 @@
     <h4 id="mana-symbol-order">Mana Symbol Order in Prerequisites and Steps</h4>
     <ul>
       <li>
-        When writing costs, always write generic mana symbols first (The
-        exception is the x symbol, which comes before generic symbols).
-      </li>
-      <li>
-        Colorless and mono-colored mana symbols always are listed at the end on
-        a cost, with colorless coming before the colors.
+        Costs are always written with the generic mana symbol first.
 
         <ul>
           <li>
-            For 2 allied colors, the one that comes first in WUBRG order is
-            written first, with G being considered to come before W. (If you do
-            not feel like figuring it out yourself, check how EDHREC has the
-            symbols listed under "Color ID").
+            <TextWithMagicSymbol text="{x}" /> comes before the generic mana symbol, and is the only symbol for which this is the case as of when this is being written.
+          </li>
+        </ul>
+      </li>
+      
+      <li>
+        Colorless and mono-colored mana symbols are always listed at the end of
+        a cost, with the colorless symbol always coming before the colored mana symbols. For all of the following cases, you may reference how EDHRec sequences its colors
+        in the "Commanders" dropdown rather than using these explanations to figure it out yourself.
+
+        <ul>
+          <li>
+            For two allied colors, the one that comes first in WUBRG order is
+            written first, with G being considered to come before W.
           </li>
           <li>
-            For 2 enemy colors, the one that would only have to advance 2
-            positions forward in WUBRG order (rather than 3) comes first (If you
-            do not feel like figuring it out yourself, check how EDHREC has the
-            symbols listed under "Color ID").
+            For two enemy colors, the one that would only have to advance 2
+            positions forward in WUBRG order (rather than 3) comes first.
           </li>
           <li>
-            For 3 colors, the primary color of the wedge/shard (the enemy of
+            For three colors, the primary color of the wedge/shard (the enemy of
             both in the wedge, the ally of both in the shard) goes in the
             middle, and the two colors on the left and right are placed based on
             where they are positioned in the color pie relative to the primary
-            color. (If you do not feel like figuring it out yourself, check how
-            EDHREC has the symbols listed under "Color ID").
+            color.
           </li>
           <li>
-            For 4 colors, they are listed in WUBRG order starting with the one
-            after the missing color. (If you do not feel like figuring it out
-            yourself, check how EDHREC has the symbols listed under "Color ID").
+            For four colors, they are listed in WUBRG order starting with the one
+            after the missing color.
           </li>
         </ul>
       </li>
@@ -101,10 +105,7 @@
         are, but should be placed before normal colored mana symbols. The
         notation for it is:
         <ul>
-          <li>
-            <TextWithMagicSymbol text="{wp}" />
-            <code>{wp}</code>
-          </li>
+          <li><TextWithMagicSymbol text="{wp}" /> <code>{wp}</code></li>
           <li><TextWithMagicSymbol text="{up}" /> <code>{up}</code></li>
           <li><TextWithMagicSymbol text="{bp}" /> <code>{bp}</code></li>
           <li><TextWithMagicSymbol text="{rp}" /> <code>{rp}</code></li>
@@ -117,6 +118,9 @@
       <li>
         All other unmentioned mana symbols should go between the generic and
         colored mana symbols.
+        
+        <ul>
+          There are some mana symbol combinations with no precedent, like Phyrexian mana with any kind of of symbol outside of X or generic, snow with 
       </li>
     </ul>
 
@@ -224,7 +228,9 @@
         Adventure cards should only be listed as the non-adventure part of the
         card.
       </li>
-      <li>Split cards should be written as "[side 1] // [side 2]".</li>
+      <li>
+        Split cards should be written as "[side 1] // [side 2]".
+      </li>
       <li>
         Flip Cards (the ones you rotate from Kamigawa) should only be listed as
         the unflipped "side" of the card.
@@ -285,7 +291,7 @@
       <li>
         When you have a creature on the battlefield that must either attack or
         use an activated ability involving tapping as a cost, one should say
-        "[creature name] does not have summoning sickness." ul>
+        "[creature name] does not have summoning sickness."
         <ul>
           <li>
             The exception to this rule is when a permanent goes from being a
@@ -337,9 +343,9 @@
         In some cases, a triggered ability may occur in between paying the cost
         of and the resolution of a spell or activated ability, or priority may
         be held and additional spells may be cast or activated abilities may be
-        activated. See the
-        <a href="#delayed-resolution">Delayed Resolution section</a> for how
-        this is handled.
+        activated. See
+        <a href="#delayed-resolution">Delayed Resolution</a> for how
+        to handle such cases.
       </li>
     </ul>
 
@@ -353,10 +359,9 @@
 
         <ul>
           <li>
-            If the one spell being cast or ability being activated triggers an
-            ability before the spell or activated ability resolves, the
-            intervening trigger is dealt with immediately, and the
-            casting/activation and resolution will each be their own steps.
+            In some cases, something else will be put onto the stack before the one spell, ability, or trigger is able to resolve. See
+            <a href="#delayed-resolution">Delayed Resolution</a> for how
+            to handle such cases. 
           </li>
         </ul>
       </li>
@@ -392,14 +397,17 @@
             When referring to the item being put onto the stack:
 
             <ul>
-              <li>For a trigger, say "~ triggers."</li>
               <li>
-                For casting a spell, say "Cast ~." Make sure to include any
+                For a triggered ability, say "[card name] triggers."
+              </li>
+              <li>
+                For casting a spell, say "Cast [card name]." Make sure to include any
                 costs that need mentioning.
               </li>
               <li>
-                For activating an ability, say "Activate ~." Make sure to
-                include any costs that need mentioning.
+                For activating an ability, say "Activate [card name]." Make sure to
+                include any costs that need mentioning. If there are multiple activateable abilities on the card that could be activated, make it clear which one is being
+                activated.
               </li>
             </ul>
           </li>
