@@ -41,22 +41,28 @@
     <h4 id="card-names">Card Names</h4>
     <ul>
       <li>
-        All card names are written out in full. No abbreviations,
-        nicknames, etc.
+        All card names are written out in full. No abbreviations, nicknames,
+        etc.
 
         <ul>
           <li>
-            The exception to this rule is legendary card names. If there is a version of the card that shortens the name and there are no more recent printings of said card
-            that does not shorten the name (not including oddities like weirdly worded Secret Lairs or stuff like the List that does not update wording), you may abbreviate
-            the card name.
+            The exception to this rule is legendary card names. If there is a
+            version of the card that shortens the name and there are no more
+            recent printings of said card that does not shorten the name (not
+            including oddities like weirdly worded Secret Lairs or stuff like
+            the List that does not update wording), you may abbreviate the card
+            name.
           </li>
-            <li>
-              This is not the case when there are two cards that would be abbreviated the same way. For example, if a combo has two cards that would be abbreviated
-              "Jace", then the full name of each card is spelled out.
-            </li>
-            <li>
-              This is not the case in the "Card Names" section of a combo, where card names are always written out in full.
-            </li>
+          <li>
+            This is not the case when there are two cards that would be
+            abbreviated the same way. For example, if a combo has two cards that
+            would be abbreviated "Jace", then the full name of each card is
+            spelled out.
+          </li>
+          <li>
+            This is not the case in the "Card Names" section of a combo, where
+            card names are always written out in full.
+          </li>
         </ul>
       </li>
     </ul>
@@ -68,15 +74,19 @@
 
         <ul>
           <li>
-            <TextWithMagicSymbol text="{x}" /> comes before the generic mana symbol, and is the only symbol for which this is the case as of when this is being written.
+            <TextWithMagicSymbol text="{x}" /> comes before the generic mana
+            symbol, and is the only symbol for which this is the case as of when
+            this is being written.
           </li>
         </ul>
       </li>
-      
+
       <li>
         Colorless and mono-colored mana symbols are always listed at the end of
-        a cost, with the colorless symbol always coming before the colored mana symbols. For all of the following cases, you may reference how EDHRec sequences its colors
-        in the "Commanders" dropdown rather than using these explanations to figure it out yourself.
+        a cost, with the colorless symbol always coming before the colored mana
+        symbols. For all of the following cases, you may reference how EDHRec
+        sequences its colors in the "Commanders" dropdown rather than using
+        these explanations to figure it out yourself.
 
         <ul>
           <li>
@@ -95,8 +105,8 @@
             color.
           </li>
           <li>
-            For four colors, they are listed in WUBRG order starting with the one
-            after the missing color.
+            For four colors, they are listed in WUBRG order starting with the
+            one after the missing color.
           </li>
         </ul>
       </li>
@@ -118,9 +128,14 @@
       <li>
         All other unmentioned mana symbols should go between the generic and
         colored mana symbols.
-        
+
         <ul>
-          There are some mana symbol combinations with no precedent, like Phyrexian mana with any kind of of symbol outside of X or generic, snow with 
+          <li>
+            There are some mana symbol combinations with no precedent, like
+            Phyrexian mana with any kind of of symbol outside of X or generic,
+            snow with
+          </li>
+        </ul>
       </li>
     </ul>
 
@@ -228,9 +243,7 @@
         Adventure cards should only be listed as the non-adventure part of the
         card.
       </li>
-      <li>
-        Split cards should be written as "[side 1] // [side 2]".
-      </li>
+      <li>Split cards should be written as "[side 1] // [side 2]".</li>
       <li>
         Flip Cards (the ones you rotate from Kamigawa) should only be listed as
         the unflipped "side" of the card.
@@ -344,8 +357,8 @@
         of and the resolution of a spell or activated ability, or priority may
         be held and additional spells may be cast or activated abilities may be
         activated. See
-        <a href="#delayed-resolution">Delayed Resolution</a> for how
-        to handle such cases.
+        <a href="#delayed-resolution">Delayed Resolution</a> for how to handle
+        such cases.
       </li>
     </ul>
 
@@ -359,9 +372,10 @@
 
         <ul>
           <li>
-            In some cases, something else will be put onto the stack before the one spell, ability, or trigger is able to resolve. See
-            <a href="#delayed-resolution">Delayed Resolution</a> for how
-            to handle such cases. 
+            In some cases, something else will be put onto the stack before the
+            one spell, ability, or trigger is able to resolve. See
+            <a href="#delayed-resolution">Delayed Resolution</a> for how to
+            handle such cases.
           </li>
         </ul>
       </li>
@@ -397,17 +411,16 @@
             When referring to the item being put onto the stack:
 
             <ul>
+              <li>For a triggered ability, say "[card name] triggers."</li>
               <li>
-                For a triggered ability, say "[card name] triggers."
+                For casting a spell, say "Cast [card name]." Make sure to
+                include any costs that need mentioning.
               </li>
               <li>
-                For casting a spell, say "Cast [card name]." Make sure to include any
-                costs that need mentioning.
-              </li>
-              <li>
-                For activating an ability, say "Activate [card name]." Make sure to
-                include any costs that need mentioning. If there are multiple activateable abilities on the card that could be activated, make it clear which one is being
-                activated.
+                For activating an ability, say "Activate [card name]." Make sure
+                to include any costs that need mentioning. If there are multiple
+                activateable abilities on the card that could be activated, make
+                it clear which one is being activated.
               </li>
             </ul>
           </li>
