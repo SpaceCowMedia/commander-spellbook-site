@@ -119,6 +119,7 @@ export default {
 
   router: {
     trailingSlash: true,
+    middleware: ["authenticated"],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
