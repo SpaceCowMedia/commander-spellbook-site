@@ -64,7 +64,7 @@
         </RandomButton>
         <nuxt-link
           ref="profile-link"
-          v-if="isAuthenticated"
+          v-show="isAuthenticated"
           to="/profile/"
           class="hidden md:flex menu-link"
           ><div class="profile-icon link-icon mr-0"></div>
@@ -100,7 +100,7 @@
 
       <nuxt-link
         ref="mobile-profile-link"
-        v-if="isAuthenticated"
+        v-show="isAuthenticated"
         to="/profile/"
         class="mobile-menu-button"
         ><div class="profile-icon link-icon"></div>

@@ -149,7 +149,7 @@ describe("SearchBar", () => {
         .findComponent({
           ref: "profile-link",
         })
-        .exists()
+        .isVisible()
     ).toBe(false);
 
     $store.getters["auth/isAuthenticated"] = true;
@@ -161,7 +161,7 @@ describe("SearchBar", () => {
         .findComponent({
           ref: "profile-link",
         })
-        .exists()
+        .isVisible()
     ).toBe(true);
 
     // also check the mobile menu
@@ -175,7 +175,7 @@ describe("SearchBar", () => {
         .findComponent({
           ref: "mobile-profile-link",
         })
-        .exists()
+        .isVisible()
     ).toBe(false);
 
     $store.getters["auth/isAuthenticated"] = true;
@@ -187,7 +187,7 @@ describe("SearchBar", () => {
         .findComponent({
           ref: "mobile-profile-link",
         })
-        .exists()
+        .isVisible()
     ).toBe(true);
   });
 
