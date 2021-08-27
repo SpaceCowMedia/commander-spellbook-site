@@ -164,13 +164,21 @@ export default {
 
   firebase: {
     config: {
-      // TODO use env variables to configure
-      apiKey: process.env.FIREBASE_API_KEY,
-      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-      appId: process.env.FIREBASE_APP_ID,
+      apiKey:
+        process.env.FIREBASE_API_KEY ||
+        "AIzaSyDbLy6q09rqCgwMEssOGj2OxYyD8bSegXw",
+      authDomain:
+        process.env.FIREBASE_AUTH_DOMAIN ||
+        "commander-spellbook-local.firebaseapp.com",
+      projectId: process.env.FIREBASE_PROJECT_ID || "commander-spellbook-local",
+      storageBucket:
+        process.env.FIREBASE_STORAGE_BUCKET ||
+        "commander-spellbook-local.appspot.com",
+      messagingSenderId:
+        process.env.FIREBASE_MESSAGING_SENDER_ID || "766592582304",
+      appId:
+        process.env.FIREBASE_APP_ID ||
+        "1:766592582304:web:d55f27537ea02d05457fc5",
       // measurementId: '<measurementId>'
     },
     services: {
