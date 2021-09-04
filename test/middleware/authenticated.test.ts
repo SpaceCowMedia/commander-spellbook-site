@@ -17,6 +17,26 @@ describe("authMiddleware", () => {
     expect(redirect).not.toBeCalled();
   });
 
+  it("signs the user out when the signout route is used", async () => {
+    const store = createStore();
+    const route = createRoute({
+      path: "/signout/",
+    });
+    const redirect = jest.fn();
+
+    // @ts-ignore
+    await authMiddleware({
+      store,
+      route,
+      redirect,
+    });
+
+    expect(store.dispatch).toBeCalledTimes(1);
+    expect(store.dispatch).toBeCalledWith("auth/signOut");
+    expect(redirect).toBeCalledTimes(1);
+    expect(redirect).toBeCalledWith("/");
+  });
+
   it.each(["/profile/"])(
     "noops if %s route requires authentication and user is authenticated",
     (path) => {

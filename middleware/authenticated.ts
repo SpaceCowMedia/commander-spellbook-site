@@ -3,6 +3,12 @@ import { Middleware } from "@nuxt/types";
 const authMiddleware: Middleware = ({ store, route, redirect }) => {
   const isAuthenticated = store.getters["auth/isAuthenticated"];
 
+  if (route.path.includes("/signout")) {
+    return store.dispatch("auth/signOut").then(() => {
+      redirect("/");
+    });
+  }
+
   if (requiresAuth(route) && !isAuthenticated) {
     redirect("/login/");
     return;
