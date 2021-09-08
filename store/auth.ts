@@ -36,15 +36,36 @@ export const mutations: MutationTree<AuthState> = {
 };
 
 export const actions: ActionTree<AuthState, RootState> = {
-  signUp(_, { email, password }) {
-    return this.$fire.auth.createUserWithEmailAndPassword(email, password);
+  async requestMagicLink(_, { email }): Promise<void> {
+    await this.$fire.auth.sendSignInLinkToEmail(email, {
+      url: `${window.location.origin}/finish-login/`,
+      handleCodeInApp: true,
+    });
+
+    // The link was successfully sent. Inform the user.
+    // Save the email locally so you don't need to ask the user for it again
+    // if they open the link on the same device.
+    window.localStorage.setItem("emailForSignIn", email);
   },
 
-  signInWithEmail(_, { email, password }) {
-    return this.$fire.auth.signInWithEmailAndPassword(email, password);
+  async signInWithMagicLink(): Promise<void> {
+    if (!this.$fire.auth.isSignInWithEmailLink(window.location.href)) {
+      return Promise.reject(new Error("Sign in url is not valid"));
+    }
+
+    const email = window.localStorage.getItem("emailForSignIn");
+
+    if (!email) {
+      // TODO maybe pop up a modal to enter email insteaad?
+      return Promise.reject(new Error("No email found"));
+    }
+
+    await this.$fire.auth.signInWithEmailLink(email, window.location.href);
+    // Clear email from storage.
+    window.localStorage.removeItem("emailForSignIn");
   },
 
-  signOut() {
+  signOut(): Promise<void> {
     return this.$fire.auth.signOut();
   },
 };
