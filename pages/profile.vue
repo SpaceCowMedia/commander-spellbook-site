@@ -16,9 +16,10 @@
     </p>
 
     <p>TODO: change display name</p>
-    <p>TODO: change password</p>
     <p>TODO: change email</p>
-    <p>TODO: verify email</p>
+    <p>TODO: points</p>
+    <p>TODO: list of combos with their statuses</p>
+    <p>TODO: filter combos by status</p>
   </div>
 </template>
 
