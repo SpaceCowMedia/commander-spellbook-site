@@ -12,7 +12,7 @@
 
     <p id="email"><strong class="font-bold">Email:</strong> {{ email }}</p>
     <p id="display-name">
-      <strong class="font-bold">Display Name:</strong> {{ displayName }}
+      <strong class="font-bold">Display Name:</strong> TODO
     </p>
 
     <p>TODO: change display name</p>
@@ -34,7 +34,6 @@ export default Vue.extend({
   data() {
     return {
       email: "",
-      displayName: "",
     };
   },
   mounted() {
@@ -45,7 +44,6 @@ export default Vue.extend({
     }
 
     this.email = user.email || "";
-    this.displayName = user.displayName || "";
   },
 });
 </script>

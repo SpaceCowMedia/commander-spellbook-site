@@ -20,7 +20,9 @@
         justify-center
       "
     >
-      <div class="w-min bg-white p-4 rounded shadow-xl w-auto mx-auto md:my-4">
+      <div
+        class="w-min bg-white p-4 rounded shadow-xl w-auto mx-4 md:mx-auto my-4"
+      >
         <div class="-mt-12 pt-2 mx-auto bg-white rounded-full h-24 w-24">
           <img
             src="~/assets/images/logo.svg"

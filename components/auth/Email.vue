@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-w-full md:w-72">
     <div v-if="!linkSent">
       <div class="mb-2 text-center">
         <p class="prompt-text">{{ promptText }}</p>
