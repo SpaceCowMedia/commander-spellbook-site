@@ -34,7 +34,7 @@ describe("LoginPage", () => {
     expect(spy).toBeCalledTimes(1);
   });
 
-  it("shows error message when an error is visible", async () => {
+  it("shows error message when an error is present", async () => {
     const ErrorMessageStub = {
       props: ["message"],
       template: "<div></div>",
@@ -50,8 +50,6 @@ describe("LoginPage", () => {
       },
     });
 
-    expect(wrapper.findComponent(ErrorMessageStub).exists()).toBe(false);
-
     await wrapper.setData({
       error: "error",
     });
@@ -62,7 +60,7 @@ describe("LoginPage", () => {
   });
 
   describe("userSignIn", () => {
-    it("dispatches auth/signInWithEmail action", async () => {
+    it("dispatches auth/requestMagicLink action", async () => {
       const wrapper = shallowMount(LoginPage, {
         mocks: {
           $store,
@@ -77,15 +75,13 @@ describe("LoginPage", () => {
 
       await wrapper.setData({
         email: "arjun@example.com",
-        password: "strong password",
       });
 
       await vm.userSignIn();
 
       expect($store.dispatch).toBeCalledTimes(1);
-      expect($store.dispatch).toBeCalledWith("auth/signInWithEmail", {
+      expect($store.dispatch).toBeCalledWith("auth/requestMagicLink", {
         email: "arjun@example.com",
-        password: "strong password",
       });
     });
 
@@ -111,7 +107,7 @@ describe("LoginPage", () => {
       expect(vm.error).toBe("");
     });
 
-    it("re-routes to profile page when succesfull log in", async () => {
+    it("sets linkSent to true", async () => {
       const wrapper = shallowMount(LoginPage, {
         mocks: {
           $store,
@@ -124,10 +120,15 @@ describe("LoginPage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
+      expect(vm.linkSent).toBe(false);
+
       await vm.userSignIn();
 
-      expect($router.push).toBeCalledTimes(1);
-      expect($router.push).toBeCalledWith("/profile/");
+      expect(vm.linkSent).toBe(true);
+      expect(wrapper.find("form").exists()).toBeFalsy();
+      expect(wrapper.find("div").text()).toContain(
+        "Check your email on this device for a sign in link."
+      );
     });
 
     it("sets error message when log in fails", async () => {
