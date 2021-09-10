@@ -63,8 +63,8 @@
           Random
         </RandomButton>
         <nuxt-link
-          ref="profile-link"
           v-show="isAuthenticated"
+          ref="profile-link"
           to="/profile/"
           class="hidden md:flex menu-link"
           ><div class="profile-icon link-icon mr-0"></div>
@@ -99,8 +99,8 @@
       </RandomButton>
 
       <nuxt-link
-        ref="mobile-profile-link"
         v-show="isAuthenticated"
+        ref="mobile-profile-link"
         to="/profile/"
         class="mobile-menu-button"
         ><div class="profile-icon link-icon"></div>

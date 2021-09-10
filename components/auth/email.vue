@@ -14,8 +14,8 @@
             class="input"
             :class="{ 'border border-red-400': error }"
             type="text"
-            @input="error = ''"
             placeholder="email address"
+            @input="error = ''"
           />
           <ErrorMessage :message="error" />
         </div>

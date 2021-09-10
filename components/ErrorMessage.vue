@@ -1,6 +1,7 @@
 <template>
   <div>
     <div
+      v-if="message"
       class="
         flex
         items-center
@@ -12,7 +13,6 @@
         error-message
       "
       role="alert"
-      v-if="message"
     >
       {{ message }}
     </div>
