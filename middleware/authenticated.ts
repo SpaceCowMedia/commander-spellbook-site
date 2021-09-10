@@ -9,6 +9,12 @@ const authMiddleware: Middleware = ({ store, route, redirect }) => {
     });
   }
 
+  if (route.path.includes("/finish-login")) {
+    return store.dispatch("auth/signInWithMagicLink").then(() => {
+      redirect("/profile/");
+    });
+  }
+
   if (requiresAuth(route) && !isAuthenticated) {
     redirect("/login/");
     return;

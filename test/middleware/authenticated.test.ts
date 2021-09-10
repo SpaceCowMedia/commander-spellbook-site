@@ -37,6 +37,26 @@ describe("authMiddleware", () => {
     expect(redirect).toBeCalledWith("/");
   });
 
+  it("signs in with magic link when finish-login route is used", async () => {
+    const store = createStore();
+    const route = createRoute({
+      path: "/finish-login/",
+    });
+    const redirect = jest.fn();
+
+    // @ts-ignore
+    await authMiddleware({
+      store,
+      route,
+      redirect,
+    });
+
+    expect(store.dispatch).toBeCalledTimes(1);
+    expect(store.dispatch).toBeCalledWith("auth/signInWithMagicLink");
+    expect(redirect).toBeCalledTimes(1);
+    expect(redirect).toBeCalledWith("/profile/");
+  });
+
   it.each(["/profile/"])(
     "noops if %s route requires authentication and user is authenticated",
     (path) => {
