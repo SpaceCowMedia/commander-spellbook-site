@@ -2,6 +2,29 @@ import { createRoute, createStore } from "../utils";
 import authMiddleware from "~/middleware/authenticated";
 
 describe("authMiddleware", () => {
+  it("noops if in server mode", () => {
+    const defaultServerParam = process.server;
+
+    process.server = true;
+
+    const store = createStore();
+    const route = createRoute({
+      path: "/signout/",
+    });
+    const redirect = jest.fn();
+
+    // @ts-ignore
+    authMiddleware({
+      store,
+      route,
+      redirect,
+    });
+
+    expect(redirect).not.toBeCalled();
+
+    process.server = defaultServerParam;
+  });
+
   it("noops if route does not need auth handling", () => {
     const store = createStore();
     const route = createRoute();
