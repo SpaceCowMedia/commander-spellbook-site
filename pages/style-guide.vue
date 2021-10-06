@@ -132,10 +132,10 @@
         <ul>
           <li>
             There are some mana symbol combinations with no precedent, like
-            Phyrexian mana with any kind of of symbol outside of X or generic
-            or snow with any other non-generic mana symbol, among others. When
-            such a mana cost needs to be addressed, a rule will be created and
-            added to the sheet at that time.
+            Phyrexian mana with any kind of of symbol outside of X or generic or
+            snow with any other non-generic mana symbol, among others. When such
+            a mana cost needs to be addressed, a rule will be created and added
+            to the sheet at that time.
           </li>
         </ul>
       </li>
