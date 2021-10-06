@@ -100,7 +100,7 @@ describe("ComboSidebarLinks", () => {
     });
 
     expect(wrapper.findComponent(RouterLinkStub).props("to")).toBe(
-      "/report-error?comboId=fake-id"
+      "/report-error/?comboId=fake-id"
     );
   });
 });

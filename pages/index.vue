@@ -20,7 +20,7 @@
           Random Combo
         </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
-          AFR Combos
+          Midnight Hunt Combos
         </nuxt-link>
       </div>
 

@@ -12,7 +12,7 @@
       <nuxt-link
         id="report-error-button"
         class="button w-full"
-        :to="'/report-error?comboId=' + comboId"
+        :to="'/report-error/?comboId=' + comboId"
         >Report an Error with this Combo</nuxt-link
       >
       <ShareComboButtons :combo-link="comboLink" />
