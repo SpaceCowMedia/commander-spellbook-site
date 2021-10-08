@@ -12,13 +12,14 @@
 
     <p id="email"><strong class="font-bold">Email:</strong> {{ email }}</p>
     <p id="display-name">
-      <strong class="font-bold">Display Name:</strong> TODO
+      <strong class="font-bold">Display Name:</strong>
+      {{ displayName || "Uhh" }}
     </p>
 
     <p>TODO: change display name</p>
     <p>TODO: change email</p>
     <p>TODO: points</p>
-    <p>TODO: list of combos with their statuses</p>
+    <p>TODO: list of combos submitted by user with their statuses</p>
     <p>TODO: filter combos by status</p>
   </div>
 </template>
@@ -34,6 +35,7 @@ export default Vue.extend({
   data() {
     return {
       email: "",
+      displayName: "",
     };
   },
   mounted() {
@@ -44,6 +46,7 @@ export default Vue.extend({
     }
 
     this.email = user.email || "";
+    this.displayName = user.displayName || "";
   },
 });
 </script>

@@ -14,6 +14,7 @@ describe("ProfilePage", () => {
 
   it("sets user details to current user", async () => {
     $fire.auth.currentUser.email = "codie@example.com";
+    $fire.auth.currentUser.displayName = "Codie";
 
     const wrapper = shallowMount(ProfilePage, {
       mocks: {
@@ -28,5 +29,6 @@ describe("ProfilePage", () => {
     await flushPromises();
 
     expect(wrapper.find("#email").text()).toContain("codie@example.com");
+    expect(wrapper.find("#display-name").text()).toContain("Codie");
   });
 });

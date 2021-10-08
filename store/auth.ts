@@ -52,32 +52,26 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     const email = window.localStorage.getItem("emailForSignIn");
-    // TODO
-    // const username = (window.localStorage.getItem("username") || "").trim();
-    // const isInitialSignup =
-    //   window.localStorage.getItem("isInitialSignup") === "true";
+    const displayName = window.localStorage.getItem("displayNameForSignUp");
 
     if (!email) {
       // TODO maybe pop up a modal to enter email insteaad?
       return Promise.reject(new Error("No email found"));
     }
 
-    await this.$fire.auth.signInWithEmailLink(email, window.location.href);
-    // Clear email from storage.
-    window.localStorage.removeItem("emailForSignIn");
-    // TODO
-    // window.localStorage.removeItem("username");
-    // window.localStorage.removeItem("isInitialSignup");
+    const userResult = await this.$fire.auth.signInWithEmailLink(
+      email,
+      window.location.href
+    );
 
-    // TODO
-    // if (isInitialSignup && username && this.$fire.auth.currentUser) {
-    //   console.log("heyou");
-    // }
-    // You can access the new user via result.user
-    // Additional user info profile not available via:
-    // result.additionalUserInfo.profile == null
-    // You can check if the user is new or existing:
-    // result.additionalUserInfo.isNewUser
+    window.localStorage.removeItem("emailForSignIn");
+
+    if (displayName && userResult.additionalUserInfo?.isNewUser) {
+      await this.$fire.auth.currentUser?.updateProfile({
+        displayName,
+      });
+      window.localStorage.removeItem("displayNameForSignUp");
+    }
   },
 
   signOut(): Promise<void> {
