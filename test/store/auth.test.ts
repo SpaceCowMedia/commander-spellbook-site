@@ -101,6 +101,17 @@ describe("Auth Store", () => {
           "email-in-local-storage@example.com"
         );
       });
+
+      it("stores display name for initial sign up flow", async () => {
+        await (actions.requestMagicLink as Function)(null, {
+          email: "email-in-local-storage@example.com",
+          displayName: "Name Here",
+        });
+
+        expect(window.localStorage.getItem("displayNameForSignUp")).toBe(
+          "Name Here"
+        );
+      });
     });
 
     describe("signInWithMagicLink", () => {

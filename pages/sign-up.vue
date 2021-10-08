@@ -1,6 +1,7 @@
 <template>
   <EmailAuth
     prompt-text="Enter your email address to create an account"
+    :include-display-name="true"
     submit-button-text="Create Account"
     link-sent-text="Check your email to complete the setup process."
   />

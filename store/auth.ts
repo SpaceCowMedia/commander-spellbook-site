@@ -36,19 +36,14 @@ export const mutations: MutationTree<AuthState> = {
 };
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async requestMagicLink(_, { email }): Promise<void> {
+  async requestMagicLink(_, { email, displayName }): Promise<void> {
     await this.$fire.auth.sendSignInLinkToEmail(email, {
       url: `${window.location.origin}/finish-login/`,
       handleCodeInApp: true,
     });
 
-    // The link was successfully sent. Inform the user.
-    // Save the email locally so you don't need to ask the user for it again
-    // if they open the link on the same device.
     window.localStorage.setItem("emailForSignIn", email);
-    // TODO
-    // window.localStorage.setItem("username", username || "");
-    // window.localStorage.setItem("isInitialSignup", isInitialSignup);
+    window.localStorage.setItem("displayNameForSignUp", displayName);
   },
 
   async signInWithMagicLink(): Promise<void> {

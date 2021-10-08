@@ -12,12 +12,24 @@
             id="email"
             v-model="email"
             class="input"
-            :class="{ 'border border-red-400': error }"
+            :class="{ 'border border-red-400': emailError }"
             type="text"
             placeholder="email address"
-            @input="error = ''"
+            @input="emailError = ''"
           />
-          <ErrorMessage :message="error" />
+          <ErrorMessage :message="emailError" />
+
+          <input
+            v-if="includeDisplayName"
+            id="display-name"
+            v-model="displayName"
+            class="input mt-1"
+            :class="{ 'border border-red-400': displayNameError }"
+            type="text"
+            placeholder="display name"
+            @input="displayNameError = ''"
+          />
+          <ErrorMessage :message="displayNameError" />
         </div>
 
         <button type="submit" class="button w-full">
@@ -42,6 +54,10 @@ export default Vue.extend({
   },
   layout: "splash",
   props: {
+    includeDisplayName: {
+      type: Boolean,
+      default: false,
+    },
     promptText: {
       type: String,
       default: "",
@@ -57,24 +73,33 @@ export default Vue.extend({
   },
   data() {
     return {
-      error: "",
+      emailError: "",
       email: "",
+      displayNameError: "",
+      displayName: "",
       linkSent: false,
     };
   },
   methods: {
     requestMagicLink() {
-      this.error = "";
+      this.emailError = "";
+      this.displayNameError = "";
+
+      if (this.includeDisplayName && !this.displayName.trim()) {
+        this.displayNameError = "Display name cannot be empty.";
+        return;
+      }
 
       return this.$store
         .dispatch("auth/requestMagicLink", {
           email: this.email,
+          displayName: this.displayName,
         })
         .then(() => {
           this.linkSent = true;
         })
         .catch((err) => {
-          this.error = err.message;
+          this.emailError = err.message;
         });
     },
   },

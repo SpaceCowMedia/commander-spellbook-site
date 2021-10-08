@@ -64,7 +64,7 @@ describe("Email Auth", () => {
     });
 
     await wrapper.setData({
-      error: "error message",
+      emailError: "error message",
     });
 
     expect(wrapper.findComponent(ErrorMessageStub).props("message")).toBe(
@@ -93,10 +93,59 @@ describe("Email Auth", () => {
       expect($store.dispatch).toBeCalledTimes(1);
       expect($store.dispatch).toBeCalledWith("auth/requestMagicLink", {
         email: "arjun@example.com",
+        displayName: "",
       });
     });
 
-    it("removes error message if it already exists", async () => {
+    it("does not dispatch auth/requestMagicLink action if display name is included and it is not entered", () => {
+      const wrapper = shallowMount(Email, {
+        mocks: {
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+        propsData: {
+          includeDisplayName: true,
+        },
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.find("form").trigger("submit");
+
+      expect($store.dispatch).toBeCalledTimes(0);
+      expect(vm.displayNameError).toBe("Display name cannot be empty.");
+    });
+
+    it("dispatches auth/requestMagicLink action with display name if included", async () => {
+      const wrapper = shallowMount(Email, {
+        mocks: {
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+        propsData: {
+          includeDisplayName: true,
+        },
+      });
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+        displayName: "Arjun",
+      });
+
+      wrapper.find("form").trigger("submit");
+
+      expect($store.dispatch).toBeCalledTimes(1);
+      expect($store.dispatch).toBeCalledWith("auth/requestMagicLink", {
+        email: "arjun@example.com",
+        displayName: "Arjun",
+      });
+    });
+
+    it("removes error messages if they already exist", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
           $store,
@@ -108,12 +157,14 @@ describe("Email Auth", () => {
       const vm = wrapper.vm as VueComponent;
 
       await wrapper.setData({
-        error: "error message",
+        emailError: "email error message",
+        displayNameError: "display name error",
       });
 
       await vm.requestMagicLink();
 
-      expect(vm.error).toBe("");
+      expect(vm.emailError).toBe("");
+      expect(vm.displayNameError).toBe("");
     });
 
     it("sets component to completed state when dispatch is sent", async () => {
@@ -151,7 +202,7 @@ describe("Email Auth", () => {
 
       await vm.requestMagicLink();
 
-      expect(vm.error).toBe("some validation error");
+      expect(vm.emailError).toBe("some validation error");
     });
   });
 });
