@@ -21,9 +21,11 @@ export type Store = {
 };
 export type Firebase = {
   auth: {
-    currentUser: {
-      email?: string;
-      displayName?: string;
+    currentUser?: {
+      email: string;
+      displayName: string;
+      getIdToken: jest.SpyInstance;
+      getIdTokenResult: jest.SpyInstance;
     };
   };
 };

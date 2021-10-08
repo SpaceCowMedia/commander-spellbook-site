@@ -34,6 +34,12 @@ export function createFirebase(): Firebase {
       currentUser: {
         email: "rashmi@example.com",
         displayName: "Rashmi, Eternities Crafter",
+        getIdToken: jest.fn().mockResolvedValue("token"),
+        getIdTokenResult: jest.fn().mockResolvedValue({
+          claims: {
+            propose_combos: true,
+          },
+        }),
       },
     },
   };
