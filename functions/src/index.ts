@@ -1,9 +1,9 @@
-import * as functions from "firebase-functions";
+import { https } from "firebase-functions";
+import admin from "firebase-admin";
+import app from "./api";
 
-// Start writing Firebase Functions
-// https://firebase.google.com/docs/functions/typescript
+admin.initializeApp();
 
-export const helloWorld = functions.https.onRequest((_, response) => {
-  functions.logger.info("Hello logs!", { structuredData: true });
-  response.send("Hello from Firebase!");
-});
+export * as users from "./db-hooks/users";
+
+export const api = https.onRequest(app);

@@ -1,4 +1,7 @@
 import dotenv from "dotenv";
+
+dotenv.config();
+
 const isWindows = process.platform === "win32";
 
 const title = "Commander Spellbook: The Search Engine for EDH Combos";
@@ -6,7 +9,9 @@ const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
-dotenv.config();
+const useEmulators =
+  process.env.NODE_ENVIRONMENT === "development" &&
+  process.env.USE_FIREBASE_EMULATORS === "true";
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
@@ -183,8 +188,12 @@ export default {
       // measurementId: '<measurementId>'
     },
     services: {
-      auth: true,
-      firestore: true,
+      auth: {
+        emulatorPort: useEmulators ? 9099 : null,
+      },
+      firestore: {
+        emulatorPort: useEmulators ? 8080 : null,
+      },
     },
   },
 
