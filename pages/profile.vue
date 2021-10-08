@@ -7,7 +7,7 @@
     />
     <h1 class="heading-title">Profile</h1>
     <p class="text-center">
-      <nuxt-link to="/signout/">Sign Out</nuxt-link>
+      <button @click="signout" class="button">Sign Out</button>
     </p>
 
     <p id="email"><strong class="font-bold">Email:</strong> {{ email }}</p>
@@ -54,7 +54,7 @@ export default Vue.extend({
     const user = this.$fire.auth.currentUser;
 
     if (!user) {
-      this.$router.push("/signout");
+      this.signout();
       return;
     }
 
@@ -69,9 +69,10 @@ export default Vue.extend({
       this.permissions.push("Propose New Combos");
     }
   },
+  methods: {
+    signout() {
+      this.$router.push("/signout");
+    },
+  },
 });
 </script>
-
-<style scoped>
-/* TODO */
-</style>
