@@ -9,7 +9,6 @@ If you do not have access to the Firebase console for the project, you will not 
 We use the [Email Link strategy](https://firebase.google.com/docs/auth/web/email-link-auth?authuser=1) for logging in. Basically, instead of having our users remember a password to log in, they simply enter their email and then click the link that gets mailed to them. That opens them back on the app and they are logged in!
 
 ## Discord Login
-
 In the future, we intend to support Discord login as well.
 
 ## user-permissions
@@ -69,16 +68,18 @@ npm run firebase:emulate
 
 # Deploys
 
-First, log in to Firebase.
+First, log in to Firebase. (if you are not a member of the Firebase project you are attemptting to deploy to, you will be unable to do the deploys)
 
 ```bash
 npm run firebase:login
 ```
 
-TODO - document how to switch projects, local, staging, production??
-
-Then, deploy the changes to the Firestore configuration and Functions.
+Choose the environment you are deploying to:
 
 ```bash
-npm run firebase:deploy
+npm run firebase:deploy:local
+npm run firebase:deploy:staging
+npm run firebase:deploy:prod
 ```
+
+Whenever you deploy to `staging` or `prod`, it will auto switch back the context to `local` when it finishes.
