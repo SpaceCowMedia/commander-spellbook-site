@@ -10,7 +10,7 @@ const description =
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
 const useEmulators =
-  process.env.NODE_ENVIRONMENT !== "production" &&
+  process.env.NODE_ENVIRONMENT === "development" &&
   process.env.USE_FIREBASE_EMULATORS === "true";
 
 export default {

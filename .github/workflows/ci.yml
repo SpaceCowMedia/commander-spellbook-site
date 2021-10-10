@@ -70,9 +70,7 @@ jobs:
           runTests: false
 
       - name: Run Integration tests 💻
-        run: npm run firebase:emulate & npm run test:integration
-        env:
-          USE_FIREBASE_EMULATORS: true
+        run: npm run test:integration
 
   deploy:
     # only deploy from the main branch
