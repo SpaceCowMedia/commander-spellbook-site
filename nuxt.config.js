@@ -139,10 +139,6 @@ export default {
       mode: "client",
     },
     "~/plugins/vue-tooltip.ts",
-    {
-      src: "./plugins/fireauth.ts",
-      mode: "client",
-    },
   ],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)

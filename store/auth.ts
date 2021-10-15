@@ -1,39 +1,9 @@
-import type { GetterTree, ActionTree, MutationTree } from "vuex";
+import type { ActionTree } from "vuex";
 import type { RootState } from "./";
 
-function createEmptyUser() {
-  return {
-    email: "",
-    displayName: "",
-    emailVerified: false,
-    refreshToken: "",
-  };
-}
-
-export const state = () => ({
-  user: createEmptyUser(),
-});
+export const state = () => ({});
 
 export type AuthState = ReturnType<typeof state>;
-
-export const getters: GetterTree<AuthState, RootState> = {
-  user: (state) => state.user,
-  isAuthenticated: (state) => Boolean(state.user.refreshToken),
-};
-
-export const mutations: MutationTree<AuthState> = {
-  setUser(state, userData: ReturnType<typeof createEmptyUser>) {
-    if (!userData) {
-      state.user = createEmptyUser();
-      return;
-    }
-
-    state.user.email = userData.email;
-    state.user.displayName = userData.displayName;
-    state.user.emailVerified = Boolean(userData.emailVerified);
-    state.user.refreshToken = userData.refreshToken;
-  },
-};
 
 export const actions: ActionTree<AuthState, RootState> = {
   async requestMagicLink(_, { email, displayName }): Promise<void> {
