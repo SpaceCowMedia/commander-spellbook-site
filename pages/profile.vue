@@ -51,15 +51,14 @@ export default Vue.extend({
     };
   },
   async mounted() {
+    await this.$store.dispatch("auth/waitForUserToBeAvailable");
+
     const user = this.$fire.auth.currentUser;
 
     if (!user) {
       this.signout();
       return;
     }
-
-    // have to do this to refresh the token so the claims are up to date
-    await user.getIdToken(true);
     const token = await user.getIdTokenResult();
 
     this.email = user.email || "";

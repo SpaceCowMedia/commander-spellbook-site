@@ -1,15 +1,17 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
 import ProfilePage from "@/pages/profile.vue";
-import { createFirebase } from "../utils";
+import { createFirebase, createStore } from "../utils";
 
-import type { Firebase } from "../types";
+import type { Firebase, Store } from "../types";
 
 describe("ProfilePage", () => {
   let $fire: Firebase;
+  let $store: Store;
 
   beforeEach(() => {
     $fire = createFirebase();
+    $store = createStore();
   });
 
   it("sets user details to current user", async () => {
@@ -19,6 +21,7 @@ describe("ProfilePage", () => {
     const wrapper = shallowMount(ProfilePage, {
       mocks: {
         $fire,
+        $store,
       },
       stubs: {
         NuxtLink: true,
@@ -27,6 +30,9 @@ describe("ProfilePage", () => {
     });
 
     await flushPromises();
+
+    expect($store.dispatch).toBeCalledTimes(1);
+    expect($store.dispatch).toBeCalledWith("auth/waitForUserToBeAvailable");
 
     expect(wrapper.find("#email").text()).toContain("codie@example.com");
     expect(wrapper.find("#display-name").text()).toContain("Codie");
@@ -43,6 +49,7 @@ describe("ProfilePage", () => {
     const wrapper = shallowMount(ProfilePage, {
       mocks: {
         $fire,
+        $store,
       },
       stubs: {
         NuxtLink: true,
@@ -64,6 +71,7 @@ describe("ProfilePage", () => {
     shallowMount(ProfilePage, {
       mocks: {
         $fire,
+        $store,
         $router,
       },
       stubs: {
