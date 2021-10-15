@@ -74,6 +74,15 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
+  waitForUserToBeAvailable(): Promise<void> {
+    return new Promise((resolve) => {
+      const unsubscribe = this.$fire.auth.onAuthStateChanged(() => {
+        unsubscribe();
+        resolve();
+      });
+    });
+  },
+
   signOut(): Promise<void> {
     return this.$fire.auth.signOut();
   },

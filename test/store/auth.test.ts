@@ -65,6 +65,7 @@ describe("Auth Store", () => {
       sendSignInLinkToEmail: jest.SpyInstance;
       signInWithEmailLink: jest.SpyInstance;
       signOut: jest.SpyInstance;
+      onAuthStateChanged: jest.SpyInstance;
       currentUser?: {
         updateProfile: jest.SpyInstance;
       };
@@ -78,6 +79,10 @@ describe("Auth Store", () => {
           additionalUserInfo: {
             isNewUser: false,
           },
+        }),
+        onAuthStateChanged: jest.fn().mockImplementation((cb) => {
+          setTimeout(cb, 1);
+          return jest.fn();
         }),
         signOut: jest.fn(),
       };
@@ -223,6 +228,26 @@ describe("Auth Store", () => {
         await (actions.signInWithMagicLink as Function)();
 
         expect(auth.currentUser.updateProfile).toBeCalledTimes(0);
+      });
+    });
+
+    describe("waitForUserToBeAvailable", () => {
+      it("calls $fire.auth.onAuthStateChanged", async () => {
+        await (actions.waitForUserToBeAvailable as Function)();
+
+        expect(auth.onAuthStateChanged).toBeCalledTimes(1);
+      });
+
+      it("unsubscribes form onAuthStateChanged", async () => {
+        const unsub = jest.fn();
+        auth.onAuthStateChanged.mockImplementation((cb) => {
+          setTimeout(cb, 1);
+          return unsub;
+        });
+
+        await (actions.waitForUserToBeAvailable as Function)();
+
+        expect(unsub).toBeCalledTimes(1);
       });
     });
 
