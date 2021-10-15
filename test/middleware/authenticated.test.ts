@@ -1,25 +1,39 @@
-import { createRoute, createStore, createFirebase } from "../utils";
+import { createRoute, createStore } from "../utils";
 import authMiddleware from "~/middleware/authenticated";
 
 describe("authMiddleware", () => {
-  let $fire: ReturnType<typeof createFirebase>;
-  let store: ReturnType<typeof createStore>;
-  let route: ReturnType<typeof createRoute>;
-  let redirect: jest.SpyInstance;
+  it("noops if in server mode", () => {
+    const defaultServerParam = process.server;
 
-  beforeEach(() => {
-    store = createStore();
-    route = createRoute();
-    $fire = createFirebase();
-    redirect = jest.fn();
-  });
+    process.server = true;
 
-  it("noops if route does not need auth handling", () => {
+    const store = createStore();
+    const route = createRoute({
+      path: "/signout/",
+    });
+    const redirect = jest.fn();
+
     // @ts-ignore
     authMiddleware({
       store,
       route,
-      $fire,
+      redirect,
+    });
+
+    expect(redirect).not.toBeCalled();
+
+    process.server = defaultServerParam;
+  });
+
+  it("noops if route does not need auth handling", () => {
+    const store = createStore();
+    const route = createRoute();
+    const redirect = jest.fn();
+
+    // @ts-ignore
+    authMiddleware({
+      store,
+      route,
       redirect,
     });
 
@@ -27,16 +41,17 @@ describe("authMiddleware", () => {
   });
 
   it("signs the user out when the signout route is used", async () => {
-    route = createRoute({
+    const store = createStore();
+    const route = createRoute({
       path: "/signout/",
     });
+    const redirect = jest.fn();
 
     // @ts-ignore
     await authMiddleware({
       store,
       route,
       redirect,
-      $fire,
     });
 
     expect(store.dispatch).toBeCalledTimes(1);
@@ -46,16 +61,17 @@ describe("authMiddleware", () => {
   });
 
   it("signs in with magic link when finish-login route is used", async () => {
-    route = createRoute({
+    const store = createStore();
+    const route = createRoute({
       path: "/finish-login/",
     });
+    const redirect = jest.fn();
 
     // @ts-ignore
     await authMiddleware({
       store,
       route,
       redirect,
-      $fire,
     });
 
     expect(store.dispatch).toBeCalledTimes(1);
@@ -67,16 +83,21 @@ describe("authMiddleware", () => {
   it.each(["/profile/"])(
     "noops if %s route requires authentication and user is authenticated",
     (path) => {
-      route = createRoute({
+      const store = createStore({
+        getters: {
+          "auth/isAuthenticated": true,
+        },
+      });
+      const route = createRoute({
         path,
       });
+      const redirect = jest.fn();
 
       // @ts-ignore
       authMiddleware({
         store,
         route,
         redirect,
-        $fire,
       });
 
       expect(redirect).not.toBeCalled();
@@ -86,17 +107,21 @@ describe("authMiddleware", () => {
   it.each(["/profile/"])(
     "reidrects if %s route requires authentication and user is not authenticated",
     (path) => {
-      delete $fire.auth.currentUser;
-      route = createRoute({
+      const store = createStore({
+        getters: {
+          "auth/isAuthenticated": false,
+        },
+      });
+      const route = createRoute({
         path,
       });
+      const redirect = jest.fn();
 
       // @ts-ignore
       authMiddleware({
         store,
         route,
         redirect,
-        $fire,
       });
 
       expect(redirect).toBeCalledTimes(1);
@@ -107,17 +132,21 @@ describe("authMiddleware", () => {
   it.each(["/login/", "/sign-up"])(
     "noops if %s route should be skipped if logged in, but user is not authenticated",
     (path) => {
-      delete $fire.auth.currentUser;
-      route = createRoute({
+      const store = createStore({
+        getters: {
+          "auth/isAuthenticated": false,
+        },
+      });
+      const route = createRoute({
         path,
       });
+      const redirect = jest.fn();
 
       // @ts-ignore
       authMiddleware({
         store,
         route,
         redirect,
-        $fire,
       });
 
       expect(redirect).not.toBeCalled();
@@ -127,16 +156,21 @@ describe("authMiddleware", () => {
   it.each(["/login/", "/sign-up"])(
     "reidrects if %s route should be skipped when user is logged in",
     (path) => {
-      route = createRoute({
+      const store = createStore({
+        getters: {
+          "auth/isAuthenticated": true,
+        },
+      });
+      const route = createRoute({
         path,
       });
+      const redirect = jest.fn();
 
       // @ts-ignore
       authMiddleware({
         store,
         route,
         redirect,
-        $fire,
       });
 
       expect(redirect).toBeCalledTimes(1);

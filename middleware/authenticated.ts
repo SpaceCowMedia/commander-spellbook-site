@@ -1,7 +1,11 @@
 import { Middleware } from "@nuxt/types";
 
-const authMiddleware: Middleware = ({ store, route, redirect, $fire }) => {
-  const isAuthenticated = Boolean($fire.auth.currentUser);
+const authMiddleware: Middleware = ({ store, route, redirect }) => {
+  if (process.server) {
+    return;
+  }
+
+  const isAuthenticated = store.getters["auth/isAuthenticated"];
 
   if (route.path.includes("/signout")) {
     return store.dispatch("auth/signOut").then(() => {
