@@ -32,7 +32,7 @@ describe("user hooks", () => {
       expect(claimsSpy).toBeCalledTimes(1);
       expect(claimsSpy).toBeCalledWith("user-id", {
         provisioned: true,
-        propose_combos: true,
+        proposeCombo: true,
       });
     });
 

@@ -18,7 +18,7 @@ describe("ProfilePage", () => {
     $fire.auth.currentUser!.email = "codie@example.com";
     $fire.auth.currentUser!.displayName = "Codie";
     $store.dispatch.mockResolvedValue({
-      propose_combos: true,
+      proposeCombo: true,
     });
 
     const wrapper = shallowMount(ProfilePage, {
@@ -46,7 +46,7 @@ describe("ProfilePage", () => {
 
   it("does not include permissions section if user has no permissions", async () => {
     $store.dispatch.mockResolvedValue({
-      propose_combos: false,
+      proposeCombo: false,
     });
 
     const wrapper = shallowMount(ProfilePage, {

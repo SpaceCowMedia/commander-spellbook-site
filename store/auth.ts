@@ -91,7 +91,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
           if (token.claims.provisioned) {
             return Promise.resolve({
-              propose_combos: token.claims.propose_combos,
+              proposeCombo: token.claims.proposeCombo,
             });
           }
 

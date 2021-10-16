@@ -63,7 +63,7 @@ export default Vue.extend({
     this.email = user.email || "";
     this.displayName = user.displayName || "";
 
-    if (permissions.propose_combos === true) {
+    if (permissions.proposeCombo === true) {
       this.permissions.push("Propose New Combos");
     }
   },

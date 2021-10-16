@@ -11,6 +11,6 @@ export const onUserCreate = auth.user().onCreate(async (user) => {
   });
   await auth.setCustomUserClaims(uid, {
     provisioned: true,
-    propose_combos: true,
+    proposeCombo: true,
   });
 });

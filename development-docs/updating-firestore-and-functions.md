@@ -18,11 +18,11 @@ Upon user creation, we have a server side function that sets the default permiss
 
 We need to limit what users are allowed to do, so set certain custom claims on the user to set what they are allowed to do. Here are the options:
 
-* `propose_combo` - can submit new combos for review on the site
-* `edit_combo` - can edit a combo proposed for the site and mark it as ready for final review
-* `reject_combo` - can mark a proposed combo as rejected
-* `finalize_combo` - can mark a proposed combo as ready to be seen on the production site
-* `manage_permissions` - can change the user permissions of another user
+* `proposeCombo` - can submit new combos for review on the site
+* `editCombo` - can edit a combo proposed for the site and mark it as ready for final review
+* `rejectCombo` - can mark a proposed combo as rejected
+* `finalizeCombo` - can mark a proposed combo as ready to be seen on the production site
+* `managePermissions` - can change the user permissions of another user
 
 # Firestore
 

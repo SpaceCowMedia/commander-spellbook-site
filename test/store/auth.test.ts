@@ -271,7 +271,7 @@ describe("Auth Store", () => {
         const provisionedResult = {
           claims: {
             provisioned: true,
-            propose_combos: true,
+            proposeCombo: true,
           },
         };
 
@@ -322,7 +322,7 @@ describe("Auth Store", () => {
         const permissions = await promise;
 
         expect(permissions).toEqual({
-          propose_combos: true,
+          proposeCombo: true,
         });
 
         expect(user.reload).toBeCalledTimes(1);

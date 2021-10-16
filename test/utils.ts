@@ -37,7 +37,7 @@ export function createFirebase(): Firebase {
         getIdToken: jest.fn().mockResolvedValue("token"),
         getIdTokenResult: jest.fn().mockResolvedValue({
           claims: {
-            propose_combos: true,
+            proposeCombo: true,
           },
         }),
       },
