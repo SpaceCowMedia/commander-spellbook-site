@@ -13,7 +13,6 @@
     "download-data": "ts-node scripts/download-data",
     "pregenerate": "npm run download-data",
     "generate": "nuxt generate --fail-on-error",
-    "generate:netlify": "rm -rf firebase-functions && npm run generate",
     "prefirebase:emulate": "cd firebase-functions && npm run build",
     "firebase:emulate": "firebase emulators:start",
     "firebase:login": "firebase login",
