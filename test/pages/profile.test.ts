@@ -17,6 +17,9 @@ describe("ProfilePage", () => {
   it("sets user details to current user", async () => {
     $fire.auth.currentUser!.email = "codie@example.com";
     $fire.auth.currentUser!.displayName = "Codie";
+    $store.dispatch.mockResolvedValue({
+      propose_combos: true,
+    });
 
     const wrapper = shallowMount(ProfilePage, {
       mocks: {
@@ -32,7 +35,7 @@ describe("ProfilePage", () => {
     await flushPromises();
 
     expect($store.dispatch).toBeCalledTimes(1);
-    expect($store.dispatch).toBeCalledWith("auth/waitForUserToBeAvailable");
+    expect($store.dispatch).toBeCalledWith("auth/lookupPermissions");
 
     expect(wrapper.find("#email").text()).toContain("codie@example.com");
     expect(wrapper.find("#display-name").text()).toContain("Codie");
@@ -42,8 +45,8 @@ describe("ProfilePage", () => {
   });
 
   it("does not include permissions section if user has no permissions", async () => {
-    $fire.auth.currentUser?.getIdTokenResult.mockResolvedValue({
-      claims: {},
+    $store.dispatch.mockResolvedValue({
+      propose_combos: false,
     });
 
     const wrapper = shallowMount(ProfilePage, {
@@ -63,6 +66,7 @@ describe("ProfilePage", () => {
   });
 
   it("redirects to /signout if user is not present", async () => {
+    $store.dispatch.mockResolvedValue({});
     delete $fire.auth.currentUser;
     const $router = {
       push: jest.fn(),
@@ -83,6 +87,6 @@ describe("ProfilePage", () => {
     await flushPromises();
 
     expect($router.push).toBeCalledTimes(1);
-    expect($router.push).toBeCalledWith("/signout");
+    expect($router.push).toBeCalledWith("/signout/");
   });
 });

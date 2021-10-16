@@ -74,11 +74,39 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
-  waitForUserToBeAvailable(): Promise<void> {
+  lookupPermissions(): Promise<Record<string, boolean>> {
     return new Promise((resolve) => {
-      const unsubscribe = this.$fire.auth.onAuthStateChanged(() => {
+      const unsubscribe = this.$fire.auth.onAuthStateChanged((user) => {
         unsubscribe();
-        resolve();
+
+        if (!user) {
+          resolve({});
+          return;
+        }
+
+        const waitForProvision = async (): Promise<Record<string, boolean>> => {
+          // have to do this to refresh the token so the claims are up to date
+          await user.getIdToken(true);
+          const token = await user.getIdTokenResult();
+
+          if (token.claims.provisioned) {
+            return Promise.resolve({
+              propose_combos: token.claims.propose_combos,
+            });
+          }
+
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              waitForProvision().then(resolve);
+            }, 2000);
+          });
+        };
+
+        return waitForProvision()
+          .then((per) => {
+            return user.reload().then(() => per);
+          })
+          .then(resolve);
       });
     });
   },

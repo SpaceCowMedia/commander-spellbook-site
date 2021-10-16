@@ -17,6 +17,7 @@
     </p>
 
     <div class="my-2">
+      <p>TODO: loading state until user provisioning is complete</p>
       <p>TODO: change display name</p>
       <p>TODO: change email</p>
       <p>TODO: points</p>
@@ -51,26 +52,24 @@ export default Vue.extend({
     };
   },
   async mounted() {
-    await this.$store.dispatch("auth/waitForUserToBeAvailable");
-
+    const permissions = await this.$store.dispatch("auth/lookupPermissions");
     const user = this.$fire.auth.currentUser;
 
     if (!user) {
       this.signout();
       return;
     }
-    const token = await user.getIdTokenResult();
 
     this.email = user.email || "";
     this.displayName = user.displayName || "";
 
-    if (token.claims.propose_combos === true) {
+    if (permissions.propose_combos === true) {
       this.permissions.push("Propose New Combos");
     }
   },
   methods: {
     signout() {
-      this.$router.push("/signout");
+      this.$router.push("/signout/");
     },
   },
 });

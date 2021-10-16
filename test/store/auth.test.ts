@@ -1,3 +1,4 @@
+import flushPromises from "flush-promises";
 import { state, getters, mutations, actions } from "~/store/auth";
 
 describe("Auth Store", () => {
@@ -231,9 +232,9 @@ describe("Auth Store", () => {
       });
     });
 
-    describe("waitForUserToBeAvailable", () => {
+    describe("lookupPermissions", () => {
       it("calls $fire.auth.onAuthStateChanged", async () => {
-        await (actions.waitForUserToBeAvailable as Function)();
+        await (actions.lookupPermissions as Function)();
 
         expect(auth.onAuthStateChanged).toBeCalledTimes(1);
       });
@@ -245,9 +246,86 @@ describe("Auth Store", () => {
           return unsub;
         });
 
-        await (actions.waitForUserToBeAvailable as Function)();
+        await (actions.lookupPermissions as Function)();
 
         expect(unsub).toBeCalledTimes(1);
+      });
+
+      it("resolves with an empty object when no user is available", async () => {
+        auth.onAuthStateChanged.mockImplementation((cb) => {
+          setTimeout(() => {
+            cb();
+          }, 1);
+          return jest.fn();
+        });
+        const permissions = await (actions.lookupPermissions as Function)();
+
+        expect(permissions).toEqual({});
+      });
+
+      it("waits for user to be provisioned before resolving permissions", async () => {
+        jest.useFakeTimers();
+        const unprovisionedResult = {
+          claims: {},
+        };
+        const provisionedResult = {
+          claims: {
+            provisioned: true,
+            propose_combos: true,
+          },
+        };
+
+        const user = {
+          reload: jest.fn().mockResolvedValue({}),
+          getIdToken: jest.fn().mockResolvedValue({}),
+          getIdTokenResult: jest
+            .fn()
+            .mockResolvedValueOnce(unprovisionedResult)
+            .mockResolvedValueOnce(unprovisionedResult)
+            .mockResolvedValueOnce(unprovisionedResult)
+            .mockResolvedValueOnce(provisionedResult),
+        };
+
+        auth.onAuthStateChanged.mockImplementation((cb) => {
+          setTimeout(() => {
+            cb(user);
+          }, 1);
+          return jest.fn();
+        });
+        const promise = (actions.lookupPermissions as Function)();
+
+        jest.advanceTimersByTime(2100);
+        await flushPromises();
+        expect(user.getIdToken).toBeCalledTimes(1);
+        expect(user.getIdTokenResult).toBeCalledTimes(1);
+
+        jest.advanceTimersByTime(2000);
+        await flushPromises();
+        expect(user.getIdToken).toBeCalledTimes(2);
+        expect(user.getIdTokenResult).toBeCalledTimes(2);
+
+        jest.advanceTimersByTime(2000);
+        await flushPromises();
+        expect(user.getIdToken).toBeCalledTimes(3);
+        expect(user.getIdTokenResult).toBeCalledTimes(3);
+
+        jest.advanceTimersByTime(2000);
+        await flushPromises();
+        expect(user.getIdToken).toBeCalledTimes(4);
+        expect(user.getIdTokenResult).toBeCalledTimes(4);
+
+        jest.advanceTimersByTime(2000);
+        await flushPromises();
+        expect(user.getIdToken).toBeCalledTimes(4);
+        expect(user.getIdTokenResult).toBeCalledTimes(4);
+
+        const permissions = await promise;
+
+        expect(permissions).toEqual({
+          propose_combos: true,
+        });
+
+        expect(user.reload).toBeCalledTimes(1);
       });
     });
 
