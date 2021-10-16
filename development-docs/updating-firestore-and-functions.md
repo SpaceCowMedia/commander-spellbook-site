@@ -24,6 +24,10 @@ We need to limit what users are allowed to do, so set certain custom claims on t
 * `finalizeCombo` - can mark a proposed combo as ready to be seen on the production site
 * `managePermissions` - can change the user permissions of another user
 
+Additional claims on a user include:
+
+* `provisioned` - the user is created and ready to be used on the site. Not really used for anything other than to determine that the user is fully set up and the initial claims have been set.
+
 # Firestore
 
 This is where the app's data is stored. Current collections are:
