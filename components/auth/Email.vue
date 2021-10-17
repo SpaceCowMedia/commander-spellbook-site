@@ -17,7 +17,7 @@
             placeholder="email address"
             @input="emailError = ''"
           />
-          <ErrorMessage :message="emailError" />
+          <ErrorMessage id="email-error" :message="emailError" />
 
           <input
             v-if="includeDisplayName"
@@ -29,7 +29,7 @@
             placeholder="display name"
             @input="displayNameError = ''"
           />
-          <ErrorMessage :message="displayNameError" />
+          <ErrorMessage id="display-name-error" :message="displayNameError" />
         </div>
 
         <button type="submit" class="button w-full">
@@ -40,7 +40,7 @@
       <slot />
     </div>
 
-    <div v-else>{{ linkSentText }}</div>
+    <div id="link-sent-text" v-else>{{ linkSentText }}</div>
   </div>
 </template>
 
