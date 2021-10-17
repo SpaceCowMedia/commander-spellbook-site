@@ -49,7 +49,7 @@ describe("Email Auth", () => {
     expect(wrapper.find("button").text()).toContain("submit text");
   });
 
-  it("shows error message when an error is present", async () => {
+  it("shows email error message when an error is present", async () => {
     const ErrorMessageStub = {
       props: ["message"],
       template: "<div></div>",
@@ -67,9 +67,32 @@ describe("Email Auth", () => {
       emailError: "error message",
     });
 
-    expect(wrapper.findComponent(ErrorMessageStub).props("message")).toBe(
-      "error message"
-    );
+    expect(
+      wrapper.findAllComponents(ErrorMessageStub).at(0).props("message")
+    ).toBe("error message");
+  });
+
+  it("shows display name error message when an error is present", async () => {
+    const ErrorMessageStub = {
+      props: ["message"],
+      template: "<div></div>",
+    };
+    const wrapper = shallowMount(Email, {
+      mocks: {
+        $store,
+      },
+      stubs: {
+        ErrorMessage: ErrorMessageStub,
+      },
+    });
+
+    await wrapper.setData({
+      displayNameError: "error message",
+    });
+
+    expect(
+      wrapper.findAllComponents(ErrorMessageStub).at(1).props("message")
+    ).toBe("error message");
   });
 
   describe("requestMagicLink", () => {
@@ -97,7 +120,7 @@ describe("Email Auth", () => {
       });
     });
 
-    it("does not dispatch auth/requestMagicLink action if display name is included and it is not entered", () => {
+    it("does not dispatch auth/requestMagicLink action if display name is included and it is not entered", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
           $store,
@@ -112,10 +135,32 @@ describe("Email Auth", () => {
 
       const vm = wrapper.vm as VueComponent;
 
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+
       wrapper.find("form").trigger("submit");
 
       expect($store.dispatch).toBeCalledTimes(0);
       expect(vm.displayNameError).toBe("Display name cannot be empty.");
+    });
+
+    it("does not dispatch auth/requestMagicLink action if email name is not entered", () => {
+      const wrapper = shallowMount(Email, {
+        mocks: {
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      wrapper.find("form").trigger("submit");
+
+      expect($store.dispatch).toBeCalledTimes(0);
+      expect(vm.emailError).toBe("Email cannot be empty.");
     });
 
     it("dispatches auth/requestMagicLink action with display name if included", async () => {
@@ -159,6 +204,7 @@ describe("Email Auth", () => {
       await wrapper.setData({
         emailError: "email error message",
         displayNameError: "display name error",
+        email: "arjun@example.com",
       });
 
       await vm.requestMagicLink();
@@ -181,13 +227,17 @@ describe("Email Auth", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+
       await vm.requestMagicLink();
 
       expect(wrapper.find("form").exists()).toBeFalsy();
       expect(wrapper.find("div").text()).toContain("link sent text");
     });
 
-    it("sets error message when log in fails", async () => {
+    it("sets email error message when log in fails", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
           $store,
@@ -198,6 +248,9 @@ describe("Email Auth", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
       $store.dispatch.mockRejectedValue(new Error("some validation error"));
 
       await vm.requestMagicLink();

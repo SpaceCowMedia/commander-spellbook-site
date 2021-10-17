@@ -87,6 +87,13 @@ export default Vue.extend({
 
       if (this.includeDisplayName && !this.displayName.trim()) {
         this.displayNameError = "Display name cannot be empty.";
+      }
+
+      if (!this.email.trim()) {
+        this.emailError = "Email cannot be empty.";
+      }
+
+      if (this.displayNameError || this.emailError) {
         return;
       }
 
