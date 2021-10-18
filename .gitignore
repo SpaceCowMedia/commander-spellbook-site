@@ -90,7 +90,6 @@ sw.*
 *.swp
 
 cypress/fixtures
-cypress/plugins
 cypress/videos
 cypress/screenshots
 
