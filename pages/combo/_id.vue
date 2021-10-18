@@ -57,8 +57,8 @@
         </div>
 
         <div v-if="hasPreviewedCard" class="previewed-warning">
-          WARNING: Combo contains cards that are from a forthcoming set (and not
-          yet legal in Commander)
+          WARNING: Combo contains cards that have not been released yet (and are
+          not yet legal in Commander)
         </div>
 
         <ComboSidebarLinks
