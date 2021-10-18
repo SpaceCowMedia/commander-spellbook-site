@@ -1,3 +1,5 @@
+import "./firebase-commands";
+
 beforeEach(() => {
   cy.visit("/");
 

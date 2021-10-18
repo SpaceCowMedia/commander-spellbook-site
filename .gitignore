@@ -89,6 +89,7 @@ sw.*
 # Vim swap files
 *.swp
 
+cypress/fixtures
 cypress/plugins
 cypress/videos
 cypress/screenshots

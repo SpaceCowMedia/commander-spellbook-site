@@ -26,8 +26,8 @@
     "lint": "npm run lint:js && npm run lint:style",
     "test": "jest",
     "cy:run": "cypress run --spec cypress/integration/**/*.ts",
-    "pretest:integration": "npm run generate -- -c cypress/nuxt.config.js",
-    "test:integration": "npm start & wait-on http://localhost:3000 && npm run cy:run"
+    "pretest:integration": "npm run firebase:emulate & npm run generate -- -c cypress/nuxt.config.js",
+    "test:integration": "npm start & wait-on http://localhost:3000 && wait-on http://localhost:4000 && npm run cy:run"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
@@ -60,11 +60,14 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.2.5",
+    "cross-env": "^7.0.3",
     "cypress": "^8.5.0",
+    "cypress-firebase": "^2.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "firebase-admin": "^10.0.0",
     "firebase-tools": "^9.18.0",
     "flush-promises": "^1.0.2",
     "husky": "^7.0.2",
