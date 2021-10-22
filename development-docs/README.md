@@ -1,8 +1,8 @@
 # Frontend App
 
-* [Installation and setup](./frontend/installation-and-setup.md)
-* [Updating Featured Combos on Home Page](./frontend/updating-featured-combos.md)
+- [Installation and setup](./frontend/installation-and-setup.md)
+- [Updating Featured Combos on Home Page](./frontend/updating-featured-combos.md)
 
 # Firebase
 
-* [updating Firestore and Functions](./updating-firestore-and-functions.j\nf)
+- [updating Firestore and Functions](./updating-firestore-and-functions.j\nf)

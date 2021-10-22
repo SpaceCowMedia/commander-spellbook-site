@@ -9,24 +9,24 @@ If you do not have access to the Firebase console for the project, you will not 
 We use the [Email Link strategy](https://firebase.google.com/docs/auth/web/email-link-auth?authuser=1) for logging in. Basically, instead of having our users remember a password to log in, they simply enter their email and then click the link that gets mailed to them. That opens them back on the app and they are logged in!
 
 ## Discord Login
+
 In the future, we intend to support Discord login as well.
 
 ## user-permissions
-
 
 Upon user creation, we have a server side function that sets the default permissions for the user, only granting them the ability to propose new combos. An administrator with the `manage_permissions` claim can modify what a user is allowed to do.
 
 We need to limit what users are allowed to do, so set certain custom claims on the user to set what they are allowed to do. Here are the options:
 
-* `proposeCombo` - can submit new combos for review on the site
-* `editCombo` - can edit a combo proposed for the site and mark it as ready for final review
-* `rejectCombo` - can mark a proposed combo as rejected
-* `finalizeCombo` - can mark a proposed combo as ready to be seen on the production site
-* `managePermissions` - can change the user permissions of another user
+- `proposeCombo` - can submit new combos for review on the site
+- `editCombo` - can edit a combo proposed for the site and mark it as ready for final review
+- `rejectCombo` - can mark a proposed combo as rejected
+- `finalizeCombo` - can mark a proposed combo as ready to be seen on the production site
+- `managePermissions` - can change the user permissions of another user
 
 Additional claims on a user include:
 
-* `provisioned` - the user is created and ready to be used on the site. Not really used for anything other than to determine that the user is fully set up and the initial claims have been set.
+- `provisioned` - the user is created and ready to be used on the site. Not really used for anything other than to determine that the user is fully set up and the initial claims have been set.
 
 # Firestore
 
