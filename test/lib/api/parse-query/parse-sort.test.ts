@@ -14,7 +14,7 @@ describe("parseSort", () => {
     "steps",
     "prerequisites",
     "cards",
-    "id",
+    "created",
     "colors",
     "popularity",
     "price",

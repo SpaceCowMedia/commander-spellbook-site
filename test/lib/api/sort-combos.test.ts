@@ -45,7 +45,7 @@ describe("search", () => {
     expect(sortedCombos[4].commanderSpellbookId).toBe("4");
   });
 
-  it("sorts combos by id", () => {
+  it("sorts combos by created at in ascending order", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "3",
@@ -57,7 +57,7 @@ describe("search", () => {
         commanderSpellbookId: "1",
       }),
       makeFakeCombo({
-        commanderSpellbookId: "5",
+        commanderSpellbookId: "105",
       }),
       makeFakeCombo({
         commanderSpellbookId: "4",
@@ -65,7 +65,7 @@ describe("search", () => {
     );
 
     const sortedCombos = sortCombos(combos, {
-      by: "id",
+      by: "created",
       order: "ascending",
       vendor: "cardkingdom",
     });
@@ -74,10 +74,10 @@ describe("search", () => {
     expect(sortedCombos[1].commanderSpellbookId).toBe("2");
     expect(sortedCombos[2].commanderSpellbookId).toBe("3");
     expect(sortedCombos[3].commanderSpellbookId).toBe("4");
-    expect(sortedCombos[4].commanderSpellbookId).toBe("5");
+    expect(sortedCombos[4].commanderSpellbookId).toBe("105");
   });
 
-  it("sorts combos by id in descending order", () => {
+  it("sorts combos by created at in descending order", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "3",
@@ -89,7 +89,7 @@ describe("search", () => {
         commanderSpellbookId: "1",
       }),
       makeFakeCombo({
-        commanderSpellbookId: "5",
+        commanderSpellbookId: "105",
       }),
       makeFakeCombo({
         commanderSpellbookId: "4",
@@ -97,12 +97,12 @@ describe("search", () => {
     );
 
     const sortedCombos = sortCombos(combos, {
-      by: "id",
+      by: "created",
       order: "descending",
       vendor: "cardkingdom",
     });
 
-    expect(sortedCombos[0].commanderSpellbookId).toBe("5");
+    expect(sortedCombos[0].commanderSpellbookId).toBe("105");
     expect(sortedCombos[1].commanderSpellbookId).toBe("4");
     expect(sortedCombos[2].commanderSpellbookId).toBe("3");
     expect(sortedCombos[3].commanderSpellbookId).toBe("2");
@@ -613,7 +613,7 @@ describe("search", () => {
     }
   );
 
-  it("orders id in asecnding order when auto order is used", () => {
+  it("orders created at in asecnding order when auto order is used", () => {
     combos.push(
       makeFakeCombo({
         commanderSpellbookId: "1",
@@ -636,7 +636,7 @@ describe("search", () => {
     combos.sort(() => 0.5 - Math.random());
 
     sortCombos(combos, {
-      by: "id",
+      by: "created",
       order: "auto",
       vendor: "cardkingdom",
     });

@@ -182,6 +182,10 @@ export default Vue.extend({
           value: "results",
           label: "# of Results",
         },
+        {
+          value: "created",
+          label: "Date Added to Site",
+        },
       ];
     },
 
