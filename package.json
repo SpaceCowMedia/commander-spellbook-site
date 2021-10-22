@@ -13,7 +13,7 @@
     "download-data": "ts-node scripts/download-data",
     "pregenerate": "npm run download-data",
     "generate": "nuxt generate --fail-on-error",
-    "generate:netlify": "rm -rf firebase-functions && npm run generate",
+    "generate:netlify": "rm -rf firebase-functions && npm run generate -- -c cypress/nuxt.config.js",
     "prefirebase:emulate": "cd firebase-functions && npm run build",
     "firebase:emulate": "firebase emulators:start --import firebase-emulator-seed-data",
     "firebase:login": "firebase login",

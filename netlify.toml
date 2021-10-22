@@ -12,11 +12,15 @@
 [context.production]
   ignore = "exit 0"
 
-# we generate using the cypress config so that it builds a
-# minimal version of the site (doesn't include a million
+# Netlify caches the node modules, which means that the
+# node_modules in the firebase-functions directory do not
+# always get installed properly. We have a special generate
+# command for netlify that first removes the firebase-functions
+# directory and then generates using the cypress config so that
+# it builds a minimal version of the site (doesn't include a million
 # combo pages) This has the downside of not presenting the
 # combo pages as they'll actually be when deploying to s3
 # but it makes the deploy process not take a million years
 # when asking for feedback on changes to the site
 [context.deploy-preview]
-  command = "npm run generate -- -c cypress/nuxt.config.js"
+  command = "npm run generate:netlify"
