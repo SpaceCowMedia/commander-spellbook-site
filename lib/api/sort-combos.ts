@@ -25,7 +25,7 @@ const ORDER_DEFAULTS: Record<SortValue, OrderValue> = {
   results: "ascending",
   cards: "ascending",
   colors: "ascending",
-  id: "ascending",
+  created: "ascending",
 
   popularity: "descending",
   price: "descending",
@@ -122,11 +122,13 @@ export default function sortCombos(
     };
 
     switch (by) {
-      case "id":
+      case "created":
         meta.isEqual =
-          firstCombo.commanderSpellbookId === secondCombo.commanderSpellbookId;
+          Number(firstCombo.commanderSpellbookId) ===
+          Number(secondCombo.commanderSpellbookId);
         meta.firstRemainsFirst =
-          firstCombo.commanderSpellbookId > secondCombo.commanderSpellbookId;
+          Number(firstCombo.commanderSpellbookId) >
+          Number(secondCombo.commanderSpellbookId);
         break;
       case "cards":
       case "prerequisites":
