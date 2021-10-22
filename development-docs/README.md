@@ -5,4 +5,4 @@
 
 # Firebase
 
-- [updating Firestore and Functions](./updating-firestore-and-functions.j\nf)
+- [updating Firestore and Functions](./firebase/updating-firestore-and-functions.j\nf)

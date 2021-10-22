@@ -6,7 +6,7 @@ If you do not have access to the Firebase console for the project, you will not 
 
 ## Email Link
 
-We use the [Email Link strategy](https://firebase.google.com/docs/auth/web/email-link-auth?authuser=1) for logging in. Basically, instead of having our users remember a password to log in, they simply enter their email and then click the link that gets mailed to them. That opens them back on the app and they are logged in!
+We use the [Email Link strategy](https://firebase.google.com/docs/auth/web/email-link-auth) for logging in. Basically, instead of having our users remember a password to log in, they simply enter their email and then click the link that gets mailed to them. That opens them back on the app and they are logged in!
 
 ## Discord Login
 
@@ -43,7 +43,7 @@ TODO
 
 ## Rules
 
-The [`firestore.rules`](../firestore.rules) file dictates the changes that can be made to documents in the Firestore database on the client. Warning: these rules do not apply when using functions along with the `firebase-admin` module.
+The [`firestore.rules`](../../firestore.rules) file dictates the changes that can be made to documents in the Firestore database on the client. Warning: these rules do not apply when using functions along with the `firebase-admin` module.
 
 # Functions
 
