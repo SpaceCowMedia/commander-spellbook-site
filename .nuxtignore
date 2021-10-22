@@ -1,0 +1,2 @@
+# Netlify is having issues building the nuxt application with the firebase-functions directory
+firebase-functions/
