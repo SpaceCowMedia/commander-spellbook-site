@@ -35,7 +35,7 @@ export default function parseSort(
     case "steps":
     case "results":
     case "cards":
-    case "id":
+    case "created":
       // make no changes to value
       break;
     case "ci":

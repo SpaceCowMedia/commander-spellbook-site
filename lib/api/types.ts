@@ -48,7 +48,7 @@ export type SortValue =
   | "results"
   | "cards"
   | "colors"
-  | "id"
+  | "created"
   | "price"
   | "popularity";
 export type OrderValue = "auto" | "ascending" | "descending";

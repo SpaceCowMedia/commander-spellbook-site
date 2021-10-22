@@ -23,7 +23,7 @@
           to="/featured/"
           class="previwed-combos-button dark button md:m-1"
         >
-          Midnight Hunt Combos
+          Stranger Things Combos
         </nuxt-link>
       </div>
 

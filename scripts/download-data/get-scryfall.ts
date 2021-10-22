@@ -120,6 +120,7 @@ export type ScryfallEntry = {
     reprint: boolean;
     setCode: string;
   };
+  collectorNumber: string;
   images: {
     oracle: string;
     artCrop: string;
@@ -189,6 +190,7 @@ export default async function getScryfallData(): Promise<ScryfallData> {
         reprint: card.reprint,
         setCode: card.set,
       },
+      collectorNumber: card.collector_number,
       images: {
         oracle: images.normal,
         artCrop: images.art_crop,

@@ -354,6 +354,8 @@
         </li>
 
         <li><code>cards</code> (or <code>number-of-cards</code>)</li>
+
+        <li><code>created</code></li>
       </ul>
 
       <p>
@@ -598,9 +600,9 @@ export default Vue.extend({
             "Combos with fewer than 3 steps sorted by color identity, starting with the most colors and going to the fewest.",
         },
         {
-          search: "decks>100 sort:results",
+          search: "decks>100 sort:created",
           description:
-            "Combos that are in more than 100 decks, sorted by number of results in ascending order.",
+            "Combos that are in more than 100 decks, sorted by the date they were added to the site.",
         },
       ],
     };
