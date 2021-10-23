@@ -90,6 +90,7 @@ describe("Auth Store", () => {
       (actions as any).$fire = {
         auth,
       };
+      (actions as any).commit = jest.fn();
     });
 
     describe("requestMagicLink", () => {
@@ -326,6 +327,36 @@ describe("Auth Store", () => {
         });
 
         expect(user.reload).toBeCalledTimes(1);
+      });
+
+      it("commits user after looking up permissions", async () => {
+        jest.useFakeTimers();
+
+        const provisionedResult = {
+          claims: {
+            provisioned: true,
+            proposeCombo: true,
+          },
+        };
+
+        const user = {
+          reload: jest.fn().mockResolvedValue({}),
+          getIdToken: jest.fn().mockResolvedValue({}),
+          getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
+        };
+
+        auth.onAuthStateChanged.mockImplementation((cb) => {
+          setTimeout(() => {
+            cb(user);
+          }, 1);
+          return jest.fn();
+        });
+        (actions.lookupPermissions as Function)();
+
+        jest.advanceTimersByTime(2100);
+        await flushPromises();
+        expect(actions.commit).toBeCalledTimes(1);
+        expect(actions.commit).toBeCalledWith("auth/setUser", user);
       });
     });
 

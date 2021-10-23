@@ -104,7 +104,10 @@ export const actions: ActionTree<AuthState, RootState> = {
 
         return waitForProvision()
           .then((per) => {
-            return user.reload().then(() => per);
+            return user.reload().then(() => {
+              this.commit("auth/setUser", user);
+              return per;
+            });
           })
           .then(resolve);
       });
