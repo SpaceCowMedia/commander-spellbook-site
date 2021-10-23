@@ -1,5 +1,6 @@
 import flushPromises from "flush-promises";
 import { state, getters, mutations, actions } from "~/store/auth";
+import { PERMISSIONS } from "~/lib/constants";
 
 describe("Auth Store", () => {
   describe("getters", () => {
@@ -261,7 +262,11 @@ describe("Auth Store", () => {
         });
         const permissions = await (actions.lookupPermissions as Function)();
 
-        expect(permissions).toEqual({});
+        expect(permissions).toEqual({
+          proposeCombo: false,
+          manageUserPermissions: false,
+          viewUsers: false,
+        });
       });
 
       it("waits for user to be provisioned before resolving permissions", async () => {
@@ -271,8 +276,8 @@ describe("Auth Store", () => {
         };
         const provisionedResult = {
           claims: {
-            provisioned: true,
-            proposeCombo: true,
+            [PERMISSIONS.provisioned]: 1,
+            [PERMISSIONS.proposeCombo]: 1,
           },
         };
 
@@ -324,6 +329,8 @@ describe("Auth Store", () => {
 
         expect(permissions).toEqual({
           proposeCombo: true,
+          manageUserPermissions: false,
+          viewUsers: false,
         });
 
         expect(user.reload).toBeCalledTimes(1);
@@ -334,8 +341,8 @@ describe("Auth Store", () => {
 
         const provisionedResult = {
           claims: {
-            provisioned: true,
-            proposeCombo: true,
+            [PERMISSIONS.provisioned]: 1,
+            [PERMISSIONS.proposeCombo]: 1,
           },
         };
 

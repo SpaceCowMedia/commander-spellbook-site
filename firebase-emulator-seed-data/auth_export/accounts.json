@@ -23,7 +23,7 @@
           "photoUrl": ""
         }
       ],
-      "customAttributes": "{\"provisioned\":true,\"proposeCombo\":true}",
+      "customAttributes": "{\"r\":1,\"p\":1}",
       "lastRefreshAt": "2021-10-17T03:21:47.212Z"
     }
   ]

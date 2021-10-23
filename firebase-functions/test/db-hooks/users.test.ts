@@ -3,6 +3,7 @@ import admin from "firebase-admin";
 import { mocked } from "ts-jest/utils";
 import { onUserCreate } from "../../src/db-hooks/users";
 import generateRandomName from "../../src/lib/generate-random-name";
+import { PERMISSIONS } from "../../../lib/constants";
 
 jest.mock("../../src/lib/generate-random-name");
 
@@ -10,6 +11,7 @@ const test = FirebaseTest();
 const wrapped = test.wrap(onUserCreate);
 
 jest.mock("firebase-admin");
+
 describe("user hooks", () => {
   let claimsSpy: jest.SpyInstance;
   let updateSpy: jest.SpyInstance;
@@ -31,8 +33,8 @@ describe("user hooks", () => {
 
       expect(claimsSpy).toBeCalledTimes(1);
       expect(claimsSpy).toBeCalledWith("user-id", {
-        provisioned: true,
-        proposeCombo: true,
+        [PERMISSIONS.provisioned]: 1,
+        [PERMISSIONS.proposeCombo]: 1,
       });
     });
 

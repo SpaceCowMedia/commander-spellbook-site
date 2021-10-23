@@ -1,5 +1,14 @@
 import type { GetterTree, ActionTree, MutationTree } from "vuex";
+import { PERMISSIONS } from "@/lib/constants";
 import type { RootState } from "./";
+
+type Permissions = {
+  proposeCombo: boolean;
+  manageUserPermissions: boolean;
+  viewUsers: boolean;
+};
+
+const DELAY_BETWEEN_PROVISION_CHECK = 2000;
 
 function createEmptyUser() {
   return {
@@ -74,31 +83,38 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
-  lookupPermissions(): Promise<Record<string, boolean>> {
+  lookupPermissions(): Promise<Permissions> {
     return new Promise((resolve) => {
       const unsubscribe = this.$fire.auth.onAuthStateChanged((user) => {
         unsubscribe();
 
         if (!user) {
-          resolve({});
+          resolve({
+            proposeCombo: false,
+            manageUserPermissions: false,
+            viewUsers: false,
+          });
           return;
         }
 
-        const waitForProvision = async (): Promise<Record<string, boolean>> => {
+        const waitForProvision = async (): Promise<Permissions> => {
           // have to do this to refresh the token so the claims are up to date
           await user.getIdToken(true);
           const token = await user.getIdTokenResult();
 
-          if (token.claims.provisioned) {
+          if (token.claims[PERMISSIONS.provisioned]) {
             return Promise.resolve({
-              proposeCombo: token.claims.proposeCombo,
+              proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
+              manageUserPermissions:
+                token.claims[PERMISSIONS.manageUserPermissions] === 1,
+              viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
             });
           }
 
           return new Promise((resolve) => {
             setTimeout(() => {
               waitForProvision().then(resolve);
-            }, 2000);
+            }, DELAY_BETWEEN_PROVISION_CHECK);
           });
         };
 
