@@ -5,18 +5,18 @@ import { PERMISSIONS } from "~/lib/constants";
 describe("Auth Store", () => {
   describe("getters", () => {
     describe("isAuthenticated", () => {
-      it("is true when there is a refresh token", () => {
+      it("is true when there is an email token", () => {
         const s = state();
-        s.user.refreshToken = "token";
+        s.user.email = "email@example.com";
 
         const isAuthenticated = getters.isAuthenticated(s, null, {}, null);
 
         expect(isAuthenticated).toBe(true);
       });
 
-      it("is false when there is not a refresh token", () => {
+      it("is false when there is not an email", () => {
         const s = state();
-        s.user.refreshToken = "";
+        s.user.email = "";
 
         const isAuthenticated = getters.isAuthenticated(s, null, {}, null);
 
@@ -33,30 +33,40 @@ describe("Auth Store", () => {
         mutations.setUser(s, {
           email: "user@example.com",
           displayName: "First Last",
-          emailVerified: true,
-          refreshToken: "token",
+          provisioned: true,
         });
 
         expect(s.user.email).toBe("user@example.com");
         expect(s.user.displayName).toBe("First Last");
-        expect(s.user.emailVerified).toBe(true);
-        expect(s.user.refreshToken).toBe("token");
+        expect(s.user.provisioned).toBe(true);
       });
 
       it("resets to empty user object when no user data is passed", () => {
         const s = state();
         s.user.email = "user@example.com";
         s.user.displayName = "First Last";
-        s.user.emailVerified = true;
-        s.user.refreshToken = "token";
+        s.user.provisioned = true;
 
         mutations.setUser(s, null);
 
         expect(s.user.email).toBe("");
         expect(s.user.displayName).toBe("");
-        expect(s.user.emailVerified).toBe(false);
-        expect(s.user.refreshToken).toBe("");
+        expect(s.user.provisioned).toBe(false);
       });
+    });
+
+    it("ignores provisioned attribute if not passed", () => {
+      const s = state();
+      s.user.provisioned = true;
+
+      mutations.setUser(s, {
+        email: "user@example.com",
+        displayName: "First Last",
+      });
+
+      expect(s.user.email).toBe("user@example.com");
+      expect(s.user.displayName).toBe("First Last");
+      expect(s.user.provisioned).toBe(true);
     });
   });
 
@@ -347,6 +357,8 @@ describe("Auth Store", () => {
         };
 
         const user = {
+          email: "user@example.com",
+          displayName: "display name",
           reload: jest.fn().mockResolvedValue({}),
           getIdToken: jest.fn().mockResolvedValue({}),
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
@@ -363,7 +375,11 @@ describe("Auth Store", () => {
         jest.advanceTimersByTime(2100);
         await flushPromises();
         expect(actions.commit).toBeCalledTimes(1);
-        expect(actions.commit).toBeCalledWith("auth/setUser", user);
+        expect(actions.commit).toBeCalledWith("auth/setUser", {
+          email: "user@example.com",
+          displayName: "display name",
+          provisioned: true,
+        });
       });
     });
 

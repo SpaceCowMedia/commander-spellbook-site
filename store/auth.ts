@@ -14,8 +14,7 @@ function createEmptyUser() {
   return {
     email: "",
     displayName: "",
-    emailVerified: false,
-    refreshToken: "",
+    provisioned: false,
   };
 }
 
@@ -27,7 +26,8 @@ export type AuthState = ReturnType<typeof state>;
 
 export const getters: GetterTree<AuthState, RootState> = {
   user: (state) => state.user,
-  isAuthenticated: (state) => Boolean(state.user.refreshToken),
+  isAuthenticated: (state) => Boolean(state.user.email),
+  isProvisioned: (state) => Boolean(state.user.provisioned),
 };
 
 export const mutations: MutationTree<AuthState> = {
@@ -39,8 +39,10 @@ export const mutations: MutationTree<AuthState> = {
 
     state.user.email = userData.email;
     state.user.displayName = userData.displayName;
-    state.user.emailVerified = Boolean(userData.emailVerified);
-    state.user.refreshToken = userData.refreshToken;
+
+    if (userData.provisioned) {
+      state.user.provisioned = true;
+    }
   },
 };
 
@@ -121,7 +123,11 @@ export const actions: ActionTree<AuthState, RootState> = {
         return waitForProvision()
           .then((per) => {
             return user.reload().then(() => {
-              this.commit("auth/setUser", user);
+              this.commit("auth/setUser", {
+                email: user.email,
+                displayName: user.displayName,
+                provisioned: true,
+              });
               return per;
             });
           })
