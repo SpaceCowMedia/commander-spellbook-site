@@ -2,10 +2,10 @@ import FirebaseTest from "firebase-functions-test";
 import admin from "firebase-admin";
 import { mocked } from "ts-jest/utils";
 import { onUserCreate } from "../../src/db-hooks/users";
-import generateRandomName from "../../src/lib/generate-random-name";
+import generateRandomName from "../../src/util/generate-random-name";
 import { PERMISSIONS } from "../../../lib/constants";
 
-jest.mock("../../src/lib/generate-random-name");
+jest.mock("../../src/util/generate-random-name");
 
 const test = FirebaseTest();
 const wrapped = test.wrap(onUserCreate);

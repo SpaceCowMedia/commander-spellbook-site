@@ -1,4 +1,4 @@
-import createRandomDisplayName from "../../src/lib/generate-random-name";
+import createRandomDisplayName from "../../src/util/generate-random-name";
 
 describe("generate random name", () => {
   it("generates a random username", () => {
