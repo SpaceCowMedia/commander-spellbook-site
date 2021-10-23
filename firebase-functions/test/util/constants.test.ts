@@ -1,6 +1,6 @@
-import { PERMISSIONS } from "@/lib/constants";
+import { PERMISSIONS } from "../../src/util/constants";
 
-describe("Permissions Constant Gut Check", () => {
+describe("Constants gut checks", () => {
   it("does not repeat values in Permissions constants", () => {
     const values = Object.values(PERMISSIONS);
     const uniqueValues = new Set(values);

@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import { auth } from "firebase-functions";
 import generateRandomName from "../util/generate-random-name";
-import { PERMISSIONS } from "../../../lib/constants";
+import { PERMISSIONS } from "../util/constants";
 
 export const onUserCreate = auth.user().onCreate(async (user) => {
   const uid = user.uid;
