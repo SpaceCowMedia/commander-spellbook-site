@@ -102,6 +102,7 @@ describe("Auth Store", () => {
         auth,
       };
       (actions as any).commit = jest.fn();
+      (actions as any).dispatch = jest.fn().mockResolvedValue({});
     });
 
     describe("requestMagicLink", () => {
@@ -202,6 +203,8 @@ describe("Auth Store", () => {
 
         await (actions.signInWithMagicLink as Function)();
 
+        expect(actions.dispatch).toBeCalledTimes(1);
+        expect(actions.dispatch).toBeCalledWith("auth/lookupPermissions");
         expect(auth.currentUser.updateProfile).toBeCalledTimes(1);
         expect(auth.currentUser.updateProfile).toBeCalledWith({
           displayName: "Name Here",
