@@ -209,6 +209,8 @@ describe("Auth Store", () => {
         expect(auth.currentUser.updateProfile).toBeCalledWith({
           displayName: "Name Here",
         });
+
+        expect(window.localStorage.getItem("displayNameForSignUp")).toBeFalsy();
       });
 
       it("does not update the current user with a display name if it is a new user but a display name is not in local storage", async () => {
@@ -225,6 +227,7 @@ describe("Auth Store", () => {
 
         await (actions.signInWithMagicLink as Function)();
 
+        expect(actions.dispatch).toBeCalledTimes(0);
         expect(auth.currentUser.updateProfile).toBeCalledTimes(0);
       });
 
@@ -243,7 +246,9 @@ describe("Auth Store", () => {
 
         await (actions.signInWithMagicLink as Function)();
 
+        expect(actions.dispatch).toBeCalledTimes(0);
         expect(auth.currentUser.updateProfile).toBeCalledTimes(0);
+        expect(window.localStorage.getItem("displayNameForSignUp")).toBeFalsy();
       });
     });
 

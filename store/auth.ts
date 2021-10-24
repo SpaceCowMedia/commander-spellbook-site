@@ -85,8 +85,8 @@ export const actions: ActionTree<AuthState, RootState> = {
       await this.$fire.auth.currentUser?.updateProfile({
         displayName,
       });
-      window.localStorage.removeItem("displayNameForSignUp");
     }
+    window.localStorage.removeItem("displayNameForSignUp");
   },
 
   lookupPermissions(): Promise<Permissions> {
