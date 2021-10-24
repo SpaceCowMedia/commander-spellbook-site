@@ -3,7 +3,7 @@ import admin from "firebase-admin";
 import { mocked } from "ts-jest/utils";
 import { onUserCreate } from "../../src/db-hooks/users";
 import generateRandomName from "../../src/util/generate-random-name";
-import { PERMISSIONS } from "../../../lib/constants";
+import { PERMISSIONS } from "../../src/shared/constants";
 
 jest.mock("../../src/util/generate-random-name");
 
