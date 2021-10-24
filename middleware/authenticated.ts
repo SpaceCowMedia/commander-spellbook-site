@@ -15,7 +15,7 @@ const authMiddleware: Middleware = ({ store, route, redirect }) => {
 
   if (route.path.includes("/finish-login")) {
     return store.dispatch("auth/signInWithMagicLink").then(() => {
-      redirect("/profile/");
+      redirect("/dashboard/");
     });
   }
 
@@ -25,12 +25,12 @@ const authMiddleware: Middleware = ({ store, route, redirect }) => {
   }
 
   if (skipIfLoggedIn(route) && isAuthenticated) {
-    redirect("/profile/");
+    redirect("/dashboard/");
   }
 };
 
 function requiresAuth({ path }: { path: string }) {
-  return path.includes("/profile");
+  return path.includes("/dashboard");
 }
 
 function skipIfLoggedIn({ path }: { path: string }) {

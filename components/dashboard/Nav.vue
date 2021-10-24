@@ -27,7 +27,7 @@
             >
           </li>
           <li v-if="permissions.viewUsers">
-            <NuxtLink to="/dashboard/manage-users/">Users</NuxtLink>
+            <NuxtLink to="/dashboard/users/">Users</NuxtLink>
           </li>
           <li>
             <NuxtLink to="/signout/">Sign Out</NuxtLink>

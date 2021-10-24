@@ -65,7 +65,7 @@
         <nuxt-link
           v-show="isAuthenticated"
           ref="profile-link"
-          to="/profile/"
+          to="/dashboard/"
           class="hidden md:flex menu-link"
           ><div class="profile-icon link-icon mr-0"></div>
           <span class="sr-only">Profile</span></nuxt-link
@@ -101,7 +101,7 @@
       <nuxt-link
         v-show="isAuthenticated"
         ref="mobile-profile-link"
-        to="/profile/"
+        to="/dashboard/"
         class="mobile-menu-button"
         ><div class="profile-icon link-icon"></div>
         Profile</nuxt-link

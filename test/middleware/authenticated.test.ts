@@ -77,10 +77,10 @@ describe("authMiddleware", () => {
     expect(store.dispatch).toBeCalledTimes(1);
     expect(store.dispatch).toBeCalledWith("auth/signInWithMagicLink");
     expect(redirect).toBeCalledTimes(1);
-    expect(redirect).toBeCalledWith("/profile/");
+    expect(redirect).toBeCalledWith("/dashboard/");
   });
 
-  it.each(["/profile/"])(
+  it.each(["/dashboard/"])(
     "noops if %s route requires authentication and user is authenticated",
     (path) => {
       const store = createStore({
@@ -104,7 +104,7 @@ describe("authMiddleware", () => {
     }
   );
 
-  it.each(["/profile/"])(
+  it.each(["/dashboard/"])(
     "reidrects if %s route requires authentication and user is not authenticated",
     (path) => {
       const store = createStore({
@@ -174,7 +174,7 @@ describe("authMiddleware", () => {
       });
 
       expect(redirect).toBeCalledTimes(1);
-      expect(redirect).toBeCalledWith("/profile/");
+      expect(redirect).toBeCalledWith("/dashboard/");
     }
   );
 });
