@@ -131,7 +131,12 @@ export type ScryfallEntry = {
 };
 type ScryfallData = Record<string, ScryfallEntry>;
 
-export default async function getScryfallData(): Promise<ScryfallData> {
+export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
+  if (trys > 2) {
+    return Promise.reject(
+      new Error("Could not download bulk data. Kept 404-ing")
+    );
+  }
   log("Fetching Scryfall Bulk Data URI");
 
   const response = (await getData(
@@ -144,6 +149,13 @@ export default async function getScryfallData(): Promise<ScryfallData> {
 
   log(`Downloading bulk data from ${oracleCardsUrl}`);
   const bulkData = (await getData(oracleCardsUrl)) as RawScryfallResponse;
+  // sometimes we get a 404 error instead, so we force this safety check
+  // @ts-ignore
+  if (bulkData.status === 404) {
+    trys++;
+    log("Trying to download scryfall data again");
+    return getScryfallData(trys);
+  }
   log("Finding Scryfall Images");
 
   const data = bulkData.reduce((cards, card) => {
