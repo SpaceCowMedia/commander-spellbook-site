@@ -35,9 +35,10 @@ describe("DashboardNav", () => {
 
     const links = wrapper.findAll("nav ul li");
 
-    expect(links.length).toBe(2);
-    expect(links.at(0).text()).toContain("Your Settings");
-    expect(links.at(1).text()).toContain("Sign Out");
+    expect(links.length).toBe(3);
+    expect(links.at(0).text()).toContain("Recent Activity");
+    expect(links.at(1).text()).toContain("Account Settings");
+    expect(links.at(2).text()).toContain("Sign Out");
   });
 
   it("shows nav links based on user has no permissions", async () => {
@@ -61,11 +62,12 @@ describe("DashboardNav", () => {
 
     const links = wrapper.findAll("nav ul li");
 
-    expect(links.length).toBe(4);
-    expect(links.at(0).text()).toContain("Your Settings");
-    expect(links.at(1).text()).toContain("Propose New Combo");
-    expect(links.at(2).text()).toContain("Users");
-    expect(links.at(3).text()).toContain("Sign Out");
+    expect(links.length).toBe(5);
+    expect(links.at(0).text()).toContain("Recent Activity");
+    expect(links.at(1).text()).toContain("Account Settings");
+    expect(links.at(2).text()).toContain("Propose New Combo");
+    expect(links.at(3).text()).toContain("Users");
+    expect(links.at(4).text()).toContain("Sign Out");
   });
 
   it("redirects to /signout if user is not present", async () => {

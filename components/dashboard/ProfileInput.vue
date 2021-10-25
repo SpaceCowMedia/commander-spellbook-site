@@ -38,3 +38,17 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+label {
+  @apply font-bold;
+}
+
+.input {
+  @apply max-w-md;
+}
+
+.helper-text {
+  @apply text-gray-500 text-sm;
+}
+</style>

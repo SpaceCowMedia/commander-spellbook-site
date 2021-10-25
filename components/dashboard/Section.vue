@@ -19,3 +19,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+h2 {
+  @apply font-title text-xl;
+}
+</style>

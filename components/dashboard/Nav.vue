@@ -19,7 +19,12 @@
       <div class="md:h-1/3 py-4 md:ml-2 md:m-h-32 bg-dark md:rounded-l-lg">
         <ul v-if="loaded">
           <li>
-            <NuxtLink to="/dashboard/">Your Settings</NuxtLink>
+            <NuxtLink to="/dashboard/">Recent Activity</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/dashboard/account-settings/"
+              >Account Settings</NuxtLink
+            >
           </li>
           <li v-if="permissions.proposeCombo">
             <NuxtLink to="/dashboard/propose-combo/"
