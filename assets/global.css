@@ -51,6 +51,10 @@ a {
   @apply m-4 inline-block py-2 px-3 bg-transparent text-link border-2 border-primary rounded-sm no-underline;
 }
 
+.button.m-0 {
+  @apply m-0;
+}
+
 .button.dark {
   @apply bg-dark text-white border-dark;
 }
