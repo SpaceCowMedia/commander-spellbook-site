@@ -140,6 +140,11 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
   },
 
+  updateProfile(): Promise<void> {
+    // TODO
+    return Promise.resolve();
+  },
+
   signOut(): Promise<void> {
     return this.$fire.auth.signOut();
   },
