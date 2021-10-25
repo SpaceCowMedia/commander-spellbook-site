@@ -44,6 +44,6 @@ export default Vue.extend({
 
 <style scoped>
 h2 {
-  @apply font-title text-xl mt-4;
+  @apply font-title text-xl;
 }
 </style>
