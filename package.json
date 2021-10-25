@@ -14,7 +14,7 @@
     "download-data": "ts-node scripts/download-data",
     "pregenerate": "npm run download-data",
     "generate": "nuxt generate --fail-on-error",
-    "generate:netlify": "rm -rf firebase-functions/src/{api,db-hooks,util,index.ts} && rm -rf firebase-functions/{lib,test,package.json,package-lock.json} && npm run generate -- -c cypress/nuxt.config.js",
+    "generate:netlify": "mv firebase-functions/src/shared firebase-shared && rm -rf firebase-functions && mkdir -p firebase-functions/src/ && mv firebase-shared firebase-functions/src/shared && npm run generate -- -c cypress/nuxt.config.js",
     "prefirebase:emulate": "npm run build-functions",
     "firebase:emulate": "firebase emulators:start --import firebase-emulator-seed-data",
     "firebase:login": "firebase login",
