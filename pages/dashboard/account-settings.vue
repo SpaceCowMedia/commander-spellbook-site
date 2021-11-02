@@ -18,8 +18,12 @@
         />
 
         <div>
-          <button type="submit" class="button m-0">
-            Update Profile (Does not Currently Update)
+          <button
+            type="submit"
+            class="button m-0"
+            :class="{ disabled: !isUpdateable }"
+          >
+            Update Profile
           </button>
         </div>
       </form>
@@ -46,8 +50,21 @@ export default Vue.extend({
       email: user.email,
     };
   },
+  computed: {
+    isUpdateable(): boolean {
+      const user = this.$store.getters["auth/user"];
+      return (
+        user.displayName !== this.displayName.trim() ||
+        user.email !== this.email.trim()
+      );
+    },
+  },
   methods: {
     updateProfile(): Promise<void> {
+      if (!this.isUpdateable) {
+        return Promise.resolve();
+      }
+
       return this.$store.dispatch("auth/updateProfile", {
         displayName: this.displayName.trim(),
         email: this.email.trim(),

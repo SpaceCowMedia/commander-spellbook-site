@@ -58,5 +58,42 @@ describe("AccountSettings", () => {
         email: "new-email@example.com",
       });
     });
+
+    it("does not dispatch event if no fields have changed", async () => {
+      const wrapper = shallowMount(AccountSettings, {
+        mocks: {
+          $store,
+        },
+        stubs: {
+          ProfileInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await vm.updateProfile();
+
+      expect($store.dispatch).not.toBeCalled();
+    });
+
+    it("does not dispatch event if no field values only have white space on either side", async () => {
+      const wrapper = shallowMount(AccountSettings, {
+        mocks: {
+          $store,
+        },
+        stubs: {
+          ProfileInput: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        displayName: "    First Last    ",
+        email: "    first@example.com    ",
+      });
+
+      await vm.updateProfile();
+
+      expect($store.dispatch).not.toBeCalled();
+    });
   });
 });
