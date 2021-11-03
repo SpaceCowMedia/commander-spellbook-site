@@ -20,7 +20,7 @@
           Random Combo
         </RandomButton>
         <nuxt-link to="/featured/" class="previwed-combos-button button md:m-1">
-          Stranger Things Combos
+          Crimson Vow Combos
         </nuxt-link>
       </div>
 
