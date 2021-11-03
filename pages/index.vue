@@ -23,7 +23,7 @@
           to="/featured/"
           class="previwed-combos-button dark button md:m-1"
         >
-          Stranger Things Combos
+          Crimson Vow Combos
         </nuxt-link>
       </div>
 
