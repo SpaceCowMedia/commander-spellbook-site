@@ -2,7 +2,12 @@
   <div class="my-4">
     <label>{{ label }}</label>
     <div>
-      <input v-model="localState" type="text" class="input" />
+      <input
+        v-model="localState"
+        type="text"
+        class="input"
+        :disabled="disabled"
+      />
     </div>
     <span class="helper-text">{{ helperText }}</span>
   </div>
@@ -24,6 +29,10 @@ export default Vue.extend({
     value: {
       type: String,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

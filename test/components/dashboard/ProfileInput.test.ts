@@ -19,4 +19,21 @@ describe("ProfileInput", () => {
       "some value"
     );
   });
+
+  it("disables input", () => {
+    const wrapper = shallowMount(ProfileInput, {
+      propsData: {
+        label: "A Label",
+        value: "some value",
+        helperText: "some text describing the input",
+        disabled: true,
+      },
+    });
+
+    expect(
+      (wrapper.find("input").element as HTMLInputElement).getAttribute(
+        "disabled"
+      )
+    ).toBe("disabled");
+  });
 });
