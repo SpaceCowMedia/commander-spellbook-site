@@ -83,6 +83,10 @@ a {
   @apply border px-3 py-2 w-full appearance-none rounded-none;
 }
 
+.input[disabled] {
+  @apply cursor-not-allowed;
+}
+
 .spinner {
   -webkit-mask: url("~assets/svgs/circle-notch-solid.svg") no-repeat center;
   mask: url("~assets/svgs/circle-notch-solid.svg") no-repeat center;
