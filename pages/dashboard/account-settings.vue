@@ -13,8 +13,8 @@
         <ProfileInput
           v-model="email"
           label="Email"
-          helper-text="This is what you use to sign in to Commander Spellbook. Only admins
-          can see this value."
+          :disabled="true"
+          helper-text="This is what you use to sign in to Commander Spellbook. Contact an admin on Discord if you need to change your email address."
         />
 
         <div>
@@ -48,6 +48,7 @@ export default Vue.extend({
     return {
       displayName: user.displayName,
       email: user.email,
+      error: "",
     };
   },
   computed: {
@@ -65,10 +66,14 @@ export default Vue.extend({
         return Promise.resolve();
       }
 
-      return this.$store.dispatch("auth/updateProfile", {
-        displayName: this.displayName.trim(),
-        email: this.email.trim(),
-      });
+      return this.$store
+        .dispatch("auth/updateProfile", {
+          displayName: this.displayName.trim(),
+        })
+        .catch((err) => {
+          // TODO how to expose this
+          this.error = err.message;
+        });
     },
   },
 });

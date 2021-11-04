@@ -47,7 +47,6 @@ describe("AccountSettings", () => {
 
       await wrapper.setData({
         displayName: "New Name",
-        email: "new-email@example.com",
       });
 
       await vm.updateProfile();
@@ -55,7 +54,6 @@ describe("AccountSettings", () => {
       expect($store.dispatch).toBeCalledTimes(1);
       expect($store.dispatch).toBeCalledWith("auth/updateProfile", {
         displayName: "New Name",
-        email: "new-email@example.com",
       });
     });
 
@@ -88,7 +86,6 @@ describe("AccountSettings", () => {
 
       await wrapper.setData({
         displayName: "    First Last    ",
-        email: "    first@example.com    ",
       });
 
       await vm.updateProfile();
