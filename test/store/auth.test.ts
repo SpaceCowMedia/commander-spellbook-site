@@ -397,6 +397,13 @@ describe("Auth Store", () => {
 
         expect(auth.signOut).toBeCalledTimes(1);
       });
+
+      it("resets the user", () => {
+        (actions.signOut as Function)();
+
+        expect(actions.commit).toBeCalledTimes(1);
+        expect(actions.commit).toBeCalledWith("auth/setUser", null);
+      });
     });
   });
 });

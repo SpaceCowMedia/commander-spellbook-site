@@ -146,6 +146,7 @@ export const actions: ActionTree<AuthState, RootState> = {
   },
 
   signOut(): Promise<void> {
+    this.commit("auth/setUser", null);
     return this.$fire.auth.signOut();
   },
 };
