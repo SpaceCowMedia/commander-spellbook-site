@@ -2,7 +2,6 @@
   <EmailAuth
     prompt-text="Enter your email address to log in"
     submit-button-text="Continue"
-    link-sent-text="Check your email on this device for a sign in link."
   >
     <hr class="my-2" />
 
