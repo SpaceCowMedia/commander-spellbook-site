@@ -1,19 +1,22 @@
 import { shallowMount } from "@vue/test-utils";
 import Email from "@/components/auth/Email.vue";
-import { createStore } from "../../utils";
+import { createRouter, createStore } from "../../utils";
 
-import type { Store, VueComponent } from "../../types";
+import type { Router, Store, VueComponent } from "../../types";
 
 describe("Email Auth", () => {
+  let $router: Router;
   let $store: Store;
 
   beforeEach(() => {
+    $router = createRouter();
     $store = createStore();
   });
 
   it("calls requestMagicLink when form submits", () => {
     const wrapper = shallowMount(Email, {
       mocks: {
+        $router,
         $store,
       },
       stubs: {
@@ -34,6 +37,7 @@ describe("Email Auth", () => {
   it("configures informational text in form", () => {
     const wrapper = shallowMount(Email, {
       mocks: {
+        $router,
         $store,
       },
       stubs: {
@@ -56,6 +60,7 @@ describe("Email Auth", () => {
     };
     const wrapper = shallowMount(Email, {
       mocks: {
+        $router,
         $store,
       },
       stubs: {
@@ -79,6 +84,7 @@ describe("Email Auth", () => {
     };
     const wrapper = shallowMount(Email, {
       mocks: {
+        $router,
         $store,
       },
       stubs: {
@@ -99,6 +105,7 @@ describe("Email Auth", () => {
     it("dispatches auth/requestMagicLink action", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -123,6 +130,7 @@ describe("Email Auth", () => {
     it("does not dispatch auth/requestMagicLink action if display name is included and it is not entered", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -148,6 +156,7 @@ describe("Email Auth", () => {
     it("does not dispatch auth/requestMagicLink action if email name is not entered", () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -166,6 +175,7 @@ describe("Email Auth", () => {
     it("dispatches auth/requestMagicLink action with display name if included", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -193,6 +203,7 @@ describe("Email Auth", () => {
     it("removes error messages if they already exist", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -216,6 +227,7 @@ describe("Email Auth", () => {
     it("sets component to completed state when dispatch is sent", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {
@@ -233,13 +245,38 @@ describe("Email Auth", () => {
 
       await vm.requestMagicLink();
 
+      expect($router.push).not.toBeCalled();
       expect(wrapper.find("form").exists()).toBeFalsy();
       expect(wrapper.find("div").text()).toContain("link sent text");
+    });
+
+    it("redirects to /email-link-sent/ if no completion text is passed", async () => {
+      const wrapper = shallowMount(Email, {
+        mocks: {
+          $router,
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+
+      await vm.requestMagicLink();
+
+      expect($router.push).toBeCalledTimes(1);
+      expect($router.push).toBeCalledWith("/email-link-sent/");
+      expect(vm.linkSent).toBe(false);
     });
 
     it("sets email error message when log in fails", async () => {
       const wrapper = shallowMount(Email, {
         mocks: {
+          $router,
           $store,
         },
         stubs: {

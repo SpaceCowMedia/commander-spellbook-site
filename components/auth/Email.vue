@@ -103,6 +103,10 @@ export default Vue.extend({
           displayName: this.displayName,
         })
         .then(() => {
+          if (!this.linkSentText) {
+            this.$router.push("/email-link-sent/");
+            return;
+          }
           this.linkSent = true;
         })
         .catch((err) => {

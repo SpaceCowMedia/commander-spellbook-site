@@ -1,4 +1,4 @@
-import { Firebase, Route, Store } from "./types";
+import { Firebase, Route, Router, Store } from "./types";
 
 type CreateRouteOptions = {
   path?: string;
@@ -12,6 +12,13 @@ export function createRoute(options: CreateRouteOptions = {}): Route {
     params: {},
     path: options.path || "/",
     query: {},
+  };
+}
+
+export function createRouter(): Router {
+  return {
+    push: jest.fn(),
+    replace: jest.fn(),
   };
 }
 
