@@ -140,9 +140,33 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
   },
 
-  updateProfile(): Promise<void> {
-    // TODO
-    return Promise.resolve();
+  async updateProfile(_, { displayName }): Promise<void> {
+    let numberOfUpdates = 0;
+    const user = this.$fire.auth.currentUser;
+
+    if (!user) {
+      return Promise.reject(new Error("No user logged in."));
+    }
+
+    const promises = [] as Promise<unknown>[];
+
+    if (displayName && user.displayName !== displayName) {
+      numberOfUpdates++;
+      promises.push(
+        user.updateProfile({
+          displayName,
+        })
+      );
+    }
+
+    // TODO add any additional profile info here
+
+    if (numberOfUpdates === 0) {
+      return Promise.reject(new Error("Nothing set to update."));
+    }
+
+    await Promise.all(promises);
+    await this.commit("auth/setUser", user);
   },
 
   signOut(): Promise<void> {

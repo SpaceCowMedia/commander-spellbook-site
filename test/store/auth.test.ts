@@ -79,6 +79,7 @@ describe("Auth Store", () => {
       signOut: jest.SpyInstance;
       onAuthStateChanged: jest.SpyInstance;
       currentUser?: {
+        displayName?: string;
         updateProfile: jest.SpyInstance;
       };
     };
@@ -388,6 +389,73 @@ describe("Auth Store", () => {
           displayName: "display name",
           provisioned: true,
         });
+      });
+    });
+
+    describe("updateProfile", () => {
+      beforeEach(() => {
+        auth.currentUser = {
+          displayName: "Old Name",
+          updateProfile: jest.fn().mockResolvedValue(null),
+        };
+      });
+
+      it("errors when there is no logged in user", async () => {
+        expect.assertions(1);
+
+        delete auth.currentUser;
+
+        try {
+          await (actions.updateProfile as Function)(null, {
+            displayName: "New Name",
+          });
+        } catch (err) {
+          expect(err.message).toBe("No user logged in.");
+        }
+      });
+
+      it("errors when no updates are passed", async () => {
+        expect.assertions(1);
+
+        try {
+          await (actions.updateProfile as Function)(null, {
+            displayName: "",
+          });
+        } catch (err) {
+          expect(err.message).toBe("Nothing set to update.");
+        }
+      });
+
+      it("errors when nothing was changed", async () => {
+        expect.assertions(1);
+
+        try {
+          await (actions.updateProfile as Function)(null, {
+            displayName: "Old Name",
+          });
+        } catch (err) {
+          expect(err.message).toBe("Nothing set to update.");
+        }
+      });
+
+      it("updates the display name", async () => {
+        await (actions.updateProfile as Function)(null, {
+          displayName: "New Name",
+        });
+
+        expect(auth.currentUser?.updateProfile).toBeCalledTimes(1);
+        expect(auth.currentUser?.updateProfile).toBeCalledWith({
+          displayName: "New Name",
+        });
+      });
+
+      it("commits updates to user store", async () => {
+        await (actions.updateProfile as Function)(null, {
+          displayName: "New Name",
+        });
+
+        expect(actions.commit).toBeCalledTimes(1);
+        expect(actions.commit).toBeCalledWith("auth/setUser", auth.currentUser);
       });
     });
 
