@@ -5,8 +5,10 @@ describe("Login", () => {
     cy.get("#email").type("arjun@example.com");
     cy.get("button[type='submit']").click();
 
+    cy.url().should("include", "/email-link-sent/");
+
     cy.get("#link-sent-text").should(
-      "have.text",
+      "contain.text",
       "Check your email on this device for a sign in link."
     );
   });

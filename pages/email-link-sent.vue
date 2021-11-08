@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-full md:w-72">
+  <div id="link-sent-text" class="max-w-full md:w-72">
     Check your email on this device for a sign in link.
   </div>
 </template>
