@@ -3,7 +3,7 @@ import {
   createRequest,
   createResponse,
   createNext,
-  createAdmin,
+  createAdminAuth,
 } from "../../helper";
 import requireAuthenticationMiddleware from "../../../src/api/middleware/require-authentication";
 import { PERMISSIONS } from "../../../src/shared/constants";
@@ -12,7 +12,7 @@ jest.mock("firebase-admin");
 
 describe("requiresAuthenticationMiddleware", () => {
   beforeEach(() => {
-    admin.auth = createAdmin({
+    admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockResolvedValue({}),
     });
   });
@@ -36,7 +36,7 @@ describe("requiresAuthenticationMiddleware", () => {
   });
 
   it("errors when verifyIdToken rejects", async () => {
-    admin.auth = createAdmin({
+    admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockRejectedValue(new Error("foo")),
     });
 
@@ -72,7 +72,7 @@ describe("requiresAuthenticationMiddleware", () => {
     const res = createResponse();
     const next = createNext();
 
-    admin.auth = createAdmin({
+    admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockResolvedValue({
         [PERMISSIONS.proposeCombo]: 1,
         [PERMISSIONS.provisioned]: 1,
@@ -96,7 +96,7 @@ describe("requiresAuthenticationMiddleware", () => {
     const res = createResponse();
     const next = createNext();
 
-    admin.auth = createAdmin({
+    admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockResolvedValue({
         [PERMISSIONS.proposeCombo]: 1,
         [PERMISSIONS.provisioned]: 1,

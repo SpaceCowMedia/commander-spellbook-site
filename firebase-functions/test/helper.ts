@@ -37,7 +37,7 @@ export function createNext(): NextFunction {
   return jest.fn() as NextFunction;
 }
 
-export function createAdmin(options: CreateAdminOptions = {}) {
+export function createAdminAuth(options: CreateAdminOptions = {}) {
   const { claimsSpy, updateUserSpy, verifyIdTokenSpy } = options;
 
   return jest.fn().mockReturnValue({

@@ -4,7 +4,7 @@ import { mocked } from "ts-jest/utils";
 import { onUserCreate } from "../../src/db-hooks/users";
 import generateRandomName from "../../src/util/generate-random-name";
 import { PERMISSIONS } from "../../src/shared/constants";
-import { createAdmin } from "../helper";
+import { createAdminAuth } from "../helper";
 
 jest.mock("../../src/util/generate-random-name");
 
@@ -20,7 +20,7 @@ describe("user hooks", () => {
   beforeEach(() => {
     claimsSpy = jest.fn();
     updateSpy = jest.fn();
-    admin.auth = createAdmin({
+    admin.auth = createAdminAuth({
       claimsSpy,
       updateUserSpy: updateSpy,
     });
