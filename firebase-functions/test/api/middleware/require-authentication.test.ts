@@ -18,24 +18,19 @@ describe("requiresAuthenticationMiddleware", () => {
   });
 
   it("errors when there is no authorization", async () => {
-    const statusSpy = jest.fn();
-    const jsonSpy = jest.fn();
     const req = createRequest({
       headers: {},
     });
-    const res = createResponse({
-      statusSpy,
-      jsonSpy,
-    });
+    const res = createResponse();
     const next = createNext();
 
     await requireAuthenticationMiddleware(req, res, next);
 
     expect(next).not.toBeCalled();
-    expect(statusSpy).toBeCalledTimes(1);
-    expect(statusSpy).toBeCalledWith(403);
-    expect(jsonSpy).toBeCalledTimes(1);
-    expect(jsonSpy).toBeCalledWith({
+    expect(res.status).toBeCalledTimes(1);
+    expect(res.status).toBeCalledWith(403);
+    expect(res.json).toBeCalledTimes(1);
+    expect(res.json).toBeCalledWith({
       message: "Missing authorization header",
     });
   });
@@ -45,51 +40,36 @@ describe("requiresAuthenticationMiddleware", () => {
       verifyIdTokenSpy: jest.fn().mockRejectedValue(new Error("foo")),
     });
 
-    const statusSpy = jest.fn();
-    const jsonSpy = jest.fn();
     const req = createRequest();
-    const res = createResponse({
-      statusSpy,
-      jsonSpy,
-    });
+    const res = createResponse();
     const next = createNext();
 
     await requireAuthenticationMiddleware(req, res, next);
 
     expect(next).not.toBeCalled();
-    expect(statusSpy).toBeCalledTimes(1);
-    expect(statusSpy).toBeCalledWith(403);
-    expect(jsonSpy).toBeCalledTimes(1);
-    expect(jsonSpy).toBeCalledWith({
+    expect(res.status).toBeCalledTimes(1);
+    expect(res.status).toBeCalledWith(403);
+    expect(res.json).toBeCalledTimes(1);
+    expect(res.json).toBeCalledWith({
       message: "Invalid authorization.",
     });
   });
 
   it("passes to next function when all conditions pass", async () => {
-    const statusSpy = jest.fn();
-    const jsonSpy = jest.fn();
     const req = createRequest();
-    const res = createResponse({
-      statusSpy,
-      jsonSpy,
-    });
+    const res = createResponse();
     const next = createNext();
 
     await requireAuthenticationMiddleware(req, res, next);
 
     expect(next).toBeCalledTimes(1);
-    expect(statusSpy).not.toBeCalled();
-    expect(jsonSpy).not.toBeCalled();
+    expect(res.status).not.toBeCalled();
+    expect(res.json).not.toBeCalled();
   });
 
   it("attaches permissions to user object", async () => {
-    const statusSpy = jest.fn();
-    const jsonSpy = jest.fn();
     const req = createRequest();
-    const res = createResponse({
-      statusSpy,
-      jsonSpy,
-    });
+    const res = createResponse();
     const next = createNext();
 
     admin.auth = createAdmin({

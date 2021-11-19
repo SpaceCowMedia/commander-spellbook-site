@@ -2,11 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 type CreateRequestOptions = {
   headers?: Record<string, unknown>;
-};
-
-type CreateResponseOptions = {
-  statusSpy?: jest.SpyInstance;
-  jsonSpy?: jest.SpyInstance;
+  userPermissions?: Record<string, boolean> | null;
 };
 
 type CreateAdminOptions = {
@@ -16,23 +12,24 @@ type CreateAdminOptions = {
 };
 
 export function createRequest(options: CreateRequestOptions = {}): Request {
-  const { headers } = options;
+  const { headers, userPermissions } = options;
 
   return {
     headers: headers || {
       authorization: "auth",
     },
+    userPermissions: userPermissions || {
+      provisioned: true,
+      proposeCombo: true,
+    },
   } as Request;
 }
 
-export function createResponse(options: CreateResponseOptions = {}): Response {
-  const { statusSpy, jsonSpy } = options;
-
+export function createResponse(): Response {
   return {
-    status: (statusSpy || jest.fn()).mockReturnValue({
-      json: jsonSpy || jest.fn(),
-    }),
+    status: jest.fn().mockReturnThis(),
     send: jest.fn(),
+    json: jest.fn(),
   } as any; // not great, but the response has a billion entries and Typescript won't let us get away with just putting in a few
 }
 
