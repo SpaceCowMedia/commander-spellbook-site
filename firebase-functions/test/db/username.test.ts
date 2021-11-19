@@ -4,4 +4,8 @@ describe("Username", () => {
   beforeEach(() => {
     // TODO - set BaseDocument.getDocumentSnapshot to return fake UserProfile document
   });
+
+  it("TODO", () => {
+    // TODO
+  });
 });
