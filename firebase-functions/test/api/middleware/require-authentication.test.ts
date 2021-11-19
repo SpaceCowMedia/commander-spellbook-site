@@ -67,7 +67,7 @@ describe("requiresAuthenticationMiddleware", () => {
     expect(res.json).not.toBeCalled();
   });
 
-  it("attaches permissions to user object", async () => {
+  it("attaches permissions to request object", async () => {
     const req = createRequest();
     const res = createResponse();
     const next = createNext();
@@ -89,5 +89,23 @@ describe("requiresAuthenticationMiddleware", () => {
         viewUsers: false,
       })
     );
+  });
+
+  it("attaches user id to request object", async () => {
+    const req = createRequest();
+    const res = createResponse();
+    const next = createNext();
+
+    admin.auth = createAdmin({
+      verifyIdTokenSpy: jest.fn().mockResolvedValue({
+        [PERMISSIONS.proposeCombo]: 1,
+        [PERMISSIONS.provisioned]: 1,
+        user_id: "user-123",
+      }),
+    });
+
+    await requireAuthenticationMiddleware(req, res, next);
+
+    expect(req.userId).toEqual("user-123");
   });
 });

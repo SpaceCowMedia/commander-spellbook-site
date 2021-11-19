@@ -24,6 +24,7 @@ export default function requireAuthentication(
         permissions[key] = claims[PERMISSIONS[key]] === 1;
         return permissions;
       }, {} as Record<string, boolean>);
+      req.userId = claims.user_id;
 
       next();
     })
