@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 type CreateRequestOptions = {
   headers?: Record<string, unknown>;
   userPermissions?: Record<string, boolean> | null;
+  body?: Record<string, unknown>;
 };
 
 type CreateAdminOptions = {
@@ -12,16 +13,18 @@ type CreateAdminOptions = {
 };
 
 export function createRequest(options: CreateRequestOptions = {}): Request {
-  const { headers, userPermissions } = options;
+  const { body, headers, userPermissions } = options;
 
   return {
     headers: headers || {
       authorization: "auth",
     },
+    body: body || {},
     userPermissions: userPermissions || {
       provisioned: true,
       proposeCombo: true,
     },
+    userId: "user-id",
   } as Request;
 }
 
