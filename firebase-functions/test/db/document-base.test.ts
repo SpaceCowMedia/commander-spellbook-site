@@ -44,6 +44,24 @@ describe("DocumentBase", () => {
         expect(getSpy).toBeCalledTimes(1);
       });
     });
+
+    describe("exists", () => {
+      it("resolves with true when document exists", async () => {
+        jest.spyOn(ChildDocument.prototype, "exists").mockReturnValue(true);
+
+        const exists = await ChildDocument.exists("foo");
+
+        expect(exists).toBe(true);
+      });
+
+      it("resolves with false when document does not exist", async () => {
+        jest.spyOn(ChildDocument.prototype, "exists").mockReturnValue(false);
+
+        const exists = await ChildDocument.exists("foo");
+
+        expect(exists).toBe(false);
+      });
+    });
   });
 
   describe("exists", () => {

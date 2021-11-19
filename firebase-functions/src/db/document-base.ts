@@ -36,4 +36,10 @@ export default abstract class DocumentBase {
       return new this(doc);
     });
   }
+
+  static exists(id: string): Promise<boolean> {
+    return this.get(id).then((instance) => {
+      return instance.exists();
+    });
+  }
 }
