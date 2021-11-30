@@ -1,8 +1,6 @@
 import admin from "firebase-admin";
 
-export type Document = {
-  exists: () => boolean;
-};
+type RecordDetails = Record<string, unknown>;
 
 function getDb(): FirebaseFirestore.Firestore {
   const db = admin.firestore();
@@ -23,18 +21,32 @@ export default abstract class DocumentBase {
     return this.rawDoc.exists;
   }
 
-  private static getDocumentSnapshot(id: string) {
-    return getDb().collection(this.CollectionName).doc(id).get();
+  private static getCollection() {
+    return getDb().collection(this.CollectionName);
+  }
+
+  private static getDocumentRef(id: string) {
+    return this.getCollection().doc(id);
+  }
+
+  static create(details: RecordDetails) {
+    return this.getCollection().add(details);
+  }
+
+  static createWithId(id: string, details: RecordDetails) {
+    return this.getDocumentRef(id).set(details);
   }
 
   static get(id: string) {
-    return this.getDocumentSnapshot(id).then((doc) => {
-      // typescript gets mad at us for doing this, since DocumentBase is
-      // an abstract class, but this is the magic to let each of the
-      // Document classes return instances of themselves when calling get
-      // @ts-ignore
-      return new this(doc);
-    });
+    return this.getDocumentRef(id)
+      .get()
+      .then((doc) => {
+        // typescript gets mad at us for doing this, since DocumentBase is
+        // an abstract class, but this is the magic to let each of the
+        // Document classes return instances of themselves when calling get
+        // @ts-ignore
+        return new this(doc);
+      });
   }
 
   static exists(id: string): Promise<boolean> {

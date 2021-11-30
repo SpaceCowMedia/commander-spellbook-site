@@ -7,6 +7,8 @@ describe("DocumentBase", () => {
   let collectionSpy: jest.SpyInstance;
   let docSpy: jest.SpyInstance;
   let getSpy: jest.SpyInstance;
+  let addSpy: jest.SpyInstance;
+  let setSpy: jest.SpyInstance;
 
   class ChildDocument extends DocumentBase {
     static CollectionName = "child-document";
@@ -14,6 +16,8 @@ describe("DocumentBase", () => {
 
   beforeEach(() => {
     collectionSpy = jest.fn().mockReturnThis();
+    addSpy = jest.fn();
+    setSpy = jest.fn();
     docSpy = jest.fn().mockReturnThis();
     getSpy = jest.fn().mockResolvedValue({
       exists: true,
@@ -23,10 +27,36 @@ describe("DocumentBase", () => {
       collection: collectionSpy,
       doc: docSpy,
       get: getSpy,
+      add: addSpy,
+      set: setSpy,
     });
   });
 
   describe("static methods", () => {
+    describe("create", () => {
+      it("adds a document to collection", async () => {
+        await ChildDocument.create({ foo: "bar" });
+
+        expect(collectionSpy).toBeCalledTimes(1);
+        expect(collectionSpy).toBeCalledWith("child-document");
+        expect(addSpy).toBeCalledTimes(1);
+        expect(addSpy).toBeCalledWith({ foo: "bar" });
+      });
+    });
+
+    describe("createWithId", () => {
+      it("sets a document on collection", async () => {
+        await ChildDocument.createWithId("foo", { foo: "bar" });
+
+        expect(collectionSpy).toBeCalledTimes(1);
+        expect(collectionSpy).toBeCalledWith("child-document");
+        expect(docSpy).toBeCalledTimes(1);
+        expect(docSpy).toBeCalledWith("foo");
+        expect(setSpy).toBeCalledTimes(1);
+        expect(setSpy).toBeCalledWith({ foo: "bar" });
+      });
+    });
+
     describe("get", () => {
       it("resolves with an instance of the child class", async () => {
         const doc = await ChildDocument.get("foo");
