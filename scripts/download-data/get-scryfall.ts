@@ -9,7 +9,7 @@ type BulkDataApiResponse = {
     download_uri: string;
   }>;
 };
-type RawScryfallResponse = Array<{
+type ScryfallApiData = {
   object: "card";
   id: string;
   oracle_id: string;
@@ -114,7 +114,8 @@ type RawScryfallResponse = Array<{
     edhrec: string;
     mtgtop8: string;
   };
-}>;
+};
+type RawScryfallResponse = Array<ScryfallApiData>;
 export type ScryfallEntry = {
   setData: {
     reprint: boolean;
@@ -129,6 +130,13 @@ export type ScryfallEntry = {
   edhrecPermalink: string;
 };
 type ScryfallData = Record<string, ScryfallEntry>;
+
+function isFunnyCard(card: ScryfallApiData) {
+  return (
+    card.type_line.toLowerCase().includes("contraption") ||
+    (card.set_type === "funny" && card.border_color === "silver")
+  );
+}
 
 export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
   if (trys > 2) {
@@ -159,7 +167,7 @@ export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
 
   const data = bulkData.reduce((cards, card) => {
     if (
-      card.set_type === "funny" ||
+      isFunnyCard(card) ||
       card.set_type === "token" ||
       card.set_type === "memorabilia"
     ) {
