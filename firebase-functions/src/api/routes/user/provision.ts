@@ -30,17 +30,6 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
-  // TODO, may not need to do this! Are we ok with just overwriting
-  // a user profile if it already exists? Shouldn't be a problem,
-  // since it should only create a profile when the user is first provisioned
-  const existingUserProfileExists = await UserProfile.exists(userId);
-  if (existingUserProfileExists) {
-    res.status(400).json({
-      message: `User Profile for user with id "${userId}" already exists`,
-    });
-    return;
-  }
-
   const normalizedUsername = username.toLowerCase();
   const usernameTaken = await Username.exists(normalizedUsername);
   if (usernameTaken) {

@@ -23,7 +23,6 @@ describe("user/provision", () => {
       claimsSpy,
       updateUserSpy: updateSpy,
     });
-    jest.spyOn(UserProfile, "exists").mockResolvedValue(false);
     jest.spyOn(Username, "exists").mockResolvedValue(false);
     jest
       .spyOn(Username, "createWithId")
@@ -99,31 +98,6 @@ describe("user/provision", () => {
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith({
       message: "User is already provisioned.",
-    });
-  });
-
-  it("errors with a 400 when user already has a user profile", async () => {
-    const res = createResponse();
-    const req = createRequest({
-      body: {
-        username: "my_username",
-      },
-      userPermissions: {
-        provisioned: false,
-      },
-    });
-
-    mocked(UserProfile.exists).mockResolvedValue(true);
-    await provision(req, res);
-
-    expect(UserProfile.exists).toBeCalledTimes(1);
-    expect(UserProfile.exists).toBeCalledWith("user-id");
-
-    expect(res.status).toBeCalledTimes(1);
-    expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith({
-      message: 'User Profile for user with id "user-id" already exists',
     });
   });
 
