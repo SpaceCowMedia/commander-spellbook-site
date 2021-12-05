@@ -1,9 +1,13 @@
+import admin from "firebase-admin";
 import type { Request, Response } from "express";
 import UserProfile from "../../../db/user-profile";
 import Username from "../../../db/username";
+import { PERMISSIONS } from "../../../shared/constants";
 
 export default async function provision(req: Request, res: Response) {
   const username = req.body.username?.trim();
+  const userId = req.userId;
+  const permissions = req.userPermissions;
 
   if (!username) {
     res.status(400).json({
@@ -19,23 +23,26 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
-  if (req.userPermissions.provisioned) {
+  if (permissions.provisioned) {
     res.status(400).json({
       message: "User is already provisioned.",
     });
     return;
   }
 
-  const existingUserProfileExists = await UserProfile.exists(req.userId);
+  // TODO, may not need to do this! Are we ok with just overwriting
+  // a user profile if it already exists? Shouldn't be a problem,
+  // since it should only create a profile when the user is first provisioned
+  const existingUserProfileExists = await UserProfile.exists(userId);
   if (existingUserProfileExists) {
     res.status(400).json({
-      message: `User Profile for user with id "${req.userId}" already exists`,
+      message: `User Profile for user with id "${userId}" already exists`,
     });
     return;
   }
 
-  // TODO transform username casing
-  const usernameTaken = await Username.exists(username);
+  const normalizedUsername = username.toLowerCase();
+  const usernameTaken = await Username.exists(normalizedUsername);
   if (usernameTaken) {
     res.status(400).json({
       message: `"${username}" is not an available username.`,
@@ -43,9 +50,29 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
-  // TODO create username (maybe can do this as a 1 and done since setting it should error if it already exists?) doc, with user id as the key
-  // TODO create user-profiles doc and set username in it
-  // TODO set provisioned to true
-  // TODO set proposeCombo to true
-  res.status(201).json({});
+  await Promise.all([
+    Username.createWithId(normalizedUsername, {
+      userId,
+    }),
+    UserProfile.createWithId(userId, {
+      username,
+    }),
+  ]);
+
+  const auth = admin.auth();
+
+  await auth.updateUser(userId, {
+    displayName: username,
+  });
+  await auth.setCustomUserClaims(userId, {
+    [PERMISSIONS.provisioned]: 1,
+    [PERMISSIONS.proposeCombo]: 1,
+  });
+
+  res.status(201).json({
+    permissions: {
+      proposeCombo: true,
+    },
+    username,
+  });
 }
