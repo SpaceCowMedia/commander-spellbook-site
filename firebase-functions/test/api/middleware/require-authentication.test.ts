@@ -31,7 +31,7 @@ describe("requiresAuthenticationMiddleware", () => {
     expect(res.status).toBeCalledWith(403);
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith({
-      message: "Missing authorization header",
+      message: "Missing authorization header.",
     });
   });
 

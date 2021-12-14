@@ -8,12 +8,13 @@ export default function requireAuthentication(
   next: NextFunction
 ) {
   if (!req.headers.authorization) {
-    res.status(403).json({ message: "Missing authorization header" });
+    res.status(403).json({ message: "Missing authorization header." });
 
     return;
   }
 
   const jwt = req.headers.authorization.trim();
+
   return admin
     .auth()
     .verifyIdToken(jwt)
