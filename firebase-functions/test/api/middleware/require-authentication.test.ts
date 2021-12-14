@@ -55,6 +55,27 @@ describe("requiresAuthenticationMiddleware", () => {
     });
   });
 
+  it("verifies authorization with firebase admin", async () => {
+    const verifySpy = jest.fn().mockResolvedValue({});
+    const req = createRequest({
+      headers: {
+        authorization: "Bearer auth",
+      },
+    });
+    const res = createResponse();
+    const next = createNext();
+
+    admin.auth = createAdminAuth({
+      verifyIdTokenSpy: verifySpy,
+    });
+
+    await requireAuthenticationMiddleware(req, res, next);
+
+    expect(verifySpy).toBeCalledTimes(1);
+    expect(verifySpy).toBeCalledWith("auth");
+    expect(next).toBeCalledTimes(1);
+  });
+
   it("errors when verifyIdToken rejects", async () => {
     admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockRejectedValue(new Error("foo")),
