@@ -35,6 +35,26 @@ describe("requiresAuthenticationMiddleware", () => {
     });
   });
 
+  it("errors when authorization does not include bearer token", async () => {
+    const req = createRequest({
+      headers: {
+        authorization: "auth",
+      },
+    });
+    const res = createResponse();
+    const next = createNext();
+
+    await requireAuthenticationMiddleware(req, res, next);
+
+    expect(next).not.toBeCalled();
+    expect(res.status).toBeCalledTimes(1);
+    expect(res.status).toBeCalledWith(403);
+    expect(res.json).toBeCalledTimes(1);
+    expect(res.json).toBeCalledWith({
+      message: "Authorization header is malformed.",
+    });
+  });
+
   it("errors when verifyIdToken rejects", async () => {
     admin.auth = createAdminAuth({
       verifyIdTokenSpy: jest.fn().mockRejectedValue(new Error("foo")),

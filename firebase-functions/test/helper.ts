@@ -17,7 +17,7 @@ export function createRequest(options: CreateRequestOptions = {}): Request {
 
   return {
     headers: headers || {
-      authorization: "auth",
+      authorization: "Bearer auth",
     },
     body: body || {},
     userPermissions: userPermissions || {

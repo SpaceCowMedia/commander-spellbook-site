@@ -13,7 +13,13 @@ export default function requireAuthentication(
     return;
   }
 
-  const jwt = req.headers.authorization.trim();
+  const jwt = req.headers.authorization.trim().split("Bearer ")[1];
+
+  if (!jwt) {
+    res.status(403).json({ message: "Missing authorization header." });
+
+    return;
+  }
 
   return admin
     .auth()
