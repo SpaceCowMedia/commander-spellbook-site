@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 import type { Request, Response, NextFunction } from "express";
-import { PERMISSIONS } from "../../shared/constants";
+import { PERMISSIONS } from "../../../shared/constants";
 
 export default function requireAuthentication(
   req: Request,
@@ -16,7 +16,7 @@ export default function requireAuthentication(
   const jwt = req.headers.authorization.trim().split("Bearer ")[1];
 
   if (!jwt) {
-    res.status(403).json({ message: "Missing authorization header." });
+    res.status(403).json({ message: "Authorization header is malformed." });
 
     return;
   }

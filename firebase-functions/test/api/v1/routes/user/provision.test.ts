@@ -1,14 +1,14 @@
 import admin from "firebase-admin";
 import { mocked } from "ts-jest/utils";
-import UserProfile from "../../../../src/db/user-profile";
-import Username from "../../../../src/db/username";
+import UserProfile from "../../../../../src/db/user-profile";
+import Username from "../../../../../src/db/username";
 import {
   createAdminAuth,
   createRequest,
   createResponse,
-} from "../../../helper";
-import provision from "../../../../src/api/routes/user/provision";
-import { PERMISSIONS } from "../../../../src/shared/constants";
+} from "../../../../helper";
+import provision from "../../../../../src/api/v1/routes/user/provision";
+import { PERMISSIONS } from "../../../../../src/shared/constants";
 
 jest.mock("firebase-admin");
 

@@ -1,8 +1,8 @@
 import admin from "firebase-admin";
 import type { Request, Response } from "express";
-import UserProfile from "../../../db/user-profile";
-import Username from "../../../db/username";
-import { PERMISSIONS } from "../../../shared/constants";
+import UserProfile from "../../../../db/user-profile";
+import Username from "../../../../db/username";
+import { PERMISSIONS } from "../../../../shared/constants";
 
 export default async function provision(req: Request, res: Response) {
   const username = req.body.username?.trim();

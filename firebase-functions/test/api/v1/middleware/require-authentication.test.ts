@@ -4,9 +4,9 @@ import {
   createResponse,
   createNext,
   createAdminAuth,
-} from "../../helper";
-import requireAuthenticationMiddleware from "../../../src/api/middleware/require-authentication";
-import { PERMISSIONS } from "../../../src/shared/constants";
+} from "../../../helper";
+import requireAuthenticationMiddleware from "../../../../src/api/v1/middleware/require-authentication";
+import { PERMISSIONS } from "../../../../src/shared/constants";
 
 jest.mock("firebase-admin");
 
