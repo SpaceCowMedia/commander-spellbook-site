@@ -19,6 +19,7 @@ const apiSetup: Plugin = (nuxt): void => {
     path: string,
     fetchOptions: FetchOptions = {}
   ) {
+    let status: number;
     const user = $fire.auth.currentUser;
 
     if (!user) {
@@ -36,7 +37,19 @@ const apiSetup: Plugin = (nuxt): void => {
       ...fetchOptions,
     };
 
-    return fetch(`${baseUrl}${path}`, options).then((res) => res.json());
+    return fetch(`${baseUrl}${path}`, options)
+      .then((res) => {
+        status = res.status;
+
+        return res.json();
+      })
+      .then((res) => {
+        if (status >= 400) {
+          return Promise.reject(new Error(res.message));
+        }
+
+        return res;
+      });
   };
 };
 
