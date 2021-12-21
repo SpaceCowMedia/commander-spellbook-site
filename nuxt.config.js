@@ -10,13 +10,25 @@ const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
-const useEmulators =
-  process.env.NODE_ENVIRONMENT === "development" &&
-  process.env.USE_FIREBASE_EMULATORS === "true";
+const isDev = process.env.NODE_ENVIRONMENT === "development";
+const useEmulators = isDev && process.env.USE_FIREBASE_EMULATORS === "true";
+
+let apiBaseUrl = "https://api.commanderspellbook.com/v1";
+
+// TODO staging url
+if (useEmulators) {
+  apiBaseUrl = "http://localhost:5001/commander-spellbook-prod/us-central1/v1";
+} else if (isDev) {
+  apiBaseUrl = "https://local-api.commanderspellbook.com/v1";
+}
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
+
+  env: {
+    apiBaseUrl,
+  },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -142,6 +154,10 @@ export default {
     "~/plugins/vue-tooltip.ts",
     {
       src: "./plugins/fireauth.ts",
+      mode: "client",
+    },
+    {
+      src: "./plugins/api.ts",
       mode: "client",
     },
   ],
