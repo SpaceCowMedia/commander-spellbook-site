@@ -47,11 +47,8 @@
         <ul>
           <li>
             The exception to this rule is legendary card names. If there is a
-            version of the card that shortens the name and there are no more
-            recent printings of said card that does not shorten the name (not
-            including oddities like weirdly worded Secret Lairs or stuff like
-            the List that does not update wording), you may abbreviate the card
-            name.
+            comma in the legendary card's name, the part of the name that comes
+            before the comma may be used in place of the card's full name.
           </li>
           <li>
             This is not the case when there are two cards that would be
