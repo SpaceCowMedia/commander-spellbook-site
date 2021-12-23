@@ -8,8 +8,6 @@ type Permissions = {
   viewUsers: boolean;
 };
 
-const DELAY_BETWEEN_PROVISION_CHECK = 2000;
-
 function createEmptyUser() {
   return {
     email: "",
@@ -91,7 +89,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
   lookupPermissions(): Promise<Permissions> {
     return new Promise((resolve) => {
-      const unsubscribe = this.$fire.auth.onAuthStateChanged((user) => {
+      const unsubscribe = this.$fire.auth.onAuthStateChanged(async (user) => {
         unsubscribe();
 
         if (!user) {
@@ -103,39 +101,22 @@ export const actions: ActionTree<AuthState, RootState> = {
           return;
         }
 
-        const waitForProvision = async (): Promise<Permissions> => {
-          // have to do this to refresh the token so the claims are up to date
-          await user.getIdToken(true);
-          const token = await user.getIdTokenResult();
+        await user.getIdToken(true);
+        const token = await user.getIdTokenResult();
+        const provisioned = token.claims[PERMISSIONS.provisioned] === 1;
 
-          if (token.claims[PERMISSIONS.provisioned]) {
-            return Promise.resolve({
-              proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
-              manageUserPermissions:
-                token.claims[PERMISSIONS.manageUserPermissions] === 1,
-              viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
-            });
-          }
+        this.commit("auth/setUser", {
+          email: user.email,
+          displayName: user.displayName,
+          provisioned,
+        });
 
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              waitForProvision().then(resolve);
-            }, DELAY_BETWEEN_PROVISION_CHECK);
-          });
-        };
-
-        return waitForProvision()
-          .then((per) => {
-            return user.reload().then(() => {
-              this.commit("auth/setUser", {
-                email: user.email,
-                displayName: user.displayName,
-                provisioned: true,
-              });
-              return per;
-            });
-          })
-          .then(resolve);
+        resolve({
+          proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
+          manageUserPermissions:
+            token.claims[PERMISSIONS.manageUserPermissions] === 1,
+          viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
+        });
       });
     });
   },

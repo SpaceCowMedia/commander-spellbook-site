@@ -1,4 +1,3 @@
-import flushPromises from "flush-promises";
 import { state, getters, mutations, actions } from "~/store/auth";
 import { PERMISSIONS } from "~/lib/constants";
 
@@ -288,76 +287,7 @@ describe("Auth Store", () => {
         });
       });
 
-      it("waits for user to be provisioned before resolving permissions", async () => {
-        jest.useFakeTimers();
-        const unprovisionedResult = {
-          claims: {},
-        };
-        const provisionedResult = {
-          claims: {
-            [PERMISSIONS.provisioned]: 1,
-            [PERMISSIONS.proposeCombo]: 1,
-          },
-        };
-
-        const user = {
-          reload: jest.fn().mockResolvedValue({}),
-          getIdToken: jest.fn().mockResolvedValue({}),
-          getIdTokenResult: jest
-            .fn()
-            .mockResolvedValueOnce(unprovisionedResult)
-            .mockResolvedValueOnce(unprovisionedResult)
-            .mockResolvedValueOnce(unprovisionedResult)
-            .mockResolvedValueOnce(provisionedResult),
-        };
-
-        auth.onAuthStateChanged.mockImplementation((cb) => {
-          setTimeout(() => {
-            cb(user);
-          }, 1);
-          return jest.fn();
-        });
-        const promise = (actions.lookupPermissions as Function)();
-
-        jest.advanceTimersByTime(2100);
-        await flushPromises();
-        expect(user.getIdToken).toBeCalledTimes(1);
-        expect(user.getIdTokenResult).toBeCalledTimes(1);
-
-        jest.advanceTimersByTime(2000);
-        await flushPromises();
-        expect(user.getIdToken).toBeCalledTimes(2);
-        expect(user.getIdTokenResult).toBeCalledTimes(2);
-
-        jest.advanceTimersByTime(2000);
-        await flushPromises();
-        expect(user.getIdToken).toBeCalledTimes(3);
-        expect(user.getIdTokenResult).toBeCalledTimes(3);
-
-        jest.advanceTimersByTime(2000);
-        await flushPromises();
-        expect(user.getIdToken).toBeCalledTimes(4);
-        expect(user.getIdTokenResult).toBeCalledTimes(4);
-
-        jest.advanceTimersByTime(2000);
-        await flushPromises();
-        expect(user.getIdToken).toBeCalledTimes(4);
-        expect(user.getIdTokenResult).toBeCalledTimes(4);
-
-        const permissions = await promise;
-
-        expect(permissions).toEqual({
-          proposeCombo: true,
-          manageUserPermissions: false,
-          viewUsers: false,
-        });
-
-        expect(user.reload).toBeCalledTimes(1);
-      });
-
-      it("commits user after looking up permissions", async () => {
-        jest.useFakeTimers();
-
+      it("resolves with user permissions when use is available", async () => {
         const provisionedResult = {
           claims: {
             [PERMISSIONS.provisioned]: 1,
@@ -379,10 +309,39 @@ describe("Auth Store", () => {
           }, 1);
           return jest.fn();
         });
-        (actions.lookupPermissions as Function)();
+        const permissions = await (actions.lookupPermissions as Function)();
 
-        jest.advanceTimersByTime(2100);
-        await flushPromises();
+        expect(permissions).toEqual({
+          proposeCombo: true,
+          manageUserPermissions: false,
+          viewUsers: false,
+        });
+      });
+
+      it("commits user after looking up permissions", async () => {
+        const provisionedResult = {
+          claims: {
+            [PERMISSIONS.provisioned]: 1,
+            [PERMISSIONS.proposeCombo]: 1,
+          },
+        };
+
+        const user = {
+          email: "user@example.com",
+          displayName: "display name",
+          reload: jest.fn().mockResolvedValue({}),
+          getIdToken: jest.fn().mockResolvedValue({}),
+          getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
+        };
+
+        auth.onAuthStateChanged.mockImplementation((cb) => {
+          setTimeout(() => {
+            cb(user);
+          }, 1);
+          return jest.fn();
+        });
+        await (actions.lookupPermissions as Function)();
+
         expect(actions.commit).toBeCalledTimes(1);
         expect(actions.commit).toBeCalledWith("auth/setUser", {
           email: "user@example.com",
