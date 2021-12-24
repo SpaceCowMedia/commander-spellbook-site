@@ -2,29 +2,52 @@
   "kind": "identitytoolkit#DownloadAccountResponse",
   "users": [
     {
+      "localId": "unprovisioned-user",
+      "createdAt": "1640375346220",
+      "lastLoginAt": "1640375346219",
+      "displayName": "Unprovisioned User",
+      "photoUrl": "",
+      "emailVerified": true,
+      "email": "unprovisioned-user@example.com",
+      "salt": "fakeSalt7bunTtSPM8SZu5fzQu6S",
+      "passwordHash": "fakeHash:salt=fakeSalt7bunTtSPM8SZu5fzQu6S:password=asdfasdf",
+      "passwordUpdatedAt": 1640375346219,
+      "validSince": "1640375346",
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "unprovisioned-user@example.com",
+          "federatedId": "unprovisioned-user@example.com",
+          "rawId": "unprovisioned-user@example.com",
+          "displayName": "Unprovisioned User",
+          "photoUrl": ""
+        }
+      ]
+    },
+    {
       "localId": "basic-user",
       "createdAt": "1634440907181",
       "lastLoginAt": "1634440907181",
       "displayName": "Basic Test User",
       "photoUrl": "",
-      "emailVerified": false,
-      "email": "test-user@example.com",
-      "salt": "fakeSaltVLAjHkmPYHQtbDVYhZyA",
-      "passwordHash": "fakeHash:salt=fakeSaltVLAjHkmPYHQtbDVYhZyA:password=asdfasdf",
-      "passwordUpdatedAt": 1634440907212,
-      "validSince": "1634440907",
+      "passwordHash": "fakeHash:salt=fakeSaltjHIOlGLMyhOwTDOQMuuq:password=asdfasdf",
+      "salt": "fakeSaltjHIOlGLMyhOwTDOQMuuq",
+      "passwordUpdatedAt": 1640375325568,
+      "customAttributes": "{\"r\":1,\"p\":1}",
       "providerUserInfo": [
         {
           "providerId": "password",
-          "email": "test-user@example.com",
-          "federatedId": "test-user@example.com",
-          "rawId": "test-user@example.com",
+          "email": "basic-user@example.com",
+          "federatedId": "basic-user@example.com",
+          "rawId": "basic-user@example.com",
           "displayName": "Basic Test User",
           "photoUrl": ""
         }
       ],
-      "customAttributes": "{\"r\":1,\"p\":1}",
-      "lastRefreshAt": "2021-10-17T03:21:47.212Z"
+      "validSince": "1640375325",
+      "email": "basic-user@example.com",
+      "emailVerified": true,
+      "disabled": false
     }
   ]
 }
