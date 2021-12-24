@@ -187,69 +187,6 @@ describe("Auth Store", () => {
 
         expect(window.localStorage.getItem("emailForSignIn")).toBeFalsy();
       });
-
-      it("updates the current user with a display name if it is a new user and a display name is in local storage", async () => {
-        window.localStorage.setItem("emailForSignIn", "email@example.com");
-        window.localStorage.setItem("displayNameForSignUp", "Name Here");
-
-        auth.signInWithEmailLink.mockResolvedValue({
-          additionalUserInfo: {
-            isNewUser: true,
-          },
-        });
-        auth.currentUser = {
-          updateProfile: jest.fn().mockResolvedValue(null),
-        };
-
-        await (actions.signInWithMagicLink as Function)();
-
-        expect(actions.dispatch).toBeCalledTimes(1);
-        expect(actions.dispatch).toBeCalledWith("auth/lookupPermissions");
-        expect(auth.currentUser.updateProfile).toBeCalledTimes(1);
-        expect(auth.currentUser.updateProfile).toBeCalledWith({
-          displayName: "Name Here",
-        });
-
-        expect(window.localStorage.getItem("displayNameForSignUp")).toBeFalsy();
-      });
-
-      it("does not update the current user with a display name if it is a new user but a display name is not in local storage", async () => {
-        window.localStorage.setItem("emailForSignIn", "email@example.com");
-
-        auth.signInWithEmailLink.mockResolvedValue({
-          additionalUserInfo: {
-            isNewUser: true,
-          },
-        });
-        auth.currentUser = {
-          updateProfile: jest.fn().mockResolvedValue(null),
-        };
-
-        await (actions.signInWithMagicLink as Function)();
-
-        expect(actions.dispatch).toBeCalledTimes(0);
-        expect(auth.currentUser.updateProfile).toBeCalledTimes(0);
-      });
-
-      it("does not update the current user with a display name if it is not a new user", async () => {
-        window.localStorage.setItem("emailForSignIn", "email@example.com");
-        window.localStorage.setItem("displayNameForSignUp", "Name Here");
-
-        auth.signInWithEmailLink.mockResolvedValue({
-          additionalUserInfo: {
-            isNewUser: false,
-          },
-        });
-        auth.currentUser = {
-          updateProfile: jest.fn().mockResolvedValue(null),
-        };
-
-        await (actions.signInWithMagicLink as Function)();
-
-        expect(actions.dispatch).toBeCalledTimes(0);
-        expect(auth.currentUser.updateProfile).toBeCalledTimes(0);
-        expect(window.localStorage.getItem("displayNameForSignUp")).toBeFalsy();
-      });
     });
 
     describe("lookupPermissions", () => {

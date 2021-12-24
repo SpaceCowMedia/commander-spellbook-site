@@ -61,30 +61,14 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     const email = window.localStorage.getItem("emailForSignIn");
-    const displayName = window.localStorage.getItem("displayNameForSignUp");
+    window.localStorage.removeItem("emailForSignIn");
 
     if (!email) {
       // TODO maybe pop up a modal to enter email insteaad?
       return Promise.reject(new Error("No email found"));
     }
 
-    const userResult = await this.$fire.auth.signInWithEmailLink(
-      email,
-      window.location.href
-    );
-
-    window.localStorage.removeItem("emailForSignIn");
-
-    if (displayName && userResult.additionalUserInfo?.isNewUser) {
-      // need to wait till User is provisioned before we update
-      // the display name, otherwise it'll be overwritten during
-      // the provision staged with the random default display name
-      await this.dispatch("auth/lookupPermissions");
-      await this.$fire.auth.currentUser?.updateProfile({
-        displayName,
-      });
-    }
-    window.localStorage.removeItem("displayNameForSignUp");
+    await this.$fire.auth.signInWithEmailLink(email, window.location.href);
   },
 
   lookupPermissions(): Promise<Permissions> {
