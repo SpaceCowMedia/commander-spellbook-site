@@ -68,6 +68,9 @@ describe("user/provision", () => {
     const res = createResponse();
     const req = createRequest({
       body: { username: "  as-df!@123  " },
+      userPermissions: {
+        provisioned: false,
+      },
     });
 
     await provision(req, res);
@@ -130,7 +133,7 @@ describe("user/provision", () => {
     const res = createResponse();
     const req = createRequest({
       body: {
-        username: "My_Username",
+        username: "My_User name",
       },
       userPermissions: {
         provisioned: false,
@@ -149,7 +152,7 @@ describe("user/provision", () => {
     const res = createResponse();
     const req = createRequest({
       body: {
-        username: "My_Username",
+        username: "My_User name",
       },
       userPermissions: {
         provisioned: false,
@@ -160,7 +163,7 @@ describe("user/provision", () => {
 
     expect(UserProfile.createWithId).toBeCalledTimes(1);
     expect(UserProfile.createWithId).toBeCalledWith("user-id", {
-      username: "My_Username",
+      username: "My_User name",
     });
   });
 
@@ -168,7 +171,7 @@ describe("user/provision", () => {
     const res = createResponse();
     const req = createRequest({
       body: {
-        username: "My_Username",
+        username: "My_User name",
       },
       userPermissions: {
         provisioned: false,
@@ -179,7 +182,7 @@ describe("user/provision", () => {
 
     expect(updateSpy).toBeCalledTimes(1);
     expect(updateSpy).toBeCalledWith("user-id", {
-      displayName: "My_Username",
+      displayName: "My_User name",
     });
   });
 

@@ -16,13 +16,6 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
-  if (/[^a-z0-9_]/i.test(username)) {
-    res.status(400).json({
-      message: "Username must only have alphanumeric characters or _.",
-    });
-    return;
-  }
-
   if (permissions.provisioned) {
     res.status(400).json({
       message: "User is already provisioned.",
@@ -30,7 +23,15 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
-  const normalizedUsername = username.toLowerCase();
+  const normalizedUsername = username.toLowerCase().replace(/\s/g, "");
+
+  if (/[^a-z0-9_]/i.test(normalizedUsername)) {
+    res.status(400).json({
+      message: "Username must only have alphanumeric characters or _.",
+    });
+    return;
+  }
+
   const usernameTaken = await Username.exists(normalizedUsername);
   if (usernameTaken) {
     res.status(400).json({
