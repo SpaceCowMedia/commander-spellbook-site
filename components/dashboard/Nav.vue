@@ -63,12 +63,6 @@ export default Vue.extend({
   },
   async mounted() {
     const permissions = await this.$store.dispatch("auth/lookupPermissions");
-    const user = this.$fire.auth.currentUser;
-
-    if (!user) {
-      this.signout();
-      return;
-    }
 
     this.permissions.proposeCombo = permissions.proposeCombo;
     this.permissions.manageUserPermissions = permissions.manageUserPermissions;
