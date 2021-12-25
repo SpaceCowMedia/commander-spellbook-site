@@ -37,6 +37,10 @@ const apiSetup: Plugin = (nuxt): void => {
       ...fetchOptions,
     };
 
+    if (options.body) {
+      options.body = JSON.stringify(options.body);
+    }
+
     return fetch(`${baseUrl}${path}`, options)
       .then((res) => {
         status = res.status;

@@ -112,13 +112,49 @@ describe("api", () => {
 
     await Vue.prototype.$api("/path", {
       method: "POST",
-      body: "{}",
+      foo: "bar",
     });
 
     expect(global.fetch).toBeCalledTimes(1);
     expect(global.fetch).toBeCalledWith("https://example.com/v1/path", {
       method: "POST",
-      body: "{}",
+      foo: "bar",
+      headers: {
+        Authorization: "Bearer token",
+        "Content-Type": "application/json",
+      },
+    });
+  });
+
+  it("transforms post body into a string automatically", async () => {
+    setupApi(
+      // @ts-ignore
+      {
+        env: {
+          apiBaseUrl: "https://example.com/v1",
+        },
+        $fire: {
+          // @ts-ignore
+          auth: {
+            // @ts-ignore
+            currentUser: {
+              getIdToken: jest.fn().mockResolvedValue("token"),
+            },
+          },
+        },
+      },
+      null
+    );
+
+    await Vue.prototype.$api("/path", {
+      method: "POST",
+      body: { foo: "bar" },
+    });
+
+    expect(global.fetch).toBeCalledTimes(1);
+    expect(global.fetch).toBeCalledWith("https://example.com/v1/path", {
+      method: "POST",
+      body: '{"foo":"bar"}',
       headers: {
         Authorization: "Bearer token",
         "Content-Type": "application/json",
