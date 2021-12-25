@@ -1,5 +1,6 @@
 import type { GetterTree, ActionTree, MutationTree } from "vuex";
 import { PERMISSIONS } from "@/lib/constants";
+import type firebase from "firebase";
 import type { RootState } from "./";
 
 type Permissions = {
@@ -71,37 +72,42 @@ export const actions: ActionTree<AuthState, RootState> = {
     await this.$fire.auth.signInWithEmailLink(email, window.location.href);
   },
 
-  lookupPermissions(): Promise<Permissions> {
+  lookupUser(): Promise<firebase.User | null> {
     return new Promise((resolve) => {
-      const unsubscribe = this.$fire.auth.onAuthStateChanged(async (user) => {
+      const unsubscribe = this.$fire.auth.onAuthStateChanged((user) => {
         unsubscribe();
 
-        if (!user) {
-          resolve({
-            proposeCombo: false,
-            manageUserPermissions: false,
-            viewUsers: false,
-          });
-          return;
-        }
-
-        await user.getIdToken(true);
-        const token = await user.getIdTokenResult();
-        const provisioned = token.claims[PERMISSIONS.provisioned] === 1;
-
-        this.commit("auth/setUser", {
-          email: user.email,
-          displayName: user.displayName,
-          provisioned,
-        });
-
-        resolve({
-          proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
-          manageUserPermissions:
-            token.claims[PERMISSIONS.manageUserPermissions] === 1,
-          viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
-        });
+        resolve(user);
       });
+    });
+  },
+
+  async lookupPermissions(): Promise<Permissions> {
+    const user = await this.dispatch("auth/lookupUser");
+
+    if (!user) {
+      return Promise.resolve({
+        proposeCombo: false,
+        manageUserPermissions: false,
+        viewUsers: false,
+      });
+    }
+
+    await user.getIdToken(true);
+    const token = await user.getIdTokenResult();
+    const provisioned = token.claims[PERMISSIONS.provisioned] === 1;
+
+    this.commit("auth/setUser", {
+      email: user.email,
+      displayName: user.displayName,
+      provisioned,
+    });
+
+    return Promise.resolve({
+      proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
+      manageUserPermissions:
+        token.claims[PERMISSIONS.manageUserPermissions] === 1,
+      viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
     });
   },
 

@@ -1,3 +1,4 @@
+import { mocked } from "ts-jest/utils";
 import { state, getters, mutations, actions } from "~/store/auth";
 import { PERMISSIONS } from "~/lib/constants";
 
@@ -189,9 +190,9 @@ describe("Auth Store", () => {
       });
     });
 
-    describe("lookupPermissions", () => {
+    describe("lookupUser", () => {
       it("calls $fire.auth.onAuthStateChanged", async () => {
-        await (actions.lookupPermissions as Function)();
+        await (actions.lookupUser as Function)();
 
         expect(auth.onAuthStateChanged).toBeCalledTimes(1);
       });
@@ -203,18 +204,17 @@ describe("Auth Store", () => {
           return unsub;
         });
 
-        await (actions.lookupPermissions as Function)();
+        await (actions.lookupUser as Function)();
 
         expect(unsub).toBeCalledTimes(1);
       });
+    });
 
+    describe("lookupPermissions", () => {
       it("resolves with an empty object when no user is available", async () => {
-        auth.onAuthStateChanged.mockImplementation((cb) => {
-          setTimeout(() => {
-            cb();
-          }, 1);
-          return jest.fn();
-        });
+        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        dispatch.mockResolvedValue(null);
+
         const permissions = await (actions.lookupPermissions as Function)();
 
         expect(permissions).toEqual({
@@ -240,12 +240,9 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        auth.onAuthStateChanged.mockImplementation((cb) => {
-          setTimeout(() => {
-            cb(user);
-          }, 1);
-          return jest.fn();
-        });
+        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        dispatch.mockResolvedValue(user);
+
         const permissions = await (actions.lookupPermissions as Function)();
 
         expect(permissions).toEqual({
@@ -271,12 +268,9 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        auth.onAuthStateChanged.mockImplementation((cb) => {
-          setTimeout(() => {
-            cb(user);
-          }, 1);
-          return jest.fn();
-        });
+        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        dispatch.mockResolvedValue(user);
+
         await (actions.lookupPermissions as Function)();
 
         expect(actions.commit).toBeCalledTimes(1);
