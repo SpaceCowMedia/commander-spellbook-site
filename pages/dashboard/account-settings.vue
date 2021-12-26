@@ -14,7 +14,7 @@
           v-model="email"
           label="Email"
           :disabled="true"
-          helper-text="This is what you use to sign in to Commander Spellbook. Contact an admin on Discord if you need to change your email address."
+          helper-text="This is what you use to sign in to Commander Spellbook. TODO: make this able to be updated."
         />
 
         <div>
