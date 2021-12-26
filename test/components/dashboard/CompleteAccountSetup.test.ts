@@ -175,8 +175,7 @@ describe("DashboardCompleteAccountSetup", () => {
 
       expect($api).toBeCalledTimes(1);
       expect($api).toBeCalledWith("/user/provision", {
-        method: "post",
-        body: { username: "My Username" },
+        username: "My Username",
       });
     });
 
@@ -189,6 +188,8 @@ describe("DashboardCompleteAccountSetup", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
+      $store.dispatch.mockReset();
+
       wrapper.setData({
         username: "My Username",
       });
@@ -199,8 +200,26 @@ describe("DashboardCompleteAccountSetup", () => {
       expect($store.dispatch).toBeCalledWith("auth/lookupPermissions");
     });
 
-    it("does not refresh permissions if there is an error", () => {
-      // TODO
+    it("does not refresh permissions if there is an error", async () => {
+      const wrapper = shallowMount(CompleteAccountSetup, {
+        mocks: {
+          $store,
+          $api,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      $store.dispatch.mockReset();
+      $api.mockRejectedValue(new Error("error message"));
+
+      wrapper.setData({
+        username: "My Username",
+      });
+
+      await vm.provision();
+
+      expect(vm.error).toBe("error message");
+      expect($store.dispatch).not.toBeCalled();
     });
   });
 });
