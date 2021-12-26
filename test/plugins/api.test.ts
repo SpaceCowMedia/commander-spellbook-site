@@ -90,7 +90,7 @@ describe("api", () => {
     });
   });
 
-  it("can pass additional options to fetch", async () => {
+  it("sends post request when a post body is provided", async () => {
     setupApi(
       // @ts-ignore
       {
@@ -111,50 +111,15 @@ describe("api", () => {
     );
 
     await Vue.prototype.$api("/path", {
-      method: "POST",
-      foo: "bar",
+      foo: {
+        bar: "baz",
+      },
     });
 
     expect(global.fetch).toBeCalledTimes(1);
     expect(global.fetch).toBeCalledWith("https://example.com/v1/path", {
-      method: "POST",
-      foo: "bar",
-      headers: {
-        Authorization: "Bearer token",
-        "Content-Type": "application/json",
-      },
-    });
-  });
-
-  it("transforms post body into a string automatically", async () => {
-    setupApi(
-      // @ts-ignore
-      {
-        env: {
-          apiBaseUrl: "https://example.com/v1",
-        },
-        $fire: {
-          // @ts-ignore
-          auth: {
-            // @ts-ignore
-            currentUser: {
-              getIdToken: jest.fn().mockResolvedValue("token"),
-            },
-          },
-        },
-      },
-      null
-    );
-
-    await Vue.prototype.$api("/path", {
-      method: "POST",
-      body: { foo: "bar" },
-    });
-
-    expect(global.fetch).toBeCalledTimes(1);
-    expect(global.fetch).toBeCalledWith("https://example.com/v1/path", {
-      method: "POST",
-      body: '{"foo":"bar"}',
+      method: "post",
+      body: '{"foo":{"bar":"baz"}}',
       headers: {
         Authorization: "Bearer token",
         "Content-Type": "application/json",
@@ -194,8 +159,7 @@ describe("api", () => {
 
     try {
       await Vue.prototype.$api("/path", {
-        method: "POST",
-        body: "{}",
+        foo: "bar",
       });
     } catch (e) {
       expect(e.message).toBe("400 error message from response");
@@ -208,8 +172,7 @@ describe("api", () => {
 
     try {
       await Vue.prototype.$api("/path", {
-        method: "POST",
-        body: "{}",
+        foo: "bar",
       });
     } catch (e) {
       expect(e.message).toBe("422 error message from response");
@@ -222,8 +185,7 @@ describe("api", () => {
 
     try {
       await Vue.prototype.$api("/path", {
-        method: "POST",
-        body: "{}",
+        foo: "bar",
       });
     } catch (e) {
       expect(e.message).toBe("500 error message from response");
@@ -235,8 +197,7 @@ describe("api", () => {
     });
 
     const res = await Vue.prototype.$api("/path", {
-      method: "POST",
-      body: "{}",
+      foo: "bar",
     });
 
     expect(res.value).toBe("not an error");

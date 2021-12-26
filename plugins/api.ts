@@ -2,11 +2,12 @@ import Vue from "vue";
 import { Plugin } from "@nuxt/types";
 
 type FetchOptions = Parameters<typeof fetch>[1];
+
 declare module "vue/types/vue" {
   interface Vue {
     $api(
       path: string,
-      fetchOptions: FetchOptions
+      body?: Record<string, unknown>
     ): Promise<Record<string, unknown>>;
   }
 }
@@ -17,7 +18,7 @@ const apiSetup: Plugin = (nuxt): void => {
 
   Vue.prototype.$api = async function (
     path: string,
-    fetchOptions: FetchOptions = {}
+    body: Record<string, unknown>
   ) {
     let status: number;
     const user = $fire.auth.currentUser;
@@ -29,16 +30,17 @@ const apiSetup: Plugin = (nuxt): void => {
     }
 
     const token = await user.getIdToken();
-    const options = {
+
+    const options: FetchOptions = {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      ...fetchOptions,
     };
 
-    if (options.body) {
-      options.body = JSON.stringify(options.body);
+    if (body) {
+      options.method = "post";
+      options.body = JSON.stringify(body);
     }
 
     return fetch(`${baseUrl}${path}`, options)
