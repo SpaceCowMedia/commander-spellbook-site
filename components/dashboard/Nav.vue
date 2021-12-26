@@ -16,7 +16,14 @@
           aria-hidden="true"
         />
       </NuxtLink>
-      <div class="md:h-1/3 py-4 md:ml-2 md:m-h-32 bg-dark md:rounded-l-lg">
+      <div
+        class="
+          bg-dark
+          py-4
+          px-4
+          md:h-1/3 md:ml-2 md:m-h-32 md:pr-0 md:rounded-l-lg
+        "
+      >
         <ul v-if="loaded">
           <li>
             <NuxtLink to="/dashboard/">Recent Activity</NuxtLink>
@@ -84,15 +91,21 @@ nav {
 }
 
 nav ul li a {
-  @apply text-white no-underline px-4 w-full inline-block  py-2 ml-4;
+  @apply text-white no-underline px-4 w-full inline-block py-2;
 }
 
 nav ul li a.nuxt-link-exact-active {
-  @apply text-dark bg-white rounded-l-md ml-4;
+  @apply text-dark bg-white rounded-md;
 }
 
 .biblioplex-bg {
   background: url("~assets/images/hi-res-mtg/The-Biblioplex.jpg");
   @apply absolute top-0 bottom-0 left-0 right-0 opacity-25 bg-cover bg-center;
+}
+
+@media (min-width: 768px) {
+  nav ul li a.nuxt-link-exact-active {
+    @apply rounded-r-none;
+  }
 }
 </style>
