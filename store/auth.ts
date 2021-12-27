@@ -97,6 +97,14 @@ export const actions: ActionTree<AuthState, RootState> = {
     const token = await user.getIdTokenResult();
     const provisioned = token.claims[PERMISSIONS.provisioned] === 1;
 
+    // when the user is first created, the display name is set
+    // on the server, but it doesn't populate automatically,
+    // so we need to manually reload the user to get the display
+    // name to be available right away
+    if (user.displayName == null) {
+      await user.reload();
+    }
+
     this.commit("auth/setUser", {
       email: user.email,
       displayName: user.displayName,

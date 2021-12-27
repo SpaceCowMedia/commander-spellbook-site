@@ -252,6 +252,53 @@ describe("Auth Store", () => {
         });
       });
 
+      it("reloads the user when the display name is not immediately available", async () => {
+        const provisionedResult = {
+          claims: {
+            [PERMISSIONS.provisioned]: 1,
+            [PERMISSIONS.proposeCombo]: 1,
+          },
+        };
+
+        const user = {
+          email: "user@example.com",
+          reload: jest.fn().mockResolvedValue({}),
+          getIdToken: jest.fn().mockResolvedValue({}),
+          getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
+        };
+
+        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        dispatch.mockResolvedValue(user);
+
+        await (actions.lookupPermissions as Function)();
+
+        expect(user.reload).toBeCalledTimes(1);
+      });
+
+      it("does not reload the user when the display name is available", async () => {
+        const provisionedResult = {
+          claims: {
+            [PERMISSIONS.provisioned]: 1,
+            [PERMISSIONS.proposeCombo]: 1,
+          },
+        };
+
+        const user = {
+          email: "user@example.com",
+          displayName: "Name",
+          reload: jest.fn().mockResolvedValue({}),
+          getIdToken: jest.fn().mockResolvedValue({}),
+          getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
+        };
+
+        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        dispatch.mockResolvedValue(user);
+
+        await (actions.lookupPermissions as Function)();
+
+        expect(user.reload).not.toBeCalled();
+      });
+
       it("commits user after looking up permissions", async () => {
         const provisionedResult = {
           claims: {
