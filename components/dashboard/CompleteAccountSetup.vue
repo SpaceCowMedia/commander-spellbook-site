@@ -86,7 +86,9 @@ export default Vue.extend({
         return;
       }
 
-      // TODO with a fast connection, the transition is kind of abrupt. Explore putting a delay or some kind of transition animation for navigating to the dashboard view
+      // TODO with a fast connection, the transition is kind of abrupt.
+      // Explore putting a delay or some kind of transition animation
+      // for navigating to the dashboard view
       await this.$store.dispatch("auth/lookupPermissions");
     },
     onSubmit() {
