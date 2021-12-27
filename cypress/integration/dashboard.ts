@@ -1,4 +1,8 @@
 describe("Dashboard", () => {
+  afterEach(() => {
+    cy.logout();
+  });
+
   it("requires authentication", () => {
     cy.visit("/dashboard/");
 
@@ -9,7 +13,21 @@ describe("Dashboard", () => {
     cy.visit("/dashboard/");
 
     cy.url().should("include", "/dashboard/");
+  });
 
-    cy.logout();
+  it("requires user to be provisioned", () => {
+    cy.login("unprovisioned-user");
+
+    cy.visit("/dashboard/");
+
+    cy.get("#complete-account-setup").should("have.length", 1);
+    cy.get("nav").should("have.length", 0);
+
+    cy.login("basic-user");
+
+    cy.visit("/dashboard/");
+
+    cy.get("#complete-account-setup").should("have.length", 0);
+    cy.get("nav").should("have.length", 1);
   });
 });
