@@ -1,7 +1,7 @@
 import { https } from "firebase-functions";
 import admin from "firebase-admin";
-import apiV1 from "./api/v1";
+import apiApp from "./api";
 
 admin.initializeApp();
 
-export const v1 = https.onRequest(apiV1);
+export const api = https.onRequest(apiApp);

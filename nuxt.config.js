@@ -18,7 +18,7 @@ let apiBaseUrl = "https://api.commanderspellbook.com/v1";
 
 // TODO staging url
 if (useEmulators) {
-  apiBaseUrl = "http://localhost:5001/commander-spellbook-prod/us-central1/v1";
+  apiBaseUrl = "http://localhost:5000/v1";
 } else if (isDev) {
   apiBaseUrl = "https://api-local.commanderspellbook.com/v1";
 } else if (isStaging) {
