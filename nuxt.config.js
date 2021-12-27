@@ -10,7 +10,7 @@ const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
-const isDev = process.env.NODE_ENVIRONMENT === "development";
+const isDev = process.env.NODE_ENV === "development";
 const useEmulators = isDev && process.env.USE_FIREBASE_EMULATORS === "true";
 
 let apiBaseUrl = "https://api.commanderspellbook.com/v1";

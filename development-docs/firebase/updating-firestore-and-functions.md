@@ -55,11 +55,11 @@ The `firebase-functions/src/db-hooks` directory contains files that manage data 
 
 # Emulators
 
-To run the functions and auth locally, first create or modify an `.env` file in the root of the repository with `USE_FIREBASE_EMULATORS` set to true and `NODE_ENVIRONMENT` set to development:
+To run the functions and auth locally, first create or modify an `.env` file in the root of the repository with `USE_FIREBASE_EMULATORS` set to true and `NODE_ENV` set to development:
 
 ```bash
 USE_FIREBASE_EMULATORS=true
-NODE_ENVIRONMENT=development
+NODE_ENV=development
 ```
 
 You will also need [Java](https://www.java.com/) installed on your machine to run the emulators.
