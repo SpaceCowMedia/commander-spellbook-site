@@ -11,6 +11,7 @@ const description =
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
 const isDev = process.env.NODE_ENV === "development";
+const isStaging = process.env.NODE_ENV === "staging";
 const useEmulators = isDev && process.env.USE_FIREBASE_EMULATORS === "true";
 
 let apiBaseUrl = "https://api.commanderspellbook.com/v1";
@@ -20,6 +21,8 @@ if (useEmulators) {
   apiBaseUrl = "http://localhost:5001/commander-spellbook-prod/us-central1/v1";
 } else if (isDev) {
   apiBaseUrl = "https://local-api.commanderspellbook.com/v1";
+} else if (isStaging) {
+  apiBaseUrl = "https://staging-api.commanderspellbook.com/v1";
 }
 
 export default {
