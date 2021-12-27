@@ -2,7 +2,7 @@
   "hosting": {
     "rewrites": [
       {
-        "source": "/v1",
+        "source": "/v1/**",
         "function": "v1"
       }
     ]
