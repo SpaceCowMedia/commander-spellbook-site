@@ -90,6 +90,9 @@ describe("Email Auth", () => {
       stubs: {
         ErrorMessage: ErrorMessageStub,
       },
+      propsData: {
+        includeDisplayName: true,
+      },
     });
 
     await wrapper.setData({

@@ -1,5 +1,8 @@
 <template>
-  <div>Coming Soon</div>
+  <div>
+    <h1 class="heading-title">Propose New Combo</h1>
+    <p>Coming Soon</p>
+  </div>
 </template>
 
 <script lang="ts">

@@ -10,7 +10,9 @@
         <p>Your account is almost set up. All we need now is a username.</p>
 
         <form @submit.prevent="onSubmit">
+          <label class="sr-only" for="display-name-input">Display Name</label>
           <input
+            id="display-name-input"
             v-model="username"
             class="input mt-2"
             placeholder="MyAwesomeUsername"

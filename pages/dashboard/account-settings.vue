@@ -1,8 +1,10 @@
 <template>
   <div>
+    <h1 class="heading-title">Account Settings</h1>
     <DashboardSection title="Profile Settings">
       <form @submit.prevent="updateProfile">
         <ProfileInput
+          id="account-settings-display-name-input"
           v-model="displayName"
           class="mt-0"
           label="Display Name"
@@ -11,6 +13,7 @@
         />
 
         <ProfileInput
+          id="account-settings-email-input"
           v-model="email"
           label="Email"
           :disabled="true"

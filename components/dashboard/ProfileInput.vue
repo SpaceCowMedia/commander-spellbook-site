@@ -1,11 +1,12 @@
 <template>
   <div class="my-4">
-    <label>{{ label }}</label>
+    <label :for="id">{{ label }}</label>
     <div>
       <input
         v-model="localState"
         type="text"
         class="input"
+        :id="id"
         :disabled="disabled"
       />
     </div>
@@ -18,6 +19,10 @@ import Vue from "vue";
 
 export default Vue.extend({
   props: {
+    id: {
+      type: String,
+      default: "",
+    },
     label: {
       type: String,
       default: "",

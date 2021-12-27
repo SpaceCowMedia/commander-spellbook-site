@@ -19,17 +19,19 @@
           />
           <ErrorMessage id="email-error" :message="emailError" />
 
-          <input
-            v-if="includeDisplayName"
-            id="display-name"
-            v-model="displayName"
-            class="input mt-1"
-            :class="{ 'border border-red-400': displayNameError }"
-            type="text"
-            placeholder="display name"
-            @input="displayNameError = ''"
-          />
-          <ErrorMessage id="display-name-error" :message="displayNameError" />
+          <div v-if="includeDisplayName">
+            <label class="sr-only" for="display-name">Display Name</label>
+            <input
+              id="display-name"
+              v-model="displayName"
+              class="input mt-1"
+              :class="{ 'border border-red-400': displayNameError }"
+              type="text"
+              placeholder="display name"
+              @input="displayNameError = ''"
+            />
+            <ErrorMessage id="display-name-error" :message="displayNameError" />
+          </div>
         </div>
 
         <button type="submit" class="button w-full">
