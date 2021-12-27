@@ -46,14 +46,16 @@ export default Vue.extend({
     const user = this.$store.getters["auth/user"];
 
     return {
-      displayName: user.displayName,
-      email: user.email,
+      // TODO figure out why display name can be unset here
+      displayName: user.displayName || "",
+      email: user.email || "",
       error: "",
     };
   },
   computed: {
     isUpdateable(): boolean {
       const user = this.$store.getters["auth/user"];
+
       return (
         user.displayName !== this.displayName.trim() ||
         user.email !== this.email.trim()
