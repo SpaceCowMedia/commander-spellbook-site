@@ -1,4 +1,12 @@
 {
+  "hosting": {
+    "rewrites": [
+      {
+        "source": "/v1",
+        "function": "v1"
+      }
+    ]
+  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
