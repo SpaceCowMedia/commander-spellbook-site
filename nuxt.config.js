@@ -20,9 +20,9 @@ let apiBaseUrl = "https://api.commanderspellbook.com/v1";
 if (useEmulators) {
   apiBaseUrl = "http://localhost:5001/commander-spellbook-prod/us-central1/v1";
 } else if (isDev) {
-  apiBaseUrl = "https://local-api.commanderspellbook.com/v1";
+  apiBaseUrl = "https://api-local.commanderspellbook.com/v1";
 } else if (isStaging) {
-  apiBaseUrl = "https://staging-api.commanderspellbook.com/v1";
+  apiBaseUrl = "https://api-staging.commanderspellbook.com/v1";
 }
 
 export default {
