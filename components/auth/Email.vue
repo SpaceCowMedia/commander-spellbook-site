@@ -42,7 +42,7 @@
       <slot />
     </div>
 
-    <div id="link-sent-text" v-else>{{ linkSentText }}</div>
+    <div id="link-sent-text" v-else role="alert">{{ linkSentText }}</div>
   </div>
 </template>
 

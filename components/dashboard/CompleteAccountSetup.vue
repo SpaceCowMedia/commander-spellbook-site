@@ -2,7 +2,7 @@
   <div class="w-full flex h-full justify-center center-items gradient">
     <div class="bg-white p-4 rounded m-auto">
       <div v-if="!loaded" class="mx-16">
-        <h1 class="heading-title">Loading</h1>
+        <h1 class="heading-title" role="alert">Loading</h1>
         <div class="spinner mt-4 h-32 w-32 bg-gray-300 m-auto"></div>
       </div>
       <div id="complete-account-setup" v-else>
