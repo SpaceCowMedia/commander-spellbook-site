@@ -21,13 +21,13 @@ describe("Dashboard", () => {
     cy.visit("/dashboard/");
 
     cy.get("#complete-account-setup").should("have.length", 1);
-    cy.get("nav").should("have.length", 0);
+    cy.get("nav").should("not.exist");
 
     cy.login("basic-user");
 
     cy.visit("/dashboard/");
 
-    cy.get("#complete-account-setup").should("have.length", 0);
+    cy.get("#complete-account-setup").should("not.exist");
     cy.get("nav").should("have.length", 1);
   });
 });
