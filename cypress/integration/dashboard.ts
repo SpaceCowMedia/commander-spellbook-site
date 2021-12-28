@@ -22,15 +22,5 @@ describe("Dashboard", () => {
 
     cy.get("#complete-account-setup").should("exist");
     cy.get("nav").should("not.exist");
-
-    cy.logout();
-
-    cy.login("basic-user");
-
-    cy.visit("/");
-    cy.visit("/dashboard/");
-
-    cy.get("#complete-account-setup").should("not.exist");
-    cy.get("nav").should("exist");
   });
 });
