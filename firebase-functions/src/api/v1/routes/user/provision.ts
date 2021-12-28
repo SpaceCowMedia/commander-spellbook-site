@@ -40,6 +40,8 @@ export default async function provision(req: Request, res: Response) {
     return;
   }
 
+  const auth = admin.auth();
+
   await Promise.all([
     Username.createWithId(normalizedUsername, {
       userId,
@@ -47,17 +49,14 @@ export default async function provision(req: Request, res: Response) {
     UserProfile.createWithId(userId, {
       username,
     }),
+    auth.updateUser(userId, {
+      displayName: username,
+    }),
+    auth.setCustomUserClaims(userId, {
+      [PERMISSIONS.provisioned]: 1,
+      [PERMISSIONS.proposeCombo]: 1,
+    }),
   ]);
-
-  const auth = admin.auth();
-
-  await auth.updateUser(userId, {
-    displayName: username,
-  });
-  await auth.setCustomUserClaims(userId, {
-    [PERMISSIONS.provisioned]: 1,
-    [PERMISSIONS.proposeCombo]: 1,
-  });
 
   res.status(201).json({
     permissions: {
