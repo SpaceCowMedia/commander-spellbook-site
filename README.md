@@ -18,33 +18,6 @@ We encourage you to copy this data so it lives on!
 - [Jaelyn Rosenquist](https://twitter.com/rosequartz_26)
 - [Senior Edificer (Emeritus)](https://www.moxfield.com/users/SeniorEdificer)
 
-## Installation Requirements
+## Development
 
-Install [Node v14](https://nodejs.org/). This will also install the `npm` command line tool.
-
-If you are already using the [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm) tool, you can run `nvm install` in the directory to get the correct version of node.
-
-## Build Setup
-
-```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
-
-## Updating Featured Combos on Home Page
-
-To update what combos are designated as featured, update the script at [./scripts/download-data/is-featured.ts](./scripts/download-data/is-featured.ts). This will typically be the set codes for whatever the most recent sets are.
-
-In addition, go to the Home page component and update the button text to be relevant for whatever combos are being featured.
+See [the development docs](./development-docs/) for information.

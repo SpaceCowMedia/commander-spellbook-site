@@ -1,3 +1,8 @@
+import dotenv from "dotenv";
+import fbConfig from "./firebase-config";
+
+dotenv.config();
+
 const isWindows = process.platform === "win32";
 
 const title = "Commander Spellbook: The Search Engine for EDH Combos";
@@ -5,9 +10,28 @@ const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
+const isDev = process.env.NODE_ENV === "development";
+const isStaging = process.env.NODE_ENV === "staging";
+const useEmulators = isDev && process.env.USE_FIREBASE_EMULATORS === "true";
+
+let apiBaseUrl = "https://api.commanderspellbook.com/v1";
+
+// TODO staging url
+if (useEmulators) {
+  apiBaseUrl = "http://localhost:5000/v1";
+} else if (isDev) {
+  apiBaseUrl = "https://api-local.commanderspellbook.com/v1";
+} else if (isStaging) {
+  apiBaseUrl = "https://api-staging.commanderspellbook.com/v1";
+}
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
+
+  env: {
+    apiBaseUrl,
+  },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -116,6 +140,7 @@ export default {
 
   router: {
     trailingSlash: true,
+    middleware: ["authenticated"],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
@@ -130,6 +155,14 @@ export default {
       mode: "client",
     },
     "~/plugins/vue-tooltip.ts",
+    {
+      src: "./plugins/fireauth.ts",
+      mode: "client",
+    },
+    {
+      src: "./plugins/api.ts",
+      mode: "client",
+    },
   ],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
@@ -143,13 +176,29 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
+  modules: [
+    "@nuxtjs/google-fonts",
+    "vue-social-sharing/nuxt",
+    "@nuxtjs/firebase",
+  ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+
+  firebase: {
+    config: fbConfig,
+    services: {
+      auth: {
+        emulatorPort: useEmulators ? 9099 : null,
+      },
+      firestore: {
+        emulatorPort: useEmulators ? 8080 : null,
+      },
+    },
+  },
 
   tailwindcss: {
     jit: !isWindows,

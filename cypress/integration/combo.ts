@@ -30,24 +30,28 @@ describe("Combo Detail Page", () => {
 
     cy.get("#copy-combo-button").click();
 
-    cy.window().then((win) => {
+    cy.wait(500);
+
+    return cy.window().then((win) => {
       const ta = win.document.createElement("textarea");
       ta.id = "paste-helper";
       win.document.body.appendChild(ta);
-      win.navigator.clipboard
+
+      return win.navigator.clipboard
         .readText()
         .then((text) => {
           ta.value = text;
         })
         .catch((err) => {
           ta.value = err.message;
+        })
+        .then(() => {
+          cy.get("#paste-helper").should(
+            "have.value",
+            "https://commanderspellbook.com/combo/450/"
+          );
         });
     });
-
-    cy.get("#paste-helper").should(
-      "have.value",
-      "https://commanderspellbook.com/combo/450/"
-    );
   });
 
   it("can buy combo on TCGplayer", () => {

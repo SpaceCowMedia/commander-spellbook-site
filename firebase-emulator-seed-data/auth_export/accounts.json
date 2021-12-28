@@ -1,0 +1,79 @@
+{
+  "kind": "identitytoolkit#DownloadAccountResponse",
+  "users": [
+    {
+      "localId": "basic-user",
+      "createdAt": "1634440907181",
+      "lastLoginAt": "1640376017565",
+      "displayName": "Basic Test User",
+      "photoUrl": "",
+      "passwordHash": "fakeHash:salt=fakeSaltArtmO9VWo7OR0g0Ynl6a:password=asdfasdf",
+      "salt": "fakeSaltArtmO9VWo7OR0g0Ynl6a",
+      "passwordUpdatedAt": 1640376154418,
+      "customAttributes": "{\"r\":1,\"p\":1}",
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "basic-user@example.com",
+          "federatedId": "basic-user@example.com",
+          "rawId": "basic-user@example.com",
+          "displayName": "Basic Test User",
+          "photoUrl": ""
+        }
+      ],
+      "validSince": "1640376154",
+      "email": "basic-user@example.com",
+      "emailVerified": true,
+      "disabled": false
+    },
+    {
+      "localId": "email-not-verified",
+      "createdAt": "1640375768313",
+      "lastLoginAt": "1640375811751",
+      "displayName": "Email Not Verified",
+      "photoUrl": "",
+      "passwordHash": "fakeHash:salt=fakeSaltGS6ZZabTAiYu5AusbZZ8:password=asdfasdf",
+      "salt": "fakeSaltGS6ZZabTAiYu5AusbZZ8",
+      "passwordUpdatedAt": 1640376154418,
+      "customAttributes": "{\"r\":1,\"p\":1}",
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "email-not-verified-user@gmail.com",
+          "federatedId": "email-not-verified-user@gmail.com",
+          "rawId": "email-not-verified-user@gmail.com",
+          "displayName": "Email Not Verified",
+          "photoUrl": ""
+        }
+      ],
+      "validSince": "1640376154",
+      "email": "email-not-verified-user@gmail.com",
+      "emailVerified": false,
+      "disabled": false
+    },
+    {
+      "localId": "unprovisioned-user",
+      "createdAt": "1640375346220",
+      "lastLoginAt": "1640375346219",
+      "displayName": "Unprovisioned User",
+      "photoUrl": "",
+      "passwordHash": "fakeHash:salt=fakeSalt7bunTtSPM8SZu5fzQu6S:password=asdfasdf",
+      "salt": "fakeSalt7bunTtSPM8SZu5fzQu6S",
+      "passwordUpdatedAt": 1640376154418,
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "unprovisioned-user@example.com",
+          "federatedId": "unprovisioned-user@example.com",
+          "rawId": "unprovisioned-user@example.com",
+          "displayName": "Unprovisioned User",
+          "photoUrl": ""
+        }
+      ],
+      "validSince": "1640376154",
+      "email": "unprovisioned-user@example.com",
+      "emailVerified": true,
+      "disabled": false
+    }
+  ]
+}

@@ -15,6 +15,18 @@ export type Store = {
   state: {
     query: QueryState;
   };
+  getters: Record<string, any>;
   commit: jest.SpyInstance;
+  dispatch: jest.SpyInstance;
+};
+export type Firebase = {
+  auth: {
+    currentUser?: {
+      email: string;
+      displayName: string;
+      getIdToken: jest.SpyInstance;
+      getIdTokenResult: jest.SpyInstance;
+    };
+  };
 };
 export type VueComponent = Record<string, any>;

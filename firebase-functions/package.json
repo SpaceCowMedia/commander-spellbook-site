@@ -1,0 +1,31 @@
+{
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "14"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.8.0",
+    "firebase-functions": "^3.14.1",
+    "scryfall-client": "^0.19.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.3",
+    "jest": "^27.2.5",
+    "ts-jest": "^27.0.5",
+    "typescript": "^3.8.0"
+  },
+  "private": true
+}
