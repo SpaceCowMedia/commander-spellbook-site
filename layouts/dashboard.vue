@@ -9,7 +9,7 @@
       </main>
     </div>
     <div v-else>
-      <CompleteAccountSetup class="md:h-screen" />
+      <CompleteAccountSetup class="h-screen px-2" />
     </div>
   </div>
 </template>
