@@ -1,10 +1,10 @@
+import { mocked } from "ts-jest/utils";
 import findById from "@/lib/api/find-by-id";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import lookup from "@/lib/api/spellbook-api";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
 jest.mock("@/lib/api/spellbook-api");
 
 describe("findById", () => {

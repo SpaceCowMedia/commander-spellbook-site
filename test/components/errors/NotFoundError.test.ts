@@ -1,12 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
-import getRandomItemFromArray from "@/lib/random-from-array";
-import NotFoundErrorComponent from "@/components/errors/not-found.vue";
-import ErrorBaseComponent from "@/components/errors/error-base.vue";
-
 import { mocked } from "ts-jest/utils";
+import getRandomItemFromArray from "@/lib/random-from-array";
+import NotFoundError from "@/components/errors/NotFoundError.vue";
+import ErrorBase from "@/components/errors/ErrorBase.vue";
+
 jest.mock("@/lib/random-from-array");
 
-describe("NotFoundErrorComponent", () => {
+describe("NotFoundError", () => {
   beforeEach(() => {
     mocked(getRandomItemFromArray).mockReturnValue([
       "mock-class",
@@ -15,14 +15,14 @@ describe("NotFoundErrorComponent", () => {
   });
 
   it("sets a random background class", () => {
-    const wrapper = shallowMount(NotFoundErrorComponent);
+    const wrapper = shallowMount(NotFoundError);
     expect(wrapper.vm.$data.notFoundClass).toBe("mock-class");
     expect(wrapper.vm.$data.notFoundMessage).toBe("mock message");
   });
 
   it("creates an Error Base Component", () => {
-    const wrapper = shallowMount(NotFoundErrorComponent);
-    const baseError = wrapper.findComponent(ErrorBaseComponent);
+    const wrapper = shallowMount(NotFoundError);
+    const baseError = wrapper.findComponent(ErrorBase);
 
     expect(baseError).toBeTruthy();
     expect(baseError.props("mainMessage")).toBe("Page Not Found");

@@ -5,7 +5,7 @@
         <h1 class="heading-title" role="alert">Loading</h1>
         <div class="spinner mt-4 h-32 w-32 bg-gray-300 m-auto"></div>
       </div>
-      <div id="complete-account-setup" v-else>
+      <div v-else id="complete-account-setup">
         <h1 class="heading-title">Almost Done</h1>
         <p>Your account is almost set up. All we need now is a username.</p>
 

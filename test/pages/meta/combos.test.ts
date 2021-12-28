@@ -1,10 +1,9 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
+import type { VueComponent } from "../../types";
 import ComboHomePage from "@/pages/meta/combos.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import getAllCombos from "@/lib/api/get-all-combos";
-import { mocked } from "ts-jest/utils";
-
-import type { VueComponent } from "../../types";
 
 jest.mock("@/lib/api/get-all-combos");
 

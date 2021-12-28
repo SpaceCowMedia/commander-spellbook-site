@@ -1,11 +1,10 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
+import { mocked } from "ts-jest/utils";
+import type { Route, Router } from "../types";
 import RandomPage from "@/pages/random.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import random from "@/lib/api/random";
-import { mocked } from "ts-jest/utils";
-
-import type { Route, Router } from "../types";
 
 jest.mock("@/lib/api/random");
 

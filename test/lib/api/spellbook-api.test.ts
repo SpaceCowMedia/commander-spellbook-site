@@ -1,9 +1,8 @@
+import { mocked } from "ts-jest/utils";
 import lookup, { resetCache } from "@/lib/api/spellbook-api";
 import formatApiResponse from "@/lib/api/format-api-response";
 import transformGoogleSheetsData from "@/lib/api/transform-google-sheets-data";
 import { CommanderSpellbookAPIResponse } from "@/lib/api/types";
-
-import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/api/normalize-database-value");
 jest.mock("@/lib/api/format-api-response");

@@ -1,7 +1,7 @@
 import type { GetterTree, ActionTree, MutationTree } from "vuex";
+import type { RootState } from "./";
 import { PERMISSIONS } from "@/lib/constants";
 import type firebase from "firebase";
-import type { RootState } from "./";
 
 type Permissions = {
   proposeCombo: boolean;

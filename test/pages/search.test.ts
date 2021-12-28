@@ -1,10 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
+import type { MountOptions, Route, Router, VueComponent } from "../types";
 import SearchPage from "@/pages/search.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";
-import { mocked } from "ts-jest/utils";
-
-import type { MountOptions, Route, Router, VueComponent } from "../types";
 
 jest.mock("@/lib/api/search");
 
@@ -59,7 +58,7 @@ describe("SearchPage", () => {
         ComboResults: true,
         SearchMessage: true,
         NoCombosFound: true,
-        Pagination: true,
+        SearchPagination: true,
       },
     };
   });
@@ -225,7 +224,7 @@ describe("SearchPage", () => {
         },
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       // add a large number of combos
@@ -292,7 +291,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
@@ -318,7 +317,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({

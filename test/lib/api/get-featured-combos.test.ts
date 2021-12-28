@@ -1,8 +1,8 @@
+import { mocked } from "ts-jest/utils";
 import getFeaturedCombos from "@/lib/api/get-featured-combos";
 import CardGrouping from "@/lib/api/models/card-grouping";
 import lookup from "@/lib/api/spellbook-api";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
-import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/api/spellbook-api");
 

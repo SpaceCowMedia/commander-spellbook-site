@@ -1,16 +1,7 @@
 <template>
   <div class="text-white w-full bg-center bg-cover" :class="containerClass">
     <div
-      class="
-        bg-dark bg-opacity-75
-        w-full
-        h-screen
-        flex flex-col
-        items-center
-        justify-center
-        text-center
-        pb-16
-      "
+      class="bg-dark bg-opacity-75 w-full h-screen flex flex-col items-center justify-center text-center pb-16"
     >
       <h1 class="heading-title hero-title">{{ mainMessage }}</h1>
       <h2 class="hero-subtitle">{{ subMessage }}</h2>

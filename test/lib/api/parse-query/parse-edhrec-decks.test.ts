@@ -1,6 +1,6 @@
+import { makeSearchParams } from "../helper";
 import parseEDHRECDecks from "@/lib/api/parse-query/parse-edhrec-decks";
 import type { SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("parseEDHRECDecks", () => {
   let searchParams: SearchParameters;

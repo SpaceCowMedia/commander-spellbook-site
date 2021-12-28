@@ -1,8 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
 import CardTooltip from "@/components/CardTooltip.vue";
 import getExternalCardData from "@/lib/get-external-card-data";
-
-import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/get-external-card-data");
 

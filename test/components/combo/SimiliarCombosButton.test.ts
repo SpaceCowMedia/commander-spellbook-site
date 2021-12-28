@@ -1,10 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
+import type { VueComponent } from "../../types";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";
-import { mocked } from "ts-jest/utils";
-
-import type { VueComponent } from "../../types";
 
 jest.mock("@/lib/api/search");
 

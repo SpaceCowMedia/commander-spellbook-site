@@ -1,7 +1,7 @@
+import { makeSearchParams } from "../helper";
 import filterIds from "@/lib/api/search-filters/ids";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("idsFilter", () => {
   let combos: FormattedApiResponse[];

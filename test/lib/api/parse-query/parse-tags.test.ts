@@ -1,6 +1,6 @@
+import { makeSearchParams } from "../helper";
 import parseTags from "@/lib/api/parse-query/parse-tags";
 import type { SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 const KINDS: ["banned", "spoiled"] = ["banned", "spoiled"];
 

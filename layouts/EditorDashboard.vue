@@ -17,7 +17,7 @@
 <script lang="ts">
 import Vue from "vue";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
-import DashboardNav from "@/components/dashboard/Nav.vue";
+import DashboardNav from "@/components/dashboard/DashboardNav.vue";
 import CompleteAccountSetup from "@/components/dashboard/CompleteAccountSetup.vue";
 
 export default Vue.extend({

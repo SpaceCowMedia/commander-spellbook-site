@@ -1,3 +1,4 @@
+import { mocked } from "ts-jest/utils";
 import random from "@/lib/api/random";
 import search from "@/lib/api/search";
 import getAllCombos from "@/lib/api/get-all-combos";
@@ -5,7 +6,6 @@ import makeFakeCombo from "@/lib/api/make-fake-combo";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
 jest.mock("@/lib/api/search");
 jest.mock("@/lib/api/get-all-combos");
 

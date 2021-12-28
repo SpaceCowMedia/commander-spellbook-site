@@ -31,9 +31,11 @@ a {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -88,7 +90,6 @@ a {
 }
 
 .spinner {
-  -webkit-mask: url("~assets/svgs/circle-notch-solid.svg") no-repeat center;
   mask: url("~assets/svgs/circle-notch-solid.svg") no-repeat center;
 
   @apply animate-spin;
@@ -118,7 +119,7 @@ a {
 }
 
 .tooltip[x-placement^="top"] .tooltip-arrow {
-  border-width: 0.25rem 0.25rem 0 0.25rem;
+  border-width: 0.25rem 0.25rem 0;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
   border-bottom-color: transparent !important;
@@ -131,7 +132,7 @@ a {
 }
 
 .tooltip[x-placement^="bottom"] .tooltip-arrow {
-  border-width: 0 0.25rem 0.25rem 0.25rem;
+  border-width: 0 0.25rem 0.25rem;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
   border-top-color: transparent !important;

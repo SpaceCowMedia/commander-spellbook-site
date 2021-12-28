@@ -1,7 +1,7 @@
 <template>
   <div class="container relative md:h-screen z-10">
     <div class="w-full">
-      <Logo />
+      <SpellbookLogo />
 
       <h2 class="font-title my-1 sm:my-3 text-2xl sm:text-3xl md:text-4xl">
         The Search Engine for EDH Combos
@@ -43,16 +43,17 @@ import Vue from "vue";
 import RandomButton from "@/components/RandomButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
-import Logo from "@/components/Logo.vue";
+import SpellbookLogo from "@/components/SpellbookLogo.vue";
 
 export default Vue.extend({
+  name: "HomePage",
   components: {
     ExternalLink,
     RandomButton,
     SearchBar,
-    Logo,
+    SpellbookLogo,
   },
-  layout: "landing",
+  layout: "LandingLayout",
   computed: {
     query(): string {
       return this.$store.state.query.value;

@@ -1,9 +1,9 @@
 import { mount } from "@vue/test-utils";
-import Select from "@/components/Select.vue";
+import StyledSelect from "@/components/StyledSelect.vue";
 
-describe("Select", () => {
+describe("StyledSelect", () => {
   it("con configure background class for select", async () => {
-    const wrapper = mount(Select);
+    const wrapper = mount(StyledSelect);
 
     expect(wrapper.classes()).toContain("border");
     expect(wrapper.classes()).toContain("border-dark");
@@ -19,7 +19,7 @@ describe("Select", () => {
   });
 
   it("con configure text class for select", async () => {
-    const wrapper = mount(Select);
+    const wrapper = mount(StyledSelect);
 
     expect(wrapper.find("select").classes()).toContain("text-dark");
     expect(wrapper.find("select").classes()).not.toContain("text-red-100");

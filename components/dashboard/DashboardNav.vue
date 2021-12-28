@@ -17,12 +17,7 @@
         />
       </NuxtLink>
       <div
-        class="
-          bg-dark
-          py-4
-          px-4
-          md:h-1/3 md:ml-2 md:m-h-32 md:pr-0 md:rounded-l-lg
-        "
+        class="bg-dark py-4 px-4 md:h-1/3 md:ml-2 md:m-h-32 md:pr-0 md:rounded-l-lg"
       >
         <ul v-if="loaded">
           <li>

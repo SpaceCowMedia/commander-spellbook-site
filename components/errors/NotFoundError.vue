@@ -1,5 +1,5 @@
 <template>
-  <Error-Base
+  <ErrorBase
     :container-class="notFoundClass"
     main-message="Page Not Found"
     :sub-message="notFoundMessage"
@@ -8,8 +8,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ErrorBase from "./ErrorBase.vue";
 import getRandomItemFromArray from "@/lib/random-from-array";
-import ErrorBaseComponent from "./error-base.vue";
 
 const notFoundTemplates = [
   ["barren-glory", "You were looking for glory, but found an empty world."],
@@ -24,7 +24,7 @@ const notFoundTemplates = [
 
 export default Vue.extend({
   components: {
-    "Error-Base": ErrorBaseComponent,
+    ErrorBase,
   },
   data() {
     return {

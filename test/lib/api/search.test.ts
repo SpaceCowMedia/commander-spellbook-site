@@ -1,3 +1,5 @@
+import { mocked } from "ts-jest/utils";
+import { makeSearchParams } from "./helper";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";
 import lookup from "@/lib/api/spellbook-api";
@@ -10,8 +12,6 @@ import filterTags from "@/lib/api/search-filters/tags";
 import sortCombos from "@/lib/api/sort-combos";
 import parseQuery from "@/lib/api/parse-query";
 import validateSearchParams from "@/lib/api/validate-search-params";
-import { mocked } from "ts-jest/utils";
-import { makeSearchParams } from "./helper";
 
 jest.mock("@/lib/api/spellbook-api");
 jest.mock("@/lib/api/search-filters/color-identity");

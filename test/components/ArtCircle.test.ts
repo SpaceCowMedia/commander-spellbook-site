@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import ArtCircle from "@/components/ArtCircle.vue";
 import type { VueComponent } from "../types";
+import ArtCircle from "@/components/ArtCircle.vue";
 
 describe("ArtCircle", () => {
   it("applies background image based on the card", () => {

@@ -55,9 +55,11 @@ export default Vue.extend({
   0% {
     @apply bg-gray-300;
   }
+
   50% {
     @apply bg-gray-400;
   }
+
   100% {
     @apply bg-gray-300;
   }

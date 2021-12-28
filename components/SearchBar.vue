@@ -74,15 +74,7 @@
     </form>
     <div
       v-if="!onHomePage && showMobileMenu"
-      class="
-        md:hidden
-        flex flex-wrap flex-row
-        text-center
-        mt-2
-        py-4
-        border-t border-light
-        text-light
-      "
+      class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
       @click="toggleMenu"
     >
       <nuxt-link to="/advanced-search/" class="mobile-menu-button">
@@ -228,33 +220,27 @@ a {
 }
 
 .menu-icon {
-  -webkit-mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
   mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
   @apply mr-0;
 }
 
 .advanced-search-icon {
-  -webkit-mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
   mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
 }
 
 .syntax-guide-icon {
-  -webkit-mask: url("~assets/svgs/question-solid.svg") no-repeat center;
   mask: url("~assets/svgs/question-solid.svg") no-repeat center;
 }
 
 .profile-icon {
-  -webkit-mask: url("~assets/svgs/user-circle-solid.svg") no-repeat center;
   mask: url("~assets/svgs/user-circle-solid.svg") no-repeat center;
 }
 
 .random-icon {
-  -webkit-mask: url("~assets/svgs/random-solid.svg") no-repeat center;
   mask: url("~assets/svgs/random-solid.svg") no-repeat center;
 }
 
 .search-input-icon {
-  -webkit-mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
 }
@@ -295,6 +281,7 @@ a {
 .mobile-menu-button:last-of-type {
   @apply mr-0;
 }
+
 .mobile-menu-button:nth-child(odd) {
   @apply ml-0;
 }

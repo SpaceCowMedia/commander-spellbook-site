@@ -1,10 +1,9 @@
+import { mocked } from "ts-jest/utils";
+import { makeSearchParams } from "../helper";
 import filterColorIdentity from "@/lib/api/search-filters/color-identity";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-import { mocked } from "ts-jest/utils";
-
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("colorIdentityFilter", () => {
   let combos: FormattedApiResponse[];

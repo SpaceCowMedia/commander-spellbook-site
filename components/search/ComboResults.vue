@@ -37,15 +37,7 @@
         <div class="flex-grow"></div>
         <div
           v-if="sortStatMessage(r)"
-          class="
-            sort-footer
-            w-full
-            py-1
-            text-center
-            flex-shrink
-            bg-dark
-            text-white
-          "
+          class="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white"
         >
           {{ sortStatMessage(r) }}
         </div>

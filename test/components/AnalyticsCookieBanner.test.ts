@@ -1,9 +1,9 @@
 import { mount } from "@vue/test-utils";
-import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
 import { bootstrap } from "vue-gtag";
 import { mocked } from "ts-jest/utils";
 
 import type { VueComponent } from "../types";
+import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
 
 jest.mock("vue-gtag");
 

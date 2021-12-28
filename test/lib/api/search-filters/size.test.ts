@@ -1,12 +1,11 @@
+import { mocked } from "ts-jest/utils";
+import { makeSearchParams } from "../helper";
 import filterSize, {
   SIZE_RESTRICTED_FILTERS,
 } from "@/lib/api/search-filters/size";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-import { mocked } from "ts-jest/utils";
-
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("sizeFilter", () => {
   let combos: FormattedApiResponse[];

@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
-import CardGroup from "@/components/combo/CardGroup.vue";
-
 import type { VueComponent } from "../../types";
+import CardGroup from "@/components/combo/CardGroup.vue";
 
 describe("CardGroup", () => {
   it("sets card images", () => {

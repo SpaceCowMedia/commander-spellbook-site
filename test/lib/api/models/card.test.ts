@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import scryfall from "scryfall-client";
+import { mocked } from "ts-jest/utils";
 import Card from "@/lib/api/models/card";
 import getExternalCardData from "@/lib/get-external-card-data";
-
-import { mocked } from "ts-jest/utils";
 
 jest.mock("@/lib/get-external-card-data");
 

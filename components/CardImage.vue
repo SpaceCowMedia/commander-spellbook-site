@@ -1,21 +1,21 @@
 <template>
-  <Flipper :flipped="loaded && readyToFlip">
+  <FlipperCard :flipped="loaded && readyToFlip">
     <template slot="front">
       <img class="back-card" src="~/assets/images/card-back.png" alt="" />
     </template>
     <template slot="back">
       <img class="front-card" :src="img" :alt="name" @load="onImgLoad" />
     </template>
-  </Flipper>
+  </FlipperCard>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import Flipper from "@/components/Flipper.vue";
+import FlipperCard from "@/components/FlipperCard.vue";
 
 export default Vue.extend({
   components: {
-    Flipper,
+    FlipperCard,
   },
   props: {
     img: {

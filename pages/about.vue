@@ -72,6 +72,7 @@ import ArtCircle from "@/components/ArtCircle.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
 
 export default Vue.extend({
+  name: "AboutPage",
   components: {
     ArtCircle,
     ExternalLink,

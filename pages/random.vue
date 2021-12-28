@@ -13,10 +13,11 @@ import SplashPage from "@/components/SplashPage.vue";
 import random from "@/lib/api/random";
 
 export default Vue.extend({
+  name: "RandomPage",
   components: {
     SplashPage,
   },
-  layout: "splash",
+  layout: "SplashLayout",
 
   async mounted(): Promise<void> {
     let query = this.$route.query.q;

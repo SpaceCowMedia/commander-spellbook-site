@@ -42,7 +42,7 @@
       <slot />
     </div>
 
-    <div id="link-sent-text" v-else role="alert">{{ linkSentText }}</div>
+    <div v-else id="link-sent-text" role="alert">{{ linkSentText }}</div>
   </div>
 </template>
 
@@ -54,7 +54,7 @@ export default Vue.extend({
   components: {
     ErrorMessage,
   },
-  layout: "splash",
+  layout: "SplashLayout",
   props: {
     includeDisplayName: {
       type: Boolean,

@@ -1,10 +1,9 @@
+import { mocked } from "ts-jest/utils";
+import { makeSearchParams } from "../helper";
 import filterPrice from "@/lib/api/search-filters/price";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-import { mocked } from "ts-jest/utils";
-
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("priceFilter", () => {
   let combos: FormattedApiResponse[];

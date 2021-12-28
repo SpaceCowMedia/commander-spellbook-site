@@ -28,9 +28,9 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 
+import scryfall from "scryfall-client";
 import CardLink from "@/components/CardLink.vue";
 import CardTooltip from "@/components/CardTooltip.vue";
-import scryfall from "scryfall-client";
 
 type NodeConfig = {
   nodeType: "image" | "card" | "text";

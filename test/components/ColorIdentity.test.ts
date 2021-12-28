@@ -1,8 +1,8 @@
 import { mount } from "@vue/test-utils";
-import ColorIdentity from "@/components/ColorIdentity.vue";
 import scryfall from "scryfall-client";
 
 import { mocked } from "ts-jest/utils";
+import ColorIdentity from "@/components/ColorIdentity.vue";
 
 jest.mock("scryfall-client");
 

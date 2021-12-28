@@ -1,7 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
-import AdvancedSearchPage from "@/pages/advanced-search.vue";
-
 import type { Router, VueComponent } from "../types";
+import AdvancedSearchPage from "@/pages/advanced-search.vue";
 
 describe("AdvancedSearchPage", () => {
   let $router: Router;

@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
-import ReportError from "@/pages/report-error.vue";
-
 import type { MountOptions, Route } from "../types";
+import ReportError from "@/pages/report-error.vue";
 
 describe("Report Error Page", () => {
   let $route: Route;

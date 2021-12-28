@@ -72,6 +72,7 @@ export default Vue.extend({
 .combo-list-title {
   @apply font-bold text-xl mb-2;
 }
+
 .combo-list {
   @apply list-inside;
 }

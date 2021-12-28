@@ -1,9 +1,8 @@
+import { mocked } from "ts-jest/utils";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import sortCombos from "@/lib/api/sort-combos";
 import COLOR_ORDER from "@/lib/api/color-combo-order";
 import { FormattedApiResponse, SortValue } from "@/lib/api/types";
-
-import { mocked } from "ts-jest/utils";
 
 describe("search", () => {
   let combos: FormattedApiResponse[];

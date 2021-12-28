@@ -1,6 +1,6 @@
-import { https } from "firebase-functions";
 import admin from "firebase-admin";
 import apiApp from "./api";
+import { https } from "firebase-functions";
 
 admin.initializeApp();
 

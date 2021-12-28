@@ -1,10 +1,10 @@
+import { mocked } from "ts-jest/utils";
 import getAllCombos from "@/lib/api/get-all-combos";
 import lookup from "@/lib/api/spellbook-api";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
 jest.mock("@/lib/api/spellbook-api");
 
 describe("getAllCombos", () => {
