@@ -2,8 +2,9 @@
   <div>
     <AnalyticsCookieBanner />
     <div v-if="provisioned" class="w-full md:flex md:h-screen">
+      <a ref="skipLink" href="#main" class="sr-only">Skip to main content</a>
       <DashboardNav />
-      <main class="p-8 flex-grow md:w-2/3 max-w-5xl mx-auto">
+      <main id="main" class="p-8 flex-grow md:w-2/3 max-w-5xl mx-auto">
         <Nuxt />
       </main>
     </div>
