@@ -27,10 +27,8 @@ describe("Dashboard", () => {
 
     cy.login("basic-user");
 
-    // shows that the dashboard link can be found in the navbar
-    // on the normal site
-    cy.visit("/advanced-search/");
-    cy.get("[href='/dashboard/']").click();
+    cy.visit("/");
+    cy.visit("/dashboard/");
 
     cy.get("#complete-account-setup").should("not.exist");
     cy.get("nav").should("exist");
