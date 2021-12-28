@@ -23,9 +23,14 @@ describe("Dashboard", () => {
     cy.get("#complete-account-setup").should("exist");
     cy.get("nav").should("not.exist");
 
+    cy.logout();
+
     cy.login("basic-user");
 
-    cy.visit("/dashboard/");
+    // shows that the dashboard link can be found in the navbar
+    // on the normal site
+    cy.visit("/advanced-search/");
+    cy.get("[href='/dashboard/']").click();
 
     cy.get("#complete-account-setup").should("not.exist");
     cy.get("nav").should("exist");
