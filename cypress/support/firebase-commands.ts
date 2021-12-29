@@ -1,6 +1,7 @@
 /*  eslint-disable no-console */
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
 // TODO something wrong with the cypress-firebase package
 // https://github.com/prescottprue/cypress-firebase/issues/483
 // @ts-ignore

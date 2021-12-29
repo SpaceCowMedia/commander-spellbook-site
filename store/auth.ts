@@ -1,7 +1,7 @@
+import type firebase from "firebase/compat/app";
 import type { GetterTree, ActionTree, MutationTree } from "vuex";
 import type { RootState } from "./";
 import { PERMISSIONS } from "@/lib/constants";
-import type firebase from "firebase";
 
 type Permissions = {
   proposeCombo: boolean;
