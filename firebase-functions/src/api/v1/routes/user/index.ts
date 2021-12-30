@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 import provision from "./provision";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/provision", provision);
 
