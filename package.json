@@ -43,7 +43,6 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "@nuxtjs/firebase": "^8.1.1",
     "core-js": "^3.20.1",
     "dotenv": "^10.0.0",
     "firebase": "^9.6.1",

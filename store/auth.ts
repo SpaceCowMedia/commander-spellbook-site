@@ -1,4 +1,4 @@
-import type firebase from "firebase/compat/app";
+import type { User } from "firebase/auth";
 import type { GetterTree, ActionTree, MutationTree } from "vuex";
 import type { RootState } from "./";
 import { PERMISSIONS } from "@/lib/constants";
@@ -72,7 +72,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     await this.$fire.auth.signInWithEmailLink(email, window.location.href);
   },
 
-  lookupUser(): Promise<firebase.User | null> {
+  lookupUser(): Promise<User | null> {
     return new Promise((resolve) => {
       const unsubscribe = this.$fire.auth.onAuthStateChanged((user) => {
         unsubscribe();
@@ -132,7 +132,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     if (displayName && user.displayName !== displayName) {
       numberOfUpdates++;
       promises.push(
-        user.updateProfile({
+        this.$fire.auth.updateProfile({
           displayName,
         })
       );

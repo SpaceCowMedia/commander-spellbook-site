@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import fbConfig from "./firebase-config";
 
 dotenv.config();
 
@@ -30,6 +29,7 @@ export default {
   target: "static",
 
   env: {
+    useEmulators,
     apiBaseUrl,
   },
 
@@ -156,7 +156,7 @@ export default {
     },
     "~/plugins/vue-tooltip.ts",
     {
-      src: "./plugins/fireauth.ts",
+      src: "./plugins/firebase.ts",
       mode: "client",
     },
     {
@@ -176,29 +176,13 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    "@nuxtjs/google-fonts",
-    "vue-social-sharing/nuxt",
-    "@nuxtjs/firebase",
-  ],
+  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-
-  firebase: {
-    config: fbConfig,
-    services: {
-      auth: {
-        emulatorPort: useEmulators ? 9099 : null,
-      },
-      firestore: {
-        emulatorPort: useEmulators ? 8080 : null,
-      },
-    },
-  },
 
   tailwindcss: {
     jit: !isWindows,

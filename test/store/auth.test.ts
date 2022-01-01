@@ -78,9 +78,9 @@ describe("Auth Store", () => {
       signInWithEmailLink: jest.SpyInstance;
       signOut: jest.SpyInstance;
       onAuthStateChanged: jest.SpyInstance;
+      updateProfile: jest.SpyInstance;
       currentUser?: {
         displayName?: string;
-        updateProfile: jest.SpyInstance;
       };
     };
 
@@ -93,6 +93,7 @@ describe("Auth Store", () => {
             isNewUser: false,
           },
         }),
+        updateProfile: jest.fn(),
         onAuthStateChanged: jest.fn().mockImplementation((cb) => {
           setTimeout(cb, 1);
           return jest.fn();
@@ -333,7 +334,6 @@ describe("Auth Store", () => {
       beforeEach(() => {
         auth.currentUser = {
           displayName: "Old Name",
-          updateProfile: jest.fn().mockResolvedValue(null),
         };
       });
 
@@ -380,8 +380,8 @@ describe("Auth Store", () => {
           displayName: "New Name",
         });
 
-        expect(auth.currentUser?.updateProfile).toBeCalledTimes(1);
-        expect(auth.currentUser?.updateProfile).toBeCalledWith({
+        expect(auth.updateProfile).toBeCalledTimes(1);
+        expect(auth.updateProfile).toBeCalledWith({
           displayName: "New Name",
         });
       });
