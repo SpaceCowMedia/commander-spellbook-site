@@ -1,5 +1,7 @@
 /*  eslint-disable no-console */
-// TODO change this to v9 module syntax
+// TODO the firebase-cypress plugin doesn't support
+// the v9 modular syntax, when it does, change this
+// to the v9 module syntax
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
