@@ -1,6 +1,7 @@
-import dotenv from "dotenv";
+import { config as configureDotenv } from "dotenv";
+import firebaseConfig from "./firebase-config";
 
-dotenv.config();
+configureDotenv();
 
 const isWindows = process.platform === "win32";
 
@@ -31,6 +32,12 @@ export default {
   env: {
     useEmulators,
     apiBaseUrl,
+    FIREBASE_API_KEY: firebaseConfig.apiKey,
+    FIREBASE_AUTH_DOMAIN: firebaseConfig.authDomain,
+    FIREBASE_PROJECT_ID: firebaseConfig.projectId,
+    FIREBASE_STORAGE_BUCKET: firebaseConfig.storageBucket,
+    FIREBASE_MESSAGING_SENDER_ID: firebaseConfig.messagingSenderId,
+    FIREBASE_APP_ID: firebaseConfig.appId,
   },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
