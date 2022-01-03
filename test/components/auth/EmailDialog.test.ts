@@ -297,5 +297,57 @@ describe("EmailDialog Auth", () => {
 
       expect(vm.emailError).toBe("some validation error");
     });
+
+    it("catches auth/invalid-email error", async () => {
+      const wrapper = shallowMount(EmailDialog, {
+        mocks: {
+          $router,
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+      $store.dispatch.mockRejectedValue({
+        code: "auth/invalid-email",
+        message: "some validation error",
+      });
+
+      await vm.requestMagicLink();
+
+      expect(vm.emailError).toBe("The email address is badly formatted.");
+    });
+
+    it("catches all other auth related errors", async () => {
+      const wrapper = shallowMount(EmailDialog, {
+        mocks: {
+          $router,
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+      $store.dispatch.mockRejectedValue({
+        code: "auth/other",
+        message: "some validation error",
+      });
+
+      await vm.requestMagicLink();
+
+      expect(vm.emailError).toBe(
+        "Something went wrong. Refresh your browser and try again. If the problem persists, reach out in the Discord server. Original error: auth/other - some validation error"
+      );
+    });
   });
 });
