@@ -9,7 +9,6 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { mocked } from "ts-jest/utils";
 import setupFirebase from "~/plugins/firebase";
 
 jest.mock("firebase/auth");
@@ -23,8 +22,8 @@ describe("firebase", () => {
       name: "fake-auth",
       currentUser: {},
     } as ReturnType<typeof getAuth>;
-    mocked(getApps).mockReturnValue([]);
-    mocked(getAuth).mockReturnValue(fakeAuth);
+    jest.mocked(getApps).mockReturnValue([]);
+    jest.mocked(getAuth).mockReturnValue(fakeAuth);
   });
 
   it("initializes firebase app if it is not already initialized", () => {
@@ -48,7 +47,7 @@ describe("firebase", () => {
   it("skips initialization when firebase is already initialized", () => {
     const fakeFirebase = { fakeFirebase: "app" };
     // @ts-ignore
-    mocked(getApps).mockReturnValue([fakeFirebase]);
+    jest.mocked(getApps).mockReturnValue([fakeFirebase]);
 
     setupFirebase(
       {
@@ -132,7 +131,7 @@ describe("firebase", () => {
       refreshToken: "token",
     };
     const commit = jest.fn();
-    mocked(onAuthStateChanged).mockImplementation((_, cb) => {
+    jest.mocked(onAuthStateChanged).mockImplementation((_, cb) => {
       // @ts-ignore
       cb(user);
 
@@ -164,7 +163,7 @@ describe("firebase", () => {
       refreshToken: "token",
     };
     const commit = jest.fn();
-    mocked(onAuthStateChanged).mockImplementation((_, cb) => {
+    jest.mocked(onAuthStateChanged).mockImplementation((_, cb) => {
       // @ts-ignore
       cb(user);
 
@@ -267,7 +266,7 @@ describe("firebase", () => {
     // @ts-ignore
     fakeAuth.currentUser = null;
 
-    mocked(updateProfile).mockReset();
+    jest.mocked(updateProfile).mockReset();
     try {
       await injectedAuth.updateProfile({
         displayName: "name",

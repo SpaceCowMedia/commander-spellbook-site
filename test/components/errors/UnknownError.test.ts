@@ -1,5 +1,4 @@
 import { shallowMount } from "@vue/test-utils";
-import { mocked } from "ts-jest/utils";
 import getRandomItemFromArray from "@/lib/random-from-array";
 import UnknownError from "@/components/errors/UnknownError.vue";
 import ErrorBase from "@/components/errors/ErrorBase.vue";
@@ -8,7 +7,7 @@ jest.mock("@/lib/random-from-array");
 
 describe("UnknownError", () => {
   it("sets a random background class", () => {
-    mocked(getRandomItemFromArray).mockReturnValue("mock-class");
+    jest.mocked(getRandomItemFromArray).mockReturnValue("mock-class");
 
     const wrapper = shallowMount(UnknownError);
     expect(wrapper.vm.$data.unknownErrorClass).toBe("mock-class");

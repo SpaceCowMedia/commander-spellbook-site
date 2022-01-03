@@ -1,5 +1,4 @@
 import { shallowMount } from "@vue/test-utils";
-import { mocked } from "ts-jest/utils";
 import getRandomItemFromArray from "@/lib/random-from-array";
 import NotFoundError from "@/components/errors/NotFoundError.vue";
 import ErrorBase from "@/components/errors/ErrorBase.vue";
@@ -8,10 +7,9 @@ jest.mock("@/lib/random-from-array");
 
 describe("NotFoundError", () => {
   beforeEach(() => {
-    mocked(getRandomItemFromArray).mockReturnValue([
-      "mock-class",
-      "mock message",
-    ]);
+    jest
+      .mocked(getRandomItemFromArray)
+      .mockReturnValue(["mock-class", "mock message"]);
   });
 
   it("sets a random background class", () => {

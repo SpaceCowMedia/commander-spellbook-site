@@ -1,6 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { mocked } from "ts-jest/utils";
 import type { MountOptions, Route, Router, VueComponent } from "../../types";
 import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
@@ -43,7 +42,7 @@ describe("ComboPage", () => {
         ComboResults: true,
       },
     };
-    mocked(getExternalCardData).mockReturnValue({
+    jest.mocked(getExternalCardData).mockReturnValue({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -66,7 +65,7 @@ describe("ComboPage", () => {
   });
 
   it("redirects on mount when loading state is false and client side lookup to Google Sheets data fails", async () => {
-    mocked(findById).mockRejectedValue(new Error("foo"));
+    jest.mocked(findById).mockRejectedValue(new Error("foo"));
     // remove the loaded: true supplied by asyncData
     // @ts-ignore
     delete options.data;
@@ -85,7 +84,7 @@ describe("ComboPage", () => {
   });
 
   it("redirects on mount when preview query param is inlcluded and client side lookup to Google Sheets data fails", async () => {
-    mocked(findById).mockRejectedValue(new Error("foo"));
+    jest.mocked(findById).mockRejectedValue(new Error("foo"));
     $route.query.preview = "true";
     shallowMount(ComboPage, options);
 
@@ -102,7 +101,7 @@ describe("ComboPage", () => {
   });
 
   it("sets data to combo data found on Google Sheets when loaded is not true", async () => {
-    mocked(getExternalCardData).mockReturnValue({
+    jest.mocked(getExternalCardData).mockReturnValue({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -116,7 +115,7 @@ describe("ComboPage", () => {
       },
       edhrecLink: "https://edhrec.com/card",
     });
-    mocked(findById).mockResolvedValue(
+    jest.mocked(findById).mockResolvedValue(
       makeFakeCombo({
         commanderSpellbookId: "13",
         hasBannedCard: true,
@@ -171,7 +170,7 @@ describe("ComboPage", () => {
   });
 
   it("sets data to combo data found on Google Sheets when preview query param is set to true", async () => {
-    mocked(findById).mockResolvedValue(
+    jest.mocked(findById).mockResolvedValue(
       makeFakeCombo({
         commanderSpellbookId: "13",
         hasBannedCard: true,
@@ -395,7 +394,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2"],
     });
-    mocked(findById).mockResolvedValue(fakeCombo);
+    jest.mocked(findById).mockResolvedValue(fakeCombo);
 
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;
@@ -433,7 +432,7 @@ describe("ComboPage", () => {
   });
 
   it("adds edhrec link", async () => {
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -447,7 +446,7 @@ describe("ComboPage", () => {
       },
       edhrecLink: "https://edhrec.com/card",
     });
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -470,7 +469,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2"],
     });
-    mocked(findById).mockResolvedValue(fakeCombo);
+    jest.mocked(findById).mockResolvedValue(fakeCombo);
     const ComboSidebarLinksStub = {
       template: "<div></div>",
       props: ["edhrecLink"],
@@ -495,7 +494,7 @@ describe("ComboPage", () => {
   });
 
   it("looks up prices for combo", async () => {
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -509,7 +508,7 @@ describe("ComboPage", () => {
       },
       edhrecLink: "https://edhrec.com/card",
     });
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -532,7 +531,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2"],
     });
-    mocked(findById).mockResolvedValue(fakeCombo);
+    jest.mocked(findById).mockResolvedValue(fakeCombo);
     const ComboSidebarLinksStub = {
       template: "<div></div>",
       props: ["tcgplayerPrice", "cardkingdomPrice"],
@@ -560,7 +559,7 @@ describe("ComboPage", () => {
   });
 
   it("does not pass prices if a card is missing from price data", async () => {
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -574,7 +573,7 @@ describe("ComboPage", () => {
       },
       edhrecLink: "https://edhrec.com/card",
     });
-    mocked(getExternalCardData).mockReturnValueOnce({
+    jest.mocked(getExternalCardData).mockReturnValueOnce({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -597,7 +596,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2"],
     });
-    mocked(findById).mockResolvedValue(fakeCombo);
+    jest.mocked(findById).mockResolvedValue(fakeCombo);
     const ComboSidebarLinksStub = {
       template: "<div></div>",
       props: ["tcgplayerPrice", "cardkingdomPrice"],
@@ -633,7 +632,7 @@ describe("ComboPage", () => {
       colorIdentity: "wbr",
       cards: ["card 1", "card 2", "card 3", "card 4"],
     });
-    mocked(findById).mockResolvedValue(fakeCombo);
+    jest.mocked(findById).mockResolvedValue(fakeCombo);
 
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;
@@ -675,7 +674,7 @@ describe("ComboPage", () => {
         colorIdentity: "wbr",
         cards,
       });
-      mocked(findById).mockResolvedValue(fakeCombo);
+      jest.mocked(findById).mockResolvedValue(fakeCombo);
 
       const wrapper = shallowMount(ComboPage, options);
       const vm = wrapper.vm as VueComponent;
@@ -694,7 +693,7 @@ describe("ComboPage", () => {
   );
 
   it("does not load data from combo when no combos is found for id", async () => {
-    mocked(findById).mockRejectedValue(new Error("not found"));
+    jest.mocked(findById).mockRejectedValue(new Error("not found"));
 
     const wrapper = shallowMount(ComboPage, options);
     const vm = wrapper.vm as VueComponent;

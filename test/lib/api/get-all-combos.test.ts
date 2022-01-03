@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import getAllCombos from "@/lib/api/get-all-combos";
 import lookup from "@/lib/api/spellbook-api";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
@@ -12,7 +11,7 @@ describe("getAllCombos", () => {
 
   beforeEach(() => {
     combos = [makeFakeCombo(), makeFakeCombo()];
-    mocked(lookup).mockResolvedValue(combos);
+    jest.mocked(lookup).mockResolvedValue(combos);
   });
 
   it("looks up all combos from api", async () => {

@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import { state, getters, mutations, actions } from "~/store/auth";
 import { PERMISSIONS } from "~/lib/constants";
 
@@ -213,7 +212,7 @@ describe("Auth Store", () => {
 
     describe("lookupPermissions", () => {
       it("resolves with an empty object when no user is available", async () => {
-        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        const dispatch = jest.mocked(actions.dispatch) as jest.SpyInstance;
         dispatch.mockResolvedValue(null);
 
         const permissions = await (actions.lookupPermissions as Function)();
@@ -241,7 +240,7 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        const dispatch = jest.mocked(actions.dispatch) as jest.SpyInstance;
         dispatch.mockResolvedValue(user);
 
         const permissions = await (actions.lookupPermissions as Function)();
@@ -268,7 +267,7 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        const dispatch = jest.mocked(actions.dispatch) as jest.SpyInstance;
         dispatch.mockResolvedValue(user);
 
         await (actions.lookupPermissions as Function)();
@@ -292,7 +291,7 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        const dispatch = jest.mocked(actions.dispatch) as jest.SpyInstance;
         dispatch.mockResolvedValue(user);
 
         await (actions.lookupPermissions as Function)();
@@ -316,7 +315,7 @@ describe("Auth Store", () => {
           getIdTokenResult: jest.fn().mockResolvedValue(provisionedResult),
         };
 
-        const dispatch = mocked(actions.dispatch) as jest.SpyInstance;
+        const dispatch = jest.mocked(actions.dispatch) as jest.SpyInstance;
         dispatch.mockResolvedValue(user);
 
         await (actions.lookupPermissions as Function)();

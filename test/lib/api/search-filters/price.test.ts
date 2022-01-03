@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import { makeSearchParams } from "../helper";
 import filterPrice from "@/lib/api/search-filters/price";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
@@ -21,24 +20,24 @@ describe("priceFilter", () => {
       method: operator,
       value: 3,
     });
-    mocked(combos[0].cards.getPrice).mockReturnValue(3);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(3);
 
     let result = await filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(4);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(4);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
   });
 
   it("can filter by number of values using >", () => {
-    mocked(combos[0].cards.getPrice).mockReturnValue(4);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(4);
 
     params.price.filters.push({
       method: ">",
@@ -48,19 +47,19 @@ describe("priceFilter", () => {
     let result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(3);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(3);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
   });
 
   it("can filter by number of values using >=", () => {
-    mocked(combos[0].cards.getPrice).mockReturnValue(4);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(4);
 
     params.price.filters.push({
       method: ">=",
@@ -70,19 +69,19 @@ describe("priceFilter", () => {
     let result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(3);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(3);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
   });
 
   it("can filter by number of values using <", () => {
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     params.price.filters.push({
       method: "<",
@@ -92,19 +91,19 @@ describe("priceFilter", () => {
     let result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(3);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(3);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(4);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(4);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
   });
 
   it("can filter by number of values using <=", () => {
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     params.price.filters.push({
       method: "<=",
@@ -114,19 +113,19 @@ describe("priceFilter", () => {
     let result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(3);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(3);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(4);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(4);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);
   });
 
   it("filters out combos with a price of 0, even if it would match method", () => {
-    mocked(combos[0].cards.getPrice).mockReturnValue(2);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(2);
 
     params.price.filters.push({
       method: "<=",
@@ -136,7 +135,7 @@ describe("priceFilter", () => {
     let result = filterPrice(combos, params);
     expect(result.length).toBe(1);
 
-    mocked(combos[0].cards.getPrice).mockReturnValue(0);
+    jest.mocked(combos[0].cards.getPrice).mockReturnValue(0);
 
     result = filterPrice(combos, params);
     expect(result.length).toBe(0);

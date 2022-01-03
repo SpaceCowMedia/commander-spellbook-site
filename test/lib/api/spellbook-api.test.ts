@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import lookup, { resetCache } from "@/lib/api/spellbook-api";
 import formatApiResponse from "@/lib/api/format-api-response";
 import transformGoogleSheetsData from "@/lib/api/transform-google-sheets-data";
@@ -15,10 +14,10 @@ describe("api", () => {
     process.server = true;
     // got to do it this way so the test about not returning
     // the same result when reseting the cache works
-    mocked(formatApiResponse).mockImplementation(() => {
+    jest.mocked(formatApiResponse).mockImplementation(() => {
       return [];
     });
-    mocked(transformGoogleSheetsData).mockReturnValue([]);
+    jest.mocked(transformGoogleSheetsData).mockReturnValue([]);
     body = {
       spreadsheetId: "foo-1",
       valueRanges: [
@@ -105,7 +104,7 @@ describe("api", () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mocked(window.fetch).mockImplementation(() => {
+    jest.mocked(window.fetch).mockImplementation(() => {
       return Promise.resolve({
         json: jest.fn().mockResolvedValue({
           spreadsheetId: "foo-2",
@@ -205,7 +204,7 @@ describe("api", () => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    mocked(window.fetch).mockImplementation(() => {
+    jest.mocked(window.fetch).mockImplementation(() => {
       return Promise.resolve({
         json: jest.fn().mockResolvedValue({
           spreadsheetId: "foo-2",
@@ -242,7 +241,7 @@ describe("api", () => {
       },
     ];
 
-    mocked(transformGoogleSheetsData).mockReturnValue(compressedData);
+    jest.mocked(transformGoogleSheetsData).mockReturnValue(compressedData);
 
     await lookup();
 

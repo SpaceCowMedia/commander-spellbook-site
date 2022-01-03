@@ -1,6 +1,5 @@
 import { mount } from "@vue/test-utils";
 import { bootstrap } from "vue-gtag";
-import { mocked } from "ts-jest/utils";
 
 import type { VueComponent } from "../types";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
@@ -105,7 +104,7 @@ describe("AnalyticsCookieBanner", () => {
           },
         }
       );
-      mocked(bootstrap).mockResolvedValue({} as any);
+      jest.mocked(bootstrap).mockResolvedValue({} as any);
     });
 
     it("bootstraps the vue-gtag module", async () => {

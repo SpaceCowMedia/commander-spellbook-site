@@ -1,5 +1,4 @@
 import { shallowMount } from "@vue/test-utils";
-import { mocked } from "ts-jest/utils";
 import type { VueComponent } from "../../types";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
@@ -56,7 +55,7 @@ describe("SimiliarCombosButton", () => {
 
   describe("lookupSimiliarCombos", () => {
     beforeEach(() => {
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         vendor: "cardkingdom",
@@ -115,7 +114,7 @@ describe("SimiliarCombosButton", () => {
     });
 
     it("sets hasSimiliarCombos to true when combos return from search", async () => {
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [makeFakeCombo()],
         message: "",
         vendor: "cardkingdom",

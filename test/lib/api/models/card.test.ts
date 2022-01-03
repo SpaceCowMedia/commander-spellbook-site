@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import scryfall from "scryfall-client";
-import { mocked } from "ts-jest/utils";
 import Card from "@/lib/api/models/card";
 import getExternalCardData from "@/lib/get-external-card-data";
 
@@ -8,7 +7,7 @@ jest.mock("@/lib/get-external-card-data");
 
 describe("Card", () => {
   beforeEach(() => {
-    mocked(getExternalCardData).mockReturnValue({
+    jest.mocked(getExternalCardData).mockReturnValue({
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -143,7 +142,7 @@ describe("Card", () => {
     });
 
     it("returns true when card is featured", () => {
-      mocked(getExternalCardData).mockReturnValue({
+      jest.mocked(getExternalCardData).mockReturnValue({
         isBanned: false,
         isPreview: false,
         isFeatured: true,
@@ -171,7 +170,7 @@ describe("Card", () => {
     });
 
     it("returns true when card is featured", () => {
-      mocked(getExternalCardData).mockReturnValue({
+      jest.mocked(getExternalCardData).mockReturnValue({
         isBanned: true,
         isPreview: false,
         isFeatured: false,
@@ -199,7 +198,7 @@ describe("Card", () => {
     });
 
     it("returns true when card is featured", () => {
-      mocked(getExternalCardData).mockReturnValue({
+      jest.mocked(getExternalCardData).mockReturnValue({
         isBanned: false,
         isPreview: true,
         isFeatured: false,

@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import { makeSearchParams } from "./helper";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";
@@ -34,17 +33,17 @@ describe("search", () => {
       steps: ["Step 1. Step 2"],
       results: ["Step 1. Step 2"],
     });
-    mocked(lookup).mockResolvedValue([combo]);
+    jest.mocked(lookup).mockResolvedValue([combo]);
 
-    mocked(parseQuery).mockReturnValue(makeSearchParams());
-    mocked(filterColorIdentity).mockReturnValue([combo]);
-    mocked(filterComboData).mockReturnValue([combo]);
-    mocked(filterSize).mockReturnValue([combo]);
-    mocked(filterPrice).mockReturnValue([combo]);
-    mocked(filterIds).mockReturnValue([combo]);
-    mocked(filterTags).mockReturnValue([combo]);
-    mocked(sortCombos).mockReturnValue([combo]);
-    mocked(validateSearchParams).mockReturnValue(true);
+    jest.mocked(parseQuery).mockReturnValue(makeSearchParams());
+    jest.mocked(filterColorIdentity).mockReturnValue([combo]);
+    jest.mocked(filterComboData).mockReturnValue([combo]);
+    jest.mocked(filterSize).mockReturnValue([combo]);
+    jest.mocked(filterPrice).mockReturnValue([combo]);
+    jest.mocked(filterIds).mockReturnValue([combo]);
+    jest.mocked(filterTags).mockReturnValue([combo]);
+    jest.mocked(sortCombos).mockReturnValue([combo]);
+    jest.mocked(validateSearchParams).mockReturnValue(true);
   });
 
   it("looks up combos from api", async () => {
@@ -54,7 +53,7 @@ describe("search", () => {
   });
 
   it("does not look up combos if search params are not valid", async () => {
-    mocked(validateSearchParams).mockReturnValue(false);
+    jest.mocked(validateSearchParams).mockReturnValue(false);
 
     const result = await search("card");
 
@@ -65,8 +64,8 @@ describe("search", () => {
   });
 
   it("includes errors when search params are not valid", async () => {
-    mocked(validateSearchParams).mockReturnValue(false);
-    mocked(parseQuery).mockReturnValue(
+    jest.mocked(validateSearchParams).mockReturnValue(false);
+    jest.mocked(parseQuery).mockReturnValue(
       makeSearchParams({
         errors: [
           {
@@ -144,7 +143,7 @@ describe("search", () => {
   });
 
   it("specifies cardkingdom as default vendor", async () => {
-    mocked(parseQuery).mockReturnValue(
+    jest.mocked(parseQuery).mockReturnValue(
       makeSearchParams({
         sort: "price",
         order: "descending",
@@ -163,9 +162,9 @@ describe("search", () => {
     expect(result.order).toBe("descending");
     expect(result.vendor).toBe("cardkingdom");
 
-    mocked(sortCombos).mockClear();
+    jest.mocked(sortCombos).mockClear();
 
-    mocked(parseQuery).mockReturnValue(
+    jest.mocked(parseQuery).mockReturnValue(
       makeSearchParams({
         sort: "price",
         order: "descending",
@@ -188,7 +187,7 @@ describe("search", () => {
   });
 
   it("can sort by specific attributes and order in descending order", async () => {
-    mocked(parseQuery).mockReturnValue(
+    jest.mocked(parseQuery).mockReturnValue(
       makeSearchParams({
         sort: "cards",
         order: "descending",
@@ -209,7 +208,7 @@ describe("search", () => {
   });
 
   it("includes errors", async () => {
-    mocked(parseQuery).mockReturnValue(
+    jest.mocked(parseQuery).mockReturnValue(
       makeSearchParams({
         errors: [
           {

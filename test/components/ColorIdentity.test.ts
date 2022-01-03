@@ -1,22 +1,21 @@
 import { mount } from "@vue/test-utils";
 import scryfall from "scryfall-client";
 
-import { mocked } from "ts-jest/utils";
 import ColorIdentity from "@/components/ColorIdentity.vue";
 
 jest.mock("scryfall-client");
 
 describe("ColorIdentity", () => {
   it("sets scryfall image src for symbol", () => {
-    mocked(scryfall.getSymbolUrl).mockReturnValueOnce(
-      "https://example.com/W.svg"
-    );
-    mocked(scryfall.getSymbolUrl).mockReturnValueOnce(
-      "https://example.com/B.svg"
-    );
-    mocked(scryfall.getSymbolUrl).mockReturnValueOnce(
-      "https://example.com/G.svg"
-    );
+    jest
+      .mocked(scryfall.getSymbolUrl)
+      .mockReturnValueOnce("https://example.com/W.svg");
+    jest
+      .mocked(scryfall.getSymbolUrl)
+      .mockReturnValueOnce("https://example.com/B.svg");
+    jest
+      .mocked(scryfall.getSymbolUrl)
+      .mockReturnValueOnce("https://example.com/G.svg");
 
     const wrapper = mount(ColorIdentity, {
       propsData: {
@@ -38,9 +37,9 @@ describe("ColorIdentity", () => {
   });
 
   it("sets alt message for each color", () => {
-    mocked(scryfall.getSymbolUrl).mockReturnValue(
-      "https://example.com/example.svg"
-    );
+    jest
+      .mocked(scryfall.getSymbolUrl)
+      .mockReturnValue("https://example.com/example.svg");
 
     const wrapper = mount(ColorIdentity, {
       propsData: {

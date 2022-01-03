@@ -1,6 +1,5 @@
 import { mount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { mocked } from "ts-jest/utils";
 import { createStore } from "../utils";
 import type {
   MountOptions,
@@ -208,7 +207,7 @@ describe("SearchBar", () => {
       const vm = wrapper.vm as VueComponent;
       const mockCombo = makeFakeCombo();
 
-      mocked(getAllCombos).mockResolvedValue([mockCombo]);
+      jest.mocked(getAllCombos).mockResolvedValue([mockCombo]);
 
       expect(
         wrapper.find(".main-search-input").element.getAttribute("placeholder")

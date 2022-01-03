@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import random from "@/lib/api/random";
 import search from "@/lib/api/search";
 import getAllCombos from "@/lib/api/get-all-combos";
@@ -14,7 +13,7 @@ describe("random", () => {
 
   beforeEach(() => {
     combos = [makeFakeCombo(), makeFakeCombo()];
-    mocked(search).mockResolvedValue({
+    jest.mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
       vendor: "cardkingdom",
@@ -22,7 +21,7 @@ describe("random", () => {
       order: "ascending",
       combos,
     });
-    mocked(getAllCombos).mockResolvedValue(combos);
+    jest.mocked(getAllCombos).mockResolvedValue(combos);
   });
 
   it("looks up all combos", async () => {
@@ -54,7 +53,7 @@ describe("random", () => {
   it("throws an error when no combos can be found", async () => {
     expect.assertions(1);
 
-    mocked(search).mockResolvedValue({
+    jest.mocked(search).mockResolvedValue({
       errors: [],
       message: "message",
       vendor: "cardkingdom",

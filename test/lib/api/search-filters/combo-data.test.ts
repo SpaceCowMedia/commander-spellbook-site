@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import { makeSearchParams } from "../helper";
 import filterComboData, {
   DATA_TYPES,
@@ -29,7 +28,7 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValue).mockReturnValue(false);
+      jest.mocked(combos[0][dataType].includesValue).mockReturnValue(false);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -49,7 +48,9 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(false);
+      jest
+        .mocked(combos[0][dataType].includesValueExactly)
+        .mockReturnValue(false);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -67,7 +68,7 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValue).mockReturnValue(true);
+      jest.mocked(combos[0][dataType].includesValue).mockReturnValue(true);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -87,7 +88,9 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(true);
+      jest
+        .mocked(combos[0][dataType].includesValueExactly)
+        .mockReturnValue(true);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);

@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import sortCombos from "@/lib/api/sort-combos";
 import COLOR_ORDER from "@/lib/api/color-combo-order";
@@ -557,7 +556,7 @@ describe("search", () => {
     expect(combos[0].cards.getPrice).toBeCalledWith("cardkingdom");
     expect(combos[0].cards.getPrice).not.toBeCalledWith("tcgplayer");
 
-    mocked(combos[0].cards.getPrice).mockClear();
+    jest.mocked(combos[0].cards.getPrice).mockClear();
 
     sortCombos(combos, {
       by: "price",

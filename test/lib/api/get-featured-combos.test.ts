@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import getFeaturedCombos from "@/lib/api/get-featured-combos";
 import CardGrouping from "@/lib/api/models/card-grouping";
 import lookup from "@/lib/api/spellbook-api";
@@ -9,7 +8,7 @@ jest.mock("@/lib/api/spellbook-api");
 describe("getFeaturedCombos", () => {
   it("looks up featured combos from api", async () => {
     const combos = [makeFakeCombo(), makeFakeCombo()];
-    mocked(lookup).mockResolvedValue(combos);
+    jest.mocked(lookup).mockResolvedValue(combos);
     const spy = jest.spyOn(CardGrouping.prototype, "isFeatured");
     spy.mockReturnValueOnce(false);
     spy.mockReturnValueOnce(true);

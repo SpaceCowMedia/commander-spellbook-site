@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import findById from "@/lib/api/find-by-id";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import lookup from "@/lib/api/spellbook-api";
@@ -29,7 +28,7 @@ describe("findById", () => {
         results: ["Step 1.", "Step 2"],
       }),
     ];
-    mocked(lookup).mockResolvedValue(combos);
+    jest.mocked(lookup).mockResolvedValue(combos);
   });
 
   it("returns the specified combo", async () => {
