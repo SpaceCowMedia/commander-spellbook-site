@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import DashboardSection from "@/components/dashboard/Section.vue";
+import DashboardSection from "@/components/dashboard/DashboardSection.vue";
 
 describe("DashboardSection", () => {
   it("configures title", () => {

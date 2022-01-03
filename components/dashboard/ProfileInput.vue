@@ -3,10 +3,10 @@
     <label :for="id">{{ label }}</label>
     <div>
       <input
+        :id="id"
         v-model="localState"
         type="text"
         class="input"
-        :id="id"
         :disabled="disabled"
       />
     </div>

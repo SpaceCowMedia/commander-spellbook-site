@@ -1,5 +1,5 @@
-import { DEFAULT_VENDOR } from "@/lib/constants";
 import type { SearchParameters, FormattedApiResponse } from "../types";
+import { DEFAULT_VENDOR } from "@/lib/constants";
 
 export default function filterPrice(
   combos: FormattedApiResponse[],

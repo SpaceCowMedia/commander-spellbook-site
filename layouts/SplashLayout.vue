@@ -10,15 +10,7 @@
     <main
       id="main"
       tabindex="-1"
-      class="
-        gradient
-        h-screen
-        pt-16
-        md:pt-0 md:flex
-        flex-col
-        content-center
-        justify-center
-      "
+      class="gradient h-screen pt-16 md:pt-0 md:flex flex-col content-center justify-center"
     >
       <div
         class="w-min bg-white p-4 rounded shadow-xl w-auto mx-4 md:mx-auto my-4"
@@ -34,7 +26,6 @@
         <Nuxt />
       </div>
     </main>
-    <Footer />
   </div>
 </template>
 

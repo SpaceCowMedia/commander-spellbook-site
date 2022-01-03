@@ -1,6 +1,6 @@
+import { makeSearchParams } from "../helper";
 import parsePriceData from "@/lib/api/parse-query/parse-price-data";
 import type { SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("parsePriceData", () => {
   let searchParams: SearchParameters;

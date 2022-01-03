@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
-import CardHeader from "@/components/combo/CardHeader.vue";
-
 import type { VueComponent } from "../../types";
+import CardHeader from "@/components/combo/CardHeader.vue";
 
 describe("CardHeader", () => {
   it("sets title", () => {

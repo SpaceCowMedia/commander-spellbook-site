@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DashboardSection from "@/components/dashboard/Section.vue";
+import DashboardSection from "@/components/dashboard/DashboardSection.vue";
 import ProfileInput from "@/components/dashboard/ProfileInput.vue";
 
 export default Vue.extend({
@@ -44,7 +44,7 @@ export default Vue.extend({
     DashboardSection,
     ProfileInput,
   },
-  layout: "dashboard",
+  layout: "EditorDashboard",
   data() {
     const user = this.$store.getters["auth/user"];
 

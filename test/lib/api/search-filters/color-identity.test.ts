@@ -1,10 +1,8 @@
+import { makeSearchParams } from "../helper";
 import filterColorIdentity from "@/lib/api/search-filters/color-identity";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-import { mocked } from "ts-jest/utils";
-
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("colorIdentityFilter", () => {
   let combos: FormattedApiResponse[];
@@ -53,7 +51,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(0);
@@ -76,8 +74,8 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(0);
@@ -100,8 +98,8 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(0);
@@ -121,7 +119,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(0);
@@ -141,7 +139,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(0);
@@ -186,7 +184,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(0);
 
-      mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(1);
@@ -209,8 +207,8 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(0);
 
-      mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.includes).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(1);
@@ -233,8 +231,8 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(0);
 
-      mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(1);
@@ -254,7 +252,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(0);
 
-      mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.isWithin).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(1);
@@ -274,7 +272,7 @@ describe("colorIdentityFilter", () => {
 
       expect(result.length).toBe(0);
 
-      mocked(combos[0].colorIdentity.is).mockReturnValue(false);
+      jest.mocked(combos[0].colorIdentity.is).mockReturnValue(false);
 
       result = filterColorIdentity(combos, params);
       expect(result.length).toBe(1);

@@ -2,8 +2,6 @@ import { shallowMount } from "@vue/test-utils";
 import CardTooltip from "@/components/CardTooltip.vue";
 import getExternalCardData from "@/lib/get-external-card-data";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@/lib/get-external-card-data");
 
 describe("CardTooltip", () => {
@@ -18,7 +16,7 @@ describe("CardTooltip", () => {
         default: "<div></div>",
       },
     };
-    mocked(getExternalCardData).mockReturnValue({
+    jest.mocked(getExternalCardData).mockReturnValue({
       isBanned: false,
       isPreview: false,
       isFeatured: false,

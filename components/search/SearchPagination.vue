@@ -79,6 +79,7 @@ export default Vue.extend({
 .nav-button:first-child {
   @apply ml-0;
 }
+
 .nav-button:last-child {
   @apply mr-0;
 }

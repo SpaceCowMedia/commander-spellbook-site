@@ -1,22 +1,21 @@
 import { shallowMount } from "@vue/test-utils";
 import getRandomItemFromArray from "@/lib/random-from-array";
-import UnknownErrorComponent from "@/components/errors/unknown.vue";
-import ErrorBaseComponent from "@/components/errors/error-base.vue";
+import UnknownError from "@/components/errors/UnknownError.vue";
+import ErrorBase from "@/components/errors/ErrorBase.vue";
 
-import { mocked } from "ts-jest/utils";
 jest.mock("@/lib/random-from-array");
 
-describe("UnknownErrorComponent", () => {
+describe("UnknownError", () => {
   it("sets a random background class", () => {
-    mocked(getRandomItemFromArray).mockReturnValue("mock-class");
+    jest.mocked(getRandomItemFromArray).mockReturnValue("mock-class");
 
-    const wrapper = shallowMount(UnknownErrorComponent);
+    const wrapper = shallowMount(UnknownError);
     expect(wrapper.vm.$data.unknownErrorClass).toBe("mock-class");
   });
 
   it("creates an Error Base Component", () => {
-    const wrapper = shallowMount(UnknownErrorComponent);
-    const baseError = wrapper.findComponent(ErrorBaseComponent);
+    const wrapper = shallowMount(UnknownError);
+    const baseError = wrapper.findComponent(ErrorBase);
 
     expect(baseError).toBeTruthy();
     expect(baseError.props("mainMessage")).toBe("Uh Oh");

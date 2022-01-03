@@ -42,7 +42,7 @@
       <slot />
     </div>
 
-    <div id="link-sent-text" v-else role="alert">{{ linkSentText }}</div>
+    <div v-else id="link-sent-text" role="alert">{{ linkSentText }}</div>
   </div>
 </template>
 
@@ -54,7 +54,7 @@ export default Vue.extend({
   components: {
     ErrorMessage,
   },
-  layout: "splash",
+  layout: "SplashLayout",
   props: {
     includeDisplayName: {
       type: Boolean,
@@ -112,6 +112,16 @@ export default Vue.extend({
           this.linkSent = true;
         })
         .catch((err) => {
+          if (err.code === "auth/invalid-email") {
+            this.emailError = "The email address is badly formatted.";
+
+            return;
+          } else if (err.code) {
+            this.emailError = `Something went wrong. Refresh your browser and try again. If the problem persists, reach out in the Discord server. Original error: ${err.code} - ${err.message}`;
+
+            return;
+          }
+
           this.emailError = err.message;
         });
     },

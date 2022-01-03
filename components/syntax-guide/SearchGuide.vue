@@ -33,8 +33,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ArtCircle from "@/components/ArtCircle.vue";
 import SearchSnippet from "./SearchSnippet.vue";
+import ArtCircle from "@/components/ArtCircle.vue";
 
 export default Vue.extend({
   components: {

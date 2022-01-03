@@ -14,7 +14,7 @@ describe("api", () => {
   });
 
   it("adds $api to the Vue prototype", () => {
-    expect(Vue.prototype.$api).toBeFalsy();
+    const spy = jest.fn();
 
     setupApi(
       // @ts-ignore
@@ -27,15 +27,18 @@ describe("api", () => {
           auth: {},
         },
       },
-      null
+      spy
     );
 
-    expect(Vue.prototype.$api).toBeTruthy();
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith("api", expect.any(Function));
   });
 
   it("rejects when there is no active user", async () => {
     expect.assertions(1);
 
+    const spy = jest.fn();
+
     setupApi(
       // @ts-ignore
       {
@@ -47,11 +50,13 @@ describe("api", () => {
           auth: {},
         },
       },
-      null
+      spy
     );
 
+    const $api = spy.mock.calls[0][1];
+
     try {
-      await Vue.prototype.$api("/path");
+      await $api("/path");
     } catch (e) {
       expect(e.message).toBe(
         "User not logged in. Refreshng your browser and try again."
@@ -60,6 +65,8 @@ describe("api", () => {
   });
 
   it("sends an api request with users auth token", async () => {
+    const spy = jest.fn();
+
     setupApi(
       // @ts-ignore
       {
@@ -76,10 +83,12 @@ describe("api", () => {
           },
         },
       },
-      null
+      spy
     );
 
-    await Vue.prototype.$api("/path");
+    const $api = spy.mock.calls[0][1];
+
+    await $api("/path");
 
     expect(global.fetch).toBeCalledTimes(1);
     expect(global.fetch).toBeCalledWith("https://example.com/v1/path", {
@@ -91,6 +100,8 @@ describe("api", () => {
   });
 
   it("sends post request when a post body is provided", async () => {
+    const spy = jest.fn();
+
     setupApi(
       // @ts-ignore
       {
@@ -107,10 +118,12 @@ describe("api", () => {
           },
         },
       },
-      null
+      spy
     );
 
-    await Vue.prototype.$api("/path", {
+    const $api = spy.mock.calls[0][1];
+
+    await $api("/path", {
       foo: {
         bar: "baz",
       },
@@ -130,6 +143,8 @@ describe("api", () => {
   it("rejects when http status is 400 or greater", async () => {
     expect.assertions(4);
 
+    const spy = jest.fn();
+
     setupApi(
       // @ts-ignore
       {
@@ -146,8 +161,10 @@ describe("api", () => {
           },
         },
       },
-      null
+      spy
     );
+
+    const $api = spy.mock.calls[0][1];
 
     const fakeFetch = {
       status: 400,
@@ -158,7 +175,7 @@ describe("api", () => {
     global.fetch = jest.fn().mockResolvedValue(fakeFetch);
 
     try {
-      await Vue.prototype.$api("/path", {
+      await $api("/path", {
         foo: "bar",
       });
     } catch (e) {
@@ -171,7 +188,7 @@ describe("api", () => {
     });
 
     try {
-      await Vue.prototype.$api("/path", {
+      await $api("/path", {
         foo: "bar",
       });
     } catch (e) {
@@ -184,7 +201,7 @@ describe("api", () => {
     });
 
     try {
-      await Vue.prototype.$api("/path", {
+      await $api("/path", {
         foo: "bar",
       });
     } catch (e) {
@@ -196,7 +213,7 @@ describe("api", () => {
       value: "not an error",
     });
 
-    const res = await Vue.prototype.$api("/path", {
+    const res = await $api("/path", {
       foo: "bar",
     });
 

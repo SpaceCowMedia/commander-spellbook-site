@@ -115,22 +115,18 @@ export default Vue.extend({
 }
 
 .twitter-icon {
-  -webkit-mask: url("~assets/svgs/twitter-square-brands.svg") no-repeat center;
   mask: url("~assets/svgs/twitter-square-brands.svg") no-repeat center;
 }
 
 .facebook-icon {
-  -webkit-mask: url("~assets/svgs/facebook-square-brands.svg") no-repeat center;
   mask: url("~assets/svgs/facebook-square-brands.svg") no-repeat center;
 }
 
 .reddit-icon {
-  -webkit-mask: url("~assets/svgs/reddit-square-brands.svg") no-repeat center;
   mask: url("~assets/svgs/reddit-square-brands.svg") no-repeat center;
 }
 
 .copy-icon {
-  -webkit-mask: url("~assets/svgs/link-solid.svg") no-repeat center;
   mask: url("~assets/svgs/link-solid.svg") no-repeat center;
   @apply h-5 w-5;
 }

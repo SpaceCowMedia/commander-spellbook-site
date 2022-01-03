@@ -2,17 +2,7 @@
   <!-- adapted from https://www.carlcassar.com/articles/add-google-analytics-to-a-nuxt-js-app/ -->
   <div
     v-if="isOpen"
-    class="
-      border-b-2 border-dark
-      lg:flex
-      items-center
-      p-4
-      bg-white
-      shadow-lg
-      justify-center
-      w-full
-      text-dark
-    "
+    class="border-b-2 border-dark lg:flex items-center p-4 bg-white shadow-lg justify-center w-full text-dark"
   >
     <div class="text-5xl pb-2 leading-none text-center">🍪</div>
     <div class="lg:mx-8 text-center">

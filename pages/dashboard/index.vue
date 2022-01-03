@@ -30,7 +30,8 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  layout: "dashboard",
+  name: "DashboardHome",
+  layout: "EditorDashboard",
   computed: {
     displayName(): string {
       return this.$store.getters["auth/user"].displayName;

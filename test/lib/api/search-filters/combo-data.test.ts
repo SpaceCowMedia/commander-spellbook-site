@@ -1,12 +1,10 @@
+import { makeSearchParams } from "../helper";
 import filterComboData, {
   DATA_TYPES,
 } from "@/lib/api/search-filters/combo-data";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 
-import { mocked } from "ts-jest/utils";
-
 import type { FormattedApiResponse, SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("comboDataFilter", () => {
   let combos: FormattedApiResponse[];
@@ -30,7 +28,7 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValue).mockReturnValue(false);
+      jest.mocked(combos[0][dataType].includesValue).mockReturnValue(false);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -50,7 +48,9 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(false);
+      jest
+        .mocked(combos[0][dataType].includesValueExactly)
+        .mockReturnValue(false);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -68,7 +68,7 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValue).mockReturnValue(true);
+      jest.mocked(combos[0][dataType].includesValue).mockReturnValue(true);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);
@@ -88,7 +88,9 @@ describe("comboDataFilter", () => {
 
       expect(result.length).toBe(1);
 
-      mocked(combos[0][dataType].includesValueExactly).mockReturnValue(true);
+      jest
+        .mocked(combos[0][dataType].includesValueExactly)
+        .mockReturnValue(true);
       result = filterComboData(combos, params);
 
       expect(result.length).toBe(0);

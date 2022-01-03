@@ -1,6 +1,6 @@
+import { makeSearchParams } from "../helper";
 import parseSort from "@/lib/api/parse-query/parse-sort";
 import type { SearchParameters, SortValue } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("parseSort", () => {
   let searchParams: SearchParameters;

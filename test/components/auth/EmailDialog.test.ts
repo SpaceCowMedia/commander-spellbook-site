@@ -1,10 +1,10 @@
 import { shallowMount } from "@vue/test-utils";
-import Email from "@/components/auth/Email.vue";
 import { createRouter, createStore } from "../../utils";
 
 import type { Router, Store, VueComponent } from "../../types";
+import EmailDialog from "@/components/auth/EmailDialog.vue";
 
-describe("Email Auth", () => {
+describe("EmailDialog Auth", () => {
   let $router: Router;
   let $store: Store;
 
@@ -14,7 +14,7 @@ describe("Email Auth", () => {
   });
 
   it("calls requestMagicLink when form submits", () => {
-    const wrapper = shallowMount(Email, {
+    const wrapper = shallowMount(EmailDialog, {
       mocks: {
         $router,
         $store,
@@ -35,7 +35,7 @@ describe("Email Auth", () => {
   });
 
   it("configures informational text in form", () => {
-    const wrapper = shallowMount(Email, {
+    const wrapper = shallowMount(EmailDialog, {
       mocks: {
         $router,
         $store,
@@ -58,7 +58,7 @@ describe("Email Auth", () => {
       props: ["message"],
       template: "<div></div>",
     };
-    const wrapper = shallowMount(Email, {
+    const wrapper = shallowMount(EmailDialog, {
       mocks: {
         $router,
         $store,
@@ -82,7 +82,7 @@ describe("Email Auth", () => {
       props: ["message"],
       template: "<div></div>",
     };
-    const wrapper = shallowMount(Email, {
+    const wrapper = shallowMount(EmailDialog, {
       mocks: {
         $router,
         $store,
@@ -106,7 +106,7 @@ describe("Email Auth", () => {
 
   describe("requestMagicLink", () => {
     it("dispatches auth/requestMagicLink action", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -131,7 +131,7 @@ describe("Email Auth", () => {
     });
 
     it("does not dispatch auth/requestMagicLink action if display name is included and it is not entered", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -157,7 +157,7 @@ describe("Email Auth", () => {
     });
 
     it("does not dispatch auth/requestMagicLink action if email name is not entered", () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -176,7 +176,7 @@ describe("Email Auth", () => {
     });
 
     it("dispatches auth/requestMagicLink action with display name if included", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -204,7 +204,7 @@ describe("Email Auth", () => {
     });
 
     it("removes error messages if they already exist", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -228,7 +228,7 @@ describe("Email Auth", () => {
     });
 
     it("sets component to completed state when dispatch is sent", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -254,7 +254,7 @@ describe("Email Auth", () => {
     });
 
     it("redirects to /email-link-sent/ if no completion text is passed", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -277,7 +277,7 @@ describe("Email Auth", () => {
     });
 
     it("sets email error message when log in fails", async () => {
-      const wrapper = shallowMount(Email, {
+      const wrapper = shallowMount(EmailDialog, {
         mocks: {
           $router,
           $store,
@@ -296,6 +296,58 @@ describe("Email Auth", () => {
       await vm.requestMagicLink();
 
       expect(vm.emailError).toBe("some validation error");
+    });
+
+    it("catches auth/invalid-email error", async () => {
+      const wrapper = shallowMount(EmailDialog, {
+        mocks: {
+          $router,
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+      $store.dispatch.mockRejectedValue({
+        code: "auth/invalid-email",
+        message: "some validation error",
+      });
+
+      await vm.requestMagicLink();
+
+      expect(vm.emailError).toBe("The email address is badly formatted.");
+    });
+
+    it("catches all other auth related errors", async () => {
+      const wrapper = shallowMount(EmailDialog, {
+        mocks: {
+          $router,
+          $store,
+        },
+        stubs: {
+          ErrorMessage: true,
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      await wrapper.setData({
+        email: "arjun@example.com",
+      });
+      $store.dispatch.mockRejectedValue({
+        code: "auth/other",
+        message: "some validation error",
+      });
+
+      await vm.requestMagicLink();
+
+      expect(vm.emailError).toBe(
+        "Something went wrong. Refresh your browser and try again. If the problem persists, reach out in the Discord server. Original error: auth/other - some validation error"
+      );
     });
   });
 });

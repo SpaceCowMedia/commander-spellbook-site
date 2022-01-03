@@ -30,6 +30,7 @@ type Data = {
 };
 
 export default Vue.extend({
+  name: "FeaturedPage",
   components: {
     ArtCircle,
     ComboResults,

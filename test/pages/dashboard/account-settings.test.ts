@@ -1,8 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
-import AccountSettings from "@/pages/dashboard/account-settings.vue";
 
 import { createStore } from "../../utils";
 import type { Store, VueComponent } from "../../types";
+import AccountSettings from "@/pages/dashboard/account-settings.vue";
 
 describe("AccountSettings", () => {
   let $store: Store;

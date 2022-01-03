@@ -2,13 +2,11 @@ import CardGrouping from "@/lib/api/models/card-grouping";
 import Card from "@/lib/api/models/card";
 import getExternalCardData from "@/lib/get-external-card-data";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@/lib/get-external-card-data");
 
 describe("CardGrouping", () => {
   beforeEach(() => {
-    mocked(getExternalCardData).mockReturnValue({
+    jest.mocked(getExternalCardData).mockReturnValue({
       isBanned: false,
       isPreview: false,
       isFeatured: false,

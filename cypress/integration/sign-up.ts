@@ -28,14 +28,15 @@ describe("Sign Up", () => {
       "Display name cannot be empty."
     );
 
-    cy.get("#display-name").type("Arjun, the Shifting Flame");
-    cy.get("#email").type("arjun");
-
-    cy.get("button[type='submit']").click();
-
-    cy.get("#email-error").should(
-      "contain.text",
-      "The email address is badly formatted."
-    );
+    // TODO the emulators no longer validate the format of the email
+    // cy.get("#display-name").type("Arjun, the Shifting Flame");
+    // cy.get("#email").type("arjun");
+    //
+    // cy.get("button[type='submit']").click();
+    //
+    // cy.get("#email-error").should(
+    //   "contain.text",
+    //   "The email address is badly formatted."
+    // );
   });
 });

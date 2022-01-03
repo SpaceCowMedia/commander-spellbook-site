@@ -1,8 +1,8 @@
+import { makeSearchParams } from "../helper";
 import parseComboData, {
   COMBO_DATA_TYPES,
 } from "@/lib/api/parse-query/parse-combo-data";
 import type { SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("parseComboData", () => {
   let searchParams: SearchParameters;

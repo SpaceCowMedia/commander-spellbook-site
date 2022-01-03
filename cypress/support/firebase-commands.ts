@@ -1,7 +1,10 @@
-/*  eslint-disable no-console */
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+/*  eslint-disable no-console, import/no-named-as-default-member */
+// TODO the firebase-cypress plugin doesn't support
+// the v9 modular syntax, when it does, change this
+// to the v9 module syntax
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
 // TODO something wrong with the cypress-firebase package
 // https://github.com/prescottprue/cypress-firebase/issues/483
 // @ts-ignore

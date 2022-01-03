@@ -9,7 +9,7 @@
       :class="'input-wrapper-' + index"
     >
       <div class="sm:flex">
-        <Select
+        <StyledSelect
           :id="label + '-select-' + index"
           v-model="input.operator"
           :label="'Modifier for ' + label"
@@ -73,15 +73,7 @@
       </div>
       <div
         v-if="input.error"
-        class="
-          input-error
-          text-danger
-          w-full
-          py-2
-          px-4
-          text-center
-          rounded-b-sm
-        "
+        class="input-error text-danger w-full py-2 px-4 text-center rounded-b-sm"
       >
         {{ input.error }}
       </div>
@@ -92,14 +84,14 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
-import Select from "@/components/Select.vue";
+import StyledSelect from "@/components/StyledSelect.vue";
 
 type MultiSearchInputValue = { value: string; operator: string }[];
 
 export default Vue.extend({
   components: {
     AutocompleteInput,
-    Select,
+    StyledSelect,
   },
   props: {
     value: {

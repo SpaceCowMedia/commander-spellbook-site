@@ -3,8 +3,6 @@ import sortCombos from "@/lib/api/sort-combos";
 import COLOR_ORDER from "@/lib/api/color-combo-order";
 import { FormattedApiResponse, SortValue } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
-
 describe("search", () => {
   let combos: FormattedApiResponse[];
 
@@ -558,7 +556,7 @@ describe("search", () => {
     expect(combos[0].cards.getPrice).toBeCalledWith("cardkingdom");
     expect(combos[0].cards.getPrice).not.toBeCalledWith("tcgplayer");
 
-    mocked(combos[0].cards.getPrice).mockClear();
+    jest.mocked(combos[0].cards.getPrice).mockClear();
 
     sortCombos(combos, {
       by: "price",

@@ -98,9 +98,11 @@ export default Vue.extend({
   0% {
     @apply bg-dark;
   }
+
   50% {
     @apply bg-primary;
   }
+
   100% {
     @apply bg-dark;
   }

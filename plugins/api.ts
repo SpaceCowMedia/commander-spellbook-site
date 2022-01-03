@@ -1,4 +1,3 @@
-import Vue from "vue";
 import { Plugin } from "@nuxt/types";
 
 type FetchOptions = Parameters<typeof fetch>[1];
@@ -12,14 +11,10 @@ declare module "vue/types/vue" {
   }
 }
 
-const apiSetup: Plugin = (nuxt): void => {
-  const { env, $fire } = nuxt;
+const apiSetup: Plugin = ({ env, $fire }, inject): void => {
   const baseUrl = env.apiBaseUrl;
 
-  Vue.prototype.$api = async function (
-    path: string,
-    body: Record<string, unknown>
-  ) {
+  inject("api", async function (path: string, body: Record<string, unknown>) {
     let status: number;
     const user = $fire.auth.currentUser;
 
@@ -56,7 +51,7 @@ const apiSetup: Plugin = (nuxt): void => {
 
         return res;
       });
-  };
+  });
 };
 
 export default apiSetup;

@@ -1,5 +1,5 @@
 <template>
-  <EmailAuth
+  <EmailDialog
     prompt-text="Enter your email address to create an account"
     :include-display-name="true"
     submit-button-text="Create Account"
@@ -9,12 +9,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import EmailAuth from "@/components/auth/Email.vue";
+import EmailDialog from "@/components/auth/EmailDialog.vue";
 
 export default Vue.extend({
   components: {
-    EmailAuth,
+    EmailDialog,
   },
-  layout: "splash",
+  layout: "SplashLayout",
 });
 </script>

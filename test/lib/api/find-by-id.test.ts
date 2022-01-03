@@ -4,7 +4,6 @@ import lookup from "@/lib/api/spellbook-api";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
 jest.mock("@/lib/api/spellbook-api");
 
 describe("findById", () => {
@@ -29,7 +28,7 @@ describe("findById", () => {
         results: ["Step 1.", "Step 2"],
       }),
     ];
-    mocked(lookup).mockResolvedValue(combos);
+    jest.mocked(lookup).mockResolvedValue(combos);
   });
 
   it("returns the specified combo", async () => {

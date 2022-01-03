@@ -38,6 +38,7 @@ type Data = {
 };
 
 export default Vue.extend({
+  name: "MetaCombosPage",
   data(): Data {
     return {
       links: [],

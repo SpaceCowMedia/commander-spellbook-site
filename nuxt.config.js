@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
-import fbConfig from "./firebase-config";
+import { config as configureDotenv } from "dotenv";
+import firebaseConfig from "./firebase-config";
 
-dotenv.config();
+configureDotenv();
 
 const isWindows = process.platform === "win32";
 
@@ -30,7 +30,14 @@ export default {
   target: "static",
 
   env: {
+    useEmulators,
     apiBaseUrl,
+    FIREBASE_API_KEY: firebaseConfig.apiKey,
+    FIREBASE_AUTH_DOMAIN: firebaseConfig.authDomain,
+    FIREBASE_PROJECT_ID: firebaseConfig.projectId,
+    FIREBASE_STORAGE_BUCKET: firebaseConfig.storageBucket,
+    FIREBASE_MESSAGING_SENDER_ID: firebaseConfig.messagingSenderId,
+    FIREBASE_APP_ID: firebaseConfig.appId,
   },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -156,7 +163,7 @@ export default {
     },
     "~/plugins/vue-tooltip.ts",
     {
-      src: "./plugins/fireauth.ts",
+      src: "./plugins/firebase.ts",
       mode: "client",
     },
     {
@@ -176,29 +183,13 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    "@nuxtjs/google-fonts",
-    "vue-social-sharing/nuxt",
-    "@nuxtjs/firebase",
-  ],
+  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-
-  firebase: {
-    config: fbConfig,
-    services: {
-      auth: {
-        emulatorPort: useEmulators ? 9099 : null,
-      },
-      firestore: {
-        emulatorPort: useEmulators ? 8080 : null,
-      },
-    },
-  },
 
   tailwindcss: {
     jit: !isWindows,

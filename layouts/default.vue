@@ -11,7 +11,7 @@
     <main id="main" tabindex="-1" class="pb-16">
       <Nuxt />
     </main>
-    <Footer class="mt-24 lg:mt-48 z-0" />
+    <PageFooter class="mt-24 lg:mt-48 z-0" />
   </div>
 </template>
 
@@ -19,13 +19,17 @@
 import Vue from "vue";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
 import SearchBar from "@/components/SearchBar.vue";
-import Footer from "@/components/Footer.vue";
+import PageFooter from "@/components/PageFooter.vue";
 
 export default Vue.extend({
+  // got to give it a multi-word name to appease
+  // the eslint rules, but it should still get used
+  // correctly by nuxt based on the filename
+  name: "DefaultLayout",
   components: {
     AnalyticsCookieBanner,
     SearchBar,
-    Footer,
+    PageFooter,
   },
   watch: {
     $route(): void {

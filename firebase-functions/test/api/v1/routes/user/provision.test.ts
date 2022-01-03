@@ -1,5 +1,4 @@
 import admin from "firebase-admin";
-import { mocked } from "ts-jest/utils";
 import UserProfile from "../../../../../src/db/user-profile";
 import Username from "../../../../../src/db/username";
 import {
@@ -115,7 +114,7 @@ describe("user/provision", () => {
       },
     });
 
-    mocked(Username.exists).mockResolvedValue(true);
+    jest.mocked(Username.exists).mockResolvedValue(true);
     await provision(req, res);
 
     expect(Username.exists).toBeCalledTimes(1);

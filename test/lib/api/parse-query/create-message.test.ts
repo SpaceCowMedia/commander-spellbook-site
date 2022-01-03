@@ -1,9 +1,9 @@
+import { makeSearchParams } from "../helper";
 import createMessage, {
   DATA_TYPES,
 } from "@/lib/api/parse-query/create-message";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import type { SearchParameters, FormattedApiResponse } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("createMessage", () => {
   let combos: FormattedApiResponse[];

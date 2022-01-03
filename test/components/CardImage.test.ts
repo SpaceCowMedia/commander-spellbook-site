@@ -44,7 +44,7 @@ describe("CardImage", () => {
         img: "https://example.com/image.png",
       },
       stubs: {
-        Flipper: FlipperStub,
+        FlipperCard: FlipperStub,
       },
     });
 

@@ -1,6 +1,6 @@
+import { makeSearchParams } from "../helper";
 import parseColorIdentity from "@/lib/api/parse-query/parse-color-identity";
 import type { SearchParameters } from "@/lib/api/types";
-import { makeSearchParams } from "../helper";
 
 describe("parseColorIdentity", () => {
   let searchParams: SearchParameters;

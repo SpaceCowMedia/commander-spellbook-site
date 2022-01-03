@@ -5,8 +5,6 @@ import {
   CommanderSpellbookAPIResponse,
 } from "@/lib/api/types";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@/lib/api/normalize-database-value");
 
 describe("api", () => {
@@ -14,7 +12,7 @@ describe("api", () => {
   let body: CommanderSpellbookAPIResponse;
 
   beforeEach(() => {
-    mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
+    jest.mocked(normalizeDatabaseValue).mockImplementation((str: string) => {
       return str;
     });
 

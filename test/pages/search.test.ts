@@ -1,10 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
+import type { MountOptions, Route, Router, VueComponent } from "../types";
 import SearchPage from "@/pages/search.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";
-import { mocked } from "ts-jest/utils";
-
-import type { MountOptions, Route, Router, VueComponent } from "../types";
 
 jest.mock("@/lib/api/search");
 
@@ -20,7 +18,7 @@ describe("SearchPage", () => {
   }[];
 
   beforeEach(() => {
-    mocked(search).mockResolvedValue({
+    jest.mocked(search).mockResolvedValue({
       vendor: "cardkingdom",
       sort: "popularity",
       order: "descending",
@@ -59,7 +57,7 @@ describe("SearchPage", () => {
         ComboResults: true,
         SearchMessage: true,
         NoCombosFound: true,
-        Pagination: true,
+        SearchPagination: true,
       },
     };
   });
@@ -107,7 +105,7 @@ describe("SearchPage", () => {
       };
       // @ts-ignore
       wrapperOptions.stubs.NoCombosFound = NoCombosStub;
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         vendor: "cardkingdom",
@@ -225,7 +223,7 @@ describe("SearchPage", () => {
         },
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       // add a large number of combos
@@ -292,7 +290,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
@@ -318,7 +316,7 @@ describe("SearchPage", () => {
         template: "<div></div>",
       };
       // @ts-ignore
-      wrapperOptions.stubs.Pagination = PaginationStub;
+      wrapperOptions.stubs.SearchPagination = PaginationStub;
       const wrapper = shallowMount(SearchPage, wrapperOptions);
 
       await wrapper.setData({
@@ -451,7 +449,7 @@ describe("SearchPage", () => {
 
   describe("updateSearchResults", () => {
     beforeEach(() => {
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [],
         message: "",
         vendor: "cardkingdom",
@@ -479,7 +477,7 @@ describe("SearchPage", () => {
         commanderSpellbookId: "2",
         numberOfEDHRECDecks: 20,
       });
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [combo1, combo2],
         message: "",
         vendor: "cardkingdom",
@@ -498,7 +496,7 @@ describe("SearchPage", () => {
       const wrapper = shallowMount(SearchPage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
-      mocked(search).mockResolvedValue({
+      jest.mocked(search).mockResolvedValue({
         combos: [
           makeFakeCombo({
             cards: ["a", "b", "c"],

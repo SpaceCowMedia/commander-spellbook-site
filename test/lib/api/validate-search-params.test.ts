@@ -1,5 +1,5 @@
-import validateSearchParams from "@/lib/api/validate-search-params";
 import { makeSearchParams } from "./helper";
+import validateSearchParams from "@/lib/api/validate-search-params";
 
 describe("validateSearchParams", () => {
   it("returns false when no search params are passed on", () => {

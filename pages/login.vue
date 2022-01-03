@@ -1,5 +1,5 @@
 <template>
-  <EmailAuth
+  <EmailDialog
     prompt-text="Enter your email address to log in"
     submit-button-text="Continue"
   >
@@ -8,17 +8,18 @@
     <nuxt-link class="button dark w-full text-center" to="/sign-up/"
       >Create an Account</nuxt-link
     >
-  </EmailAuth>
+  </EmailDialog>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import EmailAuth from "@/components/auth/Email.vue";
+import EmailDialog from "@/components/auth/EmailDialog.vue";
 
 export default Vue.extend({
+  name: "LoginPage",
   components: {
-    EmailAuth,
+    EmailDialog,
   },
-  layout: "splash",
+  layout: "SplashLayout",
 });
 </script>

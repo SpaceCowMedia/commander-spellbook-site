@@ -1,10 +1,8 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
+import type { VueComponent } from "../../types";
 import ComboHomePage from "@/pages/meta/combos.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import getAllCombos from "@/lib/api/get-all-combos";
-import { mocked } from "ts-jest/utils";
-
-import type { VueComponent } from "../../types";
 
 jest.mock("@/lib/api/get-all-combos");
 
@@ -18,7 +16,7 @@ describe("ComboHomePage", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      mocked(getAllCombos).mockResolvedValue([
+      jest.mocked(getAllCombos).mockResolvedValue([
         makeFakeCombo({
           cards: ["card 1", "card 2"],
           commanderSpellbookId: "1",

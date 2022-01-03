@@ -1,11 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
+import type { Route, Router } from "../types";
 import RandomPage from "@/pages/random.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import random from "@/lib/api/random";
-import { mocked } from "ts-jest/utils";
-
-import type { Route, Router } from "../types";
 
 jest.mock("@/lib/api/random");
 
@@ -13,7 +11,7 @@ describe("RandomPage", () => {
   let $route: Route, $router: Router;
 
   beforeEach(() => {
-    mocked(random).mockResolvedValue(
+    jest.mocked(random).mockResolvedValue(
       makeFakeCombo({
         commanderSpellbookId: "123",
       })
@@ -48,7 +46,7 @@ describe("RandomPage", () => {
   });
 
   it("redirects to a not found page when random throws an error combo", async () => {
-    mocked(random).mockRejectedValue("no combo");
+    jest.mocked(random).mockRejectedValue("no combo");
     shallowMount(RandomPage, {
       mocks: {
         $route,

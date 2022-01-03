@@ -1,5 +1,5 @@
 <template>
-  <Error-Base
+  <ErrorBase
     :container-class="unknownErrorClass"
     main-message="Uh Oh"
     sub-message="Something went wrong. Try again in a few minutes."
@@ -8,14 +8,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ErrorBase from "./ErrorBase.vue";
 import getRandomItemFromArray from "@/lib/random-from-array";
-import ErrorBaseComponent from "./error-base.vue";
 
 const backgroundOptions = ["apocalypse", "obliterate", "book-burning"];
 
 export default Vue.extend({
   components: {
-    "Error-Base": ErrorBaseComponent,
+    ErrorBase,
   },
   data() {
     return {

@@ -1,9 +1,9 @@
 import { shallowMount } from "@vue/test-utils";
-import Flipper from "@/components/Flipper.vue";
+import FlipperCard from "@/components/FlipperCard.vue";
 
-describe("Flipper", () => {
+describe("FlipperCard", () => {
   it("creates a flipper with a front and back slot", () => {
-    const wrapper = shallowMount(Flipper, {
+    const wrapper = shallowMount(FlipperCard, {
       slots: {
         front: '<div class="front-slot"></div>',
         back: '<div class="back-slot"></div>',
@@ -15,7 +15,7 @@ describe("Flipper", () => {
   });
 
   it("applies flipped class from prop", async () => {
-    const wrapper = shallowMount(Flipper);
+    const wrapper = shallowMount(FlipperCard);
 
     expect(wrapper.classes()).not.toContain("flipped");
 

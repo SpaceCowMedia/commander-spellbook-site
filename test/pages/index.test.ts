@@ -1,8 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
-import HomePage from "@/pages/index.vue";
 
 import { createStore } from "../utils";
 import type { MountOptions, Route, Router, Store } from "../types";
+import HomePage from "@/pages/index.vue";
 
 describe("HomePage", () => {
   let $route: Route;
@@ -26,7 +26,7 @@ describe("HomePage", () => {
       },
       stubs: {
         SearchBar: true,
-        Logo: true,
+        SpellbookLogo: true,
         NuxtLink: true,
       },
     };

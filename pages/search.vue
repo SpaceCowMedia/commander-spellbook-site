@@ -14,7 +14,7 @@
     <div v-if="paginatedResults.length > 0" class="border-b border-light">
       <div class="container sm:flex flex-row items-center justify-center">
         <div class="mr-2 sm:mt-0 mt-2" aria-hidden="true">Sorted by</div>
-        <Select
+        <StyledSelect
           id="sort-combos-select"
           v-model="sort"
           class="my-2 sm:mr-2"
@@ -24,7 +24,7 @@
           :options="sortOptions"
         />
         <div class="mx-1 hidden sm:block" aria-hidden="true">:</div>
-        <Select
+        <StyledSelect
           id="order-combos-select"
           v-model="order"
           class="sm:m-2"
@@ -34,7 +34,7 @@
           :options="orderOptions"
         />
         <div class="flex-grow"></div>
-        <Pagination
+        <SearchPagination
           :current-page="page"
           :total-pages="totalPages"
           aria-hidden="true"
@@ -52,7 +52,7 @@
           :vendor="vendor"
         />
 
-        <Pagination
+        <SearchPagination
           :current-page="page"
           :total-pages="totalPages"
           @go-forward="goForward"
@@ -69,9 +69,9 @@
 import Vue from "vue";
 import ComboResults from "@/components/search/ComboResults.vue";
 import NoCombosFound from "@/components/search/NoCombosFound.vue";
-import Pagination from "@/components/search/Pagination.vue";
+import SearchPagination from "@/components/search/SearchPagination.vue";
 import SearchMessage from "@/components/search/SearchMessage.vue";
-import Select, { Option } from "@/components/Select.vue";
+import StyledSelect, { Option } from "@/components/StyledSelect.vue";
 import search from "@/lib/api/search";
 import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "@/lib/constants";
 
@@ -96,12 +96,13 @@ type Data = {
 };
 
 export default Vue.extend({
+  name: "SearchPage",
   components: {
     ComboResults,
     NoCombosFound,
-    Pagination,
+    SearchPagination,
     SearchMessage,
-    Select,
+    StyledSelect,
   },
   data(): Data {
     return {
