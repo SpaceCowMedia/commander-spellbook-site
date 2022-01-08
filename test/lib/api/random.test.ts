@@ -62,10 +62,8 @@ describe("random", () => {
       combos: [],
     });
 
-    try {
-      await random("query");
-    } catch (err) {
-      expect(err.message).toBe("No combos found for query: query");
-    }
+    await expect(random("query")).rejects.toEqual(
+      new Error("No combos found for query: query")
+    );
   });
 });

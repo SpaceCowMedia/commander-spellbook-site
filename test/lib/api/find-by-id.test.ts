@@ -52,12 +52,8 @@ describe("findById", () => {
   it("rejects when combo cannot be found", async () => {
     expect.assertions(1);
 
-    try {
-      await findById("not-found-id");
-    } catch (err) {
-      expect(err.message).toBe(
-        'Combo with id "not-found-id" could not be found.'
-      );
-    }
+    await expect(findById("not-found-id")).rejects.toEqual(
+      new Error('Combo with id "not-found-id" could not be found.')
+    );
   });
 });
