@@ -267,13 +267,12 @@ describe("firebase", () => {
     fakeAuth.currentUser = null;
 
     jest.mocked(updateProfile).mockReset();
-    try {
-      await injectedAuth.updateProfile({
+
+    await expect(
+      injectedAuth.updateProfile({
         displayName: "name",
-      });
-    } catch (e) {
-      expect(updateProfile).not.toBeCalled();
-      expect(e.message).toBe("Unexpected Error. No user.");
-    }
+      })
+    ).rejects.toEqual(new Error("Unexpected Error. No user."));
+    expect(updateProfile).not.toBeCalled();
   });
 });

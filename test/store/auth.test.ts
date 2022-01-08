@@ -148,11 +148,9 @@ describe("Auth Store", () => {
         window.localStorage.setItem("emailForSignIn", "email@example.com");
         auth.isSignInWithEmailLink.mockReturnValue(false);
 
-        try {
-          await (actions.signInWithMagicLink as Function)();
-        } catch (e) {
-          expect(e.message).toBe("Sign in url is not valid");
-        }
+        await expect(
+          (actions.signInWithMagicLink as Function)()
+        ).rejects.toEqual(new Error("Sign in url is not valid"));
 
         expect(auth.isSignInWithEmailLink).toBeCalledWith(window.location.href);
       });
@@ -162,11 +160,9 @@ describe("Auth Store", () => {
 
         window.localStorage.removeItem("emailForSignIn");
 
-        try {
-          await (actions.signInWithMagicLink as Function)();
-        } catch (e) {
-          expect(e.message).toBe("No email found");
-        }
+        await expect(
+          (actions.signInWithMagicLink as Function)()
+        ).rejects.toEqual(new Error("No email found"));
       });
 
       it("calls $fire.auth.signInWithEmailLink", async () => {
@@ -341,37 +337,31 @@ describe("Auth Store", () => {
 
         delete auth.currentUser;
 
-        try {
-          await (actions.updateProfile as Function)(null, {
+        await expect(
+          (actions.updateProfile as Function)(null, {
             displayName: "New Name",
-          });
-        } catch (err) {
-          expect(err.message).toBe("No user logged in.");
-        }
+          })
+        ).rejects.toEqual(new Error("No user logged in."));
       });
 
       it("errors when no updates are passed", async () => {
         expect.assertions(1);
 
-        try {
-          await (actions.updateProfile as Function)(null, {
+        await expect(
+          (actions.updateProfile as Function)(null, {
             displayName: "",
-          });
-        } catch (err) {
-          expect(err.message).toBe("Nothing set to update.");
-        }
+          })
+        ).rejects.toEqual(new Error("Nothing set to update."));
       });
 
       it("errors when nothing was changed", async () => {
         expect.assertions(1);
 
-        try {
-          await (actions.updateProfile as Function)(null, {
+        await expect(
+          (actions.updateProfile as Function)(null, {
             displayName: "Old Name",
-          });
-        } catch (err) {
-          expect(err.message).toBe("Nothing set to update.");
-        }
+          })
+        ).rejects.toEqual(new Error("Nothing set to update."));
       });
 
       it("updates the display name", async () => {

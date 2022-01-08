@@ -93,6 +93,7 @@ describe("AnalyticsCookieBanner", () => {
       const oldWindowLocation = window.location;
       // @ts-ignore
       delete window.location;
+      // @ts-ignore
       window.location = Object.defineProperties(
         // start with an empty object on which to define properties
         {},

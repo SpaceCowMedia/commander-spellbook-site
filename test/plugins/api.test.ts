@@ -55,13 +55,9 @@ describe("api", () => {
 
     const $api = spy.mock.calls[0][1];
 
-    try {
-      await $api("/path");
-    } catch (e) {
-      expect(e.message).toBe(
-        "User not logged in. Refreshng your browser and try again."
-      );
-    }
+    await expect($api("/path")).rejects.toEqual(
+      new Error("User not logged in. Refreshng your browser and try again.")
+    );
   });
 
   it("sends an api request with users auth token", async () => {
@@ -174,39 +170,33 @@ describe("api", () => {
     };
     global.fetch = jest.fn().mockResolvedValue(fakeFetch);
 
-    try {
-      await $api("/path", {
+    await expect(
+      $api("/path", {
         foo: "bar",
-      });
-    } catch (e) {
-      expect(e.message).toBe("400 error message from response");
-    }
+      })
+    ).rejects.toEqual(new Error("400 error message from response"));
 
     fakeFetch.status = 422;
     fakeFetch.json.mockResolvedValue({
       message: "422 error message from response",
     });
 
-    try {
-      await $api("/path", {
+    await expect(
+      $api("/path", {
         foo: "bar",
-      });
-    } catch (e) {
-      expect(e.message).toBe("422 error message from response");
-    }
+      })
+    ).rejects.toEqual(new Error("422 error message from response"));
 
     fakeFetch.status = 500;
     fakeFetch.json.mockResolvedValue({
       message: "500 error message from response",
     });
 
-    try {
-      await $api("/path", {
+    await expect(
+      $api("/path", {
         foo: "bar",
-      });
-    } catch (e) {
-      expect(e.message).toBe("500 error message from response");
-    }
+      })
+    ).rejects.toEqual(new Error("500 error message from response"));
 
     fakeFetch.status = 399;
     fakeFetch.json.mockResolvedValue({

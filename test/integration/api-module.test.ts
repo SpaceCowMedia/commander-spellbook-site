@@ -36,13 +36,9 @@ describe("API Module", () => {
     it("rejects when combo does not exist", async () => {
       expect.assertions(1);
 
-      try {
-        await findById("does-not-exist");
-      } catch (err) {
-        expect(err.message).toBe(
-          'Combo with id "does-not-exist" could not be found.'
-        );
-      }
+      await expect(findById("does-not-exist")).rejects.toEqual(
+        new Error('Combo with id "does-not-exist" could not be found.')
+      );
     });
   });
 
