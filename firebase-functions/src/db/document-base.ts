@@ -34,6 +34,11 @@ export default abstract class DocumentBase {
   }
 
   static createWithId(id: string, details: RecordDetails) {
+    // TODO should probably check for existence
+    return this.update(id, details);
+  }
+
+  static update(id: string, details: RecordDetails) {
     return this.getDocumentRef(id).set(details);
   }
 
