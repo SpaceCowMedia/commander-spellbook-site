@@ -25,7 +25,7 @@ export function createRequest(options: CreateRequestOptions = {}): Request {
       proposeCombo: true,
     },
     userId: "user-id",
-  } as Request;
+  } as any; // not great, but the request object has a billion entries and Typescript won't let us get away with just putting in a few
 }
 
 export function createResponse(): Response {
@@ -33,7 +33,7 @@ export function createResponse(): Response {
     status: jest.fn().mockReturnThis(),
     send: jest.fn(),
     json: jest.fn(),
-  } as any; // not great, but the response has a billion entries and Typescript won't let us get away with just putting in a few
+  } as any; // same thing here with the request object
 }
 
 export function createNext(): NextFunction {
