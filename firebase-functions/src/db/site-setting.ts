@@ -1,3 +1,4 @@
+import { UnknownError, ValidationError } from "../api/error";
 import DocumentBase from "./document-base";
 
 const ALLOWED_RULE_KINDS = ["card"];
@@ -61,17 +62,23 @@ export default class SiteSetting extends DocumentBase {
           };
       }
 
-      throw new Error("Unexpected kind");
+      // it should never get here, since the allowed kinds
+      // are checked before this function runs
+      throw new UnknownError("Unexpected rule kind.");
     });
   }
 
   static updateFeaturedSettings(settings: FeaturedSettings) {
     if (!this.hasRequiredSettings(settings)) {
-      return Promise.reject(new Error("Missing buttonText or rules"));
+      return Promise.reject(
+        new ValidationError("Featured combos is missing buttonText or rules.")
+      );
     }
 
     if (!this.hasValidRules(settings.rules)) {
-      return Promise.reject(new Error("Rules malformed."));
+      return Promise.reject(
+        new ValidationError("At least one featured combo rule is malformed.")
+      );
     }
 
     const buttonText = String(settings.buttonText);

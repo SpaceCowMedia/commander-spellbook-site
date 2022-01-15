@@ -1,12 +1,9 @@
 import SiteSetting from "../../src/db/site-setting";
+import { ValidationError } from "../../src/api/error";
 
 jest.mock("../../src/db/document-base");
 
 describe("SiteSetting", () => {
-  beforeEach(() => {
-    // TODO - set BaseDocument.getDocumentSnapshot to return fake UserProfile document
-  });
-
   describe("updateFeaturedSettings", () => {
     it("rejects when buttonText is missing", async () => {
       await expect(
@@ -19,7 +16,9 @@ describe("SiteSetting", () => {
             },
           ],
         })
-      ).rejects.toEqual(new Error("Missing buttonText or rules"));
+      ).rejects.toEqual(
+        new ValidationError("Featured combos is missing buttonText or rules.")
+      );
     });
 
     it("rejects when rules is missing", async () => {
@@ -28,7 +27,9 @@ describe("SiteSetting", () => {
         SiteSetting.updateFeaturedSettings({
           buttonText: "foo",
         })
-      ).rejects.toEqual(new Error("Missing buttonText or rules"));
+      ).rejects.toEqual(
+        new ValidationError("Featured combos is missing buttonText or rules.")
+      );
     });
 
     it("rejects when rules is empty", async () => {
@@ -37,7 +38,9 @@ describe("SiteSetting", () => {
           buttonText: "foo",
           rules: [],
         })
-      ).rejects.toEqual(new Error("Missing buttonText or rules"));
+      ).rejects.toEqual(
+        new ValidationError("Featured combos is missing buttonText or rules.")
+      );
     });
 
     it("rejects when at least one rule is malformed", async () => {
@@ -56,7 +59,9 @@ describe("SiteSetting", () => {
             },
           ],
         })
-      ).rejects.toEqual(new Error("Rules malformed."));
+      ).rejects.toEqual(
+        new ValidationError("At least one featured combo rule is malformed.")
+      );
 
       await expect(
         SiteSetting.updateFeaturedSettings({
@@ -78,7 +83,9 @@ describe("SiteSetting", () => {
             },
           ],
         })
-      ).rejects.toEqual(new Error("Rules malformed."));
+      ).rejects.toEqual(
+        new ValidationError("At least one featured combo rule is malformed.")
+      );
     });
 
     it("sets settings data when all rules are correctly formed", async () => {
