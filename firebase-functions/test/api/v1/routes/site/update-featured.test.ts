@@ -1,6 +1,7 @@
 import SiteSetting from "../../../../../src/db/site-setting";
 import { createRequest, createResponse } from "../../../../helper";
 import updateFeatured from "../../../../../src/api/v1/routes/site/update-featured";
+import { UnknownError } from "../../../../../src/api/error";
 
 jest.mock("../../../../../src/db/site-setting");
 
@@ -16,17 +17,16 @@ describe("site/update-featured", () => {
     const req = createRequest({
       body: {},
     });
+    const err = new UnknownError();
 
-    jest
-      .mocked(SiteSetting.updateFeaturedSettings)
-      .mockRejectedValue(new Error("something went wrong"));
+    jest.mocked(SiteSetting.updateFeaturedSettings).mockRejectedValue(err);
 
     await updateFeatured(req, res);
 
     expect(res.status).toBeCalledTimes(1);
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(new Error("something went wrong"));
+    expect(res.json).toBeCalledWith(err);
   });
 
   it("returns a 200 when update completes", async () => {
