@@ -1,10 +1,14 @@
-import { PermissionError, UnknownError } from "../../../src/api/error";
+import {
+  PermissionError,
+  UnknownError,
+  ValidationError,
+} from "../../../src/api/error";
 
 describe("API Errors", () => {
   let errorClasses: Array<typeof PermissionError | typeof UnknownError>;
 
   beforeEach(() => {
-    errorClasses = [PermissionError, UnknownError];
+    errorClasses = [PermissionError, UnknownError, ValidationError];
   });
 
   describe("ApiError", () => {
@@ -58,6 +62,23 @@ describe("API Errors", () => {
       const err = new UnknownError();
 
       expect(err.message).toBe("Something went wrong.");
+    });
+  });
+
+  describe("ValidationError", () => {
+    it("signifies a validation error", () => {
+      const err = new ValidationError("message");
+
+      expect(JSON.parse(JSON.stringify(err))).toEqual({
+        name: "ValidationError",
+        message: "message",
+      });
+    });
+
+    it("defaults message to 'A validation error occurred.'", () => {
+      const err = new ValidationError();
+
+      expect(err.message).toBe("A validation error occurred.");
     });
   });
 });

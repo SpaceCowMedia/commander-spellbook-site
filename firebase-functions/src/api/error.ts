@@ -26,3 +26,7 @@ export class PermissionError extends ApiError {
 }
 
 export class UnknownError extends ApiError {}
+
+export class ValidationError extends ApiError {
+  protected static defaultMessage = "A validation error occurred.";
+}
