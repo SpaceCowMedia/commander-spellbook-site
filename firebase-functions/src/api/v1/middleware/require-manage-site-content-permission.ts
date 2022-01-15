@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import { PermissionError } from "../../error";
 
 export default function requireAuthentication(
   req: Request,
@@ -6,9 +7,13 @@ export default function requireAuthentication(
   next: NextFunction
 ) {
   if (!req.userPermissions.manageSiteContent) {
-    res.status(403).json({
-      message: "Your user does not have the manage site content permission.",
-    });
+    res
+      .status(403)
+      .json(
+        new PermissionError(
+          "Your user does not have the 'manage site content' permission."
+        )
+      );
 
     return;
   }
