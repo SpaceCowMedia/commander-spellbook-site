@@ -1,6 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
 import {
-  connectAuthEmulator,
   getAuth,
   onAuthStateChanged,
   isSignInWithEmailLink,
@@ -9,45 +7,65 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import connectToFirebase from "~/lib/connect-to-firebase";
 import setupFirebase from "~/plugins/firebase";
 
 jest.mock("firebase/auth");
-jest.mock("firebase/app");
+jest.mock("~/lib/connect-to-firebase");
 
 describe("firebase", () => {
   let fakeAuth: ReturnType<typeof getAuth>;
+  let env: Record<string, string | boolean>;
 
   beforeEach(() => {
+    env = {
+      FIREBASE_API_KEY: "api-key",
+      FIREBASE_AUTH_DOMAIN: "auth-domain",
+      FIREBASE_PROJECT_ID: "project-id",
+      FIREBASE_STORAGE_BUCKET: "storage-bucket",
+      FIREBASE_MESSAGING_SENDER_ID: "messaging-sender-id",
+      FIREBASE_APP_ID: "app-id",
+      useEmulators: false,
+    };
     fakeAuth = {
       name: "fake-auth",
       currentUser: {},
     } as ReturnType<typeof getAuth>;
-    jest.mocked(getApps).mockReturnValue([]);
     jest.mocked(getAuth).mockReturnValue(fakeAuth);
+    jest.mocked(connectToFirebase).mockReturnValue({
+      db: {},
+      auth: fakeAuth,
+    } as ReturnType<typeof connectToFirebase>);
   });
 
-  it("initializes firebase app if it is not already initialized", () => {
+  it("connects to firebase", () => {
     setupFirebase(
       {
         // @ts-ignore
         store: {
           commit: jest.fn(),
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       jest.fn()
     );
 
-    expect(getApps).toBeCalledTimes(1);
-    expect(initializeApp).toBeCalledTimes(1);
+    expect(connectToFirebase).toBeCalledTimes(1);
+    expect(connectToFirebase).toBeCalledWith(
+      {
+        apiKey: "api-key",
+        authDomain: "auth-domain",
+        projectId: "project-id",
+        storageBucket: "storage-bucket",
+        messagingSenderId: "messaging-sender-id",
+        appId: "app-id",
+      },
+      false
+    );
   });
 
-  it("skips initialization when firebase is already initialized", () => {
-    const fakeFirebase = { fakeFirebase: "app" };
-    // @ts-ignore
-    jest.mocked(getApps).mockReturnValue([fakeFirebase]);
+  it("passes along useEmulators value when connecting to firebase", () => {
+    env.useEmulators = true;
 
     setupFirebase(
       {
@@ -55,16 +73,23 @@ describe("firebase", () => {
         store: {
           commit: jest.fn(),
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       jest.fn()
     );
 
-    expect(getApps).toBeCalledTimes(1);
-    expect(initializeApp).not.toBeCalled();
-    expect(getAuth).toBeCalledWith(fakeFirebase);
+    expect(connectToFirebase).toBeCalledTimes(1);
+    expect(connectToFirebase).toBeCalledWith(
+      {
+        apiKey: "api-key",
+        authDomain: "auth-domain",
+        projectId: "project-id",
+        storageBucket: "storage-bucket",
+        messagingSenderId: "messaging-sender-id",
+        appId: "app-id",
+      },
+      true
+    );
   });
 
   it("injects $fire", () => {
@@ -76,51 +101,13 @@ describe("firebase", () => {
         store: {
           commit: jest.fn(),
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       spy
     );
 
     expect(spy).toBeCalledTimes(1);
     expect(spy).toBeCalledWith("fire", expect.any(Object));
-  });
-
-  it("connects emulators when configured", () => {
-    setupFirebase(
-      {
-        // @ts-ignore
-        store: {
-          commit: jest.fn(),
-        },
-        env: {
-          useEmulators: false,
-        },
-      },
-      jest.fn()
-    );
-
-    expect(connectAuthEmulator).not.toBeCalled();
-
-    setupFirebase(
-      {
-        // @ts-ignore
-        store: {
-          commit: jest.fn(),
-        },
-        env: {
-          useEmulators: true,
-        },
-      },
-      jest.fn()
-    );
-
-    expect(connectAuthEmulator).toBeCalledTimes(1);
-    expect(connectAuthEmulator).toBeCalledWith(
-      fakeAuth,
-      "http://localhost:9099"
-    );
   });
 
   it("commits user on auth change", () => {
@@ -144,9 +131,7 @@ describe("firebase", () => {
         store: {
           commit,
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       jest.fn()
     );
@@ -176,9 +161,7 @@ describe("firebase", () => {
         store: {
           commit,
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       spy
     );
@@ -197,9 +180,7 @@ describe("firebase", () => {
         store: {
           commit: jest.fn(),
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       spy
     );
@@ -246,9 +227,7 @@ describe("firebase", () => {
         store: {
           commit: jest.fn(),
         },
-        env: {
-          useEmulators: false,
-        },
+        env,
       },
       spy
     );

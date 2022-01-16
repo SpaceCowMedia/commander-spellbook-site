@@ -1,6 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
 import {
-  connectAuthEmulator,
   getAuth,
   onAuthStateChanged,
   isSignInWithEmailLink,
@@ -9,7 +7,8 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { Plugin } from "@nuxt/types";
+import type { Plugin } from "@nuxt/types";
+import connectToFirebase from "../lib/connect-to-firebase";
 
 type NuxtAuth = {
   sendSignInLinkToEmail(
@@ -62,24 +61,18 @@ declare module "@nuxt/types" {
 }
 
 const firebasePlugin: Plugin = ({ store, env }, inject): void => {
-  let firebaseApp: ReturnType<typeof initializeApp>;
-
-  const apps = getApps();
-
-  if (apps.length === 0) {
-    firebaseApp = initializeApp({
+  const { auth } = connectToFirebase(
+    {
       apiKey: env.FIREBASE_API_KEY,
       authDomain: env.FIREBASE_AUTH_DOMAIN,
       projectId: env.FIREBASE_PROJECT_ID,
       storageBucket: env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
       appId: env.FIREBASE_APP_ID,
-    });
-  } else {
-    firebaseApp = apps[0];
-  }
+    },
+    env.useEmulators
+  );
 
-  const auth = getAuth(firebaseApp);
   const injectedAuth: NuxtAuth = {
     sendSignInLinkToEmail(email, actionCodeSettings) {
       return sendSignInLinkToEmail(auth, email, actionCodeSettings);
@@ -104,10 +97,6 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
     },
     currentUser: auth.currentUser,
   };
-
-  if (env.useEmulators) {
-    connectAuthEmulator(auth, "http://localhost:9099");
-  }
 
   onAuthStateChanged(auth, (user) => {
     store.commit("auth/setUser", user);
