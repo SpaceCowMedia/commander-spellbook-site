@@ -8,6 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import type { DocumentData } from "firebase/firestore";
 import type { Plugin } from "@nuxt/types";
 import connectToFirebase from "../lib/connect-to-firebase";
 
@@ -33,38 +34,31 @@ type NuxtAuth = {
   currentUser: ReturnType<typeof getAuth>["currentUser"];
 };
 type NuxtFirestore = {
-  getDoc(collection: string, id: string): void;
+  getDoc(collection: string, id: string): Promise<DocumentData>;
+};
+
+type NuxtFire = {
+  auth: NuxtAuth;
+  firestore: NuxtFirestore;
 };
 
 declare module "vue/types/vue" {
   interface Vue {
-    $fire: {
-      auth: NuxtAuth;
-      firestore: NuxtFirestore;
-    };
+    $fire: NuxtFire;
   }
 }
 declare module "vuex/types/index" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
-    $fire: {
-      auth: NuxtAuth;
-      firestore: NuxtFirestore;
-    };
+    $fire: NuxtFire;
   }
 }
 declare module "@nuxt/types" {
   interface NuxtAppOptions {
-    $fire: {
-      auth: NuxtAuth;
-      firestore: NuxtFirestore;
-    };
+    $fire: NuxtFire;
   }
   interface Context {
-    $fire: {
-      auth: NuxtAuth;
-      firestore: NuxtFirestore;
-    };
+    $fire: NuxtFire;
   }
 }
 
@@ -107,7 +101,7 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
   };
 
   const injectedFirestore = {
-    async getDoc(collection: string, id: string) {
+    async getDoc(collection: string, id: string): Promise<DocumentData> {
       const docRef = doc(db, collection, id);
       const docSnap = await getDoc(docRef);
 
