@@ -20,10 +20,12 @@
           Random Combo
         </RandomButton>
         <nuxt-link
+          v-if="featuredComboButtonText"
+          id="featured-combos-button"
           to="/featured/"
           class="previwed-combos-button dark button md:m-1"
         >
-          Crimson Vow Combos
+          {{ featuredComboButtonText }}
         </nuxt-link>
       </div>
 
@@ -45,6 +47,12 @@ import SearchBar from "@/components/SearchBar.vue";
 import ExternalLink from "@/components/ExternalLink.vue";
 import SpellbookLogo from "@/components/SpellbookLogo.vue";
 
+function getDefaultData() {
+  return {
+    featuredComboButtonText: "",
+  };
+}
+
 export default Vue.extend({
   name: "HomePage",
   components: {
@@ -54,6 +62,27 @@ export default Vue.extend({
     SpellbookLogo,
   },
   layout: "LandingLayout",
+  async asyncData(context) {
+    try {
+      const featuredRules = await context.$fire.firestore.getDoc(
+        "site-settings",
+        "featured-combos"
+      );
+      if (!featuredRules.buttonText || featuredRules.rules.length === 0) {
+        return getDefaultData();
+      }
+
+      return {
+        featuredComboButtonText: featuredRules.buttonText,
+      };
+    } catch (e) {
+      return getDefaultData();
+    }
+  },
+
+  data() {
+    return getDefaultData();
+  },
   computed: {
     query(): string {
       return this.$store.state.query.value;
