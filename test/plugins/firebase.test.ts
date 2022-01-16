@@ -7,8 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import connectToFirebase from "~/lib/connect-to-firebase";
 import setupFirebase from "~/plugins/firebase";
 
