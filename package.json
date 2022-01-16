@@ -18,7 +18,7 @@
     "generate:netlify": "mv firebase-functions/src/shared firebase-shared && rm -rf firebase-functions && mkdir -p firebase-functions/src/ && mv firebase-shared firebase-functions/src/shared && npm run generate -- -c cypress/nuxt.config.js",
     "prefirebase:emulate": "npm run build-functions",
     "postfirebase:emulate": "npm run prettier",
-    "firebase:emulate": "firebase emulators:start --import firebase-emulator-seed-data",
+    "firebase:emulate": "firebase emulators:start --project=\"commander-spellbook-local\" --import firebase-emulator-seed-data",
     "firebase:login": "firebase login",
     "firebase:deploy": "firebase deploy",
     "prefirebase:deploy:ci": "npm run install-functions",
