@@ -7,6 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import type { Plugin } from "@nuxt/types";
 import connectToFirebase from "../lib/connect-to-firebase";
 
@@ -31,11 +32,15 @@ type NuxtAuth = {
   ): ReturnType<typeof updateProfile>;
   currentUser: ReturnType<typeof getAuth>["currentUser"];
 };
+type NuxtFirestore = {
+  getDoc(collection: string, id: string): void;
+};
 
 declare module "vue/types/vue" {
   interface Vue {
     $fire: {
       auth: NuxtAuth;
+      firestore: NuxtFirestore;
     };
   }
 }
@@ -44,6 +49,7 @@ declare module "vuex/types/index" {
   interface Store<S> {
     $fire: {
       auth: NuxtAuth;
+      firestore: NuxtFirestore;
     };
   }
 }
@@ -51,17 +57,19 @@ declare module "@nuxt/types" {
   interface NuxtAppOptions {
     $fire: {
       auth: NuxtAuth;
+      firestore: NuxtFirestore;
     };
   }
   interface Context {
     $fire: {
       auth: NuxtAuth;
+      firestore: NuxtFirestore;
     };
   }
 }
 
 const firebasePlugin: Plugin = ({ store, env }, inject): void => {
-  const { auth } = connectToFirebase(
+  const { auth, db } = connectToFirebase(
     {
       apiKey: env.FIREBASE_API_KEY,
       authDomain: env.FIREBASE_AUTH_DOMAIN,
@@ -98,6 +106,19 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
     currentUser: auth.currentUser,
   };
 
+  const injectedFirestore = {
+    async getDoc(collection: string, id: string) {
+      const docRef = doc(db, collection, id);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        throw new Error("Document not found.");
+      }
+
+      return docSnap.data();
+    },
+  };
+
   onAuthStateChanged(auth, (user) => {
     store.commit("auth/setUser", user);
     injectedAuth.currentUser = user;
@@ -105,6 +126,7 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
 
   inject("fire", {
     auth: injectedAuth,
+    firestore: injectedFirestore,
   });
 };
 
