@@ -1,12 +1,16 @@
 import fs from "fs";
+import { config as configureDotenv } from "dotenv";
 import normalizeCardName from "../../lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
 import isFeatured from "./is-featured";
 import getEDHRECPrices from "./get-edhrec-prices";
 import getEDHRECComboData from "./get-edhrec-combo-data";
+import getFeaturedRules from "./get-featured-rules";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
+
+configureDotenv();
 
 type CardData = {
   f?: 1; // whether the combo should be featured
@@ -30,10 +34,16 @@ Promise.all([
   getScryfallData(),
   getEDHRECPrices(),
   getEDHRECComboData(),
+  getFeaturedRules(),
 ]).then((responses) => {
   const cardData: Record<string, CardData> = {};
-  const [compressedData, scryfallData, edhrecPriceData, edhrecComboData] =
-    responses;
+  const [
+    compressedData,
+    scryfallData,
+    edhrecPriceData,
+    edhrecComboData,
+    featuredRules,
+  ] = responses;
   const cardNames = collectCardNames(compressedData);
   const results = collectResults(compressedData);
 
@@ -65,7 +75,7 @@ Promise.all([
         e: sfData.edhrecPermalink,
       };
 
-      if (isFeatured(sfData)) {
+      if (isFeatured(sfData, featuredRules)) {
         cardData[name].f = 1;
       }
 
