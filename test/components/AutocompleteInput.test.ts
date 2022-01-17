@@ -1,6 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
-import type { VueComponent } from "../../types";
-import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
+import type { VueComponent } from "../types";
+import AutocompleteInput from "@/components/AutocompleteInput.vue";
 
 describe("AutocompleteInput", () => {
   it("creates an input", () => {

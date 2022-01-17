@@ -54,7 +54,6 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
-
 import normalizeStringInput from "@/lib/api/normalize-string-input";
 
 type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
@@ -292,7 +291,7 @@ export default Vue.extend({
 
       return totalOptions.slice(0, MAX_NUMBER_OF_MATCHING_RESULTS);
     },
-    createAutocompleteTimeout(): ReturnValue<typeof setTimeout> {
+    createAutocompleteTimeout(): ReturnType<typeof setTimeout> {
       return setTimeout(() => {
         if (!this.value) {
           this.close();
