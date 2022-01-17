@@ -23,20 +23,28 @@ describe("AutocompleteInput", () => {
     expect(label.attributes("for")).toBe("id");
   });
 
-  it("applies border classes for error and non-error state", async () => {
+  it("applies border classes for error", async () => {
     const wrapper = shallowMount(AutocompleteInput, {
       propsData: {
         hasError: false,
       },
     });
 
-    expect(wrapper.find("input").classes()).toContain("border-dark");
     expect(wrapper.find("input").classes()).not.toContain("border-danger");
 
     await wrapper.setProps({ hasError: true });
 
     expect(wrapper.find("input").classes()).toContain("border-danger");
-    expect(wrapper.find("input").classes()).not.toContain("border-dark");
+  });
+
+  it("applies input class if specified", () => {
+    const wrapper = shallowMount(AutocompleteInput, {
+      propsData: {
+        inputClass: "custom-input-class",
+      },
+    });
+
+    expect(wrapper.find("input").classes()).toContain("custom-input-class");
   });
 
   it("shows autocomplete results when there any matching autocomplete results", async () => {

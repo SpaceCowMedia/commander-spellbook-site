@@ -10,7 +10,7 @@
       :placeholder="placeholder"
       class="input"
       :class="{
-        'border-dark': !hasError,
+        [inputClass]: true,
         'border-danger': hasError,
       }"
       autocomplete="off"
@@ -69,6 +69,10 @@ export default Vue.extend({
   },
   props: {
     value: {
+      type: String,
+      default: "",
+    },
+    inputClass: {
       type: String,
       default: "",
     },

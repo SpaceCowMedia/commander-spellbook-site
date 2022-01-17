@@ -31,6 +31,7 @@
             :input-id="getInputId(index)"
             :placeholder="getPlaceholder(input.operator)"
             :label="inputLabel"
+            input-class="border-dark"
             :autocomplete-options="autocompleteOptions"
             :has-error="Boolean(input.error)"
             :use-value-for-input="useValueForAutocompleteInput"

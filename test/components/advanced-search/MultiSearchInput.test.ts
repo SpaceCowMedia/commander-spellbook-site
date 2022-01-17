@@ -6,7 +6,7 @@ describe("MultiSearchInput", () => {
   it("creates an input", () => {
     const AutocompleteInputStub = {
       template: "<div><input /></div>",
-      props: ["label", "inputId", "placeholder"],
+      props: ["label", "inputClass", "inputId", "placeholder"],
     };
     const wrapper = shallowMount(MultiSearchInput, {
       propsData: {
@@ -30,6 +30,7 @@ describe("MultiSearchInput", () => {
     expect(inputs.at(0).props("label")).toBe("Label Name");
     expect(inputs.at(0).props("placeholder")).toBe("Placeholder");
     expect(inputs.at(0).props("inputId")).toBe("label-name-input-0");
+    expect(inputs.at(0).props("inputClass")).toBe("border-dark");
   });
 
   it("creates an operator selector for input", async () => {
