@@ -304,7 +304,7 @@ describe("ComboPage", () => {
     ]);
   });
 
-  it("Pluralizes number of decks correctly", async () => {
+  it("pluralizes number of decks correctly in metadata", async () => {
     const ComboListStub = {
       template: "<div></div>",
       props: ["cardsInCombo", "iterations"],
