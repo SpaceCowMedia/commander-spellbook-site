@@ -94,6 +94,10 @@ export default Vue.extend({
       type: String,
       default: "",
     },
+    matchAgainstOptionLabel: {
+      type: Boolean,
+      default: false,
+    },
     hasError: {
       type: Boolean,
       default: false,
@@ -237,9 +241,25 @@ export default Vue.extend({
       return this.autocompleteOptions.filter((option) => {
         const mainMatch = option.value.includes(normalizedValue);
 
-        return (
-          mainMatch || (option.alias && normalizedValue.match(option.alias))
-        );
+        if (mainMatch) {
+          return true;
+        }
+
+        if (this.matchAgainstOptionLabel) {
+          const labelMatch = normalizeStringInput(option.label).includes(
+            normalizedValue
+          );
+
+          if (labelMatch) {
+            return true;
+          }
+        }
+
+        if (option.alias) {
+          return normalizedValue.match(option.alias);
+        }
+
+        return false;
       });
     },
     findBestMatches(

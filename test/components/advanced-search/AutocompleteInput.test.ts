@@ -824,6 +824,29 @@ describe("AutocompleteInput", () => {
         { value: "bfoo", label: "B Foo", alias: /baz/ },
       ]);
     });
+
+    it("supports labels to match if configured", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "some value baz some other value",
+          matchAgainstOptionLabel: true,
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "2", label: "A Foo" },
+            { value: "2", label: "B Foo" },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findAllMatches("foo");
+
+      expect(matches).toEqual([
+        { value: "2", label: "A Foo" },
+        { value: "2", label: "B Foo" },
+      ]);
+    });
   });
 
   describe("findBestMatches", () => {
