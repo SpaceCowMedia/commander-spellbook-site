@@ -233,6 +233,63 @@ export default Vue.extend({
         input.focus();
       }
     },
+    findAllMatches(normalizedValue: string) {
+      return this.autocompleteOptions.filter((option) => {
+        const mainMatch = option.value.includes(normalizedValue);
+
+        return (
+          mainMatch || (option.alias && normalizedValue.match(option.alias))
+        );
+      });
+    },
+    findBestMatches(
+      totalOptions: AutoCompleteOption[],
+      normalizedValue: string
+    ) {
+      totalOptions.sort((a, b) => {
+        const indexA = a.value.indexOf(normalizedValue);
+        const indexB = b.value.indexOf(normalizedValue);
+
+        if (indexA === indexB) {
+          return 0;
+        }
+
+        if (indexA === -1) {
+          return 1;
+        }
+        if (indexB === -1) {
+          return -1;
+        }
+
+        if (indexA < indexB) {
+          return -1;
+        } else if (indexB < indexA) {
+          return 1;
+        }
+
+        return 0;
+      });
+
+      return totalOptions.slice(0, MAX_NUMBER_OF_MATCHING_RESULTS);
+    },
+    createAutocompleteTimeout(): ReturnValue<typeof setTimeout> {
+      return setTimeout(() => {
+        if (!this.value) {
+          this.close();
+          return;
+        }
+
+        const normalizedValue = normalizeStringInput(this.value);
+        this.matchingAutocompleteOptions = [];
+
+        const totalOptions = this.findAllMatches(normalizedValue);
+
+        this.matchingAutocompleteOptions = this.findBestMatches(
+          totalOptions,
+          normalizedValue
+        );
+      }, AUTOCOMPLETE_DELAY);
+    },
     lookupAutocomplete(): void {
       if (!this.active) {
         return;
@@ -246,52 +303,7 @@ export default Vue.extend({
       if (this.autocompleteTimeout) {
         clearTimeout(this.autocompleteTimeout);
       }
-      this.autocompleteTimeout = setTimeout(() => {
-        if (!this.value) {
-          this.close();
-          return;
-        }
-
-        const normalizedValue = normalizeStringInput(this.value);
-        this.matchingAutocompleteOptions = [];
-
-        const totalOptions = this.autocompleteOptions
-          .filter((option) => {
-            const mainMatch = option.value.includes(normalizedValue);
-
-            return (
-              mainMatch || (option.alias && normalizedValue.match(option.alias))
-            );
-          })
-          .sort((a, b) => {
-            const indexA = a.value.indexOf(normalizedValue);
-            const indexB = b.value.indexOf(normalizedValue);
-
-            if (indexA === indexB) {
-              return 0;
-            }
-
-            if (indexA === -1) {
-              return 1;
-            }
-            if (indexB === -1) {
-              return -1;
-            }
-
-            if (indexA < indexB) {
-              return -1;
-            } else if (indexB < indexA) {
-              return 1;
-            }
-
-            return 0;
-          });
-
-        this.matchingAutocompleteOptions = totalOptions.slice(
-          0,
-          MAX_NUMBER_OF_MATCHING_RESULTS
-        );
-      }, AUTOCOMPLETE_DELAY);
+      this.autocompleteTimeout = this.createAutocompleteTimeout();
     },
   },
 });
