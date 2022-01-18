@@ -91,7 +91,7 @@ export default Vue.extend({
     cardkingdomLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("\n"));
 
-      return `https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=${cardQuery}`;
+      return `https://www.cardkingdom.com/builder?partner=CommanderSpellbook&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=${cardQuery}`;
     },
     tcgPlayerLink(): string {
       const cardQuery = encodeURI(this.cardsWithQuantities.join("||"));

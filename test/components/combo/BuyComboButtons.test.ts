@@ -87,7 +87,7 @@ describe("BuyComboButton", () => {
 
     expect(ckButton.text()).toContain("Card Kingdom");
     expect(ckButton.attributes("href")).toBe(
-      "https://www.cardkingdom.com/builder?partner=edhrec&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=1%20card%201%0A1%20card%202%0A1%20card%203"
+      "https://www.cardkingdom.com/builder?partner=CommanderSpellbook&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=1%20card%201%0A1%20card%202%0A1%20card%203"
     );
     expect(ckButton.text()).toContain("($123.45)");
   });
