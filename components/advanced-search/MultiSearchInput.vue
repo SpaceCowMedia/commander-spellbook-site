@@ -138,15 +138,7 @@ export default Vue.extend({
   },
   computed: {
     inputLabel(): string {
-      if (this.inputs.length > 1) {
-        if (this.pluralLabel) {
-          return this.pluralLabel;
-        }
-
-        return `${this.label}s`;
-      }
-
-      return this.label;
+      return this.$pluralize(this.label, this.inputs.length, this.pluralLabel);
     },
     inputs: {
       get(): MultiSearchInputValue {

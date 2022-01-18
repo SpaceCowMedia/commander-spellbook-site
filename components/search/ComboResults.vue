@@ -87,13 +87,15 @@ export default Vue.extend({
       }
 
       if (this.sort === "popularity") {
-        if (!combo.numberOfEDHRECDecks) {
+        const numberOfDecks = combo.numberOfEDHRECDecks;
+
+        if (!numberOfDecks) {
           return "No deck data (EDHREC)";
         }
 
-        return `${combo.numberOfEDHRECDecks} deck${
-          combo.numberOfEDHRECDecks === 1 ? "" : "s"
-        } (EDHREC)`;
+        const deckString = this.$pluralize("deck", numberOfDecks);
+
+        return `${numberOfDecks} ${deckString} (EDHREC)`;
       }
 
       if (this.sort === "price") {

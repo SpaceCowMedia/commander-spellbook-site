@@ -39,6 +39,7 @@
           v-model="colorIdentity"
           default-placeholder="ex: wug, temur, colorless, black"
           label="Color Identity"
+          plural-label="Color Identities"
           :operator-options="colorIdentityOperatorOptions"
           :autocomplete-options="colorAutocompletes"
           :use-value-for-autocomplete-input="true"

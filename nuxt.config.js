@@ -167,6 +167,7 @@ export default {
       src: "./plugins/api.ts",
       mode: "client",
     },
+    "~/plugins/text-helpers.ts",
   ],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)

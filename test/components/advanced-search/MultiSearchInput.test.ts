@@ -1,6 +1,7 @@
 import { shallowMount, mount } from "@vue/test-utils";
 import type { VueComponent } from "../../types";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
+import { pluralize as $pluralize } from "~/plugins/text-helpers";
 
 describe("MultiSearchInput", () => {
   it("creates an input", () => {
@@ -9,6 +10,9 @@ describe("MultiSearchInput", () => {
       props: ["label", "inputClass", "inputId", "placeholder"],
     };
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -35,6 +39,9 @@ describe("MultiSearchInput", () => {
 
   it("creates an operator selector for input", async () => {
     const wrapper = mount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -70,6 +77,9 @@ describe("MultiSearchInput", () => {
 
   it("includes error if provided", () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -104,6 +114,9 @@ describe("MultiSearchInput", () => {
 
   it("calls addInput when plus button is clicked", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -143,6 +156,9 @@ describe("MultiSearchInput", () => {
 
   it("calls removeInput when minus button is clicked", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -182,6 +198,9 @@ describe("MultiSearchInput", () => {
 
   it("automatically updates label to be plural", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         label: "Label",
         value: [
@@ -205,6 +224,9 @@ describe("MultiSearchInput", () => {
 
   it("can pass a custom plural label", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         label: "Mouse",
         pluralLabel: "Mice",
@@ -229,6 +251,9 @@ describe("MultiSearchInput", () => {
 
   it("only displays minus button when there are multiple inputs", async () => {
     const wrapper = shallowMount(MultiSearchInput, {
+      mocks: {
+        $pluralize,
+      },
       propsData: {
         value: [
           {
@@ -275,6 +300,9 @@ describe("MultiSearchInput", () => {
         { value: "3", operator: ":" },
       ];
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           value,
         },
@@ -294,6 +322,9 @@ describe("MultiSearchInput", () => {
         { value: "3", operator: ":" },
       ];
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           value,
           defaultOperator: ">",
@@ -316,6 +347,9 @@ describe("MultiSearchInput", () => {
         { value: "3", operator: ":" },
       ];
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           value,
         },
@@ -332,7 +366,9 @@ describe("MultiSearchInput", () => {
 
   describe("getPlaceholder", () => {
     it("returns a random number between 1 and 5 when a number operator is used", () => {
-      const wrapper = shallowMount(MultiSearchInput);
+      const wrapper = shallowMount(MultiSearchInput, {
+        mocks: { $pluralize },
+      });
       const vm = wrapper.vm as VueComponent;
 
       jest.spyOn(Math, "random").mockReturnValue(0.6);
@@ -341,6 +377,9 @@ describe("MultiSearchInput", () => {
 
     it("returns configured default placeholder when appropriate option configuration cannot be found", () => {
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           defaultPlaceholder: "placeholder",
           operatorOptions: [
@@ -359,6 +398,9 @@ describe("MultiSearchInput", () => {
 
     it("returns configured default placeholder when appropriate option configuration has no placeholder", () => {
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           defaultPlaceholder: "placeholder",
           operatorOptions: [
@@ -376,6 +418,9 @@ describe("MultiSearchInput", () => {
 
     it("returns empty string when appropriate option configuration has no placeholder and there is no default placedholder", () => {
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           operatorOptions: [
             {
@@ -392,6 +437,9 @@ describe("MultiSearchInput", () => {
 
     it("returns the placeholder from options configuration if it can be found", () => {
       const wrapper = shallowMount(MultiSearchInput, {
+        mocks: {
+          $pluralize,
+        },
         propsData: {
           operatorOptions: [
             {
