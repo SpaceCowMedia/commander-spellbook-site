@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "core-js": "^3.20.3",
-    "dotenv": "^12.0.3",
+    "dotenv": "^14.2.0",
     "firebase": "^9.6.3",
     "nuxt": "^2.15.8",
     "scryfall-client": "^0.19.1",
