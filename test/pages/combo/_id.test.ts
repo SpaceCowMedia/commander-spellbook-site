@@ -304,6 +304,43 @@ describe("ComboPage", () => {
     ]);
   });
 
+  it("pluralizes number of decks correctly in metadata", async () => {
+    const ComboListStub = {
+      template: "<div></div>",
+      props: ["cardsInCombo", "iterations"],
+    };
+    // @ts-ignore
+    options.stubs.ComboList = ComboListStub;
+    const wrapper = shallowMount(ComboPage, options);
+
+    await wrapper.setData({
+      prerequisites: ["pre 1", "pre 2"],
+      steps: ["step 1", "step 2"],
+      results: ["result 1", "result 2"],
+      cards: [
+        {
+          name: "Card 1",
+          artUrl: "https://example.com/art-1",
+          oracleImageUrl: "https://example.com/card-1",
+        },
+        {
+          name: "Card 2",
+          artUrl: "https://example.com/art-2",
+          oracleImageUrl: "https://example.com/card-2",
+        },
+      ],
+      numberOfDecks: 1,
+    });
+
+    const lists = wrapper.findAllComponents(ComboListStub);
+
+    expect(lists).toHaveLength(5);
+
+    expect(lists.at(4).props("iterations")).toEqual([
+      "In 1 deck according to EDHREC.",
+    ]);
+  });
+
   it("does not include metadata if no metadata info is available", async () => {
     const ComboListStub = {
       template: "<div></div>",

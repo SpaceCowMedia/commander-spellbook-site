@@ -91,11 +91,9 @@ export default Vue.extend({
           return "No deck data (EDHREC)";
         }
 
-        if (combo.numberOfEDHRECDecks === 1) {
-          return "1 deck (EDHREC)";
-        }
-
-        return `${combo.numberOfEDHRECDecks} decks (EDHREC)`;
+        return `${combo.numberOfEDHRECDecks} deck${
+          combo.numberOfEDHRECDecks === 1 ? "" : "s"
+        } (EDHREC)`;
       }
 
       if (this.sort === "price") {
