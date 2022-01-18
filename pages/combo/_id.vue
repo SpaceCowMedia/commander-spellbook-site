@@ -285,7 +285,7 @@ export default Vue.extend({
       const data = [];
 
       if (this.numberOfDecks > 0) {
-        data.push(`In ${this.numberOfDecks} decks according to EDHREC.`);
+        data.push(`In ${this.numberOfDecks} deck${this.numberOfDecks === 1 ? "" : "s"} according to EDHREC.`);
       }
 
       return data;
