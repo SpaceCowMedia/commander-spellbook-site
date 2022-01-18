@@ -91,8 +91,8 @@ export default Vue.extend({
           return "No deck data (EDHREC)";
         }
 
-        return `${combo.numberOfEDHRECDecks} deck${
-          combo.numberOfEDHRECDecks === 1 ? "" : "s"
+        return `${combo.numberOfEDHRECDecks} ${
+          this.$pluralize("deck", combo.numberOfEDHRECDecks)
         } (EDHREC)`;
       }
 

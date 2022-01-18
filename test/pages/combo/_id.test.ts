@@ -5,6 +5,7 @@ import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import findById from "@/lib/api/find-by-id";
 import getExternalCardData from "@/lib/get-external-card-data";
+import { pluralize as $pluralize } from "~/plugins/helpers";
 
 jest.mock("@/lib/api/find-by-id");
 jest.mock("@/lib/get-external-card-data");
@@ -31,6 +32,7 @@ describe("ComboPage", () => {
         };
       },
       mocks: {
+        $pluralize,
         $route,
         $router,
       },
