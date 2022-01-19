@@ -216,6 +216,7 @@ describe("Auth Store", () => {
         expect(permissions).toEqual({
           proposeCombo: false,
           manageUserPermissions: false,
+          manageSiteContent: false,
           viewUsers: false,
         });
       });
@@ -244,6 +245,7 @@ describe("Auth Store", () => {
         expect(permissions).toEqual({
           proposeCombo: true,
           manageUserPermissions: false,
+          manageSiteContent: false,
           viewUsers: false,
         });
       });

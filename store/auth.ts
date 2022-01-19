@@ -7,6 +7,7 @@ type Permissions = {
   proposeCombo: boolean;
   manageUserPermissions: boolean;
   viewUsers: boolean;
+  manageSiteContent: boolean;
 };
 
 function createEmptyUser() {
@@ -89,6 +90,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       return Promise.resolve({
         proposeCombo: false,
         manageUserPermissions: false,
+        manageSiteContent: false,
         viewUsers: false,
       });
     }
@@ -115,6 +117,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
       manageUserPermissions:
         token.claims[PERMISSIONS.manageUserPermissions] === 1,
+      manageSiteContent: token.claims[PERMISSIONS.manageSiteContent] === 1,
       viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
     });
   },

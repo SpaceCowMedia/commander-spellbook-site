@@ -42,6 +42,7 @@ describe("DashboardNav", () => {
     $store.dispatch.mockResolvedValue({
       proposeCombo: true,
       manageUserPermissions: true,
+      manageSiteContent: true,
       viewUsers: true,
     });
 
@@ -58,11 +59,12 @@ describe("DashboardNav", () => {
 
     const links = wrapper.findAll("nav ul li");
 
-    expect(links.length).toBe(5);
+    expect(links.length).toBe(6);
     expect(links.at(0).text()).toContain("Recent Activity");
     expect(links.at(1).text()).toContain("Account Settings");
-    expect(links.at(2).text()).toContain("Propose New Combo");
-    expect(links.at(3).text()).toContain("Users");
-    expect(links.at(4).text()).toContain("Sign Out");
+    expect(links.at(2).text()).toContain("Site Settings");
+    expect(links.at(3).text()).toContain("Propose New Combo");
+    expect(links.at(4).text()).toContain("Users");
+    expect(links.at(5).text()).toContain("Sign Out");
   });
 });
