@@ -49,5 +49,8 @@ export function createFirebase(): Firebase {
         }),
       },
     },
+    firestore: {
+      getDoc: jest.fn().mockResolvedValue({}),
+    },
   };
 }
