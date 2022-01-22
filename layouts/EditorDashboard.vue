@@ -13,7 +13,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import Vue from "vue";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
@@ -27,6 +26,9 @@ export default Vue.extend({
     CompleteAccountSetup,
   },
   computed: {
+    isAuthenticated(): boolean {
+      return this.$store.getters["auth/isAuthenticated"];
+    },
     provisioned(): boolean {
       return this.$store.getters["auth/user"].provisioned === true;
     },
@@ -34,7 +36,7 @@ export default Vue.extend({
   async mounted() {
     await this.$store.dispatch("auth/lookupUser");
 
-    if (!this.$store.getters["auth/isAuthenticated"]) {
+    if (!this.isAuthenticated) {
       this.$router.push("/");
     }
   },
