@@ -25,6 +25,21 @@ export default Vue.extend({
     DashboardNav,
     CompleteAccountSetup,
   },
+  middleware({ store, redirect }) {
+    // TODO is this the best way to handle this????
+    if (process.server) {
+      return;
+    }
+
+    const isAuthenticated = store.getters["auth/isAuthenticated"];
+
+    if (!isAuthenticated) {
+      // TODO should probably have a return param
+      // to get back to the specific dashboard page
+      // the user was trying to access
+      return redirect("/login/");
+    }
+  },
   computed: {
     isAuthenticated(): boolean {
       return this.$store.getters["auth/isAuthenticated"];
@@ -37,7 +52,7 @@ export default Vue.extend({
     await this.$store.dispatch("auth/lookupUser");
 
     if (!this.isAuthenticated) {
-      this.$router.push("/");
+      this.$router.push("/login/");
     }
   },
 });
