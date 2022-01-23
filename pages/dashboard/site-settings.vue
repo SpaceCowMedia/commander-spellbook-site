@@ -31,13 +31,14 @@
             <AutocompleteInput
               v-model="setCode.value"
               label="foo"
+              :input-id="'featured-set-code-' + index"
               :autocomplete-options="setCodeAutocompleteOptions"
               :use-value-for-input="true"
               :match-against-option-label="true"
             />
             <button
               v-if="index !== setCodes.length - 1"
-              id="add-rule-button"
+              :id="'remove-set-code-rule-button-' + index"
               type="button"
               class="button dark m-0 w-10"
               @click="removeSetCodeRule(index)"
@@ -46,7 +47,7 @@
             </button>
             <button
               v-if="index === setCodes.length - 1"
-              id="add-rule-button"
+              :id="'add-set-code-rule-button-' + index"
               type="button"
               class="button dark m-0 w-10"
               @click="addSetCodeRule(index)"
@@ -57,14 +58,14 @@
         </div>
 
         <div>
-          <button type="submit" class="button m-0">
+          <button id="submit-featured-updates" type="submit" class="button m-0">
             Update Featured Combos Page
           </button>
         </div>
 
         <div
           v-if="featuredInfo"
-          id="featured-error"
+          id="featured-info"
           class="my-2 p-4 rounded-sm bg-yellow-200"
         >
           {{ featuredInfo }}
