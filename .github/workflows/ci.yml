@@ -100,6 +100,7 @@ jobs:
         run: npm run generate
         env:
           NODE_ENV: production
+          NODE_OPTIONS: "--max-old-space-size=4096"
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
