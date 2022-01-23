@@ -57,7 +57,7 @@ export default class SiteSetting extends DocumentBase {
         case "card":
           return {
             kind: rule.kind,
-            setCode: String(rule.setCode || ""),
+            setCode: String(rule.setCode || "").toLowerCase(),
             cardName: String(rule.cardName || ""),
           };
       }

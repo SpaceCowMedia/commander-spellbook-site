@@ -94,7 +94,7 @@ describe("SiteSetting", () => {
         rules: [
           {
             kind: "card",
-            setCode: "bar",
+            setCode: "Bar",
           },
           {
             kind: "card",
@@ -142,7 +142,7 @@ describe("SiteSetting", () => {
         rules: [
           {
             kind: "card",
-            setCode: "[object Object]",
+            setCode: "[object object]",
             cardName: "[object Object]",
           },
         ],
