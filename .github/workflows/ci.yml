@@ -17,15 +17,21 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@master
 
-        # only install dependencies using
-        # https://github.com/cypress-io/github-action
-        # will restore / create folders
-        #   ~/.npm
-        #   ~/.cache/Cypress
-      - name: Install 📦
-        uses: cypress-io/github-action@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
         with:
-          runTests: false
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install 📦
+        run: npm install
 
   linter:
     runs-on: ubuntu-20.04
@@ -35,9 +41,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
+        run: npm install
 
       - name: Run linter 👀
         run: npm run lint
@@ -50,9 +54,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
+        run: npm install
 
       - name: Run unit tests 🧪
         run: npm test
@@ -65,12 +67,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
+        run: npm install
 
       - name: Run Integration tests 💻
         run: npm run test:integration
+        env:
+          NODE_ENV: development
+          USE_FIREBASE_EMULATORS: true
 
   deploy:
     # only deploy from the main branch
@@ -83,9 +86,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
+        run: npm install
+
+      - name: Deploy Firebase 🔥
+        run: npm run firebase:deploy:ci
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
 
       - name: Generate 🏗️
         run: npm run generate
@@ -98,12 +105,6 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-
-      - name: Deploy Firebase 🔥
-        run: npm run firebase:deploy:ci
-        env:
-          NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
 
       - name: Configure AWS Credentials ㊙️
         uses: aws-actions/configure-aws-credentials@v1
