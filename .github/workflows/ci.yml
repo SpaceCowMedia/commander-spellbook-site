@@ -71,6 +71,9 @@ jobs:
 
       - name: Run Integration tests 💻
         run: npm run test:integration
+        env:
+          NODE_ENV: development
+          USE_FIREBASE_EMULATORS: true
 
   deploy:
     # only deploy from the main branch
