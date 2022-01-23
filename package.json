@@ -34,8 +34,8 @@
     "lint:style:vue": "stylelint \"**/*.vue\"",
     "lint": "npm run lint:js && npm run lint:style",
     "test": "jest",
-    "cy:run": "cypress run -- --spec cypress/integration/dashboard/*.ts",
-    "pretest:integration": "npm run firebase:emulate & npm run generate -- -c cypress/nuxt.config.js",
+    "cy:run": "cypress run -- --spec cypress/integration/dashboard/site-settings.ts",
+    "pretest:integration": "NODE_ENV=development USE_FIREBASE_EMULATORS=true npm run firebase:emulate & npm run generate -- -c cypress/nuxt.config.js",
     "test:integration": "npm start & wait-on http://localhost:3000 && wait-on http://localhost:4000 && npm run cy:run"
   },
   "lint-staged": {
