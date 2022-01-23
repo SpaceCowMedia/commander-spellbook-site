@@ -21,6 +21,14 @@ Unlike unit tests, we really only want to test broad strokes behavior. The most 
   npm run cy:run
   ```
 
+## Videos/Screenshots
+
+By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:
+
+```
+npm run cy:run -- --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
+```
+
 ## Test Users
 
 When the emulators start up, they import users and Firestore documents from the firebase-emulator-seed-data directory.
