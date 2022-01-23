@@ -47,7 +47,10 @@ export default Vue.extend({
   async mounted() {
     await this.$store.dispatch("auth/lookupPermissions");
 
-    if (this.$store.getters["auth/user"].provisioned === true) {
+    if (
+      !this.$store.getters["auth/isAuthenticated"] ||
+      this.$store.getters["auth/user"].provisioned === true
+    ) {
       return;
     }
 

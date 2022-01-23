@@ -4,5 +4,8 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+    match /site-settings/featured-combos {
+      allow read: if true;
+    }
   }
 }

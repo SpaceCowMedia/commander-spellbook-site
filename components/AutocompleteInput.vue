@@ -10,7 +10,7 @@
       :placeholder="placeholder"
       class="input"
       :class="{
-        'border-dark': !hasError,
+        [inputClass]: true,
         'border-danger': hasError,
       }"
       autocomplete="off"
@@ -54,7 +54,6 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
-
 import normalizeStringInput from "@/lib/api/normalize-string-input";
 
 type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
@@ -69,6 +68,10 @@ export default Vue.extend({
   },
   props: {
     value: {
+      type: String,
+      default: "",
+    },
+    inputClass: {
       type: String,
       default: "",
     },
@@ -89,6 +92,10 @@ export default Vue.extend({
     label: {
       type: String,
       default: "",
+    },
+    matchAgainstOptionLabel: {
+      type: Boolean,
+      default: false,
     },
     hasError: {
       type: Boolean,
@@ -229,6 +236,79 @@ export default Vue.extend({
         input.focus();
       }
     },
+    findAllMatches(normalizedValue: string) {
+      return this.autocompleteOptions.filter((option) => {
+        const mainMatch = option.value.includes(normalizedValue);
+
+        if (mainMatch) {
+          return true;
+        }
+
+        if (this.matchAgainstOptionLabel) {
+          const labelMatch = normalizeStringInput(option.label).includes(
+            normalizedValue
+          );
+
+          if (labelMatch) {
+            return true;
+          }
+        }
+
+        if (option.alias) {
+          return normalizedValue.match(option.alias);
+        }
+
+        return false;
+      });
+    },
+    findBestMatches(
+      totalOptions: AutoCompleteOption[],
+      normalizedValue: string
+    ) {
+      totalOptions.sort((a, b) => {
+        const indexA = a.value.indexOf(normalizedValue);
+        const indexB = b.value.indexOf(normalizedValue);
+
+        if (indexA === indexB) {
+          return 0;
+        }
+
+        if (indexA === -1) {
+          return 1;
+        }
+        if (indexB === -1) {
+          return -1;
+        }
+
+        if (indexA < indexB) {
+          return -1;
+        } else if (indexB < indexA) {
+          return 1;
+        }
+
+        return 0;
+      });
+
+      return totalOptions.slice(0, MAX_NUMBER_OF_MATCHING_RESULTS);
+    },
+    createAutocompleteTimeout(): ReturnType<typeof setTimeout> {
+      return setTimeout(() => {
+        if (!this.value) {
+          this.close();
+          return;
+        }
+
+        const normalizedValue = normalizeStringInput(this.value);
+        this.matchingAutocompleteOptions = [];
+
+        const totalOptions = this.findAllMatches(normalizedValue);
+
+        this.matchingAutocompleteOptions = this.findBestMatches(
+          totalOptions,
+          normalizedValue
+        );
+      }, AUTOCOMPLETE_DELAY);
+    },
     lookupAutocomplete(): void {
       if (!this.active) {
         return;
@@ -242,52 +322,7 @@ export default Vue.extend({
       if (this.autocompleteTimeout) {
         clearTimeout(this.autocompleteTimeout);
       }
-      this.autocompleteTimeout = setTimeout(() => {
-        if (!this.value) {
-          this.close();
-          return;
-        }
-
-        const normalizedValue = normalizeStringInput(this.value);
-        this.matchingAutocompleteOptions = [];
-
-        const totalOptions = this.autocompleteOptions
-          .filter((option) => {
-            const mainMatch = option.value.includes(normalizedValue);
-
-            return (
-              mainMatch || (option.alias && normalizedValue.match(option.alias))
-            );
-          })
-          .sort((a, b) => {
-            const indexA = a.value.indexOf(normalizedValue);
-            const indexB = b.value.indexOf(normalizedValue);
-
-            if (indexA === indexB) {
-              return 0;
-            }
-
-            if (indexA === -1) {
-              return 1;
-            }
-            if (indexB === -1) {
-              return -1;
-            }
-
-            if (indexA < indexB) {
-              return -1;
-            } else if (indexB < indexA) {
-              return 1;
-            }
-
-            return 0;
-          });
-
-        this.matchingAutocompleteOptions = totalOptions.slice(
-          0,
-          MAX_NUMBER_OF_MATCHING_RESULTS
-        );
-      }, AUTOCOMPLETE_DELAY);
+      this.autocompleteTimeout = this.createAutocompleteTimeout();
     },
   },
 });

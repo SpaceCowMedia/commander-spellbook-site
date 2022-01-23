@@ -69,7 +69,8 @@ a {
   @apply bg-light text-dark border-dark cursor-not-allowed;
 }
 
-.button.disabled:hover {
+.button.disabled:hover,
+.button.disabled:focus {
   @apply bg-light text-dark border-dark;
 }
 
@@ -77,7 +78,8 @@ a {
   @apply mx-0 my-1;
 }
 
-.button:hover {
+.button:hover,
+.button:focus {
   @apply bg-link text-white border-link;
 }
 

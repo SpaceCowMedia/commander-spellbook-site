@@ -80,55 +80,6 @@ describe("authMiddleware", () => {
     expect(redirect).toBeCalledWith("/dashboard/");
   });
 
-  it.each(["/dashboard/"])(
-    "noops if %s route requires authentication and user is authenticated",
-    (path) => {
-      const store = createStore({
-        getters: {
-          "auth/isAuthenticated": true,
-        },
-      });
-      const route = createRoute({
-        path,
-      });
-      const redirect = jest.fn();
-
-      // @ts-ignore
-      authMiddleware({
-        store,
-        route,
-        redirect,
-      });
-
-      expect(redirect).not.toBeCalled();
-    }
-  );
-
-  it.each(["/dashboard/"])(
-    "reidrects if %s route requires authentication and user is not authenticated",
-    (path) => {
-      const store = createStore({
-        getters: {
-          "auth/isAuthenticated": false,
-        },
-      });
-      const route = createRoute({
-        path,
-      });
-      const redirect = jest.fn();
-
-      // @ts-ignore
-      authMiddleware({
-        store,
-        route,
-        redirect,
-      });
-
-      expect(redirect).toBeCalledTimes(1);
-      expect(redirect).toBeCalledWith("/login/");
-    }
-  );
-
   it.each(["/login/", "/sign-up"])(
     "noops if %s route should be skipped if logged in, but user is not authenticated",
     (path) => {

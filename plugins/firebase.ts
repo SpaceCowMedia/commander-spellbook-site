@@ -1,6 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
 import {
-  connectAuthEmulator,
   getAuth,
   onAuthStateChanged,
   isSignInWithEmailLink,
@@ -9,7 +7,10 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { Plugin } from "@nuxt/types";
+import { doc, getDoc } from "firebase/firestore";
+import type { DocumentData } from "firebase/firestore";
+import type { Plugin } from "@nuxt/types";
+import connectToFirebase from "../lib/connect-to-firebase";
 
 type NuxtAuth = {
   sendSignInLinkToEmail(
@@ -32,54 +33,48 @@ type NuxtAuth = {
   ): ReturnType<typeof updateProfile>;
   currentUser: ReturnType<typeof getAuth>["currentUser"];
 };
+type NuxtFirestore = {
+  getDoc(collection: string, id: string): Promise<DocumentData>;
+};
+
+type NuxtFire = {
+  auth: NuxtAuth;
+  firestore: NuxtFirestore;
+};
 
 declare module "vue/types/vue" {
   interface Vue {
-    $fire: {
-      auth: NuxtAuth;
-    };
+    $fire: NuxtFire;
   }
 }
 declare module "vuex/types/index" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
-    $fire: {
-      auth: NuxtAuth;
-    };
+    $fire: NuxtFire;
   }
 }
 declare module "@nuxt/types" {
   interface NuxtAppOptions {
-    $fire: {
-      auth: NuxtAuth;
-    };
+    $fire: NuxtFire;
   }
   interface Context {
-    $fire: {
-      auth: NuxtAuth;
-    };
+    $fire: NuxtFire;
   }
 }
 
 const firebasePlugin: Plugin = ({ store, env }, inject): void => {
-  let firebaseApp: ReturnType<typeof initializeApp>;
-
-  const apps = getApps();
-
-  if (apps.length === 0) {
-    firebaseApp = initializeApp({
+  const { auth, db } = connectToFirebase(
+    {
       apiKey: env.FIREBASE_API_KEY,
       authDomain: env.FIREBASE_AUTH_DOMAIN,
       projectId: env.FIREBASE_PROJECT_ID,
       storageBucket: env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
       appId: env.FIREBASE_APP_ID,
-    });
-  } else {
-    firebaseApp = apps[0];
-  }
+    },
+    env.useEmulators
+  );
 
-  const auth = getAuth(firebaseApp);
   const injectedAuth: NuxtAuth = {
     sendSignInLinkToEmail(email, actionCodeSettings) {
       return sendSignInLinkToEmail(auth, email, actionCodeSettings);
@@ -105,9 +100,18 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
     currentUser: auth.currentUser,
   };
 
-  if (env.useEmulators) {
-    connectAuthEmulator(auth, "http://localhost:9099");
-  }
+  const injectedFirestore = {
+    async getDoc(collection: string, id: string): Promise<DocumentData> {
+      const docRef = doc(db, collection, id);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        throw new Error("Document not found.");
+      }
+
+      return docSnap.data();
+    },
+  };
 
   onAuthStateChanged(auth, (user) => {
     store.commit("auth/setUser", user);
@@ -116,6 +120,7 @@ const firebasePlugin: Plugin = ({ store, env }, inject): void => {
 
   inject("fire", {
     auth: injectedAuth,
+    firestore: injectedFirestore,
   });
 };
 

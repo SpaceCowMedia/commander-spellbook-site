@@ -1,6 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
-import type { VueComponent } from "../../types";
-import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
+import type { VueComponent } from "../types";
+import AutocompleteInput from "@/components/AutocompleteInput.vue";
 
 describe("AutocompleteInput", () => {
   it("creates an input", () => {
@@ -23,20 +23,28 @@ describe("AutocompleteInput", () => {
     expect(label.attributes("for")).toBe("id");
   });
 
-  it("applies border classes for error and non-error state", async () => {
+  it("applies border classes for error", async () => {
     const wrapper = shallowMount(AutocompleteInput, {
       propsData: {
         hasError: false,
       },
     });
 
-    expect(wrapper.find("input").classes()).toContain("border-dark");
     expect(wrapper.find("input").classes()).not.toContain("border-danger");
 
     await wrapper.setProps({ hasError: true });
 
     expect(wrapper.find("input").classes()).toContain("border-danger");
-    expect(wrapper.find("input").classes()).not.toContain("border-dark");
+  });
+
+  it("applies input class if specified", () => {
+    const wrapper = shallowMount(AutocompleteInput, {
+      propsData: {
+        inputClass: "custom-input-class",
+      },
+    });
+
+    expect(wrapper.find("input").classes()).toContain("custom-input-class");
   });
 
   it("shows autocomplete results when there any matching autocomplete results", async () => {
@@ -774,11 +782,274 @@ describe("AutocompleteInput", () => {
     });
   });
 
-  describe("lookupAutocomplete", () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
+  describe("findAllMatches", () => {
+    it("filters for values that contain the value of the input", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "afoo", label: "A Foo" },
+            { value: "bfoo", label: "B Foo" },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findAllMatches("foo");
+
+      expect(matches).toEqual([
+        { value: "afoo", label: "A Foo" },
+        { value: "bfoo", label: "B Foo" },
+      ]);
     });
 
+    it("supports aliases to match if present in the option", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "some value baz some other value",
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "afoo", label: "A Foo" },
+            { value: "bfoo", label: "B Foo", alias: /baz/ },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findAllMatches("some value baz some other value");
+
+      expect(matches).toEqual([
+        { value: "bfoo", label: "B Foo", alias: /baz/ },
+      ]);
+    });
+
+    it("supports labels to match if configured", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "some value baz some other value",
+          matchAgainstOptionLabel: true,
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "2", label: "A Foo" },
+            { value: "2", label: "B Foo" },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findAllMatches("foo");
+
+      expect(matches).toEqual([
+        { value: "2", label: "A Foo" },
+        { value: "2", label: "B Foo" },
+      ]);
+    });
+  });
+
+  describe("findBestMatches", () => {
+    it("sorts results", () => {
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findBestMatches(
+        [
+          { value: "123foo", label: "1" },
+          { value: "afoo", label: "A Foo" },
+          { value: "bfoo", label: "B Foo" },
+          { value: "foo4", label: "4" },
+        ],
+        "foo"
+      );
+
+      expect(matches).toEqual([
+        { value: "foo4", label: "4" },
+        { value: "afoo", label: "A Foo" },
+        { value: "bfoo", label: "B Foo" },
+        { value: "123foo", label: "1" },
+      ]);
+    });
+
+    it("shows a max of 20 autocomplete results", () => {
+      const options = [];
+      let index = 0;
+      while (index < 30) {
+        options.push({
+          value: `foo-${index + 1}`,
+          label: `Label ${index + 1}`,
+        });
+        index++;
+      }
+
+      const wrapper = shallowMount(AutocompleteInput);
+      const vm = wrapper.vm as VueComponent;
+
+      const matches = vm.findBestMatches(options, "foo");
+
+      expect(matches).toEqual([
+        { value: "foo-1", label: "Label 1" },
+        { value: "foo-2", label: "Label 2" },
+        { value: "foo-3", label: "Label 3" },
+        { value: "foo-4", label: "Label 4" },
+        { value: "foo-5", label: "Label 5" },
+        { value: "foo-6", label: "Label 6" },
+        { value: "foo-7", label: "Label 7" },
+        { value: "foo-8", label: "Label 8" },
+        { value: "foo-9", label: "Label 9" },
+        { value: "foo-10", label: "Label 10" },
+        { value: "foo-11", label: "Label 11" },
+        { value: "foo-12", label: "Label 12" },
+        { value: "foo-13", label: "Label 13" },
+        { value: "foo-14", label: "Label 14" },
+        { value: "foo-15", label: "Label 15" },
+        { value: "foo-16", label: "Label 16" },
+        { value: "foo-17", label: "Label 17" },
+        { value: "foo-18", label: "Label 18" },
+        { value: "foo-19", label: "Label 19" },
+        { value: "foo-20", label: "Label 20" },
+      ]);
+    });
+  });
+
+  describe("createAutocompleteTimeout", () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.runAllTimers();
+    });
+
+    it("returns an setTimeout reference", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "foo",
+          autocompleteOptions: [{ value: "1", lable: "1" }],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      const ref = vm.createAutocompleteTimeout();
+
+      expect(ref).toBeGreaterThanOrEqual(0);
+
+      jest.runAllTimers();
+    });
+
+    it("closes if the autocomplete starts with a value but ends up without a value when the filtering is applied", async () => {
+      const closeSpy = jest.spyOn(
+        (AutocompleteInput as VueComponent).options.methods,
+        "close"
+      );
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "foo",
+          autocompleteOptions: [{ value: "1", lable: "1" }],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      vm.createAutocompleteTimeout();
+
+      expect(closeSpy).not.toBeCalled();
+
+      jest.advanceTimersByTime(100);
+
+      expect(closeSpy).not.toBeCalled();
+
+      await wrapper.setProps({
+        value: "",
+      });
+
+      jest.advanceTimersByTime(51);
+
+      expect(closeSpy).toBeCalledTimes(1);
+      expect(vm.matchingAutocompleteOptions).toEqual([]);
+    });
+
+    it("finds matches", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "Foo",
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "afoo", label: "A Foo" },
+            { value: "bfoo", label: "B Foo" },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      jest.spyOn(vm, "findAllMatches").mockReturnValue([
+        { value: "afoo", label: "A Foo" },
+        { value: "bfoo", label: "B Foo" },
+      ]);
+      jest.spyOn(vm, "findBestMatches").mockReturnValue([
+        { value: "bfoo", label: "B Foo" },
+        { value: "afoo", label: "A Foo" },
+      ]);
+
+      vm.lookupAutocomplete();
+
+      jest.advanceTimersByTime(151);
+      expect(vm.matchingAutocompleteOptions).toEqual([
+        { value: "bfoo", label: "B Foo" },
+        { value: "afoo", label: "A Foo" },
+      ]);
+
+      expect(vm.findAllMatches).toBeCalledTimes(1);
+      expect(vm.findAllMatches).toBeCalledWith("foo");
+      expect(vm.findBestMatches).toBeCalledTimes(1);
+      expect(vm.findBestMatches).toBeCalledWith(
+        [
+          { value: "afoo", label: "A Foo" },
+          { value: "bfoo", label: "B Foo" },
+        ],
+        "foo"
+      );
+    });
+
+    it("waits to find matches until after a delay", () => {
+      const wrapper = shallowMount(AutocompleteInput, {
+        propsData: {
+          value: "Foo",
+          autocompleteOptions: [
+            { value: "1", label: "1" },
+            { value: "afoo", label: "A Foo" },
+            { value: "bfoo", label: "B Foo" },
+            { value: "4", label: "4" },
+          ],
+        },
+      });
+      const vm = wrapper.vm as VueComponent;
+
+      jest.spyOn(vm, "findAllMatches").mockReturnValue([
+        { value: "afoo", label: "A Foo" },
+        { value: "bfoo", label: "B Foo" },
+      ]);
+      jest.spyOn(vm, "findBestMatches").mockReturnValue([
+        { value: "bfoo", label: "B Foo" },
+        { value: "afoo", label: "A Foo" },
+      ]);
+
+      vm.lookupAutocomplete();
+
+      expect(vm.findAllMatches).not.toBeCalled();
+      expect(vm.findBestMatches).not.toBeCalled();
+
+      jest.advanceTimersByTime(149);
+
+      expect(vm.findAllMatches).not.toBeCalled();
+      expect(vm.findBestMatches).not.toBeCalled();
+
+      jest.advanceTimersByTime(2);
+
+      expect(vm.findAllMatches).toBeCalledTimes(1);
+      expect(vm.findBestMatches).toBeCalledTimes(1);
+    });
+  });
+
+  describe("lookupAutocomplete", () => {
     it("noops if there are no autocomplete options", () => {
       const closeSpy = jest.spyOn(
         (AutocompleteInput as VueComponent).options.methods,
@@ -816,11 +1087,7 @@ describe("AutocompleteInput", () => {
       expect(vm.matchingAutocompleteOptions).toEqual([]);
     });
 
-    it("closes if the autocomplete starts with a value but ends up without a value when the filtering is applied", async () => {
-      const closeSpy = jest.spyOn(
-        (AutocompleteInput as VueComponent).options.methods,
-        "close"
-      );
+    it("creates an autocomplete timeout", () => {
       const wrapper = shallowMount(AutocompleteInput, {
         propsData: {
           value: "foo",
@@ -829,135 +1096,11 @@ describe("AutocompleteInput", () => {
       });
       const vm = wrapper.vm as VueComponent;
 
-      vm.lookupAutocomplete();
-
-      expect(closeSpy).not.toBeCalled();
-      jest.advanceTimersByTime(100);
-      expect(closeSpy).not.toBeCalled();
-
-      await wrapper.setProps({
-        value: "",
-      });
-
-      jest.advanceTimersByTime(51);
-      expect(closeSpy).toBeCalledTimes(1);
-      expect(vm.matchingAutocompleteOptions).toEqual([]);
-    });
-
-    it("filters for values that contain the value of the input", () => {
-      const wrapper = shallowMount(AutocompleteInput, {
-        propsData: {
-          value: "foo",
-          autocompleteOptions: [
-            { value: "1", label: "1" },
-            { value: "afoo", label: "A Foo" },
-            { value: "bfoo", label: "B Foo" },
-            { value: "4", label: "4" },
-          ],
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
+      jest.spyOn(vm, "createAutocompleteTimeout").mockImplementation();
 
       vm.lookupAutocomplete();
 
-      jest.advanceTimersByTime(151);
-      expect(vm.matchingAutocompleteOptions).toEqual([
-        { value: "afoo", label: "A Foo" },
-        { value: "bfoo", label: "B Foo" },
-      ]);
-    });
-
-    it("supports aliases to match if present in the option", () => {
-      const wrapper = shallowMount(AutocompleteInput, {
-        propsData: {
-          value: "some value baz some other value",
-          autocompleteOptions: [
-            { value: "1", label: "1" },
-            { value: "afoo", label: "A Foo" },
-            { value: "bfoo", label: "B Foo", alias: /baz/ },
-            { value: "4", label: "4" },
-          ],
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      vm.lookupAutocomplete();
-
-      jest.advanceTimersByTime(151);
-      expect(vm.matchingAutocompleteOptions).toEqual([
-        { value: "bfoo", label: "B Foo", alias: /baz/ },
-      ]);
-    });
-
-    it("sorts results by closest match in value", () => {
-      const wrapper = shallowMount(AutocompleteInput, {
-        propsData: {
-          value: "foo",
-          autocompleteOptions: [
-            { value: "123foo", label: "1" },
-            { value: "afoo", label: "A Foo" },
-            { value: "bfoo", label: "B Foo" },
-            { value: "foo4", label: "4" },
-          ],
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      vm.lookupAutocomplete();
-
-      jest.advanceTimersByTime(151);
-      expect(vm.matchingAutocompleteOptions).toEqual([
-        { value: "foo4", label: "4" },
-        { value: "afoo", label: "A Foo" },
-        { value: "bfoo", label: "B Foo" },
-        { value: "123foo", label: "1" },
-      ]);
-    });
-
-    it("shows a max of 20 autocomplete results", () => {
-      const options = [];
-      let index = 0;
-      while (index < 30) {
-        options.push({
-          value: `foo-${index + 1}`,
-          label: `Label ${index + 1}`,
-        });
-        index++;
-      }
-
-      const wrapper = shallowMount(AutocompleteInput, {
-        propsData: {
-          value: "foo",
-          autocompleteOptions: options,
-        },
-      });
-      const vm = wrapper.vm as VueComponent;
-
-      vm.lookupAutocomplete();
-
-      jest.advanceTimersByTime(151);
-      expect(vm.matchingAutocompleteOptions).toEqual([
-        { value: "foo-1", label: "Label 1" },
-        { value: "foo-2", label: "Label 2" },
-        { value: "foo-3", label: "Label 3" },
-        { value: "foo-4", label: "Label 4" },
-        { value: "foo-5", label: "Label 5" },
-        { value: "foo-6", label: "Label 6" },
-        { value: "foo-7", label: "Label 7" },
-        { value: "foo-8", label: "Label 8" },
-        { value: "foo-9", label: "Label 9" },
-        { value: "foo-10", label: "Label 10" },
-        { value: "foo-11", label: "Label 11" },
-        { value: "foo-12", label: "Label 12" },
-        { value: "foo-13", label: "Label 13" },
-        { value: "foo-14", label: "Label 14" },
-        { value: "foo-15", label: "Label 15" },
-        { value: "foo-16", label: "Label 16" },
-        { value: "foo-17", label: "Label 17" },
-        { value: "foo-18", label: "Label 18" },
-        { value: "foo-19", label: "Label 19" },
-        { value: "foo-20", label: "Label 20" },
-      ]);
+      expect(vm.createAutocompleteTimeout).toBeCalledTimes(1);
     });
   });
 });

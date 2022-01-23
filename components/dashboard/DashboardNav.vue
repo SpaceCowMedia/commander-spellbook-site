@@ -28,6 +28,9 @@
               >Account Settings</NuxtLink
             >
           </li>
+          <li v-if="permissions.manageSiteContent">
+            <NuxtLink to="/dashboard/site-settings/">Site Settings</NuxtLink>
+          </li>
           <li v-if="permissions.proposeCombo">
             <NuxtLink to="/dashboard/propose-combo/"
               >Propose New Combo</NuxtLink
@@ -59,6 +62,7 @@ export default Vue.extend({
       permissions: {
         proposeCombo: false,
         manageUserPermissions: false,
+        manageSiteContent: false,
         viewUsers: false,
       },
     };
@@ -68,6 +72,7 @@ export default Vue.extend({
 
     this.permissions.proposeCombo = permissions.proposeCombo;
     this.permissions.manageUserPermissions = permissions.manageUserPermissions;
+    this.permissions.manageSiteContent = permissions.manageSiteContent;
     this.permissions.viewUsers = permissions.viewUsers;
 
     this.loaded = true;

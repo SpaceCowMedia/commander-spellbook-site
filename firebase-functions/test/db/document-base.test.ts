@@ -44,9 +44,9 @@ describe("DocumentBase", () => {
       });
     });
 
-    describe("createWithId", () => {
+    describe("update", () => {
       it("sets a document on collection", async () => {
-        await ChildDocument.createWithId("foo", { foo: "bar" });
+        await ChildDocument.update("foo", { foo: "bar" });
 
         expect(collectionSpy).toBeCalledTimes(1);
         expect(collectionSpy).toBeCalledWith("child-document");
@@ -54,6 +54,17 @@ describe("DocumentBase", () => {
         expect(docSpy).toBeCalledWith("foo");
         expect(setSpy).toBeCalledTimes(1);
         expect(setSpy).toBeCalledWith({ foo: "bar" });
+      });
+    });
+
+    describe("careteWithId", () => {
+      it("calls update", async () => {
+        jest.spyOn(ChildDocument, "update");
+
+        await ChildDocument.createWithId("foo", { foo: "bar" });
+
+        expect(ChildDocument.update).toBeCalledTimes(1);
+        expect(ChildDocument.update).toBeCalledWith("foo", { foo: "bar" });
       });
     });
 

@@ -19,19 +19,10 @@ const authMiddleware: Middleware = ({ store, route, redirect }) => {
     });
   }
 
-  if (requiresAuth(route) && !isAuthenticated) {
-    redirect("/login/");
-    return;
-  }
-
   if (skipIfLoggedIn(route) && isAuthenticated) {
     redirect("/dashboard/");
   }
 };
-
-function requiresAuth({ path }: { path: string }) {
-  return path.includes("/dashboard");
-}
 
 function skipIfLoggedIn({ path }: { path: string }) {
   return path.includes("/login") || path.includes("/sign-up");

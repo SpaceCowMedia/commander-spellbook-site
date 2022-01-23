@@ -12,6 +12,7 @@ describe("DashboardCompleteAccountSetup", () => {
   beforeEach(() => {
     $store = createStore({
       getters: {
+        "auth/isAuthenticated": true,
         "auth/user": {
           provisioned: false,
         },
@@ -22,6 +23,25 @@ describe("DashboardCompleteAccountSetup", () => {
 
   it("does not load when user is already provisioned", async () => {
     $store.getters["auth/user"].provisioned = true;
+
+    const wrapper = shallowMount(CompleteAccountSetup, {
+      mocks: {
+        $store,
+      },
+    });
+    const vm = wrapper.vm as VueComponent;
+
+    await flushPromises();
+
+    expect($store.dispatch).toBeCalledTimes(1);
+    expect($store.dispatch).toBeCalledWith("auth/lookupPermissions");
+    expect(vm.loaded).toBe(false);
+    expect(wrapper.find(".spinner").exists()).toBe(true);
+    expect(wrapper.find("#complete-account-setup").exists()).toBe(false);
+  });
+
+  it("does not load when user is not authenticated", async () => {
+    $store.getters["auth/isAuthenticated"] = false;
 
     const wrapper = shallowMount(CompleteAccountSetup, {
       mocks: {

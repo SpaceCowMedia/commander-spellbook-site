@@ -31,6 +31,7 @@
             :input-id="getInputId(index)"
             :placeholder="getPlaceholder(input.operator)"
             :label="inputLabel"
+            input-class="border-dark"
             :autocomplete-options="autocompleteOptions"
             :has-error="Boolean(input.error)"
             :use-value-for-input="useValueForAutocompleteInput"
@@ -83,7 +84,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import AutocompleteInput from "@/components/advanced-search/AutocompleteInput.vue";
+import AutocompleteInput from "@/components/AutocompleteInput.vue";
 import StyledSelect from "@/components/StyledSelect.vue";
 
 type MultiSearchInputValue = { value: string; operator: string }[];

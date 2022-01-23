@@ -28,5 +28,8 @@ export type Firebase = {
       getIdTokenResult: jest.SpyInstance;
     };
   };
+  firestore: {
+    getDoc: jest.SpyInstance;
+  };
 };
 export type VueComponent = Record<string, any>;

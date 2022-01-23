@@ -1,7 +1,13 @@
 import { shallowMount } from "@vue/test-utils";
 
 import { createStore } from "../utils";
-import type { MountOptions, Route, Router, Store } from "../types";
+import type {
+  MountOptions,
+  Route,
+  Router,
+  Store,
+  VueComponent,
+} from "../types";
 import HomePage from "@/pages/index.vue";
 
 describe("HomePage", () => {
@@ -30,6 +36,18 @@ describe("HomePage", () => {
         NuxtLink: true,
       },
     };
+  });
+
+  it("does not render a featured combos button by default", async () => {
+    const wrapper = shallowMount(HomePage, wrapperOptions);
+
+    expect(wrapper.find("#featured-combos-button").exists()).toBe(false);
+
+    await wrapper.setData({
+      featuredComboButtonText: "Button Text",
+    });
+
+    expect(wrapper.find("#featured-combos-button").exists()).toBe(true);
   });
 
   it("remains on home page when no query is available", () => {
@@ -102,5 +120,84 @@ describe("HomePage", () => {
 
     expect($router.push).toBeCalledTimes(1);
     expect($router.push).toBeCalledWith("/search/?q=is:banned");
+  });
+
+  describe("asyncData", () => {
+    it("returns empty featured button text when lookup fails", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        $fire: {
+          firestore: {
+            getDoc: jest.fn().mockRejectedValue(new Error("fail")),
+          },
+        },
+      });
+
+      expect(data).toEqual({
+        featuredComboButtonText: "",
+      });
+    });
+
+    it("returns empty featured button text when lookup returns no button text", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        $fire: {
+          firestore: {
+            getDoc: jest.fn().mockResolvedValue({
+              buttonText: "",
+              rules: [{ kind: "card", setCode: "dom" }],
+            }),
+          },
+        },
+      });
+
+      expect(data).toEqual({
+        featuredComboButtonText: "",
+      });
+    });
+
+    it("returns empty featured button text when lookup returns no rules", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        $fire: {
+          firestore: {
+            getDoc: jest.fn().mockResolvedValue({
+              buttonText: "Button Text",
+              rules: [],
+            }),
+          },
+        },
+      });
+
+      expect(data).toEqual({
+        featuredComboButtonText: "",
+      });
+    });
+
+    it("returns button text when button text and rules are available", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        $fire: {
+          firestore: {
+            getDoc: jest.fn().mockResolvedValue({
+              buttonText: "Button Text",
+              rules: [{ kind: "card", setCode: "dom" }],
+            }),
+          },
+        },
+      });
+
+      expect(data).toEqual({
+        featuredComboButtonText: "Button Text",
+      });
+    });
   });
 });

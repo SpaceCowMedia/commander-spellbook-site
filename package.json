@@ -18,7 +18,7 @@
     "generate:netlify": "mv firebase-functions/src/shared firebase-shared && rm -rf firebase-functions && mkdir -p firebase-functions/src/ && mv firebase-shared firebase-functions/src/shared && npm run generate -- -c cypress/nuxt.config.js",
     "prefirebase:emulate": "npm run build-functions",
     "postfirebase:emulate": "npm run prettier",
-    "firebase:emulate": "firebase emulators:start --import firebase-emulator-seed-data",
+    "firebase:emulate": "firebase emulators:start --project=\"commander-spellbook-local\" --import firebase-emulator-seed-data",
     "firebase:login": "firebase login",
     "firebase:deploy": "firebase deploy",
     "prefirebase:deploy:ci": "npm run install-functions",
@@ -34,16 +34,16 @@
     "lint:style:vue": "stylelint \"**/*.vue\"",
     "lint": "npm run lint:js && npm run lint:style",
     "test": "jest",
-    "cy:run": "cypress run --spec cypress/integration/**/*.ts",
-    "pretest:integration": "npm run firebase:emulate & npm run generate -- -c cypress/nuxt.config.js",
-    "test:integration": "npm start & wait-on http://localhost:3000 && wait-on http://localhost:4000 && npm run cy:run"
+    "cy:run": "cypress run",
+    "pretest:integration": "NODE_ENV=development USE_FIREBASE_EMULATORS=true npm run firebase:emulate & wait-on http://localhost:4000 && npm run generate -- -c cypress/nuxt.config.js",
+    "test:integration": "npm start & wait-on http://localhost:3000 && npm run cy:run -- --config video=false,videoUploadOnPasses=false,screenshotOnRunFailure=false"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "core-js": "^3.20.2",
+    "core-js": "^3.20.3",
     "dotenv": "^14.2.0",
     "firebase": "^9.6.4",
     "nuxt": "^2.15.8",
@@ -71,7 +71,7 @@
     "cross-env": "^7.0.3",
     "cypress": "^9.3.1",
     "cypress-firebase": "^2.2.1",
-    "eslint": "^8.6.0",
+    "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^3.1.0",
     "firebase-admin": "^10.0.2",
@@ -87,7 +87,7 @@
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-recommended-vue": "^1.1.0",
     "stylelint-config-standard": "^24.0.0",
-    "ts-jest": "^27.1.2",
+    "ts-jest": "^27.1.3",
     "ts-node": "^10.4.0",
     "vue-jest": "^3.0.4",
     "wait-on": "^6.0.0"

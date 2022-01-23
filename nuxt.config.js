@@ -162,10 +162,7 @@ export default {
       mode: "client",
     },
     "~/plugins/vue-tooltip.ts",
-    {
-      src: "./plugins/firebase.ts",
-      mode: "client",
-    },
+    "~/plugins/firebase.ts",
     {
       src: "./plugins/api.ts",
       mode: "client",
