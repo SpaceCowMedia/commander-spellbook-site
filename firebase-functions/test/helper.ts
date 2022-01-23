@@ -11,6 +11,7 @@ type CreateRequestOptions = {
 type CreateAdminOptions = {
   claimsSpy?: jest.SpyInstance;
   updateUserSpy?: jest.SpyInstance;
+  getUserSpy?: jest.SpyInstance;
   verifyIdTokenSpy?: jest.SpyInstance;
 };
 
@@ -44,9 +45,10 @@ export function createNext(): NextFunction {
 }
 
 export function createAdminAuth(options: CreateAdminOptions = {}) {
-  const { claimsSpy, updateUserSpy, verifyIdTokenSpy } = options;
+  const { getUserSpy, claimsSpy, updateUserSpy, verifyIdTokenSpy } = options;
 
   return jest.fn().mockReturnValue({
+    getUser: getUserSpy || jest.fn(),
     setCustomUserClaims: claimsSpy || jest.fn(),
     updateUser: updateUserSpy || jest.fn(),
     verifyIdToken: verifyIdTokenSpy || jest.fn(),
