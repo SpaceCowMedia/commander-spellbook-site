@@ -9,7 +9,7 @@
       "photoUrl": "",
       "passwordHash": "fakeHash:salt=fakeSaltArtmO9VWo7OR0g0Ynl6a:password=asdfasdf",
       "salt": "fakeSaltArtmO9VWo7OR0g0Ynl6a",
-      "passwordUpdatedAt": 1642604546103,
+      "passwordUpdatedAt": 1642897862084,
       "customAttributes": "{\"r\":1,\"p\":1}",
       "providerUserInfo": [
         {
@@ -21,7 +21,7 @@
           "photoUrl": ""
         }
       ],
-      "validSince": "1642604546",
+      "validSince": "1642897862",
       "email": "basic-user@example.com",
       "emailVerified": true,
       "disabled": false
@@ -34,7 +34,7 @@
       "photoUrl": "",
       "passwordHash": "fakeHash:salt=fakeSaltGS6ZZabTAiYu5AusbZZ8:password=asdfasdf",
       "salt": "fakeSaltGS6ZZabTAiYu5AusbZZ8",
-      "passwordUpdatedAt": 1642604546104,
+      "passwordUpdatedAt": 1642897862084,
       "customAttributes": "{\"r\":1,\"p\":1}",
       "providerUserInfo": [
         {
@@ -46,7 +46,7 @@
           "photoUrl": ""
         }
       ],
-      "validSince": "1642604546",
+      "validSince": "1642897862",
       "email": "email-not-verified-user@gmail.com",
       "emailVerified": false,
       "disabled": false
@@ -56,12 +56,13 @@
       "createdAt": "1642604286895",
       "lastLoginAt": "1642604286897",
       "displayName": "Site Settings Manager",
-      "customAttributes": "{\"r\":1,\"p\":1}",
+      "customAttributes": "{\"r\":1,\"p\":1,\"s\":1}",
       "providerUserInfo": [],
-      "validSince": "1642604546",
+      "validSince": "1642897862",
       "email": "site-settings-manager@example.com",
       "emailVerified": true,
-      "disabled": false
+      "disabled": false,
+      "photoUrl": ""
     },
     {
       "localId": "unprovisioned-user",
@@ -71,7 +72,7 @@
       "photoUrl": "",
       "passwordHash": "fakeHash:salt=fakeSalt7bunTtSPM8SZu5fzQu6S:password=asdfasdf",
       "salt": "fakeSalt7bunTtSPM8SZu5fzQu6S",
-      "passwordUpdatedAt": 1642604546104,
+      "passwordUpdatedAt": 1642897862085,
       "providerUserInfo": [
         {
           "providerId": "password",
@@ -82,7 +83,7 @@
           "photoUrl": ""
         }
       ],
-      "validSince": "1642604546",
+      "validSince": "1642897862",
       "email": "unprovisioned-user@example.com",
       "emailVerified": true,
       "disabled": false
