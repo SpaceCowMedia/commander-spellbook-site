@@ -1,5 +1,6 @@
 import { config as configureDotenv } from "dotenv";
 import firebaseConfig from "./firebase-config";
+import connectToFirebase from "./lib/connect-to-firebase";
 
 configureDotenv();
 
@@ -153,7 +154,9 @@ export default {
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: ["~/assets/global.css"],
 
-  generate: { fallback: "404.html" },
+  generate: {
+    fallback: "404.html",
+  },
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
@@ -191,6 +194,14 @@ export default {
 
   tailwindcss: {
     jit: !isWindows,
+  },
+  hooks: {
+    generate: {
+      done() {
+        const { teardownFirebase } = connectToFirebase({});
+        teardownFirebase();
+      },
+    },
   },
 
   googleFonts: {

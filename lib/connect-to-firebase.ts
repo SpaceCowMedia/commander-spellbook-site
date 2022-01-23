@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 
@@ -36,5 +36,8 @@ export default function connectToFirebase(
   return {
     auth,
     db,
+    teardownFirebase() {
+      deleteApp(firebaseApp);
+    },
   };
 }

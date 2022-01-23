@@ -38,6 +38,7 @@ describe("firebase", () => {
     jest.mocked(connectToFirebase).mockReturnValue({
       db: fakeDb,
       auth: fakeAuth,
+      teardownFirebase: jest.fn(),
     });
   });
 

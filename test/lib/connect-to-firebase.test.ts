@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import connectToFirebase from "../../lib/connect-to-firebase";
@@ -60,6 +60,14 @@ describe("connectToFirebase", () => {
     const { auth } = connectToFirebase(fbConfig);
 
     expect(auth).toBe(fakeAuth);
+  });
+
+  it("returns function to delete app", () => {
+    const { teardownFirebase } = connectToFirebase(fbConfig);
+
+    teardownFirebase();
+
+    expect(deleteApp).toBeCalledTimes(1);
   });
 
   it("connects to emulators if configured to use them", () => {
