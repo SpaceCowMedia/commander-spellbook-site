@@ -1,11 +1,13 @@
 import { config as configureDotenv } from "dotenv";
 import firebaseConfig from "./firebase-config";
 import connectToFirebase from "./lib/connect-to-firebase";
+import combos from "./static/api/combo-data.json";
 
 configureDotenv();
 
 const isWindows = process.platform === "win32";
 
+const batch = process.env.COMBO_BATCH || "";
 const title = "Commander Spellbook: The Search Engine for EDH Combos";
 const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
@@ -155,7 +157,39 @@ export default {
   css: ["~/assets/global.css"],
 
   generate: {
+    dir: `dist${batch ? "-" + batch : ""}`,
     fallback: "404.html",
+    crawler: false,
+    routes() {
+      if (!batch) {
+        return [];
+      }
+
+      let [start, end] = batch.split("to");
+      start = Number(start);
+      end = Number(end);
+
+      // TODO make this whole thing more elegant. May need to write a script that figures
+      // out how to split up the batching. Basically, if we get in spitting distance
+      // of not running enough batches to get all the combos, we should start failing
+      // the builds
+      if (combos.length > 11500) {
+        throw new Error(
+          "more combos than expected. Please update the `npm run generate:in-batches` command to include an additional batch"
+        );
+      }
+
+      return combos
+        .filter((_, index) => {
+          // only look at combos within the batch
+          return index >= start && index <= end;
+        })
+        .map((combo) => ({
+          route: `/combo/${combo.d}`,
+          // TODO eventually we'll pass the data this way
+          payload: combo,
+        }));
+    },
   },
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
