@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && npm run pregenerate && npm run install-functions",
+    "postinstall": "husky install && npm run download-data && npm run install-functions",
     "predev": "npm run download-data",
     "dev": "nuxt",
     "install-functions": "npm --prefix firebase-functions install",
