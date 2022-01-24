@@ -169,16 +169,6 @@ export default {
       start = Number(start);
       end = Number(end);
 
-      // TODO make this whole thing more elegant. May need to write a script that figures
-      // out how to split up the batching. Basically, if we get in spitting distance
-      // of not running enough batches to get all the combos, we should start failing
-      // the builds
-      if (combos.length > 11500) {
-        throw new Error(
-          "more combos than expected. Please update the `npm run generate:in-batches` command to include an additional batch"
-        );
-      }
-
       return combos
         .filter((_, index) => {
           // only look at combos within the batch
