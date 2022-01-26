@@ -16,7 +16,7 @@ type CreateAdminOptions = {
 };
 
 export function createRequest(options: CreateRequestOptions = {}): Request {
-  const { body, headers, params, userPermissions, userId } = options;
+  const { body, headers, params, userId, userPermissions } = options;
 
   return {
     headers: headers || {
@@ -45,7 +45,7 @@ export function createNext(): NextFunction {
 }
 
 export function createAdminAuth(options: CreateAdminOptions = {}) {
-  const { getUserSpy, claimsSpy, updateUserSpy, verifyIdTokenSpy } = options;
+  const { claimsSpy, getUserSpy, updateUserSpy, verifyIdTokenSpy } = options;
 
   return jest.fn().mockReturnValue({
     getUser: getUserSpy || jest.fn(),

@@ -35,7 +35,7 @@ export default async function managePermissions(req: Request, res: Response) {
   // provisioned is the special permission we use to indicate that
   // a user account is fully set up, so it should not be modified
   // in any way outside of the provision route
-  if ("provisioned" in permissions) {
+  if (Object.hasOwn(permissions, "provisioned")) {
     res
       .status(400)
       .json(new ValidationError("Cannot change provisioned permission."));
@@ -46,7 +46,7 @@ export default async function managePermissions(req: Request, res: Response) {
   // from self. This precents us from accidentally getting into the circumstance
   // where the only admin revokes the ability to manage user permissions
   // and there's no one else that is able to do it
-  if (adminUserId === userId && "manageUserPermissions" in permissions) {
+  if (adminUserId === userId && Object.hasOwn(permissions, "manageUserPermissions")) {
     res
       .status(400)
       .json(
@@ -57,9 +57,7 @@ export default async function managePermissions(req: Request, res: Response) {
     return;
   }
 
-  const invalidPermissions = permissionKeys.filter((key) => {
-    return !(key in PERMISSIONS);
-  });
+  const invalidPermissions = permissionKeys.filter((key) => !Object.hasOwn(PERMISSIONS, key));
 
   if (invalidPermissions.length > 0) {
     res
