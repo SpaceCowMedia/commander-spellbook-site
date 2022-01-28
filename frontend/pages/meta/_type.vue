@@ -26,9 +26,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import colorOptions from "../../lib/api/color-autocompletes";
+import search from "../../lib/api/search";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
-import colorOptions from "@/lib/api/color-autocompletes";
-import search from "@/lib/api/search";
 
 type Data = {
   items: {
@@ -62,9 +62,9 @@ export default Vue.extend({
       if (autocompleteType === "colors") {
         options = colorOptions;
       } else if (autocompleteType === "cards") {
-        options = require("../../autocomplete-data/cards.json");
+        options = require("../../../autocomplete-data/cards.json");
       } else if (autocompleteType === "results") {
-        options = require("../../autocomplete-data/results.json");
+        options = require("../../../autocomplete-data/results.json");
       }
     } catch (e) {
       options = [];

@@ -25,4 +25,4 @@
 # but it makes the deploy process not take a million years
 # when asking for feedback on changes to the site
 [context.deploy-preview]
-  command = "npm run generate:netlify"
+  command = "npm run generate:netlify --workspace=frontend"

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import getData from "../shared/get";
 import log from "../shared/log";
-import normalizeCardName from "../../lib/normalize-card-name";
+import normalizeCardName from "frontend/lib/normalize-card-name";
 
 type BulkDataApiResponse = {
   data: Array<{

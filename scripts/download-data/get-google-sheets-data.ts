@@ -1,10 +1,10 @@
 import getData from "../shared/get";
 import log from "../shared/log";
-import transformGoogleSheetsData from "../../lib/api/transform-google-sheets-data";
+import transformGoogleSheetsData from "frontend/lib/api/transform-google-sheets-data";
 import type {
   CommanderSpellbookAPIResponse,
   CompressedApiResponse,
-} from "../../lib/api/types";
+} from "frontend/lib/api/types";
 
 export default async function getGoogleSheetsComboData(): Promise<
   CompressedApiResponse[]

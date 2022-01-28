@@ -1,9 +1,9 @@
 import { config as configureDotenv } from "dotenv";
-import firebaseConfig from "./firebase-config";
+import firebaseConfig from "../firebase-config";
 import connectToFirebase from "./lib/connect-to-firebase";
 import combos from "./static/api/combo-data.json";
 
-configureDotenv();
+configureDotenv({ path: '../.env' });
 
 const isWindows = process.platform === "win32";
 

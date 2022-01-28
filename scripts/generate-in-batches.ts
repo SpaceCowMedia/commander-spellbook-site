@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import log from "./shared/log";
 
 const combos = JSON.parse(
-  readFileSync("./static/api/combo-data.json", "utf-8")
+  readFileSync("frontend/static/api/combo-data.json", "utf-8")
 );
 const TOTAL_COMBOS = combos.length;
 const BATCH_SIZE = 1000;
@@ -29,11 +29,11 @@ while (currentIteration < NUMBER_OF_BATCHES) {
   const batchValue = `${startingPoint}to${endingPoint}`;
 
   log(`Generating batch ${currentIteration + 1}`);
-  execSync(`COMBO_BATCH=${batchValue} npm run generate`);
+  execSync(`COMBO_BATCH=${batchValue} npm run generate --workspace=frontend`);
   log(`Finished generating batch ${currentIteration + 1}`, "green");
 
   log(`Copying files from batch ${currentIteration + 1} to dist/`);
-  execSync(`cp -r dist-${batchValue}/* dist/`);
+  execSync(`cp -r frontend/dist-${batchValue}/* dist/`);
   log(
     `Done copying files from batch ${currentIteration + 1} to dist/`,
     "green"

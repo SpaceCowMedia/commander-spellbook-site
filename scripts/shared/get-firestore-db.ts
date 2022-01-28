@@ -1,5 +1,5 @@
 import firebaseConfig from "../../firebase-config";
-import connectToFirebase from "../../lib/connect-to-firebase";
+import connectToFirebase from "frontend/lib/connect-to-firebase";
 
 export default function getDb() {
   const useEmulators =

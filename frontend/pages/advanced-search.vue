@@ -156,11 +156,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import colorAutocompletes from "../lib/api/color-autocompletes";
+import { DEFAULT_VENDOR } from "../lib/constants";
 import ArtCircle from "@/components/ArtCircle.vue";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
 import RadioSearchInput from "@/components/advanced-search/RadioSearchInput.vue";
-import colorAutocompletes from "@/lib/api/color-autocompletes";
-import { DEFAULT_VENDOR } from "@/lib/constants";
 
 type InputData = {
   value: string;
@@ -226,8 +226,8 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      cardNameAutocompletes: require("../autocomplete-data/cards.json"),
-      resultAutocompletes: require("../autocomplete-data/results.json"),
+      cardNameAutocompletes: require("../../autocomplete-data/cards.json"),
+      resultAutocompletes: require("../../autocomplete-data/results.json"),
       colorAutocompletes,
 
       cards: [{ value: "", operator: ":" }],

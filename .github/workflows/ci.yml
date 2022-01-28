@@ -108,8 +108,8 @@ jobs:
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
 
-      - name: Generate 🏗️
-        run: npm run generate:in-batches
+      - name: Build Frontend Site 🏗️
+        run: npm run build-frontend
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
