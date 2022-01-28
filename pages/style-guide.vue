@@ -119,6 +119,22 @@
           <li><TextWithMagicSymbol text="{gp}" /> <code>{gp}</code></li>
         </ul>
       </li>
+
+      <li>
+        The notation for hybrid phyrexian mana is:
+        <ul>
+          <li><TextWithMagicSymbol text="{wup}" /> <code>{wup}</code></li>
+          <li><TextWithMagicSymbol text="{ubp}" /> <code>{ubp}</code></li>
+          <li><TextWithMagicSymbol text="{brp}" /> <code>{brp}</code></li>
+          <li><TextWithMagicSymbol text="{rgp}" /> <code>{rgp}</code></li>
+          <li><TextWithMagicSymbol text="{gwp}" /> <code>{gwp}</code></li>
+          <li><TextWithMagicSymbol text="{wbp}" /> <code>{wbp}</code></li>
+          <li><TextWithMagicSymbol text="{urp}" /> <code>{urp}</code></li>
+          <li><TextWithMagicSymbol text="{bgp}" /> <code>{bgp}</code></li>
+          <li><TextWithMagicSymbol text="{rwp}" /> <code>{rwp}</code></li>
+          <li><TextWithMagicSymbol text="{gup}" /> <code>{gup}</code></li>
+        </ul>
+      </li>
       <li>
         Energy is not a mana symbol and should not be grouped with mana symbols.
       </li>
