@@ -32,10 +32,27 @@ export default async function managePermissions(req: Request, res: Response) {
     return;
   }
 
+  const invalidPermissions = permissionKeys.filter(
+    (key) =>
+      !Object.getOwnPropertyDescriptor(PERMISSIONS, key) ||
+      typeof Object.getOwnPropertyDescriptor(permissions, key)?.value !== "boolean"
+  );
+
+  if (invalidPermissions.length > 0) {
+    res
+      .status(400)
+      .json(
+        new ValidationError(
+          `Invalid permission(s): ${invalidPermissions.join(", ")}`
+        )
+      );
+    return;
+  }
+
   // provisioned is the special permission we use to indicate that
   // a user account is fully set up, so it should not be modified
   // in any way outside of the provision route
-  if (Object.hasOwn(permissions, "provisioned")) {
+  if (typeof permissions.provisioned === "boolean") {
     res
       .status(400)
       .json(new ValidationError("Cannot change provisioned permission."));
@@ -46,25 +63,15 @@ export default async function managePermissions(req: Request, res: Response) {
   // from self. This precents us from accidentally getting into the circumstance
   // where the only admin revokes the ability to manage user permissions
   // and there's no one else that is able to do it
-  if (adminUserId === userId && Object.hasOwn(permissions, "manageUserPermissions")) {
+  if (
+    adminUserId === userId &&
+    typeof permissions.manageUserPermissions === "boolean"
+  ) {
     res
       .status(400)
       .json(
         new ValidationError(
           "You cannot change the manage user permissions option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
-        )
-      );
-    return;
-  }
-
-  const invalidPermissions = permissionKeys.filter((key) => !Object.hasOwn(PERMISSIONS, key));
-
-  if (invalidPermissions.length > 0) {
-    res
-      .status(400)
-      .json(
-        new ValidationError(
-          `Invalid permission(s): ${invalidPermissions.join(", ")}`
         )
       );
     return;

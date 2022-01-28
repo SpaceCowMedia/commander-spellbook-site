@@ -68,6 +68,62 @@ describe("user/:userId/manage-permissions", () => {
     );
   });
 
+  it("errors with a 400 when any permission is not a boolean", async () => {
+    const res = createResponse();
+    const req = createRequest({
+      params: {
+        userId: "some-user-id",
+      },
+      body: {
+        permissions: {
+          proposeCombo: true,
+          manageUserPermissions: "false",
+        }
+      },
+      userPermissions: {
+        manageUserPermissions: true,
+      },
+    });
+
+    await managePermissions(req, res);
+
+    expect(res.status).toBeCalledTimes(1);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledTimes(1);
+    expect(res.json).toBeCalledWith(
+      new ValidationError("Invalid permission(s): manageUserPermissions")
+    );
+  });
+
+  it("errors with a 400 when passing a permission key that does not exist", async () => {
+    const res = createResponse();
+    const req = createRequest({
+      params: {
+        userId: "some-uuid",
+      },
+      body: {
+        permissions: {
+          invalidKey: true,
+          anotherInvalidKey: true,
+        },
+      },
+      userPermissions: {
+        manageUserPermissions: true,
+      },
+    });
+
+    await managePermissions(req, res);
+
+    expect(res.status).toBeCalledTimes(1);
+    expect(res.status).toBeCalledWith(400);
+    expect(res.json).toBeCalledTimes(1);
+    expect(res.json).toBeCalledWith(
+      new ValidationError(
+        "Invalid permission(s): invalidKey, anotherInvalidKey"
+      )
+    );
+  });
+
   it("errors with a 400 when attempting to change provisioned claim", async () => {
     const res = createResponse();
     const req = createRequest({
@@ -170,35 +226,6 @@ describe("user/:userId/manage-permissions", () => {
     expect(res.status).toBeCalledWith(201);
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith({ success: true });
-  });
-
-  it("errors with a 400 when passing a permission key that does not exist", async () => {
-    const res = createResponse();
-    const req = createRequest({
-      params: {
-        userId: "some-uuid",
-      },
-      body: {
-        permissions: {
-          invalidKey: true,
-          anotherInvalidKey: true,
-        },
-      },
-      userPermissions: {
-        manageUserPermissions: true,
-      },
-    });
-
-    await managePermissions(req, res);
-
-    expect(res.status).toBeCalledTimes(1);
-    expect(res.status).toBeCalledWith(400);
-    expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(
-      new ValidationError(
-        "Invalid permission(s): invalidKey, anotherInvalidKey"
-      )
-    );
   });
 
   it("errors with a 400 when user does not exist", async () => {
