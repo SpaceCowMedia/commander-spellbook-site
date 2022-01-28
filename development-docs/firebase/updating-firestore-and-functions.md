@@ -47,11 +47,11 @@ The [`firestore.rules`](../../firestore.rules) file dictates the changes that ca
 
 # Functions
 
-The API calls are dictated by the functions in `firebase-functions/src/`.
+The API calls are dictated by the functions in `backend/src/`.
 
-The `firebase-functions/src/api` directory dictates the public API and is written as an [express application](https://expressjs.com/).
+The `backend/src/api` directory dictates the public API and is written as an [express application](https://expressjs.com/).
 
-The `firebase-functions/src/db-hooks` directory contains files that manage data events (such as the creation of a user or a combo).
+The `backend/src/db-hooks` directory contains files that manage data events (such as the creation of a user or a combo).
 
 # Emulators
 

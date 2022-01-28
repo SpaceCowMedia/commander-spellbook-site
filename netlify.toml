@@ -13,10 +13,10 @@
   ignore = "exit 0"
 
 # Netlify caches the node modules, which means that the
-# node_modules in the firebase-functions directory do not
+# node_modules in the backend directory do not
 # always get installed properly. We have a special generate
 # command for netlify that first removes many of the directories
-# in firebase-functions, but leaves `src/shared` so the client
+# in backend, but leaves `src/shared` so the client
 # that needs to share the constants used by both client and server
 # is preserved. It then generates using the cypress config so that
 # it builds a minimal version of the site (doesn't include a million
