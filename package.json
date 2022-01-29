@@ -26,6 +26,7 @@
     "firebase:deploy:local": "firebase deploy --project commander-spellbook-local",
     "firebase:deploy:staging": "firebase deploy --project commander-spellbook-staging",
     "firebase:deploy:prod": "firebase deploy --project commander-spellbook-prod",
+    "start": "npm start --workspace=frontend",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm t --workspaces --if-present",
     "cy:run": "cypress run",
