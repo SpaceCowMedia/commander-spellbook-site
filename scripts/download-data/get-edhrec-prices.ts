@@ -1,6 +1,6 @@
+import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
 import getData from "../shared/get";
 import log from "../shared/log";
-import normalizeCardName from "frontend/lib/normalize-card-name";
 
 type Price = {
   price: number | string;

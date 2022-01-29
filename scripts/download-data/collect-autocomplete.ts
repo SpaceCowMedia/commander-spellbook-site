@@ -1,6 +1,6 @@
-import normalizeStringInput from "frontend/lib/api/normalize-string-input";
+import normalizeStringInput from "@spellbook/frontend/lib/api/normalize-string-input";
 
-import type { CompressedApiResponse } from "frontend/lib/api/types";
+import type { CompressedApiResponse } from "@spellbook/frontend/lib/api/types";
 type AutoCompleteOption = {
   value: string;
   label: string;

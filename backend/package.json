@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@spellbook/backend",
   "private": true,
   "scripts": {
     "build": "tsc",

@@ -29,7 +29,7 @@
     "firebase:deploy:staging": "firebase deploy --project commander-spellbook-staging",
     "firebase:deploy:prod": "firebase deploy --project commander-spellbook-prod",
     "start": "npm start --workspace=frontend",
-    "lint": "npm run lint --workspaces --if-present",
+    "lint": "eslint --ext .ts,.js scripts cypress && npm run lint --workspaces --if-present",
     "test": "npm t --workspaces --if-present",
     "cy:run": "cypress run",
     "pretest:integration": "NODE_ENV=development USE_FIREBASE_EMULATORS=true npm run firebase:emulate & wait-on http://localhost:4000 && npm run build-frontend-for-cypress",

@@ -3,7 +3,7 @@ import firebaseConfig from "../firebase-config";
 import connectToFirebase from "./lib/connect-to-firebase";
 import combos from "./static/api/combo-data.json";
 
-configureDotenv({ path: '../.env' });
+configureDotenv({ path: "../.env" });
 
 const isWindows = process.platform === "win32";
 
@@ -196,6 +196,8 @@ export default {
     },
     "~/plugins/text-helpers.ts",
   ],
+
+  modulesDir: ['../node_modules'],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
