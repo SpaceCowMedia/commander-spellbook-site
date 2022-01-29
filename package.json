@@ -12,6 +12,7 @@
     "dev": "npm run dev --workspace=frontend",
     "build-backend": "npm run build --workspace backend",
     "build-frontend": "ts-node scripts/generate-in-batches",
+    "prebuild-frontend-for-cypress": "npm run download-data",
     "build-frontend-for-cypress": "npm run generate --workspace=frontend",
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
