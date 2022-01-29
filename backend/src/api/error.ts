@@ -20,6 +20,11 @@ abstract class ApiError extends Error {
   }
 }
 
+export class NotFoundError extends ApiError {
+  protected static defaultMessage =
+    "The requested resource could not be found.";
+}
+
 export class PermissionError extends ApiError {
   protected static defaultMessage =
     "You do not have permission to perform this action.";

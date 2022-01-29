@@ -1,14 +1,22 @@
 import {
+  NotFoundError,
   PermissionError,
   UnknownError,
   ValidationError,
 } from "../../../src/api/error";
 
 describe("API Errors", () => {
-  let errorClasses: Array<typeof PermissionError | typeof UnknownError>;
+  let errorClasses: Array<
+    typeof NotFoundError | typeof PermissionError | typeof UnknownError
+  >;
 
   beforeEach(() => {
-    errorClasses = [PermissionError, UnknownError, ValidationError];
+    errorClasses = [
+      NotFoundError,
+      PermissionError,
+      UnknownError,
+      ValidationError,
+    ];
   });
 
   describe("ApiError", () => {
@@ -26,6 +34,23 @@ describe("API Errors", () => {
 
         expect(err.message).toBe("message");
       });
+    });
+  });
+
+  describe("NotFoundError", () => {
+    it("signifies a not found error", () => {
+      const err = new NotFoundError("message");
+
+      expect(JSON.parse(JSON.stringify(err))).toEqual({
+        name: "NotFoundError",
+        message: "message",
+      });
+    });
+
+    it("defaults message to 'You do not have permission to perform this action.'", () => {
+      const err = new NotFoundError();
+
+      expect(err.message).toBe("The requested resource could not be found.");
     });
   });
 
