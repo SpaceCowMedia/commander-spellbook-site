@@ -7,7 +7,6 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate --fail-on-error",
-    "generate:netlify": "mv backend/src/shared firebase-shared && rm -rf backend && mkdir -p backend/src/ && mv firebase-shared backend/src/shared && npm run generate -- -c cypress/nuxt.config.js",
     "lint:js": "eslint --ext .ts,.vue .",
     "lint:style": "npm run lint:style:vue && npm run lint:style:css",
     "lint:style:css": "stylelint \"assets/**/*.css\"",
