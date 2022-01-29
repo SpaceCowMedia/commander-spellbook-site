@@ -3,7 +3,7 @@
 # as such, we basically tell it to ignore production deploys and only
 # run pull request deploy previews
 [build]
-  publish = "dist/"
+  publish = "frontend/dist/"
   command = "npm run build-frontend"
 
 # Production context: when ignore returns an exit code of 0
