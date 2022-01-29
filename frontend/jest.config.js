@@ -1,5 +1,7 @@
+const baseConfig = require("../jest.config.js");
+
 module.exports = {
-  preset: "ts-jest",
+  ...baseConfig,
   testEnvironment: "jsdom",
   moduleNameMapper: {
     // https://jestjs.io/docs/en/webpack#handling-static-assets
@@ -13,11 +15,8 @@ module.exports = {
   transform: {
     "^.+\\.ts$": "ts-jest",
     "^.+\\.js$": "babel-jest",
-    ".*\\.(vue)$": "vue-jest",
+    "^[^.]+.vue$": "vue-jest",
   },
-  resetMocks: true,
-  restoreMocks: true,
-  collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/components/**/*.vue",
     "<rootDir>/pages/**/*.vue",
