@@ -55,7 +55,7 @@ jobs:
           runTests: false
 
       - name: Run unit tests 🧪
-        run: npm test
+        run: npm run download-data && npm test
 
   integration-tests:
     runs-on: ubuntu-20.04

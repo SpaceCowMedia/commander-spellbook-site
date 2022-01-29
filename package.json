@@ -7,7 +7,7 @@
     "frontend"
   ],
   "scripts": {
-    "postinstall": "husky install && npm run download-data",
+    "postinstall": "husky install",
     "predev": "npm run download-data",
     "dev": "npm run dev --workspace=frontend",
     "build-backend": "npm run build --workspace backend",
