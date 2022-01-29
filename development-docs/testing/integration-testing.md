@@ -51,7 +51,7 @@ Ids of available users to log in as:
 To update seed data, run the following command:
 
 ```bash
-npm run firebase:emulate -- --export-on-exit=firebase-emulator-seed-data
+npm run firebase:emulate -- --export-on-exit=backend/firebase-emulator-seed-data
 ```
 
 Now, any changes you make (adding users, updating documents, etc) will update the seed data that the emulators use once you stop the emulator process.
