@@ -1,7 +1,16 @@
 import { mount } from "@vue/test-utils";
+import scryfall from "scryfall-client";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 
+jest.mock("scryfall-client");
+
 describe("TextWithMagicSymbol", () => {
+  beforeEach(() => {
+    jest.mocked(scryfall.getSymbolUrl).mockImplementation((str) => {
+      return `https://example.com/${str}.svg`;
+    });
+  });
+
   it("renders text", () => {
     const wrapper = mount(TextWithMagicSymbol, {
       propsData: {
@@ -23,7 +32,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
     expect(
       (wrapper.find(".magic-symbol").element as HTMLImageElement).src
-    ).toMatch(/R\.svg$/);
+    ).toEqual("https://example.com/r.svg");
   });
 
   it("renders image with Scryfall syntax", () => {
@@ -36,7 +45,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
     expect(
       (wrapper.find(".magic-symbol").element as HTMLImageElement).src
-    ).toMatch(/R\.svg$/);
+    ).toEqual("https://example.com/r.svg");
   });
 
   it("renders image with Scryfall syntax for hybrid mana", () => {
@@ -49,7 +58,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
     expect(
       (wrapper.find(".magic-symbol").element as HTMLImageElement).src
-    ).toMatch(/GU\.svg$/);
+    ).toEqual("https://example.com/GU.svg");
   });
 
   it("renders longer symbols in emoji syntax", () => {
@@ -62,7 +71,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
     expect(
       (wrapper.find(".magic-symbol").element as HTMLImageElement).src
-    ).toMatch(/CHAOS\.svg$/);
+    ).toEqual("https://example.com/chaos.svg");
   });
 
   it("renders longer symbols in Scryfall syntax", () => {
@@ -75,7 +84,7 @@ describe("TextWithMagicSymbol", () => {
     expect(wrapper.findAll(".magic-symbol").length).toBe(1);
     expect(
       (wrapper.find(".magic-symbol").element as HTMLImageElement).src
-    ).toMatch(/CHAOS\.svg$/);
+    ).toEqual("https://example.com/chaos.svg");
   });
 
   it("renders cards", () => {
@@ -269,8 +278,12 @@ describe("TextWithMagicSymbol", () => {
     expect(textNodes.at(2).element.textContent).toBe(" ");
     expect(textNodes.at(3).element.textContent).toBe(" some ");
     expect(textNodes.at(4).element.textContent).toBe(" words");
-    expect((imgNodes.at(0).element as HTMLImageElement).src).toMatch(/R\.svg$/);
-    expect((imgNodes.at(1).element as HTMLImageElement).src).toMatch(/U\.svg$/);
+    expect((imgNodes.at(0).element as HTMLImageElement).src).toEqual(
+      "https://example.com/r.svg"
+    );
+    expect((imgNodes.at(1).element as HTMLImageElement).src).toEqual(
+      "https://example.com/u.svg"
+    );
     expect(tooltipNodes.at(0).props("cardName")).toBe("Card, Name 1");
     expect(tooltipNodes.at(1).props("cardName")).toBe("Card Name 2");
   });

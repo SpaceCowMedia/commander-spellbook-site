@@ -4,6 +4,7 @@ import Card from "@/lib/api/models/card";
 import getExternalCardData from "@/lib/get-external-card-data";
 
 jest.mock("@/lib/get-external-card-data");
+jest.mock("scryfall-client");
 
 describe("Card", () => {
   beforeEach(() => {
@@ -119,7 +120,7 @@ describe("Card", () => {
       const payload = {};
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      jest.spyOn(scryfall, "getCard").mockResolvedValue(payload as any);
+      jest.mocked(scryfall.getCard).mockResolvedValue(payload as any);
 
       const card = new Card("Sydri, Galvanic Genius");
 
