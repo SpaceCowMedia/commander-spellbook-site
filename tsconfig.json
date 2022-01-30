@@ -5,18 +5,19 @@
     }
   },
   "compilerOptions": {
-    "target": "ES2018",
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": ["ESNext", "ESNext.AsyncIterable"],
     "module": "ESNext",
     "moduleResolution": "Node",
-    "lib": ["ESNext", "ESNext.AsyncIterable"],
-    "esModuleInterop": true,
-    "allowJs": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
     "sourceMap": true,
     "strict": true,
-    "noEmit": true,
-    "experimentalDecorators": true,
-    "baseUrl": ".",
-    "types": ["@types/node"]
+    "target": "ES2018",
+    "types": ["@types/node", "jest"]
   },
   "exclude": ["node_modules"]
 }
