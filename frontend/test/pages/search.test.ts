@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import type { MountOptions, Route, Router, VueComponent } from "../types";
+import type { MountOptions, Route, Router, VueComponent } from "@/test/types";
 import SearchPage from "@/pages/search.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";

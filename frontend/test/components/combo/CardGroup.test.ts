@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import type { VueComponent } from "../../types";
+import type { VueComponent } from "@/test/types";
 import CardGroup from "@/components/combo/CardGroup.vue";
 
 describe("CardGroup", () => {

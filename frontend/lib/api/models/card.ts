@@ -1,10 +1,10 @@
 import scryfall from "scryfall-client";
 import normalizeStringInput from "../normalize-string-input";
+import type { VendorValue } from "../types";
+
 import getExternalCardData, {
   ExternalCardData,
-} from "../../get-external-card-data";
-
-import type { VendorValue } from "../types";
+} from "@/lib/get-external-card-data";
 
 export default class Card {
   name: string;

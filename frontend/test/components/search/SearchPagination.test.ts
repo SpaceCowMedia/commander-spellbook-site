@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import type { MountOptions, VueComponent } from "../../types";
+import type { MountOptions, VueComponent } from "@/test/types";
 import SearchPagination from "@/components/search/SearchPagination.vue";
 
 describe("SearchPagination", () => {
