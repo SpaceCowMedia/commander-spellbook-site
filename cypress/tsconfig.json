@@ -1,7 +1,7 @@
 {
-  "extends": "../tsconfig",
   "compilerOptions": {
-    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
+    "target": "es5",
+    "lib": ["es5", "dom"],
     "types": ["cypress"]
   },
   "include": ["**/*.ts"]
