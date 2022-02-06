@@ -3,6 +3,5 @@
   "compilerOptions": {
     "outDir": "lib"
   },
-  "compileOnSave": true,
   "include": ["src"]
 }

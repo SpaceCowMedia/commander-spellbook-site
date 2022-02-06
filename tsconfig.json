@@ -4,6 +4,7 @@
       "module": "commonjs"
     }
   },
+  "compileOnSave": true,
   "compilerOptions": {
     "target": "ES2018",
     "module": "ESNext",
