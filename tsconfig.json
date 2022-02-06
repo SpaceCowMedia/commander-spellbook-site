@@ -18,7 +18,7 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
-    "types": ["@types/node"]
+    "types": ["@types/node", "jest"]
   },
   "exclude": ["node_modules"]
 }
