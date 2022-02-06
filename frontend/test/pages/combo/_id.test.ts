@@ -1,11 +1,11 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import type { MountOptions, Route, Router, VueComponent } from "../../types";
+import type { MountOptions, Route, Router, VueComponent } from "@/test/types";
 import ComboPage from "@/pages/combo/_id.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import findById from "@/lib/api/find-by-id";
 import getExternalCardData from "@/lib/get-external-card-data";
-import { pluralize as $pluralize } from "~/plugins/text-helpers";
+import { pluralize as $pluralize } from "@/plugins/text-helpers";
 
 jest.mock("@/lib/api/find-by-id");
 jest.mock("@/lib/get-external-card-data");

@@ -1,8 +1,8 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
-import type { MountOptions } from "../../types";
+import type { MountOptions } from "@/test/types";
 import ComboResults from "@/components/search/ComboResults.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
-import { pluralize as $pluralize } from "~/plugins/text-helpers";
+import { pluralize as $pluralize } from "@/plugins/text-helpers";
 
 describe("ComboResults", () => {
   let options: MountOptions;

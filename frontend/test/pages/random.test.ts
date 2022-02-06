@@ -1,6 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import type { Route, Router } from "../types";
+import type { Route, Router } from "@/test/types";
 import RandomPage from "@/pages/random.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import random from "@/lib/api/random";

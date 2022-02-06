@@ -1,13 +1,13 @@
 import { shallowMount } from "@vue/test-utils";
 
-import { createStore } from "../utils";
+import { createStore } from "@/test/utils";
 import type {
   MountOptions,
   Route,
   Router,
   Store,
   VueComponent,
-} from "../types";
+} from "@/test/types";
 import HomePage from "@/pages/index.vue";
 
 describe("HomePage", () => {

@@ -1,13 +1,13 @@
 import { mount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { createStore } from "../utils";
+import { createStore } from "@/test/utils";
 import type {
   MountOptions,
   Route,
   Router,
   Store,
   VueComponent,
-} from "../types";
+} from "@/test/types";
 import SearchBar from "@/components/SearchBar.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import getAllCombos from "@/lib/api/get-all-combos";

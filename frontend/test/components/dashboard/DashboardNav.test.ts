@@ -1,8 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { createStore } from "../../utils";
+import { createStore } from "@/test/utils";
 
-import type { Store } from "../../types";
+import type { Store } from "@/test/types";
 import DashboardNav from "@/components/dashboard/DashboardNav.vue";
 
 describe("DashboardNav", () => {

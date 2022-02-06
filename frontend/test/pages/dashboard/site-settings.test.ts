@@ -2,8 +2,8 @@ import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
 import scryfall from "scryfall-client";
 
-import { createFirebase } from "../../utils";
-import type { Firebase, VueComponent } from "../../types";
+import { createFirebase } from "@/test/utils";
+import type { Firebase, VueComponent } from "@/test/types";
 import SiteSettings from "@/pages/dashboard/site-settings.vue";
 
 jest.mock("scryfall-client");

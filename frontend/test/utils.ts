@@ -1,4 +1,4 @@
-import { Firebase, Route, Router, Store } from "./types";
+import { Firebase, Route, Router, Store } from "@/test/types";
 
 type CreateRouteOptions = {
   path?: string;
