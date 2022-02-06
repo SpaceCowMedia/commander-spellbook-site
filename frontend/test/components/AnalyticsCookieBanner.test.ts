@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { bootstrap } from "vue-gtag";
 
-import type { VueComponent } from "@/test/types";
+import type { VueComponent } from "../types";
 import AnalyticsCookieBanner from "@/components/AnalyticsCookieBanner.vue";
 
 jest.mock("vue-gtag");

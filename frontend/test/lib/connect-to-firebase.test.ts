@@ -1,7 +1,7 @@
 import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import connectToFirebase from "@/lib/connect-to-firebase";
+import connectToFirebase from "../../lib/connect-to-firebase";
 
 jest.mock("firebase/app");
 jest.mock("firebase/firestore");

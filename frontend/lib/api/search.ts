@@ -1,3 +1,4 @@
+import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "../constants";
 import lookupApi from "./spellbook-api";
 import parseQuery from "./parse-query";
 import filterIds from "./search-filters/ids";
@@ -11,8 +12,6 @@ import createMessage from "./parse-query/create-message";
 import validateSearchParams from "./validate-search-params";
 
 import type { SearchResults } from "./types";
-
-import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "@/lib/constants";
 
 export default async function search(query = ""): Promise<SearchResults> {
   const searchParams = parseQuery(query);

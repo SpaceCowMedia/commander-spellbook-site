@@ -1,7 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
-import { createRouter, createStore } from "@/test/utils";
+import { createRouter, createStore } from "../../utils";
 
-import type { Router, Store, VueComponent } from "@/test/types";
+import type { Router, Store, VueComponent } from "../../types";
 import EmailDialog from "@/components/auth/EmailDialog.vue";
 
 describe("EmailDialog Auth", () => {

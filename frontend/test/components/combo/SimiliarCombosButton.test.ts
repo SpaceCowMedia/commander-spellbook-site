@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import type { VueComponent } from "@/test/types";
+import type { VueComponent } from "../../types";
 import SimiliarCombosButton from "@/components/combo/SimiliarCombosButton.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
 import search from "@/lib/api/search";

@@ -8,12 +8,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import connectToFirebase from "@/lib/connect-to-firebase";
-import setupFirebase from "@/plugins/firebase";
+import connectToFirebase from "~/lib/connect-to-firebase";
+import setupFirebase from "~/plugins/firebase";
 
 jest.mock("firebase/auth");
 jest.mock("firebase/firestore");
-jest.mock("@/lib/connect-to-firebase");
+jest.mock("~/lib/connect-to-firebase");
 
 describe("firebase", () => {
   let fakeAuth: ReturnType<typeof getAuth>;

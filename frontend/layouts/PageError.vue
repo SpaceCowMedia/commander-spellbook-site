@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
-import NotFoundError from "@/components/errors/NotFoundError.vue";
-import UnknownError from "@/components/errors/UnknownError.vue";
+import NotFoundError from "../components/errors/NotFoundError.vue";
+import UnknownError from "../components/errors/UnknownError.vue";
 
 export default {
   components: {

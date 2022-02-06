@@ -1,4 +1,4 @@
-import { state, mutations } from "@/store/query";
+import { state, mutations } from "~/store/query";
 
 describe("Query Store", () => {
   describe("mutations", () => {

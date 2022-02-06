@@ -26,8 +26,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import colorOptions from "@/lib/api/color-autocompletes";
-import search from "@/lib/api/search";
+import colorOptions from "../../lib/api/color-autocompletes";
+import search from "../../lib/api/search";
 import TextWithMagicSymbol from "@/components/TextWithMagicSymbol.vue";
 
 type Data = {

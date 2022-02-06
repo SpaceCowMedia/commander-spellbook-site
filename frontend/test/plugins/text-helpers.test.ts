@@ -1,4 +1,4 @@
-import { pluralize } from "@/plugins/text-helpers";
+import { pluralize } from "~/plugins/text-helpers";
 
 describe("helpers", () => {
   describe("pluralize", () => {

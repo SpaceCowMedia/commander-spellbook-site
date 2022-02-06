@@ -1,7 +1,7 @@
 import { shallowMount, mount } from "@vue/test-utils";
-import type { VueComponent } from "@/test/types";
+import type { VueComponent } from "../../types";
 import MultiSearchInput from "@/components/advanced-search/MultiSearchInput.vue";
-import { pluralize as $pluralize } from "@/plugins/text-helpers";
+import { pluralize as $pluralize } from "~/plugins/text-helpers";
 
 describe("MultiSearchInput", () => {
   it("creates an input", () => {

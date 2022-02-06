@@ -1,8 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { createStore } from "@/test/utils";
+import { createStore } from "../../utils";
 
-import type { VueComponent, Store } from "@/test/types";
+import type { VueComponent, Store } from "../../types";
 import CompleteAccountSetup from "@/components/dashboard/CompleteAccountSetup.vue";
 
 describe("DashboardCompleteAccountSetup", () => {

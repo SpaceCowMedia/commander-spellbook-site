@@ -14,7 +14,6 @@
     "moduleResolution": "Node",
     "noEmit": true,
     "noUnusedLocals": true,
-    "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
     "target": "ES2018",

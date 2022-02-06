@@ -1,12 +1,12 @@
+import { DEFAULT_ORDER } from "../constants";
 import COLOR_ORDER from "./color-combo-order";
+
 import type {
   FormattedApiResponse,
   OrderValue,
   SortValue,
   VendorValue,
 } from "./types";
-
-import { DEFAULT_ORDER } from "@/lib/constants";
 
 type SortingMeta = {
   isEqual: boolean;

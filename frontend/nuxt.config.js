@@ -197,7 +197,7 @@ export default {
     "~/plugins/text-helpers.ts",
   ],
 
-  modulesDir: ["../node_modules"],
+  modulesDir: ['../node_modules'],
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [

@@ -1,6 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
-import { createStore, createRouter } from "@/test/utils";
+import { createStore, createRouter } from "../utils";
 import EditorDashboard from "@/layouts/EditorDashboard.vue";
 
 describe("EditorDashboard", () => {

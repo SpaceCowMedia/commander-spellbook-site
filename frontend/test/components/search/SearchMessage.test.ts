@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import type { MountOptions } from "@/test/types";
+import type { MountOptions } from "../../types";
 import SearchMessage from "@/components/search/SearchMessage.vue";
 
 describe("SearchMessage", () => {

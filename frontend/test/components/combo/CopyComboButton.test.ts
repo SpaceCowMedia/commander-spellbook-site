@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import type { VueComponent } from "@/test/types";
+import type { VueComponent } from "../../types";
 import CopyComboLinkButton from "@/components/combo/CopyComboLinkButton.vue";
 
 describe("CopyComboLinkButton", () => {

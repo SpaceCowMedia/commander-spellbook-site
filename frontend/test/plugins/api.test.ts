@@ -1,5 +1,5 @@
 import Vue from "vue";
-import setupApi from "@/plugins/api";
+import setupApi from "~/plugins/api";
 
 describe("api", () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import normalizeCardName from "@/lib/normalize-card-name";
 
-const cardData = require("@/../external-data/cards.json");
+const cardData = require("../../external-data/cards.json");
 
 const CARD_IMAGE_NAMED_BASE_URL =
   "https://api.scryfall.com/cards/named?format=image&exact=";

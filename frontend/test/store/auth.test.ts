@@ -1,5 +1,5 @@
-import { state, getters, mutations, actions } from "@/store/auth";
-import { PERMISSIONS } from "@/lib/constants";
+import { state, getters, mutations, actions } from "~/store/auth";
+import { PERMISSIONS } from "~/lib/constants";
 
 describe("Auth Store", () => {
   describe("getters", () => {

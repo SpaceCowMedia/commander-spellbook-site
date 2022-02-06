@@ -1,5 +1,5 @@
-import { createRoute, createStore } from "@/test/utils";
-import authMiddleware from "@/middleware/authenticated";
+import { createRoute, createStore } from "../utils";
+import authMiddleware from "~/middleware/authenticated";
 
 describe("authMiddleware", () => {
   it("noops if in server mode", () => {
