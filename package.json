@@ -75,7 +75,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^3.1.0",
     "firebase-admin": "^10.0.2",
-    "firebase-tools": "^10.1.2",
+    "firebase-tools": "^10.1.4",
     "flush-promises": "^1.0.2",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
