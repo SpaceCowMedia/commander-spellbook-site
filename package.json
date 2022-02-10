@@ -40,19 +40,19 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "dotenv": "^14.3.2",
+    "dotenv": "^16.0.0",
     "scryfall-client": "^0.19.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
-    "cypress": "^9.3.1",
+    "cypress": "^9.4.1",
     "cypress-firebase": "^2.2.1",
     "firebase-admin": "^10.0.2",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.2",
     "prettier": "^2.5.1",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.5.0",
     "wait-on": "^6.0.0"
   }
 }
