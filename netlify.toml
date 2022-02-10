@@ -3,8 +3,8 @@
 # as such, we basically tell it to ignore production deploys and only
 # run pull request deploy previews
 [build]
-  publish = "dist/"
-  command = "npm run generate"
+  publish = "frontend/dist/"
+  command = "npm run build-frontend"
 
 # Production context: when ignore returns an exit code of 0
 # this tells netlify to skip the build. We always skip the production
@@ -12,17 +12,5 @@
 [context.production]
   ignore = "exit 0"
 
-# Netlify caches the node modules, which means that the
-# node_modules in the firebase-functions directory do not
-# always get installed properly. We have a special generate
-# command for netlify that first removes many of the directories
-# in firebase-functions, but leaves `src/shared` so the client
-# that needs to share the constants used by both client and server
-# is preserved. It then generates using the cypress config so that
-# it builds a minimal version of the site (doesn't include a million
-# combo pages) This has the downside of not presenting the
-# combo pages as they'll actually be when deploying to s3
-# but it makes the deploy process not take a million years
-# when asking for feedback on changes to the site
 [context.deploy-preview]
-  command = "npm run generate:netlify"
+  command = "npm run build-frontend-for-cypress"
