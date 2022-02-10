@@ -1,7 +1,7 @@
 export const PERMISSIONS = {
   provisioned: "r",
   proposeCombo: "p",
-  manageUserPermissions: "m",
+  manageUsers: "m",
   manageSiteContent: "s",
   viewUsers: "u",
 };

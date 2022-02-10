@@ -61,7 +61,7 @@ export default Vue.extend({
       loaded: false,
       permissions: {
         proposeCombo: false,
-        manageUserPermissions: false,
+        manageUsers: false,
         manageSiteContent: false,
         viewUsers: false,
       },
@@ -71,7 +71,7 @@ export default Vue.extend({
     const permissions = await this.$store.dispatch("auth/lookupPermissions");
 
     this.permissions.proposeCombo = permissions.proposeCombo;
-    this.permissions.manageUserPermissions = permissions.manageUserPermissions;
+    this.permissions.manageUsers = permissions.manageUsers;
     this.permissions.manageSiteContent = permissions.manageSiteContent;
     this.permissions.viewUsers = permissions.viewUsers;
 

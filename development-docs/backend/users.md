@@ -10,12 +10,12 @@ After a user logs in for the first time, the site will automatically attempt to 
 
 Every time the user loads the user dashboard, the site will check if the user has already been provisioned, and then display the parts of the dashboard they are allowed to see.
 
-An administrator with the `manageUserPermissions` permission can modify what a user is allowed to do.
+An administrator with the `manageUsers` permission can modify what a user is allowed to do as well as details about the user (such as display name, their email or username).
 
 Here are the following permissions a user can have:
 
 - `provisioned` - when `true`, the user is created and ready to be used on the site. Not really used for anything other than to determine that the user is fully set up and the initial permissions have been set.
 - `proposeCombo` - can submit new combos for review on the site
-- `manageUserPermissions` - can change the user permissions of another user
+- `manageUsers` - can change the user permissions and user details of another user
 - `manageSiteContent` - can change site settings, such as the parameters for what featured combos there are
-- `viewUsers` - inspect, but not manage the permissions, of users
+- `viewUsers` - inspect, but not manage users

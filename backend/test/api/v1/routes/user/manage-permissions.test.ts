@@ -30,7 +30,7 @@ describe("user/:userId/manage-permissions", () => {
     const res = createResponse();
     const req = createRequest({
       userPermissions: {
-        manageUserPermissions: false,
+        manageUsers: false,
       },
     });
 
@@ -54,7 +54,7 @@ describe("user/:userId/manage-permissions", () => {
       },
       body: {},
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -77,11 +77,11 @@ describe("user/:userId/manage-permissions", () => {
       body: {
         permissions: {
           proposeCombo: true,
-          manageUserPermissions: "false",
-        }
+          manageUsers: "false",
+        },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -91,7 +91,7 @@ describe("user/:userId/manage-permissions", () => {
     expect(res.status).toBeCalledWith(400);
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith(
-      new ValidationError("Invalid permission(s): manageUserPermissions")
+      new ValidationError("Invalid permission(s): manageUsers")
     );
   });
 
@@ -108,7 +108,7 @@ describe("user/:userId/manage-permissions", () => {
         },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -134,7 +134,7 @@ describe("user/:userId/manage-permissions", () => {
         permissions: { provisioned: false },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -156,7 +156,7 @@ describe("user/:userId/manage-permissions", () => {
       },
       body: { permissions: {} },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -179,11 +179,11 @@ describe("user/:userId/manage-permissions", () => {
       },
       body: {
         permissions: {
-          manageUserPermissions: false,
+          manageUsers: false,
         },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -194,7 +194,7 @@ describe("user/:userId/manage-permissions", () => {
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith(
       new ValidationError(
-        "You cannot change the manage user permissions option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
+        "You cannot change the manage users option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
       )
     );
   });
@@ -213,7 +213,7 @@ describe("user/:userId/manage-permissions", () => {
       },
       userPermissions: {
         proposeCombo: true,
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -240,7 +240,7 @@ describe("user/:userId/manage-permissions", () => {
         },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -268,7 +268,7 @@ describe("user/:userId/manage-permissions", () => {
         },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 
@@ -296,11 +296,11 @@ describe("user/:userId/manage-permissions", () => {
       body: {
         permissions: {
           proposeCombo: false,
-          manageUserPermissions: true,
+          manageUsers: true,
         },
       },
       userPermissions: {
-        manageUserPermissions: true,
+        manageUsers: true,
       },
     });
 

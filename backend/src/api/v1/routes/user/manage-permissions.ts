@@ -12,7 +12,7 @@ export default async function managePermissions(req: Request, res: Response) {
     boolean
   >;
 
-  if (!adminPermissions.manageUserPermissions) {
+  if (!adminPermissions.manageUsers) {
     res
       .status(403)
       .json(
@@ -35,7 +35,8 @@ export default async function managePermissions(req: Request, res: Response) {
   const invalidPermissions = permissionKeys.filter(
     (key) =>
       !Object.getOwnPropertyDescriptor(PERMISSIONS, key) ||
-      typeof Object.getOwnPropertyDescriptor(permissions, key)?.value !== "boolean"
+      typeof Object.getOwnPropertyDescriptor(permissions, key)?.value !==
+        "boolean"
   );
 
   if (invalidPermissions.length > 0) {
@@ -59,19 +60,16 @@ export default async function managePermissions(req: Request, res: Response) {
     return;
   }
 
-  // prevent an admin user from removing the manageUserPermissions option
+  // prevent an admin user from removing the manageUsers option
   // from self. This precents us from accidentally getting into the circumstance
   // where the only admin revokes the ability to manage user permissions
   // and there's no one else that is able to do it
-  if (
-    adminUserId === userId &&
-    typeof permissions.manageUserPermissions === "boolean"
-  ) {
+  if (adminUserId === userId && typeof permissions.manageUsers === "boolean") {
     res
       .status(400)
       .json(
         new ValidationError(
-          "You cannot change the manage user permissions option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
+          "You cannot change the manage users option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
         )
       );
     return;
