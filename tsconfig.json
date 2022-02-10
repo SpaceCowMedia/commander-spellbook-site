@@ -16,7 +16,6 @@
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "types": ["@types/node", "jest"]
