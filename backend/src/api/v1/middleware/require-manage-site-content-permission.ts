@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { PermissionError } from "../../error";
 
-export default function requireAuthentication(
+export default function requireManageSiteContentPermission(
   req: Request,
   res: Response,
   next: NextFunction
