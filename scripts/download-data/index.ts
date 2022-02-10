@@ -1,6 +1,6 @@
 import fs from "fs";
 import { config as configureDotenv } from "dotenv";
-import normalizeCardName from "../../lib/normalize-card-name";
+import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
 import isFeatured from "./is-featured";
@@ -104,10 +104,10 @@ Promise.all([
   );
   log("/external-data/edhrec-combos.json written", "green");
 
-  log("Writing /static/api/combo-data.json");
+  log("Writing /frontend/static/api/combo-data.json");
   fs.writeFileSync(
-    "./static/api/combo-data.json",
+    "./frontend/static/api/combo-data.json",
     JSON.stringify(compressedData)
   );
-  log("/static/api/combo-data.json written", "green");
+  log("/frontend/static/api/combo-data.json written", "green");
 });

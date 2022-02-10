@@ -1,4 +1,5 @@
 dist
+dist-*
 coverage
 static/api
 .nuxt/

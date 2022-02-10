@@ -4,23 +4,21 @@
       "module": "commonjs"
     }
   },
+  "compileOnSave": true,
   "compilerOptions": {
     "target": "ES2018",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "lib": ["ESNext", "ESNext.AsyncIterable"],
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
-    },
-    "types": ["@types/node", "@nuxt/types", "@nuxtjs/firebase", "jest"]
+    "types": ["@types/node", "jest"]
   },
-  "exclude": ["node_modules", ".nuxt", "dist", "cypress"]
+  "exclude": ["node_modules"]
 }
