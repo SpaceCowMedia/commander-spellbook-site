@@ -1,27 +1,15 @@
 import admin from "firebase-admin";
 import type { Request, Response } from "express";
-import { PermissionError, ValidationError, UnknownError } from "../../../error";
+import { ValidationError, UnknownError } from "../../../error";
 import { PERMISSIONS } from "../../../../shared/constants";
 
 export default async function managePermissions(req: Request, res: Response) {
   const adminUserId = req.userId;
-  const adminPermissions = req.userPermissions;
   const userId = req.params.userId;
   const permissions = req.body.permissions as Record<
     keyof typeof PERMISSIONS,
     boolean
   >;
-
-  if (!adminPermissions.manageUsers) {
-    res
-      .status(403)
-      .json(
-        new PermissionError(
-          "You do not have permission to manage another user's permissions"
-        )
-      );
-    return;
-  }
 
   const permissionKeys = Object.keys(permissions || {});
 

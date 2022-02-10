@@ -5,11 +5,7 @@ import {
   createResponse,
 } from "../../../../helper";
 import managePermissions from "../../../../../src/api/v1/routes/manage-users/permissions";
-import {
-  PermissionError,
-  ValidationError,
-  UnknownError,
-} from "../../../../../src/api/error";
+import { ValidationError, UnknownError } from "../../../../../src/api/error";
 
 jest.mock("firebase-admin");
 
@@ -26,26 +22,6 @@ describe("manage-users/:userId/permissions", () => {
     });
   });
 
-  it("errors with a 403 when requesting user does not have permission to manage user permissions", async () => {
-    const res = createResponse();
-    const req = createRequest({
-      userPermissions: {
-        manageUsers: false,
-      },
-    });
-
-    await managePermissions(req, res);
-
-    expect(res.status).toBeCalledTimes(1);
-    expect(res.status).toBeCalledWith(403);
-    expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(
-      new PermissionError(
-        "You do not have permission to manage another user's permissions"
-      )
-    );
-  });
-
   it("errors with a 400 when no permissions are provided", async () => {
     const res = createResponse();
     const req = createRequest({
@@ -53,9 +29,6 @@ describe("manage-users/:userId/permissions", () => {
         userId: "some-user-id",
       },
       body: {},
-      userPermissions: {
-        manageUsers: true,
-      },
     });
 
     await managePermissions(req, res);
@@ -79,9 +52,6 @@ describe("manage-users/:userId/permissions", () => {
           proposeCombo: true,
           manageUsers: "false",
         },
-      },
-      userPermissions: {
-        manageUsers: true,
       },
     });
 
@@ -107,9 +77,6 @@ describe("manage-users/:userId/permissions", () => {
           anotherInvalidKey: true,
         },
       },
-      userPermissions: {
-        manageUsers: true,
-      },
     });
 
     await managePermissions(req, res);
@@ -133,9 +100,6 @@ describe("manage-users/:userId/permissions", () => {
       body: {
         permissions: { provisioned: false },
       },
-      userPermissions: {
-        manageUsers: true,
-      },
     });
 
     await managePermissions(req, res);
@@ -155,9 +119,6 @@ describe("manage-users/:userId/permissions", () => {
         userId: "some-user-id",
       },
       body: { permissions: {} },
-      userPermissions: {
-        manageUsers: true,
-      },
     });
 
     await managePermissions(req, res);
@@ -181,9 +142,6 @@ describe("manage-users/:userId/permissions", () => {
         permissions: {
           manageUsers: false,
         },
-      },
-      userPermissions: {
-        manageUsers: true,
       },
     });
 
@@ -211,10 +169,6 @@ describe("manage-users/:userId/permissions", () => {
           proposeCombo: false,
         },
       },
-      userPermissions: {
-        proposeCombo: true,
-        manageUsers: true,
-      },
     });
 
     getUserSpy.mockResolvedValue({ customClaims: { r: 1, p: 1, m: 1 } });
@@ -238,9 +192,6 @@ describe("manage-users/:userId/permissions", () => {
         permissions: {
           proposeCombo: true,
         },
-      },
-      userPermissions: {
-        manageUsers: true,
       },
     });
 
@@ -266,9 +217,6 @@ describe("manage-users/:userId/permissions", () => {
         permissions: {
           proposeCombo: true,
         },
-      },
-      userPermissions: {
-        manageUsers: true,
       },
     });
 
@@ -298,9 +246,6 @@ describe("manage-users/:userId/permissions", () => {
           proposeCombo: false,
           manageUsers: true,
         },
-      },
-      userPermissions: {
-        manageUsers: true,
       },
     });
 
