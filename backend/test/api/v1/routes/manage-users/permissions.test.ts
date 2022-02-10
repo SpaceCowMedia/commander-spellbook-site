@@ -4,7 +4,7 @@ import {
   createRequest,
   createResponse,
 } from "../../../../helper";
-import managePermissions from "../../../../../src/api/v1/routes/user/manage-permissions";
+import managePermissions from "../../../../../src/api/v1/routes/manage-users/permissions";
 import {
   PermissionError,
   ValidationError,
@@ -13,7 +13,7 @@ import {
 
 jest.mock("firebase-admin");
 
-describe("user/:userId/manage-permissions", () => {
+describe("manage-users/:userId/permissions", () => {
   let claimsSpy: jest.SpyInstance;
   let getUserSpy: jest.SpyInstance;
 
