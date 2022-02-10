@@ -4,8 +4,7 @@ import { ValidationError, UnknownError } from "../../../error";
 import { PERMISSIONS } from "../../../../shared/constants";
 
 export default async function managePermissions(req: Request, res: Response) {
-  const adminUserId = req.userId;
-  const userId = req.params.userId;
+  const targetUserId = req.params.userId;
   const permissions = req.body.permissions as Record<
     keyof typeof PERMISSIONS,
     boolean
@@ -48,11 +47,14 @@ export default async function managePermissions(req: Request, res: Response) {
     return;
   }
 
-  // prevent an admin user from removing the manageUsers option
-  // from self. This precents us from accidentally getting into the circumstance
-  // where the only admin revokes the ability to manage user permissions
-  // and there's no one else that is able to do it
-  if (adminUserId === userId && typeof permissions.manageUsers === "boolean") {
+  // prevent a the user making the API request from removing the manageUsers option
+  // from themself. This prevents us from accidentally getting into the circumstance
+  // where the only admin revokes the ability to manage users and then there's no one
+  // else that is able to do it
+  if (
+    req.userId === targetUserId &&
+    typeof permissions.manageUsers === "boolean"
+  ) {
     res
       .status(400)
       .json(
@@ -67,12 +69,14 @@ export default async function managePermissions(req: Request, res: Response) {
   let currentCustomClaims: Record<string, number>;
 
   try {
-    const userRecord = await auth.getUser(userId);
+    const userRecord = await auth.getUser(targetUserId);
     currentCustomClaims = userRecord.customClaims || {};
   } catch (e) {
     res
       .status(400)
-      .json(new ValidationError(`User with id '${userId}' does not exist.`));
+      .json(
+        new ValidationError(`User with id '${targetUserId}' does not exist.`)
+      );
     return;
   }
 
@@ -90,13 +94,13 @@ export default async function managePermissions(req: Request, res: Response) {
   };
 
   try {
-    await auth.setCustomUserClaims(userId, finalCustomClaims);
+    await auth.setCustomUserClaims(targetUserId, finalCustomClaims);
   } catch (e) {
     res
       .status(500)
       .json(
         new UnknownError(
-          `Something went wrong when setting permissions for '${userId}'.`
+          `Something went wrong when setting permissions for '${targetUserId}'.`
         )
       );
     return;
