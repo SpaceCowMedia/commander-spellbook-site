@@ -42,7 +42,7 @@ export class PermissionError extends ApiError {
 }
 
 export class UnknownError extends ApiError {
-  constructor(message?: string | Error, originalError?: Error | ApiError) {
+  constructor(message?: string | Error, originalError?: unknown) {
     super(message);
 
     logError(this.message, originalError);

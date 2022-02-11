@@ -55,7 +55,12 @@ describe("manage-users/:userId/permissions", () => {
     expect(res.status).toBeCalledTimes(1);
     expect(res.status).toBeCalledWith(500);
     expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(new UnknownError("Something went wrong."));
+    expect(res.json).toBeCalledWith(
+      new UnknownError(
+        "Something went wrong when user with id 'user-id' changed the permissions for user with id 'some-user-id'.",
+        error
+      )
+    );
   });
 
   it("errors with a 400 when getPermissions throws a validation error", async () => {
@@ -103,7 +108,12 @@ describe("manage-users/:userId/permissions", () => {
     expect(res.status).toBeCalledTimes(1);
     expect(res.status).toBeCalledWith(500);
     expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(new UnknownError("Something went wrong."));
+    expect(res.json).toBeCalledWith(
+      new UnknownError(
+        "Something went wrong when user with id 'user-id' changed the permissions for user with id 'some-user-id'.",
+        error
+      )
+    );
   });
 
   it("errors with a 400 when setPermissions throws a validation error", async () => {
@@ -165,7 +175,12 @@ describe("manage-users/:userId/permissions", () => {
     expect(res.status).toBeCalledTimes(1);
     expect(res.status).toBeCalledWith(500);
     expect(res.json).toBeCalledTimes(1);
-    expect(res.json).toBeCalledWith(new UnknownError("Something went wrong."));
+    expect(res.json).toBeCalledWith(
+      new UnknownError(
+        "Something went wrong when user with id 'user-id' changed the permissions for user with id 'some-user-id'.",
+        error
+      )
+    );
   });
 
   it("errors with a 400 when changing the manage user permissions option for self", async () => {

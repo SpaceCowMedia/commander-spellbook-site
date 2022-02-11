@@ -44,7 +44,14 @@ export default async function managePermissions(req: Request, res: Response) {
     if (err instanceof ValidationError) {
       res.status(400).json(err);
     } else {
-      res.status(500).json(new UnknownError("Something went wrong."));
+      res
+        .status(500)
+        .json(
+          new UnknownError(
+            `Something went wrong when user with id '${req.userId}' changed the permissions for user with id '${targetUserId}'.`,
+            err
+          )
+        );
     }
     return;
   }
