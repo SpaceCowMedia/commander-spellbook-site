@@ -9,11 +9,9 @@ type PermissionClaims = Record<ClaimKey, 1>;
 
 const VALID_PERMISSION_KEYS = Object.keys(PERMISSIONS) as PermissionKey[];
 
-export async function getPermissions(userId: string): Promise<Permissions> {
-  const auth = admin.auth();
-  const userRecord = await auth.getUser(userId);
-  const claims = userRecord.customClaims || {};
-
+export function transformClaimsToPermissions(
+  claims: PermissionClaims
+): Permissions {
   return VALID_PERMISSION_KEYS.reduce((accum, key) => {
     const claimsKey = PERMISSIONS[key];
     const hasPermission = claims[claimsKey] === 1;
@@ -22,6 +20,14 @@ export async function getPermissions(userId: string): Promise<Permissions> {
 
     return accum;
   }, {} as Permissions);
+}
+
+export async function getPermissions(userId: string): Promise<Permissions> {
+  const auth = admin.auth();
+  const userRecord = await auth.getUser(userId);
+  const claims = userRecord.customClaims || {};
+
+  return transformClaimsToPermissions(claims);
 }
 
 export function validatePermissions(
@@ -60,13 +66,10 @@ export function validatePermissions(
   return Promise.resolve();
 }
 
-export async function setPermissions(
-  userId: string,
-  permissions: Partial<Permissions> = {}
-): Promise<void> {
-  const auth = admin.auth();
-
-  const claims = VALID_PERMISSION_KEYS.reduce((accum, key) => {
+export function transformPermissionsToClaims(
+  permissions: Partial<Permissions>
+): PermissionClaims {
+  return VALID_PERMISSION_KEYS.reduce((accum, key) => {
     const claimKey = PERMISSIONS[key] as ClaimKey;
 
     if (permissions[key] === true) {
@@ -75,6 +78,15 @@ export async function setPermissions(
 
     return accum;
   }, {} as PermissionClaims);
+}
+
+export async function setPermissions(
+  userId: string,
+  permissions: Partial<Permissions> = {}
+): Promise<void> {
+  const auth = admin.auth();
+
+  const claims = transformPermissionsToClaims(permissions);
 
   // if we can set permissions on a user, they must be provisioned
   claims[PERMISSIONS.provisioned] = 1;

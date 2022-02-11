@@ -3,6 +3,8 @@ import { createAdminAuth } from "../../../helper";
 import {
   getPermissions,
   setPermissions,
+  transformClaimsToPermissions,
+  transformPermissionsToClaims,
   validatePermissions,
 } from "../../../../src/api/v1/services/permissions";
 import { ValidationError } from "../../../../src/api/error";
@@ -22,8 +24,44 @@ describe("permissions service", () => {
     });
   });
 
+  describe("transformClaimsToPermissions", () => {
+    it("transforms claims to permissions object", () => {
+      const permissions = transformClaimsToPermissions({
+        p: 1,
+        r: 1,
+        m: 1,
+      });
+
+      expect(permissions).toEqual(
+        expect.objectContaining({
+          proposeCombo: true,
+          provisioned: true,
+          manageUsers: true,
+          viewUsers: false,
+        })
+      );
+    });
+  });
+
+  describe("transformClaimsToPermissions", () => {
+    it("transforms claims to permissions object", () => {
+      const claims = transformPermissionsToClaims({
+        proposeCombo: true,
+        provisioned: true,
+        manageUsers: true,
+        viewUsers: false,
+      });
+
+      expect(claims).toEqual({
+        r: 1,
+        p: 1,
+        m: 1,
+      });
+    });
+  });
+
   describe("getPermissions", () => {
-    it("returns permissions from given user id", async () => {
+    it("resolves permissions from given user id", async () => {
       getUserSpy.mockResolvedValue({ customClaims: { r: 1, p: 1, m: 1 } });
 
       const permissions = await getPermissions("user-id");
