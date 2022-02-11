@@ -1,3 +1,4 @@
+import { info as logInfo } from "firebase-functions/lib/logger";
 import type { Request, Response } from "express";
 import { ValidationError, UnknownError } from "../../../error";
 import {
@@ -34,6 +35,11 @@ export default async function managePermissions(req: Request, res: Response) {
     };
 
     await setPermissions(targetUserId, finalPermissions);
+
+    logInfo(
+      `${req.userId} set custom user claims for ${targetUserId}:`,
+      finalPermissions
+    );
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).json(err);

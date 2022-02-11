@@ -1,3 +1,4 @@
+import { info as logInfo } from "firebase-functions/lib/logger";
 import { createRequest, createResponse } from "../../../../helper";
 import managePermissions from "../../../../../src/api/v1/routes/manage-users/permissions";
 import {
@@ -260,5 +261,39 @@ describe("manage-users/:userId/permissions", () => {
     expect(res.json).toBeCalledWith({
       success: true,
     });
+  });
+
+  it("logs that a user changed another user's permissions", async () => {
+    const res = createResponse();
+    const req = createRequest({
+      params: {
+        userId: "some-uuid",
+      },
+      body: {
+        permissions: {
+          proposeCombo: false,
+          manageUsers: true,
+        },
+      },
+    });
+
+    jest.mocked(getPermissions).mockResolvedValue({
+      provisioned: true,
+      proposeCombo: true,
+      viewUsers: false,
+    } as Permissions);
+
+    await managePermissions(req, res);
+
+    expect(logInfo).toBeCalledTimes(1);
+    expect(logInfo).toBeCalledWith(
+      "user-id set custom user claims for some-uuid:",
+      {
+        provisioned: true,
+        proposeCombo: false,
+        manageUsers: true,
+        viewUsers: false,
+      }
+    );
   });
 });
