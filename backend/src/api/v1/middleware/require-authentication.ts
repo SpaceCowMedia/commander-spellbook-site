@@ -7,6 +7,7 @@ export default async function requireAuthentication(
   res: Response,
   next: NextFunction
 ) {
+  // TODO change all these json messages to permission errors
   if (!req.headers.authorization) {
     res.status(403).json({ message: "Missing authorization header." });
 
@@ -29,7 +30,6 @@ export default async function requireAuthentication(
 
     next();
   } catch (err) {
-    // TODO log here
     res.status(403).json({
       message: "Invalid authorization.",
     });
