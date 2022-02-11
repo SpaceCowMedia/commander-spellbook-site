@@ -1,4 +1,8 @@
 import {
+  error as logError,
+  warn as logWarn,
+} from "firebase-functions/lib/logger";
+import {
   NotFoundError,
   PermissionError,
   UnknownError,
@@ -71,6 +75,13 @@ describe("API Errors", () => {
         "You do not have permission to perform this action."
       );
     });
+
+    it("logs a warning", () => {
+      const err = new PermissionError("message");
+
+      expect(logWarn).toBeCalledTimes(1);
+      expect(logWarn).toBeCalledWith(err.message);
+    });
   });
 
   describe("UnknownError", () => {
@@ -87,6 +98,21 @@ describe("API Errors", () => {
       const err = new UnknownError();
 
       expect(err.message).toBe("Something went wrong.");
+    });
+
+    it("logs error to firebase-functions logger", () => {
+      const err = new UnknownError();
+
+      expect(logError).toBeCalledTimes(1);
+      expect(logError).toBeCalledWith(err.message, undefined);
+    });
+
+    it("logs an additional error when provided to firebase-functions logger", () => {
+      const originalError = new Error("some error");
+      const err = new UnknownError("message", originalError);
+
+      expect(logError).toBeCalledTimes(1);
+      expect(logError).toBeCalledWith(err.message, originalError);
     });
   });
 
