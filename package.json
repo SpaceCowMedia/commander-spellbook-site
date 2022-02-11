@@ -53,6 +53,6 @@
     "lint-staged": "^12.3.3",
     "prettier": "^2.5.1",
     "ts-node": "^10.5.0",
-    "wait-on": "^6.0.0"
+    "wait-on": "^6.0.1"
   }
 }
