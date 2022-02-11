@@ -1,8 +1,8 @@
 import admin from "firebase-admin";
 import type { Request, Response, NextFunction } from "express";
-import { PERMISSIONS } from "../../../shared/constants";
+import { transformClaimsToPermissions } from "../services/permissions";
 
-export default function requireAuthentication(
+export default async function requireAuthentication(
   req: Request,
   res: Response,
   next: NextFunction
@@ -21,23 +21,17 @@ export default function requireAuthentication(
     return;
   }
 
-  return admin
-    .auth()
-    .verifyIdToken(jwt)
-    .then((claims) => {
-      req.userPermissions = (
-        Object.keys(PERMISSIONS) as Array<keyof typeof PERMISSIONS>
-      ).reduce((permissions, key) => {
-        permissions[key] = claims[PERMISSIONS[key]] === 1;
-        return permissions;
-      }, {} as Record<string, boolean>);
-      req.userId = claims.user_id;
+  try {
+    const claims = await admin.auth().verifyIdToken(jwt);
 
-      next();
-    })
-    .catch(() => {
-      res.status(403).json({
-        message: "Invalid authorization.",
-      });
+    req.userPermissions = transformClaimsToPermissions(claims);
+    req.userId = claims.user_id;
+
+    next();
+  } catch (err) {
+    // TODO log here
+    res.status(403).json({
+      message: "Invalid authorization.",
     });
+  }
 }
