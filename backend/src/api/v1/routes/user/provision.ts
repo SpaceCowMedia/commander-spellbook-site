@@ -2,7 +2,7 @@ import admin from "firebase-admin";
 import type { Request, Response } from "express";
 import UserProfile from "../../../../db/user-profile";
 import Username from "../../../../db/username";
-import { PERMISSIONS } from "../../../../shared/constants";
+import { setPermissions } from "../../services/permissions";
 
 export default async function provision(req: Request, res: Response) {
   const username = req.body.username?.trim();
@@ -52,9 +52,9 @@ export default async function provision(req: Request, res: Response) {
     auth.updateUser(userId, {
       displayName: username,
     }),
-    auth.setCustomUserClaims(userId, {
-      [PERMISSIONS.provisioned]: 1,
-      [PERMISSIONS.proposeCombo]: 1,
+    setPermissions(userId, {
+      provisioned: true,
+      proposeCombo: true,
     }),
   ]);
 

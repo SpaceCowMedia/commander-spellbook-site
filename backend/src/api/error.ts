@@ -1,3 +1,8 @@
+import {
+  error as logError,
+  warn as logWarn,
+} from "firebase-functions/lib/logger";
+
 abstract class ApiError extends Error {
   protected static defaultMessage: string = "Something went wrong.";
 
@@ -28,9 +33,21 @@ export class NotFoundError extends ApiError {
 export class PermissionError extends ApiError {
   protected static defaultMessage =
     "You do not have permission to perform this action.";
+
+  constructor(message?: string | Error) {
+    super(message);
+
+    logWarn(this.message);
+  }
 }
 
-export class UnknownError extends ApiError {}
+export class UnknownError extends ApiError {
+  constructor(message?: string | Error, originalError?: unknown) {
+    super(message);
+
+    logError(this.message, originalError);
+  }
+}
 
 export class ValidationError extends ApiError {
   protected static defaultMessage = "A validation error occurred.";

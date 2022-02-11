@@ -4,27 +4,31 @@ type CreateRequestOptions = {
   headers?: Record<string, unknown>;
   userPermissions?: Record<string, boolean> | null;
   body?: Record<string, unknown>;
+  params?: Record<string, unknown>;
+  userId?: string;
 };
 
 type CreateAdminOptions = {
   claimsSpy?: jest.SpyInstance;
   updateUserSpy?: jest.SpyInstance;
+  getUserSpy?: jest.SpyInstance;
   verifyIdTokenSpy?: jest.SpyInstance;
 };
 
 export function createRequest(options: CreateRequestOptions = {}): Request {
-  const { body, headers, userPermissions } = options;
+  const { body, headers, params, userId, userPermissions } = options;
 
   return {
     headers: headers || {
       authorization: "Bearer auth",
     },
     body: body || {},
+    params: params || {},
     userPermissions: userPermissions || {
       provisioned: true,
       proposeCombo: true,
     },
-    userId: "user-id",
+    userId: userId || "user-id",
   } as any; // not great, but the request object has a billion entries and Typescript won't let us get away with just putting in a few
 }
 
@@ -41,9 +45,10 @@ export function createNext(): NextFunction {
 }
 
 export function createAdminAuth(options: CreateAdminOptions = {}) {
-  const { claimsSpy, updateUserSpy, verifyIdTokenSpy } = options;
+  const { claimsSpy, getUserSpy, updateUserSpy, verifyIdTokenSpy } = options;
 
   return jest.fn().mockReturnValue({
+    getUser: getUserSpy || jest.fn(),
     setCustomUserClaims: claimsSpy || jest.fn(),
     updateUser: updateUserSpy || jest.fn(),
     verifyIdToken: verifyIdTokenSpy || jest.fn(),

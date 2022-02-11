@@ -5,7 +5,7 @@ import { PERMISSIONS } from "@/lib/constants";
 
 type Permissions = {
   proposeCombo: boolean;
-  manageUserPermissions: boolean;
+  manageUsers: boolean;
   viewUsers: boolean;
   manageSiteContent: boolean;
 };
@@ -89,7 +89,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     if (!user) {
       return Promise.resolve({
         proposeCombo: false,
-        manageUserPermissions: false,
+        manageUsers: false,
         manageSiteContent: false,
         viewUsers: false,
       });
@@ -115,8 +115,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
     return Promise.resolve({
       proposeCombo: token.claims[PERMISSIONS.proposeCombo] === 1,
-      manageUserPermissions:
-        token.claims[PERMISSIONS.manageUserPermissions] === 1,
+      manageUsers: token.claims[PERMISSIONS.manageUsers] === 1,
       manageSiteContent: token.claims[PERMISSIONS.manageSiteContent] === 1,
       viewUsers: token.claims[PERMISSIONS.viewUsers] === 1,
     });

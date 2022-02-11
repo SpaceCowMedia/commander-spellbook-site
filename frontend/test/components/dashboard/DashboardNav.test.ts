@@ -15,7 +15,7 @@ describe("DashboardNav", () => {
   it("shows only basic nav links when user has no permissions", async () => {
     $store.dispatch.mockResolvedValue({
       proposeCombo: false,
-      manageUserPermissions: false,
+      manageUsers: false,
       viewUsers: false,
     });
 
@@ -41,7 +41,7 @@ describe("DashboardNav", () => {
   it("shows nav links based on user's permissions", async () => {
     $store.dispatch.mockResolvedValue({
       proposeCombo: true,
-      manageUserPermissions: true,
+      manageUsers: true,
       manageSiteContent: true,
       viewUsers: true,
     });

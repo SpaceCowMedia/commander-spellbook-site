@@ -124,7 +124,7 @@ describe("requiresAuthenticationMiddleware", () => {
 
     expect(req.userPermissions).toEqual(
       expect.objectContaining({
-        manageUserPermissions: false,
+        manageUsers: false,
         proposeCombo: true,
         provisioned: true,
         viewUsers: false,

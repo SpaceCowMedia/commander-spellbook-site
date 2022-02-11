@@ -7,19 +7,17 @@ import {
   createResponse,
 } from "../../../../helper";
 import provision from "../../../../../src/api/v1/routes/user/provision";
-import { PERMISSIONS } from "../../../../../src/shared/constants";
+import { setPermissions } from "../../../../../src/api/v1/services/permissions";
 
 jest.mock("firebase-admin");
+jest.mock("../../../../../src/api/v1/services/permissions");
 
 describe("user/provision", () => {
-  let claimsSpy: jest.SpyInstance;
   let updateSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    claimsSpy = jest.fn();
     updateSpy = jest.fn();
     admin.auth = createAdminAuth({
-      claimsSpy,
       updateUserSpy: updateSpy,
     });
     jest.spyOn(Username, "exists").mockResolvedValue(false);
@@ -198,10 +196,10 @@ describe("user/provision", () => {
 
     await provision(req, res);
 
-    expect(claimsSpy).toBeCalledTimes(1);
-    expect(claimsSpy).toBeCalledWith("user-id", {
-      [PERMISSIONS.provisioned]: 1,
-      [PERMISSIONS.proposeCombo]: 1,
+    expect(setPermissions).toBeCalledTimes(1);
+    expect(setPermissions).toBeCalledWith("user-id", {
+      provisioned: true,
+      proposeCombo: true,
     });
   });
 
