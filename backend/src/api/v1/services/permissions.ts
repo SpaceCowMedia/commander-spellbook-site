@@ -3,7 +3,7 @@ import { PERMISSIONS } from "../../../shared/constants";
 import { ValidationError } from "../../error";
 
 type PermissionKey = keyof typeof PERMISSIONS;
-type Permissions = Record<PermissionKey, boolean>;
+export type Permissions = Record<PermissionKey, boolean>;
 type ClaimKey = typeof PERMISSIONS[PermissionKey];
 type PermissionClaims = Record<ClaimKey, 1>;
 

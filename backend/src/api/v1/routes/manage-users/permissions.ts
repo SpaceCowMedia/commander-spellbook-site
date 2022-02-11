@@ -1,108 +1,46 @@
-import admin from "firebase-admin";
 import type { Request, Response } from "express";
 import { ValidationError, UnknownError } from "../../../error";
-import { PERMISSIONS } from "../../../../shared/constants";
+import {
+  Permissions,
+  getPermissions,
+  setPermissions,
+  validatePermissions,
+} from "../../services/permissions";
 
 export default async function managePermissions(req: Request, res: Response) {
   const targetUserId = req.params.userId;
-  const permissions = req.body.permissions as Record<
-    keyof typeof PERMISSIONS,
-    boolean
-  >;
-
-  const permissionKeys = Object.keys(permissions || {});
-
-  if (permissionKeys.length === 0) {
-    res
-      .status(400)
-      .json(new ValidationError("Must provide permissions in post body."));
-    return;
-  }
-
-  const invalidPermissions = permissionKeys.filter(
-    (key) =>
-      !Object.getOwnPropertyDescriptor(PERMISSIONS, key) ||
-      typeof Object.getOwnPropertyDescriptor(permissions, key)?.value !==
-        "boolean"
-  );
-
-  if (invalidPermissions.length > 0) {
-    res
-      .status(400)
-      .json(
-        new ValidationError(
-          `Invalid permission(s): ${invalidPermissions.join(", ")}`
-        )
-      );
-    return;
-  }
-
-  // provisioned is the special permission we use to indicate that
-  // a user account is fully set up, so it should not be modified
-  // in any way outside of the provision route
-  if (typeof permissions.provisioned === "boolean") {
-    res
-      .status(400)
-      .json(new ValidationError("Cannot change provisioned permission."));
-    return;
-  }
-
-  // prevent a the user making the API request from removing the manageUsers option
-  // from themself. This prevents us from accidentally getting into the circumstance
-  // where the only admin revokes the ability to manage users and then there's no one
-  // else that is able to do it
-  if (
-    req.userId === targetUserId &&
-    typeof permissions.manageUsers === "boolean"
-  ) {
-    res
-      .status(400)
-      .json(
-        new ValidationError(
-          "You cannot change the manage users option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
-        )
-      );
-    return;
-  }
-
-  const auth = admin.auth();
-  let currentCustomClaims: Record<string, number>;
+  const permissions = (req.body.permissions || {}) as Permissions;
 
   try {
-    const userRecord = await auth.getUser(targetUserId);
-    currentCustomClaims = userRecord.customClaims || {};
-  } catch (e) {
-    res
-      .status(400)
-      .json(
-        new ValidationError(`User with id '${targetUserId}' does not exist.`)
+    await validatePermissions(permissions);
+
+    // prevent a the user making the API request from removing the manageUsers option
+    // from themself. This prevents us from accidentally getting into the circumstance
+    // where the only admin revokes the ability to manage users and then there's no one
+    // else that is able to do it
+    if (
+      req.userId === targetUserId &&
+      typeof permissions.manageUsers === "boolean"
+    ) {
+      throw new ValidationError(
+        "You cannot change the manage users option for yourself. Enlist another user with the `manage user permissions` permission to do this for you."
       );
-    return;
-  }
+    }
 
-  // transforms the permissions object to the minified version used in custom claims
-  const newCustomClaims = {} as Record<string, number>;
-  let key: keyof typeof PERMISSIONS;
-  for (key in permissions) {
-    const value = permissions[key];
-    newCustomClaims[PERMISSIONS[key]] = value ? 1 : 0;
-  }
+    const currentPermissions = await getPermissions(targetUserId);
+    const finalPermissions = {
+      ...currentPermissions,
+      ...permissions,
+    };
 
-  const finalCustomClaims = {
-    ...currentCustomClaims,
-    ...newCustomClaims,
-  };
-
-  try {
-    await auth.setCustomUserClaims(targetUserId, finalCustomClaims);
-  } catch (e) {
-    res
-      .status(500)
-      .json(
-        new UnknownError(
-          `Something went wrong when setting permissions for '${targetUserId}'.`
-        )
-      );
+    await setPermissions(targetUserId, finalPermissions);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).json(err);
+    } else {
+      // TODO log unknown error
+      res.status(500).json(new UnknownError("Something went wrong."));
+    }
     return;
   }
 
