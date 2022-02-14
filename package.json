@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
-    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/config-conventional": "^16.2.1",
     "cypress": "^9.4.1",
     "cypress-firebase": "^2.2.1",
     "firebase-admin": "^10.0.2",
