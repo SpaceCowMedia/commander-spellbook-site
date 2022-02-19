@@ -17,6 +17,7 @@ export default async function getFeaturedRules() {
     return docSnap.data()?.rules;
   } catch (err) {
     log("Something went wrong looking up the rules for featured combos", "red");
+    // eslint-disable-next-line no-console
     console.error(err);
     return [];
   }
