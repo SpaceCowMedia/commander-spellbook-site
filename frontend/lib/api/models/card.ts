@@ -10,19 +10,47 @@ export default class Card {
   name: string;
   private externalData: ExternalCardData;
   private normalizedName: string;
+  aliases: string[];
 
   constructor(cardName: string) {
     this.name = cardName;
     this.normalizedName = normalizeStringInput(cardName);
     this.externalData = getExternalCardData(cardName);
+    this.aliases = this.externalData.aliases;
   }
 
   matchesName(cardName: string): boolean {
-    return this.normalizedName.includes(normalizeStringInput(cardName));
+    const normalName = normalizeStringInput(cardName);
+    const matchesMainName = this.normalizedName.includes(normalName);
+
+    if (matchesMainName) {
+      return true;
+    }
+
+    const matchesAlias = Boolean(
+      this.aliases.find((name) => {
+        return name.includes(normalName);
+      })
+    );
+
+    return matchesAlias;
   }
 
   matchesNameExactly(cardName: string): boolean {
-    return this.normalizedName === normalizeStringInput(cardName);
+    const normalName = normalizeStringInput(cardName);
+    const matchesMainNameExactly = this.normalizedName === normalName;
+
+    if (matchesMainNameExactly) {
+      return true;
+    }
+
+    const matchesAliasExactly = Boolean(
+      this.aliases.find((name) => {
+        return name === normalName;
+      })
+    );
+
+    return matchesAliasExactly;
   }
 
   getScryfallData(): ReturnType<typeof scryfall.getCard> {

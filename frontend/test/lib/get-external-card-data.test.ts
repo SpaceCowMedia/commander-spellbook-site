@@ -3,6 +3,7 @@ import getExternalCardData from "@/lib/get-external-card-data";
 describe("getExternalCardData", () => {
   it("returns card data for combo when it exists in cache", () => {
     expect(getExternalCardData("Sydri, Galvanic Genius")).toEqual({
+      aliases: [],
       isPreview: false,
       isBanned: false,
       isFeatured: false,
@@ -18,8 +19,17 @@ describe("getExternalCardData", () => {
     });
   });
 
+  it("returns card data for combo with aliases", () => {
+    expect(getExternalCardData("Nethroi, Apex of Death")).toEqual(
+      expect.objectContaining({
+        aliases: ["biollante plant beast form"],
+      })
+    );
+  });
+
   it("returns empty card data for combo when it does not exist in cache", () => {
     expect(getExternalCardData("unknown card name")).toEqual({
+      aliases: [],
       isFeatured: false,
       isPreview: false,
       isBanned: false,

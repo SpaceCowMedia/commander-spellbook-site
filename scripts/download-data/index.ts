@@ -13,6 +13,7 @@ import { collectCardNames, collectResults } from "./collect-autocomplete";
 configureDotenv();
 
 type CardData = {
+  a?: string[]; // any other names the card may go by
   f?: 1; // whether the combo should be featured
   b?: 1; // whether the combo is banned in commander
   s?: 1; // whether the combo is a preview for an upcoming set
@@ -84,6 +85,10 @@ Promise.all([
       }
       if (sfData.isPreview) {
         cardData[name].s = 1;
+      }
+
+      if (sfData.aliases.length > 0) {
+        cardData[name].a = sfData.aliases;
       }
     } catch (e) {
       log(

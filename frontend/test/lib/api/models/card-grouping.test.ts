@@ -7,6 +7,7 @@ jest.mock("@/lib/get-external-card-data");
 describe("CardGrouping", () => {
   beforeEach(() => {
     jest.mocked(getExternalCardData).mockReturnValue({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,

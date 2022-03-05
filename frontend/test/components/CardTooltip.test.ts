@@ -17,6 +17,7 @@ describe("CardTooltip", () => {
       },
     };
     jest.mocked(getExternalCardData).mockReturnValue({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
