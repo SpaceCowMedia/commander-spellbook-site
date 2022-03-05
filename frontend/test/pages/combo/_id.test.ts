@@ -45,6 +45,7 @@ describe("ComboPage", () => {
       },
     };
     jest.mocked(getExternalCardData).mockReturnValue({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -104,6 +105,7 @@ describe("ComboPage", () => {
 
   it("sets data to combo data found on Google Sheets when loaded is not true", async () => {
     jest.mocked(getExternalCardData).mockReturnValue({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -472,6 +474,7 @@ describe("ComboPage", () => {
 
   it("adds edhrec link", async () => {
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -486,6 +489,7 @@ describe("ComboPage", () => {
       edhrecLink: "https://edhrec.com/card",
     });
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -534,6 +538,7 @@ describe("ComboPage", () => {
 
   it("looks up prices for combo", async () => {
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -548,6 +553,7 @@ describe("ComboPage", () => {
       edhrecLink: "https://edhrec.com/card",
     });
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -599,6 +605,7 @@ describe("ComboPage", () => {
 
   it("does not pass prices if a card is missing from price data", async () => {
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -613,6 +620,7 @@ describe("ComboPage", () => {
       edhrecLink: "https://edhrec.com/card",
     });
     jest.mocked(getExternalCardData).mockReturnValueOnce({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,

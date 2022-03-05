@@ -9,6 +9,7 @@ jest.mock("scryfall-client");
 describe("Card", () => {
   beforeEach(() => {
     jest.mocked(getExternalCardData).mockReturnValue({
+      aliases: [],
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -144,6 +145,7 @@ describe("Card", () => {
 
     it("returns true when card is featured", () => {
       jest.mocked(getExternalCardData).mockReturnValue({
+        aliases: [],
         isBanned: false,
         isPreview: false,
         isFeatured: true,
@@ -172,6 +174,7 @@ describe("Card", () => {
 
     it("returns true when card is featured", () => {
       jest.mocked(getExternalCardData).mockReturnValue({
+        aliases: [],
         isBanned: true,
         isPreview: false,
         isFeatured: false,
@@ -200,6 +203,7 @@ describe("Card", () => {
 
     it("returns true when card is featured", () => {
       jest.mocked(getExternalCardData).mockReturnValue({
+        aliases: [],
         isBanned: false,
         isPreview: true,
         isFeatured: false,

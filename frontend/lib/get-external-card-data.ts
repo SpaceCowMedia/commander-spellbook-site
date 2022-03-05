@@ -15,6 +15,7 @@ export type ExternalCardData = {
     tcgplayer: number;
     cardkingdom: number;
   };
+  aliases: string[];
   isBanned: boolean;
   isPreview: boolean;
   edhrecLink: string;
@@ -32,6 +33,7 @@ export default function getExternalCardData(
     )}&version=`;
 
     return {
+      aliases: [],
       isPreview: false,
       isBanned: false,
       isFeatured: false,
@@ -48,6 +50,7 @@ export default function getExternalCardData(
   }
 
   return {
+    aliases: externalCardData.a || [],
     isBanned: externalCardData.b === 1,
     isPreview: externalCardData.s === 1,
     isFeatured: externalCardData.f === 1,
