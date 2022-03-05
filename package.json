@@ -46,13 +46,13 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
-    "cypress": "^9.5.0",
+    "cypress": "^9.5.1",
     "cypress-firebase": "^2.2.1",
     "firebase-admin": "^10.0.2",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.4",
     "prettier": "^2.5.1",
-    "ts-node": "^10.5.0",
+    "ts-node": "^10.6.0",
     "wait-on": "^6.0.1"
   }
 }
