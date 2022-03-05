@@ -9,7 +9,8 @@ jest.mock("scryfall-client");
 describe("Card", () => {
   beforeEach(() => {
     jest.mocked(getExternalCardData).mockReturnValue({
-      aliases: [],
+      aliases: ["biollante plant beast form"],
+
       isBanned: false,
       isPreview: false,
       isFeatured: false,
@@ -84,6 +85,14 @@ describe("Card", () => {
 
       expect(card.matchesName("sYd~Ri G!alva??nIc GENIUS")).toBe(true);
     });
+
+    it("matches aliases if the main name does not match", () => {
+      const card = new Card("Nethroi, Apex of Death");
+
+      expect(card.matchesName("Biollante, Plant Beast Form")).toBe(true);
+      expect(card.matchesName("Plant Beast")).toBe(true);
+      expect(card.matchesName("biOllAnTe! PlaNt BeA,st Fo---rM")).toBe(true);
+    });
   });
 
   describe("matchesNameExactly", () => {
@@ -104,6 +113,16 @@ describe("Card", () => {
       const card = new Card("Sydri, Galvanic Genius");
 
       expect(card.matchesNameExactly("sYd~Ri G!alva??nIc GENIUS")).toBe(true);
+    });
+
+    it("checks aliases when name does not match", () => {
+      const card = new Card("Nethroi, Apex of Death");
+
+      expect(card.matchesNameExactly("Biollante, Plant Beast Form")).toBe(true);
+      expect(card.matchesNameExactly("Plant Beast")).toBe(false);
+      expect(card.matchesNameExactly("biOllAnTe! PlaNt BeA,st Fo---rM")).toBe(
+        true
+      );
     });
   });
 
