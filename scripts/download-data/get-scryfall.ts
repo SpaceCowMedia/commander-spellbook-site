@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
+import scryfall from "scryfall-client";
 import getData from "../shared/get";
 import log from "../shared/log";
 
@@ -19,6 +20,7 @@ type ScryfallApiData = {
   tcgplayer_id: number;
   cardmarket_id: number;
   name: string;
+  flavor_name?: string;
   card_faces?: Array<{
     // TODO fill in the rest of this if necessary
     image_uris: {
@@ -125,6 +127,7 @@ export type ScryfallEntry = {
     oracle: string;
     artCrop: string;
   };
+  aliases: string[];
   isBanned: boolean;
   isPreview: boolean;
   edhrecPermalink: string;
@@ -136,6 +139,24 @@ function isFunnyCard(card: ScryfallApiData) {
     card.type_line.toLowerCase().includes("contraption") ||
     (card.set_type === "funny" && card.border_color === "silver")
   );
+}
+
+async function getCardAliases(results: ScryfallApiData[] = []) {
+  let pageResults = await scryfall.search("has:flavorname");
+
+  results.push(...pageResults);
+
+  while (pageResults.has_more) {
+    pageResults = await pageResults.next();
+    results.push(...pageResults);
+  }
+
+  return results.reduce((accum, card) => {
+    accum[normalizeCardName(card.name)] = [
+      normalizeCardName(card.flavor_name || ""),
+    ];
+    return accum;
+  }, {} as Record<string, string[]>);
 }
 
 export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
@@ -153,6 +174,9 @@ export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
     response.data.find(({ type }) => {
       return type === "oracle_cards";
     })?.download_uri || "";
+
+  log("Fetching flavor names/aliases for cards");
+  const aliases = await getCardAliases();
 
   log(`Downloading bulk data from ${oracleCardsUrl}`);
   const bulkData = (await getData(oracleCardsUrl)) as RawScryfallResponse;
@@ -204,7 +228,8 @@ export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
       card.legalities.commander !== "legal" &&
       !card.reprint &&
       new Date(card.released_at) > new Date();
-    cards[normalizeCardName(card.name)] = {
+    const normalizedName = normalizeCardName(card.name);
+    cards[normalizedName] = {
       setData: {
         reprint: card.reprint,
         setCode: card.set,
@@ -216,6 +241,7 @@ export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
       isBanned: card.legalities.commander === "banned",
       isPreview: isFromUpcomingSet,
       edhrecPermalink: card.related_uris.edhrec,
+      aliases: aliases[normalizedName] || [],
     };
 
     return cards;
