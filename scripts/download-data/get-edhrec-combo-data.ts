@@ -1,7 +1,11 @@
 import getData from "../shared/get";
 import log from "../shared/log";
 
-type RawComboData = Record<string, [number, string[], string]>;
+type LegacyRawComboData = Record<string, [number, string[], string]>;
+type Combo = { cardnames: string[]; count: number; url: string };
+type RawComboData = {
+  combos: Record<string, Combo>;
+};
 type ComboData = Record<
   string,
   {
@@ -15,12 +19,28 @@ export default async function getEDHRECComboData(): Promise<ComboData> {
 
   const rawData = (await getData(
     "https://edhrec.com/data/spellbook_counts.json"
-  )) as RawComboData;
+  )) as RawComboData | LegacyRawComboData;
 
-  return Object.keys(rawData).reduce((accum, key) => {
-    accum[key] = {
-      numberOfDecks: rawData[key][0],
-      slug: rawData[key][2],
+  // TODO remove this logic when data is swapped over
+  if (!rawData.combos) {
+    const legacyData = rawData as LegacyRawComboData;
+
+    return Object.keys(legacyData).reduce((accum, key) => {
+      accum[key] = {
+        numberOfDecks: legacyData[key][0],
+        slug: legacyData[key][2],
+      };
+
+      return accum;
+    }, {} as ComboData);
+  }
+
+  const combos = (rawData as RawComboData).combos;
+
+  return Object.keys(combos).reduce((accum, id) => {
+    accum[id] = {
+      numberOfDecks: combos[id].count,
+      slug: combos[id].url,
     };
 
     return accum;
