@@ -1,5 +1,3 @@
-- [Running the app locally](./running-locally.md)
-- [Authentication/User Accounts](./users.md)
-- [Database Collections](./database.md)
-- [API](./api.md)
-- [Manual Deploys](./manual-deploys.md)
+# Development documentation
+
+Here you can find the development artifacts.
