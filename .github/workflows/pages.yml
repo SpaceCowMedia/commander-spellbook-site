@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/*"
+      - "development-docs/**"
 jobs:
   update-gh-pages:
     name: Generate and upload new GitHub Pages
