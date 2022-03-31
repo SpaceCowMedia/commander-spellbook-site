@@ -1,7 +1,0 @@
-dist
-dist-*
-coverage
-static/api
-.nuxt/
-external-data/
-autocomplete-data/

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ super() }}
+
+  {% if git_page_authors %}
+    <div class="md-source-date">
+      <small>
+          Authors: {{ git_page_authors | default('enable mkdocs-git-authors-plugin') }}
+      </small>
+    </div>
+  {% endif %}
+{% endblock %}
+{% block config %}
+{{ super() }}
+{% if "localsearch" in config["plugins"] %}
+<script src="https://unpkg.com/iframe-worker/polyfill"></script>
+<script src="{{ 'search/search_index.js' | url }}"></script>
+{% endif %}
+{% endblock %}

@@ -1,23 +1,36 @@
-# Commander Spellbook Website
+# Development Docs
 
-## About Commander's Spellbook
+This documentation is rendered as a website on [GitHub Pages](https://commander-spellbook.github.io/website-v2/). Any change to markdown files will be deployed after it gets merged into the `main` branch.
 
-The Commander Spellbook project is a search engine for Commander/EDH combos and to make them easily available across all modern digital platforms.
-This community driven project is used to power [EDHREC's Combo Feature](https://edhrec.com/combos)
+## Getting Started
 
-The database and the source code for the website are [completely free and open source under the MIT license](https://opensource.org/licenses/MIT).
-We encourage you to copy this data so it lives on!
+The site requires [node v16](https://nodejs.org/en/download/) and npm 8 (which comes installed with node@16) to run locally, since it utilizes [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces) to structure the repo.
 
-[Combo Database Backend on Google Sheets](https://docs.google.com/spreadsheets/d/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/)
+If you are already using the [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm) tool, you can run `nvm install` in the directory to get the correct version of node.
 
-**Sincerely, the Community Admins:**
+Once you have installed node, you can install the project's dependencies:
 
-- [Lapper](https://twitter.com/lappermedic)
-- [Goldshot20](https://www.moxfield.com/users/goldshot20)
-- [AppleSaws](https://www.moxfield.com/users/AppleSaws)
-- [Jaelyn Rosenquist](https://twitter.com/rosequartz_26)
-- [Senior Edificer (Emeritus)](https://www.moxfield.com/users/SeniorEdificer)
+```bash
+npm install
+```
 
-## Development
+## Frontend App
 
-See [the development docs](./development-docs/) for information.
+- [Installation and setup](./frontend/installation-and-setup.md)
+- [Creating a new page](./frontend/pages.md)
+- [Creating a component](./frontend/components.md)
+
+## Backend API
+
+The backend (auth, api, database) is all managed by [Firebase](https://firebase.google.com/).
+
+- [Running the app locally](./backend/running-locally.md)
+- [Authentication/User Accounts](./backend/users.md)
+- [Database Collections](./backend/database.md)
+- [API](./backend/api.md)
+- [Manual Deploys](./backend/manual-deploys.md)
+
+## Automated Testing
+
+- [Unit Testing](./testing/unit-testing.md)
+- [Integration Testing](./testing/integration-testing.md)
