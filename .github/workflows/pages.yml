@@ -1,4 +1,4 @@
-name: Update GitHub Pages
+name: Deploy developer documentation
 
 on:
   workflow_dispatch:
