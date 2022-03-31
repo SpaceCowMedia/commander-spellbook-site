@@ -77,7 +77,7 @@ jobs:
 
   deploy:
     # only deploy from the main branch
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [install, linter, unit-tests, integration-tests]
