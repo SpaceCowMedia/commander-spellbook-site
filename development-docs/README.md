@@ -1,5 +1,7 @@
 # Development Docs
 
+This documentation is rendered as a website on [GitHub Pages](https://commander-spellbook.github.io/website-v2/). Any change to markdown files will be deployed after it gets merged into the `main` branch.
+
 ## Getting Started
 
 The site requires [node v16](https://nodejs.org/en/download/) and npm 8 (which comes installed with node@16) to run locally, since it utilizes [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces) to structure the repo.

@@ -1,0 +1,33 @@
+name: Deploy developer documentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/*"
+      - "development-docs/**"
+jobs:
+  update-gh-pages:
+    name: Generate and upload new developer documentation to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run action
+        uses: ldeluigi/markdown-docs@v0
+        with:
+          src: development-docs/
+          dst: ./gh-pages
+          icon: diamond-stone
+          title: Commander Spellbook
+          primary-color: purple
+          secondary-color: blue
+      - name: Deploy GH Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
