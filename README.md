@@ -20,4 +20,4 @@ We encourage you to copy this data so it lives on!
 
 ## Development
 
-See [the development docs](./development-docs/) for information.
+See [the development docs](https://commander-spellbook.github.io/website-v2/) for information.
