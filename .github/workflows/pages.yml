@@ -10,7 +10,7 @@ on:
       - "development-docs/**"
 jobs:
   update-gh-pages:
-    name: Generate and upload new GitHub Pages
+    name: Generate and upload new developer documentation to GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
