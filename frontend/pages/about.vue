@@ -57,6 +57,16 @@
         >
       </li>
       <li>
+        <ExternalLink to="https://www.moxfield.com/users/Gordon%27s%20Kitchen"
+          >Gordon</ExternalLink
+        >
+      </li>
+      <li>
+        <ExternalLink to="https://www.youtube.com/c/ScholarsofKaladesh"
+          >Wedgi</ExternalLink
+        >
+      </li>
+      <li>
         <ExternalLink to="https://www.moxfield.com/users/SeniorEdificer"
           >Senior Edificer</ExternalLink
         >
