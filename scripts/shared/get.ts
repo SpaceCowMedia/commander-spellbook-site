@@ -10,7 +10,12 @@ export default function getData(url: string) {
           data += chunk;
         });
         response.on("end", () => {
-          resolve(JSON.parse(data));
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            console.error("JSON payload fromn", url, "failed to parse.");
+            reject(e);
+          }
         });
       })
       .on("error", reject);
