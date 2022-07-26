@@ -71,6 +71,7 @@
             >Github</ExternalLink
           >
           <ExternalLink to="https://edhrec.com/combos">EDHREC</ExternalLink>
+          <ExternalLink to="https://draftsim.com">Draftsim</ExternalLink>
         </div>
       </div>
       <div class="container mt-8 text-light">
