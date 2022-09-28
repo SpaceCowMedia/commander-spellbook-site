@@ -257,7 +257,7 @@
     <ul>
       <li>
         The least replaceable piece of a combo should be farthest to the left,
-        with less replaceable pieces further to the right.
+        with more replaceable pieces further to the right.
       </li>
     </ul>
 
