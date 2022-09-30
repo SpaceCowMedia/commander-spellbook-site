@@ -20,7 +20,7 @@
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.1",
-    "scryfall-client": "^0.21.1"
+    "scryfall-client": "^0.22.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.3.3",
