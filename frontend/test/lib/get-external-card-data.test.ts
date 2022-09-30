@@ -8,8 +8,8 @@ describe("getExternalCardData", () => {
       isBanned: false,
       isFeatured: false,
       images: {
-        artCrop: expect.stringContaining("scryfall.com/file"),
-        oracle: expect.stringContaining("scryfall.com/file"),
+        artCrop: expect.stringContaining("scryfall"),
+        oracle: expect.stringContaining("scryfall"),
       },
       prices: {
         tcgplayer: expect.any(Number),
