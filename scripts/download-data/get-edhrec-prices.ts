@@ -29,7 +29,7 @@ type PriceData = Record<
 export default async function getEDHRECPrices(): Promise<PriceData> {
   log("Looking up price data from EDHREC");
 
-  const rawData = (await getData("https://static.edhrec.com/prices").catch(
+  const rawData = (await getData("https://json.edhrec.com/static/prices").catch(
     (e) => {
       e.message =
         "Something went wrong looking up the card prices from EDHRec: " +
