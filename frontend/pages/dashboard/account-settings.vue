@@ -23,7 +23,7 @@
         <div>
           <button
             type="submit"
-            class="button m-0"
+            class="button tight"
             :class="{ disabled: !isUpdateable }"
           >
             Update Profile

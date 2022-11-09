@@ -40,7 +40,7 @@
               v-if="index !== setCodes.length - 1"
               :id="'remove-set-code-rule-button-' + index"
               type="button"
-              class="button dark m-0 w-10"
+              class="button dark w-10 tight"
               @click="removeSetCodeRule(index)"
             >
               -
@@ -49,7 +49,7 @@
               v-if="index === setCodes.length - 1"
               :id="'add-set-code-rule-button-' + index"
               type="button"
-              class="button dark m-0 w-10"
+              class="button dark tight w-10"
               @click="addSetCodeRule(index)"
             >
               +
@@ -58,7 +58,11 @@
         </div>
 
         <div>
-          <button id="submit-featured-updates" type="submit" class="button m-0">
+          <button
+            id="submit-featured-updates"
+            type="submit"
+            class="button tight"
+          >
             Update Featured Combos Page
           </button>
         </div>
