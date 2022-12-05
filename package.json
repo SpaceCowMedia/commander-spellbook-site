@@ -50,7 +50,7 @@
     "cypress-firebase": "^2.2.1",
     "firebase-admin": "^10.0.2",
     "husky": "^7.0.4",
-    "lint-staged": "^12.3.7",
+    "lint-staged": "^13.1.0",
     "prettier": "^2.6.1",
     "ts-node": "^10.7.0",
     "wait-on": "^6.0.1"
