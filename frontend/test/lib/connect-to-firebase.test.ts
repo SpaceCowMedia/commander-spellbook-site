@@ -1,7 +1,7 @@
 import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
-import connectToFirebase from "@/lib/connect-to-firebase";
+import connectToFirebase, { FirebaseConfig } from "@/lib/connect-to-firebase";
 
 jest.mock("firebase/app");
 jest.mock("firebase/firestore");
@@ -11,7 +11,7 @@ type Auth = ReturnType<typeof getAuth>;
 type Firestore = ReturnType<typeof getFirestore>;
 
 describe("connectToFirebase", () => {
-  let fbConfig: Parameters<typeof initializeApp>[0];
+  let fbConfig: FirebaseConfig;
   let fakeAuth: Auth;
   let fakeFirestore: Firestore;
 
