@@ -34,3 +34,5 @@ The backend (auth, api, database) is all managed by [Firebase](https://firebase.
 
 - [Unit Testing](./testing/unit-testing.md)
 - [Integration Testing](./testing/integration-testing.md)
+
+Note: There is currently an [issue with `firebase-tools@v11.18.0` that prevents the emulators from running](https://github.com/firebase/firebase-tools/issues/4952). We pin `firebase-tools` to `v11.17.0` until this is resolved.

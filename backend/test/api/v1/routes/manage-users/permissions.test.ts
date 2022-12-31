@@ -1,4 +1,4 @@
-import { info as logInfo } from "firebase-functions/lib/logger";
+import { logger } from "firebase-functions";
 import { createRequest, createResponse } from "../../../../helper";
 import managePermissions from "../../../../../src/api/v1/routes/manage-users/permissions";
 import {
@@ -300,8 +300,8 @@ describe("manage-users/:userId/permissions", () => {
 
     await managePermissions(req, res);
 
-    expect(logInfo).toBeCalledTimes(1);
-    expect(logInfo).toBeCalledWith(
+    expect(logger.info).toBeCalledTimes(1);
+    expect(logger.info).toBeCalledWith(
       "user-id set custom user claims for some-uuid:",
       {
         provisioned: true,
