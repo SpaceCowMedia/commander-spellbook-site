@@ -1,7 +1,4 @@
-import {
-  error as logError,
-  warn as logWarn,
-} from "firebase-functions/lib/logger";
+import { logger } from "firebase-functions";
 
 abstract class ApiError extends Error {
   protected static defaultMessage: string = "Something went wrong.";
@@ -37,7 +34,7 @@ export class PermissionError extends ApiError {
   constructor(message?: string | Error) {
     super(message);
 
-    logWarn(this.message);
+    logger.warn(this.message);
   }
 }
 
@@ -45,7 +42,7 @@ export class UnknownError extends ApiError {
   constructor(message?: string | Error, originalError?: unknown) {
     super(message);
 
-    logError(this.message, originalError);
+    logger.error(this.message, originalError);
   }
 }
 

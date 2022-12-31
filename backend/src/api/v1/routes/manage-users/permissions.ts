@@ -1,4 +1,4 @@
-import { info as logInfo } from "firebase-functions/lib/logger";
+import { logger } from "firebase-functions";
 import type { Request, Response } from "express";
 import { ValidationError, UnknownError } from "../../../error";
 import {
@@ -36,7 +36,7 @@ export default async function managePermissions(req: Request, res: Response) {
 
     await setPermissions(targetUserId, finalPermissions);
 
-    logInfo(
+    logger.info(
       `${req.userId} set custom user claims for ${targetUserId}:`,
       finalPermissions
     );

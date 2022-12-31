@@ -1,7 +1,4 @@
-import {
-  error as logError,
-  warn as logWarn,
-} from "firebase-functions/lib/logger";
+import { logger } from "firebase-functions";
 import {
   NotFoundError,
   PermissionError,
@@ -79,8 +76,8 @@ describe("API Errors", () => {
     it("logs a warning", () => {
       const err = new PermissionError("message");
 
-      expect(logWarn).toBeCalledTimes(1);
-      expect(logWarn).toBeCalledWith(err.message);
+      expect(logger.warn).toBeCalledTimes(1);
+      expect(logger.warn).toBeCalledWith(err.message);
     });
   });
 
@@ -103,16 +100,16 @@ describe("API Errors", () => {
     it("logs error to firebase-functions logger", () => {
       const err = new UnknownError();
 
-      expect(logError).toBeCalledTimes(1);
-      expect(logError).toBeCalledWith(err.message, undefined);
+      expect(logger.error).toBeCalledTimes(1);
+      expect(logger.error).toBeCalledWith(err.message, undefined);
     });
 
     it("logs an additional error when provided to firebase-functions logger", () => {
       const originalError = new Error("some error");
       const err = new UnknownError("message", originalError);
 
-      expect(logError).toBeCalledTimes(1);
-      expect(logError).toBeCalledWith(err.message, originalError);
+      expect(logger.error).toBeCalledTimes(1);
+      expect(logger.error).toBeCalledWith(err.message, originalError);
     });
   });
 

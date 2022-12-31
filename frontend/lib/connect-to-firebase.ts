@@ -2,8 +2,17 @@ import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 
+export type FirebaseConfig = {
+  apiKey: string;
+  authDomain: string;
+  projectId: string;
+  storageBucket: string;
+  messagingSenderId: string;
+  appId: string;
+};
+
 export default function connectToFirebase(
-  firebaseConfig: Parameters<typeof initializeApp>[0],
+  firebaseConfig: FirebaseConfig,
   useEmulators = false
 ) {
   let firebaseApp: ReturnType<typeof initializeApp>;

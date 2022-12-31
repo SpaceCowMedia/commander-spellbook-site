@@ -40,19 +40,20 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.3",
     "scryfall-client": "^0.23.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.3",
-    "@commitlint/config-conventional": "^16.2.1",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "cypress": "^9.5.2",
-    "cypress-firebase": "^2.2.1",
-    "firebase-admin": "^10.0.2",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.7",
-    "prettier": "^2.6.1",
-    "ts-node": "^10.7.0",
-    "wait-on": "^6.0.1"
+    "cypress-firebase": "^2.2.3",
+    "firebase-admin": "^11.4.1",
+    "firebase-tools": "11.18.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.1",
+    "ts-node": "^10.9.1",
+    "wait-on": "^7.0.1"
   }
 }
