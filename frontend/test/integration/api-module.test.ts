@@ -3,6 +3,7 @@ import search from "@/lib/api/search";
 import random from "@/lib/api/random";
 import getAllCombos from "@/lib/api/get-all-combos";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const json = require("../../static/api/combo-data.json");
 
 describe("API Module", () => {

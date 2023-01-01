@@ -102,7 +102,6 @@ describe("api", () => {
   it("caches result after first lookup", async () => {
     const firstResult = await lookup();
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     jest.mocked(window.fetch).mockImplementation(() => {
       return Promise.resolve({
@@ -202,7 +201,6 @@ describe("api", () => {
   it("can do a fresh lookup when resetting the cache manually", async () => {
     const firstResult = await lookup();
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     jest.mocked(window.fetch).mockImplementation(() => {
       return Promise.resolve({

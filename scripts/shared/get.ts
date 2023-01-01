@@ -13,6 +13,7 @@ export default function getData(url: string) {
           try {
             resolve(JSON.parse(data));
           } catch (e) {
+            // eslint-disable-next-line no-console
             console.error("JSON payload fromn", url, "failed to parse.");
             reject(e);
           }

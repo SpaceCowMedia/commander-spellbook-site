@@ -1,5 +1,6 @@
 import normalizeCardName from "@/lib/normalize-card-name";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const cardData = require("@/../external-data/cards.json");
 
 const CARD_IMAGE_NAMED_BASE_URL =

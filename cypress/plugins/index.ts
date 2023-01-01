@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 // @ts-ignore
 import { plugin as cypressFirebasePlugin } from "cypress-firebase";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
 process.env.FIREBASE_AUTH_EMULATOR_HOST =

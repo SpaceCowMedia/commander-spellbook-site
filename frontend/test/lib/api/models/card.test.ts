@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import scryfall from "scryfall-client";
 import Card from "@/lib/api/models/card";
 import getExternalCardData from "@/lib/get-external-card-data";
@@ -139,7 +138,6 @@ describe("Card", () => {
     it("calls out to scryfall.getCard", async () => {
       const payload = {};
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jest.mocked(scryfall.getCard).mockResolvedValue(payload as any);
 
       const card = new Card("Sydri, Galvanic Genius");

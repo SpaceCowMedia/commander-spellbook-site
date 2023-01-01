@@ -1,6 +1,5 @@
 import fs from "fs";
 import { config as configureDotenv } from "dotenv";
-import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
 import log from "../shared/log";
 import getScryfallData from "./get-scryfall";
 import isFeatured from "./is-featured";
@@ -9,6 +8,7 @@ import getEDHRECComboData from "./get-edhrec-combo-data";
 import getFeaturedRules from "./get-featured-rules";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
+import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
 
 configureDotenv();
 

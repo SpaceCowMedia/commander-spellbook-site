@@ -3,6 +3,7 @@ import SpellbookList from "./models/list";
 import ColorIdentity from "./models/color-identity";
 import type { CompressedApiResponse, FormattedApiResponse } from "./types";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const edhrecComboData = require("@/../external-data/edhrec-combos.json");
 
 export default function formatApiResponse(

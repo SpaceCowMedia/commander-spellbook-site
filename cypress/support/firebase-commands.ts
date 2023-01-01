@@ -1,4 +1,4 @@
-/*  eslint-disable no-console, import/no-named-as-default-member */
+/*  eslint-disable no-console */
 // TODO the firebase-cypress plugin doesn't support
 // the v9 modular syntax, when it does, change this
 // to the v9 module syntax
