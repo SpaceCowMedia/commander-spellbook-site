@@ -1,5 +1,5 @@
-import SiteSetting from "../../src/db/site-setting";
-import { ValidationError } from "../../src/api/error";
+const SiteSetting = require("../../src/db/site-setting");
+const { ValidationError } = require("../../src/api/error");
 
 jest.mock("../../src/db/document-base");
 
@@ -7,7 +7,6 @@ describe("SiteSetting", () => {
   describe("updateFeaturedSettings", () => {
     it("rejects when buttonText is missing", async () => {
       await expect(
-        // @ts-ignore
         SiteSetting.updateFeaturedSettings({
           rules: [
             {
@@ -23,7 +22,6 @@ describe("SiteSetting", () => {
 
     it("rejects when rules is missing", async () => {
       await expect(
-        // @ts-ignore
         SiteSetting.updateFeaturedSettings({
           buttonText: "foo",
         })
@@ -54,7 +52,6 @@ describe("SiteSetting", () => {
             },
             // this one is malformed for having an invalid kind
             {
-              // @ts-ignore
               kind: "not-a-kind",
             },
           ],
@@ -74,7 +71,6 @@ describe("SiteSetting", () => {
             // this one is malformed for not having an acceptable value for card
             {
               kind: "card",
-              // @ts-ignore
               foo: "bar",
             },
             {
@@ -123,14 +119,11 @@ describe("SiteSetting", () => {
 
     it("sanitizes inputs", async () => {
       await SiteSetting.updateFeaturedSettings({
-        // @ts-ignore
         buttonText: {},
         rules: [
           {
             kind: "card",
-            // @ts-ignore
             setCode: {},
-            // @ts-ignore
             cardName: {},
           },
         ],

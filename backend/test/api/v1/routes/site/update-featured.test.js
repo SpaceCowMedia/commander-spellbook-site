@@ -1,15 +1,13 @@
-import SiteSetting from "../../../../../src/db/site-setting";
-import { createRequest, createResponse } from "../../../../helper";
-import updateFeatured from "../../../../../src/api/v1/routes/site/update-featured";
-import { UnknownError } from "../../../../../src/api/error";
+const SiteSetting = require("../../../../../src/db/site-setting");
+const { createRequest, createResponse } = require("../../../../helper");
+const updateFeatured = require("../../../../../src/api/v1/routes/site/update-featured");
+const { UnknownError } = require("../../../../../src/api/error");
 
 jest.mock("../../../../../src/db/site-setting");
 
 describe("site/update-featured", () => {
   beforeEach(() => {
-    jest
-      .mocked(SiteSetting.updateFeaturedSettings)
-      .mockResolvedValue({} as FirebaseFirestore.WriteResult);
+    jest.mocked(SiteSetting.updateFeaturedSettings).mockResolvedValue({});
   });
 
   it("errors with a 400 when update fails", async () => {

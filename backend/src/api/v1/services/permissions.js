@@ -1,17 +1,11 @@
-import admin from "firebase-admin";
-import { PERMISSIONS } from "../../../shared/constants";
-import { ValidationError } from "../../error";
+const admin = require("firebase-admin");
+const { PERMISSIONS } = require("../../../shared/constants");
+const { ValidationError } = require("../../error");
 
-type PermissionKey = keyof typeof PERMISSIONS;
-export type Permissions = Record<PermissionKey, boolean>;
-type ClaimKey = typeof PERMISSIONS[PermissionKey];
-type PermissionClaims = Record<ClaimKey, 1>;
+// an array of single character values corresponding to the permissions for a user
+const VALID_PERMISSION_KEYS = Object.keys(PERMISSIONS);
 
-const VALID_PERMISSION_KEYS = Object.keys(PERMISSIONS) as PermissionKey[];
-
-export function transformClaimsToPermissions(
-  claims: PermissionClaims
-): Permissions {
+function transformClaimsToPermissions(claims) {
   return VALID_PERMISSION_KEYS.reduce((accum, key) => {
     const claimsKey = PERMISSIONS[key];
     const hasPermission = claims[claimsKey] === 1;
@@ -19,10 +13,11 @@ export function transformClaimsToPermissions(
     accum[key] = hasPermission;
 
     return accum;
-  }, {} as Permissions);
+  }, {});
 }
 
-export async function getPermissions(userId: string): Promise<Permissions> {
+// @returns Promise<UserPermissions>
+async function getPermissions(userId) {
   const auth = admin.auth();
   const userRecord = await auth.getUser(userId);
   const claims = userRecord.customClaims || {};
@@ -30,9 +25,8 @@ export async function getPermissions(userId: string): Promise<Permissions> {
   return transformClaimsToPermissions(claims);
 }
 
-export function validatePermissions(
-  permissions: Partial<Permissions> = {}
-): Promise<void> {
+// @returns Promise<void>
+function validatePermissions(permissions = {}) {
   const permissionKeys = Object.keys(permissions);
 
   if (permissionKeys.length === 0) {
@@ -50,7 +44,7 @@ export function validatePermissions(
   }
 
   const invalidPermissionValues = permissionKeys.filter((key) => {
-    return typeof permissions[key as PermissionKey] !== "boolean";
+    return typeof permissions[key] !== "boolean";
   });
 
   if (invalidPermissionValues.length > 0) {
@@ -66,24 +60,20 @@ export function validatePermissions(
   return Promise.resolve();
 }
 
-export function transformPermissionsToClaims(
-  permissions: Partial<Permissions>
-): PermissionClaims {
+function transformPermissionsToClaims(permissions) {
   return VALID_PERMISSION_KEYS.reduce((accum, key) => {
-    const claimKey = PERMISSIONS[key] as ClaimKey;
+    const claimKey = PERMISSIONS[key];
 
     if (permissions[key] === true) {
       accum[claimKey] = 1;
     }
 
     return accum;
-  }, {} as PermissionClaims);
+  }, {});
 }
 
-export async function setPermissions(
-  userId: string,
-  permissions: Partial<Permissions> = {}
-): Promise<void> {
+// @returns Promise<void>
+async function setPermissions(userId, permissions = {}) {
   const auth = admin.auth();
 
   const claims = transformPermissionsToClaims(permissions);
@@ -93,3 +83,11 @@ export async function setPermissions(
 
   await auth.setCustomUserClaims(userId, claims);
 }
+
+module.exports = {
+  transformClaimsToPermissions,
+  getPermissions,
+  validatePermissions,
+  transformPermissionsToClaims,
+  setPermissions,
+};

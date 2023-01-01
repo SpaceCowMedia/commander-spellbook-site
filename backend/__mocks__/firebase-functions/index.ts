@@ -1,1 +1,5 @@
-export * as logger from "./lib/logger";
+const logger = require("./lib/logger");
+
+module.exports = {
+  logger,
+};

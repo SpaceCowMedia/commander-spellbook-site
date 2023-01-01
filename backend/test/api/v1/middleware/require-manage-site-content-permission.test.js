@@ -1,18 +1,22 @@
-import { createRequest, createResponse, createNext } from "../../../helper";
-import requireManageUsersPermission from "../../../../src/api/v1/middleware/require-manage-users-permission";
-import { PermissionError } from "../../../../src/api/error";
+const {
+  createRequest,
+  createResponse,
+  createNext,
+} = require("../../../helper");
+const requireManageSiteContentMiddleware = require("../../../../src/api/v1/middleware/require-manage-site-content-permission");
+const { PermissionError } = require("../../../../src/api/error");
 
-describe("requireManageUsersPermission", () => {
-  it("errors when user does not have the manageUsers permission", async () => {
+describe("requireManageSiteContentMiddleware", () => {
+  it("errors when user does not have the manageSiteContent permission", async () => {
     const req = createRequest({
       userPermissions: {
-        manageUsers: false,
+        manageSiteContent: false,
       },
     });
     const res = createResponse();
     const next = createNext();
 
-    await requireManageUsersPermission(req, res, next);
+    await requireManageSiteContentMiddleware(req, res, next);
 
     expect(next).not.toBeCalled();
     expect(res.status).toBeCalledTimes(1);
@@ -20,7 +24,7 @@ describe("requireManageUsersPermission", () => {
     expect(res.json).toBeCalledTimes(1);
     expect(res.json).toBeCalledWith(
       new PermissionError(
-        "Your user does not have the 'manage users' permission."
+        "Your user does not have the 'manage site content' permission."
       )
     );
   });
@@ -28,13 +32,13 @@ describe("requireManageUsersPermission", () => {
   it("passes to next function when all conditions pass", async () => {
     const req = createRequest({
       userPermissions: {
-        manageUsers: true,
+        manageSiteContent: true,
       },
     });
     const res = createResponse();
     const next = createNext();
 
-    await requireManageUsersPermission(req, res, next);
+    await requireManageSiteContentMiddleware(req, res, next);
 
     expect(next).toBeCalledTimes(1);
     expect(res.status).not.toBeCalled();

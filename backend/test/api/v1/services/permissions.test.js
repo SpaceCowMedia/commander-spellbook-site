@@ -1,19 +1,19 @@
-import admin from "firebase-admin";
-import { createAdminAuth } from "../../../helper";
-import {
+const admin = require("firebase-admin");
+const { createAdminAuth } = require("../../../helper");
+const {
   getPermissions,
   setPermissions,
   transformClaimsToPermissions,
   transformPermissionsToClaims,
   validatePermissions,
-} from "../../../../src/api/v1/services/permissions";
-import { ValidationError } from "../../../../src/api/error";
+} = require("../../../../src/api/v1/services/permissions");
+const { ValidationError } = require("../../../../src/api/error");
 
 jest.mock("firebase-admin");
 
 describe("permissions service", () => {
-  let claimsSpy: jest.SpyInstance;
-  let getUserSpy: jest.SpyInstance;
+  let claimsSpy;
+  let getUserSpy;
 
   beforeEach(() => {
     claimsSpy = jest.fn();
@@ -121,11 +121,8 @@ describe("permissions service", () => {
       await expect(
         validatePermissions({
           proposeCombo: true,
-          // @ts-ignore
           "eat-rocks": true,
-          // @ts-ignore
           proposeRulesChanges: false,
-          // @ts-ignore
           asdf: true,
           viewUsers: true,
         })
@@ -139,9 +136,7 @@ describe("permissions service", () => {
     it("rejects with a validation error when permissions values are not all booleans", async () => {
       await expect(
         validatePermissions({
-          // @ts-ignore
           proposeCombo: "true",
-          // @ts-ignore
           manageUsers: "false",
           viewUsers: true,
         })

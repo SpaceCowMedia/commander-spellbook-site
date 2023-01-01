@@ -1,7 +1,7 @@
-import cors from "cors";
-import bodyParser from "body-parser";
-import express from "express";
-import v1 from "./v1";
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const express = require("express");
+const v1 = require("./v1");
 
 const app = express();
 
@@ -14,4 +14,4 @@ app.use((_, res) => {
   });
 });
 
-export default app;
+module.exports = app;

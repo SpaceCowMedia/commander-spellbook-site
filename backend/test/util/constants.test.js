@@ -1,4 +1,4 @@
-import { PERMISSIONS } from "../../src/shared/constants";
+const { PERMISSIONS } = require("../../src/shared/constants");
 
 describe("Constants gut checks", () => {
   it("does not repeat values in Permissions constants", () => {

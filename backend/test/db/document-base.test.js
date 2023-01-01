@@ -1,14 +1,14 @@
-import admin from "firebase-admin";
-import DocumentBase from "../../src/db/document-base";
+const admin = require("firebase-admin");
+const DocumentBase = require("../../src/db/document-base");
 
 jest.mock("firebase-admin");
 
 describe("DocumentBase", () => {
-  let collectionSpy: jest.SpyInstance;
-  let docSpy: jest.SpyInstance;
-  let getSpy: jest.SpyInstance;
-  let addSpy: jest.SpyInstance;
-  let setSpy: jest.SpyInstance;
+  let collectionSpy;
+  let docSpy;
+  let getSpy;
+  let addSpy;
+  let setSpy;
 
   class ChildDocument extends DocumentBase {
     static CollectionName = "child-document";
@@ -22,7 +22,6 @@ describe("DocumentBase", () => {
     getSpy = jest.fn().mockResolvedValue({
       exists: true,
     });
-    // @ts-ignore
     admin.firestore = jest.fn().mockReturnValue({
       collection: collectionSpy,
       doc: docSpy,

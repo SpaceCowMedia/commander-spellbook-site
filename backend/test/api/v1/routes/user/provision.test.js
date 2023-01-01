@@ -1,19 +1,21 @@
-import admin from "firebase-admin";
-import UserProfile from "../../../../../src/db/user-profile";
-import Username from "../../../../../src/db/username";
-import {
+const admin = require("firebase-admin");
+const UserProfile = require("../../../../../src/db/user-profile");
+const Username = require("../../../../../src/db/username");
+const {
   createAdminAuth,
   createRequest,
   createResponse,
-} from "../../../../helper";
-import provision from "../../../../../src/api/v1/routes/user/provision";
-import { setPermissions } from "../../../../../src/api/v1/services/permissions";
+} = require("../../../../helper");
+const provision = require("../../../../../src/api/v1/routes/user/provision");
+const {
+  setPermissions,
+} = require("../../../../../src/api/v1/services/permissions");
 
 jest.mock("firebase-admin");
 jest.mock("../../../../../src/api/v1/services/permissions");
 
 describe("user/provision", () => {
-  let updateSpy: jest.SpyInstance;
+  let updateSpy;
 
   beforeEach(() => {
     updateSpy = jest.fn();
@@ -21,12 +23,8 @@ describe("user/provision", () => {
       updateUserSpy: updateSpy,
     });
     jest.spyOn(Username, "exists").mockResolvedValue(false);
-    jest
-      .spyOn(Username, "createWithId")
-      .mockResolvedValue({} as FirebaseFirestore.WriteResult);
-    jest
-      .spyOn(UserProfile, "createWithId")
-      .mockResolvedValue({} as FirebaseFirestore.WriteResult);
+    jest.spyOn(Username, "createWithId").mockResolvedValue({});
+    jest.spyOn(UserProfile, "createWithId").mockResolvedValue({});
   });
 
   it("errors with a 400 when no username is present", async () => {

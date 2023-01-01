@@ -11,4 +11,7 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {},
+  parserOptions: {
+    ecmaVersion: "latest",
+  },
 };

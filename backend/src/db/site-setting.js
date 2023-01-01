@@ -1,26 +1,25 @@
-import { UnknownError, ValidationError } from "../api/error";
-import DocumentBase from "./document-base";
+const { UnknownError, ValidationError } = require("../api/error");
+const DocumentBase = require("./document-base");
 
 const ALLOWED_RULE_KINDS = ["card"];
 const FEATURED_ID = "featured-combos";
 
-type FeaturedRule = {
-  kind: "card";
-  setCode?: string;
-  cardName?: string;
-};
-type FeaturedSettings = {
-  buttonText: string;
-  rules: FeaturedRule[];
-};
+// type FeaturedRule = {
+//   kind: "card";
+//   setCode?: string;
+//   cardName?: string;
+// };
+// type FeaturedSettings = {
+//   buttonText: string;
+//   rules: FeaturedRule[];
+// };
 
-export default class SiteSetting extends DocumentBase {
+module.exports = class SiteSetting extends DocumentBase {
   static CollectionName = "site-settings";
 
-  private static hasRequiredSettings({
-    buttonText,
-    rules,
-  }: FeaturedSettings): boolean {
+  // private
+  // @returns boolean
+  static hasRequiredSettings({ buttonText, rules }) {
     if (!buttonText) {
       return false;
     }
@@ -34,7 +33,10 @@ export default class SiteSetting extends DocumentBase {
     return true;
   }
 
-  private static hasValidRules(rules: FeaturedRule[]) {
+  // private
+  // @arg rules: FeaturedRule[]
+  // @returns boolean
+  static hasValidRules(rules) {
     return rules.every((rule) => {
       const hasValidKind = ALLOWED_RULE_KINDS.includes(rule.kind);
 
@@ -51,7 +53,10 @@ export default class SiteSetting extends DocumentBase {
     });
   }
 
-  private static sanitizeRules(rules: FeaturedRule[]): FeaturedRule[] {
+  // private
+  // @arg rules: FeaturedRule[]
+  // @returns FeaturedRule[]
+  static sanitizeRules(rules) {
     return rules.map((rule) => {
       switch (rule.kind) {
         case "card":
@@ -68,7 +73,9 @@ export default class SiteSetting extends DocumentBase {
     });
   }
 
-  static updateFeaturedSettings(settings: FeaturedSettings) {
+  // @arg FeaturedSettings
+  // @returns void
+  static updateFeaturedSettings(settings) {
     if (!this.hasRequiredSettings(settings)) {
       return Promise.reject(
         new ValidationError("Featured combos is missing buttonText or rules.")
@@ -89,4 +96,4 @@ export default class SiteSetting extends DocumentBase {
       rules,
     });
   }
-}
+};

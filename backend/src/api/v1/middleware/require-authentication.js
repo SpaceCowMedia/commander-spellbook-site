@@ -1,12 +1,7 @@
-import admin from "firebase-admin";
-import type { Request, Response, NextFunction } from "express";
-import { transformClaimsToPermissions } from "../services/permissions";
+const admin = require("firebase-admin");
+const { transformClaimsToPermissions } = require("../services/permissions");
 
-export default async function requireAuthentication(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+module.exports = async function requireAuthentication(req, res, next) {
   // TODO change all these json messages to permission errors
   if (!req.headers.authorization) {
     res.status(403).json({ message: "Missing authorization header." });
@@ -34,4 +29,4 @@ export default async function requireAuthentication(
       message: "Invalid authorization.",
     });
   }
-}
+};

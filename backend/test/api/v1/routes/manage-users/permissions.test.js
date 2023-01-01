@@ -1,13 +1,15 @@
-import { logger } from "firebase-functions";
-import { createRequest, createResponse } from "../../../../helper";
-import managePermissions from "../../../../../src/api/v1/routes/manage-users/permissions";
-import {
-  Permissions,
+const { logger } = require("firebase-functions");
+const { createRequest, createResponse } = require("../../../../helper");
+const managePermissions = require("../../../../../src/api/v1/routes/manage-users/permissions");
+const {
   validatePermissions,
   getPermissions,
   setPermissions,
-} from "../../../../../src/api/v1/services/permissions";
-import { ValidationError, UnknownError } from "../../../../../src/api/error";
+} = require("../../../../../src/api/v1/services/permissions");
+const {
+  ValidationError,
+  UnknownError,
+} = require("../../../../../src/api/error");
 
 jest.mock("../../../../../src/api/v1/services/permissions");
 
@@ -255,7 +257,7 @@ describe("manage-users/:userId/permissions", () => {
       provisioned: true,
       proposeCombo: true,
       viewUsers: false,
-    } as Permissions);
+    });
 
     await managePermissions(req, res);
 
@@ -296,7 +298,7 @@ describe("manage-users/:userId/permissions", () => {
       provisioned: true,
       proposeCombo: true,
       viewUsers: false,
-    } as Permissions);
+    });
 
     await managePermissions(req, res);
 

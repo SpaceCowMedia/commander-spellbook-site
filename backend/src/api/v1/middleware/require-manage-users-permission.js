@@ -1,11 +1,6 @@
-import type { Request, Response, NextFunction } from "express";
-import { PermissionError } from "../../error";
+const { PermissionError } = require("../../error");
 
-export default function requireManageUsersPermission(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+module.exports = function requireManageUsersPermission(req, res, next) {
   if (!req.userPermissions.manageUsers) {
     res
       .status(403)
@@ -19,4 +14,4 @@ export default function requireManageUsersPermission(
   }
 
   next();
-}
+};

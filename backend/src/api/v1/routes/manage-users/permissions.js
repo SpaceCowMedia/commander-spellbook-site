@@ -1,16 +1,14 @@
-import { logger } from "firebase-functions";
-import type { Request, Response } from "express";
-import { ValidationError, UnknownError } from "../../../error";
-import {
-  Permissions,
+const { logger } = require("firebase-functions");
+const { ValidationError, UnknownError } = require("../../../error");
+const {
   getPermissions,
   setPermissions,
   validatePermissions,
-} from "../../services/permissions";
+} = require("../../services/permissions");
 
-export default async function managePermissions(req: Request, res: Response) {
+module.exports = async function managePermissions(req, res) {
   const targetUserId = req.params.userId;
-  const permissions = (req.body.permissions || {}) as Permissions;
+  const permissions = req.body.permissions || {};
 
   try {
     await validatePermissions(permissions);
@@ -59,4 +57,4 @@ export default async function managePermissions(req: Request, res: Response) {
   res.status(201).json({
     success: true,
   });
-}
+};

@@ -1,12 +1,12 @@
-import admin from "firebase-admin";
-import {
+const admin = require("firebase-admin");
+const {
   createRequest,
   createResponse,
   createNext,
   createAdminAuth,
-} from "../../../helper";
-import requireAuthenticationMiddleware from "../../../../src/api/v1/middleware/require-authentication";
-import { PERMISSIONS } from "../../../../src/shared/constants";
+} = require("../../../helper");
+const requireAuthenticationMiddleware = require("../../../../src/api/v1/middleware/require-authentication");
+const { PERMISSIONS } = require("../../../../src/shared/constants");
 
 jest.mock("firebase-admin");
 

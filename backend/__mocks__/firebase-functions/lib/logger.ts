@@ -1,4 +1,6 @@
-export const log = jest.fn();
-export const info = jest.fn();
-export const warn = jest.fn();
-export const error = jest.fn();
+module.exports = {
+  log: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};

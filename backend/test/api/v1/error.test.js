@@ -1,15 +1,13 @@
-import { logger } from "firebase-functions";
-import {
+const { logger } = require("firebase-functions");
+const {
   NotFoundError,
   PermissionError,
   UnknownError,
   ValidationError,
-} from "../../../src/api/error";
+} = require("../../../src/api/error");
 
 describe("API Errors", () => {
-  let errorClasses: Array<
-    typeof NotFoundError | typeof PermissionError | typeof UnknownError
-  >;
+  let errorClasses;
 
   beforeEach(() => {
     errorClasses = [

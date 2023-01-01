@@ -1,7 +1,6 @@
-import type { Request, Response } from "express";
-import SiteSetting from "../../../../db/site-setting";
+const SiteSetting = require("../../../../db/site-setting");
 
-export default async function featured(req: Request, res: Response) {
+module.exports = async function featured(req, res) {
   try {
     await SiteSetting.updateFeaturedSettings({
       buttonText: req.body.buttonText,
@@ -16,4 +15,4 @@ export default async function featured(req: Request, res: Response) {
   res.status(200).json({
     success: true,
   });
-}
+};

@@ -1,10 +1,9 @@
-import admin from "firebase-admin";
-import type { Request, Response } from "express";
-import UserProfile from "../../../../db/user-profile";
-import Username from "../../../../db/username";
-import { setPermissions } from "../../services/permissions";
+const admin = require("firebase-admin");
+const UserProfile = require("../../../../db/user-profile");
+const Username = require("../../../../db/username");
+const { setPermissions } = require("../../services/permissions");
 
-export default async function provision(req: Request, res: Response) {
+module.exports = async function provision(req, res) {
   const username = req.body.username?.trim();
   const userId = req.userId;
   const permissions = req.userPermissions;
@@ -64,4 +63,4 @@ export default async function provision(req: Request, res: Response) {
     },
     username,
   });
-}
+};
