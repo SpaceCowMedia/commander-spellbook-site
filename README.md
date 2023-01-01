@@ -36,3 +36,5 @@ The backend (auth, api, database) is all managed by [Firebase](https://firebase.
 - [Integration Testing](./testing/integration-testing.md)
 
 Note: There is currently an [issue with `firebase-tools@v11.19.0` that prevents the emulators from running](https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073). We pin `firebase-tools` to `v11.18.0` until this is resolved.
+
+The `cypress-firebase@3` package made some changes to only support Node v16 and higher, so the published code has some JavaScript that is only runnbale in Node v16 and higher. this would normally be fine, but Cypress has some weird behavior where it bundles all it's testing code for the browser using whatever Webpack config is used in the project, and since the Nuxt Webpack config is not exposed easilly, it's become difficult to figure out how to resolve the problem. This may get resolved automatically when the site is upgraded to `Nuxt@3`, but for now, we must pin to `cypress-firebase@2.x.y` in order for the integration tests to run.

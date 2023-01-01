@@ -862,7 +862,8 @@
 <li><a href="#testing-unit-testing">Unit Testing</a></li>
 <li><a href="#testing-integration-testing">Integration Testing</a></li>
 </ul>
-<p>Note: There is currently an <a href="https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073">issue with <code>firebase-tools@v11.19.0</code> that prevents the emulators from running</a>. We pin <code>firebase-tools</code> to <code>v11.18.0</code> until this is resolved.</p></section>
+<p>Note: There is currently an <a href="https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073">issue with <code>firebase-tools@v11.19.0</code> that prevents the emulators from running</a>. We pin <code>firebase-tools</code> to <code>v11.18.0</code> until this is resolved.</p>
+<p>The <code>cypress-firebase@3</code> package made some changes to only support Node v16 and higher, so the published code has some JavaScript that is only runnbale in Node v16 and higher. this would normally be fine, but Cypress has some weird behavior where it bundles all it's testing code for the browser using whatever Webpack config is used in the project, and since the Nuxt Webpack config is not exposed easilly, it's become difficult to figure out how to resolve the problem. This may get resolved automatically when the site is upgraded to <code>Nuxt@3</code>, but for now, we must pin to <code>cypress-firebase@2.x.y</code> in order for the integration tests to run.</p></section>
                         <h1 class='nav-section-title' id='section-backend'>
                             Backend <a class='headerlink' href='#section-backend' title='Permanent link'>↵</a>
                         </h1>

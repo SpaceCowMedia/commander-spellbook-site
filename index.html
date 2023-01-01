@@ -673,13 +673,14 @@
 <li><a href="testing/integration-testing.html">Integration Testing</a></li>
 </ul>
 <p>Note: There is currently an <a href="https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073">issue with <code>firebase-tools@v11.19.0</code> that prevents the emulators from running</a>. We pin <code>firebase-tools</code> to <code>v11.18.0</code> until this is resolved.</p>
+<p>The <code>cypress-firebase@3</code> package made some changes to only support Node v16 and higher, so the published code has some JavaScript that is only runnbale in Node v16 and higher. this would normally be fine, but Cypress has some weird behavior where it bundles all it's testing code for the browser using whatever Webpack config is used in the project, and since the Nuxt Webpack config is not exposed easilly, it's become difficult to figure out how to resolve the problem. This may get resolved automatically when the site is upgraded to <code>Nuxt@3</code>, but for now, we must pin to <code>cypress-firebase@2.x.y</code> in order for the integration tests to run.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">December 31, 2022 21:19:53</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">January 1, 2023 01:09:27</span>
       
         <br>
         Created:
@@ -698,7 +699,7 @@
   
     <div class="md-source-date">
       <small>
-          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a> (95.83%), <a href='mailto:44567586+ldeluigi@users.noreply.github.com'>ldeluigi</a> (4.17%)</span>
+          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a> (96.0%), <a href='mailto:44567586+ldeluigi@users.noreply.github.com'>ldeluigi</a> (4.0%)</span>
       </small>
     </div>
   
