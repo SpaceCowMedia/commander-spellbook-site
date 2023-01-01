@@ -207,10 +207,12 @@ export default {
     "@nuxtjs/stylelint-module",
     // https://go.nuxtjs.dev/tailwindcss
     "@nuxtjs/tailwindcss",
+    // https://google-fonts.nuxtjs.org/
+    "@nuxtjs/google-fonts",
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
+  modules: ["vue-social-sharing/nuxt"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
