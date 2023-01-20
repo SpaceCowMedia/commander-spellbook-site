@@ -284,15 +284,6 @@ details .combo-details span.symbol img {
   position: absolute;
 }
 
-
-
-details[open] .card-images img.missing {
-  border: 5px solid #e28fc8;
-  border-radius: 17px;
-  opacity: 1;
-  filter: grayscale(0);
-}
-
 .color-filter {
   display: flex;
   justify-content: center;
