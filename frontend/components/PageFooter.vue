@@ -47,6 +47,7 @@
           <nuxt-link to="/advanced-search/">Advanced Search</nuxt-link>
           <nuxt-link to="/syntax-guide/">Syntax Guide</nuxt-link>
           <nuxt-link to="/random/">Random Combo</nuxt-link>
+          <nuxt-link to="/combo-finder/">Find My Combo</nuxt-link>
         </div>
         <div class="link-collection">
           <h3>Commander Spellbook</h3>
@@ -72,6 +73,7 @@
           >
           <ExternalLink to="https://edhrec.com/combos">EDHREC</ExternalLink>
           <ExternalLink to="https://draftsim.com">Draftsim</ExternalLink>
+          <ExternalLink to="https://psycatgames.com/games/life-counter/">MTG Life Counter: Lotus</ExternalLink>
         </div>
       </div>
       <div class="container mt-8 text-light">

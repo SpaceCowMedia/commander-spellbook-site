@@ -19,6 +19,12 @@
         <RandomButton :query="query" class="random-button dark button md:m-1">
           Random Combo
         </RandomButton>
+      </div>
+
+      <div class="button-links flex md:w-2/3 m-auto">
+        <nuxt-link to="/combo-finder/" class="dark button md:m-1">
+          Find My Combo
+        </nuxt-link>
         <nuxt-link
           v-if="featuredComboButtonText"
           id="featured-combos-button"
@@ -27,9 +33,6 @@
         >
           {{ featuredComboButtonText }}
         </nuxt-link>
-      </div>
-
-      <div class="button-links flex md:w-2/3 m-auto">
         <ExternalLink
           class="dark button"
           to="https://www.patreon.com/commanderspellbook"

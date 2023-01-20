@@ -40,7 +40,7 @@
           :autofocus="onHomePage"
         />
       </div>
-      <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center">
+      <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center desktop-menu">
         <button
           id="search-bar-menu-button"
           type="button"
@@ -62,6 +62,10 @@
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </RandomButton>
+        <nuxt-link to="/combo-finder/" class="hidden md:flex menu-link">
+          <div class="combo-finder-icon link-icon" aria-hidden="true"></div>
+          Find My Combo
+        </nuxt-link>
         <nuxt-link
           v-show="isAuthenticated"
           ref="profile-link"
@@ -89,6 +93,10 @@
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
       </RandomButton>
+      <nuxt-link to="/combo-finder/" class="mobile-menu-button">
+        <div class="combo-finder-icon link-icon" aria-hidden="true"></div>
+        Find My Combo
+      </nuxt-link>
 
       <nuxt-link
         v-show="isAuthenticated"
@@ -232,6 +240,10 @@ a {
   mask: url("~assets/svgs/question-solid.svg") no-repeat center;
 }
 
+.combo-finder-icon {
+  mask: url("~assets/svgs/combo-finder.svg") no-repeat center;
+}
+
 .profile-icon {
   mask: url("~assets/svgs/user-circle-solid.svg") no-repeat center;
 }
@@ -295,4 +307,11 @@ a {
     @apply hidden;
   }
 }
+
+@media (max-width: 1280px) {
+  .flex.flex-shrink.flex-row.items-center.desktop-menu a div {
+    display: none;
+  }
+}
+
 </style>
