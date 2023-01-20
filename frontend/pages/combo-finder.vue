@@ -221,7 +221,6 @@ details summary .card-images {
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  box-shadow: 0 3px #07070a;
 }
 
 details summary .card-images img {
