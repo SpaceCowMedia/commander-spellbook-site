@@ -23,7 +23,7 @@
 
       <div class="button-links flex md:w-2/3 m-auto">
         <nuxt-link to="/combo-finder/" class="dark button md:m-1">
-          Find My Combo
+          Find My Combos
         </nuxt-link>
         <nuxt-link
           v-if="featuredComboButtonText"

@@ -40,7 +40,10 @@
           :autofocus="onHomePage"
         />
       </div>
-      <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center desktop-menu">
+      <div
+        v-if="!onHomePage"
+        class="flex flex-shrink flex-row items-center desktop-menu"
+      >
         <button
           id="search-bar-menu-button"
           type="button"
@@ -64,7 +67,7 @@
         </RandomButton>
         <nuxt-link to="/combo-finder/" class="hidden md:flex menu-link">
           <div class="combo-finder-icon link-icon" aria-hidden="true"></div>
-          Find My Combo
+          Find My Combos
         </nuxt-link>
         <nuxt-link
           v-show="isAuthenticated"
@@ -95,7 +98,7 @@
       </RandomButton>
       <nuxt-link to="/combo-finder/" class="mobile-menu-button">
         <div class="combo-finder-icon link-icon" aria-hidden="true"></div>
-        Find My Combo
+        Find My Combos
       </nuxt-link>
 
       <nuxt-link
@@ -313,5 +316,4 @@ a {
     display: none;
   }
 }
-
 </style>
