@@ -226,7 +226,7 @@ textarea:focus {
 }
 
 #decklist-app {
-  @apply py-8;
+  @apply py-4;
 }
 
 #decklist-hint {
