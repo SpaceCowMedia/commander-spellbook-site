@@ -13,27 +13,62 @@
     <section>
       <ol class="how-to-find-my-combo">
         <li>Paste your decklist</li>
-        <li>Lists all available combos of your deck</li>
+        <li>Lists all available combos in your deck</li>
         <li>Lists all combos where you miss 1 combo piece</li>
       </ol>
 
       <textarea
         id="decklistInput"
+        v-model="decklist"
         placeholder="Supported decklist formats:
 Ancient Tomb
 1 Ancient Tomb
 1x Ancient Tomb
 Ancient Tomb (uma) 236
 "
+        @input="lookupCombos"
       >
       </textarea>
 
-      <span id="decklist-card-count" class="gradient"></span>
-      <div id="clear-decklist-input" class="button">Clear Decklist</div>
+      <span id="decklist-card-count" v-if="decklist" class="gradient">{{
+        numberOfCardsText
+      }}</span>
+      <button
+        id="clear-decklist-input"
+        v-if="decklist"
+        class="button"
+        @click="clearDecklist"
+      >
+        Clear Decklist
+      </button>
+
+      <div v-if="!decklist" id="decklist-hint" class="heading-subtitle">
+        Paste your decklist
+      </div>
     </section>
 
     <div id="decklist-app">
-      <div class="hint heading-subtitle">Paste your decklist</div>
+      <section id="combos-in-deck-section" v-if="decklist">
+        <h2 class="title">{{ combosInDeckHeadingText }}</h2>
+
+        <ComboResults :results="combosInDeck" />
+      </section>
+
+      <section
+        id="potential-combos-in-deck-section"
+        v-if="potentialCombos.length > 0"
+      >
+        <h2 class="title">{{ potentialCombosInDeckHeadingText }}</h2>
+        <p>
+          List of combos where your decklist is missing 1 combo piece. Click the
+          color symbols to filter for identity.
+        </p>
+
+        <div>TODO: Mana Pickers here</div>
+
+        <!-- TODO pass in missing cards -->
+        <ComboResults :results="potentialCombos" />
+      </section>
     </div>
   </div>
 </template>
@@ -41,14 +76,88 @@ Ancient Tomb (uma) 236
 <script lang="ts">
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
-import { DecklistComboFinder } from "@/components/DecklistComboFinder.js";
+import ComboResults from "@/components/search/ComboResults.vue";
+import {
+  findCombosFromDecklist,
+  convertDecklistToDeck,
+} from "@/lib/decklist-parser";
+
+import type { FormattedApiResponse } from "@/lib/api/types";
+
+type ComboFinderData = {
+  decklist: string;
+  numberOfCardsInDeck: number;
+  combosInDeck: FormattedApiResponse[];
+  potentialCombos: FormattedApiResponse[];
+};
 
 export default Vue.extend({
   components: {
     ArtCircle,
+    ComboResults,
+  },
+  data(): ComboFinderData {
+    return {
+      decklist: "",
+      numberOfCardsInDeck: 0,
+      combosInDeck: [],
+      potentialCombos: [],
+    };
+  },
+  computed: {
+    numberOfCardsText(): string {
+      return `${this.numberOfCardsInDeck} ${this.$pluralize(
+        "card",
+        this.numberOfCardsInDeck
+      )}`;
+    },
+    combosInDeckHeadingText(): string {
+      const numOfCombos = this.combosInDeck.length;
+
+      if (numOfCombos === 0) {
+        return "No Combos Found";
+      } else if (numOfCombos === 1) {
+        return "1 Combo Found";
+      }
+
+      return `${numOfCombos} Combos Found`;
+    },
+    potentialCombosInDeckHeadingText(): string {
+      const numOfCombos = this.potentialCombos.length;
+
+      return `${numOfCombos} Potential Combo${
+        numOfCombos > 1 ? "s" : ""
+      } Found`;
+    },
   },
   mounted() {
-    DecklistComboFinder();
+    // TODO set decklist from localstorage
+  },
+  methods: {
+    async lookupCombos() {
+      // TODO save decklist in localstorage
+      const deck = convertDecklistToDeck(this.decklist);
+      this.numberOfCardsInDeck = deck.numberOfCards;
+
+      this.combosInDeck = [];
+
+      // not possible to have any combos if deck has 1
+      // or fewer card in it, so we can skip the lookup
+      if (this.numberOfCardsInDeck < 2) {
+        return;
+      }
+
+      // TODO: let's debounce in case some weirdo is manually
+      // typing in their deck list
+      const combos = await findCombosFromDecklist(deck.cards);
+
+      this.combosInDeck = combos.combosInDecklist;
+      this.potentialCombos = combos.potentialCombos;
+    },
+
+    clearDecklist() {
+      this.decklist = "";
+    },
   },
 });
 </script>
@@ -87,22 +196,22 @@ textarea:focus {
 }
 
 #clear-decklist-input {
-  @apply hidden cursor-pointer;
+  @apply cursor-pointer;
 }
 
 #decklist-card-count {
-  @apply hidden border-2 border-dark w-1/3 text-center py-2 -mt-4;
+  @apply border-2 border-dark w-1/3 text-center py-2 -mt-4;
 }
 
 #decklist-app {
   @apply py-8;
 }
 
-#decklist-app .hint {
-  @apply flex relative text-center items-center justify-center flex-col -my-24 mb-8;
+#decklist-hint {
+  @apply flex relative text-center items-center justify-center flex-col -my-10 mb-8;
 }
 
-#decklist-app .hint::before {
+#decklist-hint::before {
   content: "";
   height: 90px;
   width: 20px;
