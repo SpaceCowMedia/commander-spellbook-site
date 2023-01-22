@@ -91,6 +91,9 @@ type ComboFinderData = {
   potentialCombos: FormattedApiResponse[];
 };
 
+const LOCAL_STORAGE_DECK_STORAGE_KEY =
+  "commander-spellbook-combo-finder-last-decklist";
+
 export default Vue.extend({
   components: {
     ArtCircle,
@@ -131,21 +134,28 @@ export default Vue.extend({
     },
   },
   mounted() {
-    // TODO set decklist from localstorage
+    const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+
+    if (savedDeck?.trim()) {
+      this.decklist = savedDeck;
+      this.lookupCombos();
+    }
   },
   methods: {
     async lookupCombos() {
-      // TODO save decklist in localstorage
       const deck = convertDecklistToDeck(this.decklist);
       this.numberOfCardsInDeck = deck.numberOfCards;
 
       this.combosInDeck = [];
+      this.potentialCombos = [];
 
       // not possible to have any combos if deck has 1
       // or fewer card in it, so we can skip the lookup
       if (this.numberOfCardsInDeck < 2) {
         return;
       }
+
+      localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, this.decklist);
 
       // TODO: let's debounce in case some weirdo is manually
       // typing in their deck list
@@ -157,6 +167,7 @@ export default Vue.extend({
 
     clearDecklist() {
       this.decklist = "";
+      localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     },
   },
 });
