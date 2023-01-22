@@ -125,18 +125,17 @@ export default Vue.extend({
 
       if (numOfCombos === 0) {
         return "No Combos Found";
-      } else if (numOfCombos === 1) {
-        return "1 Combo Found";
       }
 
-      return `${numOfCombos} Combos Found`;
+      return `${numOfCombos} ${this.$pluralize("Combo", numOfCombos)} Found`;
     },
     potentialCombosInDeckHeadingText(): string {
       const numOfCombos = this.potentialCombos.length;
 
-      return `${numOfCombos} Potential Combo${
-        numOfCombos > 1 ? "s" : ""
-      } Found`;
+      return `${numOfCombos} Potential ${this.$pluralize(
+        "Combo",
+        numOfCombos
+      )} Found`;
     },
   },
   mounted() {
