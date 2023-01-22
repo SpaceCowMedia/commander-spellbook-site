@@ -49,11 +49,11 @@ Ancient Tomb (uma) 236
 
     <div id="decklist-app">
       <section v-if="lookupInProgress">
-        <h2 class="title">Loading Combos...</h2>
+        <h2 class="heading-subtitle">Loading Combos...</h2>
       </section>
 
       <section id="combos-in-deck-section" v-if="!lookupInProgress && decklist">
-        <h2 class="title">{{ combosInDeckHeadingText }}</h2>
+        <h2 class="heading-subtitle">{{ combosInDeckHeadingText }}</h2>
 
         <ComboResults :results="combosInDeck" />
       </section>
@@ -62,7 +62,7 @@ Ancient Tomb (uma) 236
         id="potential-combos-in-deck-section"
         v-if="!lookupInProgress && potentialCombos.length > 0"
       >
-        <h2 class="title">{{ potentialCombosInDeckHeadingText }}</h2>
+        <h2 class="heading-subtitle">{{ potentialCombosInDeckHeadingText }}</h2>
         <p>
           List of combos where your decklist is missing 1 combo piece. Click the
           color symbols to filter for identity.
