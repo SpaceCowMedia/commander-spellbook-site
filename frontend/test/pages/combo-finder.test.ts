@@ -185,6 +185,18 @@ describe("ComboFinderPage", () => {
       expect(wrapper.find("#combos-in-deck-section").exists()).toBe(true);
     });
 
+    it("hides when lookup is in progress", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "foo\nbar",
+        combosInDeck: [],
+        lookupInProgress: true,
+      });
+
+      expect(wrapper.find("#combos-in-deck-section").exists()).toBe(false);
+    });
+
     it("updates heading based on number of combos found", async () => {
       const wrapper = shallowMount(ComboFinderPage, options);
 
@@ -248,6 +260,21 @@ describe("ComboFinderPage", () => {
 
       expect(wrapper.find("#potential-combos-in-deck-section").exists()).toBe(
         true
+      );
+    });
+
+    it("hides when lookup is in progress", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "foo\nbar",
+        combosInDeck: [],
+        potentialCombos: [makeFakeCombo()],
+        lookupInProgress: true,
+      });
+
+      expect(wrapper.find("#potential-combos-in-deck-section").exists()).toBe(
+        false
       );
     });
 

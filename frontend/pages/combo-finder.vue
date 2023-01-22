@@ -48,7 +48,11 @@ Ancient Tomb (uma) 236
     </section>
 
     <div id="decklist-app">
-      <section id="combos-in-deck-section" v-if="decklist">
+      <section v-if="lookupInProgress">
+        <h2 class="title">Loading Combos...</h2>
+      </section>
+
+      <section id="combos-in-deck-section" v-if="!lookupInProgress && decklist">
         <h2 class="title">{{ combosInDeckHeadingText }}</h2>
 
         <ComboResults :results="combosInDeck" />
@@ -56,7 +60,7 @@ Ancient Tomb (uma) 236
 
       <section
         id="potential-combos-in-deck-section"
-        v-if="potentialCombos.length > 0"
+        v-if="!lookupInProgress && potentialCombos.length > 0"
       >
         <h2 class="title">{{ potentialCombosInDeckHeadingText }}</h2>
         <p>
@@ -87,6 +91,7 @@ import type { FormattedApiResponse } from "@/lib/api/types";
 type ComboFinderData = {
   decklist: string;
   numberOfCardsInDeck: number;
+  lookupInProgress: boolean;
   combosInDeck: FormattedApiResponse[];
   potentialCombos: FormattedApiResponse[];
 };
@@ -103,6 +108,7 @@ export default Vue.extend({
     return {
       decklist: "",
       numberOfCardsInDeck: 0,
+      lookupInProgress: false,
       combosInDeck: [],
       potentialCombos: [],
     };
@@ -148,10 +154,12 @@ export default Vue.extend({
 
       this.combosInDeck = [];
       this.potentialCombos = [];
+      this.lookupInProgress = true;
 
       // not possible to have any combos if deck has 1
       // or fewer card in it, so we can skip the lookup
       if (this.numberOfCardsInDeck < 2) {
+        this.lookupInProgress = false;
         return;
       }
 
@@ -163,10 +171,14 @@ export default Vue.extend({
 
       this.combosInDeck = combos.combosInDecklist;
       this.potentialCombos = combos.potentialCombos;
+
+      this.lookupInProgress = false;
     },
 
     clearDecklist() {
       this.decklist = "";
+      this.combosInDeck = [];
+      this.potentialCombos = [];
       localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     },
   },
