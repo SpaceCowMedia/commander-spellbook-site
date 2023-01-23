@@ -137,6 +137,7 @@ Bar (anything
       const data = await findCombosFromDecklist(["foo", "bar"]);
 
       expect(data.potentialCombos).toEqual([]);
+      expect(data.missingCardsForPotentialCombos).toEqual([]);
     });
 
     it("returns an array of potential combo data for combos where only one card is missing", async () => {
@@ -151,6 +152,9 @@ Bar (anything
       expect(data.potentialCombos.length).toEqual(2);
       expect(data.potentialCombos[0].commanderSpellbookId).toBe("1");
       expect(data.potentialCombos[1].commanderSpellbookId).toBe("2");
+      expect(data.missingCardsForPotentialCombos.length).toBe(2);
+      expect(data.missingCardsForPotentialCombos[0].name).toBe("Card 1");
+      expect(data.missingCardsForPotentialCombos[1].name).toBe("Card 4");
     });
   });
 });

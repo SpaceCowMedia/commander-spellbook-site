@@ -1,10 +1,12 @@
 import lookup from "@/lib/api/spellbook-api";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
+import type Card from "@/lib/api/models/card";
 
 type CombosInDecklist = {
   combosInDecklist: FormattedApiResponse[];
   potentialCombos: FormattedApiResponse[];
+  missingCardsForPotentialCombos: Card[];
 };
 
 type Deck = {
@@ -69,28 +71,37 @@ export async function findCombosFromDecklist(
   const combos = await lookup();
   const combosInDecklist: FormattedApiResponse[] = [];
   const potentialCombos: FormattedApiResponse[] = [];
+  const missingCardsForPotentialCombos: Card[] = [];
 
   combos.forEach((combo) => {
-    let requiredCardCount = combo.cards.length;
+    const missingCards: Card[] = [];
 
     combo.cards.forEach((card) => {
+      if (missingCards.length > 1) {
+        // no need to keep checking if we know up front
+        // that we're missing more than one card
+        return;
+      }
+
       const cardIsInDeck = decklist.find((cardName) => {
         return card.matchesNameExactly(cardName);
       });
-      if (cardIsInDeck) {
-        requiredCardCount--;
+      if (!cardIsInDeck) {
+        missingCards.push(card);
       }
     });
 
-    if (requiredCardCount === 0) {
+    if (missingCards.length === 0) {
       combosInDecklist.push(combo);
-    } else if (requiredCardCount === 1) {
+    } else if (missingCards.length === 1) {
       potentialCombos.push(combo);
+      missingCardsForPotentialCombos.push(missingCards[0]);
     }
   });
 
   return {
     combosInDecklist,
     potentialCombos,
+    missingCardsForPotentialCombos,
   };
 }

@@ -391,6 +391,7 @@ describe("ComboFinderPage", () => {
       jest.mocked(findCombosFromDecklist).mockResolvedValue({
         combosInDecklist,
         potentialCombos,
+        missingCardsForPotentialCombos: [],
       });
 
       const vm = wrapper.vm as VueComponent;
