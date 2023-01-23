@@ -70,8 +70,10 @@ Ancient Tomb (uma) 236
 
         <div>TODO: Mana Pickers here</div>
 
-        <!-- TODO pass in missing cards -->
-        <ComboResults :results="potentialCombos" />
+        <ComboResults
+          :results="potentialCombos"
+          :missing-decklist-cards="missingDecklistCards"
+        />
       </section>
     </div>
   </div>
@@ -87,6 +89,7 @@ import {
 } from "@/lib/decklist-parser";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
+import type Card from "@/lib/api/models/card";
 
 type ComboFinderData = {
   decklist: string;
@@ -94,6 +97,7 @@ type ComboFinderData = {
   lookupInProgress: boolean;
   combosInDeck: FormattedApiResponse[];
   potentialCombos: FormattedApiResponse[];
+  missingDecklistCards: Card[];
 };
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
@@ -111,6 +115,7 @@ export default Vue.extend({
       lookupInProgress: false,
       combosInDeck: [],
       potentialCombos: [],
+      missingDecklistCards: [],
     };
   },
   computed: {
@@ -153,6 +158,7 @@ export default Vue.extend({
 
       this.combosInDeck = [];
       this.potentialCombos = [];
+      this.missingDecklistCards = [];
       this.lookupInProgress = true;
 
       // not possible to have any combos if deck has 1
@@ -170,6 +176,7 @@ export default Vue.extend({
 
       this.combosInDeck = combos.combosInDecklist;
       this.potentialCombos = combos.potentialCombos;
+      this.missingDecklistCards = combos.missingCardsForPotentialCombos;
 
       this.lookupInProgress = false;
     },

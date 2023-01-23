@@ -3,6 +3,7 @@ import { shallowMount } from "@vue/test-utils";
 import flushPromises from "flush-promises";
 import ComboFinderPage from "@/pages/combo-finder.vue";
 import makeFakeCombo from "~/lib/api/make-fake-combo";
+import Card from "@/lib/api/models/card";
 import { pluralize as $pluralize } from "@/plugins/text-helpers";
 import {
   findCombosFromDecklist,
@@ -308,16 +309,21 @@ describe("ComboFinderPage", () => {
       );
     });
 
-    it("populates combos", async () => {
-      const ComboResults = { template: "<div></div>", props: ["results"] };
+    it("populates potential combos", async () => {
+      const ComboResults = {
+        template: "<div></div>",
+        props: ["results", "missingDecklistCards"],
+      };
       // @ts-ignore
       options.stubs.ComboResults = ComboResults;
       const wrapper = shallowMount(ComboFinderPage, options);
 
       const combos = [makeFakeCombo(), makeFakeCombo(), makeFakeCombo()];
+      const missingCards = [new Card("card a")];
       await wrapper.setData({
         decklist: "foo",
         potentialCombos: combos,
+        missingDecklistCards: missingCards,
       });
 
       const cr = wrapper
@@ -325,6 +331,7 @@ describe("ComboFinderPage", () => {
         .findComponent(ComboResults);
 
       expect(cr.props("results")).toBe(combos);
+      expect(cr.props("missingDecklistCards")).toBe(missingCards);
     });
   });
 

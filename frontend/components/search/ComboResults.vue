@@ -20,7 +20,10 @@
               :card-name="name"
             >
               <div class="card-name pl-3 pr-3">
-                {{ name }}
+                <strong v-if="isMissingInDecklist(name)" class="text-red-800"
+                  >{{ name }} (not in deck)</strong
+                >
+                <span v-else>{{ name }}</span>
               </div>
             </CardTooltip>
           </div>
@@ -57,6 +60,7 @@ import type {
   SortValue,
   VendorValue,
 } from "@/lib/api/types";
+import type Card from "@/lib/api/models/card";
 
 export default Vue.extend({
   components: {
@@ -79,8 +83,21 @@ export default Vue.extend({
         return [];
       },
     },
+    missingDecklistCards: {
+      type: Array as PropType<Card[]>,
+      default() {
+        return [];
+      },
+    },
   },
   methods: {
+    isMissingInDecklist(name: string): boolean {
+      const isMissing = this.missingDecklistCards.find((card) => {
+        return card.matchesNameExactly(name);
+      });
+
+      return Boolean(isMissing);
+    },
     sortStatMessage(combo: FormattedApiResponse): string {
       if (!this.sort) {
         return "";
