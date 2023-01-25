@@ -52,8 +52,8 @@
         >
       </li>
       <li>
-        <ExternalLink to="https://twitter.com/rosequartz_26"
-          >Jaelyn Rosenquist</ExternalLink
+        <ExternalLink to="https://www.secretpassageediting.com/"
+          >Myles Schaller</ExternalLink
         >
       </li>
       <li>
