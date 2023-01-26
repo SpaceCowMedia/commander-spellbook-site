@@ -25,40 +25,72 @@ type Deck = {
   numberOfCards: number;
 };
 
+function filterOutInvalidCardNameEntries(cardName: string) {
+  const normalizedCardName = cardName.trim();
+  // filter out empty values and values that start with //
+  // (common way to denote sections of a decklist, so it shouldn't
+  // be considered part of the decklist)
+  return normalizedCardName && !normalizedCardName.startsWith("//");
+}
+
+function parseCardData(deckEntry: string): [string, number] {
+  // it's technically possible for match to return null
+  // so we need to default to an empty array to destructure
+  // the variables
+  const [, quantityAsString, name] = deckEntry.match(DECK_ENTRY_REGEX) || [];
+  // if the quantity doesn't exist, then we default to 1
+  // and we remove the x (lowercase or uppercase)
+  // before casting it to a number
+  const quantity = Number((quantityAsString || "1").replace(/x/i, ""));
+
+  return [name, quantity];
+}
+
+function removeSetAndCollectorNumberData(cardName: string): string {
+  // removes set name or collector data, which we assume
+  // is anything after a space followed by an open parenthesis
+  // NOTE: there are a handful of magic cards that use ( in the
+  // the name, but they are all silver border so far and unlikely
+  // to be present in the Commander Spellbook database
+  return cardName.split(" (")[0].trim();
+}
+
+function findMissingCards(decklist: string[], cardsInCombo: Card[]): Card[] {
+  const missingCards: Card[] = [];
+
+  cardsInCombo.forEach((card) => {
+    if (missingCards.length > 1) {
+      // no need to keep checking if we know up front
+      // that we're missing more than one card
+      return;
+    }
+
+    const cardIsInDeck = decklist.find((cardName) => {
+      return card.matchesNameExactly(cardName);
+    });
+
+    if (!cardIsInDeck) {
+      missingCards.push(card);
+    }
+  });
+
+  return missingCards;
+}
+
 export function convertDecklistToDeck(decklist: string): Deck {
   let numberOfCardsInDeck = 0;
 
   const cards = decklist
     .split("\n")
-    .filter((cardName) => {
-      const normalizedCardName = cardName.trim();
-      // filter out empty values and values that start with //
-      // (common way to denote sections of a decklist, so it shouldn't
-      // be considered part of the decklist)
-      return normalizedCardName && !normalizedCardName.startsWith("//");
-    })
-    .map((cardName) => {
-      // it's technically possible for match to return null
-      // so we need to default to an empty array to destructure
-      // the variables
-      const [, quantityAsString, name] = cardName.match(DECK_ENTRY_REGEX) || [];
-      // if the quantity doesn't exist, then we default to 1
-      // and we remove the x (lowercase or uppercase)
-      // before casting it to a number
-      const quantity = Number((quantityAsString || "1").replace(/x/i, ""));
+    .filter(filterOutInvalidCardNameEntries)
+    .map((deckEntry) => {
+      const [cardName, quantity] = parseCardData(deckEntry);
 
       numberOfCardsInDeck += quantity;
 
-      return name;
+      return cardName;
     })
-    .map((cardName) => {
-      // removes set name or collector data, which we assume
-      // is anything after a space followed by an open parenthesis
-      // NOTE: there are a handful of magic cards that use ( in the
-      // the name, but they are all silver border so far and unlikely
-      // to be present in the Commander Spellbook database
-      return cardName.split(" (")[0].trim();
-    });
+    .map(removeSetAndCollectorNumberData);
 
   return {
     numberOfCards: numberOfCardsInDeck,
@@ -66,6 +98,10 @@ export function convertDecklistToDeck(decklist: string): Deck {
   };
 }
 
+// this function loops through the entire combo database
+// to pull out any combos where the entire set of cards
+// are available in the provided decklist
+// and any combos where only a single card is missing
 export async function findCombosFromDecklist(
   decklist: string[]
 ): Promise<CombosInDecklist> {
@@ -75,23 +111,7 @@ export async function findCombosFromDecklist(
   const missingCardsForPotentialCombos: Card[] = [];
 
   combos.forEach((combo) => {
-    const missingCards: Card[] = [];
-
-    combo.cards.forEach((card) => {
-      if (missingCards.length > 1) {
-        // no need to keep checking if we know up front
-        // that we're missing more than one card
-        return;
-      }
-
-      const cardIsInDeck = decklist.find((cardName) => {
-        return card.matchesNameExactly(cardName);
-      });
-
-      if (!cardIsInDeck) {
-        missingCards.push(card);
-      }
-    });
+    const missingCards = findMissingCards(decklist, combo.cards);
 
     if (missingCards.length === 0) {
       combosInDecklist.push(combo);
