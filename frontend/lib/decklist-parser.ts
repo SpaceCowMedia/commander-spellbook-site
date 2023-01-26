@@ -3,6 +3,17 @@ import lookup from "@/lib/api/spellbook-api";
 import type { FormattedApiResponse } from "@/lib/api/types";
 import type Card from "@/lib/api/models/card";
 
+// this is a little complicated, but basically
+// we pull off the quantity for the card (if any)
+// when the card is in one of the following forms
+// * 123 Card Name
+// * 123x Card Name
+// * 123X Card Name
+// this is saved as the second match in the array
+// returned by the match method, the card name is
+// saved in the 3rd match
+const DECK_ENTRY_REGEX = /^(\d*[xX]?\s)?(.*)$/;
+
 type CombosInDecklist = {
   combosInDecklist: FormattedApiResponse[];
   potentialCombos: FormattedApiResponse[];
@@ -27,20 +38,10 @@ export function convertDecklistToDeck(decklist: string): Deck {
       return normalizedCardName && !normalizedCardName.startsWith("//");
     })
     .map((cardName) => {
-      // this is a little complicated, but basically
-      // we pull off the quantity for the card (if any)
-      // when the card is in one of the following forms
-      // * 123 Card Name
-      // * 123x Card Name
-      // * 123X Card Name
-      // this is saved as the second match in the array
-      // returned by the match method, the card name is
-      // saved in the 3rd match
       // it's technically possible for match to return null
       // so we need to default to an empty array to destructure
       // the variables
-      const [, quantityAsString, name] =
-        cardName.match(/^(\d*[xX]?\s)?(.*)$/) || [];
+      const [, quantityAsString, name] = cardName.match(DECK_ENTRY_REGEX) || [];
       // if the quantity doesn't exist, then we default to 1
       // and we remove the x (lowercase or uppercase)
       // before casting it to a number
@@ -86,6 +87,7 @@ export async function findCombosFromDecklist(
       const cardIsInDeck = decklist.find((cardName) => {
         return card.matchesNameExactly(cardName);
       });
+
       if (!cardIsInDeck) {
         missingCards.push(card);
       }
