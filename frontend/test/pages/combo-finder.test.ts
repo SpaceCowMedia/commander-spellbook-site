@@ -330,8 +330,48 @@ describe("ComboFinderPage", () => {
         .find("#potential-combos-in-deck-section")
         .findComponent(ComboResults);
 
-      expect(cr.props("results")).toBe(combos);
+      expect(cr.props("results")).toHaveLength(3);
+      expect(cr.props("results")[0]).toBe(combos[0]);
+      expect(cr.props("results")[1]).toBe(combos[1]);
+      expect(cr.props("results")[2]).toBe(combos[2]);
+
       expect(cr.props("missingDecklistCards")).toBe(missingCards);
+    });
+
+    it("only displays combos that match color identity selected", async () => {
+      const ComboResults = {
+        template: "<div></div>",
+        props: ["results", "missingDecklistCards"],
+      };
+      // @ts-ignore
+      options.stubs.ComboResults = ComboResults;
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      const combos = [
+        makeFakeCombo({
+          colorIdentity: "wub",
+        }),
+        makeFakeCombo({
+          colorIdentity: "w",
+        }),
+        makeFakeCombo({
+          colorIdentity: "rg",
+        }),
+      ];
+      const missingCards = [new Card("card a")];
+      await wrapper.setData({
+        decklist: "foo",
+        potentialCombos: combos,
+        missingDecklistCards: missingCards,
+        potentialCombosColorIdentity: ["w"],
+      });
+
+      const cr = wrapper
+        .find("#potential-combos-in-deck-section")
+        .findComponent(ComboResults);
+
+      expect(cr.props("results")).toHaveLength(1);
+      expect(cr.props("results")[0]).toBe(combos[1]);
     });
   });
 

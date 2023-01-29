@@ -1,10 +1,6 @@
 <template>
   <div class="static-page">
-    <ArtCircle
-      card-name="Exploration"
-      artist="Florian de Gesincourt"
-      class="m-auto md:block hidden"
-    />
+    <ArtCircle card-name="Exploration" artist="Florian de Gesincourt" class="m-auto md:block hidden" />
     <h1 class="heading-title text-center">Find My Combos</h1>
     <h2 class="heading-subtitle text-center mt-0">
       Uncover combos in your deck, and discover potential combos.
@@ -17,28 +13,18 @@
         <li>Lists all combos where you miss 1 combo piece</li>
       </ol>
 
-      <textarea
-        id="decklistInput"
-        v-model="decklist"
-        placeholder="Supported decklist formats:
+      <textarea id="decklistInput" v-model="decklist" placeholder="Supported decklist formats:
 Ancient Tomb
 1 Ancient Tomb
 1x Ancient Tomb
 Ancient Tomb (uma) 236
-"
-        @input="lookupCombos"
-      >
+" @input="lookupCombos">
       </textarea>
 
       <span id="decklist-card-count" v-if="decklist" class="gradient">{{
         numberOfCardsText
       }}</span>
-      <button
-        id="clear-decklist-input"
-        v-if="decklist"
-        class="button"
-        @click="clearDecklist"
-      >
+      <button id="clear-decklist-input" v-if="decklist" class="button" @click="clearDecklist">
         Clear Decklist
       </button>
 
@@ -58,22 +44,17 @@ Ancient Tomb (uma) 236
         <ComboResults :results="combosInDeck" />
       </section>
 
-      <section
-        id="potential-combos-in-deck-section"
-        v-if="!lookupInProgress && potentialCombos.length > 0"
-      >
+      <section id="potential-combos-in-deck-section" v-if="!lookupInProgress && potentialCombos.length > 0">
         <h2 class="heading-subtitle">{{ potentialCombosInDeckHeadingText }}</h2>
         <p>
-          List of combos where your decklist is missing 1 combo piece. Click the
+          List of combos where your decklist is missing 1 combo piece. Toggle the
           color symbols to filter for identity.
         </p>
 
-        <div>TODO: Mana Pickers here</div>
+        <ColorIdentityPicker class="mb-4" :chosen-colors="potentialCombosColorIdentity"
+          v-model="potentialCombosColorIdentity" />
 
-        <ComboResults
-          :results="potentialCombos"
-          :missing-decklist-cards="missingDecklistCards"
-        />
+        <ComboResults :results="potentialCombosMatchingColorIdentity" :missing-decklist-cards="missingDecklistCards" />
       </section>
     </div>
   </div>
@@ -83,12 +64,13 @@ Ancient Tomb (uma) 236
 import Vue from "vue";
 import ArtCircle from "@/components/ArtCircle.vue";
 import ComboResults from "@/components/search/ComboResults.vue";
+import ColorIdentityPicker from "@/components/ColorIdentityPicker.vue";
 import {
   findCombosFromDecklist,
   convertDecklistToDeck,
 } from "@/lib/decklist-parser";
 
-import type { FormattedApiResponse } from "@/lib/api/types";
+import type { FormattedApiResponse, ColorIdentityColors } from "@/lib/api/types";
 import type Card from "@/lib/api/models/card";
 
 type ComboFinderData = {
@@ -98,6 +80,7 @@ type ComboFinderData = {
   combosInDeck: FormattedApiResponse[];
   potentialCombos: FormattedApiResponse[];
   missingDecklistCards: Card[];
+  potentialCombosColorIdentity: ColorIdentityColors[];
 };
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
@@ -107,6 +90,7 @@ export default Vue.extend({
   components: {
     ArtCircle,
     ComboResults,
+    ColorIdentityPicker,
   },
   data(): ComboFinderData {
     return {
@@ -116,6 +100,7 @@ export default Vue.extend({
       combosInDeck: [],
       potentialCombos: [],
       missingDecklistCards: [],
+      potentialCombosColorIdentity: ["w", "u", "b", "r", "g"]
     };
   },
   computed: {
@@ -142,6 +127,11 @@ export default Vue.extend({
         numOfCombos
       )} Found`;
     },
+    potentialCombosMatchingColorIdentity(): FormattedApiResponse[] {
+      return this.potentialCombos.filter((combo) => {
+        return combo.colorIdentity.isWithin(this.potentialCombosColorIdentity);
+      });
+    }
   },
   mounted() {
     const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
