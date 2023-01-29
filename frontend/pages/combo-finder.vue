@@ -137,7 +137,7 @@ export default Vue.extend({
   },
   methods: {
     async lookupCombos() {
-      const deck = convertDecklistToDeck(this.decklist);
+      const deck = await convertDecklistToDeck(this.decklist);
       this.numberOfCardsInDeck = deck.numberOfCards;
 
       this.combosInDeck = [];

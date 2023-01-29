@@ -383,9 +383,10 @@ describe("ComboFinderPage", () => {
         decklist: "Card 1",
       });
 
-      jest.mocked(convertDecklistToDeck).mockReturnValue({
+      jest.mocked(convertDecklistToDeck).mockResolvedValue({
         cards: ["Card 1"],
         numberOfCards: 1,
+        colorIdentity: [],
       });
 
       await (wrapper.vm as VueComponent).lookupCombos();
@@ -405,9 +406,10 @@ describe("ComboFinderPage", () => {
         potentialCombos: [makeFakeCombo(), makeFakeCombo()],
       });
 
-      jest.mocked(convertDecklistToDeck).mockReturnValue({
+      jest.mocked(convertDecklistToDeck).mockResolvedValue({
         cards: ["Card 1"],
         numberOfCards: 1,
+        colorIdentity: [],
       });
 
       const vm = wrapper.vm as VueComponent;
@@ -427,9 +429,10 @@ describe("ComboFinderPage", () => {
         potentialCombos: [],
       });
 
-      jest.mocked(convertDecklistToDeck).mockReturnValue({
+      jest.mocked(convertDecklistToDeck).mockResolvedValue({
         cards: ["Card 1", "Card 2"],
         numberOfCards: 2,
+        colorIdentity: [],
       });
 
       const combosInDecklist = [makeFakeCombo(), makeFakeCombo()];

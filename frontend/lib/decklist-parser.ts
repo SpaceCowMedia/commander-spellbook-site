@@ -1,6 +1,10 @@
+import scryfall from "scryfall-client";
 import lookup from "@/lib/api/spellbook-api";
 
-import type { FormattedApiResponse } from "@/lib/api/types";
+import type {
+  FormattedApiResponse,
+  ColorIdentityColors,
+} from "@/lib/api/types";
 import type Card from "@/lib/api/models/card";
 
 // this is a little complicated, but basically
@@ -23,6 +27,7 @@ type CombosInDecklist = {
 type Deck = {
   cards: string[];
   numberOfCards: number;
+  colorIdentity: ColorIdentityColors[];
 };
 
 function filterOutInvalidCardNameEntries(cardName: string) {
@@ -77,7 +82,35 @@ function findMissingCards(decklist: string[], cardsInCombo: Card[]): Card[] {
   return missingCards;
 }
 
-export function convertDecklistToDeck(decklist: string): Deck {
+async function getColorIdentityFromDeck(
+  cards: string[]
+): Promise<ColorIdentityColors[]> {
+  try {
+    const cardsFromScryfall = await scryfall.getCollection(
+      cards.map((cardName) => {
+        return {
+          name: cardName,
+        };
+      })
+    );
+    const allColors = cardsFromScryfall.reduce((identity, card) => {
+      identity.push(...card.color_identity);
+      return identity;
+    }, [] as ColorIdentityColors[]);
+
+    // this is a quick hack to filter
+    // out any redundant colors, so we
+    // have a nice small array representing
+    // the colors
+    return Array.from(new Set(allColors)) satisfies ColorIdentityColors[];
+  } catch (err) {
+    // in case we encounter an error in Scryfall
+    // best to just default to a WUBRG identity
+    return ["w", "u", "b", "r", "g"];
+  }
+}
+
+export async function convertDecklistToDeck(decklist: string): Promise<Deck> {
   let numberOfCardsInDeck = 0;
 
   const cards = decklist
@@ -92,9 +125,12 @@ export function convertDecklistToDeck(decklist: string): Deck {
     })
     .map(removeSetAndCollectorNumberData);
 
+  const colorIdentity = await getColorIdentityFromDeck(cards);
+
   return {
     numberOfCards: numberOfCardsInDeck,
     cards,
+    colorIdentity,
   };
 }
 

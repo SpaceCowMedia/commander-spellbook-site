@@ -1,3 +1,4 @@
+import scryfall from "scryfall-client";
 import {
   convertDecklistToDeck,
   findCombosFromDecklist,
@@ -7,14 +8,20 @@ import lookup from "@/lib/api/spellbook-api";
 
 import type { FormattedApiResponse } from "@/lib/api/types";
 
+jest.mock("scryfall-client");
 jest.mock("@/lib/api/spellbook-api");
 
 describe("decklist-parser", () => {
   let combos: FormattedApiResponse[];
 
   describe("convertDecklistToDeck", () => {
-    it("converts decklist text to array of card names", () => {
-      const { cards } = convertDecklistToDeck(`Foo
+    beforeEach(() => {
+      // TODO update scryfall-client to return helpers for creating mock data
+      jest.mocked(scryfall.getCollection).mockResolvedValue([] as any);
+    });
+
+    it("converts decklist text to array of card names", async () => {
+      const { cards } = await convertDecklistToDeck(`Foo
 Bar
 Baz
 Biz Baz`);
@@ -22,8 +29,8 @@ Biz Baz`);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("filters out blank entries", () => {
-      const { cards } = convertDecklistToDeck(`Foo
+    it("filters out blank entries", async () => {
+      const { cards } = await convertDecklistToDeck(`Foo
 
 Bar
 
@@ -34,8 +41,8 @@ Biz Baz`);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("filters out entries that start with //", () => {
-      const { cards } = convertDecklistToDeck(`Foo
+    it("filters out entries that start with //", async () => {
+      const { cards } = await convertDecklistToDeck(`Foo
 Bar
 // Commander
 Baz
@@ -44,8 +51,8 @@ Biz Baz`);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("removes spaces from beginning and end of entry", () => {
-      const { cards } = convertDecklistToDeck(`    Foo
+    it("removes spaces from beginning and end of entry", async () => {
+      const { cards } = await convertDecklistToDeck(`    Foo
 Bar    
   Baz
 Biz Baz `);
@@ -53,8 +60,8 @@ Biz Baz `);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("removes leading numbers", () => {
-      const { cards } = convertDecklistToDeck(`1 Foo
+    it("removes leading numbers", async () => {
+      const { cards } = await convertDecklistToDeck(`1 Foo
 2 Bar
 34 Baz
 9876543210 Biz Baz`);
@@ -62,8 +69,8 @@ Biz Baz `);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("removes leading numbers in the form <digit>x", () => {
-      const { cards } = convertDecklistToDeck(`1x Foo
+    it("removes leading numbers in the form <digit>x", async () => {
+      const { cards } = await convertDecklistToDeck(`1x Foo
 2x Bar
 34x Baz
 9876543210x Biz Baz`);
@@ -71,8 +78,8 @@ Biz Baz `);
       expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
     });
 
-    it("removes set/data & collector number data (anything after a parenthesis)", () => {
-      const { cards } = convertDecklistToDeck(`Foo (foo) 123
+    it("removes set/data & collector number data (anything after a parenthesis)", async () => {
+      const { cards } = await convertDecklistToDeck(`Foo (foo) 123
 Bar (anything
 34x Baz ) I stay here
 Biz Baz ()`);
@@ -80,13 +87,41 @@ Biz Baz ()`);
       expect(cards).toEqual(["Foo", "Bar", "Baz ) I stay here", "Biz Baz"]);
     });
 
-    it("provides count of total cards in deck", () => {
-      const { numberOfCards } = convertDecklistToDeck(`Foo (foo) 123
+    it("provides count of total cards in deck", async () => {
+      const { numberOfCards } = await convertDecklistToDeck(`Foo (foo) 123
 Bar (anything
 34x Baz ) I stay here
 1 Biz Baz ()`);
 
       expect(numberOfCards).toBe(37);
+    });
+
+    it("provides color identity of deck", async () => {
+      jest
+        .mocked(scryfall.getCollection)
+        .mockResolvedValue([
+          { color_identity: ["w"] },
+          { color_identity: ["r"] },
+          { color_identity: ["g", "w"] },
+        ] as any);
+
+      const { colorIdentity } = await convertDecklistToDeck(`Foo (foo) 123
+Bar (anything
+34x Baz ) I stay here
+1 Biz Baz ()`);
+
+      expect(colorIdentity).toEqual(["w", "r", "g"]);
+    });
+
+    it("provides a WUBRG color identity if the Scryfall request fails", async () => {
+      jest.mocked(scryfall.getCollection).mockRejectedValue(new Error("fail"));
+
+      const { colorIdentity } = await convertDecklistToDeck(`Foo (foo) 123
+Bar (anything
+34x Baz ) I stay here
+1 Biz Baz ()`);
+
+      expect(colorIdentity).toEqual(["w", "u", "b", "r", "g"]);
     });
   });
 
