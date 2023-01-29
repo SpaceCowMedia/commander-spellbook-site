@@ -93,16 +93,16 @@ async function getColorIdentityFromDeck(
         };
       })
     );
-    const allColors = cardsFromScryfall.reduce((identity, card) => {
-      identity.push(...card.color_identity);
-      return identity;
-    }, [] as ColorIdentityColors[]);
+    const colorsAsSet = cardsFromScryfall.reduce((identity, card) => {
+      card.color_identity.forEach((color: ColorIdentityColors) => {
+        // Scryfall's color identity value is capitalized
+        identity.add(color.toLowerCase());
+      });
 
-    // this is a quick hack to filter
-    // out any redundant colors, so we
-    // have a nice small array representing
-    // the colors
-    return Array.from(new Set(allColors)) satisfies ColorIdentityColors[];
+      return identity;
+    }, new Set());
+
+    return Array.from(colorsAsSet) satisfies ColorIdentityColors[];
   } catch (err) {
     // in case we encounter an error in Scryfall
     // best to just default to a WUBRG identity

@@ -143,6 +143,7 @@ export default Vue.extend({
       this.combosInDeck = [];
       this.potentialCombos = [];
       this.missingDecklistCards = [];
+      this.potentialCombosColorIdentity = deck.colorIdentity;
       this.lookupInProgress = true;
 
       // not possible to have any combos if deck has 1

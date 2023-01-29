@@ -454,5 +454,36 @@ describe("ComboFinderPage", () => {
       expect(vm.combosInDeck).toBe(combosInDecklist);
       expect(vm.potentialCombos).toBe(potentialCombos);
     });
+
+    it("sets potential combo color identity based on color identity of deck", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "Card 1\nCard 2",
+        combosInDeck: [],
+        potentialCombos: [],
+      });
+
+      jest.mocked(convertDecklistToDeck).mockResolvedValue({
+        cards: ["Card 1", "Card 2"],
+        numberOfCards: 2,
+        colorIdentity: ["w", "b"],
+      });
+
+      const combosInDecklist = [makeFakeCombo(), makeFakeCombo()];
+      const potentialCombos = [makeFakeCombo(), makeFakeCombo()];
+
+      jest.mocked(findCombosFromDecklist).mockResolvedValue({
+        combosInDecklist,
+        potentialCombos,
+        missingCardsForPotentialCombos: [],
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      await vm.lookupCombos();
+
+      expect(vm.potentialCombosColorIdentity).toEqual(["w", "b"]);
+    });
   });
 });

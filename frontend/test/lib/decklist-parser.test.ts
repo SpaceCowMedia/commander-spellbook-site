@@ -100,9 +100,9 @@ Bar (anything
       jest
         .mocked(scryfall.getCollection)
         .mockResolvedValue([
-          { color_identity: ["w"] },
-          { color_identity: ["r"] },
-          { color_identity: ["g", "w"] },
+          { color_identity: ["W"] },
+          { color_identity: ["R"] },
+          { color_identity: ["G", "W"] },
         ] as any);
 
       const { colorIdentity } = await convertDecklistToDeck(`Foo (foo) 123
