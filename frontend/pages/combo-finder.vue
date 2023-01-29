@@ -21,10 +21,10 @@ Ancient Tomb (uma) 236
 " @input="lookupCombos">
       </textarea>
 
-      <span id="decklist-card-count" v-if="decklist" class="gradient">{{
+      <span v-if="decklist" id="decklist-card-count" class="gradient">{{
         numberOfCardsText
       }}</span>
-      <button id="clear-decklist-input" v-if="decklist" class="button" @click="clearDecklist">
+      <button v-if="decklist" id="clear-decklist-input" class="button" @click="clearDecklist">
         Clear Decklist
       </button>
 
@@ -38,21 +38,21 @@ Ancient Tomb (uma) 236
         <h2 class="heading-subtitle">Loading Combos...</h2>
       </section>
 
-      <section id="combos-in-deck-section" v-if="!lookupInProgress && decklist">
+      <section v-if="!lookupInProgress && decklist" id="combos-in-deck-section">
         <h2 class="heading-subtitle">{{ combosInDeckHeadingText }}</h2>
 
         <ComboResults :results="combosInDeck" />
       </section>
 
-      <section id="potential-combos-in-deck-section" v-if="!lookupInProgress && potentialCombos.length > 0">
+      <section v-if="!lookupInProgress && potentialCombos.length > 0" id="potential-combos-in-deck-section">
         <h2 class="heading-subtitle">{{ potentialCombosInDeckHeadingText }}</h2>
         <p>
           List of combos where your decklist is missing 1 combo piece. Toggle the
           color symbols to filter for identity.
         </p>
 
-        <ColorIdentityPicker class="mb-4" :chosen-colors="potentialCombosColorIdentity"
-          v-model="potentialCombosColorIdentity" />
+        <ColorIdentityPicker v-model="potentialCombosColorIdentity" class="mb-4"
+          :chosen-colors="potentialCombosColorIdentity" />
 
         <ComboResults :results="potentialCombosMatchingColorIdentity" :missing-decklist-cards="missingDecklistCards" />
       </section>
