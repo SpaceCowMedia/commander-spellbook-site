@@ -7,12 +7,6 @@
     </h2>
 
     <section>
-      <ol class="how-to-find-my-combo">
-        <li>Paste your decklist</li>
-        <li>Lists all available combos in your deck</li>
-        <li>Lists all combos where you miss 1 combo piece</li>
-      </ol>
-
       <textarea id="decklistInput" v-model="decklist" placeholder="Supported decklist formats:
 Ancient Tomb
 1 Ancient Tomb
@@ -188,18 +182,6 @@ p {
 
 section {
   @apply flex flex-col items-center justify-center py-4;
-}
-
-section .how-to-find-my-combo li {
-  counter-increment: numCounter;
-
-  @apply mb-2 flex items-center;
-}
-
-section .how-to-find-my-combo li::before {
-  content: counter(numCounter);
-
-  @apply inline-flex flex-shrink-0 justify-center items-center bg-dark text-white mr-2 pt-1 font-extrabold h-8 w-8 rounded-full font-title;
 }
 
 textarea {
