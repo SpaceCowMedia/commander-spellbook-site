@@ -7,7 +7,7 @@
     </h2>
 
     <section>
-      <textarea id="decklistInput" v-model="decklist" placeholder="Supported decklist formats:
+      <textarea id="decklist-input" v-model="decklist" placeholder="Supported decklist formats:
 Ancient Tomb
 1 Ancient Tomb
 1x Ancient Tomb
@@ -184,15 +184,15 @@ section {
   @apply flex flex-col items-center justify-center py-4;
 }
 
-textarea {
-  @apply h-80 w-2/3 py-2 px-4 pb-6 mt-4 border-2 border-dark resize-none;
+#decklist-input {
+  @apply h-80 w-full py-2 px-4 pb-6 mt-4 border-2 border-dark resize-none;
 }
 
-textarea:active {
+#decklist-input:active {
   @apply border-primary;
 }
 
-textarea:focus {
+#decklist-input:focus {
   @apply border-primary;
 }
 
@@ -219,5 +219,11 @@ textarea:focus {
   background-image: url("~assets/svgs/combo-finder-arrow-hint.svg");
 
   @apply block bg-center bg-no-repeat bg-contain;
+}
+
+@media (min-width: 768px) {
+  #decklist-input {
+    @apply w-2/3;
+  }
 }
 </style>

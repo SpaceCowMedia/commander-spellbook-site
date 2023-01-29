@@ -131,7 +131,7 @@ describe("ComboFinderPage", () => {
       await wrapper.find("#clear-decklist-input").trigger("click");
 
       expect(
-        (wrapper.find("#decklistInput").element as HTMLTextAreaElement).value
+        (wrapper.find("#decklist-input").element as HTMLTextAreaElement).value
       ).toBe("");
     });
 
