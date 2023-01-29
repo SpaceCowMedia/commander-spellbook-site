@@ -21,23 +21,14 @@
         </RandomButton>
       </div>
 
-      <div class="button-links flex md:w-2/3 m-auto">
+      <div class="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
         <nuxt-link to="/combo-finder/" class="dark button md:m-1">
           Find My Combos
         </nuxt-link>
-        <nuxt-link
-          v-if="featuredComboButtonText"
-          id="featured-combos-button"
-          to="/featured/"
-          class="previwed-combos-button dark button md:m-1"
-        >
+        <nuxt-link v-if="featuredComboButtonText" id="featured-combos-button" to="/featured/"
+          class="previwed-combos-button dark button md:m-1">
           {{ featuredComboButtonText }}
         </nuxt-link>
-        <ExternalLink
-          class="dark button"
-          to="https://www.patreon.com/commanderspellbook"
-          >Join our Patreon</ExternalLink
-        >
       </div>
     </div>
   </div>
@@ -47,7 +38,6 @@
 import Vue from "vue";
 import RandomButton from "@/components/RandomButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
-import ExternalLink from "@/components/ExternalLink.vue";
 import SpellbookLogo from "@/components/SpellbookLogo.vue";
 
 function getDefaultData() {
@@ -59,7 +49,6 @@ function getDefaultData() {
 export default Vue.extend({
   name: "HomePage",
   components: {
-    ExternalLink,
     RandomButton,
     SearchBar,
     SpellbookLogo,
