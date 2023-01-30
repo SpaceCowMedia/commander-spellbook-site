@@ -15,7 +15,7 @@ Ancient Tomb
 1 Ancient Tomb
 1x Ancient Tomb
 Ancient Tomb (uma) 236
-" @input="lookupCombos">
+" @input="onInput">
       </textarea>
 
       <span v-if="decklist" id="decklist-card-count" class="gradient" aria-hidden="true">{{
@@ -25,7 +25,7 @@ Ancient Tomb (uma) 236
         Clear Decklist
       </button>
 
-      <div v-if="!decklist" id="decklist-hint" class="heading-subtitle">
+      <div v-if="!decklist" id="decklist-hint" class="heading-subtitle" aria-hidden="true">
         Paste your decklist
       </div>
     </section>
@@ -59,6 +59,7 @@ Ancient Tomb (uma) 236
 
 <script lang="ts">
 import Vue from "vue";
+import debounce from "debounce";
 import ArtCircle from "@/components/ArtCircle.vue";
 import ComboResults from "@/components/search/ComboResults.vue";
 import ColorIdentityPicker from "@/components/ColorIdentityPicker.vue";
@@ -139,6 +140,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    onInput: debounce(function () {
+      // @ts-ignore
+      this.lookupCombos();
+    }, 200),
     async lookupCombos() {
       const deck = await convertDecklistToDeck(this.decklist);
       this.numberOfCardsInDeck = deck.numberOfCards;
