@@ -6,6 +6,9 @@
       Uncover combos in your deck, and discover potential combos.
     </h2>
 
+    <label for="decklist-input" class="sr-only">Copy and paste your decklist into the text box to discover the combos in
+      your deck.</label>
+
     <section>
       <textarea id="decklist-input" v-model="decklist" placeholder="Supported decklist formats:
 Ancient Tomb
@@ -15,7 +18,7 @@ Ancient Tomb (uma) 236
 " @input="lookupCombos">
       </textarea>
 
-      <span v-if="decklist" id="decklist-card-count" class="gradient">{{
+      <span v-if="decklist" id="decklist-card-count" class="gradient" aria-hidden="true">{{
         numberOfCardsText
       }}</span>
       <button v-if="decklist" id="clear-decklist-input" class="button" @click="clearDecklist">

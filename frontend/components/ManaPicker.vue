@@ -1,7 +1,8 @@
 <template>
     <label class="mana-picker" :for="id" tabindex="0" @keyup.enter="toggle">
+        <span class="sr-only">{{ description }}</span>
         <input :id="id" v-model="model" type="checkbox" :value="color" />
-        <ManaSymbol class="mana-symbol" :symbol="color" :class="{ 'opacity-50': !isChecked }" />
+        <ManaSymbol class="mana-symbol" :symbol="color" :class="{ 'opacity-50': !isChecked }" aria-hidden="true" />
     </label>
 </template>
 
@@ -29,8 +30,29 @@ export default Vue.extend({
         id(): string {
             return `${this.color}-picker-id`
         },
+        colorName(): string {
+            switch (this.color) {
+                case "w":
+                    return "White";
+                case "u":
+                    return "Blue";
+                case "b":
+                    return "Black";
+                case "r":
+                    return "Red";
+                case "g":
+                    return "Green";
+                case "c":
+                    return "Colorless";
+                default:
+                    return "";
+            }
+        },
         isChecked(): boolean {
             return this.value.includes(this.color);
+        },
+        description(): string {
+            return `Color Identity ${this.isChecked ? "includes" : "excludes"} ${this.colorName}. Press Enter key to toggle.`
         },
         model: {
             get(): string[] {
