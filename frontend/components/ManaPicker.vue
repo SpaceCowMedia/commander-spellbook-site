@@ -1,5 +1,5 @@
 <template>
-    <label class="mana-picker" :for="id">
+    <label class="mana-picker" :for="id" tabindex="0" @keyup.enter="toggle">
         <input :id="id" v-model="model" type="checkbox" :value="color" />
         <ManaSymbol class="mana-symbol" :symbol="color" :class="{ 'opacity-50': !isChecked }" />
     </label>
@@ -40,12 +40,27 @@ export default Vue.extend({
                 this.$emit("input", value);
             },
         },
+
     },
+    methods: {
+        toggle() {
+            const newValue = Array.from(this.value);
+
+            if (this.isChecked) {
+                const index = newValue.indexOf(this.color);
+                newValue.splice(index, 1);
+            } else {
+                newValue.push(this.color);
+            }
+
+            this.$emit("input", newValue)
+        }
+    }
 });
 </script>
 <style scoped>
 input {
-    visibility: hidden;
+    @apply hidden;
 }
 
 .mana-symbol {

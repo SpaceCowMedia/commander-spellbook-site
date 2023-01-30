@@ -1,5 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
 import ManaPicker from "@/components/ManaPicker.vue";
+import type { VueComponent } from "@/test/types";
 
 describe("ManaPicker", () => {
   it("creates a checkbox input with a Mana Symbol for the label", () => {
@@ -38,5 +39,45 @@ describe("ManaPicker", () => {
     });
 
     expect(wrapper.findComponent(ManaSymbol).classes()).toContain("opacity-50");
+  });
+
+  describe("toggle", () => {
+    it("removes color from value if checked", () => {
+      const $emit = jest.fn();
+      const wrapper = shallowMount(ManaPicker, {
+        propsData: {
+          color: "w",
+          value: ["w", "u"],
+        },
+        mocks: {
+          $emit,
+        },
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      vm.toggle();
+
+      expect($emit).toBeCalledWith("input", ["u"]);
+    });
+
+    it("adds color from value if not checked", () => {
+      const $emit = jest.fn();
+      const wrapper = shallowMount(ManaPicker, {
+        propsData: {
+          color: "w",
+          value: ["u"],
+        },
+        mocks: {
+          $emit,
+        },
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      vm.toggle();
+
+      expect($emit).toBeCalledWith("input", ["u", "w"]);
+    });
   });
 });
