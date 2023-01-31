@@ -59,6 +59,7 @@ Ancient Tomb (uma) 236
 
 <script lang="ts">
 import Vue from "vue";
+// eslint-disable-next-line import/no-named-as-default
 import debounce from "debounce";
 import ArtCircle from "@/components/ArtCircle.vue";
 import ComboResults from "@/components/search/ComboResults.vue";
