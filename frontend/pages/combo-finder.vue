@@ -41,17 +41,33 @@ Ancient Tomb (uma) 236
         <ComboResults :results="combosInDeck" />
       </section>
 
-      <section v-if="!lookupInProgress && potentialCombos.length > 0" id="potential-combos-in-deck-section">
+      <section v-if="!lookupInProgress && potentialCombosMatchingDeckColorIdentity.length > 0"
+        id="potential-combos-in-deck-section">
         <h2 class="heading-subtitle">{{ potentialCombosInDeckHeadingText }}</h2>
         <p>
-          List of combos where your decklist is missing 1 combo piece. Toggle the
+          List of combos where your decklist is missing 1 combo piece.
+        </p>
+
+        <ComboResults :results="potentialCombosMatchingDeckColorIdentity"
+          :missing-decklist-cards="missingDecklistCards" />
+      </section>
+
+      <section v-if="!lookupInProgress && potentialCombosOutsideDeckColorIdentity.length > 0"
+        id="potential-combos-outside-color-identity-section">
+        <h2 class="heading-subtitle">{{ potentialCombosInAdditionalColorsHeadingText }}</h2>
+        <p>
+          List of combos where your decklist is missing 1 combo piece, but requires at least one additional color.
+          Toggle the
           color symbols to filter for identity.
         </p>
 
         <ColorIdentityPicker v-model="potentialCombosColorIdentity" class="mb-4"
           :chosen-colors="potentialCombosColorIdentity" />
 
-        <ComboResults :results="potentialCombosMatchingColorIdentity" :missing-decklist-cards="missingDecklistCards" />
+        <ComboResults :results="potentialCombosOutsideDeckColorIdentityFilteredByPicker"
+          :missing-decklist-cards="missingDecklistCards" />
+        <h2 class="heading-subtitle" v-if="potentialCombosOutsideDeckColorIdentityFilteredByPicker.length === 0">No
+          Combos Found Matching the Selected Color Identity</h2>
       </section>
     </div>
   </div>
@@ -80,6 +96,7 @@ type ComboFinderData = {
   potentialCombos: FormattedApiResponse[];
   missingDecklistCards: Card[];
   potentialCombosColorIdentity: ColorIdentityColors[];
+  deckColorIdentity: ColorIdentityColors[];
 };
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
@@ -99,7 +116,8 @@ export default Vue.extend({
       combosInDeck: [],
       potentialCombos: [],
       missingDecklistCards: [],
-      potentialCombosColorIdentity: ["w", "u", "b", "r", "g"]
+      potentialCombosColorIdentity: ["w", "u", "b", "r", "g"],
+      deckColorIdentity: [],
     };
   },
   computed: {
@@ -119,14 +137,37 @@ export default Vue.extend({
       return `${numOfCombos} ${this.$pluralize("Combo", numOfCombos)} Found`;
     },
     potentialCombosInDeckHeadingText(): string {
-      const numOfCombos = this.potentialCombos.length;
+      const numOfCombos = this.potentialCombosMatchingDeckColorIdentity.length;
 
       return `${numOfCombos} Potential ${this.$pluralize(
         "Combo",
         numOfCombos
       )} Found`;
     },
-    potentialCombosMatchingColorIdentity(): FormattedApiResponse[] {
+    potentialCombosInAdditionalColorsHeadingText(): string {
+      const numOfCombos = this.potentialCombosOutsideDeckColorIdentity.length;
+
+      return `${numOfCombos} Potential ${this.$pluralize(
+        "Combo",
+        numOfCombos
+      )} Found With Additional Color Requirements`;
+    },
+    potentialCombosMatchingDeckColorIdentity(): FormattedApiResponse[] {
+      return this.potentialCombos.filter((combo) => {
+        return combo.colorIdentity.isWithin(this.deckColorIdentity);
+      });
+    },
+    potentialCombosOutsideDeckColorIdentity(): FormattedApiResponse[] {
+      return this.potentialCombos.filter((combo) => {
+        return !combo.colorIdentity.isWithin(this.deckColorIdentity);
+      });
+    },
+    potentialCombosOutsideDeckColorIdentityFilteredByPicker(): FormattedApiResponse[] {
+      return this.potentialCombosOutsideDeckColorIdentity.filter((combo) => {
+        return combo.colorIdentity.isWithin(this.potentialCombosColorIdentity);
+      })
+    },
+    potentialCombosMatchingColorIdentityPicker(): FormattedApiResponse[] {
       return this.potentialCombos.filter((combo) => {
         return combo.colorIdentity.isWithin(this.potentialCombosColorIdentity);
       });
@@ -152,7 +193,8 @@ export default Vue.extend({
       this.combosInDeck = [];
       this.potentialCombos = [];
       this.missingDecklistCards = [];
-      this.potentialCombosColorIdentity = deck.colorIdentity;
+      this.potentialCombosColorIdentity = ["w", "u", "b", "r", "g"];
+      this.deckColorIdentity = deck.colorIdentity;
       this.lookupInProgress = true;
 
       // not possible to have any combos if deck has 1

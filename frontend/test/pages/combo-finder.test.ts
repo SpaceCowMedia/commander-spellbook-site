@@ -255,8 +255,18 @@ describe("ComboFinderPage", () => {
         false
       );
 
+      // still shouldn't show, because only combo is outside of color identity
       await wrapper.setData({
-        potentialCombos: [makeFakeCombo()],
+        potentialCombos: [makeFakeCombo({ colorIdentity: "b" })],
+        deckColorIdentity: ["g", "r", "w"],
+      });
+      expect(wrapper.find("#potential-combos-in-deck-section").exists()).toBe(
+        false
+      );
+
+      await wrapper.setData({
+        potentialCombos: [makeFakeCombo({ colorIdentity: "g" })],
+        deckColorIdentity: ["g", "r", "w"],
       });
 
       expect(wrapper.find("#potential-combos-in-deck-section").exists()).toBe(
@@ -279,7 +289,7 @@ describe("ComboFinderPage", () => {
       );
     });
 
-    it("updates heading based on number of combos found", async () => {
+    it("updates heading based on number of combos found that match deck color identity", async () => {
       const wrapper = shallowMount(ComboFinderPage, options);
 
       await wrapper.setData({
@@ -293,7 +303,11 @@ describe("ComboFinderPage", () => {
       );
 
       await wrapper.setData({
-        potentialCombos: [makeFakeCombo()],
+        potentialCombos: [
+          makeFakeCombo({ colorIdentity: "g" }),
+          makeFakeCombo({ colorIdentity: "wb" }),
+        ],
+        deckColorIdentity: ["b", "g"],
       });
 
       expect(wrapper.find("#potential-combos-in-deck-section h2").text()).toBe(
@@ -301,7 +315,11 @@ describe("ComboFinderPage", () => {
       );
 
       await wrapper.setData({
-        potentialCombos: [makeFakeCombo(), makeFakeCombo()],
+        potentialCombos: [
+          makeFakeCombo({ colorIdentity: "g" }),
+          makeFakeCombo({ colorIdentity: "wb" }),
+          makeFakeCombo({ colorIdentity: "gb" }),
+        ],
       });
 
       expect(wrapper.find("#potential-combos-in-deck-section h2").text()).toBe(
@@ -318,12 +336,26 @@ describe("ComboFinderPage", () => {
       options.stubs.ComboResults = ComboResults;
       const wrapper = shallowMount(ComboFinderPage, options);
 
-      const combos = [makeFakeCombo(), makeFakeCombo(), makeFakeCombo()];
+      const combos = [
+        makeFakeCombo({
+          colorIdentity: "g",
+        }),
+        makeFakeCombo({
+          colorIdentity: "b",
+        }),
+        makeFakeCombo({
+          colorIdentity: "w",
+        }),
+        makeFakeCombo({
+          colorIdentity: "gb",
+        }),
+      ];
       const missingCards = [new Card("card a")];
       await wrapper.setData({
         decklist: "foo",
         potentialCombos: combos,
         missingDecklistCards: missingCards,
+        deckColorIdentity: ["b", "g"],
       });
 
       const cr = wrapper
@@ -333,12 +365,140 @@ describe("ComboFinderPage", () => {
       expect(cr.props("results")).toHaveLength(3);
       expect(cr.props("results")[0]).toBe(combos[0]);
       expect(cr.props("results")[1]).toBe(combos[1]);
-      expect(cr.props("results")[2]).toBe(combos[2]);
+      expect(cr.props("results")[2]).toBe(combos[3]);
+
+      expect(cr.props("missingDecklistCards")).toBe(missingCards);
+    });
+  });
+
+  describe("potential combos outside color identity section", () => {
+    it("hides when there are no potential combos in deck", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section")
+          .exists()
+      ).toBe(false);
+
+      await wrapper.setData({
+        potentialCombos: [makeFakeCombo({ colorIdentity: "b" })],
+        deckColorIdentity: ["g"],
+      });
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section")
+          .exists()
+      ).toBe(true);
+    });
+
+    it("hides when lookup is in progress", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "foo\nbar",
+        combosInDeck: [],
+        potentialCombos: [makeFakeCombo({ colorIdentity: "r" })],
+        lookupInProgress: true,
+        deckColorIdentity: ["w"],
+      });
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section")
+          .exists()
+      ).toBe(false);
+    });
+
+    it("updates heading based on number of combos found that match deck color identity", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "foo\nbar",
+        combosInDeck: [],
+        potentialCombos: [],
+      });
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section")
+          .exists()
+      ).toBe(false);
+
+      await wrapper.setData({
+        potentialCombos: [
+          makeFakeCombo({ colorIdentity: "g" }),
+          makeFakeCombo({ colorIdentity: "wb" }),
+        ],
+        deckColorIdentity: ["b", "g"],
+      });
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section h2")
+          .text()
+      ).toBe("1 Potential Combo Found With Additional Color Requirements");
+
+      await wrapper.setData({
+        potentialCombos: [
+          makeFakeCombo({ colorIdentity: "g" }),
+          makeFakeCombo({ colorIdentity: "wb" }),
+          makeFakeCombo({ colorIdentity: "r" }),
+        ],
+      });
+
+      expect(
+        wrapper
+          .find("#potential-combos-outside-color-identity-section h2")
+          .text()
+      ).toBe("2 Potential Combos Found With Additional Color Requirements");
+    });
+
+    it("populates potential combos with additional color requirements", async () => {
+      const ComboResults = {
+        template: "<div></div>",
+        props: ["results", "missingDecklistCards"],
+      };
+      // @ts-ignore
+      options.stubs.ComboResults = ComboResults;
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      const combos = [
+        makeFakeCombo({
+          colorIdentity: "wg",
+        }),
+        makeFakeCombo({
+          colorIdentity: "rb",
+        }),
+        makeFakeCombo({
+          colorIdentity: "b",
+        }),
+        makeFakeCombo({
+          colorIdentity: "r",
+        }),
+      ];
+      const missingCards = [new Card("card a")];
+      await wrapper.setData({
+        decklist: "foo",
+        potentialCombos: combos,
+        missingDecklistCards: missingCards,
+        deckColorIdentity: ["b", "g"],
+      });
+
+      const cr = wrapper
+        .find("#potential-combos-outside-color-identity-section")
+        .findComponent(ComboResults);
+
+      expect(cr.props("results")).toHaveLength(3);
+      expect(cr.props("results")[0]).toBe(combos[0]);
+      expect(cr.props("results")[1]).toBe(combos[1]);
+      expect(cr.props("results")[2]).toBe(combos[3]);
 
       expect(cr.props("missingDecklistCards")).toBe(missingCards);
     });
 
-    it("only displays combos that match color identity selected", async () => {
+    it("only displays combos that match color identity selected outside of deck color identity", async () => {
       const ComboResults = {
         template: "<div></div>",
         props: ["results", "missingDecklistCards"],
@@ -355,6 +515,9 @@ describe("ComboFinderPage", () => {
           colorIdentity: "w",
         }),
         makeFakeCombo({
+          colorIdentity: "r",
+        }),
+        makeFakeCombo({
           colorIdentity: "rg",
         }),
       ];
@@ -364,10 +527,11 @@ describe("ComboFinderPage", () => {
         potentialCombos: combos,
         missingDecklistCards: missingCards,
         potentialCombosColorIdentity: ["w"],
+        deckColorIdentity: ["r"],
       });
 
       const cr = wrapper
-        .find("#potential-combos-in-deck-section")
+        .find("#potential-combos-outside-color-identity-section")
         .findComponent(ComboResults);
 
       expect(cr.props("results")).toHaveLength(1);
@@ -455,7 +619,7 @@ describe("ComboFinderPage", () => {
       expect(vm.potentialCombos).toBe(potentialCombos);
     });
 
-    it("sets potential combo color identity based on color identity of deck", async () => {
+    it("sets deck color identity based on color identity of deck", async () => {
       const wrapper = shallowMount(ComboFinderPage, options);
 
       await wrapper.setData({
@@ -483,7 +647,45 @@ describe("ComboFinderPage", () => {
 
       await vm.lookupCombos();
 
-      expect(vm.potentialCombosColorIdentity).toEqual(["w", "b"]);
+      expect(vm.deckColorIdentity).toEqual(["w", "b"]);
+    });
+
+    it("resets potential color identity picker", async () => {
+      const wrapper = shallowMount(ComboFinderPage, options);
+
+      await wrapper.setData({
+        decklist: "Card 1\nCard 2",
+        combosInDeck: [],
+        potentialCombos: [],
+        potentialCombosColorIdentity: ["w"],
+      });
+
+      jest.mocked(convertDecklistToDeck).mockResolvedValue({
+        cards: ["Card 1", "Card 2"],
+        numberOfCards: 2,
+        colorIdentity: ["w", "b"],
+      });
+
+      const combosInDecklist = [makeFakeCombo(), makeFakeCombo()];
+      const potentialCombos = [makeFakeCombo(), makeFakeCombo()];
+
+      jest.mocked(findCombosFromDecklist).mockResolvedValue({
+        combosInDecklist,
+        potentialCombos,
+        missingCardsForPotentialCombos: [],
+      });
+
+      const vm = wrapper.vm as VueComponent;
+
+      await vm.lookupCombos();
+
+      expect(vm.potentialCombosColorIdentity).toEqual([
+        "w",
+        "u",
+        "b",
+        "r",
+        "g",
+      ]);
     });
   });
 });
