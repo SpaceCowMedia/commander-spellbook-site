@@ -16,7 +16,7 @@ import type Card from "@/lib/api/models/card";
 // this is saved as the second match in the array
 // returned by the match method, the card name is
 // saved in the 3rd match
-const DECK_ENTRY_REGEX = /^(\d*[xX]?\s)?(.*)$/;
+const DECK_ENTRY_REGEX = /^\s*(?:(?<count>\d+)x?\s+)?(?<name>[^/\s].+?)\s*(?:\(.*)?$/;
 
 type CombosInDecklist = {
   combosInDecklist: FormattedApiResponse[];
@@ -29,36 +29,6 @@ type Deck = {
   numberOfCards: number;
   colorIdentity: ColorIdentityColors[];
 };
-
-function filterOutInvalidCardNameEntries(cardName: string) {
-  const normalizedCardName = cardName.trim();
-  // filter out empty values and values that start with //
-  // (common way to denote sections of a decklist, so it shouldn't
-  // be considered part of the decklist)
-  return normalizedCardName && !normalizedCardName.startsWith("//");
-}
-
-function parseCardData(deckEntry: string): [string, number] {
-  // it's technically possible for match to return null
-  // so we need to default to an empty array to destructure
-  // the variables
-  const [, quantityAsString, name] = deckEntry.match(DECK_ENTRY_REGEX) || [];
-  // if the quantity doesn't exist, then we default to 1
-  // and we remove the x (lowercase or uppercase)
-  // before casting it to a number
-  const quantity = Number((quantityAsString || "1").replace(/x/i, ""));
-
-  return [name, quantity];
-}
-
-function removeSetAndCollectorNumberData(cardName: string): string {
-  // removes set name or collector data, which we assume
-  // is anything after a space followed by an open parenthesis
-  // NOTE: there are a handful of magic cards that use ( in the
-  // the name, but they are all silver border so far and unlikely
-  // to be present in the Commander Spellbook database
-  return cardName.split(" (")[0].trim();
-}
 
 function findMissingCards(decklist: string[], cardsInCombo: Card[]): Card[] {
   const missingCards: Card[] = [];
@@ -111,25 +81,29 @@ async function getColorIdentityFromDeck(
 }
 
 export async function convertDecklistToDeck(decklist: string): Promise<Deck> {
-  let numberOfCardsInDeck = 0;
-
-  const cards = decklist
+  const deck = decklist
     .split("\n")
-    .filter(filterOutInvalidCardNameEntries)
-    .map((deckEntry) => {
-      const [cardName, quantity] = parseCardData(deckEntry);
+    .reduce<Pick<Deck, "cards" | "numberOfCards">>(
+      (result, line) => {
+        const { count, name } = line.match(DECK_ENTRY_REGEX)?.groups || {};
 
-      numberOfCardsInDeck += quantity;
+        if (name) {
+          result.numberOfCards += Number(count) || 1;
+          result.cards.push(name);
+        }
 
-      return cardName;
-    })
-    .map(removeSetAndCollectorNumberData);
+        return result;
+      },
+      {
+        cards: [],
+        numberOfCards: 0,
+      },
+    );
 
-  const colorIdentity = await getColorIdentityFromDeck(cards);
+  const colorIdentity = await getColorIdentityFromDeck(deck.cards);
 
   return {
-    numberOfCards: numberOfCardsInDeck,
-    cards,
+    ...deck,
     colorIdentity,
   };
 }
