@@ -185,8 +185,10 @@ export default Vue.extend({
     onInput: debounce(function () {
       // @ts-ignore
       this.lookupCombos();
-    }, 200),
+    }, 1000),
     async lookupCombos() {
+      this.lookupInProgress = true;
+
       const deck = await convertDecklistToDeck(this.decklist);
       this.numberOfCardsInDeck = deck.numberOfCards;
 
@@ -195,7 +197,6 @@ export default Vue.extend({
       this.missingDecklistCards = [];
       this.potentialCombosColorIdentity = ["w", "u", "b", "r", "g"];
       this.deckColorIdentity = deck.colorIdentity;
-      this.lookupInProgress = true;
 
       // not possible to have any combos if deck has 1
       // or fewer card in it, so we can skip the lookup
