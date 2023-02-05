@@ -66,7 +66,7 @@ Ancient Tomb (uma) 236
 
         <ComboResults :results="potentialCombosOutsideDeckColorIdentityFilteredByPicker"
           :missing-decklist-cards="missingDecklistCards" />
-        <h2 class="heading-subtitle" v-if="potentialCombosOutsideDeckColorIdentityFilteredByPicker.length === 0">No
+        <h2 v-if="potentialCombosOutsideDeckColorIdentityFilteredByPicker.length === 0" class="heading-subtitle">No
           Combos Found Matching the Selected Color Identity</h2>
       </section>
     </div>
