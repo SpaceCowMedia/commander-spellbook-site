@@ -23,3 +23,17 @@ To watch only a particular directory (such as only running the tests against the
 ```
 npm rum test:watch-frontend test/pages/
 ```
+
+## Backend Unit Tests
+
+To run (and continuoulsly watch for changes) on just the frontend workspace, run:
+
+```
+npm rum test:watch-backend
+```
+
+To watch only a particular directory (such as only running the tests against the /test/db/ directory)
+
+```
+npm rum test:watch-backend test/db/
+```
