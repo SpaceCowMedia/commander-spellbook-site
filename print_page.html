@@ -1068,7 +1068,24 @@ $ npm start
 <li>Typically, you'll also add a test for the user.</li>
 </ol></section><section class="print-page" id="testing-unit-testing"><h1 id="testing-unit-testing-unit-testing">Unit Testing</h1>
 <p>We use <a href="https://jestjs.io/">jest</a> as our test runner.</p>
-<p>Any new features added will need to be thoroughly unit tested. If you are unfamiliar with unit testing, but want to make a change, go ahead and open a PR and ask for help getting unit tests set up for your feature.</p></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
+<p>Any new features added will need to be thoroughly unit tested. If you are unfamiliar with unit testing, but want to make a change, go ahead and open a PR and ask for help getting unit tests set up for your feature.</p>
+<p>To run tests for all workpaces, run:</p>
+<div class="highlight"><pre><span></span><code>npm test
+</code></pre></div>
+<h2 id="testing-unit-testing-frontend-unit-tests">Frontend Unit Tests</h2>
+<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend
+</code></pre></div>
+<p>To watch only a particular directory (such as only running the tests against the /test/pages)</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend test/pages/
+</code></pre></div>
+<h2 id="testing-unit-testing-backend-unit-tests">Backend Unit Tests</h2>
+<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-backend
+</code></pre></div>
+<p>To watch only a particular directory (such as only running the tests against the /test/db/ directory)</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-backend test/db/
+</code></pre></div></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
 
 
 

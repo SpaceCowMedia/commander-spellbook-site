@@ -489,9 +489,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Unit Testing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="unit-testing.html" class="md-nav__link md-nav__link--active">
         Unit Testing
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frontend-unit-tests" class="md-nav__link">
+    Frontend Unit Tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-unit-tests" class="md-nav__link">
+    Backend Unit Tests
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -539,6 +577,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frontend-unit-tests" class="md-nav__link">
+    Frontend Unit Tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-unit-tests" class="md-nav__link">
+    Backend Unit Tests
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -561,13 +621,30 @@
 <h1 id="unit-testing">Unit Testing</h1>
 <p>We use <a href="https://jestjs.io/">jest</a> as our test runner.</p>
 <p>Any new features added will need to be thoroughly unit tested. If you are unfamiliar with unit testing, but want to make a change, go ahead and open a PR and ask for help getting unit tests set up for your feature.</p>
+<p>To run tests for all workpaces, run:</p>
+<div class="highlight"><pre><span></span><code>npm test
+</code></pre></div>
+<h2 id="frontend-unit-tests">Frontend Unit Tests</h2>
+<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend
+</code></pre></div>
+<p>To watch only a particular directory (such as only running the tests against the /test/pages)</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend test/pages/
+</code></pre></div>
+<h2 id="backend-unit-tests">Backend Unit Tests</h2>
+<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-backend
+</code></pre></div>
+<p>To watch only a particular directory (such as only running the tests against the /test/db/ directory)</p>
+<div class="highlight"><pre><span></span><code>npm rum test:watch-backend test/db/
+</code></pre></div>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">December 28, 2021 14:21:13</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">February 5, 2023 16:05:58</span>
       
         <br>
         Created:
