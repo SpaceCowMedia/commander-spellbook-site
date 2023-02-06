@@ -122,7 +122,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: "Commander Spellbook: Combo Finder",
+      title: "Commander Spellbook: Find My Combos",
     }
   },
   computed: {
