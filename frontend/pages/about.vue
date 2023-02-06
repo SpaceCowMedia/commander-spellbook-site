@@ -40,7 +40,7 @@
         <ExternalLink to="https://www.moxfield.com/users/AppleSaws">AppleSaws</ExternalLink>
       </li>
       <li>
-        <ExternalLink to="https://twitter.com/rosequartz_26">Jaelyn Rosenquist</ExternalLink>
+        <ExternalLink to="https://www.secretpassageediting.com/">Myles Schaller</ExternalLink>
       </li>
       <li>
         <ExternalLink to="https://www.moxfield.com/users/Gordon%27s%20Kitchen">Gordon</ExternalLink>
