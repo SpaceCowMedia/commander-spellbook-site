@@ -120,6 +120,11 @@ export default Vue.extend({
       deckColorIdentity: [],
     };
   },
+  head() {
+    return {
+      title: "Commander Spellbook: Combo Finder",
+    }
+  },
   computed: {
     numberOfCardsText(): string {
       return `${this.numberOfCardsInDeck} ${this.$pluralize(

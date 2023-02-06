@@ -1,35 +1,25 @@
 <template>
   <div class="static-page">
-    <ArtCircle
-      card-name="Go Blank"
-      artist="Wylie Beckert"
-      class="m-auto md:block hidden"
-    />
+    <ArtCircle card-name="Go Blank" artist="Wylie Beckert" class="m-auto md:block hidden" />
     <h1 class="heading-title">Report an Error</h1>
     <p>
       The first step for reporting an error is
-      <ExternalLink to="https://discord.gg/KDnvP5f"
-        >joining our Discord server</ExternalLink
-      >. Once you have joined, copy and fill the following template to report an
+      <ExternalLink to="https://discord.gg/KDnvP5f">joining our Discord server</ExternalLink>. Once you have joined,
+      copy and fill the following template to report an
       error in the
-      <ExternalLink
-        to="https://discord.com/channels/673601282946236417/673734250402545676"
-        >#submit-an-update</ExternalLink
-      >
+      <ExternalLink to="https://discord.com/channels/673601282946236417/673734250402545676">#submit-an-update
+      </ExternalLink>
       channel:
     </p>
 
-    <pre id="error-template"><code>Combo Link: {{link}}
+    <pre id="error-template"><code>Combo Link: {{ link }}
 Problem with Combo:
 </code></pre>
 
     <div class="text-center">
-      <ExternalLink
-        role="button"
-        class="button"
-        to="https://discord.com/channels/673601282946236417/673734250402545676"
-        >Report the Error in #submit-an-update</ExternalLink
-      >
+      <ExternalLink role="button" class="button"
+        to="https://discord.com/channels/673601282946236417/673734250402545676">Report the Error in #submit-an-update
+      </ExternalLink>
     </div>
   </div>
 </template>
@@ -48,6 +38,11 @@ export default Vue.extend({
     return {
       id: "",
     };
+  },
+  head() {
+    return {
+      title: "Commander Spellbook: Report Error",
+    }
   },
   computed: {
     link(): string {

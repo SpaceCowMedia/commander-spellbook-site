@@ -1,10 +1,6 @@
 <template>
   <div class="static-page">
-    <ArtCircle
-      card-name="Bruvac the Grandiloquent"
-      artist="Ekaterina Burmak"
-      class="m-auto md:block hidden"
-    />
+    <ArtCircle card-name="Bruvac the Grandiloquent" artist="Ekaterina Burmak" class="m-auto md:block hidden" />
     <h1 class="heading-title text-center">Privacy Policy</h1>
 
     <p>
@@ -48,10 +44,7 @@
       does not apply to, and we cannot control the activities of, such other
       advertisers or web sites. You may find a comprehensive listing of these
       privacy policies and their links here:
-      <ExternalLink
-        to="https://www.privacypolicyonline.com/privacy-policy-links/"
-        >Privacy Policy Links</ExternalLink
-      >
+      <ExternalLink to="https://www.privacypolicyonline.com/privacy-policy-links/">Privacy Policy Links</ExternalLink>
     </p>
 
     <h2 class="heading-subtitle">Children's Information</h2>
@@ -460,6 +453,11 @@ export default Vue.extend({
   components: {
     ArtCircle,
     ExternalLink,
+  },
+  head() {
+    return {
+      title: "Commander Spellbook: Privacy Policy",
+    }
   },
 });
 </script>

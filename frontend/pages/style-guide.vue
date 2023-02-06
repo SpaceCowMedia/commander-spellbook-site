@@ -1,10 +1,6 @@
 <template>
   <div class="static-page">
-    <ArtCircle
-      card-name="Stet, Draconic Proofreader"
-      artist="Dmitry Burmak"
-      class="m-auto md:block hidden"
-    />
+    <ArtCircle card-name="Stet, Draconic Proofreader" artist="Dmitry Burmak" class="m-auto md:block hidden" />
     <h1 class="heading-title">The Official™ Commander Spellbook Style Guide</h1>
     <h2 class="heading-subtitle text-center mt-0">
       By The Commander Spellbook Mod Team
@@ -17,9 +13,7 @@
     <p class="pt-12">
       If you have any questions, comments, or concerns about this document, ask
       one of the mods on the
-      <ExternalLink to="https://discord.com/invite/F2kkt7pETB"
-        >Commander Spellbook Discord server</ExternalLink
-      >.
+      <ExternalLink to="https://discord.com/invite/F2kkt7pETB">Commander Spellbook Discord server</ExternalLink>.
     </p>
 
     <p>
@@ -112,11 +106,21 @@
         are, but should be placed before normal colored mana symbols. The
         notation for it is:
         <ul>
-          <li><TextWithMagicSymbol text="{wp}" /> <code>{wp}</code></li>
-          <li><TextWithMagicSymbol text="{up}" /> <code>{up}</code></li>
-          <li><TextWithMagicSymbol text="{bp}" /> <code>{bp}</code></li>
-          <li><TextWithMagicSymbol text="{rp}" /> <code>{rp}</code></li>
-          <li><TextWithMagicSymbol text="{gp}" /> <code>{gp}</code></li>
+          <li>
+            <TextWithMagicSymbol text="{wp}" /> <code>{wp}</code>
+          </li>
+          <li>
+            <TextWithMagicSymbol text="{up}" /> <code>{up}</code>
+          </li>
+          <li>
+            <TextWithMagicSymbol text="{bp}" /> <code>{bp}</code>
+          </li>
+          <li>
+            <TextWithMagicSymbol text="{rp}" /> <code>{rp}</code>
+          </li>
+          <li>
+            <TextWithMagicSymbol text="{gp}" /> <code>{gp}</code>
+          </li>
         </ul>
       </li>
       <li>
@@ -602,6 +606,11 @@ export default Vue.extend({
     ArtCircle,
     ExternalLink,
     TextWithMagicSymbol,
+  },
+  head() {
+    return {
+      title: "Commander Spellbook: Style Guide",
+    }
   },
 });
 </script>
