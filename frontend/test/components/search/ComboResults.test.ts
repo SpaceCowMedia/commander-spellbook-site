@@ -2,6 +2,7 @@ import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import type { MountOptions } from "@/test/types";
 import ComboResults from "@/components/search/ComboResults.vue";
 import makeFakeCombo from "@/lib/api/make-fake-combo";
+import Card from "@/lib/api/models/card";
 import { pluralize as $pluralize } from "@/plugins/text-helpers";
 
 describe("ComboResults", () => {
@@ -305,5 +306,55 @@ describe("ComboResults", () => {
 
     expect(priceSpy).toBeCalledWith("tcgplayer");
     expect(priceSpy).not.toBeCalledWith("cardkingdom");
+  });
+
+  it("highlights missing cards when decklist missing cards prop is used", () => {
+    // @ts-ignore
+    options.propsData.missingDecklistCards = [
+      new Card("card b"),
+      new Card("card i"),
+    ];
+
+    const CardTooltipStub = {
+      template: "<div><slot /></div>",
+    };
+    // @ts-ignore
+    options.stubs.CardTooltip = CardTooltipStub;
+
+    const wrapper = shallowMount(ComboResults, options);
+
+    const links = wrapper.findAllComponents(RouterLinkStub);
+    const firstCardTooltips = links.at(0).findAllComponents(CardTooltipStub);
+    const secondCardTooltips = links.at(1).findAllComponents(CardTooltipStub);
+    const thirdCardTooltips = links.at(2).findAllComponents(CardTooltipStub);
+
+    expect(
+      firstCardTooltips.at(0).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      firstCardTooltips.at(1).find(".card-name").element.textContent
+    ).toContain("card b (not in deck)");
+    expect(
+      firstCardTooltips.at(2).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      secondCardTooltips.at(0).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      secondCardTooltips.at(1).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      secondCardTooltips.at(2).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      secondCardTooltips.at(3).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(thirdCardTooltips.length).toBe(2);
+    expect(
+      thirdCardTooltips.at(0).find(".card-name").element.textContent
+    ).not.toContain("(not in deck)");
+    expect(
+      thirdCardTooltips.at(1).find(".card-name").element.textContent
+    ).toContain("card i (not in deck)");
   });
 });

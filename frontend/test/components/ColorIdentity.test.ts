@@ -1,75 +1,8 @@
 import { mount } from "@vue/test-utils";
-import scryfall from "scryfall-client";
 
 import ColorIdentity from "@/components/ColorIdentity.vue";
 
-jest.mock("scryfall-client");
-
 describe("ColorIdentity", () => {
-  it("sets scryfall image src for symbol", () => {
-    jest
-      .mocked(scryfall.getSymbolUrl)
-      .mockReturnValueOnce("https://example.com/W.svg");
-    jest
-      .mocked(scryfall.getSymbolUrl)
-      .mockReturnValueOnce("https://example.com/B.svg");
-    jest
-      .mocked(scryfall.getSymbolUrl)
-      .mockReturnValueOnce("https://example.com/G.svg");
-
-    const wrapper = mount(ColorIdentity, {
-      propsData: {
-        colors: ["w", "b", "g"],
-      },
-    });
-
-    const imgs = wrapper.findAll(".color-identity");
-
-    expect((imgs.at(0).element as HTMLImageElement).src).toBe(
-      "https://example.com/W.svg"
-    );
-    expect((imgs.at(1).element as HTMLImageElement).src).toBe(
-      "https://example.com/B.svg"
-    );
-    expect((imgs.at(2).element as HTMLImageElement).src).toBe(
-      "https://example.com/G.svg"
-    );
-  });
-
-  it("sets alt message for each color", () => {
-    jest
-      .mocked(scryfall.getSymbolUrl)
-      .mockReturnValue("https://example.com/example.svg");
-
-    const wrapper = mount(ColorIdentity, {
-      propsData: {
-        colors: ["w", "u", "b", "r", "g", "c", "unknown"],
-      },
-    });
-
-    const imgs = wrapper.findAll(".color-identity");
-
-    expect((imgs.at(0).element as HTMLImageElement).alt).toBe(
-      "White Mana Symbol"
-    );
-    expect((imgs.at(1).element as HTMLImageElement).alt).toBe(
-      "Blue Mana Symbol"
-    );
-    expect((imgs.at(2).element as HTMLImageElement).alt).toBe(
-      "Black Mana Symbol"
-    );
-    expect((imgs.at(3).element as HTMLImageElement).alt).toBe(
-      "Red Mana Symbol"
-    );
-    expect((imgs.at(4).element as HTMLImageElement).alt).toBe(
-      "Green Mana Symbol"
-    );
-    expect((imgs.at(5).element as HTMLImageElement).alt).toBe(
-      "Colorless Mana Symbol"
-    );
-    expect((imgs.at(6).element as HTMLImageElement).alt).toBe("Mana Symbol");
-  });
-
   it("defaults size to medium", () => {
     const defaultWrapper = mount(ColorIdentity, {
       propsData: {
@@ -89,5 +22,30 @@ describe("ColorIdentity", () => {
 
     expect(customSizeWrapper.props("size")).toBe("small");
     expect(customSizeWrapper.find("img").classes()).toContain("small");
+  });
+
+  it("creates a mana symbol for each color", () => {
+    const ManaSymbol = {
+      template: "<div></div>",
+      props: ["symbol", "size"],
+    };
+    const wrapper = mount(ColorIdentity, {
+      propsData: {
+        colors: ["w", "r", "g"],
+      },
+      stubs: {
+        ManaSymbol,
+      },
+    });
+
+    const symbols = wrapper.findAllComponents(ManaSymbol);
+
+    expect(symbols).toHaveLength(3);
+    expect(symbols.at(0).props("symbol")).toBe("w");
+    expect(symbols.at(0).props("size")).toBe("medium");
+    expect(symbols.at(1).props("symbol")).toBe("r");
+    expect(symbols.at(1).props("size")).toBe("medium");
+    expect(symbols.at(2).props("symbol")).toBe("g");
+    expect(symbols.at(2).props("size")).toBe("medium");
   });
 });
