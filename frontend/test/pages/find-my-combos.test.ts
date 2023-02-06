@@ -1,7 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 
 import flushPromises from "flush-promises";
-import ComboFinderPage from "@/pages/combo-finder.vue";
+import FindMyCombosPage from "~/pages/find-my-combos.vue";
 import makeFakeCombo from "~/lib/api/make-fake-combo";
 import Card from "@/lib/api/models/card";
 import { pluralize as $pluralize } from "@/plugins/text-helpers";
@@ -17,7 +17,7 @@ jest.mock("@/lib/decklist-parser");
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
 
-describe("ComboFinderPage", () => {
+describe("FindMyCombosPage", () => {
   let options: MountOptions;
 
   beforeEach(() => {
@@ -42,12 +42,12 @@ describe("ComboFinderPage", () => {
 
       const spy = jest
         .spyOn(
-          (ComboFinderPage as VueComponent).options.methods,
+          (FindMyCombosPage as VueComponent).options.methods,
           "lookupCombos"
         )
         .mockResolvedValue(null);
 
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await flushPromises();
 
@@ -61,7 +61,7 @@ describe("ComboFinderPage", () => {
     it("does not load decklist saved in localstorage if it is empty space", async () => {
       localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, "     ");
 
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await flushPromises();
 
@@ -73,7 +73,7 @@ describe("ComboFinderPage", () => {
 
   describe("deck count element", () => {
     it("hides deck count when no decklist is available", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(wrapper.find("#decklist-card-count").exists()).toBe(false);
 
@@ -85,7 +85,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("shows deck count", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "data",
@@ -110,7 +110,7 @@ describe("ComboFinderPage", () => {
 
   describe("clear decklist button", () => {
     it("hides when no decklist is available", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(wrapper.find("#clear-decklist-input").exists()).toBe(false);
 
@@ -122,7 +122,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("clears decklist when clicked", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -139,7 +139,7 @@ describe("ComboFinderPage", () => {
       // got to prevent it from attempting to lookup combos from value in localStorage
       jest
         .spyOn(
-          (ComboFinderPage as VueComponent).options.methods,
+          (FindMyCombosPage as VueComponent).options.methods,
           "lookupCombos"
         )
         .mockResolvedValue(null);
@@ -149,7 +149,7 @@ describe("ComboFinderPage", () => {
         "Card Foo\nCard Bar"
       );
 
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await flushPromises();
 
@@ -161,7 +161,7 @@ describe("ComboFinderPage", () => {
 
   describe("hint box", () => {
     it("hides when decklist becomes available", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(wrapper.find("#decklist-hint").exists()).toBe(true);
 
@@ -175,7 +175,7 @@ describe("ComboFinderPage", () => {
 
   describe("combos in deck section", () => {
     it("hides when no decklist is empty", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(wrapper.find("#combos-in-deck-section").exists()).toBe(false);
 
@@ -187,7 +187,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("hides when lookup is in progress", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -199,7 +199,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("updates heading based on number of combos found", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -231,7 +231,7 @@ describe("ComboFinderPage", () => {
       const ComboResults = { template: "<div></div>", props: ["results"] };
       // @ts-ignore
       options.stubs.ComboResults = ComboResults;
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       const combos = [makeFakeCombo(), makeFakeCombo(), makeFakeCombo()];
       await wrapper.setData({
@@ -249,7 +249,7 @@ describe("ComboFinderPage", () => {
 
   describe("potential combos in deck section", () => {
     it("hides when there are no potential combos in deck", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(wrapper.find("#potential-combos-in-deck-section").exists()).toBe(
         false
@@ -275,7 +275,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("hides when lookup is in progress", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -290,7 +290,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("updates heading based on number of combos found that match deck color identity", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -334,7 +334,7 @@ describe("ComboFinderPage", () => {
       };
       // @ts-ignore
       options.stubs.ComboResults = ComboResults;
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       const combos = [
         makeFakeCombo({
@@ -373,7 +373,7 @@ describe("ComboFinderPage", () => {
 
   describe("potential combos outside color identity section", () => {
     it("hides when there are no potential combos in deck", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       expect(
         wrapper
@@ -394,7 +394,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("hides when lookup is in progress", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -412,7 +412,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("updates heading based on number of combos found that match deck color identity", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "foo\nbar",
@@ -462,7 +462,7 @@ describe("ComboFinderPage", () => {
       };
       // @ts-ignore
       options.stubs.ComboResults = ComboResults;
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       const combos = [
         makeFakeCombo({
@@ -505,7 +505,7 @@ describe("ComboFinderPage", () => {
       };
       // @ts-ignore
       options.stubs.ComboResults = ComboResults;
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       const combos = [
         makeFakeCombo({
@@ -541,7 +541,7 @@ describe("ComboFinderPage", () => {
 
   describe("lookupCombos", () => {
     it("does not lookup combos when decklist only contains one card", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "Card 1",
@@ -562,7 +562,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("resets combos in deck and potential combos", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "Card 1",
@@ -585,7 +585,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("looks up and populates combos", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "Card 1\nCard 2",
@@ -620,7 +620,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("sets deck color identity based on color identity of deck", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "Card 1\nCard 2",
@@ -651,7 +651,7 @@ describe("ComboFinderPage", () => {
     });
 
     it("resets potential color identity picker", async () => {
-      const wrapper = shallowMount(ComboFinderPage, options);
+      const wrapper = shallowMount(FindMyCombosPage, options);
 
       await wrapper.setData({
         decklist: "Card 1\nCard 2",

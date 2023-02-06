@@ -1,6 +1,6 @@
 describe("Combo Finder Page", () => {
   it("can lookup combos in deck", () => {
-    cy.visit("/combo-finder/");
+    cy.visit("/find-my-combos/");
 
     cy.get("#decklist-input").type(`Exquisite Blood
 Sanguine Bond`);
