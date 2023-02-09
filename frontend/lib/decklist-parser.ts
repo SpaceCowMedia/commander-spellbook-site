@@ -185,8 +185,17 @@ export async function findCombosFromDecklist(
     if (missingCards.length === 0) {
       combosInDecklist.push(combo);
     } else if (missingCards.length === 1) {
+      const missingCard = missingCards[0];
+
+      if (missingCard.isBanned()) {
+        // we want to surface combos with banned cards
+        // that are already in the deck, but not suggest
+        // a user add a banned card _to_ their deck
+        return;
+      }
+
       potentialCombos.push(combo);
-      missingCardsForPotentialCombos.push(missingCards[0]);
+      missingCardsForPotentialCombos.push(missingCard);
     }
   });
 

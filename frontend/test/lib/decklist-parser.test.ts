@@ -168,6 +168,27 @@ Bar (anything
       expect(data.combosInDecklist[0].commanderSpellbookId).toBe("2");
     });
 
+    it("includes banned combos in main decklist", async () => {
+      combos[1] = makeFakeCombo({
+        commanderSpellbookId: "2",
+        cards: ["Card 3", "Card 4"],
+        colorIdentity: "w,b,r",
+        hasBannedCard: true,
+      });
+
+      const data = await findCombosFromDecklist([
+        "Card 3",
+        "Card 1",
+        "Card Baz",
+        "Card Bar",
+        "Card 4",
+        "Card Foo",
+      ]);
+
+      expect(data.combosInDecklist.length).toEqual(1);
+      expect(data.combosInDecklist[0].commanderSpellbookId).toBe("2");
+    });
+
     it("returns an empty array for potential combos if decklist does not contain any combos missing 1 card", async () => {
       const data = await findCombosFromDecklist(["foo", "bar"]);
 
@@ -190,6 +211,25 @@ Bar (anything
       expect(data.missingCardsForPotentialCombos.length).toBe(2);
       expect(data.missingCardsForPotentialCombos[0].name).toBe("Card 1");
       expect(data.missingCardsForPotentialCombos[1].name).toBe("Card 4");
+    });
+
+    it("does not include banned combos in potential combo list", async () => {
+      const bannedCombo = makeFakeCombo({
+        cards: ["Card 1", "Card 3"],
+      });
+
+      jest.spyOn(bannedCombo.cards[0], "isBanned").mockReturnValue(true);
+
+      jest.mocked(lookup).mockResolvedValue([bannedCombo]);
+      const data = await findCombosFromDecklist([
+        "Card 3",
+        "Card foo",
+        "Card 2",
+        "Card Baz",
+        "Card Bar",
+      ]);
+
+      expect(data.potentialCombos.length).toEqual(0);
     });
   });
 });
