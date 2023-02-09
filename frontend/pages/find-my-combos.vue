@@ -18,7 +18,7 @@ Ancient Tomb (uma) 236
 " @input="onInput">
       </textarea>
 
-      <span v-if="decklist" id="decklist-card-count" class="gradient" aria-hidden="true">{{
+      <span v-if="decklist" id="decklist-card-count" class="gradient relative" aria-hidden="true">{{
         numberOfCardsText
       }}</span>
       <button v-if="decklist" id="clear-decklist-input" class="button" @click="clearDecklist">
