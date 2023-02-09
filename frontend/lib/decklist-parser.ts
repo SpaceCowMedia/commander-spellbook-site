@@ -60,22 +60,23 @@ import type Card from "@/lib/api/models/card";
 //   any number of spaces here, including 0 spaces
 //
 // --------------------------------------------------------------------------
-// (?:\(.*)?$
+// (?:[(#].*)?$
 //   this can be broken down into:
 //     (?:)?$
 //        a non-remembered capture group that is both optional
 //        and ends the line
-//      \(.*
-//        a open paren followed any number of additional,
+//      [(#].*
+//        a open paren or # followed any number of additional,
 //        including no additional characters
 //        this is how we find the set code syntax
+//        as well as the tagging syntax
 //        Note: there are magic cards that have `(` in the name
 //        but none in black border, so this shouldn't be a problem
 //        https://scryfall.com/search?extras=true&q=name%3A%22%28%22
 // --------------------------------------------------------------------------
 // future maintainers, I hope that helps a little
 const DECK_ENTRY_REGEX =
-  /^\s*(?:(?<count>\d+)[xX]?\s+)?(?<name>[^/\s].+?)\s*(?:\(.*)?$/;
+  /^\s*(?:(?<count>\d+)[xX]?\s+)?(?<name>[^/\s].+?)\s*(?:[(#].*)?$/;
 
 type CombosInDecklist = {
   combosInDecklist: FormattedApiResponse[];

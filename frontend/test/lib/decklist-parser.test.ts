@@ -87,6 +87,15 @@ Biz Baz ()`);
       expect(cards).toEqual(["Foo", "Bar", "Baz ) I stay here", "Biz Baz"]);
     });
 
+    it("removes # tag notation", async () => {
+      const { cards } = await convertDecklistToDeck(`Foo #tag
+Bar #another-tag
+34x Baz #tag1, #tag2
+Biz Baz #tag1 #tag 2`);
+
+      expect(cards).toEqual(["Foo", "Bar", "Baz", "Biz Baz"]);
+    });
+
     it("provides count of total cards in deck", async () => {
       const { numberOfCards } = await convertDecklistToDeck(`Foo (foo) 123
 Bar (anything
