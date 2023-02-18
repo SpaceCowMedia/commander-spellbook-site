@@ -4,7 +4,7 @@ import { ValidationError } from "../../error";
 
 type PermissionKey = keyof typeof PERMISSIONS;
 export type Permissions = Record<PermissionKey, boolean>;
-type ClaimKey = typeof PERMISSIONS[PermissionKey];
+type ClaimKey = (typeof PERMISSIONS)[PermissionKey];
 type PermissionClaims = Record<ClaimKey, 1>;
 
 const VALID_PERMISSION_KEYS = Object.keys(PERMISSIONS) as PermissionKey[];

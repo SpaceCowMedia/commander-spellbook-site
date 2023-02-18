@@ -46,15 +46,15 @@
     "scryfall-client": "^0.23.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.3.0",
-    "cypress": "^12.2.0",
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "cypress": "^12.6.0",
     "cypress-firebase": "^2.2.5",
-    "firebase-admin": "^11.4.1",
-    "firebase-tools": "11.18.0",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1",
+    "firebase-admin": "^11.5.0",
+    "firebase-tools": "^11.23.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "prettier": "^2.8.4",
     "ts-node": "^10.9.1",
     "wait-on": "^7.0.1"
   }
