@@ -1,6 +1,10 @@
 <template>
   <div class="static-page">
-    <ArtCircle card-name="Thespian's Stage" artist="John Avon" class="m-auto md:block hidden" />
+    <ArtCircle
+      card-name="Thespian's Stage"
+      artist="John Avon"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">Featured Combos</h1>
 
     <div class="container sm:flex flex-row">
@@ -46,7 +50,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Featured Combos",
-    }
+    };
   },
 });
 </script>

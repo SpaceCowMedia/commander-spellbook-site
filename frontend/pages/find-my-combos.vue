@@ -1,31 +1,56 @@
 <template>
   <div class="static-page">
-    <ArtCircle card-name="Exploration" artist="Florian de Gesincourt" class="m-auto md:block hidden" />
+    <ArtCircle
+      card-name="Exploration"
+      artist="Florian de Gesincourt"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title text-center">Find My Combos</h1>
     <h2 class="heading-subtitle text-center mt-0">
       Uncover combos in your deck, and discover potential combos.
     </h2>
 
-    <label for="decklist-input" class="sr-only">Copy and paste your decklist into the text box to discover the combos in
-      your deck.</label>
+    <label for="decklist-input" class="sr-only"
+      >Copy and paste your decklist into the text box to discover the combos in
+      your deck.</label
+    >
 
     <section>
-      <textarea id="decklist-input" v-model="decklist" placeholder="Supported decklist formats:
+      <textarea
+        id="decklist-input"
+        v-model="decklist"
+        placeholder="Supported decklist formats:
 Ancient Tomb
 1 Ancient Tomb
 1x Ancient Tomb
 Ancient Tomb (uma) 236
-" @input="onInput">
+"
+        @input="onInput"
+      >
       </textarea>
 
-      <span v-if="decklist" id="decklist-card-count" class="gradient relative" aria-hidden="true">{{
-        numberOfCardsText
-      }}</span>
-      <button v-if="decklist" id="clear-decklist-input" class="button" @click="clearDecklist">
+      <span
+        v-if="decklist"
+        id="decklist-card-count"
+        class="gradient relative"
+        aria-hidden="true"
+        >{{ numberOfCardsText }}</span
+      >
+      <button
+        v-if="decklist"
+        id="clear-decklist-input"
+        class="button"
+        @click="clearDecklist"
+      >
         Clear Decklist
       </button>
 
-      <div v-if="!decklist" id="decklist-hint" class="heading-subtitle" aria-hidden="true">
+      <div
+        v-if="!decklist"
+        id="decklist-hint"
+        class="heading-subtitle"
+        aria-hidden="true"
+      >
         Paste your decklist
       </div>
     </section>
@@ -41,33 +66,56 @@ Ancient Tomb (uma) 236
         <ComboResults :results="combosInDeck" />
       </section>
 
-      <section v-if="!lookupInProgress && potentialCombosMatchingDeckColorIdentity.length > 0"
-        id="potential-combos-in-deck-section">
+      <section
+        v-if="
+          !lookupInProgress &&
+          potentialCombosMatchingDeckColorIdentity.length > 0
+        "
+        id="potential-combos-in-deck-section"
+      >
         <h2 class="heading-subtitle">{{ potentialCombosInDeckHeadingText }}</h2>
-        <p>
-          List of combos where your decklist is missing 1 combo piece.
-        </p>
+        <p>List of combos where your decklist is missing 1 combo piece.</p>
 
-        <ComboResults :results="potentialCombosMatchingDeckColorIdentity"
-          :missing-decklist-cards="missingDecklistCards" />
+        <ComboResults
+          :results="potentialCombosMatchingDeckColorIdentity"
+          :missing-decklist-cards="missingDecklistCards"
+        />
       </section>
 
-      <section v-if="!lookupInProgress && potentialCombosOutsideDeckColorIdentity.length > 0"
-        id="potential-combos-outside-color-identity-section">
-        <h2 class="heading-subtitle">{{ potentialCombosInAdditionalColorsHeadingText }}</h2>
+      <section
+        v-if="
+          !lookupInProgress &&
+          potentialCombosOutsideDeckColorIdentity.length > 0
+        "
+        id="potential-combos-outside-color-identity-section"
+      >
+        <h2 class="heading-subtitle">
+          {{ potentialCombosInAdditionalColorsHeadingText }}
+        </h2>
         <p>
-          List of combos where your decklist is missing 1 combo piece, but requires at least one additional color.
-          Toggle the
-          color symbols to filter for identity.
+          List of combos where your decklist is missing 1 combo piece, but
+          requires at least one additional color. Toggle the color symbols to
+          filter for identity.
         </p>
 
-        <ColorIdentityPicker v-model="potentialCombosColorIdentity" class="mb-4"
-          :chosen-colors="potentialCombosColorIdentity" />
+        <ColorIdentityPicker
+          v-model="potentialCombosColorIdentity"
+          class="mb-4"
+          :chosen-colors="potentialCombosColorIdentity"
+        />
 
-        <ComboResults :results="potentialCombosOutsideDeckColorIdentityFilteredByPicker"
-          :missing-decklist-cards="missingDecklistCards" />
-        <h2 v-if="potentialCombosOutsideDeckColorIdentityFilteredByPicker.length === 0" class="heading-subtitle">No
-          Combos Found Matching the Selected Color Identity</h2>
+        <ComboResults
+          :results="potentialCombosOutsideDeckColorIdentityFilteredByPicker"
+          :missing-decklist-cards="missingDecklistCards"
+        />
+        <h2
+          v-if="
+            potentialCombosOutsideDeckColorIdentityFilteredByPicker.length === 0
+          "
+          class="heading-subtitle"
+        >
+          No Combos Found Matching the Selected Color Identity
+        </h2>
       </section>
     </div>
   </div>
@@ -85,7 +133,10 @@ import {
   convertDecklistToDeck,
 } from "@/lib/decklist-parser";
 
-import type { FormattedApiResponse, ColorIdentityColors } from "@/lib/api/types";
+import type {
+  FormattedApiResponse,
+  ColorIdentityColors,
+} from "@/lib/api/types";
 import type Card from "@/lib/api/models/card";
 
 type ComboFinderData = {
@@ -123,7 +174,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Find My Combos",
-    }
+    };
   },
   computed: {
     numberOfCardsText(): string {
@@ -170,13 +221,13 @@ export default Vue.extend({
     potentialCombosOutsideDeckColorIdentityFilteredByPicker(): FormattedApiResponse[] {
       return this.potentialCombosOutsideDeckColorIdentity.filter((combo) => {
         return combo.colorIdentity.isWithin(this.potentialCombosColorIdentity);
-      })
+      });
     },
     potentialCombosMatchingColorIdentityPicker(): FormattedApiResponse[] {
       return this.potentialCombos.filter((combo) => {
         return combo.colorIdentity.isWithin(this.potentialCombosColorIdentity);
       });
-    }
+    },
   },
   mounted() {
     const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);

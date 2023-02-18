@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="container">
-      <ArtCircle card-name="Tribute Mage" artist="Scott Murphy" class="m-auto md:block hidden" />
+      <ArtCircle
+        card-name="Tribute Mage"
+        artist="Scott Murphy"
+        class="m-auto md:block hidden"
+      />
       <h1 class="heading-title">Advanced Search</h1>
 
       <p class="text-center">
@@ -12,73 +16,133 @@
 
     <form @submit.prevent="submit">
       <div id="card-name-inputs" class="container">
-        <MultiSearchInput v-model="cards" label="Card Name" :operator-options="cardOperatorOptions"
-          :autocomplete-options="cardNameAutocompletes" />
+        <MultiSearchInput
+          v-model="cards"
+          label="Card Name"
+          :operator-options="cardOperatorOptions"
+          :autocomplete-options="cardNameAutocompletes"
+        />
       </div>
 
       <div id="card-amount-inputs" class="container">
-        <MultiSearchInput v-model="cardAmounts" label="Number of Cards" plural-label="Number of Cards"
-          :operator-options="cardAmountOperatorOptions" default-operator="=-number" />
+        <MultiSearchInput
+          v-model="cardAmounts"
+          label="Number of Cards"
+          plural-label="Number of Cards"
+          :operator-options="cardAmountOperatorOptions"
+          default-operator="=-number"
+        />
       </div>
 
       <div id="color-identity-inputs" class="container">
-        <MultiSearchInput v-model="colorIdentity" default-placeholder="ex: wug, temur, colorless, black"
-          label="Color Identity" plural-label="Color Identities" :operator-options="colorIdentityOperatorOptions"
-          :autocomplete-options="colorAutocompletes" :use-value-for-autocomplete-input="true" />
+        <MultiSearchInput
+          v-model="colorIdentity"
+          default-placeholder="ex: wug, temur, colorless, black"
+          label="Color Identity"
+          plural-label="Color Identities"
+          :operator-options="colorIdentityOperatorOptions"
+          :autocomplete-options="colorAutocompletes"
+          :use-value-for-autocomplete-input="true"
+        />
       </div>
 
       <div id="prerequisite-inputs" class="container">
-        <MultiSearchInput v-model="prerequisites" default-placeholder="all permanents on the battlefield"
-          label="Prerequisite" :operator-options="comboDataOperatorOptions" />
+        <MultiSearchInput
+          v-model="prerequisites"
+          default-placeholder="all permanents on the battlefield"
+          label="Prerequisite"
+          :operator-options="comboDataOperatorOptions"
+        />
       </div>
 
       <div id="step-inputs" class="container">
-        <MultiSearchInput v-model="steps" default-placeholder="ex: intruder alarm triggers as well" label="Step"
-          :operator-options="comboDataOperatorOptions" />
+        <MultiSearchInput
+          v-model="steps"
+          default-placeholder="ex: intruder alarm triggers as well"
+          label="Step"
+          :operator-options="comboDataOperatorOptions"
+        />
       </div>
 
       <div id="result-inputs" class="container">
-        <MultiSearchInput v-model="results" default-placeholder="ex: win the game" label="Result"
-          :operator-options="comboDataOperatorOptions" :autocomplete-options="resultAutocompletes" />
+        <MultiSearchInput
+          v-model="results"
+          default-placeholder="ex: win the game"
+          label="Result"
+          :operator-options="comboDataOperatorOptions"
+          :autocomplete-options="resultAutocompletes"
+        />
       </div>
 
       <div id="price-inputs" class="container">
-        <MultiSearchInput v-model="price" label="Price" plural-label="Price" :operator-options="priceOptions"
-          default-operator="<-number" />
+        <MultiSearchInput
+          v-model="price"
+          label="Price"
+          plural-label="Price"
+          :operator-options="priceOptions"
+          default-operator="<-number"
+        />
       </div>
 
       <div v-if="hasAPriceInQuery" id="vendor" class="container">
-        <RadioSearchInput label="Card Vendor" :checked-value="vendor" :options="vendorOptions" form-name="vendor"
-          @update-radio="updateRadio('vendor', $event)" />
+        <RadioSearchInput
+          label="Card Vendor"
+          :checked-value="vendor"
+          :options="vendorOptions"
+          form-name="vendor"
+          @update-radio="updateRadio('vendor', $event)"
+        />
       </div>
 
       <div id="popularity-inputs" class="container">
-        <MultiSearchInput v-model="popularity" label="Popularity" plural-label="Popularity"
-          :operator-options="popularityOptions" default-operator="<-number" />
+        <MultiSearchInput
+          v-model="popularity"
+          label="Popularity"
+          plural-label="Popularity"
+          :operator-options="popularityOptions"
+          default-operator="<-number"
+        />
       </div>
 
       <div id="previewed-combos" class="container">
-        <RadioSearchInput label="Previewed / Spoiled Combos" :checked-value="previewed" :options="previewedOptions"
-          form-name="previewed" @update-radio="updateRadio('previewed', $event)" />
+        <RadioSearchInput
+          label="Previewed / Spoiled Combos"
+          :checked-value="previewed"
+          :options="previewedOptions"
+          form-name="previewed"
+          @update-radio="updateRadio('previewed', $event)"
+        />
       </div>
 
       <div id="banned-combos" class="container">
-        <RadioSearchInput label="Banned Combos" :checked-value="banned" :options="bannedOptions" form-name="banned"
-          @update-radio="updateRadio('banned', $event)" />
+        <RadioSearchInput
+          label="Banned Combos"
+          :checked-value="banned"
+          :options="bannedOptions"
+          form-name="banned"
+          @update-radio="updateRadio('banned', $event)"
+        />
       </div>
 
       <div class="container text-center pb-8">
         <div class="flex flex-row items-center">
-          <button id="advanced-search-submit-button" type="submit"
-            class="border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white">
+          <button
+            id="advanced-search-submit-button"
+            type="submit"
+            class="border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white"
+          >
             Search&nbsp;With&nbsp;Query
           </button>
-          <div id="search-query"
+          <div
+            id="search-query"
             class="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <span v-if="query">{{ query }}</span>
-            <span v-else class="text-dark">(your query will populate here when you've entered any search
-              terms)</span>
+            <span v-else class="text-dark"
+              >(your query will populate here when you've entered any search
+              terms)</span
+            >
           </div>
         </div>
 
@@ -307,7 +371,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Advanced Search",
-    }
+    };
   },
   computed: {
     query(): string {

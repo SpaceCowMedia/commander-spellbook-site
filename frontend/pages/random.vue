@@ -1,7 +1,10 @@
 <template>
-  <SplashPage title="Randomizing"
+  <SplashPage
+    title="Randomizing"
     flavor="Ever try to count hyperactive schoolchildren while someone shouts random numbers in your ear? It’s like that."
-    art-circle-card-name="Chaosphere" art-circle-artist-name="Steve Luke" />
+    art-circle-card-name="Chaosphere"
+    art-circle-artist-name="Steve Luke"
+  />
 </template>
 
 <script lang="ts">
@@ -18,7 +21,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Random",
-    }
+    };
   },
 
   async mounted(): Promise<void> {

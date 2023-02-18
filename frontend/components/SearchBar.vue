@@ -3,19 +3,53 @@
     <form class="main-search-input-container" @submit.prevent="onSubmit">
       <nuxt-link v-if="!onHomePage" to="/" class="block mr-2 flex-shrink py-1">
         <div class="mr-1">
-          <img src="~/assets/images/gear.svg" alt="Go to home page" class="w-8 inline-block" />
+          <img
+            src="~/assets/images/gear.svg"
+            alt="Go to home page"
+            class="w-8 inline-block"
+          />
         </div>
       </nuxt-link>
 
       <div class="flex flex-grow items-center">
-        <div v-if="!onHomePage" class="search-input-icon" aria-hidden="true" @click="focusSearch"></div>
-        <label for="search-bar-input" class="sr-only text-white" aria-hidden="true">Combo Search</label>
-        <input id="search-bar-input" ref="searchInput" v-model="query" type="text" class="main-search-input"
-          :class="inputClasses" name="q" :placeholder="`Search ${numberOfCombos} EDH combos`" autocomplete="off"
-          autocapitalize="none" autocorrect="off" spellcheck="false" :autofocus="onHomePage" />
+        <div
+          v-if="!onHomePage"
+          class="search-input-icon"
+          aria-hidden="true"
+          @click="focusSearch"
+        ></div>
+        <label
+          for="search-bar-input"
+          class="sr-only text-white"
+          aria-hidden="true"
+          >Combo Search</label
+        >
+        <input
+          id="search-bar-input"
+          ref="searchInput"
+          v-model="query"
+          type="text"
+          class="main-search-input"
+          :class="inputClasses"
+          name="q"
+          :placeholder="`Search ${numberOfCombos} EDH combos`"
+          autocomplete="off"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          :autofocus="onHomePage"
+        />
       </div>
-      <div v-if="!onHomePage" class="flex flex-shrink flex-row items-center desktop-menu">
-        <button id="search-bar-menu-button" type="button" class="mobile-menu-button" @click="toggleMenu">
+      <div
+        v-if="!onHomePage"
+        class="flex flex-shrink flex-row items-center desktop-menu"
+      >
+        <button
+          id="search-bar-menu-button"
+          type="button"
+          class="mobile-menu-button"
+          @click="toggleMenu"
+        >
           <div class="menu-icon link-icon" aria-hidden="true"></div>
           <div class="sr-only">Menu</div>
         </button>
@@ -31,15 +65,22 @@
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </RandomButton>
-        <nuxt-link v-show="isAuthenticated" ref="profile-link" to="/dashboard/" class="hidden md:flex menu-link">
+        <nuxt-link
+          v-show="isAuthenticated"
+          ref="profile-link"
+          to="/dashboard/"
+          class="hidden md:flex menu-link"
+        >
           <div class="profile-icon link-icon mr-0"></div>
           <span class="sr-only">Profile</span>
         </nuxt-link>
       </div>
     </form>
-    <div v-if="!onHomePage && showMobileMenu"
+    <div
+      v-if="!onHomePage && showMobileMenu"
       class="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
-      @click="toggleMenu">
+      @click="toggleMenu"
+    >
       <nuxt-link to="/advanced-search/" class="mobile-menu-button">
         <div class="advanced-search-icon link-icon" aria-hidden="true"></div>
         Advanced
@@ -52,7 +93,12 @@
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
       </RandomButton>
-      <nuxt-link v-show="isAuthenticated" ref="mobile-profile-link" to="/dashboard/" class="mobile-menu-button">
+      <nuxt-link
+        v-show="isAuthenticated"
+        ref="mobile-profile-link"
+        to="/dashboard/"
+        class="mobile-menu-button"
+      >
         <div class="profile-icon link-icon"></div>
         Profile
       </nuxt-link>

@@ -2,30 +2,62 @@
   <div>
     <h1 class="sr-only">Search Results</h1>
 
-    <SearchMessage :message="message" :errors="errors" :current-page="page" :total-pages="totalPages"
-      :max-number-of-combos-per-page="maxNumberOfCombosPerPage" :total-results="totalResults" />
+    <SearchMessage
+      :message="message"
+      :errors="errors"
+      :current-page="page"
+      :total-pages="totalPages"
+      :max-number-of-combos-per-page="maxNumberOfCombosPerPage"
+      :total-results="totalResults"
+    />
 
     <div v-if="paginatedResults.length > 0" class="border-b border-light">
       <div class="container sm:flex flex-row items-center justify-center">
         <div class="mr-2 sm:mt-0 mt-2" aria-hidden="true">Sorted by</div>
-        <StyledSelect id="sort-combos-select" v-model="sort" class="my-2 sm:mr-2"
-          select-background-class="border-dark border-2" select-text-class="text-dark"
-          label="Change how combos are sorted" :options="sortOptions" />
+        <StyledSelect
+          id="sort-combos-select"
+          v-model="sort"
+          class="my-2 sm:mr-2"
+          select-background-class="border-dark border-2"
+          select-text-class="text-dark"
+          label="Change how combos are sorted"
+          :options="sortOptions"
+        />
         <div class="mx-1 hidden sm:block" aria-hidden="true">:</div>
-        <StyledSelect id="order-combos-select" v-model="order" class="sm:m-2"
-          select-background-class="border-dark border-2" select-text-class="text-dark"
-          label="Change sort direction, ascending or descending" :options="orderOptions" />
+        <StyledSelect
+          id="order-combos-select"
+          v-model="order"
+          class="sm:m-2"
+          select-background-class="border-dark border-2"
+          select-text-class="text-dark"
+          label="Change sort direction, ascending or descending"
+          :options="orderOptions"
+        />
         <div class="flex-grow"></div>
-        <SearchPagination :current-page="page" :total-pages="totalPages" aria-hidden="true" @go-forward="goForward"
-          @go-back="goBack" />
+        <SearchPagination
+          :current-page="page"
+          :total-pages="totalPages"
+          aria-hidden="true"
+          @go-forward="goForward"
+          @go-back="goBack"
+        />
       </div>
     </div>
 
     <div class="container sm:flex flex-row">
       <div v-if="paginatedResults.length > 0" class="w-full">
-        <ComboResults :results="paginatedResults" :sort="sort" :vendor="vendor" />
+        <ComboResults
+          :results="paginatedResults"
+          :sort="sort"
+          :vendor="vendor"
+        />
 
-        <SearchPagination :current-page="page" :total-pages="totalPages" @go-forward="goForward" @go-back="goBack" />
+        <SearchPagination
+          :current-page="page"
+          :total-pages="totalPages"
+          @go-forward="goForward"
+          @go-back="goBack"
+        />
       </div>
 
       <NoCombosFound v-else :loaded="loaded && !redirecting" />
@@ -89,7 +121,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Search Results",
-    }
+    };
   },
   computed: {
     totalResults(): number {

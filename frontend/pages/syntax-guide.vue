@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="container pt-6 mb-6">
-      <ArtCircle card-name="Goblin Guide" artist="Mark Zug" class="m-auto md:block hidden" />
+      <ArtCircle
+        card-name="Goblin Guide"
+        artist="Mark Zug"
+        class="m-auto md:block hidden"
+      />
       <h1 class="heading-title">Syntax Guide</h1>
       <p class="text-center">
         A variety of parameters can be used to search for combos.
@@ -11,8 +15,12 @@
     <div class="border-b-2 border-gray-400 w-full">
       <div class="container pb-6">
         <div class="flex flex-col md:flex-row md:flex-wrap">
-          <nuxt-link v-for="section in sections" :key="section.id" :to="'#' + section.id"
-            class="button flex-grow text-center md:w-1/4">
+          <nuxt-link
+            v-for="section in sections"
+            :key="section.id"
+            :to="'#' + section.id"
+            class="button flex-grow text-center md:w-1/4"
+          >
             <div>
               {{ section.text }}
             </div>
@@ -29,7 +37,12 @@
       </div>
     </div>
 
-    <SearchGuide heading="Cards" heading-card-name="Peek" heading-artist-name="Adam Rex" :snippets="cardSnippets">
+    <SearchGuide
+      heading="Cards"
+      heading-card-name="Peek"
+      heading-artist-name="Adam Rex"
+      :snippets="cardSnippets"
+    >
       <p>
         You can find cards in a combo simply by entering the card names, or
         parts of the card names, into the search bar. Passing multiple card
@@ -63,8 +76,12 @@
       <p>An alias for <code>card</code> is <code>cards</code>.</p>
     </SearchGuide>
 
-    <SearchGuide heading="Color Identity" heading-card-name="Fist of Suns" heading-artist-name="Arnie Swekel"
-      :snippets="colorIdentitySnippets">
+    <SearchGuide
+      heading="Color Identity"
+      heading-card-name="Fist of Suns"
+      heading-artist-name="Arnie Swekel"
+      :snippets="colorIdentitySnippets"
+    >
       <p>
         The color identity of a combo determines what colors the combo is
         comprised of. The most basic search is in the form,
@@ -97,8 +114,12 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide heading="Prerequisites" heading-card-name="Long-Term Plans" heading-artist-name="Ben Thompson"
-      :snippets="prerequisiteSnippets">
+    <SearchGuide
+      heading="Prerequisites"
+      heading-card-name="Long-Term Plans"
+      heading-artist-name="Ben Thompson"
+      :snippets="prerequisiteSnippets"
+    >
       <p>
         The prerequisites are the elements that need to be in place before the
         combo can be initiated.
@@ -121,8 +142,12 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide heading="Steps" heading-card-name="The Grand Calcutron" heading-artist-name="Sean Murray"
-      :snippets="stepSnippets">
+    <SearchGuide
+      heading="Steps"
+      heading-card-name="The Grand Calcutron"
+      heading-artist-name="Sean Murray"
+      :snippets="stepSnippets"
+    >
       <p>
         The steps are the elements that need to be followed to execute the
         combo.
@@ -142,8 +167,12 @@
       <p>An alias for <code>steps</code> is <code>step</code>.</p>
     </SearchGuide>
 
-    <SearchGuide heading="Results" heading-card-name="Revel in Riches" heading-artist-name="Eric Deschamps"
-      :snippets="resultSnippets">
+    <SearchGuide
+      heading="Results"
+      heading-card-name="Revel in Riches"
+      heading-artist-name="Eric Deschamps"
+      :snippets="resultSnippets"
+    >
       <p>
         The results are the effects that occur as a result of completing the
         combo.
@@ -163,8 +192,12 @@
       <p>An alias for <code>results</code> is <code>result</code>.</p>
     </SearchGuide>
 
-    <SearchGuide heading="Spellbook ID" heading-card-name="Fractured Identity" heading-artist-name="Yongjae Choi"
-      :snippets="idSnippets">
+    <SearchGuide
+      heading="Spellbook ID"
+      heading-card-name="Fractured Identity"
+      heading-artist-name="Yongjae Choi"
+      :snippets="idSnippets"
+    >
       <p>
         You can also search by <code>spellbookid</code> if you want to find a
         specific combo by its id. Using more than one
@@ -184,8 +217,12 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide heading="Popularity" heading-card-name="Korvold, Fae-Cursed King" heading-artist-name="Wisnu Tan"
-      :snippets="popularitySnippets">
+    <SearchGuide
+      heading="Popularity"
+      heading-card-name="Korvold, Fae-Cursed King"
+      heading-artist-name="Wisnu Tan"
+      :snippets="popularitySnippets"
+    >
       <p>
         You can also search by <code>popularity</code> to find combos by the
         number of decks that contain the combo according to
@@ -204,8 +241,12 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide heading="Price" heading-card-name="Smothering Tithe" heading-artist-name="Mark Behm"
-      :snippets="priceSnippets">
+    <SearchGuide
+      heading="Price"
+      heading-card-name="Smothering Tithe"
+      heading-artist-name="Mark Behm"
+      :snippets="priceSnippets"
+    >
       <p>
         The <code>=</code>, <code>&gt;</code>, <code>&lt;</code>,
         <code>&gt;=</code>, <code>&lt;=</code> operators can be used with
@@ -232,8 +273,13 @@
       <p><code>usd</code> is an alias for <code>price</code>.</p>
     </SearchGuide>
 
-    <SearchGuide id="previewed" heading="Previewed / Spoiled" heading-card-name="Spoils of Adventure"
-      heading-artist-name="Zezhou Chen" :snippets="previewedSnippets">
+    <SearchGuide
+      id="previewed"
+      heading="Previewed / Spoiled"
+      heading-card-name="Spoils of Adventure"
+      heading-artist-name="Zezhou Chen"
+      :snippets="previewedSnippets"
+    >
       <p>
         By default, combo results will include combos that contain cards that
         have been newly previewed and are <em>technically</em> not yet legal in
@@ -253,8 +299,12 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide heading="Banned" heading-card-name="Leovold, Emissary of Trest" heading-artist-name="Magali Villeneuve"
-      :snippets="bannedSnippets">
+    <SearchGuide
+      heading="Banned"
+      heading-card-name="Leovold, Emissary of Trest"
+      heading-artist-name="Magali Villeneuve"
+      :snippets="bannedSnippets"
+    >
       <p>
         By default, combo results will not include combos that contain cards
         that are banned in Commander. Use <code>include:banned</code> to allow
@@ -272,8 +322,13 @@
       </p>
     </SearchGuide>
 
-    <SearchGuide id="sort" heading="Sort / Order" heading-card-name="Brainstorm" heading-artist-name="DiTerlizzi"
-      :snippets="sortOrderSnippets">
+    <SearchGuide
+      id="sort"
+      heading="Sort / Order"
+      heading-card-name="Brainstorm"
+      heading-artist-name="DiTerlizzi"
+      :snippets="sortOrderSnippets"
+    >
       <p>
         By default, combo results will be sorted by popularity (the number of
         decks the combo is in according to
@@ -555,7 +610,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: Syntax Guide",
-    }
+    };
   },
 });
 </script>

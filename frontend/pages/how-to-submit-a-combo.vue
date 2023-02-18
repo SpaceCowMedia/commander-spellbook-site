@@ -1,6 +1,10 @@
 <template>
   <div class="static-page">
-    <ArtCircle card-name="Kethis the Hidden Hand" artist="Yongjae Choi" class="m-auto md:block hidden" />
+    <ArtCircle
+      card-name="Kethis the Hidden Hand"
+      artist="Yongjae Choi"
+      class="m-auto md:block hidden"
+    />
     <h1 class="heading-title">Want to submit a combo?</h1>
     <p>
       At this time, combo submissions (and updates) are only being accepted via
@@ -10,7 +14,9 @@
       combos, please join us on Discord to contribute to the catalog.
     </p>
     <div class="text-center">
-      <ExternalLink role="button" class="button" to="https://discord.gg/KDnvP5f">Join us on Discord</ExternalLink>
+      <ExternalLink role="button" class="button" to="https://discord.gg/KDnvP5f"
+        >Join us on Discord</ExternalLink
+      >
     </div>
   </div>
 </template>
@@ -28,7 +34,7 @@ export default Vue.extend({
   head() {
     return {
       title: "Commander Spellbook: How to Submit a Combo",
-    }
+    };
   },
 });
 </script>
