@@ -164,4 +164,4 @@ jobs:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
     uses: Ilshidur/action-discord@master
     with:
-      args: "The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed."
+      args: "Command Spellbook site has been deployed."
