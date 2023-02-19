@@ -30,8 +30,6 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           runTests: false
-      - name: Run node check
-        run: node --version
 
   linter:
     runs-on: ubuntu-20.04
@@ -40,13 +38,18 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
       - name: Install 📦
         uses: cypress-io/github-action@v5
         with:
           runTests: false
 
       - name: Run linter 👀
-        run: node --version && npm run lint
+        run: npm run lint
 
   unit-tests:
     runs-on: ubuntu-20.04
@@ -54,6 +57,11 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Install 📦
         uses: cypress-io/github-action@v5
@@ -69,6 +77,11 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Install 📦
         uses: cypress-io/github-action@v5
@@ -90,6 +103,11 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Install 📦
         uses: cypress-io/github-action@v5
