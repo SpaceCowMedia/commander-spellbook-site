@@ -166,4 +166,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Command Spellbook site has been deployed."
+          args: "Commander Spellbook site has been deployed."
