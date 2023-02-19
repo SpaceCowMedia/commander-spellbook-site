@@ -23,7 +23,7 @@ jobs:
         #   ~/.npm
         #   ~/.cache/Cypress
       - name: Install 📦
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.0.8
         with:
           runTests: false
 
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.0.8
         with:
           runTests: false
 
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.0.8
         with:
           runTests: false
 
@@ -65,7 +65,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.0.8
         with:
           runTests: false
 
@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install 📦
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.0.8
         with:
           runTests: false
 
