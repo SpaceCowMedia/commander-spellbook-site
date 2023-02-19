@@ -30,6 +30,8 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           runTests: false
+      - name: Run node check
+        run: node --version
 
   linter:
     runs-on: ubuntu-20.04
@@ -44,7 +46,7 @@ jobs:
           runTests: false
 
       - name: Run linter 👀
-        run: npm run lint
+        run: node --version && npm run lint
 
   unit-tests:
     runs-on: ubuntu-20.04
