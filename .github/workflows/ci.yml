@@ -158,12 +158,9 @@ jobs:
         if: ${{ github.event_name != 'pull_request'}}
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
 
-  notification:
-    runs-on: ubuntu-20.04
-    steps:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Commander Spellbook site has been deployed."
+          args: "Commander Spellbook website has been deployed."
