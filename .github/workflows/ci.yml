@@ -22,6 +22,10 @@ jobs:
         # will restore / create folders
         #   ~/.npm
         #   ~/.cache/Cypress
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Install 📦
         uses: cypress-io/github-action@v5
         with:
