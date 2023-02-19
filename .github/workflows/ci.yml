@@ -157,3 +157,10 @@ jobs:
       - name: Bust Cloudfront Cache 👥
         if: ${{ github.event_name != 'pull_request'}}
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
+
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Commander Spellbook website has been deployed."
