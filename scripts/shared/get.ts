@@ -13,7 +13,7 @@ export default function getData(url: string) {
           try {
             resolve(JSON.parse(data));
           } catch (e) {
-            console.error("JSON payload fromn", url, "failed to parse.");
+            console.error("JSON payload from", url, "failed to parse.");
             reject(e);
           }
         });
