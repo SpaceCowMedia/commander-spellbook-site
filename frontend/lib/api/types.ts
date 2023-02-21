@@ -23,7 +23,7 @@ export type CompressedApiResponse = {
   s: string; // Steps
   r: string; // Results
   b?: number; // Banned
-  o?: number; // spoiled
+  o?: number; // spOiled
   e?: string; // EDHREC link
 };
 
