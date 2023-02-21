@@ -6,4 +6,4 @@ Check out the [about page](https://commanderspellbook.com/about/) for details ab
 
 ## Development
 
-See [the development docs](https://commander-spellbook.github.io/website-v2/) for information.
+See [the development docs](https://commander-spellbook.github.io/website-v2/) for information on how to contribute to the site.
