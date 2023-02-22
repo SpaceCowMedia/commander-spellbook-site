@@ -9,6 +9,7 @@ import getEDHRECComboData from "./get-edhrec-combo-data";
 import getFeaturedRules from "./get-featured-rules";
 import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
+import getComboChangelog from "./get-combo-changelog";
 
 configureDotenv();
 
@@ -36,83 +37,100 @@ Promise.all([
   getEDHRECPrices(),
   getEDHRECComboData(),
   getFeaturedRules(),
-]).then((responses) => {
-  const cardData: Record<string, CardData> = {};
-  const [
-    compressedData,
-    scryfallData,
-    edhrecPriceData,
-    edhrecComboData,
-    featuredRules,
-  ] = responses;
-  const cardNames = collectCardNames(compressedData);
-  const results = collectResults(compressedData);
+])
+  .then((responses) => {
+    const cardData: Record<string, CardData> = {};
+    const [
+      compressedData,
+      scryfallData,
+      edhrecPriceData,
+      edhrecComboData,
+      featuredRules,
+    ] = responses;
+    const cardNames = collectCardNames(compressedData);
+    const results = collectResults(compressedData);
 
-  log("Writing /autocomplete-data/cards.json");
-  fs.writeFileSync("./autocomplete-data/cards.json", JSON.stringify(cardNames));
-  log("/autocomplete-data/cards.json written", "green");
+    log("Writing /autocomplete-data/cards.json");
+    fs.writeFileSync(
+      "./autocomplete-data/cards.json",
+      JSON.stringify(cardNames)
+    );
+    log("/autocomplete-data/cards.json written", "green");
 
-  log("Writing /autocomplete-data/results.json");
-  fs.writeFileSync("./autocomplete-data/results.json", JSON.stringify(results));
-  log("/autocomplete-data/results.json written", "green");
+    log("Writing /autocomplete-data/results.json");
+    fs.writeFileSync(
+      "./autocomplete-data/results.json",
+      JSON.stringify(results)
+    );
+    log("/autocomplete-data/results.json written", "green");
 
-  cardNames.forEach((autocompleteOption) => {
-    const name = normalizeCardName(autocompleteOption.label);
-    const sfData = scryfallData[name];
-    const priceData = edhrecPriceData[name] || {
-      prices: { tcgplayer: 0, cardkingdom: 0 },
-    };
-
-    try {
-      cardData[name] = {
-        p: {
-          t: priceData.prices.tcgplayer,
-          c: priceData.prices.cardkingdom,
-        },
-        i: {
-          o: sfData.images.oracle,
-          a: sfData.images.artCrop,
-        },
-        e: sfData.edhrecPermalink,
+    cardNames.forEach((autocompleteOption) => {
+      const name = normalizeCardName(autocompleteOption.label);
+      const sfData = scryfallData[name];
+      const priceData = edhrecPriceData[name] || {
+        prices: { tcgplayer: 0, cardkingdom: 0 },
       };
 
-      if (isFeatured(sfData, featuredRules)) {
-        cardData[name].f = 1;
-      }
+      try {
+        cardData[name] = {
+          p: {
+            t: priceData.prices.tcgplayer,
+            c: priceData.prices.cardkingdom,
+          },
+          i: {
+            o: sfData.images.oracle,
+            a: sfData.images.artCrop,
+          },
+          e: sfData.edhrecPermalink,
+        };
 
-      if (sfData.isBanned) {
-        cardData[name].b = 1;
-      }
-      if (sfData.isPreview) {
-        cardData[name].s = 1;
-      }
+        if (isFeatured(sfData, featuredRules)) {
+          cardData[name].f = 1;
+        }
 
-      if (sfData.aliases.length > 0) {
-        cardData[name].a = sfData.aliases;
+        if (sfData.isBanned) {
+          cardData[name].b = 1;
+        }
+        if (sfData.isPreview) {
+          cardData[name].s = 1;
+        }
+
+        if (sfData.aliases.length > 0) {
+          cardData[name].a = sfData.aliases;
+        }
+      } catch (e) {
+        log(
+          `"${name}" could not be found in Scryfall's data. It's possible the name is misspelled. Skipping it when creating card data.`,
+          "red"
+        );
       }
-    } catch (e) {
-      log(
-        `"${name}" could not be found in Scryfall's data. It's possible the name is misspelled. Skipping it when creating card data.`,
-        "red"
-      );
-    }
+    });
+
+    log("Writing /external-data/cards.json");
+    fs.writeFileSync("./external-data/cards.json", JSON.stringify(cardData));
+    log("/external-data/cards.json written", "green");
+
+    log("Writing /external-data/edhrec-combos.json");
+    fs.writeFileSync(
+      "./external-data/edhrec-combos.json",
+      JSON.stringify(edhrecComboData)
+    );
+    log("/external-data/edhrec-combos.json written", "green");
+
+    log("Writing /frontend/static/api/combo-data.json");
+    fs.writeFileSync(
+      "./frontend/static/api/combo-data.json",
+      JSON.stringify(compressedData)
+    );
+    log("/frontend/static/api/combo-data.json written", "green");
+
+    return getComboChangelog();
+  })
+  .then((changelogData) => {
+    log("Writing /frontend/static/changelog.json");
+    fs.writeFileSync(
+      "./frontend/static/changelog.json",
+      JSON.stringify(changelogData)
+    );
+    log("/frontend/static/changelog.json written", "green");
   });
-
-  log("Writing /external-data/cards.json");
-  fs.writeFileSync("./external-data/cards.json", JSON.stringify(cardData));
-  log("/external-data/cards.json written", "green");
-
-  log("Writing /external-data/edhrec-combos.json");
-  fs.writeFileSync(
-    "./external-data/edhrec-combos.json",
-    JSON.stringify(edhrecComboData)
-  );
-  log("/external-data/edhrec-combos.json written", "green");
-
-  log("Writing /frontend/static/api/combo-data.json");
-  fs.writeFileSync(
-    "./frontend/static/api/combo-data.json",
-    JSON.stringify(compressedData)
-  );
-  log("/frontend/static/api/combo-data.json written", "green");
-});
