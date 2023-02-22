@@ -1,7 +1,6 @@
+import fs from "fs";
 import type { CompressedApiResponse } from "../../frontend/lib/api/types";
 import get from "../shared/get";
-
-const newComboDataJSON = require("../../frontend/static/api/combo-data.json");
 
 type CompressedKey = keyof CompressedApiResponse;
 
@@ -16,7 +15,6 @@ const propertyMap = {
   s: "Steps",
   r: "Results",
 } as Record<CompressedKey, string>;
-const newComboData = newComboDataJSON as CompressedApiResponse[];
 
 function formatCombosForChangelog(combos: CompressedApiResponse[]) {
   return combos.map((combo) => {
@@ -37,6 +35,9 @@ export default function createChangelog() {
     const deletedCombos = [] as CompressedApiResponse[];
     const updatedCombos = [] as { id: string; change: string }[];
 
+    const newComboData = JSON.parse(
+      fs.readFileSync("./frontend/static/api/combo-data.json", "utf8")
+    ) as CompressedApiResponse[];
     newComboData.forEach((combo) => {
       const oldCombo = oldComboData.find((oldCombo) => {
         return oldCombo.d === combo.d;
