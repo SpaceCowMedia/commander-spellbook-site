@@ -1,5 +1,5 @@
-import newComboDataJSON from "@spellbook/frontend/static/api/combo-data.json";
-import type { CompressedApiResponse } from "@spellbook/frontend/lib/api/types";
+import newComboDataJSON from "../../frontend/static/api/combo-data.json";
+import type { CompressedApiResponse } from "../../frontend/lib/api/types";
 import get from "../shared/get";
 
 type CompressedKey = keyof CompressedApiResponse;
