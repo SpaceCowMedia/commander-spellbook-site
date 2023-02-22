@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "scryfall-client": "^0.23.0"
+    "scryfall-client": "^0.23.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
