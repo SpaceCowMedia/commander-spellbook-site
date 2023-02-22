@@ -1,6 +1,7 @@
-import newComboDataJSON from "../../frontend/static/api/combo-data.json";
 import type { CompressedApiResponse } from "../../frontend/lib/api/types";
 import get from "../shared/get";
+
+const newComboDataJSON = require("../../frontend/static/api/combo-data.json");
 
 type CompressedKey = keyof CompressedApiResponse;
 
