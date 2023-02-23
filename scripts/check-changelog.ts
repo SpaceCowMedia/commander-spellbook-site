@@ -14,9 +14,6 @@ if (
   result = "NO_COMBO_CHANGES";
 }
 
-process.env.GITHUB_OUTPUT =
-  process.env.GITHUB_OUTPUT +
-  `
-result=${result}`;
+console.log(process.env.GITHUB_OUTPUT);
 
-console.log("Deploy state: ", result);
+fs.writeFileSync("./deploy-result", `result=${result}`);

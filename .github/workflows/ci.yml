@@ -117,6 +117,7 @@ jobs:
 
       - id: changelog_result
         run: npm run check-changelog
+        run: cat ./deploy-result >> "$GITHUB_OUTPUT"
 
   cancelled_deploy_alert:
     if: needs.changelog_check.outputs.deploy_result == 'NO_COMBO_CHANGES'
