@@ -139,7 +139,7 @@ jobs:
     # only deploy from the main branch
     # and the changelog check indicates
     # that there are changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.deploy_result = 'SHOULD_DEPLOY'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.deploy_result == 'SHOULD_DEPLOY'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [changelog_check]
