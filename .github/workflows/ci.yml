@@ -116,7 +116,7 @@ jobs:
           runTests: false
 
       - id: changelog_result
-        run: npm run check-changelog && cat ./deploy-result >> "$GITHUB_OUTPUT"
+        run: npm run check-changelog
 
   post_changelogcheck:
     runs-on: ubuntu-20.04
@@ -127,7 +127,7 @@ jobs:
         run: echo "$OUTPUT1"
 
   cancelled_deploy_alert:
-    if: needs.changelog_check.outputs.deploy_result == 'NO_COMBO_CHANGES'
+    if: needs.changelog_check.outputs.deploy_result == 'SHOULD_NOT_DEPLOY'
     runs-on: ubuntu-20.04
     needs: [changelog_check]
     steps:
@@ -135,7 +135,7 @@ jobs:
         run: echo "Will not deploy!"
 
   succesful_deploy_alert:
-    if: needs.changelog_check.outputs.deploy_result == 'SHOULD_DEPLOY'
+    if: needs.changelog_check.outputs.deploy_result == 'COMBO_DATA_CHANGED'
     runs-on: ubuntu-20.04
     # needs: [changelog_check, deploy]
     needs: [changelog_check]
