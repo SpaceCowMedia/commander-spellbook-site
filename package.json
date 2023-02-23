@@ -17,6 +17,7 @@
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
+    "check-changelog": "ts-node scripts/check-changelog",
     "prefirebase:emulate": "npm run build-backend",
     "postfirebase:emulate": "npm run prettier",
     "firebase:emulate": "firebase emulators:start --project=\"commander-spellbook-local\" --import backend/firebase-emulator-seed-data",
