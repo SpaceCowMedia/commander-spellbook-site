@@ -100,7 +100,7 @@ jobs:
     # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     runs-on: ubuntu-20.04
     outputs:
-      should_deploy: ${{ steps.changelog_result.outputs.result }}
+      deploy_result: ${{ steps.changelog_result.outputs.result }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -118,13 +118,21 @@ jobs:
       - id: changelog_result
         run: npm run check-changelog && cat ./deploy-result >> "$GITHUB_OUTPUT"
 
+  post_changelogcheck:
+    runs-on: ubuntu-20.04
+    needs: [changelog_check]
+    steps:
+      - env:
+          OUTPUT1: ${{needs.changelog_check.outputs.deploy_result}}
+        run: echo "$OUTPUT1"
+
   cancelled_deploy_alert:
     if: needs.changelog_check.outputs.deploy_result == 'NO_COMBO_CHANGES'
     runs-on: ubuntu-20.04
     needs: [changelog_check]
     steps:
       - name: hello
-        run: echo "Won't deploy!"
+        run: echo "Will not deploy!"
 
   succesful_deploy_alert:
     if: needs.changelog_check.outputs.deploy_result == 'SHOULD_DEPLOY'
