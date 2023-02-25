@@ -1,4 +1,5 @@
 import fs from "fs";
+import { execSync } from "child_process";
 import type { CompressedApiResponse } from "../../frontend/lib/api/types";
 import get from "../shared/get";
 
@@ -28,6 +29,8 @@ function formatCombosForChangelog(combos: CompressedApiResponse[]) {
 // note: for this to work, this must be run after the combo-data has been
 // created locally, but before it gets deployed to prod
 export default function createChangelog() {
+  const currentGithSha = execSync("git rev-parse HEAD").toString().trim();
+
   return get(CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL).then((oldData) => {
     const oldComboData = oldData as CompressedApiResponse[];
 
@@ -78,6 +81,7 @@ export default function createChangelog() {
     });
 
     return {
+      gitSha: currentGithSha,
       addedCombos: formatCombosForChangelog(addedCombos),
       deletedCombos: formatCombosForChangelog(deletedCombos),
       updatedCombos,
