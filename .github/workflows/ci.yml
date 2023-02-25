@@ -13,6 +13,8 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-20.04
+    outputs:
+      workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -21,6 +23,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: Create Workflow ID 🆔
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
@@ -40,6 +46,32 @@ jobs:
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Cache Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
 
   linter:
     runs-on: ubuntu-20.04
@@ -100,8 +132,34 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Cache Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
       - name: Run unit tests 🧪
-        run: npm run download-data && npm test
+        run: npm test
 
   integration-tests:
     runs-on: ubuntu-20.04
@@ -130,6 +188,32 @@ jobs:
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Cache Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
 
       - name: Run Integration tests 💻
         run: npm run test:integration
@@ -168,14 +252,21 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Deploy Firebase 🔥
-        run: npm run firebase:deploy:ci
-        env:
-          NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+      - name: Cache Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
 
-      - name: Download Data ⤵️
-        run: npm run download-data
+      - name: Download Data ⬇️
+        if: steps.cache-download-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
@@ -185,6 +276,13 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
+      - name: Deploy Firebase 🔥
+        run: npm run firebase:deploy:ci
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
 
       - name: Build Frontend Site 🏗️
         run: npm run build-frontend
