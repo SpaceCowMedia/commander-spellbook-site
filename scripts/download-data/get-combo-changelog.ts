@@ -31,9 +31,9 @@ function formatCombosForChangelog(combos: CompressedApiResponse[]) {
 export default function createChangelog() {
   const currentGithSha = getCurrentGitSha();
 
-  return get(CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL).then((oldData) => {
-    const oldComboData = oldData as CompressedApiResponse[];
-
+  return get<CompressedApiResponse[]>(
+    CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL
+  ).then((oldComboData) => {
     const addedCombos = [] as CompressedApiResponse[];
     const deletedCombos = [] as CompressedApiResponse[];
     const updatedCombos = [] as { id: string; change: string }[];
