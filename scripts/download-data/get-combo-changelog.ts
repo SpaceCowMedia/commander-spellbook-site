@@ -4,6 +4,20 @@ import get from "../shared/get";
 import getCurrentGitSha from "../shared/get-current-git-sha";
 
 type CompressedKey = keyof CompressedApiResponse;
+type ComboInChangelog = {
+  id: string;
+  cards: string[];
+};
+type UpdatedComboLog = {
+  id: string;
+  change: string;
+};
+export type Changelog = {
+  gitSha: string;
+  addedCombos: ComboInChangelog[];
+  deletedCombos: ComboInChangelog[];
+  updatedCombos: UpdatedComboLog[];
+};
 
 const CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL =
   "https://commanderspellbook.com/api/combo-data.json";
@@ -36,7 +50,7 @@ export default function createChangelog() {
   ).then((oldComboData) => {
     const addedCombos = [] as CompressedApiResponse[];
     const deletedCombos = [] as CompressedApiResponse[];
-    const updatedCombos = [] as { id: string; change: string }[];
+    const updatedCombos = [] as UpdatedComboLog[];
 
     const newComboData = JSON.parse(
       fs.readFileSync("./frontend/static/api/combo-data.json", "utf8")
