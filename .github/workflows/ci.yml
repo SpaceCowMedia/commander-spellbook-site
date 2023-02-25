@@ -101,6 +101,7 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
+      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -140,8 +141,9 @@ jobs:
     # needs: [changelog_check, deploy]
     needs: [changelog_check]
     steps:
-      - name: hello
-        run: echo "Will deploy!"
+      - env:
+          OUTPUT1: ${{needs.changelog_check.outputs.deploy_reason}}
+        run: echo "$OUTPUT1"
 
   # deploy:
   #   # only deploy from the main branch
