@@ -1,6 +1,6 @@
 import https from "https";
 
-export default function getData(url: string) {
+export default function getData<T = unknown>(url: string): Promise<T> {
   return new Promise((resolve, reject) => {
     https
       .get(url, (response) => {
