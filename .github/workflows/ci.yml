@@ -60,6 +60,7 @@ jobs:
           path: |
             node_modules
             ~/.npm
+            ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
@@ -90,6 +91,7 @@ jobs:
           path: |
             node_modules
             ~/.npm
+            ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
@@ -157,6 +159,7 @@ jobs:
           path: |
             node_modules
             ~/.npm
+            ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
