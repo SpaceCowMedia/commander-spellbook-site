@@ -11,7 +11,7 @@ on:
     - cron: "0 */2 * * *"
 
 jobs:
-  install:
+  setup:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout 🛎
@@ -43,7 +43,7 @@ jobs:
 
   linter:
     runs-on: ubuntu-20.04
-    needs: install
+    needs: setup
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-20.04
-    needs: install
+    needs: setup
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -105,7 +105,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-20.04
-    needs: install
+    needs: setup
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -142,7 +142,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
-    needs: [install, linter, unit-tests, integration-tests]
+    needs: [setup, linter, unit-tests, integration-tests]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
