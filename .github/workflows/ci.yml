@@ -23,6 +23,7 @@ jobs:
           node-version: 16
 
       - name: Cache node modules 🗃
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
           # npm packages are cached in ~/.npm
@@ -55,6 +56,8 @@ jobs:
         with:
           path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-build-
 
       - name: Install 📦
         run: npm ci
@@ -79,6 +82,8 @@ jobs:
         with:
           path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-build-
 
       - name: Install 📦
         run: npm ci
@@ -105,6 +110,8 @@ jobs:
             ~/.npm
             ~/.cache
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-build-
 
       - name: Install 📦
         run: npm ci
@@ -135,6 +142,8 @@ jobs:
         with:
           path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-build-
 
       - name: Install 📦
         run: npm ci
