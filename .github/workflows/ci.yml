@@ -100,7 +100,7 @@ jobs:
     # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     runs-on: ubuntu-20.04
     outputs:
-      deploy_result: ${{ steps.changelog_result.outputs.result }}
+      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -123,11 +123,11 @@ jobs:
     needs: [changelog_check]
     steps:
       - env:
-          OUTPUT1: ${{needs.changelog_check.outputs.deploy_result}}
+          OUTPUT1: ${{needs.changelog_check.outputs.should_deploy}}
         run: echo "$OUTPUT1"
 
   cancelled_deploy_alert:
-    if: needs.changelog_check.outputs.deploy_result == 'SHOULD_NOT_DEPLOY'
+    if: needs.changelog_check.outputs.should_deploy == 'NO'
     runs-on: ubuntu-20.04
     needs: [changelog_check]
     steps:
@@ -135,7 +135,7 @@ jobs:
         run: echo "Will not deploy!"
 
   succesful_deploy_alert:
-    if: needs.changelog_check.outputs.deploy_result == 'COMBO_DATA_CHANGED'
+    if: needs.changelog_check.outputs.should_deploy == 'YES'
     runs-on: ubuntu-20.04
     # needs: [changelog_check, deploy]
     needs: [changelog_check]
@@ -147,7 +147,7 @@ jobs:
   #   # only deploy from the main branch
   #   # and the changelog check indicates
   #   # that there are changes to deploy
-  #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.deploy_result == 'SHOULD_DEPLOY'
+  #   if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
   #   concurrency: production_deploy
   #   runs-on: ubuntu-20.04
   #   needs: [linter, unit-tests, integration-tests, changelog_check]
