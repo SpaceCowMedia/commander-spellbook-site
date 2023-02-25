@@ -25,10 +25,10 @@ jobs:
       - name: Cache node modules 🗃
         uses: actions/cache@v3
         with:
-          # npm packages are stored in node_modules
+          # npm packages are cached in ~/.npm
           # Cypress binary is stored in ~/.cache
           path: |
-            node_modules
+            ~/.npm
             ~/.cache
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
@@ -53,8 +53,11 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        run: npm ci
 
       - name: Run linter 👀
         run: npm run lint
@@ -74,8 +77,11 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        run: npm ci
 
       - name: Run unit tests 🧪
         run: npm run download-data && npm test
@@ -96,9 +102,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            node_modules
+            ~/.npm
             ~/.cache
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        run: npm ci
 
       - name: Run Integration tests 💻
         run: npm run test:integration
@@ -124,8 +133,11 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: ~/.npm
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        run: npm ci
 
       - name: Deploy Firebase 🔥
         run: npm run firebase:deploy:ci
