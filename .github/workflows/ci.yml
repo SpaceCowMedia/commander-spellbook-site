@@ -11,8 +11,10 @@ on:
     - cron: "0 */2 * * *"
 
 jobs:
-  install:
+  setup:
     runs-on: ubuntu-20.04
+    outputs:
+      workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -22,25 +24,58 @@ jobs:
         with:
           node-version: 16
 
+      - name: Create Workflow ID 🆔
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
+
       - name: Cache node modules 🗃
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          # npm packages are cached in ~/.npm
+          # npm packages are cached in node_modules
+          # npm also provides a local cache in .npm
           # Cypress binary is stored in ~/.cache
           path: |
+            node_modules
             ~/.npm
             ~/.cache
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Cache Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
   linter:
     runs-on: ubuntu-20.04
-    needs: install
+    needs: setup
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -51,12 +86,19 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run linter 👀
@@ -64,7 +106,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-20.04
-    needs: install
+    needs: setup
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -75,39 +117,103 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        run: npm ci
-
-      - name: Run unit tests 🧪
-        run: npm run download-data && npm test
-
-  integration-tests:
-    runs-on: ubuntu-20.04
-    needs: install
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
           path: |
+            node_modules
             ~/.npm
             ~/.cache
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
+      - name: Run unit tests 🧪
+        run: npm test
+
+  integration-tests:
+    runs-on: ubuntu-20.04
+    needs: setup
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
 
       - name: Run Integration tests 💻
         run: npm run test:integration
@@ -177,7 +283,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
-    needs: [linter, unit-tests, integration-tests, changelog_check]
+    needs: [setup, linter, unit-tests, integration-tests, changelog_check]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -188,22 +294,36 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Deploy Firebase 🔥
-        run: npm run firebase:deploy:ci
-        env:
-          NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
 
-      - name: Download Data ⤵️
-        run: npm run download-data
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
@@ -213,6 +333,13 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
+      - name: Deploy Firebase 🔥
+        run: npm run firebase:deploy:ci
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
 
       - name: Build Frontend Site 🏗️
         run: npm run build-frontend
@@ -227,7 +354,7 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
 
       - name: Configure AWS Credentials ㊙️
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
