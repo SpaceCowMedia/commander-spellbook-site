@@ -132,10 +132,14 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+      - name: Restore node modules from cache 📦
+        uses: actions/cache@v3
         with:
-          runTests: false
+          path: ~/.npm
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        run: npm ci
 
       - id: changelog_result
         run: npm run check-changelog
