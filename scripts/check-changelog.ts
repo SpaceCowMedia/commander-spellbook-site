@@ -12,8 +12,6 @@ const numOfAddedCombos = changelog.addedCombos.length;
 const numOfDeletedCombos = changelog.deletedCombos.length;
 const numOfUpdatedCombos = changelog.updatedCombos.length;
 
-console.log(changelog);
-
 if (numOfAddedCombos > 0 || numOfDeletedCombos > 0 || numOfUpdatedCombos > 0) {
   shouldDeploy = "YES";
 
@@ -29,4 +27,4 @@ if (numOfAddedCombos > 0 || numOfDeletedCombos > 0 || numOfUpdatedCombos > 0) {
 }
 
 saveGithubOutput("should_deploy", shouldDeploy);
-saveGithubOutput("deploy_reason", deployReasonMessage);
+saveGithubOutput("deploy_reason", deployReasonMessage.trim());
