@@ -125,6 +125,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
 
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
       - name: Run Integration tests 💻
         run: npm run test:integration
         env:
