@@ -26,14 +26,16 @@ jobs:
         id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          # npm packages are cached in ~/.npm
+          # npm packages are cached in node_modules
+          # npm also provides a local cache in .npm
           # Cypress binary is stored in ~/.cache
           path: |
+            node_modules
             ~/.npm
             ~/.cache
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -52,14 +54,18 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run linter 👀
@@ -78,14 +84,18 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run unit tests 🧪
@@ -104,16 +114,19 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
           path: |
+            node_modules
             ~/.npm
             ~/.cache
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Integration tests 💻
@@ -138,14 +151,18 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-build-
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Deploy Firebase 🔥
