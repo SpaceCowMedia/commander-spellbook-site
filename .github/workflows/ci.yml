@@ -17,19 +17,24 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@master
 
-        # only install dependencies using
-        # https://github.com/cypress-io/github-action
-        # will restore / create folders
-        #   ~/.npm
-        #   ~/.cache/Cypress
       - name: Setup Node ⬢
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+
+      - name: Cache node modules 🗃
+        uses: actions/cache@v3
         with:
-          runTests: false
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          # Cypress binary is stored in ~/.cache
+          path: ~/.cache/Cypress
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-build-
+
+      - name: Install 📦
+        run: npm install
 
   linter:
     runs-on: ubuntu-20.04
@@ -43,10 +48,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+      - name: Restore node modules from cache 📦
+        uses: actions/cache@v3
         with:
-          runTests: false
+          path: ~/.npm
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run linter 👀
         run: npm run lint
@@ -63,10 +69,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+      - name: Restore node modules from cache 📦
+        uses: actions/cache@v3
         with:
-          runTests: false
+          path: ~/.npm
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run unit tests 🧪
         run: npm run download-data && npm test
@@ -83,10 +90,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+      - name: Restore node modules from cache 📦
+        uses: actions/cache@v3
         with:
-          runTests: false
+          path: ~/.npm
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Integration tests 💻
         run: npm run test:integration
@@ -109,10 +117,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install 📦
-        uses: cypress-io/github-action@v5
+      - name: Restore node modules from cache 📦
+        uses: actions/cache@v3
         with:
-          runTests: false
+          path: ~/.npm
+          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Deploy Firebase 🔥
         run: npm run firebase:deploy:ci
