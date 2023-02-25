@@ -25,17 +25,18 @@ jobs:
       - name: Cache node modules 🗃
         uses: actions/cache@v3
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
+          # npm packages are stored in node_modules
           # Cypress binary is stored in ~/.cache
           path: |
-            ~/.npm
-            ~/.cache/Cypress
+            node_modules
+            ~/.cache
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-modules-build-
 
       - name: Install 📦
-        run: npm install
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
 
   linter:
     runs-on: ubuntu-20.04
@@ -52,7 +53,7 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run linter 👀
@@ -73,7 +74,7 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run unit tests 🧪
@@ -95,8 +96,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.npm
-            ~/.cache/Cypress
+            node_modules
+            ~/.cache
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Integration tests 💻
@@ -123,7 +124,7 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Deploy Firebase 🔥
