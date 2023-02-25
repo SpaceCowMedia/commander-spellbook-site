@@ -61,7 +61,7 @@ jobs:
             ${{ runner.os }}-download-data-
 
       - name: Download Data ⬇️
-        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
@@ -132,7 +132,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Cache Downloaded Data ⏬
+      - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -146,7 +146,7 @@ jobs:
             ${{ runner.os }}-download-data-
 
       - name: Download Data ⬇️
-        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
@@ -189,7 +189,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Cache Downloaded Data ⏬
+      - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -203,7 +203,7 @@ jobs:
             ${{ runner.os }}-download-data-
 
       - name: Download Data ⬇️
-        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
@@ -252,7 +252,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Cache Downloaded Data ⏬
+      - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -266,7 +266,7 @@ jobs:
             ${{ runner.os }}-download-data-
 
       - name: Download Data ⬇️
-        if: steps.cache-download-data.outputs.cache-hit != 'true'
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
