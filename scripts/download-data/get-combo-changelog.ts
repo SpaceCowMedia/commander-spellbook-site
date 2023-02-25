@@ -1,8 +1,23 @@
 import fs from "fs";
 import type { CompressedApiResponse } from "../../frontend/lib/api/types";
 import get from "../shared/get";
+import getCurrentGitSha from "../shared/get-current-git-sha";
 
 type CompressedKey = keyof CompressedApiResponse;
+type ComboInChangelog = {
+  id: string;
+  cards: string[];
+};
+type UpdatedComboLog = {
+  id: string;
+  change: string;
+};
+export type Changelog = {
+  gitSha: string;
+  addedCombos: ComboInChangelog[];
+  deletedCombos: ComboInChangelog[];
+  updatedCombos: UpdatedComboLog[];
+};
 
 const CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL =
   "https://commanderspellbook.com/api/combo-data.json";
@@ -28,12 +43,14 @@ function formatCombosForChangelog(combos: CompressedApiResponse[]) {
 // note: for this to work, this must be run after the combo-data has been
 // created locally, but before it gets deployed to prod
 export default function createChangelog() {
-  return get(CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL).then((oldData) => {
-    const oldComboData = oldData as CompressedApiResponse[];
+  const currentGithSha = getCurrentGitSha();
 
+  return get<CompressedApiResponse[]>(
+    CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL
+  ).then((oldComboData) => {
     const addedCombos = [] as CompressedApiResponse[];
     const deletedCombos = [] as CompressedApiResponse[];
-    const updatedCombos = [] as { id: string; change: string }[];
+    const updatedCombos = [] as UpdatedComboLog[];
 
     const newComboData = JSON.parse(
       fs.readFileSync("./frontend/static/api/combo-data.json", "utf8")
@@ -78,6 +95,7 @@ export default function createChangelog() {
     });
 
     return {
+      gitSha: currentGithSha,
       addedCombos: formatCombosForChangelog(addedCombos),
       deletedCombos: formatCombosForChangelog(deletedCombos),
       updatedCombos,
