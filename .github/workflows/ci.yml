@@ -26,9 +26,10 @@ jobs:
         uses: actions/cache@v3
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
           # Cypress binary is stored in ~/.cache
-          path: ~/.cache/Cypress
+          path: |
+            ~/.npm
+            ~/.cache/Cypress
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-modules-build-
@@ -93,7 +94,9 @@ jobs:
       - name: Restore node modules from cache 📦
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: |
+            ~/.npm
+            ~/.cache/Cypress
           key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Integration tests 💻
