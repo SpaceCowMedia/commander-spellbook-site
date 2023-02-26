@@ -11,7 +11,6 @@ on:
     - cron: "0 */2 * * *"
 
 env:
-  NODE_ENV: production
   FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
   FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
   FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -74,6 +73,8 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
         run: npm run download-data
 
   changelog_check:
@@ -125,6 +126,8 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
         run: npm run download-data
 
       - name: Compare Changelog 🪵
@@ -205,6 +208,8 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
         run: npm run download-data
 
       - name: Run unit tests 🧪
@@ -253,6 +258,8 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
         run: npm run download-data
 
       - name: Run Integration tests 💻
@@ -343,12 +350,18 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
         run: npm run download-data
 
       - name: Deploy Firebase 🔥
+        env:
+          NODE_ENV: production
         run: npm run firebase:deploy:ci
 
       - name: Build Frontend Site 🏗️
+        env:
+          NODE_ENV: production
         run: npm run build-frontend
 
       - name: Configure AWS Credentials ㊙️
