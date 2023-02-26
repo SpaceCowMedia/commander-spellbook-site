@@ -1,11 +1,7 @@
 import type { CompressedApiResponse } from "@spellbook/frontend/lib/api/types";
-import post from "./post";
+import postDiscordWebhook, { Channel } from "./post-discord-webhook";
 import chunkifyArray from "./chunkify-array";
 
-// TODO move to top level script
-require("dotenv").config();
-
-type Channel = "#changelog";
 type ComboPayload = {
   title?: string;
   combos: CompressedApiResponse[];
@@ -13,10 +9,6 @@ type ComboPayload = {
 
 // https://discord.com/developers/docs/resources/channel#embed-object-embed-limits
 const MAX_FIELD_ENTRIES = 25;
-
-const channelToWebhook = {
-  "#changelog": process.env.DISCORD_CHANGELOG_WEBHOOK_URL,
-} as Record<Channel, string>;
 
 // need to specify the exact id for the emoji for it to work in Discord
 const manaToEmoji = {
@@ -41,20 +33,6 @@ export default function postComboToDiscord(
   channel: Channel,
   payload: ComboPayload
 ) {
-  const url = channelToWebhook[channel];
-
-  if (!url) {
-    // log and noop if the webhook url is not set
-    // eslint-disable-next-line no-console
-    console.error(
-      "Discord channel",
-      channel,
-      "could not be found. Are your environmental variables set?"
-    );
-
-    return Promise.resolve();
-  }
-
   const comboPayloads = payload.combos.map((combo) => {
     const identity = parseIdentity(combo.i);
     const cards = combo.c.join(" | ");
@@ -92,7 +70,7 @@ export default function postComboToDiscord(
     };
 
     promiseChain = promiseChain.then(() => {
-      return post(url, body);
+      return postDiscordWebhook(channel, body);
     });
   });
 

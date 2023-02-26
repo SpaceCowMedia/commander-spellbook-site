@@ -13,4 +13,4 @@
   ignore = "exit 0"
 
 [context.deploy-preview]
-  command = "npm run build-frontend-for-cypress"
+  command = "npm run download-data && npm run build-frontend-for-cypress"
