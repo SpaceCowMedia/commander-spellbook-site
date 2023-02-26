@@ -19,14 +19,16 @@ if (numOfAddedCombos > 0 || numOfDeletedCombos > 0 || numOfUpdatedCombos > 0) {
   shouldDeploy = "YES";
 
   if (numOfAddedCombos > 0) {
-    deployReasonMessage += ` ${numOfAddedCombos} combo(s) added to the database.`;
+    deployReasonMessage += `* ${numOfAddedCombos} combo(s) added to the database.`;
   }
   if (numOfDeletedCombos > 0) {
-    deployReasonMessage += ` ${numOfDeletedCombos} combo(s) removed from the database.`;
+    deployReasonMessage += `* ${numOfDeletedCombos} combo(s) removed from the database.`;
   }
   if (numOfUpdatedCombos > 0) {
-    deployReasonMessage += ` ${numOfUpdatedCombos} combo(s) modified in the database.`;
+    deployReasonMessage += `* ${numOfUpdatedCombos} combo(s) modified in the database.`;
   }
+} else {
+  deployReasonMessage += `* No combo data changed in database.`;
 }
 
 get<Changelog>("https://commanderspellbook.com/changelog.json").then(
@@ -36,7 +38,7 @@ get<Changelog>("https://commanderspellbook.com/changelog.json").then(
 
     if (oldSha !== currentGitSha) {
       shouldDeploy = "YES";
-      deployReasonMessage += ` Deploying [code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}).`;
+      deployReasonMessage += `* Deployed [code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}) to the website.`;
     }
 
     saveGithubOutput("should_deploy", shouldDeploy);
