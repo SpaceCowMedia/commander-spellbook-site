@@ -315,7 +315,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: "Send deploy cancelled notification"
+      - name: "Send deploy cancelled notification ✉️"
         run: npm run discord-webhook:cancel-deploy
 
   deploy:
@@ -406,8 +406,11 @@ jobs:
         run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
-        if: ${{ github.event_name != 'pull_request'}}
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
+
+      - name: Send Deploy Failed Notification ✉️
+        if: ${{ failure() }}
+        run: npm run discord-webhook:failed-deploy
 
   finish-deploy-notification:
     runs-on: ubuntu-20.04
@@ -437,7 +440,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: "Send deploy succeeded notification"
+      - name: "Send deploy succeeded notification ✉️"
         env:
           DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
         run: npm run discord-webhook:finish-deploy
