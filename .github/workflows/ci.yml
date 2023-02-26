@@ -11,13 +11,6 @@ on:
     - cron: "0 */2 * * *"
 
 env:
-  FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
-  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-  FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-  FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-  FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-  FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
   DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets. DISCORD_DEPLOY_WEBHOOK_URL }}
   DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets. DISCORD_CHANGELOG_WEBHOOK_URL }}
 
@@ -75,6 +68,13 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
   changelog_check:
@@ -128,6 +128,13 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
       - name: Compare Changelog 🪵
@@ -210,6 +217,13 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
       - name: Run unit tests 🧪
@@ -218,9 +232,6 @@ jobs:
   integration-tests:
     runs-on: ubuntu-20.04
     needs: setup
-    env:
-      NODE_ENV: development
-      USE_FIREBASE_EMULATORS: true
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -261,10 +272,22 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
       - name: Run Integration tests 💻
         run: npm run test:integration
+        env:
+          NODE_ENV: development
+          USE_FIREBASE_EMULATORS: true
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
@@ -308,8 +331,6 @@ jobs:
     concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [setup, linter, unit-tests, integration-tests, changelog_check]
-    env:
-      NODE_ENV: production
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -350,13 +371,34 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
       - name: Deploy Firebase 🔥
         run: npm run firebase:deploy:ci
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
 
       - name: Build Frontend Site 🏗️
         run: npm run build-frontend
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
 
       - name: Configure AWS Credentials ㊙️
         uses: aws-actions/configure-aws-credentials@v1-node16
