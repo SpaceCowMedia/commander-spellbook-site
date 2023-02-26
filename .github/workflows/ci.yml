@@ -14,8 +14,6 @@ env:
   DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets. DISCORD_CHANGELOG_WEBHOOK_URL }}
 
 jobs:
-
-jobs:
   setup:
     runs-on: ubuntu-20.04
     outputs:
