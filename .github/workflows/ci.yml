@@ -73,6 +73,69 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
+  changelog_check:
+    # only run this check from the main branch
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
+    runs-on: ubuntu-20.04
+    needs: setup
+    outputs:
+      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
+      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
+
+      - name: "Compare Changelog 🪵"
+        id: changelog_result
+        run: npm run check-changelog
+
   linter:
     runs-on: ubuntu-20.04
     needs: setup
@@ -220,94 +283,6 @@ jobs:
         env:
           NODE_ENV: development
           USE_FIREBASE_EMULATORS: true
-
-  changelog_check:
-    # only run this check from the main branch
-    # commented out for testing
-    # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
-    runs-on: ubuntu-20.04
-    outputs:
-      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
-      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Restore Downloaded Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
-
-      - name: Download Data ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        env:
-          NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-        run: npm run download-data
-
-      - id: changelog_result
-        run: npm run check-changelog
-
-  post_changelogcheck:
-    runs-on: ubuntu-20.04
-    needs: [changelog_check]
-    steps:
-      - env:
-          OUTPUT1: ${{needs.changelog_check.outputs.should_deploy}}
-        run: echo "$OUTPUT1"
-
-  cancelled_deploy_alert:
-    if: needs.changelog_check.outputs.should_deploy == 'NO'
-    runs-on: ubuntu-20.04
-    needs: [changelog_check]
-    steps:
-      - name: hello
-        run: echo "Will not deploy!"
-
-  succesful_deploy_alert:
-    if: needs.changelog_check.outputs.should_deploy == 'YES'
-    runs-on: ubuntu-20.04
-    # needs: [changelog_check, deploy]
-    needs: [changelog_check]
-    steps:
-      - env:
-          OUTPUT1: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: echo "$OUTPUT1"
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
