@@ -239,13 +239,46 @@ jobs:
           node-version: 16
 
       - name: Restore node modules from cache 📦
+        id: cache-nodemodules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          restore-keys: |
+            ${{ runner.os }}-download-data-
+
+      - name: Download Data ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        env:
+          NODE_ENV: production
+          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: npm run download-data
 
       - id: changelog_result
         run: npm run check-changelog
@@ -275,6 +308,40 @@ jobs:
       - env:
           OUTPUT1: ${{needs.changelog_check.outputs.deploy_reason}}
         run: echo "$OUTPUT1"
+
+  cancel-deploy-notification:
+    # only send a message about cancelling deploy from the main branch
+    # and the changelog check indicates that there are no changes to deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'NO'
+    runs-on: ubuntu-20.04
+    needs: [setup, linter, unit-tests, integration-tests, changelog_check]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: "Send deploy cancelled notification"
+        run: npm run discord-webhook:cancel-deploy
 
   deploy:
     # only deploy from the main branch

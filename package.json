@@ -17,7 +17,7 @@
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
-    "precheck-changelog": "npm run download-data",
+    "discord-webhook:cancel-deploy": "ts-node scripts/discord-webhooks/cancel-deploy.ts",
     "check-changelog": "ts-node scripts/check-changelog",
     "prefirebase:emulate": "npm run build-backend",
     "postfirebase:emulate": "npm run prettier",
