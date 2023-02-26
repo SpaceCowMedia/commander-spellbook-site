@@ -218,6 +218,9 @@ jobs:
   integration-tests:
     runs-on: ubuntu-20.04
     needs: setup
+    env:
+      NODE_ENV: development
+      USE_FIREBASE_EMULATORS: true
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -258,15 +261,10 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        env:
-          NODE_ENV: production
         run: npm run download-data
 
       - name: Run Integration tests 💻
         run: npm run test:integration
-        env:
-          NODE_ENV: development
-          USE_FIREBASE_EMULATORS: true
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
@@ -310,6 +308,8 @@ jobs:
     concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [setup, linter, unit-tests, integration-tests, changelog_check]
+    env:
+      NODE_ENV: production
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -350,18 +350,12 @@ jobs:
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        env:
-          NODE_ENV: production
         run: npm run download-data
 
       - name: Deploy Firebase 🔥
-        env:
-          NODE_ENV: production
         run: npm run firebase:deploy:ci
 
       - name: Build Frontend Site 🏗️
-        env:
-          NODE_ENV: production
         run: npm run build-frontend
 
       - name: Configure AWS Credentials ㊙️
