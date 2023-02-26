@@ -83,6 +83,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     runs-on: ubuntu-20.04
     needs: setup
+    concurrency: production_deploy
     outputs:
       should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
       deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
