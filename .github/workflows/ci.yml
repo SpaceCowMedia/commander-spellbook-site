@@ -9,6 +9,11 @@ on:
       - main
   schedule:
     - cron: "0 */2 * * *"
+env:
+  DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets. DISCORD_DEPLOY_WEBHOOK_URL }}
+  DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets. DISCORD_CHANGELOG_WEBHOOK_URL }}
+
+jobs:
 
 jobs:
   setup:
