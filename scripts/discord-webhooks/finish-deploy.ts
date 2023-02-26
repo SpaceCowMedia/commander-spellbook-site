@@ -1,6 +1,5 @@
 import postDiscordWebhook from "../shared/post-discord-webhook";
-
-const link = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+import createGithubActionLink from "../shared/create-github-action-link";
 
 postDiscordWebhook("#grand-calcutron", {
   content: "Deploy Complete",
@@ -14,7 +13,7 @@ postDiscordWebhook("#grand-calcutron", {
         },
         {
           name: "Deploy log",
-          value: `[See deploy logs](${link})`,
+          value: `[See deploy logs](${createGithubActionLink()})`,
         },
       ],
     },
