@@ -297,7 +297,7 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v3
         with:
-          node-version: 17
+          node-version: 16
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -409,9 +409,35 @@ jobs:
         if: ${{ github.event_name != 'pull_request'}}
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
 
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
-        uses: Ilshidur/action-discord@master
+  finish-deploy-notification:
+    runs-on: ubuntu-20.04
+    needs: [deploy]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
         with:
-          args: "Commander Spellbook website has been deployed."
+          node-version: 16
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-build-
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: "Send deploy succeeded notification"
+        env:
+          DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
+        run: npm run discord-webhook:finish-deploy
