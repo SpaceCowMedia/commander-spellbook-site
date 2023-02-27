@@ -38,7 +38,7 @@ get<Changelog>("https://commanderspellbook.com/changelog.json").then(
 
     if (oldSha !== currentGitSha) {
       shouldDeploy = "YES";
-      deployReasonMessage += `• Deployed [code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}) to the website\n`;
+      deployReasonMessage += `• Website code updated. [View code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}) to the website\n`;
     }
 
     saveGithubOutput("should_deploy", shouldDeploy);

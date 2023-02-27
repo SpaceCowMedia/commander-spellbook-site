@@ -13,7 +13,7 @@ postDiscordWebhook("#grand-calcutron", {
         },
         {
           name: "Deploy log",
-          value: `[See deploy logs](${createGithubActionLink()})`,
+          value: `[View Github Action logs](${createGithubActionLink()})`,
         },
       ],
     },
