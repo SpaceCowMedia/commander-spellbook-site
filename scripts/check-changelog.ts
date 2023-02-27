@@ -5,7 +5,7 @@ import get from "./shared/get";
 import type { Changelog } from "./download-data/get-combo-changelog";
 
 let shouldDeploy = "NO";
-let deployReasonMessage = "";
+const deployReasonMessages = [] as string[];
 
 const changelog = JSON.parse(
   fs.readFileSync("./frontend/static/changelog.json", "utf8")
@@ -19,16 +19,22 @@ if (numOfAddedCombos > 0 || numOfDeletedCombos > 0 || numOfUpdatedCombos > 0) {
   shouldDeploy = "YES";
 
   if (numOfAddedCombos > 0) {
-    deployReasonMessage += `• ${numOfAddedCombos} combo(s) added to the database\n`;
+    deployReasonMessages.push(
+      `• ${numOfAddedCombos} combo(s) added to the database`
+    );
   }
   if (numOfDeletedCombos > 0) {
-    deployReasonMessage += `• ${numOfDeletedCombos} combo(s) removed from the database\n`;
+    deployReasonMessages.push(
+      `• ${numOfDeletedCombos} combo(s) removed from the database`
+    );
   }
   if (numOfUpdatedCombos > 0) {
-    deployReasonMessage += `• ${numOfUpdatedCombos} combo(s) modified in the database\n`;
+    deployReasonMessages.push(
+      `• ${numOfUpdatedCombos} combo(s) modified in the database`
+    );
   }
 } else {
-  deployReasonMessage += `• No combo data changed in database\n`;
+  deployReasonMessages.push(`• No combo data changed in database`);
 }
 
 get<Changelog>("https://commanderspellbook.com/changelog.json").then(
@@ -38,10 +44,12 @@ get<Changelog>("https://commanderspellbook.com/changelog.json").then(
 
     if (oldSha !== currentGitSha) {
       shouldDeploy = "YES";
-      deployReasonMessage += `• Website code updated. [View code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}) to the website\n`;
+      deployReasonMessages.push(
+        `• Website code updated. [View code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha}) to the website`
+      );
     }
 
     saveGithubOutput("should_deploy", shouldDeploy);
-    saveGithubOutput("deploy_reason", deployReasonMessage.trim());
+    saveGithubOutput("deploy_reason", deployReasonMessages.join("|"));
   }
 );

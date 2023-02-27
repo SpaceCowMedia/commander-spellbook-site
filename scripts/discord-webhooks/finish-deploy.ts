@@ -1,6 +1,8 @@
 import postDiscordWebhook from "../shared/post-discord-webhook";
 import createGithubActionLink from "../shared/create-github-action-link";
 
+const deployReasons = (process.env.DEPLOY_REASON || "").split("|").join("\n");
+
 postDiscordWebhook("#grand-calcutron", {
   content: "Deploy Complete",
   embeds: [
@@ -9,7 +11,7 @@ postDiscordWebhook("#grand-calcutron", {
       fields: [
         {
           name: "Deploy Details",
-          value: process.env.DEPLOY_REASON || "",
+          value: deployReasons,
         },
         {
           name: "Deploy log",
