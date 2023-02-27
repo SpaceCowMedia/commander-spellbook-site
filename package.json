@@ -16,6 +16,7 @@
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
+    "discord-webhook:start-deploy": "ts-node scripts/discord-webhooks/start-deploy.ts",
     "discord-webhook:cancel-deploy": "ts-node scripts/discord-webhooks/cancel-deploy.ts",
     "discord-webhook:failed-deploy": "ts-node scripts/discord-webhooks/failed-deploy.ts",
     "discord-webhook:finish-deploy": "ts-node scripts/discord-webhooks/finish-deploy.ts",

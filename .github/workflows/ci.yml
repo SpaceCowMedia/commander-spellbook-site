@@ -47,7 +47,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
 
-      - name: Install 📦
+      - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
@@ -381,6 +381,9 @@ jobs:
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
+
+      - name: Send Deploy Start Notification ✉️
+        run: npm run discord-webhook:start-deploy
 
       - name: Deploy Firebase 🔥
         run: npm run firebase:deploy:ci
