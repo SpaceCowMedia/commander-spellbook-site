@@ -354,6 +354,8 @@ jobs:
         run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
+        env:
+          - AWS_MAX_ATTEMPTS: 8
         run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
 
       - name: Send Deploy Failed Notification ✉️
