@@ -61,8 +61,6 @@ jobs:
             frontend/static/api/combo-data.json
             frontend/static/changelog.json
           key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
@@ -121,8 +119,6 @@ jobs:
             frontend/static/api/combo-data.json
             frontend/static/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
 
       - name: Check Downloaded Data Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
@@ -201,8 +197,6 @@ jobs:
             frontend/static/api/combo-data.json
             frontend/static/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
 
       - name: Check Downloaded Data Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
@@ -249,8 +243,6 @@ jobs:
             frontend/static/api/combo-data.json
             frontend/static/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
 
       - name: Check Downloaded Data Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
@@ -339,8 +331,6 @@ jobs:
             frontend/static/api/combo-data.json
             frontend/static/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-          restore-keys: |
-            ${{ runner.os }}-download-data-
 
       - name: Check Downloaded Data Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
