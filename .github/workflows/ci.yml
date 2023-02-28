@@ -47,7 +47,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-build-
 
-      - name: Install 📦
+      - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
@@ -345,6 +345,9 @@ jobs:
       - name: Check Downloaded Data Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Downloaded data cache failed"; exit 1;
+
+      - name: Send Deploy Start Notification ✉️
+        run: npm run discord-webhook:start-deploy
 
       - name: Deploy Firebase 🔥
         run: npm run firebase:deploy:ci
