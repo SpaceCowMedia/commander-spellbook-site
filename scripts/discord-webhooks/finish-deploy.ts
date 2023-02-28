@@ -1,7 +1,14 @@
+import fs from "fs";
 import postDiscordWebhook from "../shared/post-discord-webhook";
 import createGithubActionLink from "../shared/create-github-action-link";
+import postComboToDiscord from "../shared/post-combos-to-discord";
 
 const deployReasons = (process.env.DEPLOY_REASON || "").split("|").join("\n");
+const changelog = JSON.parse(
+  fs.readFileSync("./frontend/static/changelog.json", "utf8")
+);
+
+const { addedCombos, deletedCombos } = changelog;
 
 postDiscordWebhook("#grand-calcutron", {
   content: "Deploy Complete",
@@ -15,9 +22,25 @@ postDiscordWebhook("#grand-calcutron", {
         },
         {
           name: "Deploy log",
-          value: `[View Github Action logs](${createGithubActionLink()})`,
+          value: `[View Github Action log](${createGithubActionLink()})`,
         },
       ],
     },
   ],
 });
+
+if (addedCombos.length > 0) {
+  postComboToDiscord("#changelog", {
+    title: `${addedCombos.length} combo(s) added to the database`,
+    combos: addedCombos,
+  });
+}
+
+if (deletedCombos.length > 0) {
+  postComboToDiscord("#changelog", {
+    title: `${deletedCombos.length} combo(s) removed from the database`,
+    combos: deletedCombos,
+  });
+}
+
+// TODO updated combos

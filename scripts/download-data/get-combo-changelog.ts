@@ -4,18 +4,14 @@ import get from "../shared/get";
 import getCurrentGitSha from "../shared/get-current-git-sha";
 
 type CompressedKey = keyof CompressedApiResponse;
-type ComboInChangelog = {
-  id: string;
-  cards: string[];
-};
 type UpdatedComboLog = {
   id: string;
   change: string;
 };
 export type Changelog = {
   gitSha: string;
-  addedCombos: ComboInChangelog[];
-  deletedCombos: ComboInChangelog[];
+  addedCombos: CompressedApiResponse[];
+  deletedCombos: CompressedApiResponse[];
   updatedCombos: UpdatedComboLog[];
 };
 
@@ -30,15 +26,6 @@ const propertyMap = {
   s: "Steps",
   r: "Results",
 } as Record<CompressedKey, string>;
-
-function formatCombosForChangelog(combos: CompressedApiResponse[]) {
-  return combos.map((combo) => {
-    return {
-      id: combo.d,
-      cards: combo.c,
-    };
-  });
-}
 
 // note: for this to work, this must be run after the combo-data has been
 // created locally, but before it gets deployed to prod
@@ -96,8 +83,8 @@ export default function createChangelog() {
 
     return {
       gitSha: currentGithSha,
-      addedCombos: formatCombosForChangelog(addedCombos),
-      deletedCombos: formatCombosForChangelog(deletedCombos),
+      addedCombos,
+      deletedCombos,
       updatedCombos,
     };
   });
