@@ -353,6 +353,40 @@ jobs:
       - name: Deploy to S3 🛫
         run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
 
+      - name: Send Deploy Failed Notification ✉️
+        if: ${{ failure() }}
+        run: npm run discord-webhook:failed-deploy
+
+  bust-cloudfront-cache:
+    concurrency: production_deploy
+    runs-on: ubuntu-20.04
+    needs: [deploy]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Configure AWS Credentials ㊙️
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Bust Cloudfront Cache 👥
         env:
           AWS_MAX_ATTEMPTS: 8
@@ -364,7 +398,7 @@ jobs:
 
   finish-deploy-notification:
     runs-on: ubuntu-20.04
-    needs: [setup, changelog_check, deploy]
+    needs: [setup, changelog_check, deploy, bust-cloudfront-cache]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
