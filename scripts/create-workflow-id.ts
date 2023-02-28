@@ -3,8 +3,6 @@
 
 import saveGithubOutput from "./shared/save-github-output";
 
-console.log(process.env.GITHUB_RUN_ID, process.env.GITHUB_RUN_ATTEMPT);
-
 saveGithubOutput(
   "uuid",
   process.env.GITHUB_RUN_ID + "-" + process.env.GITHUB_RUN_ATTEMPT
