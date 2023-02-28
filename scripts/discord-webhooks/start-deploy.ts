@@ -9,7 +9,7 @@ postDiscordWebhook("#grand-calcutron", {
       fields: [
         {
           name: "Deploy process has started",
-          value: `[Watch deploy progress](${createGithubActionLink(true)})`,
+          value: `[Watch deploy progress](${createGithubActionLink()})`,
         },
       ],
     },

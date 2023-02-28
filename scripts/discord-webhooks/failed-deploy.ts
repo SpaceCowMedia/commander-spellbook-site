@@ -9,7 +9,7 @@ postDiscordWebhook("#grand-calcutron", {
       fields: [
         {
           name: "Something went wrong during deploy. If this keeps happening, reach out to the devs at EDHRec to investigate cause.",
-          value: `[View Deploy logs](${createGithubActionLink(true)})`,
+          value: `[View Deploy logs](${createGithubActionLink()})`,
         },
       ],
     },
