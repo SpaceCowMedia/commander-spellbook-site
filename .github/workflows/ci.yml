@@ -30,7 +30,7 @@ jobs:
 
       - name: Create Workflow ID 🆔
         id: generate-uuid
-        uses: filipstefansson/uuid-action@v1
+        run: echo "uuid=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
