@@ -16,6 +16,7 @@
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
+    "workflow:create-workflow-id": "ts-node scripts/create-workflow-id",
     "discord-webhook:start-deploy": "ts-node scripts/discord-webhooks/start-deploy.ts",
     "discord-webhook:cancel-deploy": "ts-node scripts/discord-webhooks/cancel-deploy.ts",
     "discord-webhook:failed-deploy": "ts-node scripts/discord-webhooks/failed-deploy.ts",
