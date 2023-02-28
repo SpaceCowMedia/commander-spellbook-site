@@ -386,6 +386,21 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/static/api/combo-data.json
+            frontend/static/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+
+      - name: Check Downloaded Data Cache ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: echo "Downloaded data cache failed"; exit 1;
+
       - name: Send deploy succeeded notification ✉️
         env:
           DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
