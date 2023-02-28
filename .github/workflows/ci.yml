@@ -40,8 +40,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -102,8 +100,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -149,8 +145,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -180,8 +174,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -226,8 +218,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -278,8 +268,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -314,8 +302,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
@@ -395,8 +381,6 @@ jobs:
             ~/.npm
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-build-
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
