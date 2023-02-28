@@ -28,10 +28,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Create Workflow ID 🆔
-        id: generate-uuid
-        run: echo "uuid=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
-
       - name: Cache node modules 🗃
         id: cache-nodemodules
         uses: actions/cache@v3
@@ -50,6 +46,10 @@ jobs:
       - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Create Workflow ID 🆔
+        id: generate-uuid
+        run: npm run workflow:create-workflow-id
 
       - name: Cache Downloaded Data ⏬
         id: cache-downloaded-data
