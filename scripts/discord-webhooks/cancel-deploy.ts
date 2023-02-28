@@ -9,7 +9,7 @@ postDiscordWebhook("#grand-calcutron", {
       fields: [
         {
           name: "No change in combo data or website code detected.",
-          value: `[View Github Action logs](${createGithubActionLink()})`,
+          value: `[View Github Action log](${createGithubActionLink()})`,
         },
       ],
     },
