@@ -362,7 +362,7 @@ jobs:
 
   finish-deploy-notification:
     runs-on: ubuntu-20.04
-    needs: [changelog_check, deploy]
+    needs: [setup, changelog_check, deploy]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
