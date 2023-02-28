@@ -13,7 +13,7 @@ export const SIZE_RESTRICTED_FILTERS: [
 ] = ["colorIdentity", "cards", "prerequisites", "steps", "results"];
 
 function filterBySize(filter: SizeFilter, numberOfValues?: number): boolean {
-  if (!numberOfValues) {
+  if (numberOfValues !== 0 && !numberOfValues) {
     return false;
   }
   switch (filter.method) {

@@ -154,6 +154,23 @@ describe("sizeFilter", () => {
       expect(result.length).toBe(0);
     });
 
+    it("can filter by no deck data", () => {
+      params.edhrecDecks.sizeFilters.push({
+        method: "=",
+        value: 0,
+      });
+
+      combos[0].numberOfEDHRECDecks = 0;
+
+      let result = filterSize(combos, params);
+      expect(result.length).toBe(1);
+
+      combos[0].numberOfEDHRECDecks = 1;
+
+      result = filterSize(combos, params);
+      expect(result.length).toBe(0);
+    });
+
     it("can filter by number of values using >", () => {
       params.edhrecDecks.sizeFilters.push({
         method: ">",
