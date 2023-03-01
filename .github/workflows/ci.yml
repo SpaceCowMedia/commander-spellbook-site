@@ -14,6 +14,8 @@ env:
   DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets. DISCORD_DEPLOY_WEBHOOK_URL }}
   DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets. DISCORD_CHANGELOG_WEBHOOK_URL }}
 
+concurrency: ${{ github.ref == 'refs/heads/main' && 'production-deploy' || '' }}
+
 jobs:
   setup:
     runs-on: ubuntu-20.04
@@ -78,7 +80,6 @@ jobs:
     # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     runs-on: ubuntu-20.04
     needs: setup
-    concurrency: production_deploy
     outputs:
       should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
       deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
@@ -308,7 +309,6 @@ jobs:
 
   deploy-firebase:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
-    concurrency: firebase_production_deploy
     runs-on: ubuntu-20.04
     needs: [setup, changelog_check, send-start-deploy-notification]
     steps:
@@ -348,7 +348,6 @@ jobs:
     # and the changelog check indicates
     # that there are changes to deploy
     # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
-    concurrency: production_deploy
     runs-on: ubuntu-20.04
     # needs: [setup, changelog_check, send-start-deploy-notification]
     needs: [setup, changelog_check]
@@ -421,7 +420,6 @@ jobs:
         run: npm run discord-webhook:failed-deploy
 
   bust-cloudfront-cache:
-    concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [deploy]
     steps:
