@@ -308,7 +308,7 @@ jobs:
 
   deploy-firebase:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
-    concurrency: production_deploy
+    concurrency: firebase_production_deploy
     runs-on: ubuntu-20.04
     needs: [setup, changelog_check, send-start-deploy-notification]
     steps:
