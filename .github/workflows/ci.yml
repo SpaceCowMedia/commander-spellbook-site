@@ -14,7 +14,7 @@ env:
   DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets. DISCORD_DEPLOY_WEBHOOK_URL }}
   DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets. DISCORD_CHANGELOG_WEBHOOK_URL }}
 
-concurrency: ${{ github.ref == 'refs/heads/main' && 'production-deploy' || '' }}
+concurrency: ${{ github.ref == 'refs/heads/main' && 'production-deploy' || github.ref }}
 
 jobs:
   setup:
