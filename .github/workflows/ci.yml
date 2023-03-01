@@ -75,7 +75,7 @@ jobs:
 
   changelog_check:
     # only run this check from the main branch
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
+    # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
     runs-on: ubuntu-20.04
     needs: setup
     concurrency: production_deploy
@@ -347,10 +347,14 @@ jobs:
     # only deploy from the main branch
     # and the changelog check indicates
     # that there are changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
+    # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
-    needs: [setup, changelog_check, send-start-deploy-notification]
+    # needs: [setup, changelog_check, send-start-deploy-notification]
+    needs: [setup, changelog_check]
+    strategy:
+      matrix:
+        batch-range: [0-6, 7-12, 13-18, 19]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -393,6 +397,7 @@ jobs:
         run: npm run build-frontend
         env:
           NODE_ENV: production
+          BATCH_RANGE: ${{ matrix.batch-range }}
           FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}

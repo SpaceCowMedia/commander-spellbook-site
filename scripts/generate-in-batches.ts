@@ -7,12 +7,24 @@ const combos = JSON.parse(
 );
 const TOTAL_COMBOS = combos.length;
 const BATCH_SIZE = 1000;
-const NUMBER_OF_BATCHES = Math.ceil(TOTAL_COMBOS / BATCH_SIZE);
+const TOTAL_NUMBER_OF_BATCHES = Math.ceil(TOTAL_COMBOS / BATCH_SIZE);
 
 let currentIteration = 0;
+let endingPoint = TOTAL_NUMBER_OF_BATCHES;
+
+if (process.env.BATCH_RANGE) {
+  const [start, end] = process.env.BATCH_RANGE.split("-");
+  currentIteration = Number(start);
+
+  if (end) {
+    endingPoint = Number(end) + 1;
+  }
+}
 
 log(
-  `Preparing to generate ${TOTAL_COMBOS} combo pages in ${NUMBER_OF_BATCHES} batches.`
+  `Preparing to generate combo pages in ${
+    endingPoint - currentIteration
+  } batches.`
 );
 
 try {
@@ -23,7 +35,7 @@ try {
   log("Dist folder created.", "green");
 }
 
-while (currentIteration < NUMBER_OF_BATCHES) {
+while (currentIteration < endingPoint) {
   const startingPoint = currentIteration * BATCH_SIZE;
   const endingPoint = startingPoint + BATCH_SIZE;
   const batchValue = `${startingPoint}to${endingPoint}`;
