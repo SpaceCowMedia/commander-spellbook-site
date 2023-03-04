@@ -128,15 +128,34 @@ describe("HomePage", () => {
       const vm = wrapper.vm as VueComponent;
 
       const data = await vm.$options.asyncData({
-        $fire: {
-          firestore: {
-            getDoc: jest.fn().mockRejectedValue(new Error("fail")),
-          },
+        env: {
+          EDITOR_BACKEND_URL: "https://example.com/",
+        },
+        $http: {
+          $get: jest.fn().mockRejectedValue(new Error("fail")),
         },
       });
 
       expect(data).toEqual({
         featuredComboButtonText: "",
+      });
+    });
+
+    it("returns mocked featured button text when backend url is not available", async () => {
+      const wrapper = shallowMount(HomePage, wrapperOptions);
+      const vm = wrapper.vm as VueComponent;
+
+      const data = await vm.$options.asyncData({
+        env: {},
+        $http: {
+          $get: jest.fn().mockResolvedValue({
+            results: [{ key: "featured_combos_title", value: "value" }],
+          }),
+        },
+      });
+
+      expect(data).toEqual({
+        featuredComboButtonText: "Featured Combos (Mocked Data)",
       });
     });
 
@@ -145,13 +164,13 @@ describe("HomePage", () => {
       const vm = wrapper.vm as VueComponent;
 
       const data = await vm.$options.asyncData({
-        $fire: {
-          firestore: {
-            getDoc: jest.fn().mockResolvedValue({
-              buttonText: "",
-              rules: [{ kind: "card", setCode: "dom" }],
-            }),
-          },
+        env: {
+          EDITOR_BACKEND_URL: "https://example.com/",
+        },
+        $http: {
+          $get: jest.fn().mockResolvedValue({
+            results: [{ key: "featured_combos_title", value: "" }],
+          }),
         },
       });
 
@@ -160,38 +179,18 @@ describe("HomePage", () => {
       });
     });
 
-    it("returns empty featured button text when lookup returns no rules", async () => {
+    it("returns button text when button text is available", async () => {
       const wrapper = shallowMount(HomePage, wrapperOptions);
       const vm = wrapper.vm as VueComponent;
 
       const data = await vm.$options.asyncData({
-        $fire: {
-          firestore: {
-            getDoc: jest.fn().mockResolvedValue({
-              buttonText: "Button Text",
-              rules: [],
-            }),
-          },
+        env: {
+          EDITOR_BACKEND_URL: "https://example.com/",
         },
-      });
-
-      expect(data).toEqual({
-        featuredComboButtonText: "",
-      });
-    });
-
-    it("returns button text when button text and rules are available", async () => {
-      const wrapper = shallowMount(HomePage, wrapperOptions);
-      const vm = wrapper.vm as VueComponent;
-
-      const data = await vm.$options.asyncData({
-        $fire: {
-          firestore: {
-            getDoc: jest.fn().mockResolvedValue({
-              buttonText: "Button Text",
-              rules: [{ kind: "card", setCode: "dom" }],
-            }),
-          },
+        $http: {
+          $get: jest.fn().mockResolvedValue({
+            results: [{ key: "featured_combos_title", value: "Button Text" }],
+          }),
         },
       });
 

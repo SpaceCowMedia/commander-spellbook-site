@@ -25,12 +25,8 @@
         <nuxt-link to="/find-my-combos/" class="dark button md:m-1">
           Find My Combos
         </nuxt-link>
-        <nuxt-link
-          v-if="featuredComboButtonText"
-          id="featured-combos-button"
-          to="/featured/"
-          class="previwed-combos-button dark button md:m-1"
-        >
+        <nuxt-link v-if="featuredComboButtonText" id="featured-combos-button" to="/featured/"
+          class="previwed-combos-button dark button md:m-1">
           {{ featuredComboButtonText }}
         </nuxt-link>
       </div>
@@ -43,6 +39,10 @@ import Vue from "vue";
 import RandomButton from "@/components/RandomButton.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import SpellbookLogo from "@/components/SpellbookLogo.vue";
+
+type RawPropertiesResponse = {
+  results: { key: string; value: string }[];
+};
 
 function getDefaultData() {
   return {
@@ -59,19 +59,28 @@ export default Vue.extend({
   },
   layout: "LandingLayout",
   async asyncData(context) {
+    const { EDITOR_BACKEND_URL } = context.env;
+
+    if (!EDITOR_BACKEND_URL) {
+      return {
+        featuredComboButtonText: "Featured Combos (Mocked Data)",
+      };
+    }
+
     try {
-      const featuredRules = await context.$fire.firestore.getDoc(
-        "site-settings",
-        "featured-combos"
-      );
-      if (!featuredRules.buttonText || featuredRules.rules.length === 0) {
-        return getDefaultData();
+      const dataFromEditorBackend: RawPropertiesResponse = await context.$http.$get(`${EDITOR_BACKEND_URL}properties/?format=json`)
+      const buttonTextData = dataFromEditorBackend.results.find((data) => {
+        return data.key === "featured_combos_title"
+      })
+
+      if (!buttonTextData) {
+        return getDefaultData()
       }
 
       return {
-        featuredComboButtonText: featuredRules.buttonText,
+        featuredComboButtonText: buttonTextData.value,
       };
-    } catch (e) {
+    } catch (_) {
       return getDefaultData();
     }
   },
