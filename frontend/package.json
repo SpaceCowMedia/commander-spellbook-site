@@ -15,6 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nuxt/http": "^0.6.4",
     "core-js": "^3.27.1",
     "debounce": "^1.2.1",
     "dotenv": "^16.0.0",

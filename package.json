@@ -47,7 +47,6 @@
     "*.{css,vue}": "stylelint"
   },
   "dependencies": {
-    "@nuxt/http": "^0.6.4",
     "dotenv": "^16.0.3",
     "scryfall-client": "^0.23.1"
   },
