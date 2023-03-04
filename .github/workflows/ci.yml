@@ -64,13 +64,6 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: npm run download-data
 
   changelog_check:
@@ -242,7 +235,6 @@ jobs:
         run: npm run test:integration
         env:
           NODE_ENV: development
-          USE_FIREBASE_EMULATORS: true
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
@@ -352,23 +344,10 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Downloaded data cache failed"; exit 1;
 
-      - name: Deploy Firebase 🔥
-        run: npm run firebase:deploy:ci
-        env:
-          NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
-
       - name: Build Frontend Site 🏗️
         run: npm run build-frontend
         env:
           NODE_ENV: production
-          FIREBASE_DEPLOYMENT_TOKEN: ${{ secrets.FIREBASE_DEPLOYMENT_TOKEN }}
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
 
       - name: Configure AWS Credentials ㊙️
         uses: aws-actions/configure-aws-credentials@v1-node16

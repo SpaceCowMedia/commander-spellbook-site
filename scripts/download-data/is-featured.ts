@@ -10,7 +10,7 @@ export type FeaturedRule = {
 };
 
 // TODO this is (hopefully) temporary and in the future,
-// when the combos and cards are stored in the Firestore
+// when the combos and cards are stored in the Backend
 // DB, the featured page can be responsible for looking up
 // the featured combos
 export default function isFeatured(

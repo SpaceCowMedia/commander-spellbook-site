@@ -19,7 +19,6 @@
     "core-js": "^3.27.1",
     "debounce": "^1.2.1",
     "dotenv": "^16.0.0",
-    "firebase": "^9.15.0",
     "nuxt": "^2.15.8",
     "scryfall-client": "^0.23.1",
     "v-tooltip": "^2.1.3",

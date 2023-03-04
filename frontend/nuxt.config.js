@@ -1,6 +1,4 @@
 import { config as configureDotenv } from "dotenv";
-import firebaseConfig from "../firebase-config";
-import connectToFirebase from "./lib/connect-to-firebase";
 import combos from "./static/api/combo-data.json";
 
 configureDotenv({ path: "../.env" });
@@ -13,34 +11,11 @@ const description =
   "The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format.";
 const linkPreviewImage = "https://commanderspellbook.com/link-preview.png";
 
-const isDev = process.env.NODE_ENV === "development";
-const isStaging = process.env.NODE_ENV === "staging";
-const useEmulators = isDev && process.env.USE_FIREBASE_EMULATORS === "true";
-
-let apiBaseUrl = "https://api.commanderspellbook.com/v1";
-
-// TODO staging url
-if (useEmulators) {
-  apiBaseUrl = "http://localhost:5000/v1";
-} else if (isDev) {
-  apiBaseUrl = "https://api-local.commanderspellbook.com/v1";
-} else if (isStaging) {
-  apiBaseUrl = "https://api-staging.commanderspellbook.com/v1";
-}
-
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: "static",
 
   env: {
-    useEmulators,
-    apiBaseUrl,
-    FIREBASE_API_KEY: firebaseConfig.apiKey,
-    FIREBASE_AUTH_DOMAIN: firebaseConfig.authDomain,
-    FIREBASE_PROJECT_ID: firebaseConfig.projectId,
-    FIREBASE_STORAGE_BUCKET: firebaseConfig.storageBucket,
-    FIREBASE_MESSAGING_SENDER_ID: firebaseConfig.messagingSenderId,
-    FIREBASE_APP_ID: firebaseConfig.appId,
     EDITOR_BACKEND_URL: process.env.EDITOR_BACKEND_URL,
   },
 
@@ -190,11 +165,6 @@ export default {
       mode: "client",
     },
     "~/plugins/vue-tooltip.ts",
-    "~/plugins/firebase.ts",
-    {
-      src: "./plugins/api.ts",
-      mode: "client",
-    },
     "~/plugins/text-helpers.ts",
   ],
 
@@ -221,14 +191,6 @@ export default {
 
   tailwindcss: {
     jit: !isWindows,
-  },
-  hooks: {
-    generate: {
-      done() {
-        const { teardownFirebase } = connectToFirebase({});
-        teardownFirebase();
-      },
-    },
   },
 
   googleFonts: {
