@@ -41,6 +41,7 @@ export default {
     FIREBASE_STORAGE_BUCKET: firebaseConfig.storageBucket,
     FIREBASE_MESSAGING_SENDER_ID: firebaseConfig.messagingSenderId,
     FIREBASE_APP_ID: firebaseConfig.appId,
+    EDITOR_BACKEND_URL: process.env.EDITOR_BACKEND_URL,
   },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -210,7 +211,7 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt"],
+  modules: ["@nuxtjs/google-fonts", "vue-social-sharing/nuxt", "@nuxt/http"],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
