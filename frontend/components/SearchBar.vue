@@ -65,15 +65,6 @@
           <div class="random-icon link-icon" aria-hidden="true"></div>
           Random
         </RandomButton>
-        <nuxt-link
-          v-show="isAuthenticated"
-          ref="profile-link"
-          to="/dashboard/"
-          class="hidden md:flex menu-link"
-        >
-          <div class="profile-icon link-icon mr-0"></div>
-          <span class="sr-only">Profile</span>
-        </nuxt-link>
       </div>
     </form>
     <div
@@ -93,15 +84,6 @@
         <div class="random-icon link-icon" aria-hidden="true"></div>
         Random
       </RandomButton>
-      <nuxt-link
-        v-show="isAuthenticated"
-        ref="mobile-profile-link"
-        to="/dashboard/"
-        class="mobile-menu-button"
-      >
-        <div class="profile-icon link-icon"></div>
-        Profile
-      </nuxt-link>
     </div>
   </div>
 </template>
@@ -144,9 +126,6 @@ export default Vue.extend({
         return "text-2xl text-center";
       }
       return "pl-8 -ml-6";
-    },
-    isAuthenticated(): boolean {
-      return this.$store.getters["auth/isAuthenticated"];
     },
   },
   watch: {

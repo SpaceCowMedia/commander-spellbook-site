@@ -1,4 +1,4 @@
-import { Firebase, Route, Router, Store } from "@/test/types";
+import { Route, Router, Store } from "@/test/types";
 
 type CreateRouteOptions = {
   path?: string;
@@ -32,25 +32,5 @@ export function createStore(options: CreateStoreOptions = {}): Store {
     getters: options.getters || {},
     commit: jest.fn(),
     dispatch: jest.fn().mockResolvedValue({}),
-  };
-}
-
-export function createFirebase(): Firebase {
-  return {
-    auth: {
-      currentUser: {
-        email: "rashmi@example.com",
-        displayName: "Rashmi, Eternities Crafter",
-        getIdToken: jest.fn().mockResolvedValue("token"),
-        getIdTokenResult: jest.fn().mockResolvedValue({
-          claims: {
-            proposeCombo: true,
-          },
-        }),
-      },
-    },
-    firestore: {
-      getDoc: jest.fn().mockResolvedValue({}),
-    },
   };
 }

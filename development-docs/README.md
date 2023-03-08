@@ -22,13 +22,7 @@ npm install
 
 ## Backend API
 
-The backend (auth, api, database) is all managed by [Firebase](https://firebase.google.com/).
-
-- [Running the app locally](./backend/running-locally.md)
-- [Authentication/User Accounts](./backend/users.md)
-- [Database Collections](./backend/database.md)
-- [API](./backend/api.md)
-- [Manual Deploys](./backend/manual-deploys.md)
+The backend (auth, api, database) is all managed by a separate API outside of this repo.
 
 ## Automated Testing
 

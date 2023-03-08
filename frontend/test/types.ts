@@ -19,17 +19,4 @@ export type Store = {
   commit: jest.SpyInstance;
   dispatch: jest.SpyInstance;
 };
-export type Firebase = {
-  auth: {
-    currentUser?: {
-      email: string;
-      displayName: string;
-      getIdToken: jest.SpyInstance;
-      getIdTokenResult: jest.SpyInstance;
-    };
-  };
-  firestore: {
-    getDoc: jest.SpyInstance;
-  };
-};
 export type VueComponent = Record<string, any>;
