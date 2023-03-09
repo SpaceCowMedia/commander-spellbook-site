@@ -68,7 +68,7 @@
           <ExternalLink to="https://twitter.com/CommanderSpell"
             >Twitter</ExternalLink
           >
-          <ExternalLink to="https://github.com/Commander-Spellbook"
+          <ExternalLink to="https://github.com/EDHREC/commander-spellbook-site"
             >Github</ExternalLink
           >
           <ExternalLink to="https://edhrec.com/combos">EDHREC</ExternalLink>

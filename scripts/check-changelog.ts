@@ -45,7 +45,7 @@ get<Changelog>("https://commanderspellbook.com/changelog.json").then(
     if (oldSha !== currentGitSha) {
       shouldDeploy = "YES";
       deployReasonMessages.push(
-        `• Website code updated. [View code changes](https://github.com/commander-spellbook/website-v2/compare/${oldSha}...${currentGitSha})`
+        `• Website code updated. [View code changes](https://github.com/EDHREC/commander-spellbook-site/compare/${oldSha}...${currentGitSha})`
       );
     }
 

@@ -24,7 +24,7 @@
 
     <ul>
       <li>
-        <ExternalLink to="https://github.com/Commander-Spellbook/website-v2"
+        <ExternalLink to="https://github.com/EDHREC/commander-spellbook-site"
           >Website Source Code on GitHub
         </ExternalLink>
       </li>

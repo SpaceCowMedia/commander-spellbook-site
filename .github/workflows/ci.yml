@@ -69,7 +69,7 @@ jobs:
 
   changelog_check:
     # only run this check from the main branch
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
     runs-on: ubuntu-20.04
     needs: setup
     concurrency: production_deploy
@@ -240,7 +240,7 @@ jobs:
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
     # and the changelog check indicates that there are no changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'NO'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
     runs-on: ubuntu-20.04
     needs: [setup, changelog_check]
     steps:
@@ -270,7 +270,7 @@ jobs:
         run: npm run discord-webhook:cancel-deploy
 
   send-start-deploy-notification:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
     runs-on: ubuntu-20.04
     needs: [setup, linter, unit-tests, integration-tests, changelog_check]
     steps:
@@ -303,7 +303,7 @@ jobs:
     # only deploy from the main branch
     # and the changelog check indicates
     # that there are changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'Commander-Spellbook' && needs.changelog_check.outputs.should_deploy == 'YES'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
     concurrency: production_deploy
     runs-on: ubuntu-20.04
     needs: [setup, changelog_check, send-start-deploy-notification]
