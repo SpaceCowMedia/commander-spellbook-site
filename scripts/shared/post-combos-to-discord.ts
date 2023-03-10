@@ -17,6 +17,7 @@ const manaToEmoji = {
   b: "<:manab:673716795651391519>",
   r: "<:manar:673716795978285097>",
   g: "<:manag:673716795491876895>",
+  c: "<:manac:673716795667906570>",
 } as Record<string, string>;
 
 function parseIdentity(colors: string) {
