@@ -1,6 +1,7 @@
 import "../assets/globals.scss";
 import type { AppProps } from "next/app";
 import "react-tooltip/dist/react-tooltip.css";
+<<<<<<< HEAD
 import Script from "next/script";
 import { GA_TRACKING_ID, pageview } from "../lib/googleAnalytics";
 import { useRouter } from "next/router";
@@ -42,4 +43,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
     </>
   );
+=======
+
+export default function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+>>>>>>> 614840a (chore: run prettier)
 }
