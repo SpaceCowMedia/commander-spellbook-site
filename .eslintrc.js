@@ -5,13 +5,11 @@ module.exports = {
     node: true,
   },
   extends: [
-    "@nuxtjs/eslint-config-typescript",
-    "plugin:nuxt/recommended",
+    "next/core-web-vitals",
     "prettier",
   ],
   // add your custom rules here
   rules: {
-    // prettier messes this up by breaking up the attributes in the HTML
-    "vue/first-attribute-linebreak": 0,
+    "react/no-unescaped-entities": "off"
   },
 };
