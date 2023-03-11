@@ -1,0 +1,33 @@
+.privacyPolicyContainer {
+  h3 {
+    @apply my-4 text-xl font-bold;
+  }
+
+  h4 {
+    @apply mt-4 text-lg font-bold;
+  }
+
+  p {
+    @apply my-4;
+  }
+
+  ul {
+    @apply list-disc list-inside ml-4;
+  }
+
+  hr {
+    @apply my-6;
+  }
+
+  table th {
+    @apply px-4 py-2;
+  }
+
+  table tr:nth-child(even) {
+    @apply bg-gray-100;
+  }
+
+  table td {
+    @apply border px-4 py-2;
+  }
+}

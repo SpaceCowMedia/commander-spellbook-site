@@ -1,11 +1,11 @@
 import scryfall from "scryfall-client";
-import lookup from "@/lib/api/spellbook-api";
+import lookup from "lib/spellbook-api";
 
 import type {
   FormattedApiResponse,
   ColorIdentityColors,
-} from "@/lib/api/types";
-import type Card from "@/lib/api/models/card";
+} from "lib/types";
+import type Card from "lib/card";
 
 // this regex supports decks parsing in these formats:
 // // a heading that starts with // gets ignored
@@ -132,7 +132,7 @@ async function getColorIdentityFromDeck(
       return identity;
     }, new Set());
 
-    return Array.from(colorsAsSet) satisfies ColorIdentityColors[];
+    return Array.from(colorsAsSet) as ColorIdentityColors[];
   } catch (err) {
     // in case we encounter an error in Scryfall
     // best to just default to a WUBRG identity
@@ -181,7 +181,7 @@ export async function findCombosFromDecklist(
   const missingCardsForPotentialCombos: Card[] = [];
 
   combos.forEach((combo) => {
-    const missingCards = findMissingCards(decklist, combo.cards);
+    const missingCards = findMissingCards(decklist, combo.cards as unknown as Card[]);
 
     if (missingCards.length === 0) {
       combosInDecklist.push(combo);

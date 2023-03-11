@@ -1,0 +1,15 @@
+.autocompleteContainer {
+  @apply relative flex-grow;
+}
+
+.autocompleteResults {
+  @apply p-0 m-0 bg-white border border-light overflow-auto max-h-48 absolute w-full z-10;
+}
+
+.autocompleteResult {
+  @apply text-left p-2 cursor-pointer;
+}
+
+.autocompleteResult.isActive {
+  @apply bg-link text-white;
+}
