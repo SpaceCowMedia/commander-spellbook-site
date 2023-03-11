@@ -7,13 +7,11 @@ import getAllCombos from "../../lib/get-all-combos";
 type Props = {
   onHomepage?: boolean;
   className?: string;
-  isAuthenticated?: boolean;
 };
 
 const SearchBar: React.FC<Props> = ({
   onHomepage,
   className,
-  isAuthenticated,
 }: Props) => {
   const router = useRouter();
 
@@ -121,17 +119,6 @@ const SearchBar: React.FC<Props> = ({
               />
               Random
             </Link>
-            {isAuthenticated && (
-              <Link
-                href="/dashboard/"
-                className={`hidden md:flex ${styles.menuLink}`}
-              >
-                <div
-                  className={`${styles.profileIcon} ${styles.linkIcon} mr-0`}
-                />
-                <span className="sr-only">Profile</span>
-              </Link>
-            )}
           </div>
         )}
       </form>
@@ -162,12 +149,6 @@ const SearchBar: React.FC<Props> = ({
             />
             Random
           </Link>
-          {isAuthenticated && (
-            <Link href="/dashboard/" className={styles.mobileMenuButton}>
-              <div className={`${styles.profileIcon} ${styles.linkIcon}`} />
-              Profile
-            </Link>
-          )}
         </div>
       )}
     </div>
