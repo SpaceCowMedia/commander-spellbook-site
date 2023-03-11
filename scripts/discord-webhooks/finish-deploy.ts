@@ -5,7 +5,7 @@ import postComboToDiscord from "../shared/post-combos-to-discord";
 
 const deployReasons = (process.env.DEPLOY_REASON || "").split("|").join("\n");
 const changelog = JSON.parse(
-  fs.readFileSync("./frontend/static/changelog.json", "utf8")
+  fs.readFileSync("./frontend/public/changelog.json", "utf8")
 );
 
 const { addedCombos, deletedCombos } = changelog;

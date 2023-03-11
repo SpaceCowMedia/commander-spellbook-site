@@ -1,4 +1,4 @@
-import normalizeCardName from "@spellbook/frontend/lib/normalize-card-name";
+import normalizeCardName from "../../frontend/lib/normalizeCardName";
 import getData from "../shared/get";
 import log from "../shared/log";
 

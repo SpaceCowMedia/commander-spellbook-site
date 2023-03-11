@@ -1,5 +1,5 @@
 import fs from "fs";
-import type { CompressedApiResponse } from "../../frontend/lib/api/types";
+import type { CompressedApiResponse } from "../../frontend/lib/types";
 import get from "../shared/get";
 import getCurrentGitSha from "../shared/get-current-git-sha";
 
@@ -40,7 +40,7 @@ export default function createChangelog() {
     const updatedCombos = [] as UpdatedComboLog[];
 
     const newComboData = JSON.parse(
-      fs.readFileSync("./frontend/static/api/combo-data.json", "utf8")
+      fs.readFileSync("./frontend/public/api/combo-data.json", "utf8")
     ) as CompressedApiResponse[];
     newComboData.forEach((combo) => {
       const oldCombo = oldComboData.find((oldCombo) => {

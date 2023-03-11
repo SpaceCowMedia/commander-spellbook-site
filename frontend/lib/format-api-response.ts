@@ -3,7 +3,7 @@ import SpellbookList from "./models/list";
 import ColorIdentity from "./models/color-identity";
 import type { CompressedApiResponse, FormattedApiResponse } from "./types";
 
-const edhrecComboData = require("external-data/edhrec-combos.json");
+const edhrecComboData = require("../../external-data/edhrec-combos.json");
 
 export default function formatApiResponse(
   apiResponse: CompressedApiResponse[]

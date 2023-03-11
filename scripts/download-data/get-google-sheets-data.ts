@@ -1,8 +1,8 @@
-import transformGoogleSheetsData from "@spellbook/frontend/lib/api/transform-google-sheets-data";
+import transformGoogleSheetsData from "../../frontend/lib/transform-google-sheets-data";
 import type {
   CommanderSpellbookAPIResponse,
   CompressedApiResponse,
-} from "@spellbook/frontend/lib/api/types";
+} from "../../frontend/lib/types";
 import getData from "../shared/get";
 import log from "../shared/log";
 

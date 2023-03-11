@@ -57,8 +57,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
 
       - name: Download Data ⬇️
@@ -106,8 +106,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Downloaded Data Cache ⬇️
@@ -180,8 +180,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Downloaded Data Cache ⬇️
@@ -224,8 +224,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Downloaded Data Cache ⬇️
@@ -337,8 +337,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Downloaded Data Cache ⬇️
@@ -436,8 +436,8 @@ jobs:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Downloaded Data Cache ⬇️
