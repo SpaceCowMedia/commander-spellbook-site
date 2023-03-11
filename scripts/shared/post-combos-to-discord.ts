@@ -1,4 +1,4 @@
-import type { CompressedApiResponse } from "@spellbook/frontend/lib/api/types";
+import type { CompressedApiResponse } from "../../frontend/lib/types";
 import postDiscordWebhook, { Channel } from "./post-discord-webhook";
 import chunkifyArray from "./chunkify-array";
 
