@@ -358,7 +358,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3 🛫
-        run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
+        run: aws s3 sync ./frontend/out/ s3://commanderspellbook.com --delete
 
       - name: Send Deploy Failed Notification ✉️
         if: ${{ failure() }}
