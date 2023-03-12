@@ -3,8 +3,8 @@
 # as such, we basically tell it to ignore production deploys and only
 # run pull request deploy previews
 [build]
-  publish = "frontend/dist/"
-  command = "npm run build-frontend"
+  publish = "frontend/out/"
+  command = "npm run build"
 
 # Production context: when ignore returns an exit code of 0
 # this tells netlify to skip the build. We always skip the production
@@ -13,4 +13,4 @@
   ignore = "exit 0"
 
 [context.deploy-preview]
-  command = "npm run download-data && npm run build-frontend-for-cypress"
+  command = "npm run download-data && npm run build"
