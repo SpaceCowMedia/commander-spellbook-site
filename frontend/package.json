@@ -10,9 +10,6 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
-    "@types/node": "18.11.19",
-    "@types/react": "18.0.27",
-    "@types/react-dom": "18.0.10",
     "debounce": "^1.2.1",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
@@ -23,14 +20,17 @@
     "react-tooltip": "^5.9.0",
     "sass": "^1.58.0",
     "scryfall-client": "^0.23.0",
+    "tailwindcss": "^3.2.4",
     "typescript": "4.9.5"
   },
   "devDependencies": {
     "@types/debounce": "^1.2.1",
     "@types/gtag.js": "^0.0.12",
+    "@types/node": "18.11.19",
     "@types/pluralize": "^0.0.29",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "postcss": "^8.4.21"
   }
 }
