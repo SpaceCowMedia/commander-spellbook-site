@@ -300,6 +300,54 @@ jobs:
       - name: Send Deploy Start Notification ✉️
         run: npm run discord-webhook:start-deploy
 
+  test_build:
+    # ensure the build process can happen
+    concurrency: production_deploy
+    runs-on: ubuntu-20.04
+    needs: [setup]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+
+      - name: Check Downloaded Data Cache ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: echo "Downloaded data cache failed"; exit 1;
+
+      - name: Build Frontend Site 🏗️
+        run: npm run build
+        env:
+          NODE_ENV: production
+
   deploy:
     # only deploy from the main branch
     # and the changelog check indicates
