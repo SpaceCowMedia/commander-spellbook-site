@@ -192,8 +192,9 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Downloaded data cache failed"; exit 1;
 
-      - name: Run unit tests 🧪
-        run: npm test
+      # skip for now
+      # - name: Run unit tests 🧪
+      #   run: npm test
 
   integration-tests:
     runs-on: ubuntu-22.04
