@@ -346,7 +346,7 @@ jobs:
         run: echo "Downloaded data cache failed"; exit 1;
 
       - name: Build Frontend Site 🏗️
-        run: npm run build-frontend
+        run: npm run build
         env:
           NODE_ENV: production
 

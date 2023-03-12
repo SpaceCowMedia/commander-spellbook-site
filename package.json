@@ -9,8 +9,7 @@
     "postinstall": "husky install",
     "predev": "npm run download-data",
     "dev": "npm run dev --workspace=frontend",
-    "build-frontend": "ts-node scripts/generate-in-batches",
-    "build-frontend-for-cypress": "npm run generate --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
     "prettier": "prettier --write .",
     "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
@@ -25,7 +24,7 @@
     "test": "npm test --workspaces --if-present",
     "test:watch-frontend": "npm test --workspace frontend -- --watch --collectCoverage=false",
     "cy:run": "cypress run",
-    "pretest:integration": "NODE_ENV=development npm run build-frontend-for-cypress",
+    "pretest:integration": "NODE_ENV=development npm run build",
     "test:integration": "npm start & wait-on http://localhost:3000 && npm run cy:run"
   },
   "lint-staged": {
