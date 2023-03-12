@@ -186,8 +186,8 @@ const AdvancedSearch = () => {
   const router = useRouter();
 
   const [formState, setFormStateHook] = useState<Data>({
-    cardNameAutocompletes: require("autocompleteData/cards.json"),
-    resultAutocompletes: require("autocompleteData/results.json"),
+    cardNameAutocompletes: require("../../autocomplete-data/cards.json"),
+    resultAutocompletes: require("../../autocomplete-data/results.json"),
     colorAutocompletes: COLOR_AUTOCOMPLETES,
 
     cards: [{ value: "", operator: ":" }],
