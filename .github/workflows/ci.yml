@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
@@ -44,11 +45,11 @@ jobs:
 
       - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Create Workflow ID 🆔
         id: generate-uuid
-        run: npm run workflow:create-workflow-id
+        run: yarn run workflow:create-workflow-id
 
       - name: Cache Downloaded Data ⏬
         id: cache-downloaded-data
@@ -65,7 +66,7 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
-        run: npm run download-data
+        run: yarn run download-data
 
   changelog_check:
     # only run this check from the main branch
@@ -84,6 +85,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -97,7 +99,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -116,7 +118,7 @@ jobs:
 
       - name: Compare Changelog 🪵
         id: changelog_result
-        run: npm run check-changelog
+        run: yarn run check-changelog
 
   linter:
     runs-on: ubuntu-22.04
@@ -129,6 +131,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -142,10 +145,10 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Run linter 👀
-        run: npm run lint
+        run: yarn run lint
 
   unit-tests:
     runs-on: ubuntu-22.04
@@ -158,6 +161,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -171,7 +175,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -202,6 +206,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -215,7 +220,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -234,7 +239,7 @@ jobs:
 
       # Skip running tests since it will always fail
       # - name: Run Integration tests 💻
-      #   run: npm run test:integration
+      #   run: yarn run test:integration
       #   env:
       #     NODE_ENV: development
 
@@ -252,6 +257,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -265,10 +271,10 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Send deploy cancelled notification ✉️
-        run: npm run discord-webhook:cancel-deploy
+        run: yarn run discord-webhook:cancel-deploy
 
   send-start-deploy-notification:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
@@ -282,6 +288,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -295,10 +302,10 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Send Deploy Start Notification ✉️
-        run: npm run discord-webhook:start-deploy
+        run: yarn run discord-webhook:start-deploy
 
   test_build:
     # ensure the build process can happen
@@ -313,6 +320,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -326,7 +334,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -344,7 +352,7 @@ jobs:
         run: echo "Downloaded data cache failed"; exit 1;
 
       - name: Build Frontend Site 🏗️
-        run: npm run build
+        run: yarn run build
         env:
           NODE_ENV: production
 
@@ -364,6 +372,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -377,7 +386,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -395,7 +404,7 @@ jobs:
         run: echo "Downloaded data cache failed"; exit 1;
 
       - name: Build Frontend Site 🏗️
-        run: npm run build
+        run: yarn run build
         env:
           NODE_ENV: production
 
@@ -411,7 +420,7 @@ jobs:
 
       - name: Send Deploy Failed Notification ✉️
         if: ${{ failure() }}
-        run: npm run discord-webhook:failed-deploy
+        run: yarn run discord-webhook:failed-deploy
 
   bust-cloudfront-cache:
     concurrency: production_deploy
@@ -425,6 +434,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -450,7 +460,7 @@ jobs:
 
       - name: Send Deploy Failed Notification ✉️
         if: ${{ failure() }}
-        run: npm run discord-webhook:failed-deploy
+        run: yarn run discord-webhook:failed-deploy
 
   finish-deploy-notification:
     runs-on: ubuntu-22.04
@@ -463,6 +473,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -476,7 +487,7 @@ jobs:
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Restore Downloaded Data ⏬
         id: cache-downloaded-data
@@ -496,4 +507,4 @@ jobs:
       - name: Send deploy succeeded notification ✉️
         env:
           DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: npm run discord-webhook:finish-deploy
+        run: yarn run discord-webhook:finish-deploy
