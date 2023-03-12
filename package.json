@@ -19,7 +19,7 @@
     "discord-webhook:finish-deploy": "ts-node scripts/discord-webhooks/finish-deploy.ts",
     "check-changelog": "ts-node scripts/check-changelog",
     "start": "yarn workspaces start",
-    "lint": "eslint --ext .ts,.js scripts cypress && yarn run lint --workspaces --if-present",
+    "lint": "eslint --ext .ts,.js scripts cypress && yarn workspaces run lint",
     "test": "yarn test --workspaces --if-present",
     "test:watch-frontend": "yarn test --workspace frontend -- --watch --collectCoverage=false",
     "cy:run": "cypress run",
