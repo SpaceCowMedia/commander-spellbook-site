@@ -11,7 +11,6 @@
     "dev": "npm run dev --workspace=frontend",
     "build": "npm run build --workspace=frontend",
     "prettier": "prettier --write .",
-    "prebuild": "npm run prettier",
     "download-data": "ts-node scripts/download-data",
     "workflow:create-workflow-id": "ts-node scripts/create-workflow-id",
     "discord-webhook:start-deploy": "ts-node scripts/discord-webhooks/start-deploy.ts",
