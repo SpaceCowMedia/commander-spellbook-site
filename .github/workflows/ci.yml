@@ -17,7 +17,7 @@ env:
 
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
     steps:
@@ -70,7 +70,7 @@ jobs:
   changelog_check:
     # only run this check from the main branch
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: setup
     concurrency: production_deploy
     outputs:
@@ -119,7 +119,7 @@ jobs:
         run: npm run check-changelog
 
   linter:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: setup
     steps:
       - name: Checkout 🛎️
@@ -148,7 +148,7 @@ jobs:
         run: npm run lint
 
   unit-tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: setup
     steps:
       - name: Checkout 🛎️
@@ -192,7 +192,7 @@ jobs:
         run: npm test
 
   integration-tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: setup
     steps:
       - name: Checkout 🛎️
@@ -242,7 +242,7 @@ jobs:
     # only send a message about cancelling deploy from the main branch
     # and the changelog check indicates that there are no changes to deploy
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup, changelog_check]
     steps:
       - name: Checkout 🛎️
@@ -272,7 +272,7 @@ jobs:
 
   send-start-deploy-notification:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup, linter, unit-tests, integration-tests, changelog_check]
     steps:
       - name: Checkout 🛎️
@@ -303,7 +303,7 @@ jobs:
   test_build:
     # ensure the build process can happen
     concurrency: production_deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup]
     steps:
       - name: Checkout 🛎️
@@ -354,7 +354,7 @@ jobs:
     # that there are changes to deploy
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
     concurrency: production_deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup, changelog_check, send-start-deploy-notification]
     steps:
       - name: Checkout 🛎️
@@ -415,7 +415,7 @@ jobs:
 
   bust-cloudfront-cache:
     concurrency: production_deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [deploy]
     steps:
       - name: Checkout 🛎️
@@ -453,7 +453,7 @@ jobs:
         run: npm run discord-webhook:failed-deploy
 
   finish-deploy-notification:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [setup, changelog_check, bust-cloudfront-cache]
     steps:
       - name: Checkout 🛎️
