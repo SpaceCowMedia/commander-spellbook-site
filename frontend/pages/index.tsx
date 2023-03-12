@@ -6,8 +6,9 @@ import styles from './index.module.scss'
 import SpellbookLogo from "../components/layout/SpellbookLogo/SpellbookLogo";
 import RandomButton from "../components/RandomButton/RandomButton";
 import {useRouter} from "next/router";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import AnalyticsCookieBanner from "../components/layout/AnalyticsCookieBanner/AnalyticsCookieBanner";
 
 
 export default function Home() {
@@ -43,6 +44,7 @@ export default function Home() {
   return (
     <>
       <SpellbookHead title="Commander Spellbook: The Search Engine for EDH Combos" description="The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format."/>
+      <AnalyticsCookieBanner/>
       <main>
         <div className="gradient">
           <div className={`container ${styles.container} relative md:h-screen z-10`}>

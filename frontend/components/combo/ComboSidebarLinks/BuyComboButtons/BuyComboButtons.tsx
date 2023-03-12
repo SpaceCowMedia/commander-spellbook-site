@@ -1,4 +1,5 @@
 import ExternalLink from "../../../layout/ExternalLink/ExternalLink";
+import { event } from "../../../../lib/googleAnalytics";
 
 
 type Props = {
@@ -19,7 +20,10 @@ const BuyComboButtons = ({cards, tcgPlayerPrice, cardKingdomPrice}: Props) => {
   const cardKingdomPriceLabel = cardKingdomOutOfStock ? "(Unavailable)" : `($${cardKingdomPrice})`
 
   const handleClick = (priceSource: 'TCGPlayer' | 'Card Kingdom') => {
-    // TODO handle google analytics
+    event({
+      action:  `Buy on ${priceSource} button clicked`,
+      category: "Combo Detail Page Actions",
+    })
   }
 
 

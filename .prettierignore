@@ -3,6 +3,6 @@ dist-*
 coverage
 frontend/public/api
 frontend/public/changelog.json
-.nuxt/
+.next/
 external-data/
 autocomplete-data/

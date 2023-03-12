@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react"
 import search from "../../../../lib/search";
 import Link from 'next/link'
+import { event } from "../../../../lib/googleAnalytics";
 
 type Props = {
   cards: string[],
@@ -32,10 +33,10 @@ const SimilarComboButton = ({cards, comboId}: Props) => {
   const text = numberOfSimilarCombos === 1 ? 'View Another Combo Using these Cards' : `Find ${numberOfSimilarCombos} Other Combos Using These Cards`
 
   const handleClick = () => {
-    // TODO handle google analytics
-    // this.$gtag.event("Combos Using These Cards Button Clicked", {
-    //   event_category: "Combo Detail Page Actions",
-    // });
+    event({
+      action: "Combos Using These Cards Button Clicked",
+      category: "Combo Detail Page Actions",
+    });
   }
 
   return (

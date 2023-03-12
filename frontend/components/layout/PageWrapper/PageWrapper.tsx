@@ -2,6 +2,7 @@ import React from "react"
 import Footer from "../Footer/Footer";
 import SearchBar from "../../SearchBar/SearchBar";
 import styles from './pageWrapper.module.scss'
+import AnalyticsCookieBanner from "../AnalyticsCookieBanner/AnalyticsCookieBanner";
 
 type Props = {
   children: React.ReactNode
@@ -11,6 +12,7 @@ type Props = {
 const PageWrapper: React.FC<Props> = ({children, noMarginFooter}: Props) => {
   return (
     <div className="flex flex-col h-full">
+      <AnalyticsCookieBanner/>
       <div className="bg-dark">
         <nav className="container">
           <SearchBar/>

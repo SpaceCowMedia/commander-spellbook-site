@@ -1,6 +1,7 @@
 import {useRef, useState} from "react";
 import styles from './copyComboLinkButton.module.scss'
 import {Tooltip} from "react-tooltip";
+import { event } from "../../../../lib/googleAnalytics";
 
 type Props = {
   comboLink: string
@@ -24,10 +25,10 @@ const CopyComboLinkButton = ({comboLink, children, className}: Props) => {
 
     setShowCopyNotification(true)
 
-    // TODO - handle google analytics event
-    // this.$gtag.event("Copy Combo Link Clicked", {
-    //   event_category: "Combo Detail Page Actions",
-    // });
+    event({
+      action: "Copy Combo Link Clicked",
+      category: "Combo Detail Page Actions",
+    });
 
     setTimeout(() => {
       setShowCopyNotification(false)
