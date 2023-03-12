@@ -1,6 +1,6 @@
 import transformGoogleSheetsData from "./transform-google-sheets-data";
 import formatApiResponse from "./format-api-response";
-import type {CompressedApiResponse, FormattedApiResponse} from "./types";
+import type { CompressedApiResponse, FormattedApiResponse } from "./types";
 
 const GOOGLE_SHEETS_API_ENDPOINT =
   "https://sheets.googleapis.com/v4/spreadsheets/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/values:batchGet?ranges=combos!A2:Q&key=AIzaSyBD_rcme5Ff37Evxa4eW5BFQZkmTbgpHew";
@@ -26,8 +26,10 @@ export default function lookupApi(
   }
 
   if (useCachedResponse) {
-
-    if (typeof window === 'undefined' || process.env.NODE_ENV !== "production") {
+    if (
+      typeof window === "undefined" ||
+      process.env.NODE_ENV !== "production"
+    ) {
       return cachedPromise;
     }
     return new Promise((resolve) => {
@@ -37,7 +39,7 @@ export default function lookupApi(
     });
   }
 
-  if ( typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     cachedPromise = fetchFromGoogleSheets();
   } else {
     cachedPromise = fetch(
@@ -66,8 +68,10 @@ export function lookupApiCompressed(
   }
 
   if (useCompressedCachedResponse) {
-
-    if (typeof window === 'undefined' || process.env.NODE_ENV !== "production") {
+    if (
+      typeof window === "undefined" ||
+      process.env.NODE_ENV !== "production"
+    ) {
       return compressedCachedPromise;
     }
     return new Promise((resolve) => {
@@ -77,14 +81,12 @@ export function lookupApiCompressed(
     });
   }
 
-
-  if ( typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     compressedCachedPromise = fetchFromGoogleSheetsCompressed();
   } else {
     compressedCachedPromise = fetch(
       LOCAL_BACKUP_API_ENDPOINT + "?cache-bust=" + Math.random()
-    )
-      .then((res) => res.json())
+    ).then((res) => res.json());
   }
 
   useCompressedCachedResponse = true;

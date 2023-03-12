@@ -2,12 +2,12 @@ import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import Link from "next/link";
 import MultiSearchInput from "../components/advancedSearch/MultiSearchInput/MultiSearchInput";
-import {DEFAULT_VENDOR} from "../lib/constants";
-import {useEffect, useState} from "react";
+import { DEFAULT_VENDOR } from "../lib/constants";
+import { useEffect, useState } from "react";
 import COLOR_AUTOCOMPLETES from "../lib/colorAutocompletes";
-import styles from './advanced-search.module.scss'
+import styles from "./advanced-search.module.scss";
 import RadioSearchInput from "../components/advancedSearch/RadioSearchInput/RadioSearchInput";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 
 const CARD_OPERATOR_OPTIONS = [
@@ -31,13 +31,13 @@ const CARD_OPERATOR_OPTIONS = [
     label: "Does not have card with exact name",
     placeholder: "ex: basalt monolith",
   },
-]
+];
 
 const CARD_AMOUNT_OPERATOR_OPTIONS = [
   { value: "=-number", label: "Contains exactly x cards (number)" },
   { value: ">-number", label: "Contains more than x cards (number)" },
   { value: "<-number", label: "Contains less than x cards (number)" },
-]
+];
 
 const COLOR_IDENTITY_OPERATOR_OPTIONS = [
   {
@@ -59,7 +59,7 @@ const COLOR_IDENTITY_OPERATOR_OPTIONS = [
   { value: ">-number", label: "Contains more than x colors (number)" },
   { value: "<-number", label: "Contains less than x colors (number)" },
   { value: "=-number", label: "Contains exactly x colors (number)" },
-]
+];
 
 const COMBO_DATA_OPERATOR_OPTIONS = [
   {
@@ -77,19 +77,19 @@ const COMBO_DATA_OPERATOR_OPTIONS = [
   { value: ">-number", label: "Contains more than x (number)" },
   { value: "<-number", label: "Contains less than x (number)" },
   { value: "=-number", label: "Contains exactly x (number)" },
-]
+];
 
 const PRICE_OPTIONS = [
   { value: "<-number", label: "Costs less than" },
   { value: ">-number", label: "Costs more than" },
   { value: "=-number", label: "Costs exactly" },
-]
+];
 
 const POPULARITY_OPTIONS = [
   { value: "<-number", label: "In less than x decks (number)" },
   { value: ">-number", label: "In more than x decks (number)" },
   { value: "=-number", label: "In exactly x decks (number)" },
-]
+];
 
 const VENDOR_OPTIONS = [
   {
@@ -100,7 +100,7 @@ const VENDOR_OPTIONS = [
     value: "tcgplayer",
     label: "TCGplayer",
   },
-]
+];
 
 const PREVIEWED_OPTIONS = [
   {
@@ -116,7 +116,7 @@ const PREVIEWED_OPTIONS = [
     value: "is",
     label: "Only show combos with newly previewed cards",
   },
-]
+];
 
 const BANNED_OPTIONS = [
   {
@@ -132,7 +132,7 @@ const BANNED_OPTIONS = [
     value: "is",
     label: "Only show combos with banned cards",
   },
-]
+];
 
 type InputData = {
   value: string;
@@ -160,21 +160,17 @@ type Data = {
 
   cardAmounts: InputData[];
 
-
   colorIdentity: InputData[];
 
   prerequisites: InputData[];
   steps: InputData[];
   results: InputData[];
 
-
   price: InputData[];
 
   popularity: InputData[];
 
-
   vendor: string;
-
 
   validationError: string;
 
@@ -187,12 +183,11 @@ const DEFAULT_PREVIEWED_VALUE = "include";
 const DEFAULT_BANNED_VALUE = "exclude";
 
 const AdvancedSearch = () => {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const [formState, setFormStateHook] = useState<Data>({
-    cardNameAutocompletes: require('autocompleteData/cards.json'),
-    resultAutocompletes: require('autocompleteData/results.json'),
+    cardNameAutocompletes: require("autocompleteData/cards.json"),
+    resultAutocompletes: require("autocompleteData/results.json"),
     colorAutocompletes: COLOR_AUTOCOMPLETES,
 
     cards: [{ value: "", operator: ":" }],
@@ -207,8 +202,7 @@ const AdvancedSearch = () => {
     previewed: DEFAULT_PREVIEWED_VALUE,
     banned: DEFAULT_BANNED_VALUE,
     validationError: "",
-
-  })
+  });
 
   const {
     cardNameAutocompletes,
@@ -226,19 +220,18 @@ const AdvancedSearch = () => {
     previewed,
     banned,
     validationError,
-  } = formState
-
+  } = formState;
 
   const setFormState = (changes: Partial<typeof formState>) => {
-    setFormStateHook({...formState, ...changes})
-  }
+    setFormStateHook({ ...formState, ...changes });
+  };
 
-  const hasPriceInQuery = !!price.find(({ value }) => !!value.trim())
+  const hasPriceInQuery = !!price.find(({ value }) => !!value.trim());
 
   const validate = () => {
     let hasValidationError = false;
 
-    const newFormState = {...formState}
+    const newFormState = { ...formState };
 
     function val(input: InputData) {
       input.error = "";
@@ -260,7 +253,6 @@ const AdvancedSearch = () => {
       }
     }
 
-
     newFormState.cards.forEach(val);
     newFormState.cardAmounts.forEach(val);
     newFormState.colorIdentity.forEach(val);
@@ -270,17 +262,26 @@ const AdvancedSearch = () => {
     newFormState.price.forEach(val);
     newFormState.popularity.forEach(val);
 
-    setFormState(newFormState)
+    setFormState(newFormState);
 
-    return hasValidationError
-  }
+    return hasValidationError;
+  };
 
   useEffect(() => {
-    validate()
-  }, [cards, cardAmounts, colorIdentity, prerequisites, steps, results, price, popularity])
+    validate();
+  }, [
+    cards,
+    cardAmounts,
+    colorIdentity,
+    prerequisites,
+    steps,
+    results,
+    price,
+    popularity,
+  ]);
 
   const getQuery = () => {
-    let query = ''
+    let query = "";
 
     function makeQueryFunction(
       key: string
@@ -355,18 +356,21 @@ const AdvancedSearch = () => {
     query = query.trim();
 
     return query;
-  }
+  };
 
-  const query = getQuery()
+  const query = getQuery();
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!query) return setFormState({validationError: "No search queries entered."})
+    if (!query)
+      return setFormState({ validationError: "No search queries entered." });
 
-
-    if (validate()) return setFormState({validationError: "Check for errors in your search terms before submitting."})
-
+    if (validate())
+      return setFormState({
+        validationError:
+          "Check for errors in your search terms before submitting.",
+      });
 
     router.push({
       pathname: "/search/",
@@ -374,14 +378,16 @@ const AdvancedSearch = () => {
         q: `${query}`,
       },
     });
-  }
-
+  };
 
   return (
     <PageWrapper>
-      <SpellbookHead title="Commander Spellbook: Advanced Search" description="Advanced search form for searching through Commander Spellbook EDH combos."/>
+      <SpellbookHead
+        title="Commander Spellbook: Advanced Search"
+        description="Advanced search form for searching through Commander Spellbook EDH combos."
+      />
       <div className={`${styles.container} container`}>
-        <ArtCircle cardName="Tribute Mage" className="m-auto md:block hidden"/>
+        <ArtCircle cardName="Tribute Mage" className="m-auto md:block hidden" />
         <h1 className="heading-title">Advanced Search</h1>
         <p className="text-center">
           For more information on the syntax for searches,&nbsp;
@@ -393,7 +399,7 @@ const AdvancedSearch = () => {
         <div id="card-name-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cards}
-            onChange={cards => setFormState({ cards })}
+            onChange={(cards) => setFormState({ cards })}
             autocompleteOptions={cardNameAutocompletes}
             label="Card Names"
             operatorOptions={CARD_OPERATOR_OPTIONS}
@@ -403,18 +409,21 @@ const AdvancedSearch = () => {
         <div id="card-name-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cardAmounts}
-            onChange={cardAmounts => setFormState({ cardAmounts })}
+            onChange={(cardAmounts) => setFormState({ cardAmounts })}
             label="Number of Cards"
             pluralLabel="Number of Cards"
             operatorOptions={CARD_AMOUNT_OPERATOR_OPTIONS}
             defaultOperator="=-number"
-            />
+          />
         </div>
 
-        <div id="color-identity-inputs" className={`${styles.container} container`}>
+        <div
+          id="color-identity-inputs"
+          className={`${styles.container} container`}
+        >
           <MultiSearchInput
             value={colorIdentity}
-            onChange={colorIdentity => setFormState({ colorIdentity })}
+            onChange={(colorIdentity) => setFormState({ colorIdentity })}
             label="Color Identity"
             pluralLabel="Color Identities"
             operatorOptions={COLOR_IDENTITY_OPERATOR_OPTIONS}
@@ -424,20 +433,23 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div id="prerequisite-inputs" className={`${styles.container} container`}>
+        <div
+          id="prerequisite-inputs"
+          className={`${styles.container} container`}
+        >
           <MultiSearchInput
             value={prerequisites}
-            onChange={prerequisites => setFormState({ prerequisites })}
+            onChange={(prerequisites) => setFormState({ prerequisites })}
             defaultPlaceholder="all permanents on the battlefield"
             label="Prerequisite"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
-            />
+          />
         </div>
 
         <div id="step-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={steps}
-            onChange={steps => setFormState({ steps })}
+            onChange={(steps) => setFormState({ steps })}
             label="Step"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
           />
@@ -446,7 +458,7 @@ const AdvancedSearch = () => {
         <div id="result-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={results}
-            onChange={results => setFormState({ results })}
+            onChange={(results) => setFormState({ results })}
             autocompleteOptions={resultAutocompletes}
             label="Result"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
@@ -457,7 +469,7 @@ const AdvancedSearch = () => {
         <div id="price-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={price}
-            onChange={price => setFormState({ price })}
+            onChange={(price) => setFormState({ price })}
             label="Price"
             pluralLabel="Price"
             operatorOptions={PRICE_OPTIONS}
@@ -472,7 +484,7 @@ const AdvancedSearch = () => {
               options={VENDOR_OPTIONS}
               formName="vendor"
               label="Card Vendor"
-              onChange={vendor => setFormState({ vendor })}
+              onChange={(vendor) => setFormState({ vendor })}
             />
           </div>
         )}
@@ -480,7 +492,7 @@ const AdvancedSearch = () => {
         <div id="popularity-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={popularity}
-            onChange={popularity => setFormState({ popularity })}
+            onChange={(popularity) => setFormState({ popularity })}
             label="Popularity"
             pluralLabel="Popularity"
             operatorOptions={POPULARITY_OPTIONS}
@@ -494,7 +506,7 @@ const AdvancedSearch = () => {
             options={PREVIEWED_OPTIONS}
             formName="previewed"
             label="Previewed / Spoiled Combos"
-            onChange={previewed => setFormState({ previewed })}
+            onChange={(previewed) => setFormState({ previewed })}
           />
         </div>
 
@@ -504,7 +516,7 @@ const AdvancedSearch = () => {
             options={BANNED_OPTIONS}
             formName="banned"
             label="Banned Combos"
-            onChange={banned => setFormState({ banned })}
+            onChange={(banned) => setFormState({ banned })}
           />
         </div>
 
@@ -523,22 +535,27 @@ const AdvancedSearch = () => {
               className="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
               aria-hidden="true"
             >
-              {query ?
+              {query ? (
                 <span>{query}</span>
-                :
-                <span className="text-dark">(your query will populate here when you've entered any search terms)</span>
-              }
+              ) : (
+                <span className="text-dark">
+                  (your query will populate here when you've entered any search
+                  terms)
+                </span>
+              )}
             </div>
           </div>
 
-          <div id="advanced-search-validation-error" className="text-danger p-4">
+          <div
+            id="advanced-search-validation-error"
+            className="text-danger p-4"
+          >
             {validationError}
           </div>
         </div>
-
       </form>
     </PageWrapper>
-  )
-}
+  );
+};
 
-export default AdvancedSearch
+export default AdvancedSearch;

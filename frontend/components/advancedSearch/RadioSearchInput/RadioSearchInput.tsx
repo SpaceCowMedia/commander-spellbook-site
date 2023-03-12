@@ -1,20 +1,26 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 type Props = {
-  checkedValue: string
-  options: Array<{value: string, label: string}>
-  formName: string
-  label: string
-  onChange?: (value: string) => void
-}
+  checkedValue: string;
+  options: Array<{ value: string; label: string }>;
+  formName: string;
+  label: string;
+  onChange?: (value: string) => void;
+};
 
-const RadioSearchInput = ({ checkedValue, options, formName, label, onChange }: Props) => {
-  const [localValue, setLocalValue] = useState<string>(checkedValue)
+const RadioSearchInput = ({
+  checkedValue,
+  options,
+  formName,
+  label,
+  onChange,
+}: Props) => {
+  const [localValue, setLocalValue] = useState<string>(checkedValue);
 
   const handleChange = (value: string) => {
-    setLocalValue(value)
-    onChange && onChange(value)
-  }
+    setLocalValue(value);
+    onChange && onChange(value);
+  };
 
   return (
     <div>
@@ -24,7 +30,11 @@ const RadioSearchInput = ({ checkedValue, options, formName, label, onChange }: 
           Choose settings for {label}
         </legend>
         {options.map((option, index) => (
-          <label key={`${label}-radio-input-${index}`} htmlFor={`${label}-radio-input-${index}`} className="radio-wrapper sm:inline-flex items-center mt-3">
+          <label
+            key={`${label}-radio-input-${index}`}
+            htmlFor={`${label}-radio-input-${index}`}
+            className="radio-wrapper sm:inline-flex items-center mt-3"
+          >
             <input
               id={`${label}-radio-input-${index}`}
               type="radio"
@@ -33,14 +43,13 @@ const RadioSearchInput = ({ checkedValue, options, formName, label, onChange }: 
               checked={localValue === option.value}
               value={option.value}
               onChange={() => handleChange(option.value)}
-              />
+            />
             <span className="ml-2 text-dark">{option.label}</span>
           </label>
-          ))}
+        ))}
       </fieldset>
     </div>
-  )
-}
+  );
+};
 
-
-export default RadioSearchInput
+export default RadioSearchInput;

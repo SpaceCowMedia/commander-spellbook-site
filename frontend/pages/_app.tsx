@@ -1,14 +1,12 @@
-import '../assets/globals.scss'
-import type { AppProps } from 'next/app'
-import 'react-tooltip/dist/react-tooltip.css'
-import Script from 'next/script'
+import "../assets/globals.scss";
+import type { AppProps } from "next/app";
+import "react-tooltip/dist/react-tooltip.css";
+import Script from "next/script";
 import { GA_TRACKING_ID, pageview } from "../lib/googleAnalytics";
-import {useRouter} from "next/router"
-import {useEffect} from "react"
-
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
-
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -22,7 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Script id="ga1" strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}/>
+      <Script
+        id="ga1"
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+      />
       <Script
         id="ga2"
         strategy="afterInteractive"
@@ -39,5 +41,5 @@ export default function App({ Component, pageProps }: AppProps) {
       />
       <Component {...pageProps} />
     </>
-  )
+  );
 }

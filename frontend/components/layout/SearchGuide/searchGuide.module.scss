@@ -7,13 +7,17 @@
   }
 
   @media (min-width: 768px) {
-    .searchGuide:nth-child(even) {.description {
-      @apply order-last pr-0 pl-4;
-    }}
+    .searchGuide:nth-child(even) {
+      .description {
+        @apply order-last pr-0 pl-4;
+      }
+    }
 
-    .searchGuide:nth-child(even) {.searchSnippets {
-      @apply pl-0 pr-4;
-    }}
+    .searchGuide:nth-child(even) {
+      .searchSnippets {
+        @apply pl-0 pr-4;
+      }
+    }
   }
 
   .searchGuide {
@@ -21,9 +25,5 @@
       @apply border-0;
       background-color: #36096a;
     }
-
   }
-
 }
-
-

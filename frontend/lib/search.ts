@@ -32,7 +32,6 @@ export default async function search(query = ""): Promise<SearchResults> {
     };
   }
 
-
   let combos = await lookupApi();
 
   combos = filterIds(combos, searchParams);

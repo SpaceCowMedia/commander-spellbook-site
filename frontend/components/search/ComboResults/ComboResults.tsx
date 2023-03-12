@@ -1,28 +1,33 @@
 import { SearchResultsState } from "../../../pages/search";
-import styles from './comboResults.module.scss'
+import styles from "./comboResults.module.scss";
 import Link from "next/link";
 import ColorIdentity from "../../layout/ColorIdentity/ColorIdentity";
 import CardTooltip from "../../layout/CardTooltip/CardTooltip";
-import {FormattedApiResponse} from "../../../lib/types";
+import { FormattedApiResponse } from "../../../lib/types";
 import Card from "../../../lib/card";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import pluralize from "pluralize";
 
 type Props = {
-  missingDecklistCards?: Card[]
-} & ({
-  results: SearchResultsState
-  paginatedResults: FormattedApiResponse[]
-} | {results: FormattedApiResponse[], paginatedResults?: never})
+  missingDecklistCards?: Card[];
+} & (
+  | {
+      results: SearchResultsState;
+      paginatedResults: FormattedApiResponse[];
+    }
+  | { results: FormattedApiResponse[]; paginatedResults?: never }
+);
 
-const getCardNames = (combo: FormattedApiResponse) => combo.cards.map((card) => card.name)
+const getCardNames = (combo: FormattedApiResponse) =>
+  combo.cards.map((card) => card.name);
 
-
-
-const ComboResults = ({ results, paginatedResults, missingDecklistCards = [] }: Props) => {
-
-  const isMissingInDecklistCards = (cardName: string) =>  !!missingDecklistCards.find(card => card.matchesNameExactly(cardName))
-
+const ComboResults = ({
+  results,
+  paginatedResults,
+  missingDecklistCards = [],
+}: Props) => {
+  const isMissingInDecklistCards = (cardName: string) =>
+    !!missingDecklistCards.find((card) => card.matchesNameExactly(cardName));
 
   const sortStatMessage = (combo: FormattedApiResponse) => {
     if (!results.sort) {
@@ -63,16 +68,19 @@ const ComboResults = ({ results, paginatedResults, missingDecklistCards = [] }: 
     }
 
     return "";
-  }
-
+  };
 
   return (
     <div className={styles.comboResultsWrapper}>
       {(paginatedResults || results).map((combo) => (
-        <Link href={`/combo/${combo.commanderSpellbookId}`} key={combo.commanderSpellbookId} className={`${styles.comboResult} w-full md:w-1/4`}>
+        <Link
+          href={`/combo/${combo.commanderSpellbookId}`}
+          key={combo.commanderSpellbookId}
+          className={`${styles.comboResult} w-full md:w-1/4`}
+        >
           <div className="flex flex-col">
             <div className="flex items-center flex-grow flex-col bg-dark text-white">
-              <ColorIdentity colors={combo.colorIdentity.colors} size="small"/>
+              <ColorIdentity colors={combo.colorIdentity.colors} size="small" />
             </div>
             <div className="flex-grow border-b-2 border-light">
               <div className="py-1">
@@ -80,13 +88,13 @@ const ComboResults = ({ results, paginatedResults, missingDecklistCards = [] }: 
                 {getCardNames(combo).map((cardName) => (
                   <CardTooltip cardName={cardName} key={cardName}>
                     <div className="card-name pl-3 pr-3">
-                      {isMissingInDecklistCards(cardName) ?
+                      {isMissingInDecklistCards(cardName) ? (
                         <strong className="text-red-800">
                           {cardName} (not in deck)
                         </strong>
-                        :
+                      ) : (
                         <span>{cardName}</span>
-                      }
+                      )}
                     </div>
                   </CardTooltip>
                 ))}
@@ -96,13 +104,13 @@ const ComboResults = ({ results, paginatedResults, missingDecklistCards = [] }: 
               <span className="sr-only">Results in combo:</span>
               {combo.results.map((result) => (
                 <div key={result} className={`result pl-3 pr-3`}>
-                  <TextWithMagicSymbol text={result}/>
+                  <TextWithMagicSymbol text={result} />
                 </div>
               ))}
             </div>
           </div>
           <div className="flex items-center flex-grow flex-col">
-            <div className="flex-grow"/>
+            <div className="flex-grow" />
             {sortStatMessage(combo) && (
               <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
                 {sortStatMessage(combo)}
@@ -112,7 +120,7 @@ const ComboResults = ({ results, paginatedResults, missingDecklistCards = [] }: 
         </Link>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default ComboResults
+export default ComboResults;

@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const SpellbookLogo: React.FC<Props> = ({}: Props) => {
   return (
@@ -23,7 +23,7 @@ const SpellbookLogo: React.FC<Props> = ({}: Props) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SpellbookLogo
+export default SpellbookLogo;

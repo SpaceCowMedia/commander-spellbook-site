@@ -4,12 +4,9 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: [
-    "next/core-web-vitals",
-    "prettier",
-  ],
+  extends: ["next/core-web-vitals", "prettier"],
   // add your custom rules here
   rules: {
-    "react/no-unescaped-entities": "off"
+    "react/no-unescaped-entities": "off",
   },
 };

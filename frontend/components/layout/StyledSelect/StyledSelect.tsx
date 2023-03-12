@@ -1,38 +1,53 @@
-import {ChangeEvent, useState} from "react";
-import styles from './styledSelect.module.scss'
+import { ChangeEvent, useState } from "react";
+import styles from "./styledSelect.module.scss";
 
-export type Option = { value: string; label: string}
+export type Option = { value: string; label: string };
 
 type Props = {
-  selectBackgroundClassName?: string,
-  selectTextClassName?: string,
-  label: string
-  id: string
-  value?: string
-  options: Option[]
-  onChange?: (value: string) => void
-}
+  selectBackgroundClassName?: string;
+  selectTextClassName?: string;
+  label: string;
+  id: string;
+  value?: string;
+  options: Option[];
+  onChange?: (value: string) => void;
+};
 
-const StyledSelect = ({label, id, value, options, selectBackgroundClassName = 'border border-dark', selectTextClassName = 'text-dark', onChange}: Props) => {
-
-  const [localValue, setLocalValue] = useState(value)
+const StyledSelect = ({
+  label,
+  id,
+  value,
+  options,
+  selectBackgroundClassName = "border border-dark",
+  selectTextClassName = "text-dark",
+  onChange,
+}: Props) => {
+  const [localValue, setLocalValue] = useState(value);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setLocalValue(event.target.value)
-    onChange && onChange(event.target.value)
-  }
+    setLocalValue(event.target.value);
+    onChange && onChange(event.target.value);
+  };
 
   return (
-    <div className={`${selectBackgroundClassName} rounded-l-sm relative`} >
-      <label htmlFor={id} className="sr-only" aria-hidden="true">{ label }</label>
+    <div className={`${selectBackgroundClassName} rounded-l-sm relative`}>
+      <label htmlFor={id} className="sr-only" aria-hidden="true">
+        {label}
+      </label>
       <select
-          onChange={handleChange}
-          id={id}
-          value={localValue}
+        onChange={handleChange}
+        id={id}
+        value={localValue}
         className={`${styles.operatorSelector} ${selectTextClassName} focus:shadow-outline`}
-          >
+      >
         {options.map((option, index) => (
-          <option key={`${label}-input-${index}-${option.label}`} value={option.value} className="text-dark">{option.label}</option>
+          <option
+            key={`${label}-input-${index}-${option.label}`}
+            value={option.value}
+            className="text-dark"
+          >
+            {option.label}
+          </option>
         ))}
       </select>
       <div
@@ -41,7 +56,7 @@ const StyledSelect = ({label, id, value, options, selectBackgroundClassName = 'b
       >
         <svg
           className={`${selectTextClassName} w-4 h-4 fill-current`}
-        viewBox="0 0 20 20"
+          viewBox="0 0 20 20"
         >
           <path
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -51,7 +66,7 @@ const StyledSelect = ({label, id, value, options, selectBackgroundClassName = 'b
         </svg>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StyledSelect
+export default StyledSelect;

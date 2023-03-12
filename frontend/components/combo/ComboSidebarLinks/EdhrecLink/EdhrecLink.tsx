@@ -1,15 +1,15 @@
 import ExternalLink from "../../../layout/ExternalLink/ExternalLink";
 
 type Props = {
-  link: string
-}
+  link: string;
+};
 
-const EdhrecLink = ({link}: Props) => {
+const EdhrecLink = ({ link }: Props) => {
   return (
     <ExternalLink href={link} className="button w-full">
       View on EDHREC
     </ExternalLink>
-  )
-}
+  );
+};
 
-export default EdhrecLink
+export default EdhrecLink;

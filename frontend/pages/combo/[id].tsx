@@ -1,22 +1,22 @@
 import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
-import {findByIdCompressed} from "../../lib/find-by-id";
+import { findByIdCompressed } from "../../lib/find-by-id";
 import pluralize from "pluralize";
 import CardHeader from "../../components/combo/CardHeader/CardHeader";
 import CardGroup from "../../components/combo/CardGroup/CardGroup";
 import ColorIdentity from "../../components/layout/ColorIdentity/ColorIdentity";
 import ComboList from "../../components/combo/ComboList/ComboList";
-import styles from './combo.module.scss'
+import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
 import getAllCombos from "../../lib/get-all-combos";
-import {GetStaticPaths} from "next";
-import {CompressedApiResponse} from "../../lib/types";
+import { GetStaticPaths } from "next";
+import { CompressedApiResponse } from "../../lib/types";
 import formatApiResponse from "../../lib/format-api-response";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
-import React from 'react'
+import React from "react";
 
 type Props = {
-  compressedCombo: CompressedApiResponse
-}
+  compressedCombo: CompressedApiResponse;
+};
 
 type Price = {
   tcgplayer: string;
@@ -45,7 +45,6 @@ type ComboData = {
   commanderSpellbookId: string;
 };
 
-
 const NUMBERS = [
   "zero",
   "one",
@@ -60,10 +59,8 @@ const NUMBERS = [
   "ten",
 ];
 
-
-
-const Combo = ({compressedCombo}: Props) => {
-  const combo = formatApiResponse([compressedCombo])[0]
+const Combo = ({ compressedCombo }: Props) => {
+  const combo = formatApiResponse([compressedCombo])[0];
 
   const data: ComboData = {
     commanderSpellbookId: combo.commanderSpellbookId,
@@ -83,25 +80,58 @@ const Combo = ({compressedCombo}: Props) => {
     results: Array.from(combo.results),
     colorIdentity: Array.from(combo.colorIdentity.colors),
     prices: {
-      tcgplayer: '',
-      cardkingdom: '',
+      tcgplayer: "",
+      cardkingdom: "",
     },
     loaded: true,
-  }
+  };
 
-  const { cards, numberOfDecks, loaded, colorIdentity, prerequisites, steps, results, hasBannedCard, hasPreviewedCard, link, edhrecLink, comboNumber, prices } = data
+  const {
+    cards,
+    numberOfDecks,
+    loaded,
+    colorIdentity,
+    prerequisites,
+    steps,
+    results,
+    hasBannedCard,
+    hasPreviewedCard,
+    link,
+    edhrecLink,
+    comboNumber,
+    prices,
+  } = data;
 
-  const cardNames = cards.map((card) => card.name)
-  const cardArts = cards.map((card) => card.artUrl)
-  const title = cardNames.length === 0 ? 'Looking up Combo' : cardNames.slice(0, 3).join(' | ')
-  const subtitle = cards.length < 4 ? '' : cards.length === 4 ? `(and ${NUMBERS[1]} other card)` : `(and ${NUMBERS[cards.length - 3]} other cards)`
-  const metaData = numberOfDecks > 0 ? [`In ${numberOfDecks} ${pluralize("deck", numberOfDecks)} according to EDHREC.`] : []
+  const cardNames = cards.map((card) => card.name);
+  const cardArts = cards.map((card) => card.artUrl);
+  const title =
+    cardNames.length === 0
+      ? "Looking up Combo"
+      : cardNames.slice(0, 3).join(" | ");
+  const subtitle =
+    cards.length < 4
+      ? ""
+      : cards.length === 4
+      ? `(and ${NUMBERS[1]} other card)`
+      : `(and ${NUMBERS[cards.length - 3]} other cards)`;
+  const metaData =
+    numberOfDecks > 0
+      ? [
+          `In ${numberOfDecks} ${pluralize(
+            "deck",
+            numberOfDecks
+          )} according to EDHREC.`,
+        ]
+      : [];
 
   return (
     <PageWrapper>
       <SpellbookHead
         title={`${title} ${subtitle}`}
-        description={results.reduce((str, result) => str + `\n  * ${result}`, "Combo Results:")}
+        description={results.reduce(
+          (str, result) => str + `\n  * ${result}`,
+          "Combo Results:"
+        )}
         imageUrl={cardArts[0]}
         useCropDimensions
       />
@@ -160,54 +190,63 @@ const Combo = ({compressedCombo}: Props) => {
             </div>
 
             {hasBannedCard && (
-              <div className={styles.bannedWarning} >
+              <div className={styles.bannedWarning}>
                 WARNING: Combo contains cards that are banned in Commander
               </div>
             )}
 
             {hasPreviewedCard && (
-              <div className={styles.previewedWarning} >
-                WARNING: Combo contains cards that have not been released yet (and are
-                not yet legal in Commander)
+              <div className={styles.previewedWarning}>
+                WARNING: Combo contains cards that have not been released yet
+                (and are not yet legal in Commander)
               </div>
             )}
 
-            <ComboSidebarLinks cards={cardNames} comboLink={link} edhrecLink={edhrecLink} comboId={comboNumber} tcgPlayerPrice={prices.tcgplayer} cardKingdomPrice={prices.cardkingdom}/>
+            <ComboSidebarLinks
+              cards={cardNames}
+              comboLink={link}
+              edhrecLink={edhrecLink}
+              comboId={comboNumber}
+              tcgPlayerPrice={prices.tcgplayer}
+              cardKingdomPrice={prices.cardkingdom}
+            />
           </aside>
         )}
       </div>
     </PageWrapper>
-  )
+  );
+};
 
-}
-
-
-export default Combo
+export default Combo;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const combos = await getAllCombos()
+  const combos = await getAllCombos();
   const paths = combos.map((combo) => ({
     params: { id: `${combo.commanderSpellbookId}` },
-  }))
+  }));
 
-  return { paths, fallback: false }
-}
+  return { paths, fallback: false };
+};
 
-export const getStaticProps = async ({ params }: {params: {id: string}}) => {
-  const combo = await findByIdCompressed(params.id)
+export const getStaticProps = async ({
+  params,
+}: {
+  params: { id: string };
+}) => {
+  const combo = await findByIdCompressed(params.id);
 
   if (!combo) {
     return {
       redirect: {
-        destination: '/combo-not-found',
+        destination: "/combo-not-found",
         permanent: false,
-      }
-    }
+      },
+    };
   }
 
   return {
     props: {
       compressedCombo: combo,
     },
-  }
-}
+  };
+};

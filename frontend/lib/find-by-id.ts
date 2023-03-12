@@ -1,6 +1,6 @@
-import lookupApi, {lookupApiCompressed} from "./spellbook-api";
+import lookupApi, { lookupApiCompressed } from "./spellbook-api";
 
-import type {CompressedApiResponse, FormattedApiResponse} from "./types";
+import type { CompressedApiResponse, FormattedApiResponse } from "./types";
 
 export default async function findById(
   id: string | number,

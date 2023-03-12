@@ -1,15 +1,14 @@
-import React from "react"
+import React from "react";
 import Link from "next/link";
-import styles from './searchSnippet.module.scss'
+import styles from "./searchSnippet.module.scss";
 
 type Props = {
-  search: string
-  description: string
-}
+  search: string;
+  description: string;
+};
 
-const SearchSnippet: React.FC<Props> = ({search, description}: Props) => {
-
-  const link = `/search/?q=${search}`
+const SearchSnippet: React.FC<Props> = ({ search, description }: Props) => {
+  const link = `/search/?q=${search}`;
 
   return (
     <Link href={link} className={styles.link}>
@@ -18,7 +17,7 @@ const SearchSnippet: React.FC<Props> = ({search, description}: Props) => {
         <p className={styles.description}>{description}</p>
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default SearchSnippet
+export default SearchSnippet;

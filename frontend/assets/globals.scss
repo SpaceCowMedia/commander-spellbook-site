@@ -6,7 +6,9 @@ html {
   @apply bg-white font-body;
 }
 
-body, html, #__next {
+body,
+html,
+#__next {
   @apply h-full;
 }
 

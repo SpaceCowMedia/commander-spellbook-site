@@ -1,10 +1,7 @@
 import scryfall from "scryfall-client";
 import lookup from "lib/spellbook-api";
 
-import type {
-  FormattedApiResponse,
-  ColorIdentityColors,
-} from "lib/types";
+import type { FormattedApiResponse, ColorIdentityColors } from "lib/types";
 import type Card from "lib/card";
 
 // this regex supports decks parsing in these formats:
@@ -181,7 +178,10 @@ export async function findCombosFromDecklist(
   const missingCardsForPotentialCombos: Card[] = [];
 
   combos.forEach((combo) => {
-    const missingCards = findMissingCards(decklist, combo.cards as unknown as Card[]);
+    const missingCards = findMissingCards(
+      decklist,
+      combo.cards as unknown as Card[]
+    );
 
     if (missingCards.length === 0) {
       combosInDecklist.push(combo);

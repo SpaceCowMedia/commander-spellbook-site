@@ -1,20 +1,27 @@
-import React from "react"
-import Link from 'next/link'
-import styles from './footer.module.scss'
+import React from "react";
+import Link from "next/link";
+import styles from "./footer.module.scss";
 import Image from "next/image";
 
 type Props = {
-  className?: string
-  noMargin?: boolean
-}
+  className?: string;
+  noMargin?: boolean;
+};
 
-const Footer: React.FC<Props> = ({className, noMargin}: Props) => {
+const Footer: React.FC<Props> = ({ className, noMargin }: Props) => {
   return (
-    <div className={`${className} ${noMargin && 'mt-0 lg:mt-0'}`}>
-
-      {!noMargin && <div className="relative md:-mt-24 lg:-mt-48">
-        <Image className="w-full select-none" height="100" width="2000" src="/footer.svg" alt="footer"/>
-      </div>}
+    <div className={`${className} ${noMargin && "mt-0 lg:mt-0"}`}>
+      {!noMargin && (
+        <div className="relative md:-mt-24 lg:-mt-48">
+          <Image
+            className="w-full select-none"
+            height="100"
+            width="2000"
+            src="/footer.svg"
+            alt="footer"
+          />
+        </div>
+      )}
       <footer className={styles.footer}>
         <div className="container md:flex flex-row text-center md:text-left">
           <div className={styles.linkCollection}>
@@ -40,27 +47,31 @@ const Footer: React.FC<Props> = ({className, noMargin}: Props) => {
             <a href="https://github.com/Commander-Spellbook">Github</a>
             <a href="https://edhrec.com/combos">EDHREC</a>
             <a href="https://draftsim.com">Draftsim</a>
-            <a href="https://psycatgames.com/games/life-counter/">MTG Life Counter: Lotus</a>
+            <a href="https://psycatgames.com/games/life-counter/">
+              MTG Life Counter: Lotus
+            </a>
           </div>
         </div>
         <div className="container mt-8 text-light">
           <p className="my-4">
-            Commander Spellbook is unofficial Fan Content permitted under the&nbsp;
-            <a href="https://company.wizards.com/en/legal/fancontentpolicy">Fan Content Policy</a>.
-            Not approved/endorsed by Wizards. Portions of the materials used
+            Commander Spellbook is unofficial Fan Content permitted under
+            the&nbsp;
+            <a href="https://company.wizards.com/en/legal/fancontentpolicy">
+              Fan Content Policy
+            </a>
+            . Not approved/endorsed by Wizards. Portions of the materials used
             are property of Wizards of the Coast. ©Wizards of the Coast LLC.
           </p>
           <p className="my-4">
             Commander Spellbook utilizes icons provided by&nbsp;
-            <a href="https://fontawesome.com/">
-              Font Awesome</a>&nbsp;
-            according to the&nbsp;
+            <a href="https://fontawesome.com/">Font Awesome</a>&nbsp; according
+            to the&nbsp;
             <a href="https://fontawesome.com/license">Font Awesome License</a>.
           </p>
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
