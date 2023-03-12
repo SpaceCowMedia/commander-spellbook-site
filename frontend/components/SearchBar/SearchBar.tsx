@@ -9,10 +9,7 @@ type Props = {
   className?: string;
 };
 
-const SearchBar: React.FC<Props> = ({
-  onHomepage,
-  className,
-}: Props) => {
+const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const router = useRouter();
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
