@@ -138,14 +138,14 @@ const Search: React.FC<Props> = ({}: Props) => {
     const query = String(router.query.q)
       .replace(/((\s)?sort(:|=)\w*|$)/, ` sort:${value}`)
       .trim();
-    router.push({ pathname: "/search", query: { q: query, page: "1" } });
+    router.push({ pathname: "/search/", query: { q: query, page: "1" } });
   };
 
   const handleOrderChange = (value: string) => {
     const query = String(router.query.q)
       .replace(/((\s)?order(:|=)\w*|$)/, ` order:${value}`)
       .trim();
-    router.push({ pathname: "/search", query: { q: query, page: "1" } });
+    router.push({ pathname: "/search/", query: { q: query, page: "1" } });
   };
 
   return (

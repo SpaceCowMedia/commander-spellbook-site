@@ -13,7 +13,7 @@ describe("Search Bar", () => {
 
     cy.get("input[name=q]").type("mesmeric result:infinite{enter}");
 
-    cy.url().should("include", "/search?q=mesmeric%20result:infinite");
+    cy.url().should("include", "/search/?q=mesmeric%20result:infinite");
   });
 
   it("does not search when query is empty", () => {

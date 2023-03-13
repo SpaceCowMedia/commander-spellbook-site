@@ -20,7 +20,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     e.preventDefault();
 
     if (typeof inputValue === 'string' && inputValue.trim()) {
-      router.push(`/search?q=${inputValue}`);
+      router.push(`/search/?q=${inputValue}`);
     }
   };
 
