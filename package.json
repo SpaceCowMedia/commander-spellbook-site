@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "husky install",
     "predev": "yarn run download-data",
-    "dev": "yarn workspaces run test",
+    "dev": "yarn workspaces run dev",
     "build": "yarn workspaces run build",
     "prettier": "prettier --write .",
     "download-data": "ts-node scripts/download-data",
