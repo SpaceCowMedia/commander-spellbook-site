@@ -317,7 +317,7 @@ jobs:
     # TODO change back to productin deploy before merging
     concurrency: dev_deploy
     runs-on: ubuntu-22.04
-    needs: [setup, changelog_check ]
+    needs: [setup]
     # TODO put this back before merging
     # needs: [setup, changelog_check, send-start-deploy-notification]
     steps:
