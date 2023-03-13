@@ -54,6 +54,9 @@ const MultiSearchInput = ({
   const getInputId = (index: number) =>
     `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
 
+  const getSelectId = (index: number) =>
+    `${label.toLowerCase().replace(/\s/g, "-")}-select-${index}`;
+
   const getPlaceHolder = (operator: string) => {
     const isNumber = operator.split("-")[1] === "number";
     if (isNumber) return `ex: 2`;
@@ -80,7 +83,7 @@ const MultiSearchInput = ({
           <div className="sm:flex">
             <StyledSelect
               label={`Modifier for ${label}`}
-              id={`${label}-select-${index}`}
+              id={getSelectId(index)}
               options={operatorOptions}
               selectTextClassName="sm:w-1/2 flex-grow"
               selectBackgroundClassName={`${
