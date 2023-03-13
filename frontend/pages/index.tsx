@@ -73,7 +73,7 @@ export default function Home() {
                 </Link>
                 <RandomButton
                   query={query}
-                  className={`${styles.button} dark button md:m-1`}
+                  className={`random-button ${styles.button} dark button md:m-1`}
                 >
                   Random Combo
                 </RandomButton>
