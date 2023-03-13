@@ -18,7 +18,10 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`/search?q=${inputValue}`);
+
+    if (typeof inputValue === 'string' && inputValue.trim()) {
+      router.push(`/search?q=${inputValue}`);
+    }
   };
 
   useEffect(() => {
@@ -26,6 +29,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     getAllCombos().then((combos) => {
       setNumberOfCombos(combos.length);
     });
+
   }, [router.query.q]);
 
   return (
@@ -60,6 +64,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
           </label>
           <input
             value={inputValue}
+            name="q"
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={`Search ${
               numberOfCombos ? numberOfCombos + " " : ""

@@ -4,7 +4,7 @@ describe("Search Bar", () => {
 
     pages.forEach((page) => {
       cy.visit(`/${page}/`);
-      cy.get(".main-search-input").should("have.length", 1);
+      cy.get("input[name=q]").should("have.length", 1);
     });
   });
 
@@ -13,7 +13,7 @@ describe("Search Bar", () => {
 
     cy.get("input[name=q]").type("mesmeric result:infinite{enter}");
 
-    cy.url().should("include", "/search/?q=mesmeric%20result%3Ainfinite");
+    cy.url().should("include", "/search?q=mesmeric%20result:infinite");
   });
 
   it("does not search when query is empty", () => {
@@ -21,6 +21,6 @@ describe("Search Bar", () => {
 
     cy.get("input[name=q]").type("      {enter}");
 
-    cy.url().should("include", "/advanced-search/");
+    cy.url().should("include", "/advanced-search");
   });
 });
