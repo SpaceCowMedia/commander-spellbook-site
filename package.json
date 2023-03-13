@@ -18,13 +18,12 @@
     "discord-webhook:failed-deploy": "ts-node scripts/discord-webhooks/failed-deploy.ts",
     "discord-webhook:finish-deploy": "ts-node scripts/discord-webhooks/finish-deploy.ts",
     "check-changelog": "ts-node scripts/check-changelog",
-    "start": "yarn workspaces start",
     "lint": "eslint --ext .ts,.js scripts cypress && yarn workspaces run lint",
     "test": "yarn test --workspaces --if-present",
     "test:watch-frontend": "yarn test --workspace frontend -- --watch --collectCoverage=false",
     "cy:run": "cypress run",
     "pretest:integration": "NODE_ENV=development yarn run build",
-    "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run"
+    "test:integration": "yarn dev & wait-on http://localhost:3000 && yarn run cy:run"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",

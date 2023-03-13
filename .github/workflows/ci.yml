@@ -238,11 +238,10 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Downloaded data cache failed"; exit 1;
 
-      # Skip running tests since it will always fail
-      # - name: Run Integration tests 💻
-      #   run: yarn run test:integration
-      #   env:
-      #     NODE_ENV: development
+      - name: Run Integration tests 💻
+        run: yarn run test:integration
+        env:
+          NODE_ENV: development
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
