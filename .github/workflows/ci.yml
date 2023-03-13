@@ -73,7 +73,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
     runs-on: ubuntu-22.04
     needs: setup
-    concurrency: production_deploy
+    # TODO change back to productin deploy before merging
+    concurrency: dev_deploy
     outputs:
       should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
       deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
@@ -273,8 +274,8 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Send deploy cancelled notification ✉️
-        run: yarn run discord-webhook:cancel-deploy
+      # - name: Send deploy cancelled notification ✉️
+      #   run: yarn run discord-webhook:cancel-deploy
 
   send-start-deploy-notification:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
@@ -304,66 +305,21 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Send Deploy Start Notification ✉️
-        run: yarn run discord-webhook:start-deploy
-
-  test_build:
-    # ensure the build process can happen
-    concurrency: production_deploy
-    runs-on: ubuntu-22.04
-    needs: [setup]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Restore Downloaded Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Downloaded Data Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Build Frontend Site 🏗️
-        run: yarn run build
-        env:
-          NODE_ENV: production
+      # - name: Send Deploy Start Notification ✉️
+      #   run: yarn run discord-webhook:start-deploy
 
   deploy:
     # only deploy from the main branch
     # and the changelog check indicates
     # that there are changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
-    concurrency: production_deploy
+    # TODO uncomment this check before mergingc
+    # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
+    # TODO change back to productin deploy before merging
+    concurrency: dev_deploy
     runs-on: ubuntu-22.04
-    needs: [setup, changelog_check, send-start-deploy-notification]
+    needs: [setup, changelog_check ]
+    # TODO put this back before merging
+    # needs: [setup, changelog_check, send-start-deploy-notification]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -416,14 +372,16 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3 🛫
-        run: aws s3 sync ./frontend/out/ s3://commanderspellbook.com --delete
+        # TODO change back to prod url before merging
+        run: aws s3 sync ./frontend/out/ s3://dev.commanderspellbook.com --delete
 
-      - name: Send Deploy Failed Notification ✉️
-        if: ${{ failure() }}
-        run: yarn run discord-webhook:failed-deploy
+      # - name: Send Deploy Failed Notification ✉️
+      #   if: ${{ failure() }}
+      #   run: yarn run discord-webhook:failed-deploy
 
   bust-cloudfront-cache:
-    concurrency: production_deploy
+    # TODO change back to productin deploy before merging
+    concurrency: dev_deploy
     runs-on: ubuntu-22.04
     needs: [deploy]
     steps:
@@ -456,11 +414,12 @@ jobs:
       - name: Bust Cloudfront Cache 👥
         env:
           AWS_MAX_ATTEMPTS: 8
-        run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
+        # TODO change back to prod distribution id before merging
+        run: aws cloudfront create-invalidation --distribution-id E38HRVAV3M8AZX --paths "/*"
 
-      - name: Send Deploy Failed Notification ✉️
-        if: ${{ failure() }}
-        run: yarn run discord-webhook:failed-deploy
+      # - name: Send Deploy Failed Notification ✉️
+      #   if: ${{ failure() }}
+      #   run: yarn run discord-webhook:failed-deploy
 
   finish-deploy-notification:
     runs-on: ubuntu-22.04
@@ -504,7 +463,7 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Downloaded data cache failed"; exit 1;
 
-      - name: Send deploy succeeded notification ✉️
-        env:
-          DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: yarn run discord-webhook:finish-deploy
+      # - name: Send deploy succeeded notification ✉️
+      #   env:
+      #     DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
+      #   run: yarn run discord-webhook:finish-deploy
