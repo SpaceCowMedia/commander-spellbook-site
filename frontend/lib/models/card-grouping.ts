@@ -87,4 +87,8 @@ export default class CardGrouping extends Array<Card> {
   toString(): string {
     return this.join(" | ");
   }
+
+  serialize(): string[] {
+    return this.map(card => card.toString())
+  }
 }

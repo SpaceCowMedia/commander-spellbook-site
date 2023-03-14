@@ -1,17 +1,20 @@
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import { FormattedApiResponse } from "../lib/types";
-import { useEffect, useState } from "react";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import getFeaturedCombos from "../lib/getFeaturedCombos";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import {
+  serializeCombo,
+  deserializeCombo,
+  SerializedCombo,
+} from "../lib/serialize-combo";
 
-const Featured = () => {
-  const [combos, setCombos] = useState<FormattedApiResponse[]>([]);
-
-  useEffect(() => {
-    getFeaturedCombos().then(setCombos);
-  }, []);
+const Featured = ({
+  serializedCombos,
+}: {
+  serializedCombos: SerializedCombo[];
+}) => {
+  const combos = serializedCombos.map(combo => deserializeCombo(combo));
 
   return (
     <PageWrapper>
@@ -40,5 +43,18 @@ const Featured = () => {
     </PageWrapper>
   );
 };
+
+export async function getStaticProps() {
+  const combos = await getFeaturedCombos();
+  const serializedCombos = combos.map((combo) => {
+    return serializeCombo(combo);
+  });
+
+  return {
+    props: {
+      serializedCombos,
+    },
+  };
+}
 
 export default Featured;
