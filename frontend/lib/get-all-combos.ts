@@ -1,14 +1,6 @@
-import lookupApi, { lookupApiCompressed } from "./spellbook-api";
+import lookupApi from "./spellbook-api";
 
-import type { CompressedApiResponse, FormattedApiResponse } from "./types";
-
-export async function getAllCombosCompressed(): Promise<
-  CompressedApiResponse[]
-> {
-  const combos = await lookupApiCompressed();
-
-  return combos;
-}
+import type { FormattedApiResponse } from "./types";
 
 export default async function getAllCombos(): Promise<FormattedApiResponse[]> {
   const combos = await lookupApi();
