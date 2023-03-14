@@ -64,6 +64,7 @@ const BuyComboButtons = ({
         className="button w-full flex-shrink"
         disabled={cardKingdomOutOfStock}
         onClick={() => handleClick("Card Kingdom")}
+        href={cardKingdomLink}
       >
         <svg
           aria-hidden="true"

@@ -1,5 +1,5 @@
 import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
-import { findByIdCompressed } from "../../lib/find-by-id";
+import findById from "../../lib/find-by-id";
 import pluralize from "pluralize";
 import CardHeader from "../../components/combo/CardHeader/CardHeader";
 import CardGroup from "../../components/combo/CardGroup/CardGroup";
@@ -9,13 +9,12 @@ import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
 import getAllCombos from "../../lib/get-all-combos";
 import { GetStaticPaths } from "next";
-import { CompressedApiResponse } from "../../lib/types";
-import formatApiResponse from "../../lib/format-api-response";
+import { serializeCombo, deserializeCombo, SerializedCombo } from "lib/serialize-combo";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import React from "react";
 
 type Props = {
-  compressedCombo: CompressedApiResponse;
+  serializedCombo: SerializedCombo;
 };
 
 type Price = {
@@ -59,61 +58,28 @@ const NUMBERS = [
   "ten",
 ];
 
-const Combo = ({ compressedCombo }: Props) => {
-  const combo = formatApiResponse([compressedCombo])[0];
-
-  const data: ComboData = {
-    commanderSpellbookId: combo.commanderSpellbookId,
-    edhrecLink: combo.edhrecLink,
-    numberOfDecks: combo.numberOfEDHRECDecks,
-    comboNumber: combo.commanderSpellbookId,
-    hasBannedCard: combo.hasBannedCard,
-    hasPreviewedCard: combo.hasSpoiledCard,
-    link: combo.permalink,
-    cards: combo.cards.map((card) => ({
+const Combo = ({ serializedCombo }: Props) => {
+  const combo = deserializeCombo(serializedCombo);
+  const cards = combo.cards.map((card) => {
+    return {
       name: card.name,
       artUrl: card.getImageUrl("artCrop"),
       oracleImageUrl: card.getImageUrl("oracle"),
-    })),
-    prerequisites: Array.from(combo.prerequisites),
-    steps: Array.from(combo.steps),
-    results: Array.from(combo.results),
-    colorIdentity: Array.from(combo.colorIdentity.colors),
-    prices: {
-      tcgplayer: "",
-      cardkingdom: "",
-    },
-    loaded: true,
-  };
-
-  const {
-    cards,
-    numberOfDecks,
-    loaded,
-    colorIdentity,
-    prerequisites,
-    steps,
-    results,
-    hasBannedCard,
-    hasPreviewedCard,
-    link,
-    edhrecLink,
-    comboNumber,
-    prices,
-  } = data;
-
-  const cardNames = cards.map((card) => card.name);
+    };
+  });
+  const cardNames = cards.map(card => card.name);
   const cardArts = cards.map((card) => card.artUrl);
   const title =
     cardNames.length === 0
       ? "Looking up Combo"
       : cardNames.slice(0, 3).join(" | ");
   const subtitle =
-    cards.length < 4
+    cardNames.length < 4
       ? ""
-      : cards.length === 4
+      : cardNames.length === 4
       ? `(and ${NUMBERS[1]} other card)`
-      : `(and ${NUMBERS[cards.length - 3]} other cards)`;
+      : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
+  const numberOfDecks  = combo.numberOfEDHRECDecks;
   const metaData =
     numberOfDecks > 0
       ? [
@@ -123,6 +89,12 @@ const Combo = ({ compressedCombo }: Props) => {
           )} according to EDHREC.`,
         ]
       : [];
+
+  const colors = Array.from(combo.colorIdentity.colors);
+  const prerequisites = Array.from(combo.prerequisites);
+  const steps = Array.from(combo.steps);
+  const results = Array.from(combo.results);
+  const loaded = true;
 
   return (
     <PageWrapper>
@@ -140,7 +112,7 @@ const Combo = ({ compressedCombo }: Props) => {
       <div className="container md:flex flex-row">
         <div className="w-full md:w-2/3">
           <div className="md:hidden pt-4">
-            <ColorIdentity colors={colorIdentity} />
+            <ColorIdentity colors={colors} />
           </div>
 
           <ComboList
@@ -186,16 +158,16 @@ const Combo = ({ compressedCombo }: Props) => {
         {loaded && (
           <aside className="w-full md:w-1/3 text-center">
             <div id="combo-color-identity" className="my-4 hidden md:block">
-              <ColorIdentity colors={colorIdentity} />
+              <ColorIdentity colors={colors} />
             </div>
 
-            {hasBannedCard && (
+            {combo.hasBannedCard && (
               <div className={styles.bannedWarning}>
                 WARNING: Combo contains cards that are banned in Commander
               </div>
             )}
 
-            {hasPreviewedCard && (
+            {combo.hasSpoiledCard && (
               <div className={styles.previewedWarning}>
                 WARNING: Combo contains cards that have not been released yet
                 (and are not yet legal in Commander)
@@ -204,11 +176,11 @@ const Combo = ({ compressedCombo }: Props) => {
 
             <ComboSidebarLinks
               cards={cardNames}
-              comboLink={link}
-              edhrecLink={edhrecLink}
-              comboId={comboNumber}
-              tcgPlayerPrice={prices.tcgplayer}
-              cardKingdomPrice={prices.cardkingdom}
+              comboLink={combo.permalink}
+              edhrecLink={combo.edhrecLink}
+              comboId={combo.commanderSpellbookId}
+              tcgPlayerPrice={combo.cards.getPriceAsString("tcgplayer")}
+              cardKingdomPrice={combo.cards.getPriceAsString("cardkingdom")}
             />
           </aside>
         )}
@@ -233,7 +205,7 @@ export const getStaticProps = async ({
 }: {
   params: { id: string };
 }) => {
-  const combo = await findByIdCompressed(params.id);
+  const combo = await findById(params.id);
 
   if (!combo) {
     return {
@@ -246,7 +218,7 @@ export const getStaticProps = async ({
 
   return {
     props: {
-      compressedCombo: combo,
+      serializedCombo: serializeCombo(combo),
     },
   };
 };
