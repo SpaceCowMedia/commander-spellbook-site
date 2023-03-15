@@ -406,7 +406,10 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div id="card-amount-inputs" className={`${styles.container} container`}>
+        <div
+          id="card-amount-inputs"
+          className={`${styles.container} container`}
+        >
           <MultiSearchInput
             value={cardAmounts}
             onChange={(cardAmounts) => setFormState({ cardAmounts })}

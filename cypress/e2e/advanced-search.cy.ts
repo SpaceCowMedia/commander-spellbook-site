@@ -3,24 +3,24 @@ describe("Advanced Search Page", () => {
     cy.visit("/advanced-search/");
 
     cy.get("#card-name-inputs input.input").should("have.length", 1);
-    cy.get("#card-name-input-0").type("mesmeric");
+    cy.get("#card-names-input-0").type("mesmeric");
 
     cy.get("#card-name-inputs .plus-button-0").click();
     cy.get("#card-name-inputs input.input").should("have.length", 2);
 
-    cy.get("#card-name-inputs .select-1 select").select("=");
-    cy.get("#card-name-input-1").type("basalt monolith");
+    cy.get("#card-names-select-1").select("=");
+    cy.get("#card-names-input-1").type("basalt monolith");
 
-    cy.get("#card-name-inputs .plus-button-0").click();
+    cy.get("#card-name-inputs .plus-button-1").click();
 
-    cy.get("#card-name-input-1").type("emry");
-    cy.get("#card-name-inputs .select-1 select").select(":-exclude");
+    cy.get("#card-names-input-2").type("emry");
+    cy.get("#card-names-select-2").select(":-exclude");
 
     cy.get("#advanced-search-submit-button").click();
 
     cy.url().should(
       "include",
-      "/search/?q=mesmeric%20-card%3Aemry%20card%3D%22basalt%20monolith%22"
+      "/search/?q=mesmeric+card%3D%22basalt+monolith%22+-card%3Aemry"
     );
   });
 
@@ -33,12 +33,12 @@ describe("Advanced Search Page", () => {
     cy.get("#card-amount-inputs .plus-button-0").click();
     cy.get("#card-amount-inputs input.input").should("have.length", 2);
 
-    cy.get("#card-amount-inputs .select-1 select").select("<-number");
+    cy.get("#number-of-cards-select-1").select("<-number");
     cy.get("#number-of-cards-input-1").type("5");
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should("include", "/search/?q=cards%3D3%20cards%3C5");
+    cy.url().should("include", "/search/?q=cards%3D3+cards%3C5");
   });
 
   it("can search color identity in combo", () => {
@@ -50,20 +50,17 @@ describe("Advanced Search Page", () => {
     cy.get("#color-identity-inputs .plus-button-0").click();
     cy.get("#color-identity-inputs input.input").should("have.length", 2);
 
-    cy.get("#color-identity-inputs .select-1 select").select("=");
+    cy.get("#color-identity-select-1").select("=");
     cy.get("#color-identity-input-1").type("grixis");
 
-    cy.get("#color-identity-inputs .plus-button-0").click();
+    cy.get("#color-identity-inputs .plus-button-1").click();
 
-    cy.get("#color-identity-input-1").type("2");
-    cy.get("#color-identity-inputs .select-1 select").select(">-number");
+    cy.get("#color-identity-input-2").type("2");
+    cy.get("#color-identity-select-2").select(">-number");
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should(
-      "include",
-      "/search/?q=ci%3Awubr%20colors%3E2%20ci%3Dgrixis"
-    );
+    cy.url().should("include", "/search/?q=ci%3Awubr+ci%3Dgrixis+colors%3E2");
   });
 
   it("can search prerequisites in combo", () => {
@@ -76,14 +73,11 @@ describe("Advanced Search Page", () => {
     cy.get("#prerequisite-inputs input.input").should("have.length", 2);
 
     cy.get("#prerequisite-input-1").type("untap all");
-    cy.get("#prerequisite-inputs .select-1 select").select("=-exclude");
+    cy.get("#prerequisite-select-1").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should(
-      "include",
-      "/search/?q=pre%3Amana%20-pre%3D%22untap%20all%22"
-    );
+    cy.url().should("include", "/search/?q=pre%3Amana+-pre%3D%22untap+all%22");
   });
 
   it("can search steps in combo", () => {
@@ -96,13 +90,13 @@ describe("Advanced Search Page", () => {
     cy.get("#step-inputs input.input").should("have.length", 2);
 
     cy.get("#step-input-1").type("untap all");
-    cy.get("#step-inputs .select-1 select").select("=-exclude");
+    cy.get("#step-select-1").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
 
     cy.url().should(
       "include",
-      "/search/?q=step%3Amana%20-step%3D%22untap%20all%22"
+      "/search/?q=step%3Amana+-step%3D%22untap+all%22"
     );
   });
 
@@ -116,13 +110,13 @@ describe("Advanced Search Page", () => {
     cy.get("#result-inputs input.input").should("have.length", 2);
 
     cy.get("#result-input-1").type("untap all");
-    cy.get("#result-inputs .select-1 select").select("=-exclude");
+    cy.get("#result-select-1").select("=-exclude");
 
     cy.get("#advanced-search-submit-button").click();
 
     cy.url().should(
       "include",
-      "/search/?q=result%3Amana%20-result%3D%22untap%20all%22"
+      "/search/?q=result%3Amana+-result%3D%22untap+all%22"
     );
   });
 
@@ -136,7 +130,7 @@ describe("Advanced Search Page", () => {
     cy.get("#price-inputs input.input").should("have.length", 2);
 
     cy.get("#price-input-1").type("2");
-    cy.get("#price-inputs .select-1 select").select("=-number");
+    cy.get("#price-select-1").select("=-number");
 
     cy.get("#vendor input[type='radio']").last().check();
 
@@ -144,7 +138,7 @@ describe("Advanced Search Page", () => {
 
     cy.url().should(
       "include",
-      "/search/?q=price%3C3%20price%3D2%20vendor%3Atcgplayer"
+      "/search/?q=price%3C3+price%3D2+vendor%3Atcgplayer"
     );
   });
 
@@ -158,11 +152,11 @@ describe("Advanced Search Page", () => {
     cy.get("#popularity-inputs input.input").should("have.length", 2);
 
     cy.get("#popularity-input-1").type("2");
-    cy.get("#popularity-inputs .select-1 select").select("=-number");
+    cy.get("#popularity-select-1").select("=-number");
 
     cy.get("#advanced-search-submit-button").click();
 
-    cy.url().should("include", "/search/?q=decks%3C3%20decks%3D2");
+    cy.url().should("include", "/search/?q=decks%3C3+decks%3D2");
   });
 
   it("can search for previewed combos", () => {
@@ -201,7 +195,7 @@ describe("Advanced Search Page", () => {
 
     cy.get("#result-input-0").type(`mana ' " mana`);
     cy.get("#step-input-0").type("not a number");
-    cy.get("#step-inputs .select-0 select").select("=-number");
+    cy.get("#step-select-0").select("=-number");
 
     cy.get("#advanced-search-submit-button").click();
 

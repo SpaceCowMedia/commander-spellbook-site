@@ -65,6 +65,12 @@ const MultiSearchInput = ({
     return option.placeholder;
   };
 
+  const handleSelectChange = (index: number, value: string) => {
+    const newInputs = [...inputs];
+    newInputs[index].operator = value;
+    setInputs(newInputs);
+    onChange && onChange(newInputs);
+  };
   const handleInputChange = (index: number, value: string) => {
     const newInputs = [...inputs];
     newInputs[index].value = value;
@@ -83,6 +89,7 @@ const MultiSearchInput = ({
           <div className="sm:flex">
             <StyledSelect
               label={`Modifier for ${label}`}
+              onChange={(value) => handleSelectChange(index, value)}
               id={getSelectId(index)}
               options={operatorOptions}
               selectTextClassName="sm:w-1/2 flex-grow"
