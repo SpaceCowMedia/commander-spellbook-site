@@ -14,7 +14,7 @@ const Featured = ({
 }: {
   serializedCombos: SerializedCombo[];
 }) => {
-  const combos = serializedCombos.map(combo => deserializeCombo(combo));
+  const combos = serializedCombos.map((combo) => deserializeCombo(combo));
 
   return (
     <PageWrapper>

@@ -19,7 +19,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (typeof inputValue === 'string' && inputValue.trim()) {
+    if (typeof inputValue === "string" && inputValue.trim()) {
       router.push(`/search/?q=${inputValue}`);
     }
   };
@@ -29,7 +29,6 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     getAllCombos().then((combos) => {
       setNumberOfCombos(combos.length);
     });
-
   }, [router.query.q]);
 
   return (

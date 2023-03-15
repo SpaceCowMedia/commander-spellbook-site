@@ -4,20 +4,20 @@ import List from "./models/list";
 import type { FormattedApiResponse } from "./types";
 
 export type SerializedCombo = {
-    commanderSpellbookId: string;
-    permalink: string;
-    cards: string[];
-    colorIdentity: string;
-    prerequisites: string;
-    steps: string;
-    results: string;
-    hasBannedCard: boolean;
-    hasSpoiledCard: boolean;
-    edhrecLink: string;
-    numberOfEDHRECDecks: number;
-}
+  commanderSpellbookId: string;
+  permalink: string;
+  cards: string[];
+  colorIdentity: string;
+  prerequisites: string;
+  steps: string;
+  results: string;
+  hasBannedCard: boolean;
+  hasSpoiledCard: boolean;
+  edhrecLink: string;
+  numberOfEDHRECDecks: number;
+};
 
-export function serializeCombo(combo: FormattedApiResponse ) {
+export function serializeCombo(combo: FormattedApiResponse) {
   return {
     commanderSpellbookId: combo.commanderSpellbookId,
     permalink: combo.permalink,
@@ -30,7 +30,7 @@ export function serializeCombo(combo: FormattedApiResponse ) {
     hasSpoiledCard: combo.hasSpoiledCard,
     edhrecLink: combo.edhrecLink,
     numberOfEDHRECDecks: combo.numberOfEDHRECDecks,
-  }
+  };
 }
 
 export function deserializeCombo(combo: SerializedCombo): FormattedApiResponse {
@@ -46,5 +46,5 @@ export function deserializeCombo(combo: SerializedCombo): FormattedApiResponse {
     hasSpoiledCard: combo.hasSpoiledCard,
     edhrecLink: combo.edhrecLink,
     numberOfEDHRECDecks: combo.numberOfEDHRECDecks,
-  }
+  };
 }

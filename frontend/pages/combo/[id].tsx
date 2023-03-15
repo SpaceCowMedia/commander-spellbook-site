@@ -9,7 +9,11 @@ import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
 import getAllCombos from "../../lib/get-all-combos";
 import { GetStaticPaths } from "next";
-import { serializeCombo, deserializeCombo, SerializedCombo } from "lib/serialize-combo";
+import {
+  serializeCombo,
+  deserializeCombo,
+  SerializedCombo,
+} from "lib/serialize-combo";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import React from "react";
 
@@ -67,7 +71,7 @@ const Combo = ({ serializedCombo }: Props) => {
       oracleImageUrl: card.getImageUrl("oracle"),
     };
   });
-  const cardNames = cards.map(card => card.name);
+  const cardNames = cards.map((card) => card.name);
   const cardArts = cards.map((card) => card.artUrl);
   const title =
     cardNames.length === 0
@@ -79,7 +83,7 @@ const Combo = ({ serializedCombo }: Props) => {
       : cardNames.length === 4
       ? `(and ${NUMBERS[1]} other card)`
       : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
-  const numberOfDecks  = combo.numberOfEDHRECDecks;
+  const numberOfDecks = combo.numberOfEDHRECDecks;
   const metaData =
     numberOfDecks > 0
       ? [

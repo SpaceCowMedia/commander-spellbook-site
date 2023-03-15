@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   trailingSlash: true,
   images: {
-    unoptimized: true
+    unoptimized: true,
   },
   webpack(webpackConfig) {
     return {
