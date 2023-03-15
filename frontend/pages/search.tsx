@@ -223,7 +223,7 @@ const Search: React.FC<Props> = ({}: Props) => {
               />
             </div>
           ) : (
-            <NoCombosFound loaded={false} />
+            <NoCombosFound loaded={loaded} />
           )}
         </div>
       </div>
