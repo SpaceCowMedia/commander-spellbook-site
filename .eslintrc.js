@@ -8,5 +8,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     "react/no-unescaped-entities": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "@next/next/no-img-element": "off",
   },
 };

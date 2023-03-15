@@ -1,4 +1,4 @@
-export default [
+const colorAutocomplete = [
   {
     value: "colorless",
     label: "Colorless {c}",
@@ -212,3 +212,5 @@ export default [
     label: "Artifice {w}{u}{b}{r}",
   },
 ];
+
+export default colorAutocomplete;

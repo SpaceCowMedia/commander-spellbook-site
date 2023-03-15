@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Josefin%20Sans"
+          href="https://fonts.googleapis.com/css?family=Josefin%20Sans&display=swap"
         />
       </Head>
       <body>
