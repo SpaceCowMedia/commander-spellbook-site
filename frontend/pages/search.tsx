@@ -40,6 +40,7 @@ const SORT_OPTIONS: Option[] = [
 ];
 
 const ORDER_OPTIONS: Option[] = [
+  { value: "auto", label: "Auto" },
   { value: "asc", label: "Ascending" },
   { value: "desc", label: "Descending" },
 ];
