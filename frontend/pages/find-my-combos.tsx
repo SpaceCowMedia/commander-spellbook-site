@@ -45,18 +45,17 @@ const FindMyCombos = () => {
     ? "No combos found"
     : `${numOfCombos} ${pluralize("Combo", numOfCombos)} Found`;
 
-  const numPotentialCombos = potentialCombos.length;
-  const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
-    "Combo",
-    numPotentialCombos
-  )} Found`;
-
   const potentialCombosMatchingDeckColorIdentity = potentialCombos.filter(
     (combo) => combo.colorIdentity.isWithin(deckColorIdentity)
   );
   const potentialCombosOutsideDeckColorIdentity = potentialCombos.filter(
     (combo) => !combo.colorIdentity.isWithin(deckColorIdentity)
   );
+  const numPotentialCombos = potentialCombosMatchingDeckColorIdentity.length;
+  const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
+    "Combo",
+    numPotentialCombos
+  )} Found`;
 
   const potentialCombosOutsideDeckColorIdentityFilteredByPicker =
     potentialCombosOutsideDeckColorIdentity.filter((combo) =>
