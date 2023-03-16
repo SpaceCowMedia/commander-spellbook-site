@@ -9,14 +9,19 @@ type Props = {
 >;
 
 const ExternalLink: React.FC<Props> = (props: Props) => {
-  const { children, disabled, href } = props;
+  const { children, disabled } = props;
+  const attributes = {
+    ...props,
+    target: "_blank",
+    rel: "noopener noreferrer",
+  };
+
+  if (disabled) {
+    delete attributes.href;
+  }
+
   return (
-    <a
-      target="_blank"
-      rel="noopener noreferrer"
-      {...props}
-      href={disabled ? "" : href}
-    >
+    <a {...attributes}>
       {children}
     </a>
   );
