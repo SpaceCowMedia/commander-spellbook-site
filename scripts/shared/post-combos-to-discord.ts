@@ -5,6 +5,7 @@ import chunkifyArray from "./chunkify-array";
 type ComboPayload = {
   title?: string;
   combos: CompressedApiResponse[];
+  includeLinks?: boolean;
 };
 
 // https://discord.com/developers/docs/resources/channel#embed-object-embed-limits
@@ -38,10 +39,21 @@ export default function postComboToDiscord(
     const identity = parseIdentity(combo.i);
     const cards = combo.c.join(" | ");
     const link = `https://commanderspellbook.com/combo/${combo.d}`;
+    let value = "";
+
+    if (payload.includeLinks !== false) {
+      value += "[";
+    }
+
+    value += cards;
+
+    if (payload.includeLinks !== false) {
+      value += `](${link})`;
+    }
 
     return {
       name: `${identity} Combo ${combo.d}`,
-      value: `[${cards}](${link})`,
+      value,
     };
   });
 

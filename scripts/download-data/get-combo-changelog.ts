@@ -4,15 +4,11 @@ import get from "../shared/get";
 import getCurrentGitSha from "../shared/get-current-git-sha";
 
 type CompressedKey = keyof CompressedApiResponse;
-type UpdatedComboLog = {
-  id: string;
-  change: string;
-};
 export type Changelog = {
   gitSha: string;
   addedCombos: CompressedApiResponse[];
   deletedCombos: CompressedApiResponse[];
-  updatedCombos: UpdatedComboLog[];
+  updatedCombos: CompressedApiResponse[];
 };
 
 const CURRENTLY_DEPLOYED_IN_PROD_COMBO_LIST_URL =
@@ -37,7 +33,7 @@ export default function createChangelog() {
   ).then((oldComboData) => {
     const addedCombos = [] as CompressedApiResponse[];
     const deletedCombos = [] as CompressedApiResponse[];
-    const updatedCombos = [] as UpdatedComboLog[];
+    const updatedCombos = [] as CompressedApiResponse[];
 
     const newComboData = JSON.parse(
       fs.readFileSync("./frontend/public/api/combo-data.json", "utf8")
@@ -65,10 +61,7 @@ export default function createChangelog() {
       });
 
       if (change) {
-        updatedCombos.push({
-          id: combo.d,
-          change: change.trim(),
-        });
+        updatedCombos.push(combo);
       }
     });
 
