@@ -1,6 +1,6 @@
 # Frontend App Setup
 
-The frontend uses [Nuxt@v2](https://nuxtjs.org/) to create the app.
+The frontend uses [Next](https://nextjs.org/) to create the app.
 
 ## Installation Requirements
 
@@ -9,17 +9,15 @@ See the [Getting Started instructions](../README.md#getting-started) for details
 ## Build Setup
 
 ```bash
-# serve with hot reload at localhost:3000, specify PORT=<whatever> to change the port
-$ npm run dev
+# serve with hot reload at localhost:3000
+yarn dev
 ```
 
 If you want to see how the app will behave in production, build and run it:
 
 ```bash
 # build for production (this will take a while)
-$ npm run build-frontend
+yarn build
 # runs the site in prod mode using the generated pages from the build-frontend step
-$ npm start
+yarn start
 ```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
