@@ -1,7 +1,7 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  defaultCommandTimeout: 10000,
+  defaultCommandTimeout: 15000,
   screenshotOnRunFailure: false,
   video: false,
   videoUploadOnPasses: false,

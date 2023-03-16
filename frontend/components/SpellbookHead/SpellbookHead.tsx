@@ -26,15 +26,19 @@ const SpellbookHead = ({
     <Head>
       <title>{title}</title>
       <meta name="description" content={description} />
+      <meta property="og:description" content={description} />
+      <meta name="twitter:description" content={description} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
       <meta property="og:title" content={title} />
+      <meta name="twitter:title" content={title} />
       <meta property="og:url" content={router.asPath} />
       <meta property="og:type" content="website" />
       <meta
         property="og:image"
         content={imageUrl || "/images/link-preview.png"}
       />
+      <meta name="twitter:image" content={imageUrl} />
       <meta
         property="og:image:width"
         content={imageWidth || (useCropDimensions ? "626" : "1200")}
