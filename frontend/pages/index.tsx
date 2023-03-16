@@ -10,7 +10,17 @@ import React, { useEffect } from "react";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import AnalyticsCookieBanner from "../components/layout/AnalyticsCookieBanner/AnalyticsCookieBanner";
 
-export default function Home() {
+type Props = {
+  featuredComboButtonText: string;
+};
+
+const DEFAULT_PROPS = {
+  props: {
+    featuredComboButtonText: "Featured Combos (Mocked Data)",
+  },
+};
+
+export default function Home({ featuredComboButtonText }: Props) {
   const router = useRouter();
   const query = router.query.q ? `${router.query.q}` : ``;
 
@@ -87,12 +97,11 @@ export default function Home() {
                   Find My Combos
                 </Link>
                 <Link
-                  v-if="featuredComboButtonText"
                   id="featured-combos-button"
                   href="/featured/"
                   className={`previwed-combos-button dark ${styles.button} button md:m-1`}
                 >
-                  Featured Combos
+                  {featuredComboButtonText}
                 </Link>
               </div>
             </div>
@@ -102,4 +111,30 @@ export default function Home() {
       </main>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const { EDITOR_BACKEND_URL } = process.env;
+
+  if (!EDITOR_BACKEND_URL) {
+    return DEFAULT_PROPS;
+  }
+
+  const res = await fetch(`${EDITOR_BACKEND_URL}properties/?format=json`);
+  const dataFromEditorBackend = await res.json();
+  const buttonTextData = dataFromEditorBackend.results.find(
+    (data: { key: string; value: string }) => {
+      return data.key === "featured_combos_title";
+    }
+  );
+
+  if (!buttonTextData) {
+    return DEFAULT_PROPS;
+  }
+
+  return {
+    props: {
+      featuredComboButtonText: buttonTextData.value,
+    },
+  };
 }
