@@ -61,6 +61,7 @@ jobs:
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
             frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
 
       - name: Download Data ⬇️
@@ -143,6 +144,7 @@ jobs:
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
             frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Site Cache ⬇️
@@ -197,6 +199,7 @@ jobs:
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
             frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Site Cache ⬇️
@@ -250,6 +253,7 @@ jobs:
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
             frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Site Cache ⬇️
@@ -377,6 +381,7 @@ jobs:
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
             frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
       - name: Check Site Cache ⬇️

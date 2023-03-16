@@ -21,7 +21,7 @@
     "check-changelog": "ts-node scripts/check-changelog",
     "lint": "eslint --ext .ts,.js scripts cypress && yarn workspaces run lint",
     "cy:run": "cypress run",
-    "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run"
+    "test:integration": "NODE_ENV=production yarn start & wait-on http://localhost:3000 && yarn run cy:run"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
