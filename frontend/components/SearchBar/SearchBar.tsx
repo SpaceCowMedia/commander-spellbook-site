@@ -26,10 +26,13 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
 
   useEffect(() => {
     setInputValue(router.query.q);
+  }, [router.query.q]);
+
+  useEffect(() => {
     getAllCombos().then((combos) => {
       setNumberOfCombos(combos.length);
     });
-  }, [router.query.q]);
+  }, [])
 
   return (
     <div className={`${styles.outerContainer} ${className}`}>
