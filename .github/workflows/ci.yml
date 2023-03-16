@@ -68,58 +68,6 @@ jobs:
           NODE_ENV: production
         run: yarn run download-data
 
-  changelog_check:
-    # only run this check from the main branch
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
-    runs-on: ubuntu-22.04
-    needs: setup
-    concurrency: production_deploy
-    outputs:
-      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
-      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Restore Downloaded Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Downloaded Data Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Compare Changelog 🪵
-        id: changelog_result
-        run: yarn run check-changelog
-
   linter:
     runs-on: ubuntu-22.04
     needs: setup
@@ -197,12 +145,15 @@ jobs:
         env:
           NODE_ENV: development
 
-  cancel-deploy-notification:
-    # only send a message about cancelling deploy from the main branch
-    # and the changelog check indicates that there are no changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
+  changelog_check:
+    # only run this check from the main branch
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
     runs-on: ubuntu-22.04
-    needs: [setup, changelog_check]
+    needs: setup
+    concurrency: production_deploy
+    outputs:
+      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
+      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -227,39 +178,24 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Send deploy cancelled notification ✉️
-        run: yarn run discord-webhook:cancel-deploy
-
-  send-start-deploy-notification:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
-    runs-on: ubuntu-22.04
-    needs: [setup, linter, integration-tests, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
+      - name: Restore Downloaded Data ⏬
+        id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+            autocomplete-data
+            external-data
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+      - name: Check Downloaded Data Cache ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: echo "Downloaded data cache failed"; exit 1;
 
-      - name: Send Deploy Start Notification ✉️
-        run: yarn run discord-webhook:start-deploy
+      - name: Compare Changelog 🪵
+        id: changelog_result
+        run: yarn run check-changelog
 
   deploy:
     # only deploy from the main branch
@@ -331,6 +267,70 @@ jobs:
       - name: Send Deploy Failed Notification ✉️
         if: ${{ failure() }}
         run: yarn run discord-webhook:failed-deploy
+
+  cancel-deploy-notification:
+    # only send a message about cancelling deploy from the main branch
+    # and the changelog check indicates that there are no changes to deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
+    runs-on: ubuntu-22.04
+    needs: [setup, changelog_check]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Send deploy cancelled notification ✉️
+        run: yarn run discord-webhook:cancel-deploy
+
+  send-start-deploy-notification:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
+    runs-on: ubuntu-22.04
+    needs: [setup, linter, integration-tests, changelog_check]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Send Deploy Start Notification ✉️
+        run: yarn run discord-webhook:start-deploy
 
   finish-deploy-notification:
     runs-on: ubuntu-22.04
