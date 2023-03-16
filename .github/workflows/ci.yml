@@ -233,7 +233,7 @@ jobs:
   send-start-deploy-notification:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
     runs-on: ubuntu-22.04
-    needs: [setup, linter, unit-tests, integration-tests, changelog_check]
+    needs: [setup, linter, integration-tests, changelog_check]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
