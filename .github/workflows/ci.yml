@@ -69,13 +69,12 @@ jobs:
         env:
           NODE_ENV: production
         run: yarn run download-data
-      
+
       - name: Build Frontend Site 🏗️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: yarn run build
         env:
           NODE_ENV: production
-
 
   linter:
     runs-on: ubuntu-22.04
@@ -210,7 +209,6 @@ jobs:
         id: changelog_result
         run: yarn run check-changelog
 
-
   deploy:
     # only deploy from the main branch
     # and the changelog check indicates
@@ -342,7 +340,6 @@ jobs:
 
       - name: Send Deploy Start Notification ✉️
         run: yarn run discord-webhook:start-deploy
-
 
   finish-deploy-notification:
     runs-on: ubuntu-22.04
