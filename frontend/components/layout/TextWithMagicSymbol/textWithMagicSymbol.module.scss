@@ -1,0 +1,12 @@
+img.magicSymbol {
+  /* match the font-size of the text around it */
+  height: 1em;
+
+  /* adjust the position so it fits more naturally with the text around it */
+  margin-top: -0.2em;
+  @apply inline;
+}
+
+.imageContainer + .imageContainer {
+  @apply ml-1;
+}

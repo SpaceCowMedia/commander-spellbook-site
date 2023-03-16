@@ -1,0 +1,16 @@
+.hiddenComboLinkInput {
+  left: -25%;
+  top: -25%;
+  @apply fixed;
+}
+
+.copyComboNotification {
+  /* Tailwind 2 class: -bottom-20 */
+  bottom: -5rem;
+  @apply transition-all duration-1000 fixed left-0 right-0 m-auto p-1 text-white z-50;
+}
+
+.copyComboNotification.show {
+  /* Tailwind 2 class: bottom-4 */
+  bottom: 1rem;
+}

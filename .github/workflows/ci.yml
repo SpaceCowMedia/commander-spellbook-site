@@ -17,7 +17,7 @@ env:
 
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
     steps:
@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "yarn"
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
@@ -40,37 +41,125 @@ jobs:
             node_modules
             ~/.npm
             ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Create Workflow ID 🆔
         id: generate-uuid
-        run: npm run workflow:create-workflow-id
+        run: yarn run workflow:create-workflow-id
 
-      - name: Cache Downloaded Data ⏬
+      - name: Cache Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+            frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
 
       - name: Download Data ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         env:
           NODE_ENV: production
-        run: npm run download-data
+        run: yarn run download-data
+      
+      - name: Build Frontend Site 🏗️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: yarn run build
+        env:
+          NODE_ENV: production
+
+
+  linter:
+    runs-on: ubuntu-22.04
+    needs: setup
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Run linter 👀
+        run: yarn run lint
+
+  integration-tests:
+    runs-on: ubuntu-22.04
+    needs: setup
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Restore Site Data ⏬
+        id: cache-downloaded-data
+        uses: actions/cache@v3
+        with:
+          path: |
+            autocomplete-data
+            external-data
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+            frontend/out/
+            frontend/.next/
+          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+
+      - name: Check Site Cache ⬇️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: echo "Site cache failed"; exit 1;
+
+      - name: Run Integration tests 💻
+        run: yarn run test:integration
+        env:
+          NODE_ENV: development
 
   changelog_check:
     # only run this check from the main branch
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: setup
     concurrency: production_deploy
     outputs:
@@ -84,6 +173,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "yarn"
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -93,211 +183,33 @@ jobs:
             node_modules
             ~/.npm
             ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+            frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
+        run: echo "Site cache failed"; exit 1;
 
       - name: Compare Changelog 🪵
         id: changelog_result
-        run: npm run check-changelog
+        run: yarn run check-changelog
 
-  linter:
-    runs-on: ubuntu-20.04
-    needs: setup
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Run linter 👀
-        run: npm run lint
-
-  unit-tests:
-    runs-on: ubuntu-20.04
-    needs: setup
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Restore Downloaded Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Downloaded Data Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Run unit tests 🧪
-        run: npm test
-
-  integration-tests:
-    runs-on: ubuntu-20.04
-    needs: setup
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Restore Downloaded Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Downloaded Data Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Run Integration tests 💻
-        run: npm run test:integration
-        env:
-          NODE_ENV: development
-
-  cancel-deploy-notification:
-    # only send a message about cancelling deploy from the main branch
-    # and the changelog check indicates that there are no changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
-    runs-on: ubuntu-20.04
-    needs: [setup, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Send deploy cancelled notification ✉️
-        run: npm run discord-webhook:cancel-deploy
-
-  send-start-deploy-notification:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
-    runs-on: ubuntu-20.04
-    needs: [setup, linter, unit-tests, integration-tests, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Send Deploy Start Notification ✉️
-        run: npm run discord-webhook:start-deploy
 
   deploy:
     # only deploy from the main branch
@@ -305,8 +217,8 @@ jobs:
     # that there are changes to deploy
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
     concurrency: production_deploy
-    runs-on: ubuntu-20.04
-    needs: [setup, changelog_check, send-start-deploy-notification]
+    runs-on: ubuntu-22.04
+    needs: [setup, linter, integration-tests, changelog_check]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -315,6 +227,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "yarn"
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -324,31 +237,28 @@ jobs:
             node_modules
             ~/.npm
             ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+            frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Build Frontend Site 🏗️
-        run: npm run build-frontend
-        env:
-          NODE_ENV: production
+        run: echo "Site cache failed"; exit 1;
 
       - name: Configure AWS Credentials ㊙️
         uses: aws-actions/configure-aws-credentials@v1-node16
@@ -358,41 +268,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3 🛫
-        run: aws s3 sync ./dist/ s3://commanderspellbook.com --delete
-
-      - name: Send Deploy Failed Notification ✉️
-        if: ${{ failure() }}
-        run: npm run discord-webhook:failed-deploy
-
-  bust-cloudfront-cache:
-    concurrency: production_deploy
-    runs-on: ubuntu-20.04
-    needs: [deploy]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Configure AWS Credentials ㊙️
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+        run: aws s3 sync ./frontend/out/ s3://commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
         env:
@@ -401,11 +277,14 @@ jobs:
 
       - name: Send Deploy Failed Notification ✉️
         if: ${{ failure() }}
-        run: npm run discord-webhook:failed-deploy
+        run: yarn run discord-webhook:failed-deploy
 
-  finish-deploy-notification:
-    runs-on: ubuntu-20.04
-    needs: [setup, changelog_check, bust-cloudfront-cache]
+  cancel-deploy-notification:
+    # only send a message about cancelling deploy from the main branch
+    # and the changelog check indicates that there are no changes to deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'NO'
+    runs-on: ubuntu-22.04
+    needs: [setup, changelog_check]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -414,6 +293,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "yarn"
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -423,28 +303,92 @@ jobs:
             node_modules
             ~/.npm
             ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Send deploy cancelled notification ✉️
+        run: yarn run discord-webhook:cancel-deploy
+
+  send-start-deploy-notification:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'EDHREC' && needs.changelog_check.outputs.should_deploy == 'YES'
+    runs-on: ubuntu-22.04
+    needs: [setup, linter, integration-tests, changelog_check]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Send Deploy Start Notification ✉️
+        run: yarn run discord-webhook:start-deploy
+
+
+  finish-deploy-notification:
+    runs-on: ubuntu-22.04
+    needs: [setup, changelog_check, deploy]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
             autocomplete-data
             external-data
-            frontend/static/api/combo-data.json
-            frontend/static/changelog.json
+            frontend/public/api/combo-data.json
+            frontend/public/changelog.json
+            frontend/out/
+            frontend/.next/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
+        run: echo "Site cache failed"; exit 1;
 
       - name: Send deploy succeeded notification ✉️
         env:
           DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: npm run discord-webhook:finish-deploy
+        run: yarn run discord-webhook:finish-deploy

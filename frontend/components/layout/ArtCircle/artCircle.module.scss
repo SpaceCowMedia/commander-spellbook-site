@@ -1,0 +1,5 @@
+.artCircle {
+  image-rendering: crisp-edges;
+  object-fit: cover;
+  @apply rounded-full bg-light bg-center bg-cover;
+}

@@ -1,0 +1,22 @@
+.heroTitle,
+.heroSubtitle {
+  animation: 3s appear;
+}
+
+.heroTitle {
+  @apply text-white;
+}
+
+.heroSubtitle {
+  @apply font-light text-4xl mt-5 mb-5;
+}
+
+.button {
+  @apply text-white;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+}

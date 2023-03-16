@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/escape-case */
 type Color = "yellow" | "red" | "green";
 
 const STARTING_TIME = new Date().getTime();

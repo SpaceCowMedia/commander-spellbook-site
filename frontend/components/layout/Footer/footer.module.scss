@@ -1,0 +1,23 @@
+.footer {
+  @apply w-full bg-dark p-10 relative;
+}
+.footer a {
+  @apply no-underline text-secondary;
+}
+.linkCollection {
+  @apply flex flex-grow flex-col mb-4;
+}
+.linkCollection:first-child {
+  @apply ml-0;
+}
+.linkCollection:last-child {
+  @apply mr-0;
+}
+.header {
+  @apply block text-white font-title uppercase border-b border-white mb-2;
+}
+@media (min-width: 768px) {
+  .linkCollection {
+    @apply mx-4 w-1/3;
+  }
+}

@@ -8,7 +8,7 @@ let shouldDeploy = "NO";
 const deployReasonMessages = [] as string[];
 
 const changelog = JSON.parse(
-  fs.readFileSync("./frontend/static/changelog.json", "utf8")
+  fs.readFileSync("./frontend/public/changelog.json", "utf8")
 );
 
 const numOfAddedCombos = changelog.addedCombos.length;

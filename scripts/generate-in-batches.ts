@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import log from "./shared/log";
 
 const combos = JSON.parse(
-  readFileSync("frontend/static/api/combo-data.json", "utf-8")
+  readFileSync("frontend/public/api/combo-data.json", "utf-8")
 );
 const TOTAL_COMBOS = combos.length;
 const BATCH_SIZE = 1000;
