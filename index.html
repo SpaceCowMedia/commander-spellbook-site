@@ -430,20 +430,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="testing/unit-testing.html" class="md-nav__link">
-        Unit Testing
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -541,9 +527,9 @@
 
 
 <h1 id="development-docs">Development Docs</h1>
-<p>This documentation is rendered as a website on <a href="https://commander-spellbook.github.io/website-v2/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
+<p>This documentation is rendered as a website on <a href="https://edhrec.github.io/commander-spellbook-site/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
 <h2 id="getting-started">Getting Started</h2>
-<p>The site requires <a href="https://nodejs.org/en/download/">node v16</a> and npm 8 (which comes installed with node@16) to run locally, since it utilizes <a href="https://docs.npmjs.com/cli/v8/using-npm/workspaces">npm workspaces</a> to structure the repo.</p>
+<p>The site requires <a href="https://nodejs.org/en/download/">node v16</a> and npm 8 (which comes installed with node@16) to run locally, since it utilizes <a href="https://classic.yarnpkg.com/lang/en/docs/workspaces/">workspaces</a> to structure the repo.</p>
 <p>If you are already using the <a href="https://github.com/nvm-sh/nvm">Node Version Manager (nvm)</a> tool, you can run <code>nvm install</code> in the directory to get the correct version of node.</p>
 <p>Once you have installed node, you can install the project's dependencies:</p>
 <div class="highlight"><pre><span></span><code>npm install
@@ -558,18 +544,15 @@
 <p>The backend (auth, api, database) is all managed by a separate API outside of this repo.</p>
 <h2 id="automated-testing">Automated Testing</h2>
 <ul>
-<li><a href="testing/unit-testing.html">Unit Testing</a></li>
 <li><a href="testing/integration-testing.html">Integration Testing</a></li>
 </ul>
-<p>Note: There is currently an <a href="https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073">issue with <code>firebase-tools@v11.19.0</code> that prevents the emulators from running</a>. We pin <code>firebase-tools</code> to <code>v11.18.0</code> until this is resolved.</p>
-<p>The <code>cypress-firebase@3</code> package made some changes to only support Node v16 and higher, so the published code has some JavaScript that is only runnbale in Node v16 and higher. this would normally be fine, but Cypress has some weird behavior where it bundles all it's testing code for the browser using whatever Webpack config is used in the project, and since the Nuxt Webpack config is not exposed easilly, it's become difficult to figure out how to resolve the problem. This may get resolved automatically when the site is upgraded to <code>Nuxt@3</code>, but for now, we must pin to <code>cypress-firebase@2.x.y</code> in order for the integration tests to run.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">March 8, 2023 20:10:44</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">March 16, 2023 14:20:09</span>
       
         <br>
         Created:
@@ -588,7 +571,7 @@
   
     <div class="md-source-date">
       <small>
-          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a> (95.0%), <a href='mailto:44567586+ldeluigi@users.noreply.github.com'>ldeluigi</a> (5.0%)</span>
+          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a></span>
       </small>
     </div>
   

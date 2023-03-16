@@ -374,20 +374,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="testing/unit-testing.html" class="md-nav__link">
-        Unit Testing
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -485,13 +471,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#testing-unit-testing" class="md-nav__link">
-    6. Unit Testing
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -585,13 +564,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#testing-unit-testing" class="md-nav__link">
-    6. Unit Testing
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -635,9 +607,9 @@
             </div>
         </section>
         <section class="print-page" id="index"><h1 id="index-development-docs">Development Docs</h1>
-<p>This documentation is rendered as a website on <a href="https://commander-spellbook.github.io/website-v2/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
+<p>This documentation is rendered as a website on <a href="https://edhrec.github.io/commander-spellbook-site/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
 <h2 id="index-getting-started">Getting Started</h2>
-<p>The site requires <a href="https://nodejs.org/en/download/">node v16</a> and npm 8 (which comes installed with node@16) to run locally, since it utilizes <a href="https://docs.npmjs.com/cli/v8/using-npm/workspaces">npm workspaces</a> to structure the repo.</p>
+<p>The site requires <a href="https://nodejs.org/en/download/">node v16</a> and npm 8 (which comes installed with node@16) to run locally, since it utilizes <a href="https://classic.yarnpkg.com/lang/en/docs/workspaces/">workspaces</a> to structure the repo.</p>
 <p>If you are already using the <a href="https://github.com/nvm-sh/nvm">Node Version Manager (nvm)</a> tool, you can run <code>nvm install</code> in the directory to get the correct version of node.</p>
 <p>Once you have installed node, you can install the project's dependencies:</p>
 <div class="highlight"><pre><span></span><code>npm install
@@ -652,33 +624,28 @@
 <p>The backend (auth, api, database) is all managed by a separate API outside of this repo.</p>
 <h2 id="index-automated-testing">Automated Testing</h2>
 <ul>
-<li><a href="#testing-unit-testing">Unit Testing</a></li>
 <li><a href="#testing-integration-testing">Integration Testing</a></li>
-</ul>
-<p>Note: There is currently an <a href="https://github.com/firebase/firebase-tools/issues/4952#issuecomment-1360837073">issue with <code>firebase-tools@v11.19.0</code> that prevents the emulators from running</a>. We pin <code>firebase-tools</code> to <code>v11.18.0</code> until this is resolved.</p>
-<p>The <code>cypress-firebase@3</code> package made some changes to only support Node v16 and higher, so the published code has some JavaScript that is only runnbale in Node v16 and higher. this would normally be fine, but Cypress has some weird behavior where it bundles all it's testing code for the browser using whatever Webpack config is used in the project, and since the Nuxt Webpack config is not exposed easilly, it's become difficult to figure out how to resolve the problem. This may get resolved automatically when the site is upgraded to <code>Nuxt@3</code>, but for now, we must pin to <code>cypress-firebase@2.x.y</code> in order for the integration tests to run.</p></section>
+</ul></section>
                         <h1 class='nav-section-title' id='section-frontend'>
                             Frontend <a class='headerlink' href='#section-frontend' title='Permanent link'>↵</a>
                         </h1>
                         <section class="print-page" id="frontend-installation-and-setup"><h1 id="frontend-installation-and-setup-frontend-app-setup">Frontend App Setup</h1>
-<p>The frontend uses <a href="https://nuxtjs.org/">Nuxt@v2</a> to create the app.</p>
+<p>The frontend uses <a href="https://nextjs.org/">Next</a> to create the app.</p>
 <h2 id="frontend-installation-and-setup-installation-requirements">Installation Requirements</h2>
 <p>See the <a href="#index-getting-started">Getting Started instructions</a> for details about installing node.</p>
 <h2 id="frontend-installation-and-setup-build-setup">Build Setup</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># serve with hot reload at localhost:3000, specify PORT=&lt;whatever&gt; to change the port</span>
-$ npm run dev
+<div class="highlight"><pre><span></span><code><span class="c1"># serve with hot reload at localhost:3000</span>
+yarn dev
 </code></pre></div>
 <p>If you want to see how the app will behave in production, build and run it:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># build for production (this will take a while)</span>
-$ npm run build-frontend
+yarn build
 <span class="c1"># runs the site in prod mode using the generated pages from the build-frontend step</span>
-$ npm start
-</code></pre></div>
-<p>For detailed explanation on how things work, check out <a href="https://nuxtjs.org">Nuxt.js docs</a>.</p></section><section class="print-page" id="frontend-pages"><h1 id="frontend-pages-pages">Pages</h1>
-<p>Create a <code>vue</code> component in the pages directory, where the name of the file is the path a user will navigate to in the url.</p>
+yarn start
+</code></pre></div></section><section class="print-page" id="frontend-pages"><h1 id="frontend-pages-pages">Pages</h1>
+<p>Create a <code>React</code> component in the pages directory, where the name of the file is the path a user will navigate to in the url.</p>
 <p>In general, try to keep page logic simple. Pull any complex logic out into a component in the <code>components</code> directory in a folder with the same name as the route.</p></section><section class="print-page" id="frontend-components"><h1 id="frontend-components-components">Components</h1>
-<p>Create a <code>vue</code> component in the <code>components</code> directory. If it's a component specific to a page, nest it in a directory with the same name as the the page.</p>
-<p>The component name should be at least 2 words. This is a linting rule to prevent colliding with exisitng HTML DOM nodes.</p></section><h1 class='nav-section-title-end'>Ended: Frontend</h1>
+<p>Create a <code>React</code> component in the <code>components</code> directory. If it's a component specific to a page, nest it in a directory with the same name as the page.</p></section><h1 class='nav-section-title-end'>Ended: Frontend</h1>
                         <h1 class='nav-section-title' id='section-testing'>
                             Testing <a class='headerlink' href='#section-testing' title='Permanent link'>↵</a>
                         </h1>
@@ -698,25 +665,6 @@ $ npm start
 <h2 id="testing-integration-testing-videosscreenshots">Videos/Screenshots</h2>
 <p>By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:</p>
 <div class="highlight"><pre><span></span><code>npm run cy:run -- --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
-</code></pre></div></section><section class="print-page" id="testing-unit-testing"><h1 id="testing-unit-testing-unit-testing">Unit Testing</h1>
-<p>We use <a href="https://jestjs.io/">jest</a> as our test runner.</p>
-<p>Any new features added will need to be thoroughly unit tested. If you are unfamiliar with unit testing, but want to make a change, go ahead and open a PR and ask for help getting unit tests set up for your feature.</p>
-<p>To run tests for all workpaces, run:</p>
-<div class="highlight"><pre><span></span><code>npm test
-</code></pre></div>
-<h2 id="testing-unit-testing-frontend-unit-tests">Frontend Unit Tests</h2>
-<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
-<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend
-</code></pre></div>
-<p>To watch only a particular directory (such as only running the tests against the /test/pages)</p>
-<div class="highlight"><pre><span></span><code>npm rum test:watch-frontend test/pages/
-</code></pre></div>
-<h2 id="testing-unit-testing-backend-unit-tests">Backend Unit Tests</h2>
-<p>To run (and continuoulsly watch for changes) on just the frontend workspace, run:</p>
-<div class="highlight"><pre><span></span><code>npm rum test:watch-backend
-</code></pre></div>
-<p>To watch only a particular directory (such as only running the tests against the /test/db/ directory)</p>
-<div class="highlight"><pre><span></span><code>npm rum test:watch-backend test/db/
 </code></pre></div></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
 
 
