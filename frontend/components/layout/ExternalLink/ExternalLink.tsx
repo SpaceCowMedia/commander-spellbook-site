@@ -20,11 +20,7 @@ const ExternalLink: React.FC<Props> = (props: Props) => {
     delete attributes.href;
   }
 
-  return (
-    <a {...attributes}>
-      {children}
-    </a>
-  );
+  return <a {...attributes}>{children}</a>;
 };
 
 export default ExternalLink;

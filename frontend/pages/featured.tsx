@@ -11,11 +11,9 @@ import {
 
 type Props = {
   serializedCombos: SerializedCombo[];
-}
+};
 
-const Featured = ({
-  serializedCombos,
-}: Props) => {
+const Featured = ({ serializedCombos }: Props) => {
   const combos = serializedCombos.map((combo) => deserializeCombo(combo));
 
   return (

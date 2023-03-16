@@ -32,7 +32,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     getAllCombos().then((combos) => {
       setNumberOfCombos(combos.length);
     });
-  }, [])
+  }, []);
 
   return (
     <div className={`${styles.outerContainer} ${className}`}>
