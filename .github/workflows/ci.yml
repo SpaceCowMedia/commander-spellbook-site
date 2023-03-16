@@ -51,7 +51,7 @@ jobs:
         id: generate-uuid
         run: yarn run workflow:create-workflow-id
 
-      - name: Cache Downloaded Data ⏬
+      - name: Cache Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -60,6 +60,7 @@ jobs:
             external-data
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
+            frontend/out/
           key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
 
       - name: Download Data ⬇️
@@ -67,6 +68,13 @@ jobs:
         env:
           NODE_ENV: production
         run: yarn run download-data
+      
+      - name: Build Frontend Site 🏗️
+        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
+        run: yarn run build
+        env:
+          NODE_ENV: production
+
 
   linter:
     runs-on: ubuntu-22.04
@@ -125,7 +133,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -134,11 +142,12 @@ jobs:
             external-data
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
+            frontend/out/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
+        run: echo "Site cache failed"; exit 1;
 
       - name: Run Integration tests 💻
         run: yarn run test:integration
@@ -178,7 +187,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -187,15 +196,17 @@ jobs:
             external-data
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
+            frontend/out/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
+        run: echo "Site cache failed"; exit 1;
 
       - name: Compare Changelog 🪵
         id: changelog_result
         run: yarn run check-changelog
+
 
   deploy:
     # only deploy from the main branch
@@ -229,7 +240,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -238,16 +249,12 @@ jobs:
             external-data
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
+            frontend/out/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
-
-      - name: Build Frontend Site 🏗️
-        run: yarn run build
-        env:
-          NODE_ENV: production
+        run: echo "Site cache failed"; exit 1;
 
       - name: Configure AWS Credentials ㊙️
         uses: aws-actions/configure-aws-credentials@v1-node16
@@ -332,6 +339,7 @@ jobs:
       - name: Send Deploy Start Notification ✉️
         run: yarn run discord-webhook:start-deploy
 
+
   finish-deploy-notification:
     runs-on: ubuntu-22.04
     needs: [setup, changelog_check, deploy]
@@ -359,7 +367,7 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Restore Downloaded Data ⏬
+      - name: Restore Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
@@ -368,11 +376,12 @@ jobs:
             external-data
             frontend/public/api/combo-data.json
             frontend/public/changelog.json
+            frontend/out/
           key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
 
-      - name: Check Downloaded Data Cache ⬇️
+      - name: Check Site Cache ⬇️
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Downloaded data cache failed"; exit 1;
+        run: echo "Site cache failed"; exit 1;
 
       - name: Send deploy succeeded notification ✉️
         env:

@@ -9,6 +9,7 @@
     "postinstall": "husky install",
     "predev": "yarn run download-data",
     "dev": "yarn workspaces run dev",
+    "start": "yarn workspaces run start",
     "build": "yarn workspaces run build",
     "prettier": "prettier --write .",
     "download-data": "ts-node scripts/download-data",
@@ -19,11 +20,8 @@
     "discord-webhook:finish-deploy": "ts-node scripts/discord-webhooks/finish-deploy.ts",
     "check-changelog": "ts-node scripts/check-changelog",
     "lint": "eslint --ext .ts,.js scripts cypress && yarn workspaces run lint",
-    "test": "yarn test --workspaces --if-present",
-    "test:watch-frontend": "yarn test --workspace frontend -- --watch --collectCoverage=false",
     "cy:run": "cypress run",
-    "pretest:integration": "NODE_ENV=development yarn run build",
-    "test:integration": "yarn dev & wait-on http://localhost:3000 && yarn run cy:run"
+    "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
