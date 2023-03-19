@@ -17,9 +17,9 @@ import {
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import React, { useEffect } from "react";
 import { FormattedApiResponse } from "../../lib/types";
-import {useState} from "react";
+import { useState } from "react";
 import SplashPage from "../../components/layout/SplashPage/SplashPage";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 type Props = {
   serializedCombo?: SerializedCombo;
@@ -68,23 +68,24 @@ const NUMBERS = [
 ];
 
 const Combo = ({ serializedCombo, retryId }: Props) => {
-
-  const [combo, setCombo] = useState<FormattedApiResponse | undefined>(serializedCombo ? deserializeCombo(serializedCombo) : undefined);
-  const router = useRouter()
+  const [combo, setCombo] = useState<FormattedApiResponse | undefined>(
+    serializedCombo ? deserializeCombo(serializedCombo) : undefined
+  );
+  const router = useRouter();
 
   const fetchCombo = async () => {
     try {
-      const localCombo = await findById(`${retryId}`, true) // This should be router.query.id, but this page cannot work dynamically without a server
-      setCombo(localCombo)
-      router.replace(`/combo/${retryId}`)
+      const localCombo = await findById(`${retryId}`, true); // This should be router.query.id, but this page cannot work dynamically without a server
+      setCombo(localCombo);
+      router.replace(`/combo/${retryId}`);
     } catch (err) {
-      router.push('/combo-not-found/')
+      router.push("/combo-not-found/");
     }
-  }
+  };
 
   useEffect(() => {
-    if (!combo) fetchCombo()
-  }, [])
+    if (!combo) fetchCombo();
+  }, []);
 
   if (!combo) {
     return (
@@ -98,7 +99,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
           <p>This may take a moment...</p>
         </SplashPage>
       </PageWrapper>
-    )
+    );
   }
 
   const cards = combo.cards.map((card) => {

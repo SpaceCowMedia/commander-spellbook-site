@@ -32,9 +32,9 @@ const NotFoundPage = () => {
     setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
     setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
 
-    if (router.asPath.includes('/combo/')) {
-      const retryId = router.asPath.split('/combo/')[1].split('/')[0]
-      router.push(`/combo-retry?id=${retryId}`)
+    if (router.asPath.includes("/combo/")) {
+      const retryId = router.asPath.split("/combo/")[1].split("/")[0];
+      router.push(`/combo-retry?id=${retryId}`);
     }
   }, []);
 

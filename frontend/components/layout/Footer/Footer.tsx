@@ -44,7 +44,9 @@ const Footer: React.FC<Props> = ({ className, noMargin }: Props) => {
             <a href="https://www.patreon.com/commanderspellbook">Patreon</a>
             <a href="https://discord.gg/DkAyVJG">Discord</a>
             <a href="https://twitter.com/CommanderSpell">Twitter</a>
-            <a href="https://github.com/EDHREC/commander-spellbook-site">Github</a>
+            <a href="https://github.com/EDHREC/commander-spellbook-site">
+              Github
+            </a>
             <a href="https://edhrec.com/combos">EDHREC</a>
             <a href="https://draftsim.com">Draftsim</a>
             <a href="https://psycatgames.com/games/life-counter/">

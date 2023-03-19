@@ -5,7 +5,7 @@ export const pageview = (url: string) => {
   if (!gdprIsAccepted) return;
   // @ts-ignore
   window.gtag &&
-  // @ts-ignore
+    // @ts-ignore
     window.gtag("config", GA_TRACKING_ID, {
       page_path: url,
     });
