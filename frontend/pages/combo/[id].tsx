@@ -77,7 +77,8 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
     try {
       const localCombo = await findById(`${retryId}`, true); // This should be router.query.id, but this page cannot work dynamically without a server
       setCombo(localCombo);
-      router.replace(`/combo/${retryId}`, undefined, { shallow: true });
+      const newUrl = `/combo/${retryId}`;
+      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
     } catch (err) {
       router.push("/combo-not-found/");
     }
