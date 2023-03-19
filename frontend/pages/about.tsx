@@ -40,7 +40,7 @@ const About: React.FC<Props> = ({}: Props) => {
 
         <ul>
           <li>
-            <ExternalLink href="https://github.com/Commander-Spellbook/website-v2">
+            <ExternalLink href="https://github.com/EDHREC/commander-spellbook-site">
               Website Source Code on GitHub
             </ExternalLink>
           </li>

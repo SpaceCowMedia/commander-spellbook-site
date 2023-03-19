@@ -5,6 +5,7 @@ export const pageview = (url: string) => {
   if (!gdprIsAccepted) return;
   // @ts-ignore
   window.gtag &&
+  // @ts-ignore
     window.gtag("config", GA_TRACKING_ID, {
       page_path: url,
     });
@@ -22,6 +23,7 @@ export const event = ({ action, category, label, value }: EventProps) => {
   if (!gdprIsAccepted) return;
   // @ts-ignore
   window.gtag &&
+    // @ts-ignore
     window.gtag("event", action, {
       event_category: category,
       event_label: label,
