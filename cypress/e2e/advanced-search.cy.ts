@@ -1,5 +1,12 @@
 describe("Advanced Search Page", () => {
+
+  cy.intercept('GET', '/api/combo-data.json', {
+    fixture: 'api/combo-data.json'
+  }).as('getCombos');
+
   it("can search card names in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#card-name-inputs input.input").should("have.length", 1);
@@ -25,6 +32,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search card amounts in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#card-amount-inputs input.input").should("have.length", 1);
@@ -42,6 +51,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search color identity in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#color-identity-inputs input.input").should("have.length", 1);
@@ -64,6 +75,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search prerequisites in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#prerequisite-inputs input.input").should("have.length", 1);
@@ -81,6 +94,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search steps in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#step-inputs input.input").should("have.length", 1);
@@ -101,6 +116,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search results in combo", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#result-inputs input.input").should("have.length", 1);
@@ -121,6 +138,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search by price", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#price-inputs input.input").should("have.length", 1);
@@ -143,6 +162,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search by popularity", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#popularity-inputs input.input").should("have.length", 1);
@@ -160,6 +181,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search for previewed combos", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#previewed-combos input[type='radio']").last().check();
@@ -170,6 +193,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("can search for banned combos", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#banned-combos input[type='radio']").last().check();
@@ -180,6 +205,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("prevents searches when queries are empty", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#advanced-search-submit-button").click();
@@ -191,6 +218,8 @@ describe("Advanced Search Page", () => {
   });
 
   it("prevents searches when invalid queries are used", () => {
+    cy.wait('@getCombos');
+
     cy.visit("/advanced-search/");
 
     cy.get("#result-input-0").type(`mana ' " mana`);
