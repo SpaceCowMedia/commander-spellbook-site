@@ -31,7 +31,7 @@ const NotFoundPage = () => {
   }, []);
 
   return (
-    <PageWrapper>
+    <PageWrapper noMarginFooter>
       <ErrorBase
         mainMessage="Page Not Found"
         subMessage={notFoundMessage}
