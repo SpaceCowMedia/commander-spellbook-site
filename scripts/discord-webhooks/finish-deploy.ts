@@ -40,7 +40,7 @@ if (deletedCombos.length > 0) {
   postComboToDiscord("#changelog", {
     title: `${deletedCombos.length} combo(s) removed from the database`,
     combos: deletedCombos,
-    includeLinks: false
+    includeLinks: false,
   });
 }
 if (updatedCombos.length > 0) {
