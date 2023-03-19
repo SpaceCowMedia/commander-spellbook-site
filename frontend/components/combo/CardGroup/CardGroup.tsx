@@ -27,7 +27,7 @@ const CardGroup = ({ cards }: Props) => {
         <div
           key={`oracle-card-image-${index}`}
           className={`${styles.cardImgWrapper} ${
-            shouldExpand(index) && "expand"
+            shouldExpand(index) && styles.expand
           }`}
           onMouseEnter={() => setHoveredOverCardIndex(index)}
           onMouseLeave={() => setHoveredOverCardIndex(-1)}
