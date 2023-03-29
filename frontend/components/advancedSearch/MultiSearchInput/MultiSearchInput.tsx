@@ -34,7 +34,7 @@ const MultiSearchInput = ({
   pluralLabel,
   defaultPlaceholder,
   operatorOptions,
-  defaultOperator = "",
+  defaultOperator = ":",
   onChange,
 }: Props) => {
   const [inputs, setInputs] = useState<MultiSearchInputValue>(value);

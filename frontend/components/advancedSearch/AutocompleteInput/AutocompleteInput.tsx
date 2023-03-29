@@ -89,6 +89,7 @@ const AutocompleteInput: React.FC<Props> = ({
   const handleSelect = (selection: AutoCompleteOption) => {
     const value = useValueForInput ? selection.value : selection.label;
     setLocalValue(value);
+    onChange && onChange(value);
     handleClose();
   };
 
