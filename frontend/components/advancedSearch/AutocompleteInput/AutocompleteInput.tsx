@@ -57,7 +57,7 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const lookupAutoComplete = () => {
     if (!active) return;
-    if (!value) return close();
+    if (!value) return handleClose();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = createAutocompleteTimeout();
   };
@@ -184,7 +184,7 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const createAutocompleteTimeout = () =>
     setTimeout(() => {
-      if (!value) return close();
+      if (!value) return handleClose();
 
       const normalizedValue = normalizeStringInput(value);
       setMatchingAutoCompleteOptions([]);
