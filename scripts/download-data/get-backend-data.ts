@@ -19,7 +19,9 @@ const invert = (input: Record<string, string>) => {
 export default async function getBackendData(): Promise<CompressedApiResponse[]> {
   log("Fetching Combo data from backend bucket");
   const variantData = await getData(VARIANT_DATA_URL) as VariantBulkData
+  log(`Found ${variantData.variants.length} variants in the backend bucket.`);
   const reverseIdMap = await getData(ID_MAP_URL) as Record<string, string>
+  log(`Found ${Object.keys(reverseIdMap).length} ids in the id map.`)
   const idMap = invert(reverseIdMap)
   const output: CompressedApiResponse[] = []
   for (const variant of variantData.variants) {
