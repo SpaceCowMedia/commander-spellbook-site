@@ -15,6 +15,7 @@ env:
 #  DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK_URL }}
   EDITOR_BACKEND_URL: ${{ secrets.EDITOR_BACKEND_URL }}
 
+
 jobs:
   setup:
     runs-on: ubuntu-22.04
