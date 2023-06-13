@@ -7,9 +7,9 @@ import isFeatured from "./is-featured";
 import getEDHRECPrices from "./get-edhrec-prices";
 import getEDHRECComboData from "./get-edhrec-combo-data";
 import getFeaturedRules from "./get-featured-rules";
-import getGoogleSheetsComboData from "./get-google-sheets-data";
 import { collectCardNames, collectResults } from "./collect-autocomplete";
 import getComboChangelog from "./get-combo-changelog";
+import getBackendData from "./get-backend-data";
 
 configureDotenv();
 
@@ -32,7 +32,7 @@ type CardData = {
 };
 
 Promise.all([
-  getGoogleSheetsComboData(),
+  getBackendData(),
   getScryfallData(),
   getEDHRECPrices(),
   getEDHRECComboData(),

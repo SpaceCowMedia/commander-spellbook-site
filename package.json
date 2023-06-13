@@ -13,6 +13,7 @@
     "build": "yarn workspaces run build",
     "prettier": "prettier --write .",
     "download-data": "ts-node scripts/download-data",
+    "generate-combo-file-diff": "ts-node scripts/generate-combo-file-diff",
     "workflow:create-workflow-id": "ts-node scripts/create-workflow-id",
     "discord-webhook:start-deploy": "ts-node scripts/discord-webhooks/start-deploy.ts",
     "discord-webhook:cancel-deploy": "ts-node scripts/discord-webhooks/cancel-deploy.ts",

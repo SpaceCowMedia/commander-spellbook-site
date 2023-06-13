@@ -128,3 +128,59 @@ export type SearchParameters = {
 };
 
 export type EDHRECData = Record<string, Record<VendorValue, { price: number }>>;
+
+
+/**
+ * The following types are for the new backend
+ */
+export type BackendCard = {
+  id: number,
+  name: string,
+  oracleId: string,
+  identity: string,
+  legal: boolean,
+  spoiled: boolean,
+}
+
+export type CardComponent = {
+  card: BackendCard,
+  zoneLocations: string[],
+  cardState: string,
+}
+
+export type Template = {
+  name: string,
+  scryfallQuery: string,
+}
+
+export type Feature = {
+  id: number,
+  name: string,
+  description: string,
+  utility: boolean
+}
+
+export type BackendCombo = {
+  id: number,
+}
+
+export type Variant = {
+  id: string,
+  uses: CardComponent[],
+  requires: Template[],
+  produces: Feature[],
+  of : BackendCombo[],
+  includes: BackendCombo[],
+  identity: string,
+  manaNeeded: string,
+  otherPrerequisites: string,
+  description: string,
+  legal: boolean,
+  spoiler: boolean,
+}
+
+export type VariantBulkData = {
+  timestamp: string,
+  variants: Variant[]
+}
+
