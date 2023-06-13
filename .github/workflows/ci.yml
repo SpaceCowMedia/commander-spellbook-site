@@ -11,8 +11,8 @@ on:
     - cron: "0 */2 * * *"
 
 env:
-  DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
-  DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK_URL }}
+#  DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
+#  DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK_URL }}
   EDITOR_BACKEND_URL: ${{ secrets.EDITOR_BACKEND_URL }}
 
 jobs:
@@ -266,16 +266,16 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy to S3 🛫
-        run: aws s3 sync ./frontend/out/ s3://commanderspellbook.com --delete
+        run: aws s3 sync ./frontend/out/ s3://dev.commanderspellbook.com --delete
 
       - name: Bust Cloudfront Cache 👥
         env:
           AWS_MAX_ATTEMPTS: 8
-        run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id E38HRVAV3M8AZX --paths "/*"
 
-      - name: Send Deploy Failed Notification ✉️
-        if: ${{ failure() }}
-        run: yarn run discord-webhook:failed-deploy
+#      - name: Send Deploy Failed Notification ✉️
+#        if: ${{ failure() }}
+#        run: yarn run discord-webhook:failed-deploy
 
   cancel-deploy-notification:
     # only send a message about cancelling deploy from the main branch
@@ -307,8 +307,8 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Send deploy cancelled notification ✉️
-        run: yarn run discord-webhook:cancel-deploy
+#      - name: Send deploy cancelled notification ✉️
+#        run: yarn run discord-webhook:cancel-deploy
 
   send-start-deploy-notification:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'SpaceCowMedia' && needs.changelog_check.outputs.should_deploy == 'YES'
@@ -338,8 +338,8 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Send Deploy Start Notification ✉️
-        run: yarn run discord-webhook:start-deploy
+#      - name: Send Deploy Start Notification ✉️
+#        run: yarn run discord-webhook:start-deploy
 
   finish-deploy-notification:
     runs-on: ubuntu-22.04
@@ -385,7 +385,7 @@ jobs:
         if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
         run: echo "Site cache failed"; exit 1;
 
-      - name: Send deploy succeeded notification ✉️
-        env:
-          DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: yarn run discord-webhook:finish-deploy
+#      - name: Send deploy succeeded notification ✉️
+#        env:
+#          DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
+#        run: yarn run discord-webhook:finish-deploy
