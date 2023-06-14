@@ -28,7 +28,7 @@ export default async function getBackendData(): Promise<CompressedApiResponse[]>
     const compressedVariant: CompressedApiResponse = {
       d : idMap[variant.id],
       c : variant.uses.map(card => card.card.name),
-      i : variant.identity,
+      i : variant.identity.toLowerCase().split("").join(','),
       p : variant.otherPrerequisites,
       s : variant.description,
       r : variant.produces.map(feature => feature.name).join('. '),
