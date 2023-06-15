@@ -27,7 +27,7 @@ const ZONE_MAP = {
 
 const getPrerequisiteString = (variant: Variant) => {
   let output = ""
-  for (const card of variant.uses) {
+  for (const card of variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name))) {
     output += `${card.card.name} `
     output += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
     output += ". "
@@ -48,7 +48,7 @@ export default async function getBackendData(): Promise<CompressedApiResponse[]>
   for (const variant of variantData.variants) {
     const compressedVariant: CompressedApiResponse = {
       d : idMap[variant.id],
-      c : variant.uses.map(card => card.card.name),
+      c : variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name)).map(card => card.card.name),
       i : variant.identity.toLowerCase().split("").join(','),
       p : getPrerequisiteString(variant),
       s : variant.description,
