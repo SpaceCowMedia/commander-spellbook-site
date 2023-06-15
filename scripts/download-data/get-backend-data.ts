@@ -1,4 +1,4 @@
-import type { CompressedApiResponse, VariantBulkData } from "../../frontend/lib/types";
+import type { CompressedApiResponse, VariantBulkData, Variant } from "../../frontend/lib/types";
 import getData from "../shared/get";
 import log from "../shared/log";
 
@@ -16,6 +16,27 @@ const invert = (input: Record<string, string>) => {
   return output
 }
 
+const ZONE_MAP = {
+  "H": "in hand",
+  "B": "on the battlefield",
+  "C": "in the command zone",
+  "G": "in your graveyard",
+  "L": "in your library",
+  "E": "in exile",
+}
+
+const getPrerequisiteString = (variant: Variant) => {
+  let output = ""
+  for (const card of variant.uses) {
+    output += `${card.card.name} `
+    output += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
+    output += ". "
+  }
+  output += (variant.otherPrerequisites || "")
+  output += variant.manaNeeded ? `${variant.manaNeeded} available. ` : ``
+  return output
+}
+
 export default async function getBackendData(): Promise<CompressedApiResponse[]> {
   log("Fetching Combo data from backend bucket");
   const variantData = await getData(VARIANT_DATA_URL) as VariantBulkData
@@ -29,7 +50,7 @@ export default async function getBackendData(): Promise<CompressedApiResponse[]>
       d : idMap[variant.id],
       c : variant.uses.map(card => card.card.name),
       i : variant.identity.toLowerCase().split("").join(','),
-      p : variant.otherPrerequisites,
+      p : getPrerequisiteString(variant),
       s : variant.description,
       r : variant.produces.map(feature => feature.name).join('. '),
       b : variant.legal ? 0 : 1,
