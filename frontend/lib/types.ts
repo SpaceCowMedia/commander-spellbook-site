@@ -15,16 +15,21 @@ export type CommanderSpellbookAPIResponse = {
   ];
 };
 
+export type NewPrerequisiteType = {
+  z: string; // zone either H, B, C, G, L, E or multi
+  s: string; // prerequisite string
+}
 export type CompressedApiResponse = {
   d: string; // spellbook iD
   c: string[]; // Card names
   i: string; // color Identity
-  p: string; // Prerequisites
+  p?: string; // Legacy Prerequisites
   s: string; // Steps
   r: string; // Results
   b?: number; // Banned
   o?: number; // spoiled
   e?: string; // EDHREC link
+  t?: NewPrerequisiteType[]; // New Prerequisites
 };
 
 export type FormattedApiResponse = {
@@ -33,6 +38,7 @@ export type FormattedApiResponse = {
   cards: CardGrouping;
   colorIdentity: ColorIdentity;
   prerequisites: SpellbookList;
+  prerequisiteList: NewPrerequisiteType[];
   steps: SpellbookList;
   results: SpellbookList;
   hasBannedCard: boolean;

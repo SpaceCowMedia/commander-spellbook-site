@@ -1,7 +1,7 @@
 import CardGrouping from "./models/card-grouping";
 import ColorIdentity from "./models/color-identity";
 import List from "./models/list";
-import type { FormattedApiResponse } from "./types";
+import type {FormattedApiResponse, NewPrerequisiteType} from "./types";
 
 export type SerializedCombo = {
   commanderSpellbookId: string;
@@ -15,6 +15,7 @@ export type SerializedCombo = {
   hasSpoiledCard: boolean;
   edhrecLink: string;
   numberOfEDHRECDecks: number;
+  prerequisiteList: NewPrerequisiteType[];
 };
 
 export function serializeCombo(combo: FormattedApiResponse) {
@@ -30,6 +31,7 @@ export function serializeCombo(combo: FormattedApiResponse) {
     hasSpoiledCard: combo.hasSpoiledCard,
     edhrecLink: combo.edhrecLink,
     numberOfEDHRECDecks: combo.numberOfEDHRECDecks,
+    prerequisiteList: combo.prerequisiteList,
   };
 }
 
@@ -46,5 +48,6 @@ export function deserializeCombo(combo: SerializedCombo): FormattedApiResponse {
     hasSpoiledCard: combo.hasSpoiledCard,
     edhrecLink: combo.edhrecLink,
     numberOfEDHRECDecks: combo.numberOfEDHRECDecks,
+    prerequisiteList: combo.prerequisiteList,
   };
 }

@@ -28,6 +28,7 @@ export default function formatApiResponse(
       results,
       hasBannedCard,
       hasSpoiledCard,
+      prerequisiteList: combo.t || [],
     } as FormattedApiResponse;
 
     if (id in edhrecComboData) {
