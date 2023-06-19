@@ -177,7 +177,7 @@ function collectPlainNameQueries(
   params: SearchParameters,
   query: string
 ): void {
-  const simpilfiedQuery = query.replace(/[^\w\d\s"']/g, "");
+  const simpilfiedQuery = query.normalize("NFD").replace(/[^\w\d\s"']/g, "");
 
   const queries =
     simpilfiedQuery.match(
