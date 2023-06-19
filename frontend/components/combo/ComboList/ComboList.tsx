@@ -11,6 +11,7 @@ type Props = {
   iterations: string[];
   id?: string;
   className?: string;
+  appendPeriod?: boolean;
 };
 
 const ComboList = ({
@@ -21,6 +22,7 @@ const ComboList = ({
   iterations,
   id,
   className,
+  appendPeriod
 }: Props) => {
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
 
@@ -39,7 +41,7 @@ const ComboList = ({
           {iterations.map((item, index) => (
             <li key={`${title}-${index}`}>
               <TextWithMagicSymbol
-                text={item}
+                text={appendPeriod && item[item.length-1] !== '.' ? `${item}.` : item}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
               />

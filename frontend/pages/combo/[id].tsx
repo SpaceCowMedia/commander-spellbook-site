@@ -186,6 +186,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             iterations={steps}
             cardsInCombo={cardNames}
             showNumbers
+            appendPeriod
           />
 
           <ComboList
@@ -193,6 +194,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             id="combo-results"
             iterations={results}
             cardsInCombo={cardNames}
+            appendPeriod
           />
 
           {metaData.length > 0 && (

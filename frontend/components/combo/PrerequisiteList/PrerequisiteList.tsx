@@ -32,7 +32,11 @@ const PrerequisiteList = ({ prerequisites, className, id, cardsInCombo, includeC
           {prerequisites.map((prereq, index) => (
             <li key={`${prereq.z}-${index}`}>
               {ICON_MAP[prereq.z as keyof typeof ICON_MAP] && <><Icon name={ICON_MAP[prereq.z as keyof typeof ICON_MAP] as any}/>&nbsp;</> }
-              <TextWithMagicSymbol text={prereq.s} cardsInCombo={cardsInCombo} includeCardLinks={includeCardLinks} />
+              <TextWithMagicSymbol
+                text={prereq.s[prereq.s.length - 1] !== '.' ? prereq.s + '.' : prereq.s}
+                cardsInCombo={cardsInCombo}
+                includeCardLinks={includeCardLinks}
+              />
             </li>
           ))}
         </ol>
