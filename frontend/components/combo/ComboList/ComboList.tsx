@@ -2,6 +2,7 @@ import styles from "./comboList.module.scss";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import React, { useEffect, useState } from "react";
 import PlaceholderText from "../../layout/PlaceholderText/PlaceholderText";
+import {addPeriod} from "../../../lib/addPeriod";
 
 type Props = {
   title: string;
@@ -41,7 +42,7 @@ const ComboList = ({
           {iterations.map((item, index) => (
             <li key={`${title}-${index}`}>
               <TextWithMagicSymbol
-                text={appendPeriod && item[item.length-1] !== '.' ? `${item}.` : item}
+                text={appendPeriod ? addPeriod(item) : item}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
               />

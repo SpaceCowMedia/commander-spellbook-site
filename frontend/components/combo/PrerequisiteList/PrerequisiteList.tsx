@@ -2,6 +2,7 @@ import {NewPrerequisiteType} from "../../../lib/types";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import styles from "./prerequisiteList.module.scss";
 import Icon from "../../layout/Icon/Icon";
+import {addPeriod} from "../../../lib/addPeriod";
 
 type Props = {
   prerequisites: NewPrerequisiteType[];
@@ -33,7 +34,7 @@ const PrerequisiteList = ({ prerequisites, className, id, cardsInCombo, includeC
             <li key={`${prereq.z}-${index}`}>
               {ICON_MAP[prereq.z as keyof typeof ICON_MAP] && <><Icon name={ICON_MAP[prereq.z as keyof typeof ICON_MAP] as any}/>&nbsp;</> }
               <TextWithMagicSymbol
-                text={prereq.s[prereq.s.length - 1] !== '.' ? prereq.s + '.' : prereq.s}
+                text={addPeriod(prereq.s)}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
               />

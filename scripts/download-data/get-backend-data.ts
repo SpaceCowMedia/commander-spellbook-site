@@ -25,14 +25,35 @@ const ZONE_MAP = {
   "E": "in exile",
 }
 
+const comaAndJoin = (input: string[]) => {
+  if (input.length === 0) return ''
+  if (input.length === 1) return input[0]
+  if (input.length === 2) return input.join(' and ')
+  return `${input.slice(0, -1).join(', ')}, and ${input.slice(-1)}`
+}
+
 const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
   let output: NewPrerequisiteType[] = []
+
+  // Count if any coma split card names exist more than once
+  const cardNameCountMap = variant.uses.reduce((acc: Record<string,number>, card) => {
+    const split = card.card.name.split(', ')[0]
+    acc[split] = acc[split] ? acc[split] + 1 :  1
+    return acc
+  }, {})
+
+  // Map card names to coma split card names if they only exist once
+  const cardNameMap = variant.uses.reduce((acc: Record<string, string>, card) => {
+    const split = card.card.name.split(', ')[0]
+    acc[card.card.name] = cardNameCountMap[split] === 1 ? split : card.card.name
+    return acc
+  }, {})
 
   // Handle any multi-zone cards
   const multiZoneCards = variant.uses.filter(card => card.zoneLocations.length > 1)
   for (const card of multiZoneCards.sort((a, b) => a.card.name.localeCompare(b.card.name))) {
     let cardString = ''
-    cardString += `${card.card.name} `
+    cardString += `${cardNameMap[card.card.name]} `
     cardString += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
     if (card.cardState) cardString += ` (${card.cardState})`
     cardString += ". "
@@ -46,13 +67,21 @@ const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
   for (const zoneKey in ZONE_MAP) {
     const zoneCards = singleZoneCards.filter(card => card.zoneLocations[0] === zoneKey)
     if (zoneCards.length === 0) continue
-    let cardState = zoneCards
-      .filter(card => card.cardState)
-      .map(card => `${zoneCards.length > 1 ? `${card.card.name} ` : ''}${card.cardState}`)
-      .join(', ')
+    //
+    const stateMap = zoneCards.reduce((acc: Record<string, string[]>, card) => {
+      if (card.cardState) acc[card.cardState] = acc[card.cardState] ? acc[card.cardState].concat([cardNameMap[card.card.name]]) : [cardNameMap[card.card.name]]
+      return acc
+    }, {})
+    let cardStateStrings: string[] = []
+    for (const stateKey in stateMap) {
+      let cardStateString = comaAndJoin(stateMap[stateKey])
+      if (stateKey) cardStateString += ` ${stateKey}`
+      cardStateStrings.push(cardStateString)
+    }
+    let cardState = comaAndJoin(cardStateStrings)
     if (cardState) cardState = ` (${cardState})`
     zoneGroups.push({
-      cardNames: zoneCards.map(card => card.card.name),
+      cardNames: zoneCards.map(card => cardNameMap[card.card.name]),
       zone: zoneKey as keyof typeof ZONE_MAP,
       cardState,
     })
@@ -79,7 +108,7 @@ const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
   }
 
   // Add any other prerequisites
-  if (variant.otherPrerequisites) variant.otherPrerequisites.split('. ').forEach(prereq => output.push({z: 'other', s: prereq}))
+  if (variant.otherPrerequisites) variant.otherPrerequisites.split(/\.\s+/ig).forEach(prereq => output.push({z: 'other', s: prereq}))
   if (variant.manaNeeded) output.push({z: 'mana', s: `${variant.manaNeeded} available`})
 
   return output
