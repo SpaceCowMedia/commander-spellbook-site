@@ -137,7 +137,7 @@ export default async function getBackendData(): Promise<CompressedApiResponse[]>
   const output: CompressedApiResponse[] = []
   for (const variant of variantData.variants) {
     const compressedVariant: CompressedApiResponse = {
-      d : idMap[variant.id],
+      d : idMap[variant.id] ? idMap[variant.id] : variant.id,
       c : variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name)).map(card => card.card.name),
       i : variant.identity.toLowerCase().split("").join(','),
       t : getPrerequisiteList(variant),
