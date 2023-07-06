@@ -114,27 +114,28 @@ export default function Home({ featuredComboButtonText }: Props) {
 }
 
 export async function getStaticProps() {
-  const { EDITOR_BACKEND_URL } = process.env;
-
-  if (!EDITOR_BACKEND_URL) {
-    return DEFAULT_PROPS;
-  }
-
-  const res = await fetch(`${EDITOR_BACKEND_URL}properties/?format=json`);
-  const dataFromEditorBackend = await res.json();
-  const buttonTextData = dataFromEditorBackend.results.find(
-    (data: { key: string; value: string }) => {
-      return data.key === "featured_combos_title";
-    }
-  );
-
-  if (!buttonTextData) {
-    return DEFAULT_PROPS;
-  }
+  // const { EDITOR_BACKEND_URL } = process.env;
+  //
+  // if (!EDITOR_BACKEND_URL) {
+  //   return DEFAULT_PROPS;
+  // }
+  //
+  // const res = await fetch(`${EDITOR_BACKEND_URL}properties/?format=json`);
+  // const dataFromEditorBackend = await res.json();
+  // const buttonTextData = dataFromEditorBackend.results.find(
+  //   (data: { key: string; value: string }) => {
+  //     return data.key === "featured_combos_title";
+  //   }
+  // );
+  //
+  // if (!buttonTextData) {
+  //   return DEFAULT_PROPS;
+  // }
 
   return {
     props: {
-      featuredComboButtonText: buttonTextData.value,
+      // featuredComboButtonText: buttonTextData.value,
+      featuredComboButtonText: 'Tales of Middle-earth Combos',
     },
   };
 }
