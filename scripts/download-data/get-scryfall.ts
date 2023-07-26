@@ -136,7 +136,7 @@ type ScryfallData = Record<string, ScryfallEntry>;
 
 function isFunnyCard(card: ScryfallApiData) {
   return (
-    card.type_line.toLowerCase().includes("contraption") ||
+    card.type_line?.toLowerCase().includes("contraption") ||
     (card.set_type === "funny" && card.border_color === "silver")
   );
 }
@@ -193,7 +193,8 @@ export default async function getScryfallData(trys = 0): Promise<ScryfallData> {
     if (
       isFunnyCard(card) ||
       card.set_type === "token" ||
-      card.set_type === "memorabilia"
+      card.set_type === "memorabilia" ||
+      card.type_line === undefined
     ) {
       // skip tokens, art cards, silver bordered stuff
       return cards;
