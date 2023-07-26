@@ -63,7 +63,7 @@ describe("Combo Detail Page", () => {
   });
 
   it("can buy combo on Card Kingdom", () => {
-    cy.visit("/combo/450/");
+    cy.visit("/combo/3616/");
 
     cy.get("#ck-buy-this-combo")
       .should("have.attr", "href")
