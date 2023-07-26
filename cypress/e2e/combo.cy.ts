@@ -55,7 +55,7 @@ describe("Combo Detail Page", () => {
   });
 
   it("can buy combo on TCGplayer", () => {
-    cy.visit("/combo/450/");
+    cy.visit("/combo/3616/");
 
     cy.get("#tcg-buy-this-combo")
       .should("have.attr", "href")
