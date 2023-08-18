@@ -1,4 +1,10 @@
-import type {CompressedApiResponse, VariantBulkData, Variant, NewPrerequisiteType} from "../../frontend/lib/types";
+import type {
+  CompressedApiResponse,
+  VariantBulkData,
+  Variant,
+  NewPrerequisiteType,
+  CardComponent
+} from "../../frontend/lib/types";
 import getData from "../shared/get";
 import log from "../shared/log";
 
@@ -25,11 +31,19 @@ const ZONE_MAP = {
   "E": "in exile",
 }
 
-const comaAndJoin = (input: string[]) => {
+const comaAndOrJoin = (input: string[], joiner='and') => {
   if (input.length === 0) return ''
   if (input.length === 1) return input[0]
-  if (input.length === 2) return input.join(' and ')
-  return `${input.slice(0, -1).join(', ')}, and ${input.slice(-1)}`
+  if (input.length === 2) return input.join(` ${joiner} `)
+  return `${input.slice(0, -1).join(', ')}, ${joiner} ${input.slice(-1)}`
+}
+const getZoneStateMap = (card: CardComponent) => {
+  const output: Record<string, string> = {}
+  if (card.battlefieldCardState) output['B'] = card.battlefieldCardState
+  if (card.exileCardState) output['E'] = card.exileCardState
+  if (card.graveyardCardState) output['G'] = card.graveyardCardState
+  if (card.libraryCardState) output['L'] = card.libraryCardState
+  return output
 }
 
 const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
@@ -55,7 +69,8 @@ const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
     let cardString = ''
     cardString += `${cardNameMap[card.card.name]} `
     cardString += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
-    if (card.cardState) cardString += ` (${card.cardState})`
+    const combinedStateString = comaAndOrJoin(Object.values(getZoneStateMap(card)))
+    if (combinedStateString) cardString += ` (${combinedStateString})`
     cardString += ". "
     output.push({z: 'multi', s: cardString})
   }
@@ -67,18 +82,19 @@ const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
   for (const zoneKey in ZONE_MAP) {
     const zoneCards = singleZoneCards.filter(card => card.zoneLocations[0] === zoneKey)
     if (zoneCards.length === 0) continue
-    //
+    // Pull out the card state for the current zone and if it exists store the card name in an array with the key of the card state string so it can be grouped with cards that match its state
     const stateMap = zoneCards.reduce((acc: Record<string, string[]>, card) => {
-      if (card.cardState) acc[card.cardState] = acc[card.cardState] ? acc[card.cardState].concat([cardNameMap[card.card.name]]) : [cardNameMap[card.card.name]]
+      const cardState = getZoneStateMap(card)[zoneKey]
+      if (cardState) acc[cardState] = acc[cardState] ? acc[cardState].concat([cardNameMap[card.card.name]]) : [cardNameMap[card.card.name]]
       return acc
     }, {})
     let cardStateStrings: string[] = []
     for (const stateKey in stateMap) {
-      let cardStateString = comaAndJoin(stateMap[stateKey])
+      let cardStateString = comaAndOrJoin(stateMap[stateKey])
       if (stateKey) cardStateString += ` ${stateKey}`
       cardStateStrings.push(cardStateString)
     }
-    let cardState = comaAndJoin(cardStateStrings)
+    let cardState = comaAndOrJoin(cardStateStrings)
     if (cardState) cardState = ` (${cardState})`
     zoneGroups.push({
       cardNames: zoneCards.map(card => cardNameMap[card.card.name]),

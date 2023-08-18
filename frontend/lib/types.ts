@@ -152,6 +152,11 @@ export type CardComponent = {
   card: BackendCard,
   zoneLocations: string[],
   cardState: string,
+  battlefieldCardState: string,
+  exileCardState: string,
+  libraryCardState: string,
+  graveyardCardState: string,
+  mustBeCommander: boolean,
 }
 
 export type Template = {
