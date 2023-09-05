@@ -4,22 +4,9 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import styles from "./report-error.module.scss";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import {v4 as uuid4} from "uuid";
-import {useCookies} from "react-cookie";
 type Props = {};
 
 const Login: React.FC<Props> = ({}: Props) => {
-
-  const [localState, setLocalState] = useState('')
-
-  useEffect(() => {
-    let storedState = localStorage.getItem('discordState')
-    if (!storedState) {
-      storedState = uuid4()
-      localStorage.setItem('discordState', storedState)
-    }
-    setLocalState(storedState)
-  }, [])
 
   return (
     <PageWrapper>
@@ -38,7 +25,7 @@ const Login: React.FC<Props> = ({}: Props) => {
           <ExternalLink
             role="button"
             className="button"
-            href={`https://discord.com/oauth2/authorize?client_id=1138608636759904387&redirect_uri=https://dev.commanderspellbook.com/discord-login&state=${localState}&response_type=code&scope=identify+email+guilds`}
+            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/discord-login`}
           >
             Login with Discord
           </ExternalLink>

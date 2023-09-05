@@ -14,30 +14,26 @@ const Login: React.FC<Props> = ({}: Props) => {
 
   const [error, setError] = useState('')
   const router = useRouter()
-  const [cookies, setCookies] = useCookies(['sbToken', 'sbRefresh'])
 
   useEffect(() => {
     if(!router.isReady) return
     const code = router.query.code
-    const incomingState = router.query.state
-    const storedState = localStorage.getItem('discordState')
 
-    console.log(code, incomingState, storedState)
-    if (code && incomingState === storedState) {
+    console.log(code)
+
+    if (code) {
       console.log('yo')
-      fetch(`https://backend.commanderspellbook.com/api/login/social/jwt-pair/`, {
+      fetch(`https://backend.commanderspellbook.com/token/`, {
         method: 'POST',
         body: JSON.stringify({
           code,
-          provider: 'discord',
         }),
         headers: {
           'Content-Type': 'application/json',
         },
       }).then(res => res.json())
         .then(data => {
-          setCookies('sbToken', data.token)
-          setCookies('sbRefresh', data.refresh)
+          console.log(data)
           router.push('/')
         }).catch(err => {
           setError(err.message)
