@@ -42,6 +42,10 @@
   mask: url("~assets/svgs/random-solid.svg") no-repeat center;
 }
 
+.discordIcon {
+  mask: url("~assets/svgs/discord.svg") no-repeat center;
+}
+
 .searchInputIcon {
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
@@ -96,4 +100,9 @@
   .flex.flex-shrink.flex-row.items-center.desktop-menu a div {
     display: none;
   }
+}
+
+
+.discordButton {
+  @apply flex flex-row items-center px-2 rounded-sm bg-indigo-600;
 }

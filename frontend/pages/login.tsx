@@ -4,9 +4,23 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import styles from "./report-error.module.scss";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import TokenService from "../services/token.service";
+import CookieService from "../services/cookie.service";
+import UserService from "../services/user.service";
+
 type Props = {};
 
 const Login: React.FC<Props> = ({}: Props) => {
+
+  useEffect(() => {
+    const decodedJwt = TokenService.decodeJwt(CookieService.get('csbJwt'))
+
+    console.log(decodedJwt)
+
+    if (decodedJwt) UserService.getPrivateUser(decodedJwt.user_id).then(user => {
+      console.log(user)
+    })
+  }, [])
 
   return (
     <PageWrapper>

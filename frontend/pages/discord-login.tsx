@@ -7,6 +7,10 @@ import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {v4 as uuid4} from "uuid";
 import {useRouter} from "next/router";
 import {useCookies} from "react-cookie";
+import TokenService from "../services/token.service";
+import UserService from "../services/user.service";
+import CookieService from "../services/cookie.service";
+import requestService from "../services/request.service";
 
 type Props = {};
 
@@ -19,22 +23,16 @@ const Login: React.FC<Props> = ({}: Props) => {
     if(!router.isReady) return
     const code = router.query.code
 
-    console.log(code)
-
     if (code) {
-      console.log('yo')
-      fetch(`https://backend.commanderspellbook.com/token/`, {
-        method: 'POST',
-        body: JSON.stringify({
-          code,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(res => res.json())
+      requestService.post('/api/token/', {code})
         .then(data => {
-          console.log(data)
-          router.push('/')
+          TokenService.setToken(data)
+          const decodedToken = TokenService.decodeJwt(data.access)
+          if (decodedToken) UserService.getPrivateUser(decodedToken.user_id).then(user => {
+            CookieService.set('csbUsername', user.username)
+            CookieService.set('csbUserId', user.id)
+            router.push('/')
+          })
         }).catch(err => {
           setError(err.message)
         })
