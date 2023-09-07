@@ -7,6 +7,7 @@ import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import TokenService from "../services/token.service";
 import CookieService from "../services/cookie.service";
 import UserService from "../services/user.service";
+import Link from "next/link";
 
 type Props = {};
 
@@ -14,8 +15,6 @@ const Login: React.FC<Props> = ({}: Props) => {
 
   useEffect(() => {
     const decodedJwt = TokenService.decodeJwt(CookieService.get('csbJwt'))
-
-    console.log(decodedJwt)
 
     if (decodedJwt) UserService.getPrivateUser(decodedJwt.user_id).then(user => {
       console.log(user)
@@ -36,13 +35,13 @@ const Login: React.FC<Props> = ({}: Props) => {
         </p>
 
         <div className="text-center">
-          <ExternalLink
+          <Link
             role="button"
             className="button"
             href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/discord-login`}
           >
             Login with Discord
-          </ExternalLink>
+          </Link>
         </div>
       </div>
     </PageWrapper>

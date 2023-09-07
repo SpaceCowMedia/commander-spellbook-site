@@ -127,7 +127,7 @@ export class RequestService {
 
     if (!unauthenticated) {
       const token = await this.getJwt()
-      if (token) request.headers['authorization'] = `JWT ${token}`
+      if (token) request.headers['authorization'] = `Bearer ${token}`
     }
     return this.fetchWrapper(proxy, request)
   }
@@ -138,7 +138,7 @@ export class RequestService {
 
     return this.fetchWrapper(proxy, {
       method: 'PUT',
-      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'authorization': `JWT ${token}` },
+      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'authorization': `Bearer ${token}` },
       body: JSON.stringify(body),
       ...options,
     })
@@ -150,7 +150,7 @@ export class RequestService {
 
     return this.fetchWrapper(proxy, {
       method: 'PATCH',
-      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'authorization': `JWT ${token}` },
+      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'authorization': `Bearer ${token}` },
       body: JSON.stringify(body),
       ...options,
     })
@@ -167,7 +167,7 @@ export class RequestService {
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/json',
-          'authorization': `JWT ${authToken}`,
+          'authorization': `Bearer ${authToken}`,
         },
         ...options,
       },
@@ -184,7 +184,7 @@ export class RequestService {
       headers: {
         // accept: 'application/json',
         // 'Content-Type': 'application/json',
-        authorization: `JWT ${token}`,
+        authorization: `Bearer ${token}`,
         'Content-Disposition': 'attachment; filename="' + file.name + '"', // not sure what this does, but our api is expecting it for some endpoints
       },
       body: file,
@@ -220,7 +220,7 @@ export class RequestService {
 
     if (!unauthenticated) {
       const authToken = await this.getJwt()
-      if (authToken) request.headers['authorization'] = `JWT ${authToken}`
+      if (authToken) request.headers['authorization'] = `Bearer ${authToken}`
     }
 
     return this.fetchWrapper(proxy, request)

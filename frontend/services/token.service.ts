@@ -21,6 +21,8 @@ type RefreshResponse = {
 }
 
 function decodeJwt(jwt: string): DecodedJWTType | null {
+  if (!jwt) return null
+
   const base64Url = jwt.split('.')[1]
 
   if (!base64Url) return null
@@ -92,7 +94,8 @@ function setToken({ access, refresh }: RefreshResponse) {
 function fetchNewToken(providedRefreshToken?: string) {
   const refreshToken = providedRefreshToken ? providedRefreshToken : CookieService.get('csbRefresh') || null
 
-  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/token/refresh`, {
+  console.log('fetching new token')
+  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/token/refresh/`, {
     method: 'POST',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     body: JSON.stringify({ refresh: refreshToken }),
@@ -114,6 +117,7 @@ const TokenService = {
   getTokenFromServerContext,
   decodeJwt,
   setToken,
+  fetchNewToken,
 }
 
 export default TokenService

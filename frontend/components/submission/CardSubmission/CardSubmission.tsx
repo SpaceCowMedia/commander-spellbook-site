@@ -1,7 +1,8 @@
-import {SubmissionCardType} from "../../../types/submission";
+import {SubmissionCardType, TemplateSubmissionType} from "../../../types/submission";
 import AutocompleteInput from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
 import {useState} from "react";
 import Select, {MultiValue} from 'react-select'
+import TemplateService from "../../../services/template.service";
 
 const ZONE_OPTIONS = [
   {value: 'H', label: 'Hand'},
@@ -14,17 +15,21 @@ const ZONE_OPTIONS = [
 
 
 type Props = {
-  card: SubmissionCardType
-  onChange: (card: SubmissionCardType) => void
+  card: SubmissionCardType | TemplateSubmissionType
+  onChange: (card: SubmissionCardType | TemplateSubmissionType) => void
   onDelete: () => void
   index: number
+  template?: boolean
 }
 
-const autocompleteOptions = require("../../../../autocomplete-data/cards.json")
+const cardAutocompleteOptions = (require("../../../../autocomplete-data/cards.json")).map((card: any) => ({value: card.label, label: card.label}))
+// const cardAutocompleteOptions = require("../../../../autocomplete-data/cards.json")
+const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
 
-const CardSubmission = ({card, onChange, index, onDelete}: Props) => {
-
-  const [nameInput, setNameInput] = useState(card.card)
+  const [nameInput, setNameInput] = useState(card.card || '')
+  const [templateInput, setTemplateInput] = useState(card.template || '')
+  const [templateOptions, setTemplateOptions] = useState<Array<{value: string, label: string}>>([])
+  const [templatesLoading, setTemplatesLoading] = useState(false)
 
   const handleZoneChange = (zoneLocations: MultiValue<{value: string, label: string}>) => {
     const newZoneList = zoneLocations.map(zone => zone.value)
@@ -38,20 +43,66 @@ const CardSubmission = ({card, onChange, index, onDelete}: Props) => {
     })
   }
 
+  const handleTemplateInputChange = (value: string) => {
+    setTemplateInput(value)
+    onChange({...card as TemplateSubmissionType, template: value})
+
+    if (value.length < 3) return setTemplateOptions([])
+
+    setTemplatesLoading(true)
+    TemplateService.getTemplates(value)
+      .then(response => {
+        setTemplateOptions(response.results.map(template => ({value: template.template, label: template.template})))
+        setTemplatesLoading(false)
+      }).catch(e => console.error(e))
+
+  }
+
+  const handleCardInputChange = (value: string) => {
+    setNameInput(value)
+    onChange({...card as SubmissionCardType, card: value})
+  }
+
   return (
     <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
-      <label className="font-bold">Card Name:</label>
-      <AutocompleteInput
-        value={nameInput}
-        onChange={setNameInput}
-        label='Card Name'
-        inputClassName="border-dark"
-        autocompleteOptions={autocompleteOptions}
-        inputId={index.toString()}
-        placeholder="Search for a card..."
-        // hasError={!!input.error}
-        useValueForInput
-      />
+
+      {template && (
+        <>
+          <label className="font-bold">Template Name:</label>
+          <AutocompleteInput
+            value={templateInput}
+            onChange={handleTemplateInputChange}
+            label='Template Name'
+            inputClassName="border-dark"
+            autocompleteOptions={templateOptions}
+            inputId={index.toString()}
+            placeholder="Search for a template (ex: 'Creature with haste')..."
+            loading={templatesLoading}
+            // hasError={!!input.error}
+            useValueForInput
+            matchAgainstOptionLabel
+          />
+        </>
+      )}
+
+      {!template && (
+        <>
+          <label className="font-bold">Card Name:</label>
+          <AutocompleteInput
+            value={nameInput}
+            onChange={handleCardInputChange}
+            label='Card Name'
+            inputClassName="border-dark"
+            autocompleteOptions={cardAutocompleteOptions}
+            inputId={index.toString()}
+            placeholder="Search for a card..."
+            // hasError={!!input.error}
+            useValueForInput
+            matchAgainstOptionLabel
+          />
+        </>
+      )}
+
       <button
         className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
         onClick={onDelete}

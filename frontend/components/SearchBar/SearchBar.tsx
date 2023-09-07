@@ -4,6 +4,7 @@ import styles from "./searchBar.module.scss";
 import { useRouter } from "next/router";
 import getAllCombos from "../../lib/get-all-combos";
 import {useCookies} from "react-cookie";
+import UserDropdown from "../layout/UserDropdown/UserDropdown";
 
 type Props = {
   onHomepage?: boolean;
@@ -16,10 +17,6 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
   const [numberOfCombos, setNumberOfCombos] = useState(0);
-  const [cookies] = useCookies(['csbUsername', 'csbJwt'])
-
-  const [username, setUsername] = useState('')
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -36,7 +33,6 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     getAllCombos().then((combos) => {
       setNumberOfCombos(combos.length);
     });
-    if (cookies.csbJwt && cookies.csbUsername)  setUsername(cookies.csbUsername)
   }, []);
 
   return (
@@ -98,6 +94,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
               />
               <div className="sr-only">Menu</div>
             </button>
+
             <Link
               href="/advanced-search/"
               className={`hidden md:flex ${styles.menuLink}`}
@@ -128,20 +125,9 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
               />
               Random
             </Link>
-            {username && (
-            <Link
-              href="/random"
-              className={`hidden md:flex ${styles.menuLink}`}
-            >
-              <div className={styles.discordButton}>
-                <div
-                  className={`${styles.discordIcon} ${styles.linkIcon}`}
-                  aria-hidden="true"
-                />
-                {username}
-              </div>
-
-            </Link>)}
+            <div className={styles.buttonContainer}>
+              <UserDropdown/>
+            </div>
           </div>
         )}
       </form>
