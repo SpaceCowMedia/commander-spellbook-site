@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
-import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
-import styles from "./report-error.module.scss";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import TokenService from "../services/token.service";
-import CookieService from "../services/cookie.service";
-import UserService from "../services/user.service";
+import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
+import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
+import ExternalLink from "../../components/layout/ExternalLink/ExternalLink";
+import styles from "../report-error.module.scss";
+import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
+import TokenService from "../../services/token.service";
+import CookieService from "../../services/cookie.service";
+import UserService from "../../services/user.service";
 import Link from "next/link";
 
 type Props = {};
@@ -38,7 +38,7 @@ const Login: React.FC<Props> = ({}: Props) => {
           <Link
             role="button"
             className="button"
-            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/discord-login`}
+            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord`}
           >
             Login with Discord
           </Link>
