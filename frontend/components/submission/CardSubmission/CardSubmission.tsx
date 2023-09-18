@@ -81,6 +81,7 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
             // hasError={!!input.error}
             useValueForInput
             matchAgainstOptionLabel
+            maxLength={256}
           />
         </>
       )}
@@ -99,6 +100,7 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
             // hasError={!!input.error}
             useValueForInput
             matchAgainstOptionLabel
+            maxLength={256}
           />
         </>
       )}

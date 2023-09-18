@@ -23,6 +23,7 @@ type Props = {
   useValueForInput?: boolean;
   onChange?: (value: string) => void;
   loading?: boolean;
+  maxLength?: number;
 };
 
 const AutocompleteInput: React.FC<Props> = ({
@@ -37,6 +38,7 @@ const AutocompleteInput: React.FC<Props> = ({
   hasError,
   onChange,
   loading,
+  maxLength,
 }: Props) => {
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -242,6 +244,7 @@ const AutocompleteInput: React.FC<Props> = ({
         onChange={(e) => handleChange(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeydown}
+        maxLength={maxLength}
       />
       {loading && <div className="absolute right-5 top-2">
         <Loader/>

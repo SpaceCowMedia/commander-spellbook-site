@@ -50,6 +50,7 @@ const FeatureSubmission = ({
         // hasError={!!input.error}
         useValueForInput
         matchAgainstOptionLabel
+        maxLength={256}
       />
       <button
         className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"

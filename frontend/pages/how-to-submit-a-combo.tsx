@@ -20,26 +20,6 @@ import TokenService from "../services/token.service";
 import requestService from "../services/request.service";
 import Loader from "../components/layout/Loader/Loader";
 
-const NUMBER_OPTIONS = [
-  {value: '0', label: '0'},
-  {value: '1', label: '1'},
-  {value: '2', label: '2'},
-  {value: '3', label: '3'},
-  {value: '4', label: '4'},
-  {value: '5', label: '5'},
-  {value: '6', label: '6'},
-  {value: '7', label: '7'},
-  {value: '8', label: '8'},
-  {value: '9', label: '9'},
-  {value: '10', label: '10'},
-  {value: '11', label: '11'},
-  {value: '12', label: '12'},
-  {value: '13', label: '13'},
-  {value: '14', label: '14'},
-  {value: '15', label: '15'},
-  {value: '16', label: '16'},
-]
-
 type Props = {};
 const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
 
@@ -113,7 +93,8 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         setSuccess(true)
       }).catch((err) => {
         setSubmitting(false)
-        setError(JSON.stringify(err))
+        if (Array.isArray(err)) setError(err.join('\n'))
+        else setError(JSON.stringify(err))
       })
   }
 
@@ -175,9 +156,9 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         <button className="button" onClick={handleAddTemplate}>Add Template</button>
 
         <h2 className="heading-subtitle flex justify-start">Mana required (optional)</h2>
-        <div className="flex flex-row gap-1">
-          <input className="textarea basis-1/2 p-4 border-gray-300 border mb-3" placeholder="e.g. {2}{U}{U}" value={manaCost} onChange={e => setManaCost(e.target.value)} />
-          <div className="bg-gray-200 h-14 basis-1/2 flex items-center p-3">Preview: <TextWithMagicSymbol text={manaCost} /></div>
+        <div className="flex flex-row gap-1 flex-wrap">
+          <input className="textarea flex-1 p-4 border-gray-300 border mb-3" maxLength={51} placeholder="e.g. {2}{U}{U}" value={manaCost} onChange={e => setManaCost(e.target.value)} />
+          <div className="bg-gray-200 h-14 flex-1 flex items-center p-3 whitespace-nowrap min-w-max">Preview: <TextWithMagicSymbol text={manaCost} /></div>
         </div>
 
         <h2 className="heading-subtitle flex justify-start">Other prerequisites (optional)</h2>
@@ -199,6 +180,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
               placeholder="e.g. Cast Splinter Twin on Deceiver Exarch"
               value={step}
               onChange={e => setSteps([...steps.slice(0, index), e.target.value, ...steps.slice(index + 1)])}
+              maxLength={256}
             />
 
             <button
@@ -233,7 +215,12 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         </div>
 
         {error && <div className="p-2 bg-red-100 border border-red-400 rounded text-red-900">
-          {error}
+          <ul className="list-disc list-inside" >
+            {error.split('\n').map((line, index) => (
+              <li key={index}>{line}</li>
+            ))}
+          </ul>
+
         </div>}
 
       </div>
