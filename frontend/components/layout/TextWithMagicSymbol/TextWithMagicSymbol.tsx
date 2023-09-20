@@ -73,11 +73,20 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       if (manaMatch) {
         let manaSymbol = (manaMatch[1] || manaMatch[2]).replace("/", "");
         if (manaSymbol[0] === "p") manaSymbol = manaSymbol[1] + manaSymbol[0]; // This is a hack to swap the p and other symbol for phyrexian mana
-        return {
-          nodeType: "image",
-          value: Scryfall.getSymbolUrl(manaSymbol),
-          manaSymbol,
-        };
+        try {
+          return {
+            nodeType: "image",
+            value: Scryfall.getSymbolUrl(manaSymbol),
+            manaSymbol,
+          };
+        }
+        catch (e) {
+          console.log("Error getting mana symbol", manaSymbol);
+          return {
+            nodeType: "text",
+            value,
+          };
+        }
       }
 
       return {
