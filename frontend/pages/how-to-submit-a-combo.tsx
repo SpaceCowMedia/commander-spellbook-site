@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {
@@ -11,14 +10,14 @@ import {
   TemplateSubmissionType
 } from "../types/submission";
 import CardSubmission from "../components/submission/CardSubmission/CardSubmission";
-import StyledSelect from "../components/layout/StyledSelect/StyledSelect";
 import TextWithMagicSymbol from "../components/layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import {useRouter} from "next/router";
 import {useCookies} from "react-cookie";
 import FeatureSubmission from "../components/submission/Feature Submission/FeatureSubmission";
-import TokenService from "../services/token.service";
 import requestService from "../services/request.service";
 import Loader from "../components/layout/Loader/Loader";
+import ErrorMessage from "../components/submission/ErrorMessage/ErrorMessage";
+import {ComboSubmissionErrorType} from "../lib/types";
 
 type Props = {};
 const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
@@ -34,6 +33,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>()
 
   const handleAddCard = () => {
     setCards([...cards, {...defaultSubmissionCard}])
@@ -87,6 +87,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
     }
     setSubmitting(true)
     setError('')
+    setErrorObj(undefined)
     requestService.post('/api/variant-suggestions/', submission)
       .then(() => {
         setSubmitting(false)
@@ -95,6 +96,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         setSubmitting(false)
         if (Array.isArray(err)) setError(err.join('\n'))
         else setError(JSON.stringify(err))
+        setErrorObj(err)
       })
   }
 
@@ -128,6 +130,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         <h1 className="heading-title">Submit a Combo</h1>
 
         <h2 className="heading-subtitle flex justify-start">Specific cards used in this combo ({cards.length})</h2>
+        <ErrorMessage list={errorObj?.uses} />
         <div className="flex flex-col">
           {cards.map((card, index) => (
             <CardSubmission
@@ -141,6 +144,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         <button className="button" onClick={handleAddCard}>Add Card</button>
 
         <h2 className="heading-subtitle flex justify-start">Generic cards this combo requires ({templates.length})</h2>
+        <ErrorMessage list={errorObj?.requires} />
         <div className="flex flex-col">
           {templates.map((card, index) => (
             <CardSubmission
@@ -156,12 +160,14 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
         <button className="button" onClick={handleAddTemplate}>Add Template</button>
 
         <h2 className="heading-subtitle flex justify-start">Mana required (optional)</h2>
+        <ErrorMessage list={errorObj?.manaNeeded} />
         <div className="flex flex-row gap-1 flex-wrap">
           <input className="textarea flex-1 p-4 border-gray-300 border mb-3" maxLength={51} placeholder="e.g. {2}{U}{U}" value={manaCost} onChange={e => setManaCost(e.target.value)} />
           <div className="bg-gray-200 h-14 flex-1 flex items-center p-3 whitespace-nowrap min-w-max">Preview: <TextWithMagicSymbol text={manaCost} /></div>
         </div>
 
         <h2 className="heading-subtitle flex justify-start">Other prerequisites (optional)</h2>
+        <ErrorMessage list={errorObj?.otherPrerequisites} />
         <textarea
           className="textarea w-full p-4 border-gray-300 border"
           placeholder="e.g. It must be your opponent's turn"
@@ -172,6 +178,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
 
 
         <h2 className="heading-subtitle flex justify-start">Steps to execute combo ({steps.length})</h2>
+        <ErrorMessage list={errorObj?.description} />
         {steps.map((step, index) => (
           <div className="flex items-center relative" key={index}>
             <span className="mr-2">{index + 1}.</span>
@@ -197,6 +204,7 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
 
 
         <h2 className="heading-subtitle flex justify-start">Results of this combo ({features.length})</h2>
+        <ErrorMessage list={errorObj?.produces} />
         <div className="flex flex-col">
           {features.map((feature, index) => (
             <FeatureSubmission
@@ -214,14 +222,12 @@ const HowToSubmitACombo: React.FC<Props> = ({}: Props) => {
           <button disabled={submitting} className="button" onClick={handleSubmit}>{submitting ? <Loader/> : 'Submit Combo'}</button>
         </div>
 
-        {error && <div className="p-2 bg-red-100 border border-red-400 rounded text-red-900">
-          <ul className="list-disc list-inside" >
-            {error.split('\n').map((line, index) => (
-              <li key={index}>{line}</li>
-            ))}
-          </ul>
-
-        </div>}
+        {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors}/>}
+        {errorObj && !errorObj.nonFieldErrors &&
+          <ErrorMessage>
+            There were errors in your submission. Please fix the mistakes outlined above and resubmit.
+          </ErrorMessage>
+        }
 
       </div>
     </PageWrapper>

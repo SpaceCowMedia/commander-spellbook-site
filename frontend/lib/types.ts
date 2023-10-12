@@ -195,3 +195,7 @@ export type VariantBulkData = {
   variants: Variant[]
 }
 
+
+export type ComboSubmissionErrorType = {
+  [key: string]: (ComboSubmissionErrorType | string)[],
+} & {statusCode: number}
