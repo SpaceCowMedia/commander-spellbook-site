@@ -9,7 +9,7 @@ type Props = {
 }
 const UserDropdown = ({}: Props) => {
 
-  const [cookies, setCookies] = useCookies(['csbUsername', 'csbJwt'])
+  const [cookies, setCookies] = useCookies(['csbUsername', 'csbJwt', 'csbIsStaff'])
   const [username, setUsername] = useState('')
 
   useEffect(() => {
@@ -32,9 +32,13 @@ const UserDropdown = ({}: Props) => {
         />
           <span className="ml-2 hidden md:flex">{username}</span>
         <div className={styles.dropdownContent}>
-          <Link href='/how-to-submit-a-combo'>
+          <Link href='/submit-a-combo'>
             <button className={styles.dropdownItem}>Submit Combo</button>
           </Link>
+          {cookies.csbIsStaff && (
+          <a href='https://backend.commanderspellbook.com/admin/'>
+            <button className={styles.dropdownItem}>Admin Page</button>
+          </a>)}
 
           <button className={styles.dropdownItem} onClick={signOut}>Sign out</button>
         </div>

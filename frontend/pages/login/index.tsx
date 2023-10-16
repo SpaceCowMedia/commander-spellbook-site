@@ -8,10 +8,13 @@ import TokenService from "../../services/token.service";
 import CookieService from "../../services/cookie.service";
 import UserService from "../../services/user.service";
 import Link from "next/link";
+import {useRouter} from "next/router";
 
 type Props = {};
 
 const Login: React.FC<Props> = ({}: Props) => {
+
+  const router = useRouter()
 
   useEffect(() => {
     const decodedJwt = TokenService.decodeJwt(CookieService.get('csbJwt'))
@@ -38,7 +41,7 @@ const Login: React.FC<Props> = ({}: Props) => {
           <Link
             role="button"
             className="button"
-            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/`}
+            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ''}`}
           >
             Login with Discord
           </Link>

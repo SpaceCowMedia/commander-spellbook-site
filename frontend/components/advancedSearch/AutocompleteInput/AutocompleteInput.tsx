@@ -40,6 +40,7 @@ const AutocompleteInput: React.FC<Props> = ({
   loading,
   maxLength,
 }: Props) => {
+  const [firstRender, setFirstRender] = useState<boolean>(true);
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
@@ -214,8 +215,9 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (!value || !active) return
-    const normalizedValue = normalizeStringInput(value);
+    if (firstRender) return setFirstRender(false)
+    if (!localValue || !active) return
+    const normalizedValue = normalizeStringInput(localValue);
     setMatchingAutoCompleteOptions([]);
 
     const totalOptions = findAllMatches(normalizedValue, autocompleteOptions);
@@ -223,7 +225,7 @@ const AutocompleteInput: React.FC<Props> = ({
     setMatchingAutoCompleteOptions(
       findBestMatches(totalOptions, normalizedValue)
     );
-  }, [value, active, autocompleteOptions])
+  }, [localValue, active, autocompleteOptions])
 
   return (
     <div className={styles.autocompleteContainer}>

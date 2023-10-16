@@ -26,9 +26,10 @@ const Login: React.FC<Props> = ({}: Props) => {
           TokenService.setToken(data)
           const decodedToken = TokenService.decodeJwt(data.access)
           if (decodedToken) UserService.getPrivateUser(decodedToken.user_id).then(user => {
-            CookieService.set('csbUsername', user.username)
-            CookieService.set('csbUserId', user.id)
-            router.push('/')
+            CookieService.set('csbUsername', user.username, 'month')
+            CookieService.set('csbUserId', user.id, 'month')
+            if (user.isStaff) CookieService.set('csbIsStaff', 'true', 'month')
+            router.query.final ? router.push(`/${router.query.final}`) : router.push('/')
           })
         }).catch(err => {
         setError(err.message)

@@ -1,6 +1,6 @@
 import {SubmissionCardType, TemplateSubmissionType} from "../../../types/submission";
 import AutocompleteInput from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Select, {MultiValue} from 'react-select'
 import TemplateService from "../../../services/template.service";
 
