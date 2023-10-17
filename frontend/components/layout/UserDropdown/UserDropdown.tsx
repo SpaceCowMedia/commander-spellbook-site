@@ -24,7 +24,7 @@ const UserDropdown = ({}: Props) => {
   if (!username) return null
 
   return (
-    <button tabIndex={0} className={styles.dropdown}>
+    <button type="button" tabIndex={0} className={styles.dropdown}>
       <div className={styles.userDropdownButton}>
         <div
           className={styles.discordIcon}
@@ -33,14 +33,14 @@ const UserDropdown = ({}: Props) => {
           <span className="ml-2 hidden md:flex">{username}</span>
         <div className={styles.dropdownContent}>
           <Link href='/submit-a-combo'>
-            <button className={styles.dropdownItem}>Submit Combo</button>
+            <button type="button" className={styles.dropdownItem}>Submit Combo</button>
           </Link>
           {cookies.csbIsStaff && (
-          <a href='https://backend.commanderspellbook.com/admin/'>
-            <button className={styles.dropdownItem}>Admin Page</button>
-          </a>)}
+          <Link onClick={() => console.log('hello')} href='https://backend.commanderspellbook.com/admin/'>
+            <button type="button" className={styles.dropdownItem}>Admin Page</button>
+          </Link>)}
 
-          <button className={styles.dropdownItem} onClick={signOut}>Sign out</button>
+          <button type="button" className={styles.dropdownItem} onClick={signOut}>Sign out</button>
         </div>
       </div>
     </button>
