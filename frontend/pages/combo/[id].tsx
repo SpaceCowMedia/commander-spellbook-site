@@ -20,6 +20,7 @@ import { FormattedApiResponse } from "../../lib/types";
 import { useState } from "react";
 import SplashPage from "../../components/layout/SplashPage/SplashPage";
 import { useRouter } from "next/router";
+import PrerequisiteList from "../../components/combo/PrerequisiteList/PrerequisiteList";
 
 type Props = {
   serializedCombo?: SerializedCombo;
@@ -167,12 +168,17 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             iterations={cardNames}
           />
 
-          <ComboList
-            title="Prerequisites"
-            id="combo-prerequisites"
-            iterations={prerequisites}
-            cardsInCombo={cardNames}
-          />
+          { combo.prerequisiteList ?
+            <PrerequisiteList prerequisites={combo.prerequisiteList} id="combo-prerequisites" cardsInCombo={cardNames}/>
+           :
+            <ComboList
+              title="Prerequisites"
+              id="combo-prerequisites"
+              iterations={prerequisites}
+              cardsInCombo={cardNames}
+            />
+          }
+
 
           <ComboList
             title="Steps"
@@ -180,6 +186,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             iterations={steps}
             cardsInCombo={cardNames}
             showNumbers
+            appendPeriod
           />
 
           <ComboList
@@ -187,6 +194,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             id="combo-results"
             iterations={results}
             cardsInCombo={cardNames}
+            appendPeriod
           />
 
           {metaData.length > 0 && (

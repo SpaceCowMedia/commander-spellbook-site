@@ -15,16 +15,21 @@ export type CommanderSpellbookAPIResponse = {
   ];
 };
 
+export type NewPrerequisiteType = {
+  z: string; // zone either H, B, C, G, L, E or multi
+  s: string; // prerequisite string
+}
 export type CompressedApiResponse = {
   d: string; // spellbook iD
   c: string[]; // Card names
   i: string; // color Identity
-  p: string; // Prerequisites
+  p?: string; // Legacy Prerequisites
   s: string; // Steps
   r: string; // Results
   b?: number; // Banned
   o?: number; // spoiled
   e?: string; // EDHREC link
+  t?: NewPrerequisiteType[]; // New Prerequisites
 };
 
 export type FormattedApiResponse = {
@@ -33,6 +38,7 @@ export type FormattedApiResponse = {
   cards: CardGrouping;
   colorIdentity: ColorIdentity;
   prerequisites: SpellbookList;
+  prerequisiteList: NewPrerequisiteType[];
   steps: SpellbookList;
   results: SpellbookList;
   hasBannedCard: boolean;
@@ -128,3 +134,68 @@ export type SearchParameters = {
 };
 
 export type EDHRECData = Record<string, Record<VendorValue, { price: number }>>;
+
+
+/**
+ * The following types are for the new backend
+ */
+export type BackendCard = {
+  id: number,
+  name: string,
+  oracleId: string,
+  identity: string,
+  legal: boolean,
+  spoiled: boolean,
+}
+
+export type CardComponent = {
+  card: BackendCard,
+  zoneLocations: string[],
+  cardState: string,
+  battlefieldCardState: string,
+  exileCardState: string,
+  libraryCardState: string,
+  graveyardCardState: string,
+  mustBeCommander: boolean,
+}
+
+export type Template = {
+  name: string,
+  scryfallQuery: string,
+}
+
+export type Feature = {
+  id: number,
+  name: string,
+  description: string,
+  utility: boolean
+}
+
+export type BackendCombo = {
+  id: number,
+}
+
+export type Variant = {
+  id: string,
+  uses: CardComponent[],
+  requires: Template[],
+  produces: Feature[],
+  of : BackendCombo[],
+  includes: BackendCombo[],
+  identity: string,
+  manaNeeded: string,
+  otherPrerequisites: string,
+  description: string,
+  legal: boolean,
+  spoiler: boolean,
+}
+
+export type VariantBulkData = {
+  timestamp: string,
+  variants: Variant[]
+}
+
+
+export type ComboSubmissionErrorType = {
+  [key: string]: (ComboSubmissionErrorType | string)[],
+} & {statusCode: number}

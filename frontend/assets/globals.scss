@@ -12,6 +12,11 @@ html,
   @apply h-full;
 }
 
+@font-face {
+  font-family: 'Spellbook Icons';
+  src: url('./fonts/spellbook-font.ttf');
+}
+
 a {
   @apply underline text-link;
 }

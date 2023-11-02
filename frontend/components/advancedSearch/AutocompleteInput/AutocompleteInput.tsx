@@ -1,8 +1,9 @@
-import React, { KeyboardEventHandler } from "react";
+import React, {KeyboardEventHandler, useEffect} from "react";
 import styles from "./autocompleteInput.module.scss";
 import { useState } from "react";
 import normalizeStringInput from "../../../lib/normalizeStringInput";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
+import Loader from "../../layout/Loader/Loader";
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
@@ -21,6 +22,8 @@ type Props = {
   hasError?: boolean;
   useValueForInput?: boolean;
   onChange?: (value: string) => void;
+  loading?: boolean;
+  maxLength?: number;
 };
 
 const AutocompleteInput: React.FC<Props> = ({
@@ -34,7 +37,10 @@ const AutocompleteInput: React.FC<Props> = ({
   placeholder,
   hasError,
   onChange,
+  loading,
+  maxLength,
 }: Props) => {
+  const [firstRender, setFirstRender] = useState<boolean>(true);
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
@@ -132,8 +138,8 @@ const AutocompleteInput: React.FC<Props> = ({
     if (inputRef.current) inputRef.current.focus();
   };
 
-  const findAllMatches = (normalizedValue: string) =>
-    autocompleteOptions.filter((option) => {
+  const findAllMatches = (normalizedValue: string, options?: AutoCompleteOption[]) =>
+    (options ||autocompleteOptions).filter((option) => {
       const mainMatch = option.value.includes(normalizedValue);
 
       if (mainMatch) return true;
@@ -208,6 +214,19 @@ const AutocompleteInput: React.FC<Props> = ({
     }
   };
 
+  useEffect(() => {
+    if (firstRender) return setFirstRender(false)
+    if (!localValue || !active) return
+    const normalizedValue = normalizeStringInput(localValue);
+    setMatchingAutoCompleteOptions([]);
+
+    const totalOptions = findAllMatches(normalizedValue, autocompleteOptions);
+
+    setMatchingAutoCompleteOptions(
+      findBestMatches(totalOptions, normalizedValue)
+    );
+  }, [localValue, active, autocompleteOptions])
+
   return (
     <div className={styles.autocompleteContainer}>
       <label className="sr-only" aria-hidden htmlFor={inputId}>
@@ -227,7 +246,11 @@ const AutocompleteInput: React.FC<Props> = ({
         onChange={(e) => handleChange(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeydown}
+        maxLength={maxLength}
       />
+      {loading && <div className="absolute right-5 top-2">
+        <Loader/>
+      </div>}
       <div role="status" aria-live="polite" className={`sr-only`}>
         {screenReaderSelectionText}
       </div>

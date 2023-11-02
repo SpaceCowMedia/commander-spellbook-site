@@ -1,0 +1,39 @@
+.icon {
+  font-family: 'Spellbook Icons' !important;
+  @apply not-italic;
+}
+.exile {
+  &:before {
+    content: '\e900';
+  }
+}
+.commandZone {
+  &:before {
+    content: '\e901';
+  }
+}
+.hand {
+  &:before {
+    content: '\e902';
+  }
+}
+.library {
+  &:before {
+    content: '\e903';
+  }
+}
+.graveyard {
+  &:before {
+    content: '\e904';
+  }
+}
+.battlefield {
+  &:before {
+    content: '\e905';
+  }
+}
+.archidekt {
+  &:before {
+    content: '\e906';
+  }
+}
