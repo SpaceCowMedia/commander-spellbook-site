@@ -37,7 +37,7 @@ if (numOfAddedCombos > 0 || numOfDeletedCombos > 0 || numOfUpdatedCombos > 0) {
   deployReasonMessages.push(`• No combo data changed in database`);
 }
 
-get<Changelog>("https://commanderspellbook.com/changelog.json").then(
+get<Changelog>("https://dev.commanderspellbook.com/changelog.json").then(
   (result) => {
     const currentGitSha = getCurrentGitSha();
     const oldSha = result.gitSha;

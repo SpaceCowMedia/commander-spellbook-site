@@ -38,7 +38,13 @@ export default function lookupApi(
   }
 
   if (typeof window === "undefined") {
-    cachedPromise = fetchFromGoogleSheets();
+    try {
+      const data = require("../public/api/combo-data.json") as CompressedApiResponse[];
+      cachedPromise = Promise.resolve(formatApiResponse(data));
+    }
+    catch (e) {
+      cachedPromise = fetchFromGoogleSheets();
+    }
   } else {
     cachedPromise = fetch(
       LOCAL_BACKUP_API_ENDPOINT + "?cache-bust=" + Math.random()

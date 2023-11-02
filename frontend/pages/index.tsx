@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import AnalyticsCookieBanner from "../components/layout/AnalyticsCookieBanner/AnalyticsCookieBanner";
+import UserDropdown from "../components/layout/UserDropdown/UserDropdown";
 
 type Props = {
   featuredComboButtonText: string;
@@ -55,7 +56,8 @@ export default function Home({ featuredComboButtonText }: Props) {
       />
       <AnalyticsCookieBanner />
       <main>
-        <div className="gradient">
+        <div className="absolute top-5 right-5 z-20"><UserDropdown/></div>
+        <div className="gradient relative z-10">
           <div
             className={`container ${styles.container} relative md:h-screen z-10`}
           >

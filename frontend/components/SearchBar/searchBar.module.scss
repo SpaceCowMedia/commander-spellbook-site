@@ -42,6 +42,10 @@
   mask: url("~assets/svgs/random-solid.svg") no-repeat center;
 }
 
+.discordIcon {
+  mask: url("~assets/svgs/discord.svg") no-repeat center;
+}
+
 .searchInputIcon {
   mask: url("~assets/svgs/search-solid.svg") no-repeat center;
   @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
@@ -55,9 +59,9 @@
   @apply items-center flex-row px-4 text-white border-l border-white;
 }
 
-.menuLink:last-of-type {
-  @apply pr-0;
-}
+//.menuLink:last-of-type {
+//  @apply pr-0;
+//}
 
 .menuLink:hover {
   @apply text-light;
@@ -96,4 +100,9 @@
   .flex.flex-shrink.flex-row.items-center.desktop-menu a div {
     display: none;
   }
+}
+
+
+.buttonContainer {
+  @apply items-center flex-row px-4 text-white md:border-l border-white
 }
