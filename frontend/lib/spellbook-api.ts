@@ -1,26 +1,29 @@
-import transformGoogleSheetsData from "./transform-google-sheets-data";
 import formatApiResponse from "./format-api-response";
 import type { CompressedApiResponse, FormattedApiResponse } from "./types";
+import {VariantBulkData} from "./types";
+import {processBackendResponses} from "./backend-processors";
 
-const GOOGLE_SHEETS_API_ENDPOINT =
-  "https://sheets.googleapis.com/v4/spreadsheets/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/values:batchGet?ranges=combos!A2:Q&key=AIzaSyBD_rcme5Ff37Evxa4eW5BFQZkmTbgpHew";
+
 const LOCAL_BACKUP_API_ENDPOINT = "/api/combo-data.json";
+const ID_MAP_URL = 'https://spellbook-prod.s3.us-east-2.amazonaws.com/variant_id_map.json'
+const VARIANT_DATA_URL = 'https://spellbook-prod.s3.us-east-2.amazonaws.com/variants.json'
 
 let cachedPromise: Promise<FormattedApiResponse[]>;
 let useCachedResponse = false;
 
-function fetchFromGoogleSheets(): Promise<FormattedApiResponse[]> {
-  return fetch(GOOGLE_SHEETS_API_ENDPOINT)
-    .then((res) => res.json())
-    .then(transformGoogleSheetsData)
-    .then(formatApiResponse);
+async function fetchFromBackend(): Promise<FormattedApiResponse[]> {
+  const variantData = await fetch(VARIANT_DATA_URL).then(res => res.json()) as VariantBulkData
+  const reverseIdMap = await fetch(ID_MAP_URL).then(res => res.json())  as Record<string, string>
+  return formatApiResponse(processBackendResponses(variantData.variants, reverseIdMap))
 }
 
+
+
 export default function lookupApi(
-  useGoogleSheetsEndpoint = false
+  useBackend = false
 ): Promise<FormattedApiResponse[]> {
-  if (useGoogleSheetsEndpoint) {
-    return fetchFromGoogleSheets();
+  if (useBackend) {
+    return fetchFromBackend();
   }
 
   if (useCachedResponse) {
@@ -43,7 +46,7 @@ export default function lookupApi(
       cachedPromise = Promise.resolve(formatApiResponse(data));
     }
     catch (e) {
-      cachedPromise = fetchFromGoogleSheets();
+      cachedPromise = fetchFromBackend();
     }
   } else {
     cachedPromise = fetch(
