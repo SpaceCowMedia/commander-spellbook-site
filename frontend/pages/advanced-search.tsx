@@ -9,6 +9,8 @@ import styles from "./advanced-search.module.scss";
 import RadioSearchInput from "../components/advancedSearch/RadioSearchInput/RadioSearchInput";
 import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import cardNameAutocompleteData from "assets/autocomplete-data/cards.json";
+import resultAutocompleteData from "assets/autocomplete-data/results.json";
 
 const CARD_OPERATOR_OPTIONS = [
   {
@@ -186,8 +188,8 @@ const AdvancedSearch = () => {
   const router = useRouter();
 
   const [formState, setFormStateHook] = useState<Data>({
-    cardNameAutocompletes: require("../../autocomplete-data/cards.json"),
-    resultAutocompletes: require("../../autocomplete-data/results.json"),
+    cardNameAutocompletes: cardNameAutocompleteData,
+    resultAutocompletes: resultAutocompleteData,
     colorAutocompletes: COLOR_AUTOCOMPLETES,
 
     cards: [{ value: "", operator: ":" }],

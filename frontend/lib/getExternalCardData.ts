@@ -1,6 +1,5 @@
 import normalizeCardName from "lib/normalizeCardName";
-
-const cardData = require("../../external-data/cards.json");
+import cardData from "assets/external-data/cards.json";
 
 const CARD_IMAGE_NAMED_BASE_URL =
   "https://api.scryfall.com/cards/named?format=image&exact=";
@@ -25,6 +24,7 @@ export default function getExternalCardData(
   cardName: string
 ): ExternalCardData {
   const name = normalizeCardName(cardName);
+  // @ts-ignore
   const externalCardData = cardData[name];
 
   if (!externalCardData) {

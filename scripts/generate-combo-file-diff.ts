@@ -25,7 +25,7 @@ const generateComboFileDiff = async () => {
   }
 
   fs.writeFileSync(
-    "./external-data/missing-combos.json",
+    "./frontend/assets/external-data/missing-combos.json",
     JSON.stringify(missingCombos)
   );
   console.log('done', missingCombos.length)

@@ -2,8 +2,8 @@ import CardGrouping from "./models/card-grouping";
 import SpellbookList from "./models/list";
 import ColorIdentity from "./models/color-identity";
 import type { CompressedApiResponse, FormattedApiResponse } from "./types";
+import edhrecComboData from "assets/external-data/edhrec-combos.json";
 
-const edhrecComboData = require("../../external-data/edhrec-combos.json");
 
 export default function formatApiResponse(
   apiResponse: CompressedApiResponse[]
@@ -32,7 +32,9 @@ export default function formatApiResponse(
     } as FormattedApiResponse;
 
     if (id in edhrecComboData) {
+      // @ts-ignore
       data.edhrecLink = `https://edhrec.com/combos/${edhrecComboData[id].slug}`;
+      // @ts-ignore
       data.numberOfEDHRECDecks = edhrecComboData[id].numberOfDecks || 0;
     } else {
       data.edhrecLink = "";

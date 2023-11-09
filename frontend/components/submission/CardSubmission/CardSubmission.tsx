@@ -3,6 +3,7 @@ import AutocompleteInput from "../../advancedSearch/AutocompleteInput/Autocomple
 import {useEffect, useState} from "react";
 import Select, {MultiValue} from 'react-select'
 import TemplateService from "../../../services/template.service";
+import cardAutocompleteOptionsUnmapped from "assets/autocomplete-data/cards.json";
 
 const ZONE_OPTIONS = [
   {value: 'H', label: 'Hand'},
@@ -22,8 +23,8 @@ type Props = {
   template?: boolean
 }
 
-const cardAutocompleteOptions = (require("../../../../autocomplete-data/cards.json")).map((card: any) => ({value: card.label, label: card.label}))
-// const cardAutocompleteOptions = require("../../../../autocomplete-data/cards.json")
+const cardAutocompleteOptions = cardAutocompleteOptionsUnmapped.map((card: any) => ({value: card.label, label: card.label}))
+
 const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
 
   const [nameInput, setNameInput] = useState(card.card || '')

@@ -50,19 +50,19 @@ Promise.all([
     const cardNames = collectCardNames(compressedData);
     const results = collectResults(compressedData);
 
-    log("Writing /autocomplete-data/cards.json");
+    log("Writing /frontend/assets/autocomplete-data/cards.json");
     fs.writeFileSync(
-      "./autocomplete-data/cards.json",
+      "./frontend/assets/autocomplete-data/cards.json",
       JSON.stringify(cardNames)
     );
-    log("/autocomplete-data/cards.json written", "green");
+    log("/frontend/assets/autocomplete-data/cards.json written", "green");
 
-    log("Writing /autocomplete-data/results.json");
+    log("Writing /frontend/assets/autocomplete-data/results.json");
     fs.writeFileSync(
-      "./autocomplete-data/results.json",
+      "./frontend/assets/autocomplete-data/results.json",
       JSON.stringify(results)
     );
-    log("/autocomplete-data/results.json written", "green");
+    log("/frontend/assets/autocomplete-data/results.json written", "green");
 
     cardNames.forEach((autocompleteOption) => {
       const name = normalizeCardName(autocompleteOption.label);
@@ -106,16 +106,16 @@ Promise.all([
       }
     });
 
-    log("Writing /external-data/cards.json");
-    fs.writeFileSync("./external-data/cards.json", JSON.stringify(cardData));
-    log("/external-data/cards.json written", "green");
+    log("Writing /frontend/assets/external-data/cards.json");
+    fs.writeFileSync("./frontend/assets/external-data/cards.json", JSON.stringify(cardData));
+    log("/frontend/assets/external-data/cards.json written", "green");
 
-    log("Writing /external-data/edhrec-combos.json");
+    log("Writing /frontend/assets/external-data/edhrec-combos.json");
     fs.writeFileSync(
-      "./external-data/edhrec-combos.json",
+      "./frontend/assets/external-data/edhrec-combos.json",
       JSON.stringify(edhrecComboData)
     );
-    log("/external-data/edhrec-combos.json written", "green");
+    log("/frontend/assets/external-data/edhrec-combos.json written", "green");
 
     log("Writing /frontend/public/api/combo-data.json");
     fs.writeFileSync(
