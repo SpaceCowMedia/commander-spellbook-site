@@ -21,6 +21,8 @@ import { useState } from "react";
 import SplashPage from "../../components/layout/SplashPage/SplashPage";
 import { useRouter } from "next/router";
 import PrerequisiteList from "../../components/combo/PrerequisiteList/PrerequisiteList";
+import {processBackendResponses} from "../../lib/backend-processors";
+import formatApiResponse from "../../lib/format-api-response";
 
 type Props = {
   serializedCombo?: SerializedCombo;
@@ -248,7 +250,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: `${combo.commanderSpellbookId}` },
   }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: 'blocking' };
 };
 
 export const getStaticProps = async ({
@@ -259,11 +261,37 @@ export const getStaticProps = async ({
   const combo = await findById(params.id);
 
   if (!combo) {
+    // If the combo is not found, check if it's a legacy combo and reroute if it's found
+    if (!params.id.includes('-')) {
+      const legacyCombo = await findById(params.id, false, true);
+      if (legacyCombo) return {
+        redirect: {
+          destination: `/combo/${legacyCombo.commanderSpellbookId}`,
+          permanent: false,
+        },
+      };
+    }
+    // If it's a new combo id, check the backend
+    else  {
+      try {
+        const backendCombo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/variants/${params.id}/`).then(res => res.json());
+        if (backendCombo && backendCombo.detail !== 'Not found.') {
+          const compressedRes = processBackendResponses([backendCombo], {})
+          const formattedCombo = formatApiResponse(compressedRes)[0];
+          return {
+            props: {
+              serializedCombo: serializeCombo(formattedCombo),
+            }
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
+    }
+    // Finally 404
     return {
-      redirect: {
-        destination: "/combo-not-found",
-        permanent: false,
-      },
+      notFound: true,
     };
   }
 

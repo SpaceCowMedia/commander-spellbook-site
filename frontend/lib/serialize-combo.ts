@@ -5,6 +5,7 @@ import type {FormattedApiResponse, NewPrerequisiteType} from "./types";
 
 export type SerializedCombo = {
   commanderSpellbookId: string;
+  legacyId: string;
   permalink: string;
   cards: string[];
   colorIdentity: string;
@@ -18,9 +19,10 @@ export type SerializedCombo = {
   prerequisiteList: NewPrerequisiteType[];
 };
 
-export function serializeCombo(combo: FormattedApiResponse) {
+export function serializeCombo(combo: FormattedApiResponse): SerializedCombo {
   return {
     commanderSpellbookId: combo.commanderSpellbookId,
+    legacyId: combo.legacyId,
     permalink: combo.permalink,
     cards: combo.cards.serialize(),
     colorIdentity: combo.colorIdentity.toString(),
@@ -38,6 +40,7 @@ export function serializeCombo(combo: FormattedApiResponse) {
 export function deserializeCombo(combo: SerializedCombo): FormattedApiResponse {
   return {
     commanderSpellbookId: combo.commanderSpellbookId,
+    legacyId: combo.legacyId,
     permalink: combo.permalink,
     cards: CardGrouping.create(combo.cards),
     colorIdentity: new ColorIdentity(combo.colorIdentity),

@@ -20,6 +20,7 @@ export default function formatApiResponse(
 
     const data = {
       commanderSpellbookId: id,
+      legacyId: combo.l,
       permalink: `https://commanderspellbook.com/combo/${id}/`,
       cards,
       colorIdentity,

@@ -3,6 +3,7 @@
 export S3_BUCKET=cdn.commanderspellbook.com
 export CACHE_CONTROL_MAX_AGE=1
 export DISTRIBUTION_ID=E16YLRUSY0N705
+export EDITOR_BACKEND_URL=https://backend.commanderspellbook.com/
 
 aws eks --region us-east-2 update-kubeconfig --name spellbook-prod-cluster &&
 
@@ -32,5 +33,5 @@ docker tag spellbook-client-prod-ecr:latest 083767677168.dkr.ecr.us-east-2.amazo
 docker push 083767677168.dkr.ecr.us-east-2.amazonaws.com/spellbook-client-prod-ecr:latest &&
 
 #kubectl apply -k .kubernetes &&
-#
-#kubectl rollout restart deployment/edhrec-client -n edhrec-dev
+
+kubectl rollout restart deployment/spellbook-client -n spellbook

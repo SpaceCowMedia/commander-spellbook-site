@@ -30,10 +30,12 @@ export type CompressedApiResponse = {
   o?: number; // spoiled
   e?: string; // EDHREC link
   t?: NewPrerequisiteType[]; // New Prerequisites
+  l?: string // legacy id
 };
 
 export type FormattedApiResponse = {
   commanderSpellbookId: string;
+  legacyId: string;
   permalink: string;
   cards: CardGrouping;
   colorIdentity: ColorIdentity;
@@ -185,8 +187,8 @@ export type Variant = {
   manaNeeded: string,
   otherPrerequisites: string,
   description: string,
-  legal?: boolean, // old api (deprecated)
-  legalities?: { // new api
+  legal: boolean,
+  legalities?: {
     commander: boolean,
     pauperCommanderMain: boolean,
     pauperCommanderCommander: boolean,
@@ -199,7 +201,12 @@ export type Variant = {
     pioneer: boolean,
     standard: boolean,
     pauper: boolean,
-  },
+  }
+  prices?: {
+    tcgplayer: number,
+    cardkingdom: number,
+    cardmarket: number,
+  }
   spoiler: boolean,
 }
 

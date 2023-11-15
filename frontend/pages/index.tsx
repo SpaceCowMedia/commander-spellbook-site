@@ -137,7 +137,7 @@ export async function getStaticProps() {
   return {
     props: {
       featuredComboButtonText: buttonTextData.value,
-      // featuredComboButtonText: 'Tales of Middle-earth Combos',
+      revalidate: 60,
     },
   };
 }

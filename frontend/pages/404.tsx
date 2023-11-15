@@ -27,16 +27,16 @@ const NotFoundPage = () => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
-    setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
-    setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
-
-    if (router.asPath.includes("/combo/")) {
-      const retryId = router.asPath.split("/combo/")[1].split("/")[0];
-      router.push(`/combo-retry?id=${retryId}`);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
+  //   setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
+  //   setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
+  //
+  //   if (router.asPath.includes("/combo/")) {
+  //     const retryId = router.asPath.split("/combo/")[1].split("/")[0];
+  //     router.push(`/combo-retry?id=${retryId}`);
+  //   }
+  // }, []);
 
   return (
     <PageWrapper noMarginFooter>

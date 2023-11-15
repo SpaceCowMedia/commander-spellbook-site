@@ -137,7 +137,7 @@ export const processBackendResponses = (variants: VariantBulkData['variants'], r
   const output: CompressedApiResponse[] = []
   for (const variant of variants) {
     const compressedVariant: CompressedApiResponse = {
-      d : idMap[variant.id] ? idMap[variant.id] : variant.id,
+      d : variant.id,
       c : variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name)).map(card => card.card.name),
       i : variant.identity.toLowerCase().split("").join(','),
       t : getPrerequisiteList(variant),
@@ -145,7 +145,8 @@ export const processBackendResponses = (variants: VariantBulkData['variants'], r
       s : variant.description,
       r : variant.produces.map(feature => feature.name).join('. '),
       b : (variant.legal || variant.legalities?.commander) ? 0 : 1,
-      o : variant.spoiler ? 1 : 0
+      o : variant.spoiler ? 1 : 0,
+      l: idMap[variant.id] ? idMap[variant.id] : variant.id
     }
     output.push(compressedVariant)
   }

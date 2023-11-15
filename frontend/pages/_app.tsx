@@ -5,6 +5,7 @@ import Script from "next/script";
 import { GA_TRACKING_ID, pageview } from "../lib/googleAnalytics";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import NextNProgress from 'nextjs-progressbar';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
+      <NextNProgress color={"#9161f3"}/>
       <Component {...pageProps} />
     </>
   );

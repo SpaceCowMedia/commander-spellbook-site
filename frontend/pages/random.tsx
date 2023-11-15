@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { Url } from "url";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import {RequestService} from "../services/request.service";
+import {GetServerSidePropsContext} from "next";
 
 const Random = () => {
   const router = useRouter();
@@ -43,5 +45,23 @@ const Random = () => {
     </PageWrapper>
   );
 };
+
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const requestService = new RequestService(context);
+  const combos = await requestService.get("https://backend.commanderspellbook.com/variants/?q=sort%3Arandom&limit=1")
+  const randomCombo = combos.results[0];
+  if (randomCombo) {
+    return {
+      redirect: {
+        destination: `/combo/${randomCombo.id}`,
+        permanent: false,
+      }
+    };
+  }
+  return {
+    notFound: true,
+  };
+}
 
 export default Random;
