@@ -144,8 +144,7 @@ export type BackendCard = {
   name: string,
   oracleId: string,
   identity: string,
-  legal: boolean,
-  spoiled: boolean,
+  spoiler: boolean,
 }
 
 export type CardComponent = {
@@ -186,7 +185,21 @@ export type Variant = {
   manaNeeded: string,
   otherPrerequisites: string,
   description: string,
-  legal: boolean,
+  legal?: boolean, // old api (deprecated)
+  legalities?: { // new api
+    commander: boolean,
+    pauperCommanderMain: boolean,
+    pauperCommanderCommander: boolean,
+    oathbreaker: boolean,
+    predh: boolean,
+    brawl: boolean,
+    vintage: boolean,
+    legacy: boolean,
+    modern: boolean,
+    pioneer: boolean,
+    standard: boolean,
+    pauper: boolean,
+  },
   spoiler: boolean,
 }
 

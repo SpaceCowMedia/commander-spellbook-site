@@ -144,7 +144,7 @@ export const processBackendResponses = (variants: VariantBulkData['variants'], r
       p : getPrerequisiteString(variant),
       s : variant.description,
       r : variant.produces.map(feature => feature.name).join('. '),
-      b : variant.legal ? 0 : 1,
+      b : (variant.legal || variant.legalities?.commander) ? 0 : 1,
       o : variant.spoiler ? 1 : 0
     }
     output.push(compressedVariant)
