@@ -1,40 +1,37 @@
-import { SearchResultsState } from "../../../pages/search";
 import styles from "./comboResults.module.scss";
 import Link from "next/link";
 import ColorIdentity from "../../layout/ColorIdentity/ColorIdentity";
 import CardTooltip from "../../layout/CardTooltip/CardTooltip";
-import { FormattedApiResponse } from "../../../lib/types";
+import {FormattedApiResponse, VendorValue} from "../../../lib/types";
 import Card from "../../../lib/card";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import pluralize from "pluralize";
 
 type Props = {
   missingDecklistCards?: Card[];
-} & (
-  | {
-      results: SearchResultsState;
-      paginatedResults: FormattedApiResponse[];
-    }
-  | { results: FormattedApiResponse[]; paginatedResults?: never }
-);
+  results: FormattedApiResponse[];
+  sort?: string;
+  vendor?: VendorValue;
+}
 
 const getCardNames = (combo: FormattedApiResponse) =>
   combo.cards.map((card) => card.name);
 
 const ComboResults = ({
   results,
-  paginatedResults,
+  sort,
+  vendor,
   missingDecklistCards = [],
 }: Props) => {
   const isMissingInDecklistCards = (cardName: string) =>
     !!missingDecklistCards.find((card) => card.matchesNameExactly(cardName));
 
   const sortStatMessage = (combo: FormattedApiResponse) => {
-    if (!results.sort) {
+    if (!sort) {
       return "";
     }
 
-    if (results.sort === "popularity") {
+    if (sort === "popularity") {
       const numberOfDecks = combo.numberOfEDHRECDecks;
 
       if (!numberOfDecks) {
@@ -46,8 +43,7 @@ const ComboResults = ({
       return `${numberOfDecks} ${deckString} (EDHREC)`;
     }
 
-    if (results.sort === "price") {
-      const vendor = results.vendor;
+    if (sort === "price" && vendor) {
 
       if (combo.cards.getPrice(vendor) === 0) {
         return "Price Unavailable";
@@ -55,16 +51,16 @@ const ComboResults = ({
       return `$${combo.cards.getPriceAsString(vendor)}`;
     }
 
-    switch (results.sort) {
+    switch (sort) {
       case "prerequisites":
       case "steps":
       case "results":
       case "cards":
-        if (combo[results.sort].length === 1) {
+        if (combo[sort].length === 1) {
           // remove the s in the sort word
-          return `1 ${results.sort.slice(0, -1)}`;
+          return `1 ${sort.slice(0, -1)}`;
         }
-        return `${combo[results.sort].length} ${results.sort}`;
+        return `${combo[sort].length} ${results.sort}`;
     }
 
     return "";
@@ -72,7 +68,7 @@ const ComboResults = ({
 
   return (
     <div className={styles.comboResultsWrapper}>
-      {(paginatedResults || results).map((combo) => (
+      {results.map((combo) => (
         <Link
           href={`/combo/${combo.commanderSpellbookId}`}
           key={combo.commanderSpellbookId}

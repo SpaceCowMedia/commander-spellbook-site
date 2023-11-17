@@ -49,12 +49,13 @@ const Random = () => {
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const requestService = new RequestService(context);
-  const combos = await requestService.get("https://backend.commanderspellbook.com/variants/?q=sort%3Arandom&limit=1")
+  const combos = await requestService.get("https://backend.commanderspellbook.com/variants/?ordering=%3F&limit=1")
   const randomCombo = combos.results[0];
   if (randomCombo) {
     return {
       redirect: {
         destination: `/combo/${randomCombo.id}`,
+        basePath: true,
         permanent: false,
       }
     };

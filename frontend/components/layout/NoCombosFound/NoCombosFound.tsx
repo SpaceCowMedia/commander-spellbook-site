@@ -2,28 +2,20 @@ import styles from "./noCombosFound.module.scss";
 import SplashPage from "../SplashPage/SplashPage";
 import Link from "next/link";
 
-type Props = {
-  loaded: boolean;
-};
+type Props = {};
 
-const NoCombosFound = ({ loaded }: Props) => {
-  const title = loaded ? "No Combos Found" : "Looking for Combos";
-  const flavor = loaded
-    ? "The final pages of the experiment log were blank. Investigators found it abandoned on a desk in the researcher’s lab, open, the pages flipping in the wind from a shattered window."
-    : "It’s hard to say which is more satisfying: the search for that missing piece or fitting that piece into place.";
+const NoCombosFound = ({}: Props) => {
+  const title = "No Combos Found"
+  const flavor = "The final pages of the experiment log were blank. Investigators found it abandoned on a desk in the researcher’s lab, open, the pages flipping in the wind from a shattered window."
 
   return (
     <SplashPage
-      pulse={!loaded}
+      pulse={false}
       title={title}
       flavor={flavor}
       artCircleCardName="Frantic Search"
     >
-      <div
-        className={`${styles.noCombosFoundButtons} ${
-          loaded ? "opacity-100" : "opacity-0"
-        }`}
-      >
+      <div className={`${styles.noCombosFoundButtons} opacity-100`}>
         <p>
           Your search didn’t match any combos. Adjust your search or try one of
           the links below:

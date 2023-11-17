@@ -6,14 +6,24 @@ import StyledSelect, {
 } from "../components/layout/StyledSelect/StyledSelect";
 import { useRouter } from "next/router";
 import search from "../lib/search";
-import { SearchResults } from "../lib/types";
+import {BackendCombo, FormattedApiResponse, SearchResults, Variant} from "../lib/types";
 import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "../lib/constants";
 import SearchPagination from "../components/search/SearchPagination/SearchPagination";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import NoCombosFound from "../components/layout/NoCombosFound/NoCombosFound";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import {GetServerSideProps} from "next";
+import {RequestService} from "../services/request.service";
+import {PaginatedResponse} from "../types/api";
+import {processBackendResponses} from "../lib/backend-processors";
+import formatApiResponse from "../lib/format-api-response";
+import {deserializeCombo, serializeCombo, SerializedCombo} from "../lib/serialize-combo";
 
-type Props = {};
+type Props = {
+  serializedCombos: SerializedCombo[]
+  count: number
+  page: number
+};
 
 export type SearchResultsState = Omit<SearchResults, "errors"> & {
   errors: string;
@@ -23,20 +33,32 @@ export type SearchResultsState = Omit<SearchResults, "errors"> & {
 
 const SORT_OPTIONS: Option[] = [
   { value: "popularity", label: "Popularity" },
-  { value: "colors", label: "Color Identity" },
+  { value: "identity_count", label: "Color Identity" },
   { value: "price", label: "Price" },
   {
-    value: "cards",
+    value: "cards_count",
     label: "# of Cards",
   },
   {
-    value: "prerequisites",
+    value: "prerequisite_count",
     label: "# of Prerequisites",
   },
   {
-    value: "steps",
+    value: "steps_count",
     label: "# of Steps",
   },
+  {
+    value: "results_count",
+    label: "# of Results",
+  },
+  {
+    value: "created",
+    label: "Date Created",
+  },
+  {
+    value: "updated",
+    label: "Date Updated",
+  }
 ];
 
 const ORDER_OPTIONS: Option[] = [
@@ -45,31 +67,15 @@ const ORDER_OPTIONS: Option[] = [
   { value: "desc", label: "Descending" },
 ];
 
-const Search: React.FC<Props> = ({}: Props) => {
-  const [loaded, setLoaded] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
+const PAGE_SIZE = 50
+const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
 
-  const [results, setResults] = useState<SearchResultsState>({
-    combos: [],
-    message: "",
-    errors: "",
-    page: 1,
-    vendor: DEFAULT_VENDOR,
-    order: DEFAULT_ORDER,
-    sort: DEFAULT_SORT,
-    maxNumberOfCombosPerPage: 78,
-  });
-  const {
-    combos,
-    message,
-    vendor,
-    order,
-    sort,
-    page,
-    maxNumberOfCombosPerPage,
-  } = results;
+  const combos = serializedCombos.map(combo => deserializeCombo(combo))
 
   const router = useRouter();
+
+  const sort = router.query.sort as string || DEFAULT_SORT;
+  const order = router.query.order as string || DEFAULT_ORDER;
 
   const parseSearchQuery = () => {
     const query = router.query.q;
@@ -79,74 +85,23 @@ const Search: React.FC<Props> = ({}: Props) => {
     return query;
   };
 
-  const updateSearchResults = async (query: string) => {
-    const newResults = await search(query);
+  const totalPages = Math.floor(count / PAGE_SIZE) + 1;
 
-    if (newResults.combos.length === 1) {
-      setRedirecting(true);
-      router.replace({
-        pathname: `/combo/${newResults.combos[0].commanderSpellbookId}/`,
-        query: { q: query },
-      });
-      return;
-    }
-    setLoaded(true);
-    setResults({
-      ...newResults,
-      page: 1,
-      errors: newResults.errors.join(" "),
-      maxNumberOfCombosPerPage: 78,
-    });
-  };
-
-  useEffect(() => {
-    setLoaded(false);
-    updateSearchResults(parseSearchQuery());
-  }, [router.query.q]);
-
-  const totalResults = combos.length;
-  const totalPages = Math.floor(totalResults / maxNumberOfCombosPerPage) + 1;
-
-  const startingPoint =
-    page > totalPages
-      ? (totalPages - 1) * maxNumberOfCombosPerPage
-      : (page - 1) * maxNumberOfCombosPerPage;
-
-  const paginatedResults =
-    totalResults > maxNumberOfCombosPerPage
-      ? combos.slice(startingPoint, startingPoint + maxNumberOfCombosPerPage)
-      : combos;
-
-  const firstResult =
-    page * maxNumberOfCombosPerPage - maxNumberOfCombosPerPage + 1;
-  const lastResult = Math.min(
-    firstResult + maxNumberOfCombosPerPage - 1,
-    totalResults
-  );
-
+  const numberPage = Number(page) || 1
   const goForward = () => {
-    setResults({
-      ...results,
-      page: Math.min(page + 1, totalPages),
-    });
+    router.push({ pathname: "/search/", query: { ...router.query, page: numberPage+1 } });
   };
 
   const goBack = () => {
-    setResults({ ...results, page: Math.max(page - 1, 1) });
+    router.push({ pathname: "/search/", query: { ...router.query, page: numberPage-1 } });
   };
 
   const handleSortChange = (value: string) => {
-    const query = String(router.query.q)
-      .replace(/((\s)?sort(:|=)\w*|$)/, ` sort:${value}`)
-      .trim();
-    router.push({ pathname: "/search/", query: { q: query, page: "1" } });
+    router.push({ pathname: "/search/", query: { ...router.query, sort: value, page: "1" } });
   };
 
   const handleOrderChange = (value: string) => {
-    const query = String(router.query.q)
-      .replace(/((\s)?order(:|=)\w*|$)/, ` order:${value}`)
-      .trim();
-    router.push({ pathname: "/search/", query: { q: query, page: "1" } });
+    router.push({ pathname: "/search/", query: { ...router.query, order: value, page: "1" } });
   };
 
   return (
@@ -159,15 +114,15 @@ const Search: React.FC<Props> = ({}: Props) => {
         <h1 className="sr-only">Search Results</h1>
 
         <SearchMessage
-          message={results.message}
-          errors={results.errors}
-          currentPage={results.page}
+          message={`Showing ${count} results for query "${parseSearchQuery()}"`}
+          errors={''}
+          currentPage={page}
           totalPages={1}
           totalResults={1}
           maxNumberOfCombosPerPage={1}
         />
 
-        {paginatedResults.length > 0 && (
+        {combos.length > 0 && (
           <div className="border-b border-light">
             <div className="container sm:flex flex-row items-center justify-center">
               <div className="mr-2 sm:mt-0 mt-2" aria-hidden="true">
@@ -196,7 +151,7 @@ const Search: React.FC<Props> = ({}: Props) => {
               />
               <div className="flex-grow" />
               <SearchPagination
-                currentPage={page}
+                currentPage={numberPage}
                 totalPages={totalPages}
                 aria-hidden="true"
                 onGoForward={goForward}
@@ -207,13 +162,11 @@ const Search: React.FC<Props> = ({}: Props) => {
         )}
 
         <div className="container sm:flex flex-row">
-          {paginatedResults.length > 0 ? (
+          {combos.length > 0 ? (
             <div className="w-full">
               <ComboResults
-                results={results}
-                paginatedResults={paginatedResults}
+                results={combos}
               />
-
               <SearchPagination
                 currentPage={page}
                 totalPages={totalPages}
@@ -223,7 +176,7 @@ const Search: React.FC<Props> = ({}: Props) => {
               />
             </div>
           ) : (
-            <NoCombosFound loaded={loaded} />
+            <NoCombosFound  />
           )}
         </div>
       </div>
@@ -232,3 +185,32 @@ const Search: React.FC<Props> = ({}: Props) => {
 };
 
 export default Search;
+
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const query = context.query.q;
+  const requestService = new RequestService(context)
+  const order = context.query.order || DEFAULT_ORDER
+  const sort = context.query.sort || DEFAULT_SORT
+  const ordering = order === 'auto' ? sort : `${order === 'asc' ? '' : '-'}${sort}`
+  const results = await requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`)
+  console.log(results)
+  const backendCombos = results ? results.results : []
+  const combos = formatApiResponse(processBackendResponses(backendCombos, {}))
+  if (combos.length === 1) {
+    return {
+      redirect: {
+        destination: `/combo/${combos[0].commanderSpellbookId}/`,
+        permanent: false,
+      }
+    }
+  }
+  return {
+    props: {
+      serializedCombos: combos.map(combo => serializeCombo(combo)),
+      count: results.count,
+      page: context.query.page || 1,
+
+    }
+  }
+}
