@@ -12,12 +12,17 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import ColorIdentityPicker from "../components/layout/ColorIdentityPicker/ColorIdentityPicker";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import findMyCombosService from "../services/findMyCombos.service";
+import {processBackendResponses} from "../lib/backend-processors";
+import formatApiResponse from "../lib/format-api-response";
+import {FindMyCombosResponseType} from "../types/findMyCombos";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
 
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
+  const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [combosInDeck, setCombosInDeck] = useState<Array<FormattedApiResponse>>(
@@ -26,6 +31,24 @@ const FindMyCombos = () => {
   const [potentialCombos, setPotentialCombos] = useState<
     Array<FormattedApiResponse>
   >([]);
+  const [results, setResults] = useState<{
+    identity: string,
+    included: FormattedApiResponse[],
+    includedByChangingCommanders: FormattedApiResponse[],
+    almostIncluded: FormattedApiResponse[],
+    almostIncludedByChangingCommanders: FormattedApiResponse[],
+    almostIncludedByAddingColors: FormattedApiResponse[],
+    almostIncludedByAddingColorsAndChangingCommanders: FormattedApiResponse[],
+  }>({
+    identity: "",
+    included: [],
+    includedByChangingCommanders: [],
+    almostIncluded: [],
+    almostIncludedByChangingCommanders: [],
+    almostIncludedByAddingColors: [],
+    almostIncludedByAddingColorsAndChangingCommanders: [],
+  })
+
   const [missingDeckListCards, setMissingDeckListCards] = useState<Array<any>>(
     []
   );
@@ -40,7 +63,7 @@ const FindMyCombos = () => {
     numberOfCardsInDeck
   )}`;
 
-  const numOfCombos = combosInDeck.length;
+  const numOfCombos = results.included.length;
   const combosInDeckHeadingText = !numOfCombos
     ? "No combos found"
     : `${numOfCombos} ${pluralize("Combo", numOfCombos)} Found`;
@@ -51,7 +74,7 @@ const FindMyCombos = () => {
   const potentialCombosOutsideDeckColorIdentity = potentialCombos.filter(
     (combo) => !combo.colorIdentity.isWithin(deckColorIdentity)
   );
-  const numPotentialCombos = potentialCombosMatchingDeckColorIdentity.length;
+  const numPotentialCombos = results.almostIncluded.length;
   const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
     "Combo",
     numPotentialCombos
@@ -66,7 +89,7 @@ const FindMyCombos = () => {
   );
 
   const numbInAdditionalColors = potentialCombosOutsideDeckColorIdentity.length;
-  const potentialCombosInAdditionalColorsHeadingText = `${numbInAdditionalColors} Potential ${pluralize(
+  const potentialCombosInAdditionalColorsHeadingText = `${results.almostIncludedByAddingColors.length} Potential ${pluralize(
     "Combo",
     numbInAdditionalColors
   )} Found With Additional Color Requirements`;
@@ -86,11 +109,19 @@ const FindMyCombos = () => {
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, newDeckList);
 
-    const combos = await findCombosFromDecklist(deck.cards);
+    const combos = await findMyCombosService.findFromString(newDeckList, commanderList);
 
-    setCombosInDeck(combos.combosInDecklist);
-    setPotentialCombos(combos.potentialCombos);
-    setMissingDeckListCards(combos.missingCardsForPotentialCombos);
+    console.log(combos)
+
+    setResults({
+      identity: combos.results.identity,
+      included: formatApiResponse(processBackendResponses(combos.results.included)),
+      includedByChangingCommanders: formatApiResponse(processBackendResponses(combos.results.includedByChangingCommanders)),
+      almostIncluded: formatApiResponse(processBackendResponses(combos.results.almostIncluded)),
+      almostIncludedByChangingCommanders: formatApiResponse(processBackendResponses(combos.results.almostIncludedByChangingCommanders)),
+      almostIncludedByAddingColors: formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColors)),
+      almostIncludedByAddingColorsAndChangingCommanders: formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColorsAndChangingCommanders)),
+    })
 
     setLookupInProgress(false);
   };
@@ -111,10 +142,8 @@ const FindMyCombos = () => {
     lookupCombos(savedDeck);
   }, []);
 
-  const debouncedLookupCombos = debounce(lookupCombos, 1000);
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDecklist(e.target.value);
-    debouncedLookupCombos(e.target.value);
   };
 
   return (
@@ -134,17 +163,25 @@ const FindMyCombos = () => {
           in your deck.
         </label>
         <section>
+          <label>Commanders:</label>
           <textarea
             id="decklist-input"
-            className={styles.decklistInput}
-            value={decklist}
-            placeholder={`Supported decklist formats:
+            className={`${styles.decklistInput} ${styles.commanderInput}`}
+            value={commanderList}
+            placeholder={`ex: Ezuri, Claw of Progress`}
+            onChange={(e) => setCommanderList(e.target.value)}
+          />
+          <textarea
+                      id="decklist-input"
+                      className={styles.decklistInput}
+                      value={decklist}
+                      placeholder={`Supported decklist formats:
               Ancient Tomb
               1 Ancient Tomb
               1x Ancient Tomb
               Ancient Tomb (uma) 236
               `}
-            onChange={handleInput}
+                      onChange={handleInput}
           />
 
           {!!decklist && (
@@ -156,6 +193,13 @@ const FindMyCombos = () => {
               >
                 {numberOfCardsText}
               </span>
+              <button
+                id="clear-decklist-input"
+                className={`${styles.clearDecklistInput} button`}
+                onClick={() => lookupCombos(decklist)}
+              >
+                Find New Combos!
+              </button>
               <button
                 id="clear-decklist-input"
                 className={`${styles.clearDecklistInput} button`}
@@ -187,12 +231,12 @@ const FindMyCombos = () => {
           {!lookupInProgress && decklist && (
             <section id="combos-in-deck-section">
               <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-              <ComboResults results={combosInDeck} />
+              <ComboResults results={results.included} />
             </section>
           )}
 
           {!lookupInProgress &&
-            !!potentialCombosMatchingDeckColorIdentity.length && (
+            !!results.almostIncluded.length && (
               <section id="potential-combos-in-deck-section">
                 <h2 className="heading-subtitle">
                   {potentialCombosInDeckHeadingText}
@@ -201,38 +245,57 @@ const FindMyCombos = () => {
                   List of combos where your decklist is missing 1 combo piece.
                 </p>
                 <ComboResults
-                  results={potentialCombosMatchingDeckColorIdentity}
+                  results={results.almostIncluded}
                   missingDecklistCards={missingDeckListCards}
                 />
               </section>
             )}
 
-          {!lookupInProgress &&
-            !!potentialCombosOutsideDeckColorIdentity.length && (
+          {!lookupInProgress && !!results.almostIncludedByAddingColors.length &&
               <section id="potential-combos-outside-color-identity-section">
                 <h2 className="heading-subtitle">
                   {potentialCombosInAdditionalColorsHeadingText}
                 </h2>
                 <p>
                   List of combos where your decklist is missing 1 combo piece,
-                  but requires at least one additional color. Toggle the color
-                  symbols to filter for identity.
+                  but requires at least one additional color.
                 </p>
-                <ColorIdentityPicker
-                  onChange={setPotentialCombosColorIdentity}
-                  chosenColors={potentialCombosColorIdentity}
-                />
                 <ComboResults
-                  results={potentialCombosOutsideDeckColorIdentity}
+                  results={results.almostIncludedByAddingColors}
                   missingDecklistCards={missingDeckListCards}
                 />
-                {!potentialCombosOutsideDeckColorIdentityFilteredByPicker.length && (
-                  <h2 className="heading-subtitle">
-                    No Combos Found Matching the Selected Color Identity
-                  </h2>
-                )}
               </section>
-            )}
+            }
+          {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length &&
+            <section id="potential-combos-outside-color-identity-section">
+              <h2 className="heading-subtitle">
+                {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
+              </h2>
+              <p>
+                List of combos where your decklist is missing 1 combo piece,
+                but requires changing your commander.
+              </p>
+              <ComboResults
+                results={results.almostIncludedByAddingColors}
+                missingDecklistCards={missingDeckListCards}
+              />
+            </section>
+          }
+          {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length &&
+            <section id="potential-combos-outside-color-identity-section">
+              <h2 className="heading-subtitle">
+                {results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different Commander and Additional Colors
+              </h2>
+              <p>
+                List of combos where your decklist is missing 1 combo piece,
+                but requires changing your commander and adding a color.
+              </p>
+              <ComboResults
+                results={results.almostIncludedByAddingColors}
+                missingDecklistCards={missingDeckListCards}
+              />
+            </section>
+          }
         </div>
       </div>
     </PageWrapper>

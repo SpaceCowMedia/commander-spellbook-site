@@ -165,6 +165,21 @@ export async function convertDecklistToDeck(decklist: string): Promise<Deck> {
   };
 }
 
+export function convertDecklistToArray(decklist: string): string[] {
+  return decklist
+    .split("\n")
+    .reduce<string[]>((result, line) => {
+        const { name } = line.match(DECK_ENTRY_REGEX)?.groups || {};
+
+        if (name) result.push(name);
+        return result;
+      },
+      [],
+    );
+
+
+}
+
 // this function loops through the entire combo database
 // to pull out any combos where the entire set of cards
 // are available in the provided decklist

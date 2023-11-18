@@ -132,7 +132,7 @@ export const getPrerequisiteString = (variant: Variant) => {
 }
 
 
-export const processBackendResponses = (variants: VariantBulkData['variants'], reverseIdMap: Record<string, string>): CompressedApiResponse[] => {
+export const processBackendResponses = (variants: VariantBulkData['variants'], reverseIdMap: Record<string, string>={}): CompressedApiResponse[] => {
   const idMap = invert(reverseIdMap)
   const output: CompressedApiResponse[] = []
   for (const variant of variants) {

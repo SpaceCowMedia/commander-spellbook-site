@@ -8,6 +8,13 @@ import {
   deserializeCombo,
   SerializedCombo,
 } from "../lib/serialize-combo";
+import {GetServerSideProps} from "next";
+import {RequestService} from "../services/request.service";
+import {DEFAULT_ORDER, DEFAULT_SORT} from "../lib/constants";
+import {PaginatedResponse} from "../types/api";
+import {Variant} from "../lib/types";
+import formatApiResponse from "../lib/format-api-response";
+import {processBackendResponses} from "../lib/backend-processors";
 
 type Props = {
   serializedCombos: SerializedCombo[];
@@ -44,17 +51,16 @@ const Featured = ({ serializedCombos }: Props) => {
   );
 };
 
-export async function getStaticProps() {
-  const combos = await getFeaturedCombos();
-  const serializedCombos = combos.map((combo) => {
-    return serializeCombo(combo);
-  });
-
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const requestService = new RequestService(context)
+  const results = await requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?q=is:featured`)
+  const backendCombos = results ? results.results : []
+  const combos = formatApiResponse(processBackendResponses(backendCombos, {}))
   return {
     props: {
-      serializedCombos,
-    },
-  };
+      serializedCombos: combos.map(combo => serializeCombo(combo)),
+    }
+  }
 }
 
 export default Featured;
