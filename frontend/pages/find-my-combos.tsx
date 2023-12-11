@@ -3,22 +3,20 @@ import pluralize from "pluralize";
 import { ColorIdentityColors, FormattedApiResponse } from "../lib/types";
 import {
   convertDecklistToDeck,
-  findCombosFromDecklist,
 } from "../lib/decklist-parser";
-import debounce from "debounce";
 import styles from "./find-my-combos.module.scss";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
-import ColorIdentityPicker from "../components/layout/ColorIdentityPicker/ColorIdentityPicker";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import findMyCombosService from "../services/findMyCombos.service";
 import {processBackendResponses} from "../lib/backend-processors";
 import formatApiResponse from "../lib/format-api-response";
-import {FindMyCombosResponseType} from "../types/findMyCombos";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
+const LOCAL_STORAGE_COMMANDER_STORAGE_KEY =
+  "commander-spellbook-combo-finder-last-commander";
 
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
@@ -94,7 +92,7 @@ const FindMyCombos = () => {
     numbInAdditionalColors
   )} Found With Additional Color Requirements`;
 
-  const lookupCombos = async (newDeckList: string) => {
+  const lookupCombos = async (newDeckList: string, newCommanderList: string, forwardedResults?: typeof results, next?: string, page=1): Promise<any> => {
     setLookupInProgress(true);
     const deck = await convertDecklistToDeck(newDeckList);
     setNumberOfCardsInDeck(deck.numberOfCards);
@@ -108,21 +106,23 @@ const FindMyCombos = () => {
     if (deck.numberOfCards < 2) return setLookupInProgress(false);
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, newDeckList);
+    localStorage.setItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY, commanderList);
 
-    const combos = await findMyCombosService.findFromString(newDeckList, commanderList);
+    const combos = await findMyCombosService.findFromString(newDeckList, newCommanderList, next)
 
-    console.log(combos)
-
-    setResults({
+    const newResults = {
       identity: combos.results.identity,
-      included: formatApiResponse(processBackendResponses(combos.results.included)),
-      includedByChangingCommanders: formatApiResponse(processBackendResponses(combos.results.includedByChangingCommanders)),
-      almostIncluded: formatApiResponse(processBackendResponses(combos.results.almostIncluded)),
-      almostIncludedByChangingCommanders: formatApiResponse(processBackendResponses(combos.results.almostIncludedByChangingCommanders)),
-      almostIncludedByAddingColors: formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColors)),
-      almostIncludedByAddingColorsAndChangingCommanders: formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColorsAndChangingCommanders)),
-    })
+      included: (forwardedResults?.included || []).concat(formatApiResponse(processBackendResponses(combos.results.included))),
+      includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.includedByChangingCommanders))),
+      almostIncluded: (forwardedResults?.almostIncluded || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncluded))),
+      almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByChangingCommanders))),
+      almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColors))),
+      almostIncludedByAddingColorsAndChangingCommanders: (forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColorsAndChangingCommanders))),
+    }
 
+    if (combos.next && page < 5) return lookupCombos(newDeckList, newCommanderList, newResults, combos.next, page+1); // Adding a page limit to prevent infinite loops
+
+    setResults(newResults)
     setLookupInProgress(false);
   };
 
@@ -131,15 +131,19 @@ const FindMyCombos = () => {
     setCombosInDeck([]);
     setPotentialCombos([]);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
   };
 
   useEffect(() => {
     const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    const savedCommanderList = localStorage.getItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
 
     if (!savedDeck?.trim()) return;
 
     setDecklist(savedDeck);
-    lookupCombos(savedDeck);
+    setCommanderList(savedCommanderList || "");
+
+    lookupCombos(savedDeck, savedCommanderList || "");
   }, []);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -165,7 +169,7 @@ const FindMyCombos = () => {
         <section>
           <label>Commanders:</label>
           <textarea
-            id="decklist-input"
+            id="commander-input"
             className={`${styles.decklistInput} ${styles.commanderInput}`}
             value={commanderList}
             placeholder={`ex: Ezuri, Claw of Progress`}
@@ -196,7 +200,7 @@ const FindMyCombos = () => {
               <button
                 id="clear-decklist-input"
                 className={`${styles.clearDecklistInput} button`}
-                onClick={() => lookupCombos(decklist)}
+                onClick={() => lookupCombos(decklist, commanderList)}
               >
                 Find New Combos!
               </button>
@@ -267,7 +271,7 @@ const FindMyCombos = () => {
               </section>
             }
           {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length &&
-            <section id="potential-combos-outside-color-identity-section">
+            <section id="potential-combos-outside-commander-section">
               <h2 className="heading-subtitle">
                 {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
               </h2>
@@ -282,7 +286,7 @@ const FindMyCombos = () => {
             </section>
           }
           {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length &&
-            <section id="potential-combos-outside-color-identity-section">
+            <section id="potential-combos-outside-color-identity-and-commander-section">
               <h2 className="heading-subtitle">
                 {results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different Commander and Additional Colors
               </h2>
@@ -291,7 +295,7 @@ const FindMyCombos = () => {
                 but requires changing your commander and adding a color.
               </p>
               <ComboResults
-                results={results.almostIncludedByAddingColors}
+                results={results.almostIncludedByAddingColorsAndChangingCommanders}
                 missingDecklistCards={missingDeckListCards}
               />
             </section>
