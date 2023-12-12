@@ -280,7 +280,7 @@ const FindMyCombos = () => {
                 but requires changing your commander.
               </p>
               <ComboResults
-                results={results.almostIncludedByAddingColors}
+                results={results.almostIncludedByChangingCommanders}
                 missingDecklistCards={missingDeckListCards}
               />
             </section>
