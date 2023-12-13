@@ -18,17 +18,22 @@ const LOCAL_STORAGE_DECK_STORAGE_KEY =
 const LOCAL_STORAGE_COMMANDER_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-commander";
 
+
+const DEFAULT_RESULTS = {
+  identity: "",
+  included: [],
+  includedByChangingCommanders: [],
+  almostIncluded: [],
+  almostIncludedByChangingCommanders: [],
+  almostIncludedByAddingColors: [],
+  almostIncludedByAddingColorsAndChangingCommanders: [],
+}
+
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
   const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
-  const [combosInDeck, setCombosInDeck] = useState<Array<FormattedApiResponse>>(
-    []
-  );
-  const [potentialCombos, setPotentialCombos] = useState<
-    Array<FormattedApiResponse>
-  >([]);
   const [results, setResults] = useState<{
     identity: string,
     included: FormattedApiResponse[],
@@ -37,19 +42,8 @@ const FindMyCombos = () => {
     almostIncludedByChangingCommanders: FormattedApiResponse[],
     almostIncludedByAddingColors: FormattedApiResponse[],
     almostIncludedByAddingColorsAndChangingCommanders: FormattedApiResponse[],
-  }>({
-    identity: "",
-    included: [],
-    includedByChangingCommanders: [],
-    almostIncluded: [],
-    almostIncludedByChangingCommanders: [],
-    almostIncludedByAddingColors: [],
-    almostIncludedByAddingColorsAndChangingCommanders: [],
-  })
+  }>(DEFAULT_RESULTS)
 
-  const [missingDeckListCards, setMissingDeckListCards] = useState<Array<any>>(
-    []
-  );
   const [potentialCombosColorIdentity, setPotentialCombosColorIdentity] =
     useState<Array<ColorIdentityColors>>(["w", "u", "b", "r", "g"]);
   const [deckColorIdentity, setDeckColorIdentity] = useState<
@@ -66,30 +60,17 @@ const FindMyCombos = () => {
     ? "No combos found"
     : `${numOfCombos} ${pluralize("Combo", numOfCombos)} Found`;
 
-  const potentialCombosMatchingDeckColorIdentity = potentialCombos.filter(
-    (combo) => combo.colorIdentity.isWithin(deckColorIdentity)
-  );
-  const potentialCombosOutsideDeckColorIdentity = potentialCombos.filter(
-    (combo) => !combo.colorIdentity.isWithin(deckColorIdentity)
-  );
+
   const numPotentialCombos = results.almostIncluded.length;
   const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
     "Combo",
     numPotentialCombos
   )} Found`;
 
-  const potentialCombosOutsideDeckColorIdentityFilteredByPicker =
-    potentialCombosOutsideDeckColorIdentity.filter((combo) =>
-      combo.colorIdentity.isWithin(potentialCombosColorIdentity)
-    );
-  const potentialCombosMatchingColorIdentityPicker = potentialCombos.filter(
-    (combo) => combo.colorIdentity.isWithin(potentialCombosColorIdentity)
-  );
 
-  const numbInAdditionalColors = potentialCombosOutsideDeckColorIdentity.length;
   const potentialCombosInAdditionalColorsHeadingText = `${results.almostIncludedByAddingColors.length} Potential ${pluralize(
     "Combo",
-    numbInAdditionalColors
+    results.almostIncludedByAddingColors.length
   )} Found With Additional Color Requirements`;
 
   const lookupCombos = async (newDeckList: string, newCommanderList: string, forwardedResults?: typeof results, next?: string, page=1): Promise<any> => {
@@ -97,9 +78,6 @@ const FindMyCombos = () => {
     const deck = await convertDecklistToDeck(newDeckList);
     setNumberOfCardsInDeck(deck.numberOfCards);
 
-    setCombosInDeck([]);
-    setPotentialCombos([]);
-    setMissingDeckListCards([]);
     setPotentialCombosColorIdentity(["w", "u", "b", "r", "g"]);
     setDeckColorIdentity(deck.colorIdentity);
 
@@ -128,8 +106,8 @@ const FindMyCombos = () => {
 
   const clearDecklist = () => {
     setDecklist("");
-    setCombosInDeck([]);
-    setPotentialCombos([]);
+    setCommanderList("");
+    setResults(DEFAULT_RESULTS)
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     localStorage.removeItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
   };
@@ -250,7 +228,6 @@ const FindMyCombos = () => {
                 </p>
                 <ComboResults
                   results={results.almostIncluded}
-                  missingDecklistCards={missingDeckListCards}
                 />
               </section>
             )}
@@ -266,7 +243,6 @@ const FindMyCombos = () => {
                 </p>
                 <ComboResults
                   results={results.almostIncludedByAddingColors}
-                  missingDecklistCards={missingDeckListCards}
                 />
               </section>
             }
@@ -281,7 +257,6 @@ const FindMyCombos = () => {
               </p>
               <ComboResults
                 results={results.almostIncludedByChangingCommanders}
-                missingDecklistCards={missingDeckListCards}
               />
             </section>
           }
@@ -296,7 +271,6 @@ const FindMyCombos = () => {
               </p>
               <ComboResults
                 results={results.almostIncludedByAddingColorsAndChangingCommanders}
-                missingDecklistCards={missingDeckListCards}
               />
             </section>
           }
