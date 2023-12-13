@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      <NextNProgress color={"#9161f3"}/>
+      <NextNProgress options={{showSpinner: false}} color={"#9161f3"}/>
       <Component {...pageProps} />
     </>
   );

@@ -2,7 +2,7 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import pluralize from "pluralize";
 import { ColorIdentityColors, FormattedApiResponse } from "../lib/types";
 import {
-  convertDecklistToDeck,
+  convertDecklistToDeck, Deck,
 } from "../lib/decklist-parser";
 import styles from "./find-my-combos.module.scss";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
@@ -34,6 +34,7 @@ const FindMyCombos = () => {
   const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
+  const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Deck>();
   const [results, setResults] = useState<{
     identity: string,
     included: FormattedApiResponse[],
@@ -75,7 +76,7 @@ const FindMyCombos = () => {
 
   const lookupCombos = async (newDeckList: string, newCommanderList: string, forwardedResults?: typeof results, next?: string, page=1): Promise<any> => {
     setLookupInProgress(true);
-    const deck = await convertDecklistToDeck(newDeckList);
+    const deck = await convertDecklistToDeck(newDeckList + "\n" + newCommanderList);
     setNumberOfCardsInDeck(deck.numberOfCards);
 
     setPotentialCombosColorIdentity(["w", "u", "b", "r", "g"]);
@@ -88,6 +89,7 @@ const FindMyCombos = () => {
 
     const combos = await findMyCombosService.findFromString(newDeckList, newCommanderList, next)
 
+    setCurrentlyParsedDeck(deck)
     const newResults = {
       identity: combos.results.identity,
       included: (forwardedResults?.included || []).concat(formatApiResponse(processBackendResponses(combos.results.included))),
@@ -105,6 +107,7 @@ const FindMyCombos = () => {
   };
 
   const clearDecklist = () => {
+    setCurrentlyParsedDeck(undefined)
     setDecklist("");
     setCommanderList("");
     setResults(DEFAULT_RESULTS)
@@ -228,6 +231,7 @@ const FindMyCombos = () => {
                 </p>
                 <ComboResults
                   results={results.almostIncluded}
+                  deck={currentlyParsedDeck}
                 />
               </section>
             )}
@@ -243,6 +247,7 @@ const FindMyCombos = () => {
                 </p>
                 <ComboResults
                   results={results.almostIncludedByAddingColors}
+                  deck={currentlyParsedDeck}
                 />
               </section>
             }
@@ -257,6 +262,7 @@ const FindMyCombos = () => {
               </p>
               <ComboResults
                 results={results.almostIncludedByChangingCommanders}
+                deck={currentlyParsedDeck}
               />
             </section>
           }
@@ -271,6 +277,7 @@ const FindMyCombos = () => {
               </p>
               <ComboResults
                 results={results.almostIncludedByAddingColorsAndChangingCommanders}
+                deck={currentlyParsedDeck}
               />
             </section>
           }

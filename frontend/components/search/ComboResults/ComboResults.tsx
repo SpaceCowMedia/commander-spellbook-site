@@ -6,9 +6,11 @@ import {FormattedApiResponse, VendorValue} from "../../../lib/types";
 import Card from "../../../lib/card";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import pluralize from "pluralize";
+import {Deck} from "../../../lib/decklist-parser";
 
 type Props = {
   missingDecklistCards?: Card[];
+  deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
   results: FormattedApiResponse[];
   sort?: string;
   vendor?: VendorValue;
@@ -22,6 +24,7 @@ const ComboResults = ({
   sort,
   vendor,
   missingDecklistCards = [],
+  deck,
 }: Props) => {
   const isMissingInDecklistCards = (cardName: string) =>
     !!missingDecklistCards.find((card) => card.matchesNameExactly(cardName));
@@ -84,7 +87,7 @@ const ComboResults = ({
                 {getCardNames(combo).map((cardName) => (
                   <CardTooltip cardName={cardName} key={cardName}>
                     <div className="card-name pl-3 pr-3">
-                      {isMissingInDecklistCards(cardName) ? (
+                      {(isMissingInDecklistCards(cardName) || (deck && !deck.cards.includes(cardName))) ? (
                         <strong className="text-red-800">
                           {cardName} (not in deck)
                         </strong>

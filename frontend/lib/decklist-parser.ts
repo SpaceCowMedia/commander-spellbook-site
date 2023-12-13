@@ -81,7 +81,7 @@ type CombosInDecklist = {
   missingCardsForPotentialCombos: Card[];
 };
 
-type Deck = {
+export type Deck = {
   cards: string[];
   numberOfCards: number;
   colorIdentity: ColorIdentityColors[];
