@@ -13,7 +13,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@next/font": "13.1.6",
-    "@scryfall/api-types": "^1.0.0-alpha.2",
     "debounce": "^1.2.1",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",

@@ -1,4 +1,3 @@
-import {ScryfallList} from '@scryfall/api-types'
 import requestService from "./request.service";
 
 let cachedNames: string[] | null = null
