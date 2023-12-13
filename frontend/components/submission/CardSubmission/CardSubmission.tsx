@@ -3,6 +3,7 @@ import AutocompleteInput from "../../advancedSearch/AutocompleteInput/Autocomple
 import {useEffect, useState} from "react";
 import Select, {MultiValue} from 'react-select'
 import TemplateService from "../../../services/template.service";
+import CardService from "../../../services/card.service";
 
 const ZONE_OPTIONS = [
   {value: 'H', label: 'Hand'},
@@ -21,15 +22,13 @@ type Props = {
   index: number
   template?: boolean
 }
-
-const cardAutocompleteOptions = (require("../../../../autocomplete-data/cards.json")).map((card: any) => ({value: card.label, label: card.label}))
-// const cardAutocompleteOptions = require("../../../../autocomplete-data/cards.json")
 const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
 
   const [nameInput, setNameInput] = useState(card.card || '')
   const [templateInput, setTemplateInput] = useState(card.template || '')
   const [templateOptions, setTemplateOptions] = useState<Array<{value: string, label: string}>>([])
   const [templatesLoading, setTemplatesLoading] = useState(false)
+  const [cardAutocompleteOptions, setCardAutocompleteOptions] = useState<Array<{value: string, label: string}>>([])
 
   const handleZoneChange = (zoneLocations: MultiValue<{value: string, label: string}>) => {
     const newZoneList = zoneLocations.map(zone => zone.value)
@@ -52,7 +51,7 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
     setTemplatesLoading(true)
     TemplateService.getTemplates(value)
       .then(response => {
-        setTemplateOptions(response.results.map(template => ({value: template.template, label: template.template})))
+        setTemplateOptions(response.results.map(template => ({value: template.name, label: template.name})))
         setTemplatesLoading(false)
       }).catch(e => console.error(e))
 
@@ -62,6 +61,11 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
     setNameInput(value)
     onChange({...card as SubmissionCardType, card: value})
   }
+
+  useEffect(() => {
+    CardService.getCardNames()
+      .then(names => setCardAutocompleteOptions(names.map(name => ({value: name, label: name}))))
+  }, [])
 
   return (
     <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
@@ -174,12 +178,12 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
       <div className="mt-8">
         <input
           className="mr-2 cursor-pointer"
-          id={`commander-checkbox-${index}`}
+          id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
           value={card.card}
           onChange={() => onChange({...card, mustBeCommander: !card.mustBeCommander})}
           type="checkbox"
         />
-        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${index}`}>Must be commander?</label>
+        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>Must be commander?</label>
       </div>
     </div>
   )
