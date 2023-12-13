@@ -4,3 +4,10 @@ export type PaginatedResponse<T> = {
   previous: string | null
   results: T[]
 }
+
+export type TemplateResponseType = {
+  id: number
+  name: string
+  scryfallApi: string
+  scryfallQuery: string
+}

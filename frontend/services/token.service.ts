@@ -50,7 +50,7 @@ function getToken(): Promise<string> {
 
   if (!decodedToken) return fetchNewToken().then(setToken)
   if (decodedToken.exp > expirationCutoff) {
-    CookieService.set('csbJwt', jwt)
+    CookieService.set('csbJwt', jwt, 'day')
 
     return jwt
   }
@@ -75,7 +75,7 @@ function getTokenFromServerContext(
 
   if (!decodedToken) return fetchNewToken(refreshToken).then(setToken)
   if (decodedToken.exp > expirationCutoff) {
-    CookieService.set('csbJwt', jwt)
+    CookieService.set('csbJwt', 'day')
 
     return jwt
   }
@@ -86,8 +86,8 @@ function getTokenFromServerContext(
 function setToken({ access, refresh }: RefreshResponse) {
   const jwt = access
 
-  CookieService.set('csbJwt', jwt)
-  if (refresh) CookieService.set('csbRefresh', refresh)
+  CookieService.set('csbJwt', jwt, 'day')
+  if (refresh) CookieService.set('csbRefresh', refresh, 'day')
 
   return jwt
 }
