@@ -1,5 +1,6 @@
 import styles from './icon.module.scss'
-
+import {faCircleExclamation, faCircleInfo, faLightbulb, faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const SPELLBOOK_ICONS = {
   graveyard: styles.graveyard,
@@ -11,14 +12,24 @@ const SPELLBOOK_ICONS = {
   archidekt: styles.archidekt,
 }
 
+const SPELLBOOK_FA_ICONS = {
+  circleInfo: faCircleInfo,
+  triangleExclamation: faTriangleExclamation,
+  circleExclamation: faCircleExclamation,
+  lightbulb: faLightbulb
+}
+
+export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS
+
 type Props = {
-  name: keyof typeof SPELLBOOK_ICONS;
+  name: SpellbookIcon
 }
 const Icon = ({name}: Props) => {
 
-  if (!SPELLBOOK_ICONS[name]) return  null
+  if (name in SPELLBOOK_ICONS) return <i className={`${styles.icon} ${SPELLBOOK_ICONS[name as keyof typeof SPELLBOOK_ICONS]}`}/>
+  if (name in SPELLBOOK_FA_ICONS) return <FontAwesomeIcon className={styles.icon} icon={SPELLBOOK_FA_ICONS[name as keyof typeof SPELLBOOK_FA_ICONS]} />
 
-  return <i className={`${styles.icon} ${SPELLBOOK_ICONS[name]}`}/>
+  return null
 }
 
 export default Icon

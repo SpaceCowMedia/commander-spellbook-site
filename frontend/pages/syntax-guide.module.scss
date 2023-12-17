@@ -35,4 +35,7 @@
       @apply border-0;
     }
   }
+  blockquote {
+    @apply border-l-4 border-gray-400 pl-4 mb-1;
+  }
 }

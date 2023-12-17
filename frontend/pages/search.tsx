@@ -77,13 +77,10 @@ const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
   const sort = router.query.sort as string || DEFAULT_SORT;
   const order = router.query.order as string || DEFAULT_ORDER;
 
-  const parseSearchQuery = () => {
-    const query = router.query.q;
 
-    if (!query || typeof query !== "string") return "";
+  const query = router.query.q;
+  const parsedSearchQuery = (!query || typeof query !== "string") ? "" : query;
 
-    return query;
-  };
 
   const totalPages = Math.floor(count / PAGE_SIZE) + 1;
 
@@ -104,6 +101,8 @@ const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
     router.push({ pathname: "/search/", query: { ...router.query, order: value, page: "1" } });
   };
 
+  const legalityMessage = (parsedSearchQuery.includes("legal:")) ? "" : " (legal:commander has been applied by default)"
+
   return (
     <PageWrapper>
       <SpellbookHead
@@ -114,7 +113,7 @@ const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
         <h1 className="sr-only">Search Results</h1>
 
         <SearchMessage
-          message={`Showing ${count} results for query "${parseSearchQuery()}"`}
+          message={`Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
           errors={''}
           currentPage={page}
           totalPages={1}
@@ -188,13 +187,15 @@ export default Search;
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const query = context.query.q;
+  let query = `${context.query.q}`
+  if (!query.includes('legal:')) query = `${query} legal:commander`
+
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
   const sort = context.query.sort || DEFAULT_SORT
   const ordering = order === 'auto' ? sort : `${order === 'asc' ? '' : '-'}${sort}`
   const results = await requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`)
-  console.log(results)
+
   const backendCombos = results ? results.results : []
   const combos = formatApiResponse(processBackendResponses(backendCombos, {}))
   if (combos.length === 1) {
