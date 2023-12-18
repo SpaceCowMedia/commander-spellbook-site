@@ -41,6 +41,14 @@ const DATA = {
       text: "Combo Identifier",
     },
     {
+      id: "tags",
+      text: "Tags",
+    },
+    {
+      id: "commander",
+      text: "Commander",
+    },
+    {
       id: "popularity",
       text: "Popularity",
     },
@@ -159,16 +167,33 @@ const DATA = {
         "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
     },
   ],
+  tagSnippets: [
+    {
+      search: "is:commander",
+      description: "Combos that require a commander.",
+    },
+    {
+      search: "is:featured",
+      description: "Combos that are featured on the home page.",
+    }
+  ],
+  commanderSnippets: [
+    {
+      search: "commander:codie",
+      description: "Combos that require Codie, Vociferous Codex.",
+    }
+
+  ],
   popularitySnippets: [
-    // {
-    //   search: "popularity>1000",
-    //   description:
-    //     "Combos that are in more than 1000 decks according to EDHREC.",
-    // },
-    // {
-    //   search: "decks<10",
-    //   description: "Combos that are in less than 10 decks according to EDHREC.",
-    // },
+    {
+      search: "popularity>1000",
+      description:
+        "Combos that are in more than 1000 decks according to EDHREC.",
+    },
+    {
+      search: "decks<10",
+      description: "Combos that are in less than 10 decks according to EDHREC.",
+    },
   ],
   priceSnippets: [
     {
@@ -209,25 +234,37 @@ const DATA = {
   sortOrderSnippets: [],
 };
 
+const INTRODUCTION = `
+A variety of parameters can be used to search for ~combos~ variants.
+No matter what parameter is used, capitalization will be disregarded, so a search of
+\`CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE\`
+is equivalent to
+\`card:"breath of" coloridentity:temur result:infinite\`.
+
+> [!IMPORTANT]
+> You can prefix a \`-\` to any search term to negate it, resulting in the exclusion of matching variants from the search.
+> For example, \`-card:" "\` will exclude all variants with a card whose name contains a space.
+`
+
 const CARDS_DESCRIPTION = `
 You can find cards in a combo simply by entering the card names, or parts of the card names, into the search bar.
-Passing multiple card names will result in combos that have cards that contain those words among the names of the cards
-in the combo. Writing a \`word\` in this way is equivalent to writing \`card:word\`.
+Passing multiple card names will result in combos that have cards that contain those words among the names of the cards in the combo.
+Writing a \`word\` in this way is equivalent to writing \`card:word\`.
 
-> [!WARNING]
-> Ignoring hyphens is currently not supported. It will be available in a future update.
-> Hyphens must be correctly inserted according to actual card names and can't be replaced neither by a space nor omitted.
+> [!TIP]
+> Accents can be ignored, meaning that using \`a\` instead of \`à\` is supported.
 
 You can lookup longer names for cards with double (") quotes.
 This will find combos that contain cards with names that include the whole phrase, including special characters and space.
-For instance, \`card:"Thassa's"\`, will include combos that contain a card whose name contains \`Thassa's\`, such as
-\`Thassa's Oracle\`. Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"words with spaces"\`.
+For instance, \`card:"Thassa's"\`, will include combos that contain a card whose name contains \`Thassa's\`, such as \`Thassa's Oracle\`.
+Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"words with spaces"\`.
+
+> [!TIP]
+> Additionally, hyphens are ignored too, and can be replaced either by nothing or by a single space.
+> For example, \`card:"blade-blossom"\` is equivalent to \`card:"blade blossom"\` and \`card:"bladeblossom"\`
 
 > [!WARNING]
 > Using single quotes instead of double quotes is not supported anymore in card search, because single quotes can appear in card names.
-
-> [!TIP]
-> Accent can be ignored, meaning that using \`a\` instead of \`à\` is supported.
 
 ### \`card\` operators
 
@@ -279,28 +316,13 @@ The prerequisites are the elements that need to be in place before the combo can
 The only supported operator is \`prerequisites:text\` which searches for _text_ in the "other prerequisites" section of a variant prerequisites, meaning it doesn't work for variant starting locations or initial state, nor mana needed.
 
 > [!WARNING]
-> This was forced to drop support for mana needed, starting locations and starting card state because of the new schematic way they are managed.
+> The support for matching the mana needed, starting locations and starting card state has been dropped.
 
 ### \`prerequisites\` keyword aliases
 
 * \`prerequisite\`
 * \`prereq\`
 * \`pre\`
-
-
-## Steps
-
-The steps are the elements that need to be followed to execute the combo.
-The only supported operator is \`steps:text\` which searches for _text_ in the description of a variant.
-
-### \`steps\` keyword aliases
-
-* \`step\`
-* \`description\`
-* \`desc\`
-
-> [!WARNING]
-> numeric operators support has dropped but will be added back in the future.
 `
 
 const STEPS_DESCRIPTION = `
@@ -314,7 +336,7 @@ The only supported operator is \`steps:text\` which searches for _text_ in the d
 * \`desc\`
 
 > [!WARNING]
-> numeric operators support has dropped but will be added back in the future.
+> numeric operators support has been dropped.
 `
 
 const RESULTS_DESCRIPTION = `
@@ -347,9 +369,58 @@ For example, \`spellbookid:1400-1401\` searches for a variant whose id is \`1400
 * \`sid\`
 `
 
+const TAG_DESCRIPTION = `
+Variants are automatically tagged based on their features.
+You can find variants matching a tag called \`tag\` with \`is:tag\`, which is the only alias and operator supported.
+
+### Supported tags
+
+Tags are in some cases manually added to variants, meaning their support is always a work in progress.
+Otherwise, they are called "automatic" and their support is complete and always up-to-date.
+
+#### Automatic tags
+
+* \`preview\`/\`previewed\`/\`spoiler\`/\`spoiled\`: means that a variant contains an unreleased, spoiled card
+* \`commander\`: means that the variant can only work in commander because it requires a specific commander
+* \`featured\`: means that the variant appears in the feature page (usually variants from recent sets are semi-automatically put there)
+
+<!-- #### Manual tags (WIP)
+
+* \`lock\`: means that the variant locks your opponent
+* \`infinite\`: means that the variant contains an infinite loop
+* \`risky\`/\`allin\`: means that the variant steps have some chance to fail and result in a possible loss
+* \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game -->
+`
+
+const COMMANDER_DESCRIPTION = `
+You can search for variants requiring a specific commander.
+For example, \`commander:text\` searches for variants that require a commander whose name contains _text_.
+This keyword has no aliases.
+
+### \`commander\` operators
+
+* \`commander:text\` searches for variants that require a commander whose name contains _text_
+* \`commander=text\` searches for variants that require a commander whose name is exactly _text_
+`
+
 const POPULARITY_DESCRIPTION = `
-> [!CAUTION]
-> Variant popularity in EDHREC decks database is currently not supported and will be added back in the future.
+You can filter and later sort variants by their popularity inside EDHREC decklists.
+The popularity value is the number of decks in which the variant is present, updated regularly.
+For example, \`popularity>10000\` searches for variants that are present in more than 10000 decks.
+
+### \`popularity\` operators
+
+* \`popularity:number\` or \`popularity=number\` search for variants whose popularity is exactly \`number\`
+* \`popularity<number\` searches for variants whose popularity is more than \`number\`
+* \`popularity<=number\` searches for variants whose popularity is at least \`number\`
+* \`popularity<number\` searches for variants whose popularity is less than \`number\`
+* \`popularity<=number\` searches for variants whose popularity is less than or equal to \`number\`
+
+### \`popularity\` keyword aliases
+
+* \`pop\`
+* \`deck\`
+* \`decks\`
 `
 
 const PRICE_DESCRIPTION = `
@@ -372,6 +443,8 @@ For example, \`price<number\` searches for variants costing less than _number_ d
 * \`usd\`/\`price\`/\`cardkingdom\`: [CardKingdom](https://www.cardkingdom.com/)
 * \`tcgplayer\`: [TCGPlayer](https://www.tcgplayer.com/)
 * \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic)
+
+For example, \`cardmarket>100\` searches for variants that cost more than 100€ on Cardmarket (by adding the cards' single prices).
 `
 
 const LEGALITY_DESCRIPTION = `
@@ -443,13 +516,9 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
               ))}
             </div>
 
-            <p className="pl-4 pr-4">
-              No matter what parameter is used, capitalization will be
-              disregarded, so a search of &nbsp;
-              <code>CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE</code>
-              &nbsp; is equivalent to &nbsp;
-              <code>card:"breath of" coloridentity:temur result:infinite</code>
-            </p>
+            <SyntaxMarkdown>
+              {INTRODUCTION}
+            </SyntaxMarkdown>
           </div>
         </div>
         <div className={styles.searchGuideContainer}>
@@ -510,6 +579,26 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           >
             <SyntaxMarkdown>
               {SPELLBOOK_ID_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Tags"
+            headingCardName="Goblin Guide"
+            snippets={DATA.tagSnippets}
+            >
+            <SyntaxMarkdown>
+              {TAG_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Commander"
+            headingCardName="Korvold, Fae-Cursed King"
+            snippets={DATA.commanderSnippets}
+          >
+            <SyntaxMarkdown>
+              {COMMANDER_DESCRIPTION}
             </SyntaxMarkdown>
           </SearchGuide>
 
