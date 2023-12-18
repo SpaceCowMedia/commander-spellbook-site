@@ -6,6 +6,11 @@
   ul {
     @apply list-disc list-inside ml-4 mb-4;
   }
+
+  h3 {
+    padding-bottom: 1rem;
+    @apply text-2xl font-bold dark:text-white;
+  }
 }
 
 .searchGuideContainer {

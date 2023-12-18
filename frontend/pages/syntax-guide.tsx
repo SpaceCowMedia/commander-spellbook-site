@@ -180,7 +180,7 @@ const DATA = {
   commanderSnippets: [
     {
       search: "commander:codie",
-      description: "Combos that require Codie, Vociferous Codex.",
+      description: "Combos that require Codie, Vociferous Codex to be your commander.",
     }
 
   ],
@@ -235,11 +235,8 @@ const DATA = {
 };
 
 const INTRODUCTION = `
-A variety of parameters can be used to search for ~combos~ variants.
-No matter what parameter is used, capitalization will be disregarded, so a search of
-\`CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE\`
-is equivalent to
-\`card:"breath of" coloridentity:temur result:infinite\`.
+A variety of parameters can be used to search for combos.
+No matter what parameter is used, capitalization will be disregarded, so a search of \`CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE\` is equivalent to \`card:"breath of" coloridentity:temur result:infinite\`.
 
 > [!IMPORTANT]
 > You can prefix a \`-\` to any search term to negate it, resulting in the exclusion of matching variants from the search.
@@ -406,6 +403,7 @@ This keyword has no aliases.
 const POPULARITY_DESCRIPTION = `
 You can filter and later sort variants by their popularity inside EDHREC decklists.
 The popularity value is the number of decks in which the variant is present, updated regularly.
+
 For example, \`popularity>10000\` searches for variants that are present in more than 10000 decks.
 
 ### \`popularity\` operators
@@ -472,8 +470,8 @@ On the contrary, \`banned:format\` searches for variants not legal in _format_. 
 
 ### \`legal\` keyword aliases
 
-* \`banned:format\`: same as \`-legal:format\`
-* \`format:format\`: same as \`legal:format\`
+* \`banned:format_name\`: same as \`-legal:format_name\`
+* \`format:format_name\`: same as \`legal:format_name\`
 `
 
 const SORT_ORDER_DESCRIPTION = `
