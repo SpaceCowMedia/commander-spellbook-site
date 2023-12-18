@@ -105,6 +105,10 @@ const CARD_ARTS = {
     uid: "6c180888-6acd-401b-815a-6ed434482681",
     artist: "Scott Murphy",
   },
+  "Kenrith, the Returned King": {
+    uid: "0e259db1-14db-4314-998c-6a076a28d8cb",
+    artist: "Kieran Yanner",
+  }
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({

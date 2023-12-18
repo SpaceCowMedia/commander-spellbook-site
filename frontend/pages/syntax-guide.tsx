@@ -592,7 +592,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Commander"
-            headingCardName="Korvold, Fae-Cursed King"
+            headingCardName="Kenrith, the Returned King"
             snippets={DATA.commanderSnippets}
           >
             <SyntaxMarkdown>

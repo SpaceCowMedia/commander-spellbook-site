@@ -201,7 +201,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (combos.length === 1) {
     return {
       redirect: {
-        destination: `/combo/${combos[0].commanderSpellbookId}/`,
+        destination: `/combo/${combos[0].commanderSpellbookId}/?q=${context.query.q}`,
         permanent: false,
       }
     }
