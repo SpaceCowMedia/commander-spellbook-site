@@ -17,8 +17,8 @@ const ALERT_TYPE_MAP: Record<string, any> = {
     title: "Tip",
   },
   "IMPORTANT": {
-    type: "warning",
-    icon: "triangleExclamation",
+    type: "important",
+    icon: "star",
     title: "Important",
   },
   "WARNING": {
@@ -28,7 +28,7 @@ const ALERT_TYPE_MAP: Record<string, any> = {
   },
   "CAUTION": {
     type: "error",
-    icon: "circleExclamation",
+    icon: "circleXmark",
     title: "Caution",
   },
 }

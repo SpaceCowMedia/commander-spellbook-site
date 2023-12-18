@@ -1,5 +1,10 @@
 import styles from './icon.module.scss'
-import {faCircleExclamation, faCircleInfo, faLightbulb, faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleExclamation,
+  faCircleInfo, faCircleXmark,
+  faLightbulb, faStar,
+  faTriangleExclamation
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const SPELLBOOK_ICONS = {
@@ -16,7 +21,9 @@ const SPELLBOOK_FA_ICONS = {
   circleInfo: faCircleInfo,
   triangleExclamation: faTriangleExclamation,
   circleExclamation: faCircleExclamation,
-  lightbulb: faLightbulb
+  lightbulb: faLightbulb,
+  circleXmark: faCircleXmark,
+  star: faStar,
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS
