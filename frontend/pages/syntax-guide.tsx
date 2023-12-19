@@ -228,7 +228,7 @@ const DATA = {
     {
       search: "legal:vintage",
       description:
-        "Include any combos that are legal in Vintage.",
+        "Combos that are legal in Vintage.",
     },
     {
       search: "-legal:commander",
