@@ -409,8 +409,8 @@ For example, \`popularity>10000\` searches for variants that are present in more
 ### \`popularity\` operators
 
 * \`popularity:number\` or \`popularity=number\` search for variants whose popularity is exactly \`number\`
-* \`popularity<number\` searches for variants whose popularity is more than \`number\`
-* \`popularity<=number\` searches for variants whose popularity is at least \`number\`
+* \`popularity>number\` searches for variants whose popularity is more than \`number\`
+* \`popularity>=number\` searches for variants whose popularity is at least \`number\`
 * \`popularity<number\` searches for variants whose popularity is less than \`number\`
 * \`popularity<=number\` searches for variants whose popularity is less than or equal to \`number\`
 
