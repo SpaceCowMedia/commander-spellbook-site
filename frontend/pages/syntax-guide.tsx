@@ -164,7 +164,7 @@ const DATA = {
     {
       search: '-sid:4131-4684 card="Basalt Monolith" card="Mesmeric Orb"',
       description:
-        "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 450.",
+        "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 4131-4684.",
     },
   ],
   tagSnippets: [
