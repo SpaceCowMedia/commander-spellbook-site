@@ -202,9 +202,14 @@ const DATA = {
         "Combos where the entire price of the combo is less than $5.00 according to Card Kingdom.",
     },
     {
-      search: "usd>100 vendor:tcgplayer",
+      search: "tcgplayer>100",
       description:
         "Combos where the entire price of the combo is greater than $100.00 according to TCGplayer.",
+    },
+    {
+      search: "cardmarket<=100",
+      description:
+        "Combos where the entire price of the combo is less than or equal to €100.00 according to Cardmarket.",
     },
   ],
   previewedSnippets: [
