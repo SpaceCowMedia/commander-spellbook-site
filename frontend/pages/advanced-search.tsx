@@ -12,140 +12,263 @@ import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import cardNameAutocompleteData from "assets/autocomplete-data/cards.json";
 import resultAutocompleteData from "assets/autocomplete-data/results.json";
 
-const CARD_OPERATOR_OPTIONS = [
+type OperatorOption = {
+  operator: string;
+  label: string;
+  numeric?: boolean;
+  negate?: boolean;
+  placeholder?: string;
+};
+
+type TagOption = {
+  name: string;
+  label: string;
+}
+
+const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    value: ":",
+    operator: ":",
     label: "Has card with name",
     placeholder: "ex: isochron",
   },
   {
-    value: "=",
+    operator: "=",
     label: "Has card with exact name",
     placeholder: "ex: basalt monolith",
   },
   {
-    value: ":-exclude",
+    operator: ":",
+    negate: true,
     label: "Does not have card with name",
     placeholder: "ex: isochron",
   },
   {
-    value: "=-exclude",
+    operator: "=",
+    negate: true,
     label: "Does not have card with exact name",
     placeholder: "ex: basalt monolith",
   },
 ];
 
-const CARD_AMOUNT_OPERATOR_OPTIONS = [
-  { value: "=-number", label: "Contains exactly x cards (number)" },
-  { value: ">-number", label: "Contains more than x cards (number)" },
-  { value: "<-number", label: "Contains less than x cards (number)" },
+const CARD_AMOUNT_OPERATOR_OPTIONS: OperatorOption[] = [
+  { operator: "=", label: "Contains exactly x cards (number)", numeric: true },
+  { operator: ">=", label: "Contains at least x cards (number)", numeric: true },
+  { operator: "<", label: "Contains less than x cards (number)", numeric: true },
 ];
 
-const COLOR_IDENTITY_OPERATOR_OPTIONS = [
+const COLOR_IDENTITY_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    value: ":",
+    operator: ":",
     label: "Is within the color identity",
   },
   {
-    value: "=",
+    operator: "=",
     label: "Is exactly the color identity",
   },
   {
-    value: ":-exclude",
+    operator: ":",
+    negate: true,
     label: "Is not within the color identity",
   },
   {
-    value: "=-exclude",
+    operator: "=",
+    negate: true,
     label: "Is not exactly the color identity",
   },
-  { value: ">-number", label: "Contains more than x colors (number)" },
-  { value: "<-number", label: "Contains less than x colors (number)" },
-  { value: "=-number", label: "Contains exactly x colors (number)" },
+  { operator: ">=", label: "Contains at least x colors (number)", numeric: true },
+  { operator: "<", label: "Contains less than x colors (number)", numeric: true },
+  { operator: "=", label: "Contains exactly x colors (number)", numeric: true },
 ];
 
-const COMBO_DATA_OPERATOR_OPTIONS = [
+const COMBO_DATA_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    value: ":",
+    operator: ":",
     label: "Contains the phrase",
     placeholder: "ex: mana, untap, additional",
   },
-  { value: "=", label: "Is exactly" },
+  { operator: "=", label: "Is exactly" },
   {
-    value: ":-exclude",
+    operator: ":",
+    negate: true,
     label: "Does not contain the phrase",
     placeholder: "ex: mana, untap, additional",
   },
-  { value: "=-exclude", label: "Is not exactly" },
-  { value: ">-number", label: "Contains more than x (number)" },
-  { value: "<-number", label: "Contains less than x (number)" },
-  { value: "=-number", label: "Contains exactly x (number)" },
+  { operator: "=", label: "Is not exactly", negate: true },
 ];
 
-const PRICE_OPTIONS = [
-  { value: "<-number", label: "Costs less than" },
-  { value: ">-number", label: "Costs more than" },
-  { value: "=-number", label: "Costs exactly" },
+const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Contains the phrase",
+    placeholder: "ex: mana, untap, additional",
+  },
+  { 
+    operator: "=", 
+    label: "Is exactly",
+    placeholder: "ex: Infinite Colorless Mana",
+  },
+  {
+    operator: ":",
+    negate: true,
+    label: "Does not contain the phrase",
+    placeholder: "ex: mana, untap, additional",
+  },
+  { 
+    operator: "=",
+    negate: true,
+    label: "Is not exactly",
+    placeholder: "ex: Infinite Colorless Mana",
+  },
+  { operator: ">=", label: "Contains at least x (number)" , numeric: true },
+  { operator: "<", label: "Contains less than x (number)" , numeric: true },
+  { operator: "=", label: "Contains exactly x (number)" , numeric: true },
 ];
 
-const POPULARITY_OPTIONS = [
-  { value: "<-number", label: "In less than x decks (number)" },
-  { value: ">-number", label: "In more than x decks (number)" },
-  { value: "=-number", label: "In exactly x decks (number)" },
+const TAGS_OPTIONS: TagOption[] = [
+  {
+    name: "spoiler",
+    label: "Contains a spoiler/previewed card",
+  },
+  {
+    name: "commander",
+    label: "Does the combo require a commander?",
+  },
+]
+
+const COMMANDER_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Requires a commander whose name contains the phrase",
+    placeholder: "ex: Krark",
+  },
+  {
+    operator: "=",
+    label: "Requires a commander whose name is exactly",
+    placeholder: "ex: Krark, the Thumbless",
+  },
+  {
+    operator: ":",
+    negate: true,
+    label: "Does not require a commander whose name contains the phrase",
+    placeholder: "ex: Krark",
+  },
+  {
+    operator: "=",
+    negate: true,
+    label: "Does not require a commander whose name is exactly",
+    placeholder: "ex: Krark, the Thumbless",
+  },
 ];
 
-const VENDOR_OPTIONS = [
+const POPULARITY_OPTIONS: OperatorOption[] = [
+  { operator: ">=", label: "In at least x decks (number)", numeric: true },
+  { operator: "<", label: "In less than x decks (number)", numeric: true },
+  { operator: "=", label: "In exactly x decks (number)", numeric: true },
+];
+
+const PRICE_OPTIONS: OperatorOption[] = [
+  {
+    operator: "<=",
+    label: "Costs at most x",
+    placeholder: "ex: 5",
+    numeric: true,
+  },
+  {
+    operator: ">=",
+    label: "Costs at least x",
+    placeholder: "ex: 5",
+    numeric: true,
+  },
+  {
+    operator: "=",
+    label: "Costs exactly x",
+    placeholder: "ex: 5",
+  }
+];
+
+
+const PRICE_VENDORS = [
   {
     value: "cardkingdom",
     label: "Card Kingdom",
   },
   {
     value: "tcgplayer",
-    label: "TCGplayer",
+    label: "TCGPlayer",
+  },
+  {
+    value: "cardmarket",
+    label: "Cardmarket",
   },
 ];
 
-const PREVIEWED_OPTIONS = [
-  {
-    value: "include",
-    label:
-      "Include combos with newly previewed cards in search results (default search behavior)",
-  },
-  {
-    value: "exclude",
-    label: "Exclude combos with newly previewed cards in search results",
-  },
-  {
-    value: "is",
-    label: "Only show combos with newly previewed cards",
-  },
-];
+type LegalityFormat = {
+  value: string;
+  label: string;
+}
 
-const BANNED_OPTIONS = [
+const LEGALITY_FORMATS: LegalityFormat[] = [
   {
-    value: "exclude",
-    label:
-      "Exclude combos with banned cards in search results (default search behavior)",
+    value: "commander",
+    label: "EDH/Commander",
   },
   {
-    value: "include",
-    label: "Include combos with banned cards in search results",
+    value: "pauper_commander",
+    label: "Pauper EDH/Commander (including uncommon commanders)",
   },
   {
-    value: "is",
-    label: "Only show combos with banned cards",
+    value: "pauper_commander_main",
+    label: "Pauper EDH/Commander (excluding uncommon commanders)",
   },
+  {
+    value: "oathbreaker",
+    label: "Oathbreaker",
+  },
+  {
+    value: "predh",
+    label: "Pre-EDH/Commander",
+  },
+  {
+    value: "brawl",
+    label: "Brawl",
+  },
+  {
+    value: "vintage",
+    label: "Vintage",
+  },
+  {
+    value: "legacy",
+    label: "Legacy",
+  },
+  {
+    value: "modern",
+    label: "Modern",
+  },
+  {
+    value: "pioneer",
+    label: "Pioneer",
+  },
+  {
+    value: "standard",
+    label: "Standard",
+  },
+  {
+    value: "pauper",
+    label: "Pauper",
+  }
 ];
 
 type InputData = {
   value: string;
   operator: string;
+  numeric?: boolean;
+  negate?: boolean;
   error?: string;
 };
-type OperatorOption = {
-  value: string;
-  label: string;
-  placeholder?: string;
-};
+
+interface SelectedTag extends TagOption {
+  selected?: boolean;
+}
 
 type AutoCompleteOption = {
   value: string;
@@ -159,30 +282,19 @@ type Data = {
   colorAutocompletes: AutoCompleteOption[];
 
   cards: InputData[];
-
   cardAmounts: InputData[];
-
   colorIdentity: InputData[];
-
   prerequisites: InputData[];
   steps: InputData[];
   results: InputData[];
-
-  price: InputData[];
-
+  tags: SelectedTag[];
+  commanders: InputData[];
   popularity: InputData[];
-
+  prices: InputData[];
   vendor: string;
-
+  format: string;
   validationError: string;
-
-  previewed: string;
-
-  banned: string;
 };
-
-const DEFAULT_PREVIEWED_VALUE = "include";
-const DEFAULT_BANNED_VALUE = "exclude";
 
 const AdvancedSearch = () => {
   const router = useRouter();
@@ -192,17 +304,18 @@ const AdvancedSearch = () => {
     resultAutocompletes: resultAutocompleteData,
     colorAutocompletes: COLOR_AUTOCOMPLETES,
 
-    cards: [{ value: "", operator: ":" }],
-    cardAmounts: [{ value: "", operator: "=-number" }],
-    colorIdentity: [{ value: "", operator: ":" }],
-    prerequisites: [{ value: "", operator: ":" }],
-    steps: [{ value: "", operator: ":" }],
-    results: [{ value: "", operator: ":" }],
-    price: [{ value: "", operator: "<-number" }],
-    popularity: [{ value: "", operator: "<-number" }],
+    cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: "" }],
+    cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: "" }],
+    colorIdentity: [{ ...COLOR_IDENTITY_OPERATOR_OPTIONS[0], value: "" }],
+    prerequisites: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
+    steps: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
+    results: [{ ...RESULTS_OPERATOR_OPTIONS[0], value: "" }],
+    tags: TAGS_OPTIONS.map((tag) => ({ ...tag })),
+    commanders: [{ ...COMMANDER_OPTIONS[0], value: "" }],
+    popularity: [{ ...POPULARITY_OPTIONS[0], value: "" }],
+    prices: [{ ...PRICE_OPTIONS[0], value: "" }],
     vendor: DEFAULT_VENDOR,
-    previewed: DEFAULT_PREVIEWED_VALUE,
-    banned: DEFAULT_BANNED_VALUE,
+    format: LEGALITY_FORMATS[0].value,
     validationError: "",
   });
 
@@ -216,11 +329,12 @@ const AdvancedSearch = () => {
     prerequisites,
     steps,
     results,
-    price,
+    tags,
+    commanders,
     popularity,
+    prices,
     vendor,
-    previewed,
-    banned,
+    format,
     validationError,
   } = formState;
 
@@ -228,7 +342,7 @@ const AdvancedSearch = () => {
     setFormStateHook({ ...formState, ...changes });
   };
 
-  const hasPriceInQuery = !!price.find(({ value }) => !!value.trim());
+  const hasPriceInQuery = !!prices.find(({ value }) => !!value.trim());
 
   const validate = () => {
     let hasValidationError = false;
@@ -238,13 +352,8 @@ const AdvancedSearch = () => {
     function val(input: InputData) {
       input.error = "";
 
-      if (input.value.includes("'") && input.value.includes('"')) {
-        input.error =
-          "Contains both single and double quotes. A card name may only use one kind.";
-      }
-
       if (
-        input.operator.split("-")[1] === "number" &&
+        (input.numeric ?? false) &&
         !Number.isInteger(Number(input.value))
       ) {
         input.error = "Contains a non-integer. Use a full number instead.";
@@ -261,11 +370,10 @@ const AdvancedSearch = () => {
     newFormState.prerequisites.forEach(val);
     newFormState.steps.forEach(val);
     newFormState.results.forEach(val);
-    newFormState.price.forEach(val);
+    newFormState.commanders.forEach(val);
     newFormState.popularity.forEach(val);
-
+    newFormState.prices.forEach(val);
     setFormState(newFormState);
-
     return hasValidationError;
   };
 
@@ -278,8 +386,12 @@ const AdvancedSearch = () => {
     prerequisites,
     steps,
     results,
-    price,
+    tags,
+    commanders,
     popularity,
+    prices,
+    vendor,
+    format,
   ]);
 
   const getQuery = () => {
@@ -290,17 +402,16 @@ const AdvancedSearch = () => {
     ): Parameters<typeof Array.prototype.forEach>[0] {
       return (input: InputData) => {
         const value = input.value.trim();
+        const negated = input.negate ?? false;
+        const numeric = input.numeric ?? false;
         const isSimpleValue = value.match(/^[\w\d]*$/);
-        const modifier = input.operator.split("-")[1];
-        const isNumericOperator = modifier === "number";
-        const isExclusionOperator = modifier === "exclude";
-        let operator = input.operator.split("-")[0];
+        let operator = input.operator;
         let keyInQuery = key;
         const isSimpleCardValue =
           isSimpleValue &&
           keyInQuery === "card" &&
           operator === ":" &&
-          !isExclusionOperator;
+          !negated;
 
         if (!value) {
           return;
@@ -312,28 +423,40 @@ const AdvancedSearch = () => {
           quotes = '"';
 
           if (value.includes(quotes)) {
-            quotes = "'";
+            // quotes = "'";
+            value.replace(/"/g, "\\\"");
           }
         }
 
         if (isSimpleCardValue) {
           keyInQuery = "";
           operator = "";
-        } else if (isNumericOperator) {
+        } else if (numeric) {
           if (keyInQuery === "ci") {
             keyInQuery = "colors";
-          } else if (keyInQuery === "pre") {
-            keyInQuery = "prerequisites";
           } else if (keyInQuery === "popularity") {
             keyInQuery = "decks";
-          } else if (keyInQuery !== "price") {
+          } else if (keyInQuery === "price") {
+            keyInQuery = vendor;
+          } else {
             keyInQuery += "s";
           }
-        } else if (isExclusionOperator) {
+        }
+        if (negated) {
           keyInQuery = `-${keyInQuery}`;
         }
 
         query += ` ${keyInQuery}${operator}${quotes}${value}${quotes}`;
+      };
+    }
+
+    function makeQueryFunctionForTags(): Parameters<typeof Array.prototype.forEach>[0] {
+      return (tag: SelectedTag) => {
+        if (tag.selected === true) {
+          query += ` is:${tag.name}`;
+        } else if (tag.selected === false) {
+          query += ` -is:${tag.name}`;
+        }
       };
     }
     cards.forEach(makeQueryFunction("card"));
@@ -342,17 +465,12 @@ const AdvancedSearch = () => {
     prerequisites.forEach(makeQueryFunction("pre"));
     steps.forEach(makeQueryFunction("step"));
     results.forEach(makeQueryFunction("result"));
-    price.forEach(makeQueryFunction("price"));
+    tags.forEach(makeQueryFunctionForTags());
+    commanders.forEach(makeQueryFunction("commander"));
     popularity.forEach(makeQueryFunction("popularity"));
-
-    if (previewed !== DEFAULT_PREVIEWED_VALUE) {
-      query += ` ${previewed}:previewed`;
-    }
-    if (banned !== DEFAULT_BANNED_VALUE) {
-      query += ` ${banned}:banned`;
-    }
-    if (vendor !== DEFAULT_VENDOR && hasPriceInQuery) {
-      query += ` vendor:${vendor}`;
+    prices.forEach(makeQueryFunction("price"));
+    if (format !== LEGALITY_FORMATS[0].value) {
+      query += ` format:${format}`;
     }
 
     query = query.trim();
@@ -418,7 +536,6 @@ const AdvancedSearch = () => {
             label="Number of Cards"
             pluralLabel="Number of Cards"
             operatorOptions={CARD_AMOUNT_OPERATOR_OPTIONS}
-            defaultOperator="=-number"
           />
         </div>
 
@@ -471,28 +588,16 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div id="price-inputs" className={`${styles.container} container`}>
+        <div id="commander-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
-            value={price}
-            onChange={(price) => setFormState({ price })}
-            label="Price"
-            pluralLabel="Price"
-            operatorOptions={PRICE_OPTIONS}
-            defaultOperator="<-number"
+            value={commanders}
+            onChange={(commanders) => setFormState({ commanders })}
+            autocompleteOptions={cardNameAutocompletes}
+            label="Commander"
+            operatorOptions={COMMANDER_OPTIONS}
+            defaultPlaceholder="ex: Codie, Vociferous Codex"
           />
         </div>
-
-        {hasPriceInQuery && (
-          <div id="vendor" className={`${styles.container} container`}>
-            <RadioSearchInput
-              checkedValue={vendor}
-              options={VENDOR_OPTIONS}
-              formName="vendor"
-              label="Card Vendor"
-              onChange={(vendor) => setFormState({ vendor })}
-            />
-          </div>
-        )}
 
         <div id="popularity-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
@@ -501,29 +606,57 @@ const AdvancedSearch = () => {
             label="Popularity"
             pluralLabel="Popularity"
             operatorOptions={POPULARITY_OPTIONS}
-            defaultOperator="<-number"
           />
         </div>
 
-        <div id="previewed-combos" className={`${styles.container} container`}>
-          <RadioSearchInput
-            checkedValue={previewed}
-            options={PREVIEWED_OPTIONS}
-            formName="previewed"
-            label="Previewed / Spoiled Combos"
-            onChange={(previewed) => setFormState({ previewed })}
+        <div id="price-inputs" className={`${styles.container} container`}>
+          <MultiSearchInput
+            value={prices}
+            onChange={(prices) => setFormState({ prices })}
+            label="Price"
+            pluralLabel="Price"
+            operatorOptions={PRICE_OPTIONS}
           />
         </div>
 
-        <div id="banned-combos" className={`${styles.container} container`}>
+        {hasPriceInQuery && (
+          <div id="vendor" className={`${styles.container} container`}>
+            <RadioSearchInput
+              checkedValue={vendor}
+              options={PRICE_VENDORS}
+              formName="vendor"
+              label="Card Vendor"
+              onChange={(vendor) => setFormState({ vendor })}
+            />
+          </div>
+        )}
+
+        <div id="format" className={`${styles.container} container`}>
           <RadioSearchInput
-            checkedValue={banned}
-            options={BANNED_OPTIONS}
-            formName="banned"
-            label="Banned Combos"
-            onChange={(banned) => setFormState({ banned })}
+            checkedValue={format}
+            options={LEGALITY_FORMATS}
+            formName="format"
+            label="Format"
+            onChange={(format) => setFormState({ format })}
           />
         </div>
+
+        {TAGS_OPTIONS.map((tagOption, i) => (
+          <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={i}>
+            <RadioSearchInput
+              checkedValue={tags.find((tag) => tag.name === tagOption.name)?.selected?.toString() ?? "null"}
+              options={[{ value: "true", label: "Yes" }, { value: "false", label: "No" }, { value: "null", label: "Either"}]}
+              formName={tagOption.name}
+              label={tagOption.label}
+              onChange={(tag) => setFormState({
+                tags: tags.filter((t) => t.name !== tagOption.name).concat({
+                  ...tagOption,
+                  selected: tag === "null" ? undefined : tag === "true",
+                }),
+              })}
+            />
+          </div>
+        ))}
 
         <div className={`${styles.container} container text-center pb-8`}>
           <div className="flex flex-row items-center">

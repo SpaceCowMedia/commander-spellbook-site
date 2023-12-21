@@ -7,6 +7,8 @@ import AutocompleteInput from "../AutocompleteInput/AutocompleteInput";
 type MultiSearchInputValue = {
   value: string;
   operator: string;
+  numeric?: boolean;
+  negate?: boolean;
   error?: string;
 }[];
 
@@ -18,11 +20,12 @@ type Props = {
   pluralLabel?: string;
   defaultPlaceholder?: string;
   operatorOptions: Array<{
-    value: string;
+    operator: string;
     label: string;
+    numeric?: boolean;
+    negate?: boolean;
     placeholder?: string;
   }>;
-  defaultOperator?: string;
   onChange?: (value: MultiSearchInputValue) => void;
 };
 
@@ -34,7 +37,6 @@ const MultiSearchInput = ({
   pluralLabel,
   defaultPlaceholder,
   operatorOptions,
-  defaultOperator = ":",
   onChange,
 }: Props) => {
   const [inputs, setInputs] = useState<MultiSearchInputValue>(value);
@@ -44,7 +46,7 @@ const MultiSearchInput = ({
   const addInput = (index: number) =>
     setInputs([
       ...inputs.slice(0, index + 1),
-      { value: "", operator: defaultOperator },
+      { value: "", operator: operatorOptions[0].operator },
       ...inputs.slice(index + 1),
     ]);
 
@@ -57,17 +59,29 @@ const MultiSearchInput = ({
   const getSelectId = (index: number) =>
     `${label.toLowerCase().replace(/\s/g, "-")}-select-${index}`;
 
-  const getPlaceHolder = (operator: string) => {
-    const isNumber = operator.split("-")[1] === "number";
-    if (isNumber) return `ex: 2`;
-    const option = operatorOptions.find((option) => option.value === operator);
+  const getPlaceHolder = (input: {
+    value: string;
+    operator: string;
+    numeric?: boolean;
+    negate?: boolean;
+    error?: string;
+  }) => {
+    const option = operatorOptions.find((option) =>
+      option.operator === input.operator &&
+      option.numeric === input.numeric &&
+      option.negate === input.negate
+    );
+    if (option && option.numeric == true && !option.placeholder) return `ex: 2`;
     if (!option || !option.placeholder) return defaultPlaceholder || "";
     return option.placeholder;
   };
 
   const handleSelectChange = (index: number, value: string) => {
     const newInputs = [...inputs];
-    newInputs[index].operator = value;
+    const [operator, numeric, negated] = value.split("|");
+    newInputs[index].operator = operator;
+    newInputs[index].numeric = numeric === "" ? undefined : numeric === "true";
+    newInputs[index].negate = negated === "" ? undefined : negated === "true";
     setInputs(newInputs);
     onChange && onChange(newInputs);
   };
@@ -91,7 +105,10 @@ const MultiSearchInput = ({
               label={`Modifier for ${label}`}
               onChange={(value) => handleSelectChange(index, value)}
               id={getSelectId(index)}
-              options={operatorOptions}
+              options={operatorOptions.map((option) => ({
+                value: option.operator + "|" + (option.numeric ?? "") + "|" + (option.negate ?? ""),
+                label: option.label,
+              }))}
               selectTextClassName="sm:w-1/2 flex-grow"
               selectBackgroundClassName={`${
                 input.error ? "border-danger" : "border-dark"
@@ -105,7 +122,7 @@ const MultiSearchInput = ({
                 inputClassName="border-dark"
                 autocompleteOptions={autocompleteOptions}
                 inputId={getInputId(index)}
-                placeholder={getPlaceHolder(input.operator)}
+                placeholder={getPlaceHolder(input)}
                 hasError={!!input.error}
                 useValueForInput={useValueForAutocompleteInput}
               />
