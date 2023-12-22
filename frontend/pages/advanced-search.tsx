@@ -271,6 +271,11 @@ const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
     operator: ":",
     label: "Is legal in the format",
   },
+  {
+    operator: ":",
+    label: "Is not legal in the format",
+    negate: true,
+  },
 ]
 
 type InputData = {
@@ -416,7 +421,7 @@ const AdvancedSearch = () => {
       key: string
     ): Parameters<typeof Array.prototype.forEach>[0] {
       return (input: InputData) => {
-        const value = input.value.trim();
+        let value = input.value.trim();
         const negated = input.negate ?? false;
         const numeric = input.numeric ?? false;
         const isSimpleValue = value.match(/^[\w\d]*$/);
@@ -441,7 +446,7 @@ const AdvancedSearch = () => {
 
           if (value.includes(quotes)) {
             // quotes = "'";
-            value.replace(/"/g, "\\\"");
+            value = value.replace(/"/g, "\\\"");
           }
         }
 
