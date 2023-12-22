@@ -23,7 +23,7 @@ const About: React.FC<Props> = ({}: Props) => {
 
         <p>
           The Commander Spellbook project is a search engine for Commander/EDH
-          combos and to make them easily available across all modern digital
+          combos and that makes them easily available across all modern digital
           platforms. This community driven project is used to power&nbsp;
           <ExternalLink href="https://edhrec.com/combos">
             EDHREC's Combo Feature
@@ -31,22 +31,34 @@ const About: React.FC<Props> = ({}: Props) => {
           .
         </p>
         <p>
-          The database and the source code for the website are&nbsp;
+          The source code for the website and the backend server are&nbsp;
           <ExternalLink href="https://opensource.org/licenses/MIT">
             completely free and open source under the MIT license
           </ExternalLink>
-          . We encourage you to copy this data so it lives on!
+          .
+        </p>
+        <p>
+          Interested in the development of Commander Spellbook? Head over to&nbsp;
+          <ExternalLink href="https://discord.com/invite/DkAyVJG">
+            our Discord server
+          </ExternalLink>
+          &nbsp;and invoke our @Artificers.
         </p>
 
         <ul>
           <li>
-            <ExternalLink href="https://github.com/EDHREC/commander-spellbook-site">
+            <ExternalLink href="https://github.com/SpaceCowMedia/commander-spellbook-site">
               Website Source Code on GitHub
             </ExternalLink>
           </li>
           <li>
-            <ExternalLink href="https://docs.google.com/spreadsheets/d/1KqyDRZRCgy8YgMFnY0tHSw_3jC99Z0zFvJrPbfm66vA/">
-              Combo Database Backend on Google Sheets
+            <ExternalLink href="https://github.com/SpaceCowMedia/commander-spellbook-backend">
+              Backend Source Code on GitHub
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href="https://backend.commanderspellbook.com/">
+              Backend REST API
             </ExternalLink>
           </li>
         </ul>
