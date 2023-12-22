@@ -437,8 +437,6 @@ const AdvancedSearch = () => {
           return;
         }
 
-        console.log(input)
-
         let quotes = "";
 
         if (!isSimpleValue) {
