@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./multiSearchInput.module.scss";
 import StyledSelect from "../../layout/StyledSelect/StyledSelect";
 import AutocompleteInput from "../AutocompleteInput/AutocompleteInput";
+import Icon, {SpellbookIcon} from "../../layout/Icon/Icon";
 
 type MultiSearchInputValue = {
   value: string;
@@ -15,8 +16,10 @@ type MultiSearchInputValue = {
 type Props = {
   value: MultiSearchInputValue;
   autocompleteOptions?: Array<{ value: string; label: string }>;
+  selectOptions?: Array<{ value: string; label: string }>;
   useValueForAutocompleteInput?: boolean;
   label: string;
+  labelIcon?: SpellbookIcon;
   pluralLabel?: string;
   defaultPlaceholder?: string;
   operatorOptions: Array<{
@@ -34,10 +37,12 @@ const MultiSearchInput = ({
   autocompleteOptions = [],
   useValueForAutocompleteInput,
   label,
+  labelIcon,
   pluralLabel,
   defaultPlaceholder,
   operatorOptions,
   onChange,
+  selectOptions,
 }: Props) => {
   const [inputs, setInputs] = useState<MultiSearchInputValue>(value);
 
@@ -50,8 +55,12 @@ const MultiSearchInput = ({
       ...inputs.slice(index + 1),
     ]);
 
-  const removeInput = (index: number) =>
-    setInputs([...inputs.slice(0, index), ...inputs.slice(index + 1)]);
+  const removeInput = (index: number) => {
+    const newInputs = [...inputs.slice(0, index), ...inputs.slice(index + 1)];
+    setInputs(newInputs);
+    onChange && onChange(newInputs);
+  }
+
 
   const getInputId = (index: number) =>
     `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
@@ -94,7 +103,7 @@ const MultiSearchInput = ({
 
   return (
     <div>
-      <label className={styles.inputLabel}>{inputLabel}</label>
+      <label className={styles.inputLabel}>{labelIcon && <Icon name={labelIcon}/>} {inputLabel}</label>
       {inputs.map((input, index) => (
         <div
           key={`${label}-input-${index}`}
@@ -103,6 +112,7 @@ const MultiSearchInput = ({
           <div className="sm:flex">
             <StyledSelect
               label={`Modifier for ${label}`}
+              disabled={operatorOptions.length === 1}
               onChange={(value) => handleSelectChange(index, value)}
               id={getSelectId(index)}
               options={operatorOptions.map((option) => ({
@@ -115,7 +125,7 @@ const MultiSearchInput = ({
               } border border-b-0 sm:border-b sm:border-r-0 sm:w-1/2 flex-grow`}
             />
             <div className="w-full flex-grow flex flex-col sm:flex-row">
-              <AutocompleteInput
+              {!selectOptions && <AutocompleteInput
                 value={input.value}
                 onChange={(value) => handleInputChange(index, value)}
                 label={inputLabel}
@@ -125,7 +135,16 @@ const MultiSearchInput = ({
                 placeholder={getPlaceHolder(input)}
                 hasError={!!input.error}
                 useValueForInput={useValueForAutocompleteInput}
-              />
+              />}
+              {selectOptions &&
+                <StyledSelect
+                  label={inputLabel}
+                  id={getInputId(index) + '-value'}
+                  options={selectOptions}
+                  onChange={value => handleInputChange(index, value)}
+                  selectBackgroundClassName="flex-grow border-dark border"
+                />
+              }
               <div className="flex">
                 {inputs.length > 1 && (
                   <button

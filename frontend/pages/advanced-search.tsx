@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import cardNameAutocompleteData from "assets/autocomplete-data/cards.json";
 import resultAutocompleteData from "assets/autocomplete-data/results.json";
+import {SpellbookIcon} from "../components/layout/Icon/Icon";
 
 type OperatorOption = {
   operator: string;
@@ -23,6 +24,7 @@ type OperatorOption = {
 type TagOption = {
   name: string;
   label: string;
+  labelIcon?: SpellbookIcon;
 }
 
 const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
@@ -102,8 +104,8 @@ const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
     label: "Contains the phrase",
     placeholder: "ex: mana, untap, additional",
   },
-  { 
-    operator: "=", 
+  {
+    operator: "=",
     label: "Is exactly",
     placeholder: "ex: Infinite Colorless Mana",
   },
@@ -113,7 +115,7 @@ const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
     label: "Does not contain the phrase",
     placeholder: "ex: mana, untap, additional",
   },
-  { 
+  {
     operator: "=",
     negate: true,
     label: "Is not exactly",
@@ -128,10 +130,12 @@ const TAGS_OPTIONS: TagOption[] = [
   {
     name: "spoiler",
     label: "Contains a spoiler/previewed card",
+    labelIcon: "certificate"
   },
   {
     name: "commander",
     label: "Does the combo require a commander?",
+    labelIcon: "commandZone"
   },
 ]
 
@@ -209,6 +213,10 @@ type LegalityFormat = {
 
 const LEGALITY_FORMATS: LegalityFormat[] = [
   {
+    value: "",
+    label: "-",
+  },
+  {
     value: "commander",
     label: "EDH/Commander",
   },
@@ -255,8 +263,15 @@ const LEGALITY_FORMATS: LegalityFormat[] = [
   {
     value: "pauper",
     label: "Pauper",
-  }
+  },
 ];
+
+const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Is legal in the format",
+  },
+]
 
 type InputData = {
   value: string;
@@ -292,7 +307,7 @@ type Data = {
   popularity: InputData[];
   prices: InputData[];
   vendor: string;
-  format: string;
+  format: InputData[];
   validationError: string;
 };
 
@@ -315,7 +330,7 @@ const AdvancedSearch = () => {
     popularity: [{ ...POPULARITY_OPTIONS[0], value: "" }],
     prices: [{ ...PRICE_OPTIONS[0], value: "" }],
     vendor: DEFAULT_VENDOR,
-    format: LEGALITY_FORMATS[0].value,
+    format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: "" }],
     validationError: "",
   });
 
@@ -417,6 +432,8 @@ const AdvancedSearch = () => {
           return;
         }
 
+        console.log(input)
+
         let quotes = "";
 
         if (!isSimpleValue) {
@@ -469,9 +486,7 @@ const AdvancedSearch = () => {
     commanders.forEach(makeQueryFunction("commander"));
     popularity.forEach(makeQueryFunction("popularity"));
     prices.forEach(makeQueryFunction("price"));
-    if (format !== LEGALITY_FORMATS[0].value) {
-      query += ` format:${format}`;
-    }
+    format.forEach(makeQueryFunction("legal"));
 
     query = query.trim();
 
@@ -522,6 +537,7 @@ const AdvancedSearch = () => {
             onChange={(cards) => setFormState({ cards })}
             autocompleteOptions={cardNameAutocompletes}
             label="Card Names"
+            labelIcon="signature"
             operatorOptions={CARD_OPERATOR_OPTIONS}
           />
         </div>
@@ -534,6 +550,7 @@ const AdvancedSearch = () => {
             value={cardAmounts}
             onChange={(cardAmounts) => setFormState({ cardAmounts })}
             label="Number of Cards"
+            labelIcon="hashtag"
             pluralLabel="Number of Cards"
             operatorOptions={CARD_AMOUNT_OPERATOR_OPTIONS}
           />
@@ -547,6 +564,7 @@ const AdvancedSearch = () => {
             value={colorIdentity}
             onChange={(colorIdentity) => setFormState({ colorIdentity })}
             label="Color Identity"
+            labelIcon="palette"
             pluralLabel="Color Identities"
             operatorOptions={COLOR_IDENTITY_OPERATOR_OPTIONS}
             autocompleteOptions={colorAutocompletes}
@@ -564,6 +582,7 @@ const AdvancedSearch = () => {
             onChange={(prerequisites) => setFormState({ prerequisites })}
             defaultPlaceholder="all permanents on the battlefield"
             label="Prerequisite"
+            labelIcon="listCheck"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
           />
         </div>
@@ -573,6 +592,7 @@ const AdvancedSearch = () => {
             value={steps}
             onChange={(steps) => setFormState({ steps })}
             label="Step"
+            labelIcon="listOl"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
           />
         </div>
@@ -583,6 +603,7 @@ const AdvancedSearch = () => {
             onChange={(results) => setFormState({ results })}
             autocompleteOptions={resultAutocompletes}
             label="Result"
+            labelIcon="infinity"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
             defaultPlaceholder="ex: win the game"
           />
@@ -594,6 +615,7 @@ const AdvancedSearch = () => {
             onChange={(commanders) => setFormState({ commanders })}
             autocompleteOptions={cardNameAutocompletes}
             label="Commander"
+            labelIcon="commandZone"
             operatorOptions={COMMANDER_OPTIONS}
             defaultPlaceholder="ex: Codie, Vociferous Codex"
           />
@@ -604,6 +626,7 @@ const AdvancedSearch = () => {
             value={popularity}
             onChange={(popularity) => setFormState({ popularity })}
             label="Popularity"
+            labelIcon="arrowUpRightDots"
             pluralLabel="Popularity"
             operatorOptions={POPULARITY_OPTIONS}
           />
@@ -614,6 +637,7 @@ const AdvancedSearch = () => {
             value={prices}
             onChange={(prices) => setFormState({ prices })}
             label="Price"
+            labelIcon="dollarSign"
             pluralLabel="Price"
             operatorOptions={PRICE_OPTIONS}
           />
@@ -626,17 +650,19 @@ const AdvancedSearch = () => {
               options={PRICE_VENDORS}
               formName="vendor"
               label="Card Vendor"
+              labelIcon="cartShopping"
               onChange={(vendor) => setFormState({ vendor })}
             />
           </div>
         )}
 
         <div id="format" className={`${styles.container} container`}>
-          <RadioSearchInput
-            checkedValue={format}
-            options={LEGALITY_FORMATS}
-            formName="format"
+          <MultiSearchInput
+            value={format}
+            operatorOptions={LEGALITY_OPERATOR_OPTIONS}
+            selectOptions={LEGALITY_FORMATS}
             label="Format"
+            labelIcon="scaleBalanced"
             onChange={(format) => setFormState({ format })}
           />
         </div>
@@ -648,6 +674,7 @@ const AdvancedSearch = () => {
               options={[{ value: "true", label: "Yes" }, { value: "false", label: "No" }, { value: "null", label: "Either"}]}
               formName={tagOption.name}
               label={tagOption.label}
+              labelIcon={tagOption.labelIcon}
               onChange={(tag) => setFormState({
                 tags: tags.filter((t) => t.name !== tagOption.name).concat({
                   ...tagOption,

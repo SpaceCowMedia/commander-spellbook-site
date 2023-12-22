@@ -11,60 +11,80 @@ import Markdown from "markdown-to-jsx";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import SyntaxMarkdown from "../components/layout/SyntaxMarkdown/SyntaxMarkdown";
+import Icon, {SpellbookIcon} from "../components/layout/Icon/Icon";
 
 type Props = {};
+
+
+type SectionType = {
+  id: string;
+  text: string;
+  icon: SpellbookIcon
+}
 
 const DATA = {
   sections: [
     {
       id: "cards",
       text: "Cards",
+      icon: "signature"
     },
     {
       id: "color-identity",
       text: "Color Identity",
+      icon: "palette",
     },
     {
       id: "prerequisites",
       text: "Prerequisites",
+      icon: "listCheck"
     },
     {
       id: "steps",
       text: "Steps",
+      icon: "listOl"
     },
     {
       id: "results",
       text: "Results",
+      icon: "infinity"
     },
     {
       id: "spellbook-id",
       text: "Combo Identifier",
+      icon: "fingerprint"
     },
     {
       id: "tags",
       text: "Tags",
+      icon: "tags",
     },
     {
       id: "commander",
       text: "Commander",
+      icon: "commandZone",
     },
     {
       id: "popularity",
       text: "Popularity",
+      icon: "arrowUpRightDots",
     },
     {
       id: "price",
       text: "Price",
+      icon: "dollarSign",
     },
     {
       id: "legality",
       text: "Legality",
+      icon: "scaleBalanced"
     },
     {
       id: "sort",
       text: "Sort / Order",
+      icon: "arrowUpWideShort",
     },
-  ],
+  ] as SectionType[],
   cardSnippets: [
     {
       search: "kenrith golem",
@@ -514,7 +534,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
                   href={`#${section.id}`}
                   className="button flex-grow text-center md:w-1/4"
                 >
-                  <div>{section.text}</div>
+                  <div><Icon name={section.icon} /> {section.text}</div>
                 </Link>
               ))}
             </div>
@@ -529,6 +549,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Peek"
             snippets={DATA.cardSnippets}
             heading="Cards"
+            icon="signature"
           >
             <SyntaxMarkdown>
               {CARDS_DESCRIPTION}
@@ -537,6 +558,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Color Identity"
+            icon="palette"
             headingCardName="Fist of Suns"
             snippets={DATA.colorIdentitySnippets}
           >
@@ -547,6 +569,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Prerequisites"
+            icon="listCheck"
             headingCardName="Long-Term Plans"
             snippets={DATA.prerequisiteSnippets}
           >
@@ -556,6 +579,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
+            icon="listOl"
             heading="Steps"
             headingCardName="The Grand Calcutron"
             snippets={DATA.stepSnippets}
@@ -566,6 +590,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
+            icon="infinity"
             heading="Results"
             headingCardName="Revel in Riches"
             snippets={DATA.resultSnippets}
@@ -577,6 +602,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Spellbook ID"
+            icon="fingerprint"
             headingCardName="Fractured Identity"
             snippets={DATA.idSnippets}
           >
@@ -587,6 +613,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Tags"
+            icon="tags"
             headingCardName="Goblin Guide"
             snippets={DATA.tagSnippets}
             >
@@ -597,6 +624,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Commander"
+            icon="commandZone"
             headingCardName="Kenrith, the Returned King"
             snippets={DATA.commanderSnippets}
           >
@@ -607,6 +635,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
 
           <SearchGuide
             heading="Popularity"
+            icon="arrowUpRightDots"
             headingCardName="Korvold, Fae-Cursed King"
             snippets={DATA.popularitySnippets}
           >
@@ -616,6 +645,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
+            icon="dollarSign"
             heading="Price"
             headingCardName="Smothering Tithe"
             snippets={DATA.priceSnippets}
@@ -625,34 +655,9 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             </SyntaxMarkdown>
           </SearchGuide>
 
-          {/*<SearchGuide*/}
-          {/*  id="previewed"*/}
-          {/*  heading="Previewed / Spoiled"*/}
-          {/*  headingCardName="Spoils of Adventure"*/}
-          {/*  snippets={DATA.previewedSnippets}*/}
-          {/*>*/}
-          {/*  <p>*/}
-          {/*    By default, combo results will include combos that contain cards*/}
-          {/*    that have been newly previewed and are <em>technically</em> not*/}
-          {/*    yet legal in Commander. To exclude these combos, use &nbsp;*/}
-          {/*    <code>exclude:previewed</code> or <code>exclude:spoiled</code>.*/}
-          {/*  </p>*/}
-
-          {/*  <p>*/}
-          {/*    To find combos that contain cards that are not yet legal in*/}
-          {/*    Commander, use <code>is:previewed</code> or{" "}*/}
-          {/*    <code>is:spoiled</code>.*/}
-          {/*  </p>*/}
-
-          {/*  <p>*/}
-          {/*    To find combos that contain <em>no</em> cards that are not yet*/}
-          {/*    legal in Commander, use <code>not:previewed</code> or &nbsp;*/}
-          {/*    <code>not:spoiled</code> instead.*/}
-          {/*  </p>*/}
-          {/*</SearchGuide>*/}
-
           <SearchGuide
             heading="Legality"
+            icon="scaleBalanced"
             headingCardName="Leovold, Emissary of Trest"
             snippets={DATA.legalitySnippets}
           >
@@ -664,6 +669,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           <SearchGuide
             id="sort"
             heading="Sort / Order"
+            icon="arrowUpWideShort"
             headingCardName="Brainstorm"
             snippets={DATA.sortOrderSnippets}
           >

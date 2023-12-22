@@ -2,12 +2,14 @@ import React from "react";
 import styles from "pages/syntax-guide.module.scss";
 import ArtCircle, { ArtCircleProps } from "../ArtCircle/ArtCircle";
 import SearchSnippet from "./SearchSnippet/SearchSnippet";
+import Icon, {SpellbookIcon} from "../Icon/Icon";
 
 type Props = {
   heading: string;
   headingCardName: ArtCircleProps["cardName"];
   snippets: { search: string; description: string }[];
   children: React.ReactNode;
+  icon: SpellbookIcon,
   id?: string;
 };
 
@@ -16,6 +18,7 @@ const SearchGuide: React.FC<Props> = ({
   headingCardName,
   snippets,
   children,
+  icon,
 }: Props) => {
   const id = heading.toLowerCase().split(" / ")[0].replace(" ", "-");
 
@@ -31,7 +34,7 @@ const SearchGuide: React.FC<Props> = ({
             size={7}
             className="mr-4 md:block hidden"
           />
-          <h2 className="heading-title">{heading}</h2>
+          <h2 className="heading-title"><Icon name={icon}/> {heading}</h2>
         </div>
 
         <div className="flex-none md:flex w-full">

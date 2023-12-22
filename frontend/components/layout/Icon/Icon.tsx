@@ -1,8 +1,10 @@
 import styles from './icon.module.scss'
 import {
+  faArrowUpRightDots, faArrowUpWideShort, faCartShopping, faCertificate,
+  faCheckDouble,
   faCircleExclamation,
-  faCircleInfo, faCircleXmark,
-  faLightbulb, faStar,
+  faCircleInfo, faCircleXmark, faDollarSign, faFingerprint, faHashtag, faInfinity,
+  faLightbulb, faListCheck, faListOl, faPalette, faScaleBalanced, faSignature, faStar, faTags,
   faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -24,6 +26,21 @@ const SPELLBOOK_FA_ICONS = {
   lightbulb: faLightbulb,
   circleXmark: faCircleXmark,
   star: faStar,
+  signature: faSignature,
+  hashtag: faHashtag,
+  palette: faPalette,
+  checkDouble: faCheckDouble,
+  listCheck: faListCheck,
+  listOl: faListOl,
+  infinity: faInfinity,
+  arrowUpRightDots: faArrowUpRightDots,
+  dollarSign: faDollarSign,
+  scaleBalanced: faScaleBalanced,
+  certificate: faCertificate,
+  cartShopping: faCartShopping,
+  fingerprint: faFingerprint,
+  tags: faTags,
+  arrowUpWideShort: faArrowUpWideShort
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS

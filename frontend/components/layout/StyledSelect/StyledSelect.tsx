@@ -11,6 +11,7 @@ type Props = {
   value?: string;
   options: Option[];
   onChange?: (value: string) => void;
+  disabled?: boolean;
 };
 
 const StyledSelect = ({
@@ -21,6 +22,7 @@ const StyledSelect = ({
   selectBackgroundClassName = "border border-dark",
   selectTextClassName = "text-dark",
   onChange,
+  disabled,
 }: Props) => {
   const [localValue, setLocalValue] = useState(value);
 
@@ -35,6 +37,7 @@ const StyledSelect = ({
         {label}
       </label>
       <select
+        disabled={disabled}
         onChange={handleChange}
         id={id}
         value={localValue}
