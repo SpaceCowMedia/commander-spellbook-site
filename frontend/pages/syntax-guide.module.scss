@@ -11,6 +11,11 @@
     padding-bottom: 1rem;
     @apply text-2xl font-bold dark:text-white;
   }
+
+  h4 {
+    padding-bottom: 1rem;
+    @apply font-bold dark:text-white;
+  }
 }
 
 .searchGuideContainer {

@@ -260,43 +260,44 @@ const DATA = {
 };
 
 const INTRODUCTION = `
-A variety of parameters can be used to search for combos.
+You can use a variety of parameters to search the combo database.
 No matter what parameter is used, capitalization will be disregarded, so a search of \`CARD:"BREATH OF" COLORIDENTITY:TEMUR RESULT:INFINITE\` is equivalent to \`card:"breath of" coloridentity:temur result:infinite\`.
 
 > [!IMPORTANT]
-> You can prefix a \`-\` to any search term to negate it, resulting in the exclusion of matching variants from the search.
-> For example, \`-card:" "\` will exclude all variants with a card whose name contains a space.
+> You can prefix a \`-\` to any search term to negate it, excluding all matching combos from the search result.
+> For example, \`-card:" "\` will exclude all combos with a card whose name contains a space.
 `
 
 const CARDS_DESCRIPTION = `
-You can find cards in a combo simply by entering the card names, or parts of the card names, into the search bar.
-Passing multiple card names will result in combos that have cards that contain those words among the names of the cards in the combo.
+Type card names or parts of card names directly into the search bar to find combos that use those cards.
 Writing a \`word\` in this way is equivalent to writing \`card:word\`.
 
 > [!TIP]
-> Accents can be ignored, meaning that using \`a\` instead of \`à\` is supported.
+> Accents and other diacritics are ignored; you can search for \`Deja Vu\` instead of \`Déjà Vu\`.
 
-You can lookup longer names for cards with double (") quotes.
-This will find combos that contain cards with names that include the whole phrase, including special characters and space.
-For instance, \`card:"Thassa's"\`, will include combos that contain a card whose name contains \`Thassa's\`, such as \`Thassa's Oracle\`.
+Put the card name inside double quotes (") to restrict the search to card names that include the entire phrase, including special characters and spaces.
+For example, \`"Goblin King"\` will only find combos that contain the card Goblin King, while the search \`Goblin King\` without quotes will also find combos with both Goblin Bombardment and Darien, King of Kjeldor.
 Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"words with spaces"\`.
 
 > [!TIP]
-> Additionally, hyphens are ignored too, and can be replaced either by nothing or by a single space.
+> Hyphens are also ignored, and can be removed or replaced by a single space.
 > For example, \`card:"blade-blossom"\` is equivalent to \`card:"blade blossom"\` and \`card:"bladeblossom"\`
 
 > [!WARNING]
-> Using single quotes instead of double quotes is not supported anymore in card search, because single quotes can appear in card names.
+> Single quotes are no longer supported in card search, since they can appear in card names.
+> Instead, use double quotes. For example, \`"Goblin King"\` instead of \`'Goblin King'\`.
+> Im the rare case where a card name contains double quotes, you can use the backslash character to escape them.
+> For example, \`card:"Henzie \\"Toolbox\\" Torre"\`.
 
 ### \`card\` operators
 
-* \`card:text\` searches for variants containing a card whose'name contains _text_
-* \`card=text\` searches for variants containing a card named exactly _text_
-* \`card<number\` searches for variants with less than _number_ cards
-* \`card<=number\` searches for variants with less than or equal _number_ cards
-* \`card>number\` searches for variants with more than _number_ cards
-* \`card>=number\` searches for variants with at least _number_ cards
-* \`card=number\` searches for variants with exactly _number_ cards
+* \`card:text\` searches for combos containing a card whose'name contains _text_
+* \`card=text\` searches for combos containing a card named exactly _text_
+* \`card<number\` searches for combos with less than _number_ cards
+* \`card<=number\` searches for combos with less than or equal _number_ cards
+* \`card>number\` searches for combos with more than _number_ cards
+* \`card>=number\` searches for combos with at least _number_ cards
+* \`card=number\` searches for combos with exactly _number_ cards
 
 ### \`card\` keyword aliases
 
@@ -304,23 +305,29 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 `
 
 const COLOR_IDENTITY_DESCRIPTION = `
-The color identity of a combo determines what colors the combo is comprised of.
-The most basic search is in the form \`coloridentity:bug\`, which in this example finds all the combos that can be played within a green, blue, black color identity.
-The coloridentity parameter accepts full color names like  green or the single character representations of the colors (w, u, b, r,  g).
-You can use the names for color combinations such as  boros, izzet, naya,  sultai, colorless, fivecolor, penta, etc.
+Each combo has a color identity determined by the color identities of its cards. This strictly follows Commander color identity rules.
+By default, the color identity search finds all combos that a deck of that color identity could include. For example, \`coloridentity:bg\`
+finds two-color black-green combos, but also monocolor black, monocolor green, and colorless combos.
+
+The coloridentity parameter accepts full color names (such as \`green\`), single character abbreviations (\`w\`, \`u\`, \`b\`, \`r\`, \`g\`, and \`c\` for colorless),
+and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`penta\`, etc.).
+
+> [!IMPORTANT]
+> Color is not tracked separately from color identity. [Noble Hierarch](https://scryfall.com/search?q=!%22Noble%20Hierarch%22)
+> is always green, white, and blue for the purpose of these searches.
 
 ### \`coloridentity\` operators
 
-* \`coloridentity:text\` or \`coloridentity<=text\` search for variants within _text_ identity
-* \`coloridentity=text\` searches for variants whose identity is exactly \`text\`
-* \`coloridentity<text\` searches for variants within _text_ identity but excludes variants whose identity is exactly \`text\`
-* \`coloridentity>=text\` searches for variants whose identity contains _text_
-* \`coloridentity>text\` searches for variants whose identity contains _text_ but excludes variants whose identity is exactly \`text\`
-* \`coloridentity=number\` searches for variants whose identity is of exactly \`number\` colors
-* \`coloridentity<number\` searches for variants whose identity is of more than \`number\` colors
-* \`coloridentity<=number\` searches for variants whose identity is of at least \`number\` colors
-* \`coloridentity<number\` searches for variants whose identity is of less than \`number\` colors
-* \`coloridentity<=number\` searches for variants whose identity is of less than or equal \`number\` colors
+* \`coloridentity:text\` or \`coloridentity<=text\` search for combos within _text_ identity
+* \`coloridentity=text\` searches for combos whose identity is exactly _text_
+* \`coloridentity<text\` searches for combos within _text_ identity but excludes combos whose identity is exactly _text_
+* \`coloridentity>=text\` searches for combos whose identity contains _text_
+* \`coloridentity>text\` searches for combos whose identity contains _text_ but is not exactly _text_
+* \`coloridentity=number\` searches for combos whose identity has exactly _number_ colors
+* \`coloridentity>number\` searches for combos whose identity has more than _number_ colors
+* \`coloridentity>=number\` searches for combos whose identity has _number_ or more colors
+* \`coloridentity<number\` searches for combos whose identity has fewer than _number_ colors
+* \`coloridentity<=number\` searches for combos whose identity has _number_ or fewer colors
 
 ### \`coloridentity\` keyword aliases
 
@@ -334,11 +341,14 @@ You can use the names for color combinations such as  boros, izzet, naya,  sulta
 `
 
 const PREREQUISITES_DESCRIPTION = `
-The prerequisites are the elements that need to be in place before the combo can be initiated.
-The only supported operator is \`prerequisites:text\` which searches for _text_ in the "other prerequisites" section of a variant prerequisites, meaning it doesn't work for variant starting locations or initial state, nor mana needed.
+A combo's prerequisites describe the game state required to start the combo.
+The only supported operator is \`prerequisites:text\`, which searches for _text_ in the prerequisites of combos.
 
 > [!WARNING]
-> The support for matching the mana needed, starting locations and starting card state has been dropped.
+> In most cases, this will _not_ search the text of the following "basic" prerequisites found in almost every combo:
+> * Mana available
+> * Starting card locations
+> * Some starting card states (especially those that appear in the same line as the starting location, such as "Clone on the battlefield as a copy of Kiki-Jiki")
 
 ### \`prerequisites\` keyword aliases
 
@@ -348,8 +358,9 @@ The only supported operator is \`prerequisites:text\` which searches for _text_ 
 `
 
 const STEPS_DESCRIPTION = `
-The steps are the elements that need to be followed to execute the combo.
-The only supported operator is \`steps:text\` which searches for _text_ in the description of a variant.
+Steps describe how to execute the combo.
+The only supported operator is \`steps:text\` which searches for _text_ in the Steps field.
+Use double quotes if your search contains spaces (\`steps:"multiword text"\`).
 
 ### \`steps\` keyword aliases
 
@@ -358,22 +369,22 @@ The only supported operator is \`steps:text\` which searches for _text_ in the d
 * \`desc\`
 
 > [!WARNING]
-> numeric operators support has been dropped.
+> Numeric operators support has been dropped. You can no longer search for combos based on the number of steps.
 `
 
 const RESULTS_DESCRIPTION = `
-The results are the effects that occur as a result of completing the combo.
-For example, \`results:infinite\` searches for variants that result in something infinite.
+Results are the effects that occur as a result of completing the combo.
+For example, \`results:turns\` searches for combos that result in infinite or near-infinite turns.
 
 ### \`results\` operators
 
-* \`results:text\` searches for variants that result in a feature whose name contains _text_
-* \`results=text\` searches for variants that result in a feature whose name is exactly _text_
-* \`results=number\` searches for variants that result in a number of features equal to _number_
-* \`results<number\` searches for variants that result in a number of features less than _number_
-* \`results<=number\` searches for variants that result in a number of features less than or equal to _number_
-* \`results>number\` searches for variants that result in a number of features greater than _number_
-* \`results>=number\` searches for variants that result in a number of features greater than or equal to _number_
+* \`results:text\` searches for combos that result in a feature whose name contains _text_
+* \`results=text\` searches for combos that result in a feature whose name is exactly _text_
+* \`results=number\` earches for combos that result in exactly _number_ features
+* \`results<number\` searches for combos that result in fewer than _number_ features
+* \`results<=number\` searches for combos that result in _number_ or fewer features
+* \`results>number\` searches for combos that result in more than _number_ features
+* \`results>=number\` searches for combos that result in _number_ or more features
 
 ## \`results\` keyword aliases
 
@@ -381,10 +392,13 @@ For example, \`results:infinite\` searches for variants that result in something
 `
 
 const SPELLBOOK_ID_DESCRIPTION = `
-You can also search by spellbookid if you want to find a specific combo by its id.
-Note that this can also be achieved by manipulating the variant detail page URL at the top of your browser window.
+Commander Spellbook assigns a unique ID to each combo. Use \`spellbookid\` to search by this ID.
+For example, \`spellbookid:2120-5329\` searches for a variant whose id is exactly _2120-5329_.
 
-For example, \`spellbookid:1400-1401\` searches for a variant whose id is \`1400-1401\`.
+> [!TIP]
+> The spellbook ID is a sequence of numbers and dashes found in each combo page's URL.
+> You can change this portion of the URL to go directly to any combo page.
+
 
 ### \`spellbookid\` aliases
 
@@ -392,52 +406,55 @@ For example, \`spellbookid:1400-1401\` searches for a variant whose id is \`1400
 `
 
 const TAG_DESCRIPTION = `
-Variants are automatically tagged based on their features.
-You can find variants matching a tag called \`tag\` with \`is:tag\`, which is the only alias and operator supported.
+Combos are tagged based on certain features.
+You can search these using \`is:tag\`, which is the only alias and operator supported.
 
 ### Supported tags
 
-Tags are in some cases manually added to variants, meaning their support is always a work in progress.
-Otherwise, they are called "automatic" and their support is complete and always up-to-date.
+Some tags are manually added to variants, meaning their support is always a work in progress.
+Other tags are applied automatically, so their support is complete and always up-to-date.
 
 #### Automatic tags
 
-* \`preview\`/\`previewed\`/\`spoiler\`/\`spoiled\`: means that a variant contains an unreleased, spoiled card
-* \`commander\`: means that the variant can only work in commander because it requires a specific commander
-* \`featured\`: means that the variant appears in the feature page (usually variants from recent sets are semi-automatically put there)
+* \`preview\`/\`previewed\`/\`spoiler\`/\`spoiled\`: the combo contains an unreleased card
+* \`commander\`: the combo requires you to have a commander, so it will not work in most non-Commander formats
+* \`featured\`: the combo appears in the feature page, which usually displays combos using cards from a recent or upcoming set
 
-<!-- #### Manual tags (WIP)
+#### Manual tags
 
+The support for manual tags will be added in the future.
+
+<!--
 * \`lock\`: means that the variant locks your opponent
 * \`infinite\`: means that the variant contains an infinite loop
 * \`risky\`/\`allin\`: means that the variant steps have some chance to fail and result in a possible loss
-* \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game -->
+* \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
+-->
 `
 
 const COMMANDER_DESCRIPTION = `
-You can search for variants requiring a specific commander.
-For example, \`commander:text\` searches for variants that require a commander whose name contains _text_.
-This keyword has no aliases.
+You can search for combos requiring a specific commander.
+For example, \`commander:text\` searches for combos that require a commander whose name contains _text_.
 
 ### \`commander\` operators
 
-* \`commander:text\` searches for variants that require a commander whose name contains _text_
-* \`commander=text\` searches for variants that require a commander whose name is exactly _text_
+* \`commander:text\` searches for combos that require a commander whose name contains _text_
+* \`commander=text\` searches for combos that require a commander whose name is exactly _text_
 `
 
 const POPULARITY_DESCRIPTION = `
-You can filter and later sort variants by their popularity inside EDHREC decklists.
-The popularity value is the number of decks in which the variant is present, updated regularly.
+You can filter and later sort combos by their popularity among EDHREC decklists.
+The popularity value is the number of decks containing the combo, and is updated regularly.
 
-For example, \`popularity>10000\` searches for variants that are present in more than 10000 decks.
+For example, \`popularity>10000\` searches for combos that are present in more than 10000 decks.
 
 ### \`popularity\` operators
 
-* \`popularity:number\` or \`popularity=number\` search for variants whose popularity is exactly \`number\`
-* \`popularity>number\` searches for variants whose popularity is more than \`number\`
-* \`popularity>=number\` searches for variants whose popularity is at least \`number\`
-* \`popularity<number\` searches for variants whose popularity is less than \`number\`
-* \`popularity<=number\` searches for variants whose popularity is less than or equal to \`number\`
+* \`popularity:number\` or \`popularity=number\` search for combos found in exactly \`number\` decks
+* \`popularity>number\` searches for combos found in more than \`number\` decks
+* \`popularity>=number\` searches for combos found in at least \`number\` decks
+* \`popularity<number\` searches for combos found in fewer than \`number\` decks
+* \`popularity<=number\` searches for combos found in at most \`number\` decks
 
 ### \`popularity\` keyword aliases
 
@@ -447,38 +464,42 @@ For example, \`popularity>10000\` searches for variants that are present in more
 `
 
 const PRICE_DESCRIPTION = `
-You can search for variant whose cards priced sum to some value.
-For example, \`price<number\` searches for variants costing less than _number_ dollars, based on prices from CardKingdom.
+You can filter combos based on the total price of the cards it contains.
+For example, \`price<number\` searches for combos costing less than _number_ US dollars, based on prices from CardKingdom.
 
 > [!NOTE]
 > This parameter only supports whole numbers.
 
 ### \`price\` operators
 
-* \`price:number\` or \`price=number\` searches for variants whose price is exactly _number_
-* \`price>number\` searches for variants that cost more than _number_
-* \`price>=number\` searches for variants that cost at least _number_
-* \`price<number\` searches for variants that cost less than _number_
-* \`price<=number\` searches for variants that cost less than or equal to _number_
+* \`price:number\` or \`price=number\` searches for combos whose price is exactly _number_
+* \`price>number\` searches for combos that cost more than _number_
+* \`price>=number\` searches for combos that cost at least _number_
+* \`price<number\` searches for combos that cost less than _number_
+* \`price<=number\` searches for combos that cost at most _number_
 
 ### \`price\` keyword aliases and supported stores
 
-* \`usd\`/\`price\`/\`cardkingdom\`: [CardKingdom](https://www.cardkingdom.com/)
-* \`tcgplayer\`: [TCGPlayer](https://www.tcgplayer.com/)
-* \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic)
+* \`usd\`/\`price\`/\`cardkingdom\`: [CardKingdom](https://www.cardkingdom.com/) prices in USD
+* \`tcgplayer\`: [TCGPlayer](https://www.tcgplayer.com/) prices in USD
+* \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic) prices in Euros
 
-For example, \`cardmarket>100\` searches for variants that cost more than 100€ on Cardmarket (by adding the cards' single prices).
+For example, \`cardmarket>100\` searches for combos whose component cards cost more than 100€ in total on Cardmarket.
 `
 
 const LEGALITY_DESCRIPTION = `
-Variants can be used in many different formats. You can filter for your preferred Magic format with the keyword \`legal\`.
-For example, \`legality:format\` searches for variants legal in _format_.
-On the contrary, \`banned:format\` searches for variants not legal in _format_. It's equivalent to \`-legal:format\`.
+You can limit results to your preferred Magic format with the keyword \`legal\`.
+For example, \`legality:format\` searches for combos legal in _format_.
+On the other hand, \`banned:format\` searches for combos not legal in _format_
+(either because of the format's banlist or its deck construction rules).
+
+> [!NOTE]
+> \`banned:format\` is equivalent to \`-legal:format\`.
 
 ### Supported formats
 
 * \`commander\`
-* \`pauper_commander\` (including variants that use uncommon legendary creatures)
+* \`pauper_commander\` (including combos that use up to one uncommon legendary creatures)
 * \`pauper_commander_main\` (only commons)
 * \`oathbreaker\`
 * \`predh\`
@@ -491,7 +512,8 @@ On the contrary, \`banned:format\` searches for variants not legal in _format_. 
 * \`pauper\`
 
 > [!NOTE]
-> Currently, variants requiring a commander are automatically excluded if the legal filter is applied with a non-commander format.
+> Combos requiring a commander are automatically excluded if the legal filter is applied with a non-commander format.
+> However, this search may return false results due to other format rules that it does not take into account, such as the number of players in a game.
 
 ### \`legal\` keyword aliases
 
@@ -501,9 +523,9 @@ On the contrary, \`banned:format\` searches for variants not legal in _format_. 
 
 const SORT_ORDER_DESCRIPTION = `
 > [!CAUTION]
-> Sorting and ordering can't be done with the query syntax anymore.
-> The reason being that every other keyword represents a filter, while sort doesn't. This blocks the way of supporting AND/OR + parenthesis logic, because sorting can't be logically combined with the rest of the filters.
-> Sorting criteria will be selected by the user AFTER inputing the query, just like it's done in [Scryfall search](https://scryfall.com/search?as=grid&extras=true&lang=any&order=name&q=&unique=cards).
+> You can no longer sort results using the query syntax.
+> Removing this feature allows to support more powerful search logic such as AND, OR, and parentheticals (will be added in the future).
+> You can still sort results from the search results page, by selecting options from the drop-down menus.
 `
 
 const SyntaxGuide: React.FC<Props> = ({}: Props) => {
