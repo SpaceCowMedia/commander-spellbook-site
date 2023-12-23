@@ -1,6 +1,6 @@
 import React from "react";
 import ExternalLink from "../ExternalLink/ExternalLink";
-import Card from "lib/card";
+import EDHRECService from "../../../services/edhrec.service";
 
 type Props = {
   name: string;
@@ -9,10 +9,9 @@ type Props = {
 };
 
 const CardLink: React.FC<Props> = ({ name, children, className }: Props) => {
-  const card = new Card(name);
 
   let link = "";
-  const edhrecLink = card.getEdhrecLink();
+  const edhrecLink = EDHRECService.getCardUrl(name);
   if (edhrecLink) link = edhrecLink;
   else {
     let quotes = "%22";

@@ -1,8 +1,6 @@
 import scryfall from "scryfall-client";
-import lookup from "lib/spellbook-api";
 
-import type { FormattedApiResponse, ColorIdentityColors } from "lib/types";
-import type Card from "lib/card";
+import type {ColorIdentityColors} from "lib/types";
 
 // this regex supports decks parsing in these formats:
 // // a heading that starts with // gets ignored
@@ -75,39 +73,11 @@ import type Card from "lib/card";
 const DECK_ENTRY_REGEX =
   /^\s*(?:(?<count>\d+)[xX]?\s+)?(?<name>[^/\s].+?)\s*(?:[(#].*)?$/;
 
-type CombosInDecklist = {
-  combosInDecklist: FormattedApiResponse[];
-  potentialCombos: FormattedApiResponse[];
-  missingCardsForPotentialCombos: Card[];
-};
-
 export type Deck = {
   cards: string[];
   numberOfCards: number;
   colorIdentity: ColorIdentityColors[];
 };
-
-function findMissingCards(decklist: string[], cardsInCombo: Card[]): Card[] {
-  const missingCards: Card[] = [];
-
-  cardsInCombo.forEach((card) => {
-    if (missingCards.length > 1) {
-      // no need to keep checking if we know up front
-      // that we're missing more than one card
-      return;
-    }
-
-    const cardIsInDeck = decklist.find((cardName) => {
-      return card.matchesNameExactly(cardName);
-    });
-
-    if (!cardIsInDeck) {
-      missingCards.push(card);
-    }
-  });
-
-  return missingCards;
-}
 
 async function getColorIdentityFromDeck(
   cards: string[]
@@ -178,46 +148,4 @@ export function convertDecklistToArray(decklist: string): string[] {
     );
 
 
-}
-
-// this function loops through the entire combo database
-// to pull out any combos where the entire set of cards
-// are available in the provided decklist
-// and any combos where only a single card is missing
-export async function findCombosFromDecklist(
-  decklist: string[]
-): Promise<CombosInDecklist> {
-  const combos = await lookup();
-  const combosInDecklist: FormattedApiResponse[] = [];
-  const potentialCombos: FormattedApiResponse[] = [];
-  const missingCardsForPotentialCombos: Card[] = [];
-
-  combos.forEach((combo) => {
-    const missingCards = findMissingCards(
-      decklist,
-      combo.cards as unknown as Card[]
-    );
-
-    if (missingCards.length === 0) {
-      combosInDecklist.push(combo);
-    } else if (missingCards.length === 1) {
-      const missingCard = missingCards[0];
-
-      if (missingCard.isBanned()) {
-        // we want to surface combos with banned cards
-        // that are already in the deck, but not suggest
-        // a user add a banned card _to_ their deck
-        return;
-      }
-
-      potentialCombos.push(combo);
-      missingCardsForPotentialCombos.push(missingCard);
-    }
-  });
-
-  return {
-    combosInDecklist,
-    potentialCombos,
-    missingCardsForPotentialCombos,
-  };
 }

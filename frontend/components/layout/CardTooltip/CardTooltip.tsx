@@ -1,6 +1,5 @@
 import styles from "./cardTooltip.module.scss";
 import { useRef } from "react";
-import getExternalCardData from "lib/getExternalCardData";
 
 type Props = {
   cardName?: string;
@@ -8,7 +7,7 @@ type Props = {
 };
 
 const CardTooltip = ({ cardName, children }: Props) => {
-  const url = cardName ? getExternalCardData(cardName).images.oracle : "";
+  const url = cardName ? `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${cardName}` : "";
 
   const divRef = useRef<HTMLDivElement>(null);
 

@@ -1,32 +1,10 @@
 import SplashPage from "../components/layout/SplashPage/SplashPage";
-import { useEffect } from "react";
-import random from "../lib/random";
-import { useRouter } from "next/router";
-import { Url } from "url";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {RequestService} from "../services/request.service";
 import {GetServerSidePropsContext} from "next";
 
 const Random = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    let query = router.query.q;
-    if (typeof query !== "string") query = "";
-
-    random(query)
-      .then((combo) => {
-        const url: Partial<Url> = {
-          pathname: `/combo/${combo.commanderSpellbookId}`,
-        };
-        if (query) url.query = `${query}`;
-        router.replace(url);
-      })
-      .catch(() => {
-        router.replace("/combo-not-found");
-      });
-  }, []);
 
   return (
     <PageWrapper>

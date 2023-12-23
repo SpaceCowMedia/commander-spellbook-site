@@ -1,15 +1,4 @@
-import {CardComponent, CompressedApiResponse, NewPrerequisiteType, Variant, VariantBulkData} from "./types";
-
-export const invert = (input: Record<string, string>) => {
-  let counter = 0
-  const output: Record<string, string> = {}
-  for (const key in input) {
-    if (output[input[key]]) counter++
-    output[input[key]] = key
-  }
-  console.log(`Found ${counter} duplicate ids in the id map.`)
-  return output
-}
+import {CardComponent, NewPrerequisiteType, Variant } from "./types";
 
 const ZONE_MAP = {
   "H": "in hand",
@@ -116,39 +105,5 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
   if (variant.otherPrerequisites) variant.otherPrerequisites.split(/\.\s+/ig).forEach(prereq => output.push({z: 'other', s: prereq}))
   if (variant.manaNeeded) output.push({z: 'mana', s: `${variant.manaNeeded} available`})
 
-  return output
-}
-
-export const getPrerequisiteString = (variant: Variant) => {
-  let output = ""
-  for (const card of variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name))) {
-    output += `${card.card.name} `
-    output += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
-    output += ". "
-  }
-  output += (variant.otherPrerequisites || "")
-  output += variant.manaNeeded ? `${variant.manaNeeded} available. ` : ``
-  return output
-}
-
-
-export const processBackendResponses = (variants: VariantBulkData['variants'], reverseIdMap: Record<string, string>={}): CompressedApiResponse[] => {
-  const idMap = invert(reverseIdMap)
-  const output: CompressedApiResponse[] = []
-  for (const variant of variants) {
-    const compressedVariant: CompressedApiResponse = {
-      d : variant.id,
-      c : variant.uses.sort((a, b) => a.card.name.localeCompare(b.card.name)).map(card => card.card.name),
-      i : variant.identity.toLowerCase().split("").join(','),
-      t : getPrerequisiteList(variant),
-      p : getPrerequisiteString(variant),
-      s : variant.description,
-      r : variant.produces.map(feature => feature.name).join('. '),
-      b : (variant.legal || variant.legalities?.commander) ? 0 : 1,
-      o : variant.spoiler ? 1 : 0,
-      l: idMap[variant.id] ? idMap[variant.id] : variant.id
-    }
-    output.push(compressedVariant)
-  }
   return output
 }

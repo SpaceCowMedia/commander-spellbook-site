@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SearchMessage from "../components/search/SearchMessage/SearchMessage";
 import StyledSelect, {
   Option,
 } from "../components/layout/StyledSelect/StyledSelect";
 import { useRouter } from "next/router";
-import search from "../lib/search";
-import {BackendCombo, FormattedApiResponse, SearchResults, Variant} from "../lib/types";
-import { DEFAULT_ORDER, DEFAULT_SORT, DEFAULT_VENDOR } from "../lib/constants";
+import {Variant} from "../lib/types";
+import { DEFAULT_ORDER, DEFAULT_SORT } from "../lib/constants";
 import SearchPagination from "../components/search/SearchPagination/SearchPagination";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import NoCombosFound from "../components/layout/NoCombosFound/NoCombosFound";
@@ -15,20 +14,11 @@ import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {GetServerSideProps} from "next";
 import {RequestService} from "../services/request.service";
 import {PaginatedResponse} from "../types/api";
-import {processBackendResponses} from "../lib/backend-processors";
-import formatApiResponse from "../lib/format-api-response";
-import {deserializeCombo, serializeCombo, SerializedCombo} from "../lib/serialize-combo";
 
 type Props = {
-  serializedCombos: SerializedCombo[]
+  combos: Variant[]
   count: number
   page: number
-};
-
-export type SearchResultsState = Omit<SearchResults, "errors"> & {
-  errors: string;
-  page: number;
-  maxNumberOfCombosPerPage: number;
 };
 
 const SORT_OPTIONS: Option[] = [
@@ -68,9 +58,7 @@ const ORDER_OPTIONS: Option[] = [
 ];
 
 const PAGE_SIZE = 50
-const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
-
-  const combos = serializedCombos.map(combo => deserializeCombo(combo))
+const Search: React.FC<Props> = ({combos, count, page}: Props) => {
 
   const router = useRouter();
 
@@ -165,6 +153,7 @@ const Search: React.FC<Props> = ({serializedCombos, count, page}: Props) => {
             <div className="w-full">
               <ComboResults
                 results={combos}
+                sort={sort}
               />
               <SearchPagination
                 currentPage={page}
@@ -197,18 +186,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const results = await requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`)
 
   const backendCombos = results ? results.results : []
-  const combos = formatApiResponse(processBackendResponses(backendCombos, {}))
-  if (combos.length === 1) {
-    return {
-      redirect: {
-        destination: `/combo/${combos[0].commanderSpellbookId}/?q=${context.query.q}`,
-        permanent: false,
-      }
-    }
-  }
+
   return {
     props: {
-      serializedCombos: combos.map(combo => serializeCombo(combo)),
+      combos: backendCombos,
       count: results.count,
       page: context.query.page || 1,
 

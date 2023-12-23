@@ -1,6 +1,6 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import pluralize from "pluralize";
-import { ColorIdentityColors, FormattedApiResponse } from "../lib/types";
+import {ColorIdentityColors, Variant} from "../lib/types";
 import {
   convertDecklistToDeck, Deck,
 } from "../lib/decklist-parser";
@@ -10,8 +10,6 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import findMyCombosService from "../services/findMyCombos.service";
-import {processBackendResponses} from "../lib/backend-processors";
-import formatApiResponse from "../lib/format-api-response";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -37,12 +35,12 @@ const FindMyCombos = () => {
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Deck>();
   const [results, setResults] = useState<{
     identity: string,
-    included: FormattedApiResponse[],
-    includedByChangingCommanders: FormattedApiResponse[],
-    almostIncluded: FormattedApiResponse[],
-    almostIncludedByChangingCommanders: FormattedApiResponse[],
-    almostIncludedByAddingColors: FormattedApiResponse[],
-    almostIncludedByAddingColorsAndChangingCommanders: FormattedApiResponse[],
+    included: Variant[],
+    includedByChangingCommanders: Variant[],
+    almostIncluded: Variant[],
+    almostIncludedByChangingCommanders: Variant[],
+    almostIncludedByAddingColors: Variant[],
+    almostIncludedByAddingColorsAndChangingCommanders: Variant[],
   }>(DEFAULT_RESULTS)
 
   const [potentialCombosColorIdentity, setPotentialCombosColorIdentity] =
@@ -92,12 +90,12 @@ const FindMyCombos = () => {
     setCurrentlyParsedDeck(deck)
     const newResults = {
       identity: combos.results.identity,
-      included: (forwardedResults?.included || []).concat(formatApiResponse(processBackendResponses(combos.results.included))),
-      includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.includedByChangingCommanders))),
-      almostIncluded: (forwardedResults?.almostIncluded || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncluded))),
-      almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByChangingCommanders))),
-      almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColors))),
-      almostIncludedByAddingColorsAndChangingCommanders: (forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []).concat(formatApiResponse(processBackendResponses(combos.results.almostIncludedByAddingColorsAndChangingCommanders))),
+      included: (forwardedResults?.included || []).concat(combos.results.included),
+      includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(combos.results.includedByChangingCommanders),
+      almostIncluded: (forwardedResults?.almostIncluded || []).concat(combos.results.almostIncluded),
+      almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(combos.results.almostIncludedByChangingCommanders),
+      almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(combos.results.almostIncludedByAddingColors),
+      almostIncludedByAddingColorsAndChangingCommanders: (forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []).concat(combos.results.almostIncludedByAddingColorsAndChangingCommanders),
     }
 
     if (combos.next && page < 5) return lookupCombos(newDeckList, newCommanderList, newResults, combos.next, page+1); // Adding a page limit to prevent infinite loops

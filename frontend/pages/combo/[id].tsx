@@ -1,5 +1,4 @@
 import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
-import findById from "../../lib/find-by-id";
 import pluralize from "pluralize";
 import CardHeader from "../../components/combo/CardHeader/CardHeader";
 import CardGroup from "../../components/combo/CardGroup/CardGroup";
@@ -7,26 +6,18 @@ import ColorIdentity from "../../components/layout/ColorIdentity/ColorIdentity";
 import ComboList from "../../components/combo/ComboList/ComboList";
 import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
-import getAllCombos from "../../lib/get-all-combos";
 import { GetStaticPaths } from "next";
-import {
-  serializeCombo,
-  deserializeCombo,
-  SerializedCombo,
-} from "lib/serialize-combo";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
-import React, { useEffect } from "react";
-import { FormattedApiResponse } from "../../lib/types";
-import { useState } from "react";
-import SplashPage from "../../components/layout/SplashPage/SplashPage";
-import { useRouter } from "next/router";
+import React from "react";
+import { Variant} from "../../lib/types";
 import PrerequisiteList from "../../components/combo/PrerequisiteList/PrerequisiteList";
-import {processBackendResponses} from "../../lib/backend-processors";
-import formatApiResponse from "../../lib/format-api-response";
+import {getPrerequisiteList} from "../../lib/backend-processors";
+import EDHRECService from "../../services/edhrec.service";
+import VariantService from "../../services/variant.service";
+import variantService from "../../services/variant.service";
 
 type Props = {
-  serializedCombo: SerializedCombo;
-  retryId?: string;
+  combo: Variant;
 };
 
 type Price = {
@@ -70,19 +61,18 @@ const NUMBERS = [
   "ten",
 ];
 
-const Combo = ({ serializedCombo, retryId }: Props) => {
-  const combo = deserializeCombo(serializedCombo)
+const Combo = ({ combo }: Props) => {
 
 
 
-  const cards = combo.cards.map((card) => {
+  const cards = combo.uses.map((card) => {
     return {
-      name: card.name,
-      artUrl: card.getImageUrl("artCrop"),
-      oracleImageUrl: card.getImageUrl("oracle"),
+      name: card.card.name,
+      artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${card.card.name}`,
+      oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${card.card.name}`,
     };
   });
-  const cardNames = cards.map((card) => card.name);
+  const cardNames = combo.uses.map(card => card.card.name)
   const cardArts = cards.map((card) => card.artUrl);
   const title =
     cardNames.length === 0
@@ -94,7 +84,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
       : cardNames.length === 4
       ? `(and ${NUMBERS[1]} other card)`
       : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
-  const numberOfDecks = combo.numberOfEDHRECDecks;
+  const numberOfDecks = combo.popularity;
   const metaData =
     numberOfDecks > 0
       ? [
@@ -105,10 +95,10 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
         ]
       : [];
 
-  const colors = Array.from(combo.colorIdentity.colors);
-  const prerequisites = Array.from(combo.prerequisites);
-  const steps = Array.from(combo.steps);
-  const results = Array.from(combo.results);
+  const colors = Array.from(combo.identity)
+  const prerequisites = getPrerequisiteList(combo)
+  const steps = combo.description.split('\n');
+  const results = combo.produces.map(feature => feature.name)
   const loaded = true;
 
   return (
@@ -139,17 +129,7 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
             iterations={cardNames}
           />
 
-          { combo.prerequisiteList ?
-            <PrerequisiteList prerequisites={combo.prerequisiteList} id="combo-prerequisites" cardsInCombo={cardNames}/>
-           :
-            <ComboList
-              title="Prerequisites"
-              id="combo-prerequisites"
-              iterations={prerequisites}
-              cardsInCombo={cardNames}
-            />
-          }
-
+          <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames}/>
 
           <ComboList
             title="Steps"
@@ -183,13 +163,13 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
               <ColorIdentity colors={colors} />
             </div>
 
-            {combo.hasBannedCard && (
+            {!combo.legalities?.commander && (
               <div className={styles.bannedWarning}>
                 WARNING: Combo contains cards that are banned in Commander
               </div>
             )}
 
-            {combo.hasSpoiledCard && (
+            {combo.spoiler && (
               <div className={styles.previewedWarning}>
                 WARNING: Combo contains cards that have not been released yet
                 (and are not yet legal in Commander)
@@ -198,11 +178,11 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
 
             <ComboSidebarLinks
               cards={cardNames}
-              comboLink={combo.permalink}
-              edhrecLink={combo.edhrecLink}
-              comboId={combo.commanderSpellbookId}
-              tcgPlayerPrice={combo.cards.getPriceAsString("tcgplayer")}
-              cardKingdomPrice={combo.cards.getPriceAsString("cardkingdom")}
+              comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
+              edhrecLink={EDHRECService.getComboUrl(combo)}
+              comboId={combo.id}
+              tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
+              cardKingdomPrice={combo.prices?.cardkingdom || "-"}
             />
           </aside>
         )}
@@ -214,9 +194,9 @@ const Combo = ({ serializedCombo, retryId }: Props) => {
 export default Combo;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const combos = await getAllCombos();
+  const combos = await VariantService.fetchAllVariants()
   const paths = combos.map((combo) => ({
-    params: { id: `${combo.commanderSpellbookId}` },
+    params: { id: `${combo.id}` },
   }));
 
   return { paths, fallback: 'blocking' };
@@ -227,46 +207,37 @@ export const getStaticProps = async ({
 }: {
   params: { id: string };
 }) => {
-  const combo = await findById(params.id);
 
-  if (!combo) {
-    // If the combo is not found, check if it's a legacy combo and reroute if it's found
-    if (!params.id.includes('-')) {
-      const legacyCombo = await findById(params.id, false, true);
-      if (legacyCombo) return {
-        redirect: {
-          destination: `/combo/${legacyCombo.commanderSpellbookId}`,
-          permanent: false,
-        },
-      };
-    }
-    // If it's a new combo id, check the backend
-    else  {
-      try {
-        const backendCombo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/variants/${params.id}/`).then(res => res.json());
-        if (backendCombo && backendCombo.detail !== 'Not found.') {
-          const compressedRes = processBackendResponses([backendCombo], {})
-          const formattedCombo = formatApiResponse(compressedRes)[0];
-          return {
-            props: {
-              serializedCombo: serializeCombo(formattedCombo),
-            }
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      }
-
-    }
-    // Finally 404
-    return {
-      notFound: true,
+  // Check if it's a legacy combo and reroute if it's found
+  if (!params.id.includes('-')) {
+    const legacyComboMap = await variantService.fetchLegacyMap()
+    const variantId = legacyComboMap[params.id]
+    if (variantId) return {
+      redirect: {
+        destination: `/combo/${variantId}`,
+        permanent: false,
+      },
     };
   }
+  // If it's a new combo id, check the backend
+  else  {
+    try {
+      const backendCombo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/variants/${params.id}/`).then(res => res.json());
+      if (backendCombo && backendCombo.detail !== 'Not found.') {
+        return {
+          props: {
+            combo: backendCombo,
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
+  }
+  // Finally 404
   return {
-    props: {
-      serializedCombo: serializeCombo(combo),
-    },
+    notFound: true,
   };
+
 };

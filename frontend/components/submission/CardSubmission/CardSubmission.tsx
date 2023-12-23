@@ -1,9 +1,9 @@
 import {SubmissionCardType, TemplateSubmissionType} from "../../../types/submission";
-import AutocompleteInput from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
+import AutocompleteInput, {AutoCompleteOption} from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
 import {useEffect, useState} from "react";
 import Select, {MultiValue} from 'react-select'
 import TemplateService from "../../../services/template.service";
-import cardAutocompleteOptionsUnmapped from "assets/autocomplete-data/cards.json";
+import CardService from "../../../services/card.service";
 
 const ZONE_OPTIONS = [
   {value: 'H', label: 'Hand'},
@@ -22,15 +22,13 @@ type Props = {
   index: number
   template?: boolean
 }
-
-const cardAutocompleteOptions = cardAutocompleteOptionsUnmapped.map((card: any) => ({value: card.label, label: card.label}))
-
 const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
 
   const [nameInput, setNameInput] = useState(card.card || '')
   const [templateInput, setTemplateInput] = useState(card.template || '')
   const [templateOptions, setTemplateOptions] = useState<Array<{value: string, label: string}>>([])
   const [templatesLoading, setTemplatesLoading] = useState(false)
+  const [cardAutocompleteOptions, setCardAutocompleteOptions] = useState<AutoCompleteOption[]>([])
 
   const handleZoneChange = (zoneLocations: MultiValue<{value: string, label: string}>) => {
     const newZoneList = zoneLocations.map(zone => zone.value)
@@ -63,6 +61,11 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
     setNameInput(value)
     onChange({...card as SubmissionCardType, card: value})
   }
+
+  useEffect(() => {
+    CardService.getNameAutocomplete()
+      .then(options => setCardAutocompleteOptions(options))
+  }, [])
 
   return (
     <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">

@@ -2,40 +2,31 @@ import styles from "./comboResults.module.scss";
 import Link from "next/link";
 import ColorIdentity from "../../layout/ColorIdentity/ColorIdentity";
 import CardTooltip from "../../layout/CardTooltip/CardTooltip";
-import {FormattedApiResponse, VendorValue} from "../../../lib/types";
-import Card from "../../../lib/card";
+import {Variant, VendorValue} from "../../../lib/types";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import pluralize from "pluralize";
 import {Deck} from "../../../lib/decklist-parser";
 
 type Props = {
-  missingDecklistCards?: Card[];
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
-  results: FormattedApiResponse[];
+  results: Variant[];
   sort?: string;
   vendor?: VendorValue;
 }
-
-const getCardNames = (combo: FormattedApiResponse) =>
-  combo.cards.map((card) => card.name);
 
 const ComboResults = ({
   results,
   sort,
   vendor,
-  missingDecklistCards = [],
   deck,
 }: Props) => {
-  const isMissingInDecklistCards = (cardName: string) =>
-    !!missingDecklistCards.find((card) => card.matchesNameExactly(cardName));
-
-  const sortStatMessage = (combo: FormattedApiResponse) => {
+  const sortStatMessage = (combo: Variant) => {
     if (!sort) {
       return "";
     }
 
     if (sort === "popularity") {
-      const numberOfDecks = combo.numberOfEDHRECDecks;
+      const numberOfDecks = combo.popularity;
 
       if (!numberOfDecks) {
         return "No deck data (EDHREC)";
@@ -48,23 +39,22 @@ const ComboResults = ({
 
     if (sort === "price" && vendor) {
 
-      if (combo.cards.getPrice(vendor) === 0) {
+      if (!combo.prices?.tcgplayer) {
         return "Price Unavailable";
       }
-      return `$${combo.cards.getPriceAsString(vendor)}`;
+      return `$${combo.prices.tcgplayer}`;
     }
 
-    switch (sort) {
-      case "prerequisites":
-      case "steps":
-      case "results":
-      case "cards":
-        if (combo[sort].length === 1) {
-          // remove the s in the sort word
-          return `1 ${sort.slice(0, -1)}`;
-        }
-        return `${combo[sort].length} ${results.sort}`;
-    }
+    // switch (sort) {
+    //   case "uses":
+    //   case "steps":
+    //   case "produces":
+    //     if (combo[sort].length === 1) {
+    //       // remove the s in the sort word
+    //       return `1 ${sort.slice(0, -1)}`;
+    //     }
+    //     return `${combo[sort].length} ${results.sort}`;
+    // }
 
     return "";
   };
@@ -73,26 +63,26 @@ const ComboResults = ({
     <div className={styles.comboResultsWrapper}>
       {results.map((combo) => (
         <Link
-          href={`/combo/${combo.commanderSpellbookId}`}
-          key={combo.commanderSpellbookId}
+          href={`/combo/${combo.id}`}
+          key={combo.id}
           className={`${styles.comboResult} w-full md:w-1/4`}
         >
           <div className="flex flex-col">
             <div className="flex items-center flex-grow flex-col bg-dark text-white">
-              <ColorIdentity colors={combo.colorIdentity.colors} size="small" />
+              <ColorIdentity colors={Array.from(combo.identity)} size="small" />
             </div>
             <div className="flex-grow border-b-2 border-light">
               <div className="py-1">
                 <span className="sr-only">Cards in combo:</span>
-                {getCardNames(combo).map((cardName) => (
-                  <CardTooltip cardName={cardName} key={cardName}>
+                {combo.uses.map(({card}) => (
+                  <CardTooltip cardName={card.name} key={card.name}>
                     <div className="card-name pl-3 pr-3">
-                      {(isMissingInDecklistCards(cardName) || (deck && !deck.cards.includes(cardName))) ? (
+                      {(deck && !deck.cards.includes(card.name)) ? (
                         <strong className="text-red-800">
-                          {cardName} (not in deck)
+                          {card.name} (not in deck)
                         </strong>
                       ) : (
-                        <span>{cardName}</span>
+                        <span>{card.name}</span>
                       )}
                     </div>
                   </CardTooltip>
@@ -101,9 +91,9 @@ const ComboResults = ({
             </div>
             <div className="flex-grow">
               <span className="sr-only">Results in combo:</span>
-              {combo.results.map((result) => (
-                <div key={result} className={`result pl-3 pr-3`}>
-                  <TextWithMagicSymbol text={result} />
+              {combo.produces.map((result) => (
+                <div key={result.name} className={`result pl-3 pr-3`}>
+                  <TextWithMagicSymbol text={result.name} />
                 </div>
               ))}
             </div>

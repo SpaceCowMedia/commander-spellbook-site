@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import search from "../../../../lib/search";
 import Link from "next/link";
 import { event } from "../../../../lib/googleAnalytics";
 
@@ -20,8 +19,8 @@ const SimilarComboButton = ({ cards, comboId }: Props) => {
   }, `-spellbookid:${comboId}`);
 
   const lookupSimilarCombos = async () => {
-    const result = await search(similarSearchString);
-    setNumberOfSimilarCombos(result.combos.length);
+    // const result = await search(similarSearchString);
+    // setNumberOfSimilarCombos(result.combos.length);
   };
 
   useEffect(() => {

@@ -1,5 +1,4 @@
 import BuyComboButtons from "./BuyComboButtons/BuyComboButtons";
-import SimilarComboButton from "./SimilarComboButton/SimilarComboButton";
 import EdhrecLink from "./EdhrecLink/EdhrecLink";
 import Link from "next/link";
 import ShareComboButtons from "./ShareComboButtons/ShareComboButtons";
@@ -29,7 +28,7 @@ const ComboSidebarLinks = ({
         cardKingdomPrice={cardKingdomPrice}
       />
       <div className="mt-1">
-        <SimilarComboButton cards={cards} comboId={comboId} />
+        {/*<SimilarComboButton cards={cards} comboId={comboId} />*/}
         {!!edhrecLink && <EdhrecLink link={edhrecLink} />}
         <Link
           id="report-error-button"

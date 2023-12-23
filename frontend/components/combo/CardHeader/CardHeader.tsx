@@ -11,10 +11,11 @@ const CardHeader = ({ title = "", subtitle = "", cardsArt = [] }: Props) => {
     <header className={`hidden sm:flex ${styles.header}`}>
       <div className="flex w-full h-64">
         {cardsArt.map((cardArt, index) => (
-          <div
+          <img
+            src={cardArt}
             key={index}
             className={styles.cardWrapper}
-            style={{ backgroundImage: `url(${cardArt})` }}
+            // style={{ backgroundImage: `url(${encodeURI(cardArt)})` }}
           />
         ))}
       </div>

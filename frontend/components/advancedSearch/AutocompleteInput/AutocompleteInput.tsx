@@ -9,7 +9,7 @@ const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
 const BLUR_CLOSE_DELAY = 900;
 
-type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
+export type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
 
 type Props = {
   value: string;

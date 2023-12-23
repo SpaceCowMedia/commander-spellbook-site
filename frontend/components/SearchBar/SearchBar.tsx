@@ -2,9 +2,8 @@ import React, { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./searchBar.module.scss";
 import { useRouter } from "next/router";
-import getAllCombos from "../../lib/get-all-combos";
-import {useCookies} from "react-cookie";
 import UserDropdown from "../layout/UserDropdown/UserDropdown";
+import {variantCount} from "../../services/variant.service";
 
 type Props = {
   onHomepage?: boolean;
@@ -16,7 +15,6 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
-  const [numberOfCombos, setNumberOfCombos] = useState(0);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -29,11 +27,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     setInputValue(router.query.q);
   }, [router.query.q]);
 
-  useEffect(() => {
-    getAllCombos().then((combos) => {
-      setNumberOfCombos(combos.length);
-    });
-  }, []);
+
 
   return (
     <div className={`${styles.outerContainer} ${className}`}>
@@ -70,7 +64,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
             name="q"
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={`Search ${
-              numberOfCombos ? numberOfCombos + " " : ""
+              variantCount ? variantCount + " " : ""
             }EDH combos`}
             id="search-bar-input"
             type="text"

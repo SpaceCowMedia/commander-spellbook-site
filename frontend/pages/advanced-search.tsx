@@ -9,9 +9,9 @@ import styles from "./advanced-search.module.scss";
 import RadioSearchInput from "../components/advancedSearch/RadioSearchInput/RadioSearchInput";
 import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import cardNameAutocompleteData from "assets/autocomplete-data/cards.json";
 import resultAutocompleteData from "assets/autocomplete-data/results.json";
 import {SpellbookIcon} from "../components/layout/Icon/Icon";
+import CardService from "../services/card.service";
 
 type OperatorOption = {
   operator: string;
@@ -320,7 +320,7 @@ const AdvancedSearch = () => {
   const router = useRouter();
 
   const [formState, setFormStateHook] = useState<Data>({
-    cardNameAutocompletes: cardNameAutocompleteData,
+    cardNameAutocompletes: [],
     resultAutocompletes: resultAutocompleteData,
     colorAutocompletes: COLOR_AUTOCOMPLETES,
 
@@ -517,6 +517,12 @@ const AdvancedSearch = () => {
       },
     });
   };
+
+  useEffect(() => {
+    CardService.getNameAutocomplete().then((cardNameAutocompletes) => {
+      setFormState({ cardNameAutocompletes });
+    });
+  }, []);
 
   return (
     <PageWrapper>

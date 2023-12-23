@@ -5,7 +5,7 @@
   @apply relative bg-primary w-full justify-center overflow-hidden;
 
   .cardWrapper {
-    @apply h-full flex-grow bg-top bg-cover;
+    @apply h-full flex-grow object-cover;
   }
 
   .mask,
