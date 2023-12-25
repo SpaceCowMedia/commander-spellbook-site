@@ -109,9 +109,9 @@ const CARD_ARTS = {
     uid: "0e259db1-14db-4314-998c-6a076a28d8cb",
     artist: "Kieran Yanner",
   },
-  "Chaos Warp": {
-    uid: "73ca9629-b1e3-49d6-ae10-908b9e4e67ce",
-    artist: "Trevor Claxton",
+  "Mirror Entity": {
+    uid: "3d9149ed-0e59-48b3-b48c-d5ea77b7239e",
+    artist: "Zoltan Boros & Gabor Szikszai",
   },
   "Alexander Clamilton": {
     uid: "a1572109-df70-4335-aac2-1670fe99be54",

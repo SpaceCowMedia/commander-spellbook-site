@@ -166,6 +166,10 @@ const DATA = {
       search: "mv=0",
       description: "Combos that contain a card with a mana value equal to 0",
     },
+    {
+      search: "manavalue>10",
+      description: "Combos that contain a card with a mana value greater than 10",
+    }
   ],
   colorIdentitySnippets: [
     {
@@ -372,7 +376,7 @@ const CARD_TYPE_DESCRIPTION = `
 You can search for combos that contain specific card types.
 For example, \`cardtype:land\` searches for combos that contain at least one land.
 
-> [!IMPORTANT]
+> [!NOTE]
 > Double-faced cards and split cards have their type line split by two slashes (\`//\`).
 > For example, [Delver of Secrets](https://scryfall.com/search?q=!%22Delver%20of%20Secrets%22) has
 > \`Creature — Human Wizard // Creature — Human Insect\` as its type line.
@@ -393,8 +397,8 @@ const CARD_ORACLE_TEXT_DESCRIPTION = `
 You can search for combos that contain cards with specific oracle text.
 For example, \`cardoracle:draw\` searches for combos that contain at least one card whose oracle text contains the word "draw".
 
-> [!IMPORTANT]
-> Double-faced cards and split cards have their oracle text split by two slashes (\`//\`).
+> [!NOTE]
+> Double-faced cards and split cards have their oracle texts concatenated.
 
 ### \`cardoracle\` operators
 
@@ -450,7 +454,7 @@ finds two-color black-green combos, but also monocolor black, monocolor green, a
 The coloridentity parameter accepts full color names (such as \`green\`), single character abbreviations (\`w\`, \`u\`, \`b\`, \`r\`, \`g\`, and \`c\` for colorless),
 and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`penta\`, etc.).
 
-> [!IMPORTANT]
+> [!NOTE]
 > Color is not tracked separately from color identity. [Noble Hierarch](https://scryfall.com/search?q=!%22Noble%20Hierarch%22)
 > is always green, white, and blue for the purpose of these searches.
 
@@ -717,7 +721,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
-            headingCardName="Chaos Warp"
+            headingCardName="Mirror Entity"
             snippets={DATA.cardTypeSnippets}
             heading="Card Type"
             icon="seedling"

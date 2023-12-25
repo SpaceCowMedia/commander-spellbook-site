@@ -551,6 +551,8 @@ const AdvancedSearch = () => {
             keyInQuery = "decks";
           } else if (keyInQuery === "price") {
             keyInQuery = vendor;
+          } else if (keyInQuery !== "mv") {
+            keyInQuery += "s";
           }
         }
         if (negated) {
