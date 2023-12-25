@@ -30,6 +30,26 @@ const DATA = {
       icon: "signature"
     },
     {
+      id: "card-type",
+      text: "Card Type",
+      icon: "signature"
+    },
+    {
+      id: "card-oracle-text",
+      text: "Card Oracle Text",
+      icon: "signature"
+    },
+    {
+      id: "card-keywords",
+      text: "Card Keywords",
+      icon: "signature"
+    },
+    {
+      id: "card-mana-value",
+      text: "Card Mana Value",
+      icon: "signature"
+    },
+    {
       id: "color-identity",
       text: "Color Identity",
       icon: "palette",
@@ -105,6 +125,46 @@ const DATA = {
       search: "cards>2 cards<=5",
       description:
         "Combos that contain more than 2 cards but no greater than 5 cards",
+    },
+  ],
+  cardTypeSnippets: [
+    {
+      search: "type:land",
+      description: "Combos that contain a land card",
+    },
+    {
+      search: "-t:creature -t:artifact",
+      description: "Combos that do not contain creature or artifact cards",
+    }
+  ],
+  cardOracleTextSnippets: [
+    {
+      search: "oracle:draw",
+      description: "Combos that contain a card with the word draw in the oracle text",
+    },
+    {
+      search: "text:\"extra turn\"",
+      description: "Combos that contain a card with the phrase \"extra turn\" in the oracle text",
+    },
+    {
+      search: "-o:sacrifice",
+      description: "Combos that do not contain a card with the word sacrifice in the oracle text",
+    }
+  ],
+  cardKeywordsSnippets: [
+    {
+      search: "keyword:indestructible",
+      description: "Combos that contain a card with the keyword indestructible",
+    },
+    {
+      search: "-keyword:partner",
+      description: "Combos that do not contain a card with the keyword partner",
+    },
+  ],
+  cardManaValueSnippets: [
+    {
+      search: "mv=0",
+      description: "Combos that contain a card with a mana value equal to 0",
     },
   ],
   colorIdentitySnippets: [
@@ -283,6 +343,10 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 > Hyphens are also ignored, and can be removed or replaced by a single space.
 > For example, \`card:"blade-blossom"\` is equivalent to \`card:"blade blossom"\` and \`card:"bladeblossom"\`
 
+> [!TIP]
+> Underscores are also ignored, and can be removed or replaced by a single space.
+> For example, \`Fight the _____ Fight\` can be found with \`"Fight the _ Fight"\` or \`"Fight the Fight"\`
+
 > [!WARNING]
 > Single quotes are no longer supported in card search, since they can appear in card names.
 > Instead, use double quotes. For example, \`"Goblin King"\` instead of \`'Goblin King'\`.
@@ -302,6 +366,80 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 ### \`card\` keyword aliases
 
 * \`cards\`
+`
+
+const CARD_TYPE_DESCRIPTION = `
+You can search for combos that contain specific card types.
+For example, \`cardtype:land\` searches for combos that contain at least one land.
+
+> [!IMPORTANT]
+> Double-faced cards and split cards have their type line split by two slashes (\`//\`).
+> For example, [Delver of Secrets](https://scryfall.com/search?q=!%22Delver%20of%20Secrets%22) has
+> \`Creature — Human Wizard // Creature — Human Insect\` as its type line.
+
+### \`cardtype\` operators
+
+* \`cardtype:text\` searches for combos containing a card whose type line contains _text_
+* \`cardtype=text\` searches for combos containing a card whose type line is exactly _text_
+
+### \`cardtype\` keyword aliases
+
+* \`type\`
+* \`types\`
+* \`t\`
+`
+
+const CARD_ORACLE_TEXT_DESCRIPTION = `
+You can search for combos that contain cards with specific oracle text.
+For example, \`cardoracle:draw\` searches for combos that contain at least one card whose oracle text contains the word "draw".
+
+> [!IMPORTANT]
+> Double-faced cards and split cards have their oracle text split by two slashes (\`//\`).
+
+### \`cardoracle\` operators
+
+* \`cardoracle:text\` searches for combos containing a card whose oracle text contains _text_
+* \`cardoracle=text\` searches for combos containing a card whose oracle text is exactly _text_
+
+### \`cardoracle\` keyword aliases
+
+* \`oracle\`
+* \`text\`
+* \`o\`
+`
+
+const CARD_KEYWORDS_DESCRIPTION = `
+You can search for combos that contain cards with specific keywords.
+For example, \`cardkeywords:indestructible\` searches for combos that contain at least one card with the keyword "indestructible".
+
+### \`cardkeywords\` operators
+
+* \`cardkeywords:text\` searches for combos containing a card that has the keyword _text_
+
+### \`cardkeywords\` keyword aliases
+
+* \`keyword\
+* \`keywords\`
+* \`kw\`
+`
+
+const CARD_MANA_VALUE_DESCRIPTION = `
+You can search for combos that contain cards with specific mana values.
+For example, \`cardmanavalue>10\` searches for combos that contain at least one card with a mana value greater than 10.
+
+### \`cardmanavalue\` operators
+
+* \`cardmanavalue=number\` or \`cardmanavalue:number\` searches for combos containing a card with a mana value of _number_
+* \`cardmanavalue>number\` searches for combos containing a card with a mana value greater than _number_
+* \`cardmanavalue>=number\` searches for combos containing a card with a mana value greater than or equal to _number_
+* \`cardmanavalue<number\` searches for combos containing a card with a mana value less than _number_
+* \`cardmanavalue<=number\` searches for combos containing a card with a mana value less than or equal to _number_
+
+### \`cardmanavalue\` keyword aliases
+
+* \`manavalue\`
+* \`mv\`
+* \`cmc\`
 `
 
 const COLOR_IDENTITY_DESCRIPTION = `
@@ -575,6 +713,50 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           >
             <SyntaxMarkdown>
               {CARDS_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            headingCardName="Peek"
+            snippets={DATA.cardTypeSnippets}
+            heading="Card Type"
+            icon="signature"
+          >
+            <SyntaxMarkdown>
+              {CARD_TYPE_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            headingCardName="Peek"
+            snippets={DATA.cardOracleTextSnippets}
+            heading="Card Oracle Text"
+            icon="signature"
+          >
+            <SyntaxMarkdown>
+              {CARD_ORACLE_TEXT_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            headingCardName="Peek"
+            snippets={DATA.cardKeywordsSnippets}
+            heading="Card Keywords"
+            icon="signature"
+          >
+            <SyntaxMarkdown>
+              {CARD_KEYWORDS_DESCRIPTION}
+            </SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            headingCardName="Peek"
+            snippets={DATA.cardManaValueSnippets}
+            heading="Card Mana Value"
+            icon="signature"
+          >
+            <SyntaxMarkdown>
+              {CARD_MANA_VALUE_DESCRIPTION}
             </SyntaxMarkdown>
           </SearchGuide>
 

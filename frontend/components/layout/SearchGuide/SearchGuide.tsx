@@ -20,7 +20,7 @@ const SearchGuide: React.FC<Props> = ({
   children,
   icon,
 }: Props) => {
-  const id = heading.toLowerCase().split(" / ")[0].replace(" ", "-");
+  const id = heading.toLowerCase().split(" / ")[0].replace(/\s/gi, "-");
 
   return (
     <div
