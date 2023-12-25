@@ -32,22 +32,22 @@ const DATA = {
     {
       id: "card-type",
       text: "Card Type",
-      icon: "signature"
+      icon: "seedling"
     },
     {
       id: "card-oracle-text",
       text: "Card Oracle Text",
-      icon: "signature"
+      icon: "fileLines"
     },
     {
       id: "card-keywords",
       text: "Card Keywords",
-      icon: "signature"
+      icon: "key"
     },
     {
       id: "card-mana-value",
       text: "Card Mana Value",
-      icon: "signature"
+      icon: "coins"
     },
     {
       id: "color-identity",
@@ -717,10 +717,10 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
-            headingCardName="Peek"
+            headingCardName="Chaos Warp"
             snippets={DATA.cardTypeSnippets}
             heading="Card Type"
-            icon="signature"
+            icon="seedling"
           >
             <SyntaxMarkdown>
               {CARD_TYPE_DESCRIPTION}
@@ -728,10 +728,10 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
-            headingCardName="Peek"
+            headingCardName="Alexander Clamilton"
             snippets={DATA.cardOracleTextSnippets}
             heading="Card Oracle Text"
-            icon="signature"
+            icon="fileLines"
           >
             <SyntaxMarkdown>
               {CARD_ORACLE_TEXT_DESCRIPTION}
@@ -739,10 +739,10 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
-            headingCardName="Peek"
+            headingCardName="Brazen Borrower"
             snippets={DATA.cardKeywordsSnippets}
             heading="Card Keywords"
-            icon="signature"
+            icon="key"
           >
             <SyntaxMarkdown>
               {CARD_KEYWORDS_DESCRIPTION}
@@ -750,10 +750,10 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
 
           <SearchGuide
-            headingCardName="Peek"
+            headingCardName="Treasure"
             snippets={DATA.cardManaValueSnippets}
             heading="Card Mana Value"
-            icon="signature"
+            icon="coins"
           >
             <SyntaxMarkdown>
               {CARD_MANA_VALUE_DESCRIPTION}

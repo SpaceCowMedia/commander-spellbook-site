@@ -108,7 +108,23 @@ const CARD_ARTS = {
   "Kenrith, the Returned King": {
     uid: "0e259db1-14db-4314-998c-6a076a28d8cb",
     artist: "Kieran Yanner",
-  }
+  },
+  "Chaos Warp": {
+    uid: "73ca9629-b1e3-49d6-ae10-908b9e4e67ce",
+    artist: "Trevor Claxton",
+  },
+  "Alexander Clamilton": {
+    uid: "a1572109-df70-4335-aac2-1670fe99be54",
+    artist: "Dmitry Burmak",
+  },
+  "Brazen Borrower": {
+    uid: "06251176-d20f-4960-ac73-135e44b77c83",
+    artist: "Alexandre Chaudret",
+  },
+  Treasure: {
+    uid: "21e89101-f1cf-4bbd-a1d5-c5d48512e0dd",
+    artist: "Zoltan Boros",
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({

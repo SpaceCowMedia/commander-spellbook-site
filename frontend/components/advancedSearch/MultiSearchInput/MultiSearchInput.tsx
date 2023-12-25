@@ -59,8 +59,7 @@ const MultiSearchInput = ({
     const newInputs = [...inputs.slice(0, index), ...inputs.slice(index + 1)];
     setInputs(newInputs);
     onChange && onChange(newInputs);
-  }
-
+  };
 
   const getInputId = (index: number) =>
     `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
