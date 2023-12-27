@@ -58,6 +58,79 @@ const CARD_AMOUNT_OPERATOR_OPTIONS: OperatorOption[] = [
   { operator: "<", label: "Contains less than x cards (number)", numeric: true },
 ];
 
+const CARD_TYPE_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Contains the phrase",
+    placeholder: "ex: sorcery, instant, artifact",
+  },
+  {
+    operator: "=",
+    label: "Is exactly",
+    placeholder: "ex: sorcery, instant, artifact",
+  },
+  {
+    operator: ":",
+    negate: true,
+    label: "Does not contain the phrase",
+    placeholder: "ex: sorcery, instant, artifact",
+  },
+  {
+    operator: "=",
+    negate: true,
+    label: "Is not exactly",
+    placeholder: "ex: sorcery, instant, artifact",
+  },
+];
+
+const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Contains the phrase",
+    placeholder: "ex: mana, untap, additional",
+  },
+  { operator: "=", label: "Is exactly" },
+  {
+    operator: ":",
+    negate: true,
+    label: "Does not contain the phrase",
+    placeholder: "ex: mana, untap, additional",
+  },
+  { operator: "=", label: "Is not exactly", negate: true },
+];
+
+const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: ":",
+    label: "Has the keyword",
+    placeholder: "ex: cycling, delve, partner",
+  },
+  {
+    operator: ":",
+    negate: true,
+    label: "Does not have the keyword",
+    placeholder: "ex: cycling, delve, partner",
+  }
+];
+
+const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: "=",
+    label: "Has a mana value of x (number)",
+    numeric: true,
+  },
+  {
+    operator: ">=",
+    label: "Has a mana value of at least x (number)",
+    numeric: true,
+  },
+  {
+    operator: "<",
+    label: "Has a mana value of less than x (number)",
+    numeric: true,
+  },
+];
+
 const COLOR_IDENTITY_OPERATOR_OPTIONS: OperatorOption[] = [
   {
     operator: ":",
@@ -303,6 +376,10 @@ type Data = {
 
   cards: InputData[];
   cardAmounts: InputData[];
+  cardTypes: InputData[];
+  oracleText: InputData[];
+  cardKeywords: InputData[];
+  manaValue: InputData[];
   colorIdentity: InputData[];
   prerequisites: InputData[];
   steps: InputData[];
@@ -326,6 +403,10 @@ const AdvancedSearch = () => {
 
     cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: "" }],
     cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: "" }],
+    cardTypes: [{ ...CARD_TYPE_OPERATOR_OPTIONS[0], value: "" }],
+    oracleText: [{ ...CARD_ORACLE_TEXT_OPERATOR_OPTIONS[0], value: "" }],
+    cardKeywords: [{ ...CARD_KEYWORD_OPERATOR_OPTIONS[0], value: "" }],
+    manaValue: [{ ...CARD_MANA_VALUE_OPERATOR_OPTIONS[0], value: "" }],
     colorIdentity: [{ ...COLOR_IDENTITY_OPERATOR_OPTIONS[0], value: "" }],
     prerequisites: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
     steps: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
@@ -345,6 +426,10 @@ const AdvancedSearch = () => {
     colorAutocompletes,
     cards,
     cardAmounts,
+    cardTypes,
+    oracleText,
+    cardKeywords,
+    manaValue,
     colorIdentity,
     prerequisites,
     steps,
@@ -386,6 +471,10 @@ const AdvancedSearch = () => {
 
     newFormState.cards.forEach(val);
     newFormState.cardAmounts.forEach(val);
+    newFormState.cardTypes.forEach(val);
+    newFormState.oracleText.forEach(val);
+    newFormState.cardKeywords.forEach(val);
+    newFormState.manaValue.forEach(val);
     newFormState.colorIdentity.forEach(val);
     newFormState.prerequisites.forEach(val);
     newFormState.steps.forEach(val);
@@ -402,6 +491,10 @@ const AdvancedSearch = () => {
   }, [
     cards,
     cardAmounts,
+    cardTypes,
+    oracleText,
+    cardKeywords,
+    manaValue,
     colorIdentity,
     prerequisites,
     steps,
@@ -458,7 +551,7 @@ const AdvancedSearch = () => {
             keyInQuery = "decks";
           } else if (keyInQuery === "price") {
             keyInQuery = vendor;
-          } else {
+          } else if (keyInQuery !== "mv") {
             keyInQuery += "s";
           }
         }
@@ -481,6 +574,10 @@ const AdvancedSearch = () => {
     }
     cards.forEach(makeQueryFunction("card"));
     cardAmounts.forEach(makeQueryFunction("card"));
+    cardTypes.forEach(makeQueryFunction("type"));
+    oracleText.forEach(makeQueryFunction("oracle"));
+    cardKeywords.forEach(makeQueryFunction("keyword"));
+    manaValue.forEach(makeQueryFunction("mv"));
     colorIdentity.forEach(makeQueryFunction("ci"));
     prerequisites.forEach(makeQueryFunction("pre"));
     steps.forEach(makeQueryFunction("step"));
@@ -562,6 +659,62 @@ const AdvancedSearch = () => {
             labelIcon="hashtag"
             pluralLabel="Number of Cards"
             operatorOptions={CARD_AMOUNT_OPERATOR_OPTIONS}
+          />
+        </div>
+
+        <div
+          id="card-type-inputs"
+          className={`${styles.container} container`}
+        >
+          <MultiSearchInput
+            value={cardTypes}
+            onChange={(cardTypes) => setFormState({ cardTypes })}
+            label="Card Type Line"
+            labelIcon="seedling"
+            pluralLabel="Card Type Lines"
+            operatorOptions={CARD_TYPE_OPERATOR_OPTIONS}
+          />
+        </div>
+
+        <div
+          id="card-oracle-inputs"
+          className={`${styles.container} container`}
+        >
+          <MultiSearchInput
+            value={oracleText}
+            onChange={(oracleText) => setFormState({ oracleText })}
+            label="Oracle Text"
+            labelIcon="fileLines"
+            pluralLabel="Oracle Text"
+            operatorOptions={CARD_ORACLE_TEXT_OPERATOR_OPTIONS}
+          />
+        </div>
+
+        <div
+          id="card-keywords-inputs"
+          className={`${styles.container} container`}
+        >
+          <MultiSearchInput
+            value={cardKeywords}
+            onChange={(cardKeywords) => setFormState({ cardKeywords })}
+            label="Card Keyword"
+            labelIcon="key"
+            pluralLabel="Card Keywords"
+            operatorOptions={CARD_KEYWORD_OPERATOR_OPTIONS}
+          />
+        </div>
+
+        <div
+          id="card-mana-value-inputs"
+          className={`${styles.container} container`}
+        >
+          <MultiSearchInput
+            value={manaValue}
+            onChange={(manaValue) => setFormState({ manaValue })}
+            label="Mana Value"
+            labelIcon="coins"
+            pluralLabel="Mana Values"
+            operatorOptions={CARD_MANA_VALUE_OPERATOR_OPTIONS}
           />
         </div>
 
@@ -684,12 +837,16 @@ const AdvancedSearch = () => {
               formName={tagOption.name}
               label={tagOption.label}
               labelIcon={tagOption.labelIcon}
-              onChange={(tag) => setFormState({
-                tags: tags.filter((t) => t.name !== tagOption.name).concat({
-                  ...tagOption,
-                  selected: tag === "null" ? undefined : tag === "true",
-                }),
-              })}
+              onChange={(tag) => {
+                const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
+                const newTag = {
+                    ...tagOption,
+                    selected: tag === "null" ? undefined : tag === "true",
+                };
+                setFormState({
+                  tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => i === tagIndex ? newTag : t)
+                });
+              }}
             />
           </div>
         ))}
