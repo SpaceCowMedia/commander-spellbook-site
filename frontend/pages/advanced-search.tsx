@@ -831,12 +831,16 @@ const AdvancedSearch = () => {
               formName={tagOption.name}
               label={tagOption.label}
               labelIcon={tagOption.labelIcon}
-              onChange={(tag) => setFormState({
-                tags: tags.filter((t) => t.name !== tagOption.name).concat({
-                  ...tagOption,
-                  selected: tag === "null" ? undefined : tag === "true",
-                }),
-              })}
+              onChange={(tag) => {
+                const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
+                const newTag = {
+                    ...tagOption,
+                    selected: tag === "null" ? undefined : tag === "true",
+                };
+                setFormState({
+                  tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => i === tagIndex ? newTag : t)
+                });
+              }}
             />
           </div>
         ))}
