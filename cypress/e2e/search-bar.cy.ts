@@ -24,3 +24,5 @@ describe("Search Bar", () => {
     cy.url().should("include", "/advanced-search");
   });
 });
+
+export {}

@@ -1,0 +1,15 @@
+.title {
+  font-family: monospace;
+  font-weight: 300;
+  font-size: 50px;
+  color: #35495e;
+  letter-spacing: 1px;
+}
+
+.bannedWarning {
+  @apply text-danger font-semibold;
+}
+
+.previewedWarning {
+  @apply font-semibold;
+}

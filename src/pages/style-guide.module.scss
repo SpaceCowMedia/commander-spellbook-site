@@ -1,0 +1,25 @@
+.styleGuideContainer {
+  p {
+    @apply my-2;
+  }
+
+  h4 {
+    @apply text-lg mt-4 mb-2 font-bold;
+  }
+
+  ul {
+    @apply list-disc list-inside;
+  }
+
+  ul ul {
+    @apply ml-8;
+  }
+
+  hr {
+    @apply my-4;
+  }
+
+  code {
+    @apply bg-gray-200 px-1 mx-1;
+  }
+}

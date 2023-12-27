@@ -1,0 +1,25 @@
+.userDropdownButton {
+  @apply flex flex-row items-center px-2 rounded bg-indigo-600 text-white;
+}
+
+.discordIcon {
+  @apply bg-white h-4 w-4 my-1.5;
+  mask: url("~assets/svgs/discord.svg") no-repeat center;
+}
+
+.dropdown {
+  @apply relative inline-block;
+}
+
+.dropdownContent {
+  @apply hidden absolute bg-black shadow z-10 top-full right-0 w-full;
+  min-width: 200px;
+}
+
+.dropdownItem {
+  @apply block px-4 py-2 text-white hover:bg-indigo-600 w-full;
+}
+
+.dropdown:focus-within .dropdownContent {
+  @apply block;
+}

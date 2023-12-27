@@ -1,0 +1,17 @@
+.container {
+  @apply flex flex-col items-center justify-center text-center m-auto;
+}
+.button {
+  @apply mx-0 mt-2 mb-0 flex-grow;
+}
+.button:hover {
+  @apply bg-transparent text-dark;
+}
+@media (min-width: 768px) {
+  .button {
+    @apply ml-2;
+  }
+  .button:first-child {
+    @apply ml-0;
+  }
+}

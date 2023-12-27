@@ -1,0 +1,25 @@
+.comboResultsWrapper {
+  @apply flex flex-wrap justify-center;
+
+  a {
+    @apply no-underline text-dark;
+  }
+
+  .comboResult {
+    @apply max-w-lg mx-0 my-2 rounded border-2 border-dark flex-grow flex flex-col content-center;
+  }
+
+  @media (min-width: 768px) {
+    .comboResult {
+      @apply m-2;
+    }
+
+    .comboResult:nth-child(3n + 3) {
+      @apply mr-0;
+    }
+
+    .comboResult:nth-child(3n + 1) {
+      @apply ml-0;
+    }
+  }
+}

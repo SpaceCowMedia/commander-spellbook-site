@@ -1,0 +1,108 @@
+.outerContainer {
+  @apply mx-auto;
+  a {
+    @apply text-white no-underline;
+  }
+}
+
+.mainSearchInputContainer {
+  @apply flex m-auto h-full;
+}
+
+.mainSearchInput {
+  @apply w-full h-full appearance-none block py-2 bg-transparent text-white leading-tight;
+}
+
+.mainSearchInput:focus {
+  @apply outline-none bg-white text-dark;
+}
+
+.linkIcon {
+  @apply bg-white h-4 w-4 mr-2;
+}
+
+.menuIcon {
+  mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
+  @apply mr-0;
+}
+
+.advancedSearchIcon {
+  mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
+}
+
+.syntaxGuideIcon {
+  mask: url("~assets/svgs/question-solid.svg") no-repeat center;
+}
+
+.profileIcon {
+  mask: url("~assets/svgs/user-circle-solid.svg") no-repeat center;
+}
+
+.randomIcon {
+  mask: url("~assets/svgs/random-solid.svg") no-repeat center;
+}
+
+.discordIcon {
+  mask: url("~assets/svgs/discord.svg") no-repeat center;
+}
+
+.searchInputIcon {
+  mask: url("~assets/svgs/search-solid.svg") no-repeat center;
+  @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
+}
+
+.searchInputIcon:hover {
+  @apply bg-light;
+}
+
+.menuLink {
+  @apply items-center flex-row px-4 text-white border-l border-white;
+}
+
+//.menuLink:last-of-type {
+//  @apply pr-0;
+//}
+
+.menuLink:hover {
+  @apply text-light;
+}
+
+.menuLink:hover .link-icon {
+  @apply bg-light;
+}
+
+.mobileMenuButton {
+  @apply flex flex-row flex-grow items-center w-1/3 rounded py-1 px-2 border border-light mx-2 md:hidden;
+}
+
+.mobileMenuButton:hover {
+  @apply border-light text-light;
+}
+
+.mobileMenuButton:hover .link-icon {
+  @apply bg-light;
+}
+
+.mobileMenuButton:nth-child(even),
+.mobileMenuButton:last-of-type {
+  @apply mr-0;
+}
+
+.mobileMenuButton:nth-child(odd) {
+  @apply ml-0;
+}
+
+.mobileMenuButton:nth-child(n + 3) {
+  @apply mt-2;
+}
+
+@media (max-width: 1280px) {
+  .flex.flex-shrink.flex-row.items-center.desktop-menu a div {
+    display: none;
+  }
+}
+
+
+.buttonContainer {
+  @apply items-center flex-row px-4 text-white md:border-l border-white
+}

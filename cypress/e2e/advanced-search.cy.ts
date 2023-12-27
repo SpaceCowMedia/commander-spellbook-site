@@ -213,3 +213,5 @@ describe("Advanced Search Page", () => {
     );
   });
 });
+
+export {}

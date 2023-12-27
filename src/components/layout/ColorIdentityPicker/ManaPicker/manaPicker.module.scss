@@ -1,0 +1,10 @@
+.manaSymbol {
+  @apply transition-transform cursor-pointer;
+  input {
+    @apply hidden;
+  }
+}
+
+.manaSymbol:hover {
+  @apply scale-125;
+}
