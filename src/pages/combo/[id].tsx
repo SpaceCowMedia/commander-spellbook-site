@@ -6,7 +6,7 @@ import ColorIdentity from "../../components/layout/ColorIdentity/ColorIdentity";
 import ComboList from "../../components/combo/ComboList/ComboList";
 import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
-import { GetStaticPaths } from "next";
+import {GetStaticPaths, GetStaticProps} from "next";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import React from "react";
 import { Variant} from "../../lib/types";
@@ -192,23 +192,17 @@ const Combo = ({ combo }: Props) => {
 };
 
 export default Combo;
-
-let isBuild = false;
 export const getStaticPaths: GetStaticPaths = async () => {
-  const combos = await VariantService.fetchAllVariants()
-  const paths = combos.map((combo) => ({
-    params: { id: `${combo.id}` },
-  }));
-
-  isBuild = true;
-  return { paths, fallback: 'blocking' };
+  return { paths: [], fallback: 'blocking' }; // Do not prerender any paths at build time.
 };
 
-export const getStaticProps = async ({
+export const getStaticProps: GetStaticProps = async ({
   params,
-}: {
-  params: { id: string };
 }) => {
+
+  if (!params || !params.id || typeof params.id !== 'string') return {
+    notFound: true,
+  }
 
   // Check if it's a legacy combo and reroute if it's found
   if (!params.id.includes('-')) {
@@ -224,11 +218,12 @@ export const getStaticProps = async ({
   // If it's a new combo id, check the backend
   else  {
     try {
-      const backendCombo = await variantService.fetchVariant(params.id, variantService.hasCachedVariants)
+      const backendCombo = await variantService.fetchVariant(params.id)
       if (backendCombo) {
         return {
           props: {
             combo: backendCombo,
+            revalidate: 60, // refreshes every minute
           }
         }
       }

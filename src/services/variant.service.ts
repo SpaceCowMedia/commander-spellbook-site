@@ -34,7 +34,6 @@ const fetchLegacyMap = async () => {
 }
 
 const fetchVariant = async (id: string, useBulkData=false): Promise<Variant | null> => {
-  console.log('using bulk data', useBulkData)
   if (typeof window === 'undefined' && useBulkData) {
     const variantMap = await fetchVariantMap()
     const variant = variantMap[id]
