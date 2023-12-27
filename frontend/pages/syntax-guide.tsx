@@ -422,7 +422,7 @@ For example, \`cardkeywords:indestructible\` searches for combos that contain at
 
 ### \`cardkeywords\` keyword aliases
 
-* \`keyword\
+* \`keyword\`
 * \`keywords\`
 * \`kw\`
 `
