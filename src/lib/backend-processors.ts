@@ -46,7 +46,11 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
   for (const card of multiZoneCards.sort((a, b) => a.card.name.localeCompare(b.card.name))) {
     let cardString = ''
     cardString += `${cardNameMap[card.card.name]} `
-    cardString += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
+    if (Object.keys(ZONE_MAP).length === card.zoneLocations.length) {
+      cardString += 'in any zone';
+    } else {
+      cardString += card.zoneLocations.map(zone => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ')
+    }
     const combinedStateString = comaAndOrJoin(Object.values(getZoneStateMap(card)))
     if (combinedStateString) cardString += ` (${combinedStateString})`
     cardString += ". "
