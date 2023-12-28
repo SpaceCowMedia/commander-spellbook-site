@@ -4,8 +4,8 @@ contact_links:
     url: https://discord.gg/DkAyVJG
     about: Please report errors with an existing combo here. Be sure to include the url of the incorrect combo.
   - name: Add New Combo to Commander Spellbook
-    url: https://discord.gg/DkAyVJG
-    about: Join our Discord community to add new combos to the database.
+    url: https://commanderspellbook.com/submit-a-combo/
+    about: Join our Discord community and then login into the submission form to add new combos to the database.
   - name: Get Help Developing the Website
     url: https://discord.gg/DkAyVJG
     about: Join our Discord community to get assistance with how to contribute to the website.
