@@ -51,7 +51,7 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
     setTemplatesLoading(true)
     TemplateService.getTemplates(value)
       .then(response => {
-        setTemplateOptions(response.results.map(template => ({value: template.template, label: template.template})))
+        setTemplateOptions(response.results.map(template => ({value: template.name, label: template.name})))
         setTemplatesLoading(false)
       }).catch(e => console.error(e))
 
@@ -178,12 +178,12 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
       <div className="mt-8">
         <input
           className="mr-2 cursor-pointer"
-          id={`commander-checkbox-${index}`}
+          id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
           value={card.card}
           onChange={() => onChange({...card, mustBeCommander: !card.mustBeCommander})}
           type="checkbox"
         />
-        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${index}`}>Must be commander?</label>
+        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>Must be commander?</label>
       </div>
     </div>
   )
