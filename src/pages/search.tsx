@@ -30,14 +30,6 @@ const SORT_OPTIONS: Option[] = [
     label: "# of Cards",
   },
   {
-    value: "prerequisite_count",
-    label: "# of Prerequisites",
-  },
-  {
-    value: "steps_count",
-    label: "# of Steps",
-  },
-  {
     value: "results_count",
     label: "# of Results",
   },
@@ -59,6 +51,8 @@ const ORDER_OPTIONS: Option[] = [
 
 const AUTO_SORT_MAP: Record<string, "-"> = {
   popularity: "-",
+  created: "-",
+  updated: "-",
 }
 
 const PAGE_SIZE = 50

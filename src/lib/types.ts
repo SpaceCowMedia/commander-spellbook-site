@@ -78,7 +78,7 @@ export type Variant = {
     cardmarket: string,
   }
   spoiler: boolean,
-  popularity: number,
+  popularity?: number,
 }
 
 export type VariantBulkData = {

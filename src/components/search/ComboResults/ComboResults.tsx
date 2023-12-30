@@ -28,7 +28,7 @@ const ComboResults = ({
     if (sort === "popularity") {
       const numberOfDecks = combo.popularity;
 
-      if (!numberOfDecks) {
+      if (numberOfDecks === null || numberOfDecks === undefined) {
         return "No deck data (EDHREC)";
       }
 
