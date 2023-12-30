@@ -72,7 +72,7 @@ export type Variant = {
     standard: boolean,
     pauper: boolean,
   }
-  prices?: {
+  prices: {
     tcgplayer: string,
     cardkingdom: string,
     cardmarket: string,

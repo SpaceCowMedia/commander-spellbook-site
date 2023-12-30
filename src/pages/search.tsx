@@ -24,7 +24,9 @@ type Props = {
 const SORT_OPTIONS: Option[] = [
   { value: "popularity", label: "Popularity" },
   { value: "identity_count", label: "Color Identity" },
-  { value: "price", label: "Price" },
+  { value: "price_tcgplayer", label: "Price (TCGPlayer)" },
+  { value: "price_cardkingdom", label: "Price (CardKingdom)" },
+  { value: "price_cardmarket", label: "Price (Cardmarket)" },
   {
     value: "cards_count",
     label: "# of Cards",

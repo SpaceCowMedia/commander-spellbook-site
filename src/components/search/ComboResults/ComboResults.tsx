@@ -37,10 +37,12 @@ const ComboResults = ({
       return `${numberOfDecks} ${deckString} (EDHREC)`;
     }
 
-    if (sort === "price" && vendor) {
-
-      if (!combo.prices?.tcgplayer) {
-        return "Price Unavailable";
+    if (sort.startsWith("price")) {
+      if (sort.includes("cardkingdom")) {
+        return `$${combo.prices.cardkingdom}`;
+      }
+      if (sort.includes("cardmarket")) {
+        return `€${combo.prices.cardmarket}`;
       }
       return `$${combo.prices.tcgplayer}`;
     }
