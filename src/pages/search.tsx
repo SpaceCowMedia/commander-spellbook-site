@@ -57,6 +57,10 @@ const ORDER_OPTIONS: Option[] = [
   { value: "desc", label: "Descending" },
 ];
 
+const AUTO_SORT_MAP: Record<string, "-"> = {
+  popularity: "-",
+}
+
 const PAGE_SIZE = 50
 const Search: React.FC<Props> = ({combos, count, page}: Props) => {
 
@@ -182,7 +186,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
   const sort = context.query.sort || DEFAULT_SORT
-  const ordering = order === 'auto' ? sort : `${order === 'asc' ? '' : '-'}${sort}`
+  const ordering = order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`
   const results = await requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`)
 
   const backendCombos = results ? results.results : []
