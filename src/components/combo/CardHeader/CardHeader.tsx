@@ -12,6 +12,7 @@ const CardHeader = ({ title = "", subtitle = "", cardsArt = [] }: Props) => {
       <div className="flex w-full h-64">
         {cardsArt.map((cardArt, index) => (
           <img
+            alt="Card art"
             src={cardArt}
             key={index}
             className={styles.cardWrapper}

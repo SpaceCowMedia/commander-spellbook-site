@@ -48,10 +48,12 @@ export function serverLogout(ctx: NextPageContext) {
   ])
 }
 
-export default {
+const cookieService = {
   get,
   set,
   remove,
   logout,
   serverLogout,
 }
+
+export default cookieService

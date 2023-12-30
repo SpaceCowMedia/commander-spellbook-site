@@ -10,7 +10,6 @@
     "lint": "next lint",
     "cy:run": "cypress run",
     "prettier": "prettier --write .",
-    "lint": "eslint --ext .ts,.js scripts cypress && yarn workspaces run lint",
     "test:integration": "NODE_ENV=production yarn start & wait-on http://localhost:3000 && yarn run cy:run"
   },
   "lint-staged": {

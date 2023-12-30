@@ -1,19 +1,18 @@
-name: ci
+name: CI/CD
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: "0 */2 * * *"
+      - "*"
+    tags:
+      - "*"
+  workflow_dispatch:
 
-env:
-  DISCORD_DEPLOY_WEBHOOK_URL: ${{ secrets.DISCORD_DEPLOY_WEBHOOK_URL }}
-  DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK_URL }}
-  EDITOR_BACKEND_URL: ${{ secrets.EDITOR_BACKEND_URL }}
+
+defaults:
+  run:
+    shell: bash
+
 
 jobs:
   setup:
@@ -27,7 +26,7 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: "yarn"
 
       - name: Cache node modules 🗃
@@ -43,38 +42,17 @@ jobs:
             ~/.cache
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Install Node Modules 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Create Workflow ID 🆔
-        id: generate-uuid
-        run: yarn run workflow:create-workflow-id
-
       - name: Cache Site Data ⏬
         id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-            frontend/out/
-            frontend/.next/
-          key: ${{ runner.os }}-download-data-${{ steps.generate-uuid.outputs.uuid }}
+            dist/
+          key: ${{ runner.os }}-download-data-${{ github.sha }}
 
-      - name: Download Data ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        env:
-          NODE_ENV: production
-        run: yarn run download-data
-
-      - name: Build Frontend Site 🏗️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: yarn run build
-        env:
-          NODE_ENV: production
+      - name: Install Node Modules 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
   linter:
     runs-on: ubuntu-22.04
@@ -86,7 +64,7 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: "yarn"
 
       - name: Restore node modules from cache 📦
@@ -106,7 +84,7 @@ jobs:
       - name: Run linter 👀
         run: yarn run lint
 
-  integration-tests:
+  type-check:
     runs-on: ubuntu-22.04
     needs: setup
     steps:
@@ -116,7 +94,7 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: "yarn"
 
       - name: Restore node modules from cache 📦
@@ -133,259 +111,118 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Restore Site Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
+      - name: Run typescript 👀
+        run: yarn tsc
+
+  build-push:
+    runs-on: ubuntu-latest
+    needs: [linter, type-check]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/remove-api-refactor'
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and export image
+        uses: docker/build-push-action@v4
         with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-            frontend/out/
-            frontend/.next/
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
+          push: false
+          load: true
+          tags: spellbook-client:latest
 
-      - name: Check Site Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Site cache failed"; exit 1;
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: github-actions
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Run Integration tests 💻
-        run: yarn run test:integration
+      - name: Copy Static Files to S3
         env:
-          NODE_ENV: development
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+        run: |
+          id=$(docker create spellbook-client:latest)
+          docker cp $id:/app/.next/static _next
+          docker rm -v $id
 
-  changelog_check:
-    # only run this check from the main branch
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'SpaceCowMedia'
-    runs-on: ubuntu-22.04
-    needs: setup
-    concurrency: production_deploy
-    outputs:
-      should_deploy: ${{ steps.changelog_result.outputs.should_deploy }}
-      deploy_reason: ${{ steps.changelog_result.outputs.deploy_reason }}
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+          aws s3 cp \
+            --recursive \
+            --cache-control "max-age=2592000" \
+            --exclude "*" \
+            --include "*.js" \
+            --content-type "text/javascript; charset=utf-8" \
+            _next/ s3://$S3_BUCKET/_next/static
 
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
+          aws s3 cp \
+            --recursive \
+            --cache-control "max-age=2592000" \
+            --exclude "*" \
+            --include "*.css" \
+            --content-type "text/css; charset=utf-8" \
+            _next/ s3://$S3_BUCKET/_next/static
 
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+          # Other files will not have UTF-8 set
+          aws s3 cp \
+            --recursive \
+            --cache-control "max-age=2592000" \
+            --exclude "*.js" \
+            --exclude "*.css" \
+            _next/ s3://$S3_BUCKET/_next/static
 
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Restore Site Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-            frontend/out/
-            frontend/.next/
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Site Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Site cache failed"; exit 1;
-
-      - name: Compare Changelog 🪵
-        id: changelog_result
-        run: yarn run check-changelog
-
-  deploy:
-    # only deploy from the main branch
-    # and the changelog check indicates
-    # that there are changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'SpaceCowMedia' && needs.changelog_check.outputs.should_deploy == 'YES'
-    concurrency: production_deploy
-    runs-on: ubuntu-22.04
-    needs: [setup, linter, integration-tests, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Restore Site Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-            frontend/out/
-            frontend/.next/
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Site Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Site cache failed"; exit 1;
-
-      - name: Configure AWS Credentials ㊙️
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Deploy to S3 🛫
-        run: aws s3 sync ./frontend/out/ s3://commanderspellbook.com --delete
-
-      - name: Bust Cloudfront Cache 👥
+      - name: Create Cloudfront Invalidation
         env:
-          AWS_MAX_ATTEMPTS: 8
-        run: aws cloudfront create-invalidation --distribution-id EOJD6575ATAH3 --paths "/*"
+          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
+        run: |
+          aws cloudfront create-invalidation \
+          --distribution-id $DISTRIBUTION_ID \
+          --paths "/*"
 
-      - name: Send Deploy Failed Notification ✉️
-        if: ${{ failure() }}
-        run: yarn run discord-webhook:failed-deploy
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-  cancel-deploy-notification:
-    # only send a message about cancelling deploy from the main branch
-    # and the changelog check indicates that there are no changes to deploy
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'SpaceCowMedia' && needs.changelog_check.outputs.should_deploy == 'NO'
-    runs-on: ubuntu-22.04
-    needs: [setup, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Send deploy cancelled notification ✉️
-        run: yarn run discord-webhook:cancel-deploy
-
-  send-start-deploy-notification:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && github.repository_owner == 'SpaceCowMedia' && needs.changelog_check.outputs.should_deploy == 'YES'
-    runs-on: ubuntu-22.04
-    needs: [setup, linter, integration-tests, changelog_check]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Send Deploy Start Notification ✉️
-        run: yarn run discord-webhook:start-deploy
-
-  finish-deploy-notification:
-    runs-on: ubuntu-22.04
-    needs: [setup, changelog_check, deploy]
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node ⬢
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Restore Site Data ⏬
-        id: cache-downloaded-data
-        uses: actions/cache@v3
-        with:
-          path: |
-            autocomplete-data
-            external-data
-            frontend/public/api/combo-data.json
-            frontend/public/changelog.json
-            frontend/out/
-            frontend/.next/
-          key: ${{ runner.os }}-download-data-${{ needs.setup.outputs.workflow_id }}
-
-      - name: Check Site Cache ⬇️
-        if: steps.cache-downloaded-data.outputs.cache-hit != 'true'
-        run: echo "Site cache failed"; exit 1;
-
-      - name: Send deploy succeeded notification ✉️
+      - name: Push image to Amazon ECR
         env:
-          DEPLOY_REASON: ${{needs.changelog_check.outputs.deploy_reason}}
-        run: yarn run discord-webhook:finish-deploy
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
+
+
+  rollout-pods:
+    runs-on: ubuntu-latest
+    needs: build-push
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/remove-api-refactor'
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: github-actions
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Config kube
+        env:
+          CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+        run: aws eks --region us-east-2 update-kubeconfig --name $CLUSTER_NAME --kubeconfig kubeconfig.yaml
+
+      - name: Install and configure kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Rollout pods
+        run: |
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl rollout restart deployment/spellbook-client -n spellbook
+#          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
+
