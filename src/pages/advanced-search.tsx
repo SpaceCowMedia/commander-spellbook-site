@@ -162,6 +162,8 @@ const COMBO_DATA_OPERATOR_OPTIONS: OperatorOption[] = [
     placeholder: "ex: mana, untap, additional",
   },
   { operator: "=", label: "Is exactly" },
+  { operator: ">=", label: "Contains at least x (number)", numeric: true },
+  { operator: "<", label: "Contains less than x (number)", numeric: true },
   {
     operator: ":",
     negate: true,
@@ -551,7 +553,7 @@ const AdvancedSearch = () => {
             keyInQuery = "decks";
           } else if (keyInQuery === "price") {
             keyInQuery = vendor;
-          } else if (keyInQuery !== "mv") {
+          } else if (keyInQuery !== "mv" && keyInQuery !== "pre") {
             keyInQuery += "s";
           }
         }

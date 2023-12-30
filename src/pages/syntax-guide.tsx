@@ -219,10 +219,10 @@ const DATA = {
       description:
         'Combos that include the phrase "mana to cast it" in one of the prerequisites and no prerequisite with the word "permanent".',
     },
-    // {
-    //   search: "pre<=3",
-    //   description: "Combos that have no more than 3 prerequisites.",
-    // },
+    {
+      search: "pre<=3",
+      description: "Combos that have no more than 3 prerequisites.",
+    },
   ],
   stepSnippets: [
     {
@@ -235,10 +235,10 @@ const DATA = {
       description:
         'Combos that include the phrase "mill target opponent" in one of the steps.',
     },
-    // {
-    //   search: "steps>6",
-    //   description: "Combos that contain greater than 6 steps.",
-    // },
+    {
+      search: "steps>6",
+      description: "Combos that contain more than 6 steps.",
+    },
   ],
   idSnippets: [
     {
@@ -484,13 +484,23 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 
 const PREREQUISITES_DESCRIPTION = `
 A combo's prerequisites describe the game state required to start the combo.
-The only supported operator is \`prerequisites:text\`, which searches for _text_ in the prerequisites of combos.
+For example, \`prerequisites:text\`, searches for _text_ in the prerequisites of combos.
 
 > [!WARNING]
 > In most cases, this will _not_ search the text of the following "basic" prerequisites found in almost every combo:
 > * Mana available
 > * Starting card locations
 > * Some starting card states (especially those that appear in the same line as the starting location, such as "Clone on the battlefield as a copy of Kiki-Jiki")
+
+### \`prerequisites\` operators
+
+* \`prerequisites:text\` searches for combos that contain _text_ in their prerequisites
+* \`prerequisites=text\` searches for combos that contain _text_ as their only prerequisite
+* \`prerequisites=number\` searches for combos that contain exactly _number_ prerequisites
+* \`prerequisites<number\` searches for combos that contain fewer than _number_ prerequisites
+* \`prerequisites<=number\` searches for combos that contain _number_ or fewer prerequisites
+* \`prerequisites>number\` searches for combos that contain more than _number_ prerequisites
+* \`prerequisites>=number\` searches for combos that contain _number_ or more prerequisites
 
 ### \`prerequisites\` keyword aliases
 
@@ -501,17 +511,24 @@ The only supported operator is \`prerequisites:text\`, which searches for _text_
 
 const STEPS_DESCRIPTION = `
 Steps describe how to execute the combo.
-The only supported operator is \`steps:text\` which searches for _text_ in the Steps field.
+For example, \`steps:text\` searches for _text_ in the Steps field.
 Use double quotes if your search contains spaces (\`steps:"multiword text"\`).
+
+### \`steps\` operators
+
+* \`steps:text\` searches for combos that contain _text_ in their steps
+* \`steps=text\` searches for combos that contain _text_ as their only step
+* \`steps=number\` searches for combos that contain exactly _number_ steps
+* \`steps<number\` searches for combos that contain fewer than _number_ steps
+* \`steps<=number\` searches for combos that contain _number_ or fewer steps
+* \`steps>number\` searches for combos that contain more than _number_ steps
+* \`steps>=number\` searches for combos that contain _number_ or more steps
 
 ### \`steps\` keyword aliases
 
 * \`step\`
 * \`description\`
 * \`desc\`
-
-> [!WARNING]
-> Numeric operators support has been dropped. You can no longer search for combos based on the number of steps.
 `
 
 const RESULTS_DESCRIPTION = `
