@@ -61,6 +61,8 @@ const ComboResults = ({
     return "";
   };
 
+  const cards = deck?.cards.map((card) => card.toLowerCase()) ?? [];
+
   return (
     <div className={styles.comboResultsWrapper}>
       {results.map((combo) => (
@@ -79,7 +81,7 @@ const ComboResults = ({
                 {combo.uses.map(({card}) => (
                   <CardTooltip cardName={card.name} key={card.name}>
                     <div className="card-name pl-3 pr-3">
-                      {(deck && !deck.cards.includes(card.name)) ? (
+                      {(deck && !cards.includes(card.name.toLowerCase())) ? (
                         <strong className="text-red-800">
                           {card.name} (not in deck)
                         </strong>
