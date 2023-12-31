@@ -1,20 +1,35 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, {FormEvent, useEffect, useRef, useState} from "react";
 import Link from "next/link";
 import styles from "./searchBar.module.scss";
 import { useRouter } from "next/router";
 import UserDropdown from "../layout/UserDropdown/UserDropdown";
-import {variantCount} from "../../services/variant.service";
+import {useCookies} from "react-cookie";
+import {PaginatedResponse} from "types/api";
+import {Variant} from "lib/types";
+import requestService from "services/request.service";
 
 type Props = {
   onHomepage?: boolean;
   className?: string;
 };
 
+const countUpToString = (count: number) => {
+  const countString = count.toString();
+  const countLength = countString.length;
+
+  if (countLength < 5) return "0".repeat(5 - countLength) + countString;
+
+  return countString;
+}
+
 const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const countUpRef = useRef<number>(20000);
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
+  const [cookies, setCookies] = useCookies(["variantCount"])
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -23,9 +38,35 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
     }
   };
 
+  const handleCountUp = () => {
+    if (!inputRef.current) return;
+    if (cookies.variantCount) {
+      inputRef.current.placeholder = `Search ${cookies.variantCount} EDH combos`;
+      return;
+    }
+    if (countUpRef.current < 25000) {
+      countUpRef.current +=  Math.floor(Math.random() * (50 - 25 + 1)) + 25;
+      inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
+      setTimeout(handleCountUp, 50);
+    }
+  }
+
   useEffect(() => {
     setInputValue(router.query.q);
   }, [router.query.q]);
+
+  useEffect(() => {
+    if (cookies.variantCount) {
+      handleCountUp()
+    }
+    else if (!cookies.variantCount) {
+      requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants`)
+        .then((response) => {
+          setCookies("variantCount", response.count, {path: "/", maxAge: 604800})
+        })
+      handleCountUp()
+    }
+  }, []);
 
 
 
@@ -62,10 +103,11 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
           <input
             value={inputValue}
             name="q"
+            ref={inputRef}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={`Search ${
-              variantCount ? variantCount + " " : ""
-            }EDH combos`}
+              cookies.variantCount ? cookies.variantCount : "20000"
+            } EDH combos`}
             id="search-bar-input"
             type="text"
             className={`${styles.mainSearchInput} ${
