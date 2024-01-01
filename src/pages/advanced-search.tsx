@@ -623,8 +623,6 @@ const AdvancedSearch = () => {
     });
   }, []);
 
-  console.log(cards)
-
   return (
     <>
       <SpellbookHead
