@@ -1,5 +1,5 @@
 import pluralize from "pluralize";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import styles from "./multiSearchInput.module.scss";
 import StyledSelect from "../../layout/StyledSelect/StyledSelect";
 import AutocompleteInput from "../AutocompleteInput/AutocompleteInput";

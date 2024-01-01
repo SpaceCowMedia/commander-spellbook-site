@@ -227,6 +227,11 @@ const AutocompleteInput: React.FC<Props> = ({
     );
   }, [localValue, active, autocompleteOptions])
 
+  useEffect(() => {
+    setFirstRender(true)
+    setLocalValue(value)
+  }, [value]  )
+
   return (
     <div className={styles.autocompleteContainer}>
       <label className="sr-only" aria-hidden htmlFor={inputId}>
