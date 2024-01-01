@@ -3,7 +3,7 @@
 export S3_BUCKET=cdn.commanderspellbook.com
 export CACHE_CONTROL_MAX_AGE=1
 export DISTRIBUTION_ID=E16YLRUSY0N705
-export EDITOR_BACKEND_URL=https://backend.commanderspellbook.com/
+export EDITOR_BACKEND_URL=https://backend.commanderspellbook.com
 
 aws eks --region us-east-2 update-kubeconfig --name spellbook-prod-cluster &&
 

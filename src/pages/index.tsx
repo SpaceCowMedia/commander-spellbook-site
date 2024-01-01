@@ -122,7 +122,7 @@ export async function getStaticProps() {
     return DEFAULT_PROPS;
   }
 
-  const res = await fetch(`${EDITOR_BACKEND_URL}properties/?format=json`);
+  const res = await fetch(`${EDITOR_BACKEND_URL}/properties/?format=json`);
   const dataFromEditorBackend = await res.json();
   const buttonTextData = dataFromEditorBackend.results.find(
     (data: { key: string; value: string }) => {

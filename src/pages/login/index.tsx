@@ -41,7 +41,7 @@ const Login: React.FC<Props> = ({}: Props) => {
           <Link
             role="button"
             className="button"
-            href={`https://backend.commanderspellbook.com/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ''}`}
+            href={`https://${process.env.EDITOR_BACKEND_URL}/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ''}`}
           >
             Login with Discord
           </Link>

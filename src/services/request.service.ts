@@ -6,7 +6,7 @@ import { Cookies } from 'react-cookie'
 import tokenService from "./token.service";
 
 const proxiedUrls = {
-  '/api': `${process.env.NEXT_PUBLIC_API_URL}`,
+  '/api': `${process.env.EDITOR_BACKEND_URL}`,
 }
 
 type GetArgs = []

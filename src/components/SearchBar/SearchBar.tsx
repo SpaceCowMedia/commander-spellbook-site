@@ -60,7 +60,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
       handleCountUp()
     }
     else if (!cookies.variantCount) {
-      requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants`)
+      requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?limit=1`)
         .then((response) => {
           setCookies("variantCount", response.count, {path: "/", maxAge: 604800})
         })

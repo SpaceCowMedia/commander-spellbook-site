@@ -27,7 +27,7 @@ const Random = () => {
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const requestService = new RequestService(context);
-  const combos = await requestService.get("https://backend.commanderspellbook.com/variants/?ordering=%3F&limit=1&q=legal%3Acommander")
+  const combos = await requestService.get(`https://${process.env.EDITOR_BACKEND_URL}/variants/?ordering=%3F&limit=1&q=legal%3Acommander`)
   const randomCombo = combos.results[0];
   if (randomCombo) {
     return {
