@@ -112,7 +112,7 @@ const Combo = ({ combo }: Props) => {
         useCropDimensions
       />
       <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-      {loaded && <CardGroup cards={cards} />}
+      {loaded && <CardGroup key={combo.id} cards={cards} />}
       <div className="container md:flex flex-row">
         <div className="w-full md:w-2/3">
           <div className="md:hidden pt-4">

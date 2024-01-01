@@ -17,6 +17,8 @@ import requestService from "../services/request.service";
 import Loader from "../components/layout/Loader/Loader";
 import ErrorMessage from "../components/submission/ErrorMessage/ErrorMessage";
 import {ComboSubmissionErrorType} from "../lib/types";
+import Alert from "components/layout/Alert/Alert";
+import {GetServerSideProps} from "next";
 
 
 type Props = {};
@@ -75,13 +77,6 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
     setSteps([...steps.slice(0, index), ...steps.slice(index + 1)])
     setKeyId(keyId + 1)
   }
-
-  useEffect(() => {
-    if (!cookies.csbUsername || !cookies.csbJwt) {
-      router.push('/login?final=submit-a-combo')
-    }
-  }, [cookies.csbJwt, cookies.csbUsername])
-
 
   const handleSubmit = async () => {
     const submission = {
@@ -230,6 +225,16 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
         </div>
         <button className="button" onClick={handleAddFeature}>Add Feature</button>
 
+        {cards.length > 5 &&
+          <Alert type="warning" icon="triangleExclamation" title="Warning">
+            This combo might be denied because it is over our five-card maximum. These tips will increase the chances of the combo making it onto Commander Spellbook:
+            <ul className="list-disc list-inside">
+              <li>If a card has many replacements in this combo’s color identity, cut it and use the generic card template instead. For example, “A Dragon creature” or “A way to give indestructible” can replace a specific card.</li>
+              <li>Cut any cards that are not required to keep the combo going, even if they are needed to win the game. We don’t need to list Blood Artist or Impact Tremors on every page.”</li>
+            </ul>
+          </Alert>
+        }
+
         <div className="flex justify-center">
           <button disabled={submitting} className="button" onClick={handleSubmit}>{submitting ? <Loader/> : 'Submit Combo'}</button>
         </div>
@@ -247,3 +252,17 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
 };
 
 export default SubmitACombo;
+
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req.cookies
+  if (!cookies.csbUsername || !cookies.csbJwt) {
+    return {
+      redirect: {
+        destination: '/login?final=submit-a-combo',
+        permanent: false,
+      }
+    }
+  }
+  return {props: {}}
+}

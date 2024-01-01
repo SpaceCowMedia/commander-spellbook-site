@@ -176,15 +176,24 @@ export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let query = `${context.query.q}`
-  if (!query.includes('legal:')) query = `${query} legal:commander`
-
+  if (!query.includes('legal:') && !query.includes('banned:') && !query.includes('format:')) query = `${query} legal:commander`
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
   const sort = context.query.sort || DEFAULT_SORT
   const ordering = order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`
-  const results = await requestService.get<PaginatedResponse<Variant>>(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`)
+  const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`
+  const results = await requestService.get<PaginatedResponse<Variant>>(url)
 
   const backendCombos = results ? results.results : []
+
+  if (backendCombos.length === 1) {
+    return {
+      redirect: {
+        destination: `/combo/${backendCombos[0].id}`,
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {
