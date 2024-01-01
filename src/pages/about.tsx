@@ -57,7 +57,7 @@ const About: React.FC<Props> = ({}: Props) => {
             </ExternalLink>
           </li>
           <li>
-            <ExternalLink href={`https://${process.env.EDITOR_BACKEND_URL}/`}>
+            <ExternalLink href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/`}>
               Backend REST API
             </ExternalLink>
           </li>

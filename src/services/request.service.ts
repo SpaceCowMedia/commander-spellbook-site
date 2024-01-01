@@ -5,8 +5,8 @@ import CookieService from './cookie.service'
 import { Cookies } from 'react-cookie'
 import tokenService from "./token.service";
 
-const proxiedUrls = {
-  '/api': `${process.env.EDITOR_BACKEND_URL}`,
+const proxiedUrls: Record<string, string> = {
+  '/api': `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}`,
 }
 
 type GetArgs = []
@@ -34,21 +34,13 @@ export class RequestService {
    * If the supplied URL doesn't match any of our proxies, return the provided URL
    */
   private replaceUrl(userUrl: string): string {
-    let replacementUrl: string | null = null
-
     const proxy: string | undefined = Object.keys(proxiedUrls).find(key => {
       if (userUrl.startsWith(key)) return true
       return false
     })
 
     if (!proxy) return userUrl
-    if (proxy === '/api') replacementUrl = proxiedUrls['/api']
-
-    // prettier-ignore
-    if (proxy === '/api' && process.env.NEXT_PUBLIC_NODE_ENV === 'production' && this.serverContext) replacementUrl = `${process.env.SERVER_URL}/api`
-
-    if (!replacementUrl) return userUrl
-
+    const replacementUrl = proxiedUrls[proxy]
     return userUrl.replace(proxy, replacementUrl)
   }
 

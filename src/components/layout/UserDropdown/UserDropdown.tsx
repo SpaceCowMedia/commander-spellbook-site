@@ -36,7 +36,7 @@ const UserDropdown = ({}: Props) => {
             <button type="button" className={styles.dropdownItem}>Submit Combo</button>
           </Link>
           {cookies.csbIsStaff && (
-          <Link onClick={() => console.log('hello')} href={`https://${process.env.EDITOR_BACKEND_URL}/admin/`}>
+          <Link onClick={() => console.log('hello')} href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/`}>
             <button type="button" className={styles.dropdownItem}>Admin Page</button>
           </Link>)}
 

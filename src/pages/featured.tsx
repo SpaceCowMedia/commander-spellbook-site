@@ -43,7 +43,7 @@ const Featured = ({ combos }: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const requestService = new RequestService(context)
-  const results = await requestService.get<PaginatedResponse<Variant>>(`https://${process.env.EDITOR_BACKEND_URL}/variants/?q=is:featured`)
+  const results = await requestService.get<PaginatedResponse<Variant>>(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=is:featured`)
   const backendCombos = results ? results.results : []
   return {
     props: {

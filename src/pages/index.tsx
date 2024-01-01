@@ -116,13 +116,13 @@ export default function Home({ featuredComboButtonText }: Props) {
 }
 
 export async function getStaticProps() {
-  const { EDITOR_BACKEND_URL } = process.env;
+  const { NEXT_PUBLIC_EDITOR_BACKEND_URL } = process.env;
 
-  if (!EDITOR_BACKEND_URL) {
+  if (!NEXT_PUBLIC_EDITOR_BACKEND_URL) {
     return DEFAULT_PROPS;
   }
 
-  const res = await fetch(`${EDITOR_BACKEND_URL}/properties/?format=json`);
+  const res = await fetch(`${NEXT_PUBLIC_EDITOR_BACKEND_URL}/properties/?format=json`);
   const dataFromEditorBackend = await res.json();
   const buttonTextData = dataFromEditorBackend.results.find(
     (data: { key: string; value: string }) => {

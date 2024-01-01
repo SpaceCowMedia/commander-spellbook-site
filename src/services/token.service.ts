@@ -95,7 +95,7 @@ function fetchNewToken(providedRefreshToken?: string) {
   const refreshToken = providedRefreshToken ? providedRefreshToken : CookieService.get('csbRefresh') || null
 
   console.log('fetching new token')
-  return fetch(`${process.env.EDITOR_BACKEND_URL}/token/refresh/`, {
+  return fetch(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/token/refresh/`, {
     method: 'POST',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     body: JSON.stringify({ refresh: refreshToken }),
