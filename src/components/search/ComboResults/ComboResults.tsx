@@ -91,6 +91,11 @@ const ComboResults = ({
                     </div>
                   </CardTooltip>
                 ))}
+                {combo.requires.length || combo.otherPrerequisites && (
+                  <div className="prerequisites pl-3 pr-3">
+                    <span className="text-gray-500">+{combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)} other prerequisite(s)</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex-grow">
