@@ -1,4 +1,3 @@
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import Link from "next/link";
 import MultiSearchInput from "../components/advancedSearch/MultiSearchInput/MultiSearchInput";

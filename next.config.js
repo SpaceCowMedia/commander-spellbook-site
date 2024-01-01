@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
+const isLocalServer = process.env.NODE_ENV === 'development'
+const beta = process.env.BUILD_TYPE === 'beta' ? 'beta' : ''
+
 const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   trailingSlash: true,
   productionBrowserSourceMaps: true,
+  assetPrefix: !isLocalServer ? `https://${beta}cdn.commanderspellbook.com` : undefined,
   images: {
     unoptimized: true,
   },

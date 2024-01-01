@@ -1,4 +1,3 @@
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
@@ -14,7 +13,7 @@ type Props = {
 const Featured = ({ combos }: Props) => {
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Featured Combos"
         description="The newest featured EDH combos on Commander Spellbook."
@@ -37,7 +36,7 @@ const Featured = ({ combos }: Props) => {
           )}
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

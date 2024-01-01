@@ -1,6 +1,4 @@
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ErrorBase from "../components/layout/ErrorBase/ErrorBase";
-import styles from "./404.module.scss";
 import { useEffect } from "react";
 import { useState } from "react";
 

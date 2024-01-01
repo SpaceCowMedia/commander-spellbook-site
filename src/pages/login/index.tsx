@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
+import React, {useEffect} from "react";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
 import styles from "../report-error.module.scss";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
