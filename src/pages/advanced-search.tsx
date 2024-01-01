@@ -715,7 +715,7 @@ const AdvancedSearch = () => {
             onChange={(manaValue) => setFormState({ manaValue })}
             label="Mana Value"
             labelIcon="coins"
-            pluralLabel="Mana Values"
+            pluralLabel="Card Mana Values"
             operatorOptions={CARD_MANA_VALUE_OPERATOR_OPTIONS}
           />
         </div>
