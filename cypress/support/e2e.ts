@@ -5,3 +5,5 @@ beforeEach(() => {
     ls.setItem("GDPR:accepted", "false");
   });
 });
+
+export {}

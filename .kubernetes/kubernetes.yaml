@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spellbook-client
+  namespace: spellbook
+spec:
+  selector:
+    matchLabels:
+      app: spellbook-client
+  replicas: 2 # match the minReplicas in the autoscaler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2  # You can specify a number or a percentage here
+  template:
+    metadata:
+      labels:
+        app: spellbook-client
+    spec:
+      containers:
+        - name: spellbook-client
+          image: 083767677168.dkr.ecr.us-east-2.amazonaws.com/spellbook-client-prod-ecr:latest
+          env:
+            - name: BUILD_TYPE
+              value: "prod"
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            periodSeconds: 20
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            periodSeconds: 20
+            timeoutSeconds: 5
+---
+# Autoscaling of the client pods
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: spellbook-client-autoscaler
+  namespace: spellbook
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spellbook-client
+  minReplicas: 2
+  maxReplicas: 36
+  targetCPUUtilizationPercentage: 80
+---
+# Client Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: spellbook-client-service
+  namespace: spellbook
+  labels:
+    app: spellbook-client
+    tier: web
+spec:
+  type: NodePort
+  selector:
+    app: spellbook-client
+  ports:
+    - port: 80
+      targetPort: 3000
+---

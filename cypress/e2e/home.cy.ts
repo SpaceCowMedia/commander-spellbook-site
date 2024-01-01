@@ -15,3 +15,5 @@ describe("Home Page", () => {
     cy.url().should("include", "/combo");
   });
 });
+
+export {}
