@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import Footer from "../components/layout/Footer/Footer";
 import SearchBar from "../components/SearchBar/SearchBar";
@@ -54,7 +53,6 @@ export default function Home({ featuredComboButtonText }: Props) {
         title="Commander Spellbook: The Search Engine for EDH Combos"
         description="The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format."
       />
-      <AnalyticsCookieBanner />
       <main>
         <div className="absolute top-5 right-5 z-20"><UserDropdown/></div>
         <div className="gradient relative z-10">

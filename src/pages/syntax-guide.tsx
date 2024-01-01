@@ -1,15 +1,9 @@
 import React from "react";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import styles from "./syntax-guide.module.scss";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import Link from "next/link";
 import SearchGuide from "../components/layout/SearchGuide/SearchGuide";
-import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import Alert from "../components/layout/Alert/Alert";
-import Markdown from "markdown-to-jsx";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
 import SyntaxMarkdown from "../components/layout/SyntaxMarkdown/SyntaxMarkdown";
 import Icon, {SpellbookIcon} from "../components/layout/Icon/Icon";
 
@@ -689,7 +683,7 @@ const SORT_ORDER_DESCRIPTION = `
 
 const SyntaxGuide: React.FC<Props> = ({}: Props) => {
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Syntax Guide"
         description="Browse our search syntax for advanced EDH combo queries."
@@ -904,7 +898,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
           </SearchGuide>
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

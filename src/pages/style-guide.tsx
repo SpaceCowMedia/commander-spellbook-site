@@ -2,7 +2,6 @@ import React from "react";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import TextWithMagicSymbol from "../components/layout/TextWithMagicSymbol/TextWithMagicSymbol";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import styles from "./style-guide.module.scss";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 
@@ -10,7 +9,7 @@ type Props = {};
 
 const StyleGuide: React.FC<Props> = ({}: Props) => {
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Style Guide"
         description="Learn our format for submitting EDH combos."
@@ -610,7 +609,7 @@ const StyleGuide: React.FC<Props> = ({}: Props) => {
           <li>Rummage/ing: Discard a card, then draw a card</li>
         </ul>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

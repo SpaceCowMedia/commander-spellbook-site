@@ -1,4 +1,3 @@
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import styles from "./privacy-policy.module.scss";
@@ -8,7 +7,7 @@ type Props = {};
 
 const PrivacyPolicy: React.FC<Props> = () => {
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Privacy Policy"
         description="Privacy policy for the use of Commander Spellbook."
@@ -485,7 +484,7 @@ const PrivacyPolicy: React.FC<Props> = () => {
           agree to its terms.
         </p>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

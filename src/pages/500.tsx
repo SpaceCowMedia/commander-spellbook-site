@@ -17,13 +17,13 @@ const UnknownErrorPage = () => {
   }, []);
 
   return (
-    <PageWrapper noMarginFooter>
+    <>
       <ErrorBase
         mainMessage="Uh Oh"
         subMessage="Something went wrong. Try again in a few minutes."
         containerClassName={unknownErrorClass}
       />
-    </PageWrapper>
+    </>
   );
 };
 

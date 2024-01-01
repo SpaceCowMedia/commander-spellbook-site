@@ -1,5 +1,4 @@
 import SplashPage from "../components/layout/SplashPage/SplashPage";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {RequestService} from "../services/request.service";
 import {GetServerSidePropsContext} from "next";
@@ -7,7 +6,7 @@ import {GetServerSidePropsContext} from "next";
 const Random = () => {
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Random"
         description="Find a random EDH combo on Commander Spellbook."
@@ -20,7 +19,7 @@ const Random = () => {
       >
         <p>Random combo</p>
       </SplashPage>
-    </PageWrapper>
+    </>
   );
 };
 

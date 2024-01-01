@@ -624,7 +624,7 @@ const AdvancedSearch = () => {
   }, []);
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Advanced Search"
         description="Advanced search form for searching through Commander Spellbook EDH combos."
@@ -887,7 +887,7 @@ const AdvancedSearch = () => {
           </div>
         </div>
       </form>
-    </PageWrapper>
+    </>
   );
 };
 

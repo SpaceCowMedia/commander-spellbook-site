@@ -1,5 +1,4 @@
 import React from "react";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SearchMessage from "../components/search/SearchMessage/SearchMessage";
 import StyledSelect, {
   Option,
@@ -92,7 +91,7 @@ const Search: React.FC<Props> = ({combos, count, page}: Props) => {
   const legalityMessage = (parsedSearchQuery.includes("legal:")) ? "" : " (legal:commander has been applied by default)"
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Search Results"
         description="Search results for all EDH combos matching your query."
@@ -168,7 +167,7 @@ const Search: React.FC<Props> = ({combos, count, page}: Props) => {
           )}
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

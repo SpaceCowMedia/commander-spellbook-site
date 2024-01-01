@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
-import ExternalLink from "../../components/layout/ExternalLink/ExternalLink";
 import styles from "../report-error.module.scss";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import TokenService from "../../services/token.service";
@@ -25,7 +24,7 @@ const Login: React.FC<Props> = ({}: Props) => {
   }, [])
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Login"
         description="Login through discord to submit combo suggestions."
@@ -47,7 +46,7 @@ const Login: React.FC<Props> = ({}: Props) => {
           </Link>
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

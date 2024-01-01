@@ -1,7 +1,5 @@
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ErrorBase from "../components/layout/ErrorBase/ErrorBase";
 import styles from "./404.module.scss";
-import { useEffect } from "react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
@@ -39,13 +37,13 @@ const NotFoundPage = () => {
   // }, []);
 
   return (
-    <PageWrapper noMarginFooter>
+    <>
       <ErrorBase
         mainMessage="Page Not Found"
         subMessage={notFoundMessage}
         containerClassName={notFoundClass}
       />
-    </PageWrapper>
+    </>
   );
 };
 

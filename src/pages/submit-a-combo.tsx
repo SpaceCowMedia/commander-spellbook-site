@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {
   defaultFeatureSubmission,
@@ -109,7 +108,7 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
   }
 
   if (success) return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: How to Submit a Combo"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
@@ -125,11 +124,11 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
         </div>
 
       </div>
-    </PageWrapper>
+    </>
   )
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: How to Submit a Combo"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
@@ -243,7 +242,7 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
         }
 
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

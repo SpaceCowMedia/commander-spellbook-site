@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
 import styles from "../report-error.module.scss";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
@@ -38,7 +37,7 @@ const Login: React.FC<Props> = ({}: Props) => {
   }, [router.isReady])
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Logging in."
         description="Discord logging in."
@@ -54,7 +53,7 @@ const Login: React.FC<Props> = ({}: Props) => {
             {error}
           </p>}
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

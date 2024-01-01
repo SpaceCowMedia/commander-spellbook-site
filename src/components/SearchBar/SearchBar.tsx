@@ -30,6 +30,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
   const [cookies, setCookies] = useCookies(["variantCount"])
+  const [variantCount, setVariantCount] = useState<number>(20000)
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -40,14 +41,12 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
 
   const handleCountUp = () => {
     if (!inputRef.current) return;
-    if (cookies.variantCount) {
-      inputRef.current.placeholder = `Search ${cookies.variantCount} EDH combos`;
-      return;
-    }
     if (countUpRef.current < 25000) {
-      countUpRef.current +=  Math.floor(Math.random() * (50 - 25 + 1)) + 25;
+      countUpRef.current +=  Math.floor(Math.random() * (200 - 100 + 1)) + 100;
       inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
       setTimeout(handleCountUp, 50);
+    } else if (cookies.variantCount) {
+      inputRef.current.placeholder = `Search ${cookies.variantCount} EDH combos`;
     }
   }
 
@@ -56,16 +55,14 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   }, [router.query.q]);
 
   useEffect(() => {
-    if (cookies.variantCount) {
-      handleCountUp()
-    }
+    if (cookies.variantCount) setVariantCount(cookies.variantCount)
     else if (!cookies.variantCount) {
       requestService.get<PaginatedResponse<Variant>>(`https://backend.commanderspellbook.com/variants/?limit=1`)
         .then((response) => {
           setCookies("variantCount", response.count, {path: "/", maxAge: 604800})
         })
-      handleCountUp()
     }
+    handleCountUp()
   }, []);
 
 
@@ -105,9 +102,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
             name="q"
             ref={inputRef}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={`Search ${
-              cookies.variantCount ? cookies.variantCount : "20000"
-            } EDH combos`}
+            placeholder={`Search ${variantCount} EDH combos`}
             id="search-bar-input"
             type="text"
             className={`${styles.mainSearchInput} ${

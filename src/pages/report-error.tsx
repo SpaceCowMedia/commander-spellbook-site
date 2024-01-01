@@ -1,5 +1,4 @@
 import React from "react";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
 import styles from "./report-error.module.scss";
@@ -9,7 +8,7 @@ type Props = {};
 
 const ReportError: React.FC<Props> = ({}: Props) => {
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Report Error"
         description="Report an error in a combo on Commander Spellbook through our discord."
@@ -47,7 +46,7 @@ const ReportError: React.FC<Props> = ({}: Props) => {
           </ExternalLink>
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

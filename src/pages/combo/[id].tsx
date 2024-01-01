@@ -1,4 +1,3 @@
-import PageWrapper from "../../components/layout/PageWrapper/PageWrapper";
 import pluralize from "pluralize";
 import CardHeader from "../../components/combo/CardHeader/CardHeader";
 import CardGroup from "../../components/combo/CardGroup/CardGroup";
@@ -102,7 +101,7 @@ const Combo = ({ combo }: Props) => {
   const loaded = true;
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title={`${title} ${subtitle}`}
         description={results.reduce(
@@ -187,7 +186,7 @@ const Combo = ({ combo }: Props) => {
           </aside>
         )}
       </div>
-    </PageWrapper>
+    </>
   );
 };
 

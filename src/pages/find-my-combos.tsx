@@ -5,7 +5,6 @@ import {
   convertDecklistToDeck, Deck,
 } from "../lib/decklist-parser";
 import styles from "./find-my-combos.module.scss";
-import PageWrapper from "../components/layout/PageWrapper/PageWrapper";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
@@ -130,7 +129,7 @@ const FindMyCombos = () => {
   };
 
   return (
-    <PageWrapper>
+    <>
       <SpellbookHead
         title="Commander Spellbook: Find My Combos"
         description="Input a decklist to generate all possible combos in your deck as well as combo suggestions."
@@ -281,7 +280,7 @@ const FindMyCombos = () => {
           }
         </div>
       </div>
-    </PageWrapper>
+    </>
   );
 };
 
