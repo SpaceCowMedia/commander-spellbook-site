@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import styles from "./styledSelect.module.scss";
 
 export type Option = { value: string; label: string };
@@ -30,6 +30,10 @@ const StyledSelect = ({
     setLocalValue(event.target.value);
     onChange && onChange(event.target.value);
   };
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div className={`${selectBackgroundClassName} rounded-l-sm relative`}>

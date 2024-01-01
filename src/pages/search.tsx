@@ -177,6 +177,7 @@ export default Search;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let query = `${context.query.q}`
   if (!query.includes('legal:') && !query.includes('banned:') && !query.includes('format:')) query = `${query} legal:commander`
+  query = encodeURIComponent(query)
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
   const sort = context.query.sort || DEFAULT_SORT
