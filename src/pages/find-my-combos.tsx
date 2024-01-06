@@ -42,12 +42,6 @@ const FindMyCombos = () => {
     almostIncludedByAddingColorsAndChangingCommanders: Variant[],
   }>(DEFAULT_RESULTS)
 
-  const [potentialCombosColorIdentity, setPotentialCombosColorIdentity] =
-    useState<Array<ColorIdentityColors>>(["w", "u", "b", "r", "g"]);
-  const [deckColorIdentity, setDeckColorIdentity] = useState<
-    Array<ColorIdentityColors>
-  >([]);
-
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize(
     "card",
     numberOfCardsInDeck
@@ -58,13 +52,11 @@ const FindMyCombos = () => {
     ? "No combos found"
     : `${numOfCombos} ${pluralize("Combo", numOfCombos)} Found`;
 
-
   const numPotentialCombos = results.almostIncluded.length;
   const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
     "Combo",
     numPotentialCombos
   )} Found`;
-
 
   const potentialCombosInAdditionalColorsHeadingText = `${results.almostIncludedByAddingColors.length} Potential ${pluralize(
     "Combo",
@@ -75,9 +67,6 @@ const FindMyCombos = () => {
     setLookupInProgress(true);
     const deck = await convertDecklistToDeck(newDeckList + "\n" + newCommanderList);
     setNumberOfCardsInDeck(deck.numberOfCards);
-
-    setPotentialCombosColorIdentity(["w", "u", "b", "r", "g"]);
-    setDeckColorIdentity(deck.colorIdentity);
 
     if (deck.numberOfCards < 2) return setLookupInProgress(false);
 
