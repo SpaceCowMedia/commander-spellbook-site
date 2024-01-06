@@ -6,24 +6,24 @@ const colorAutocomplete = [
 
   // mono colors
   {
-    value: "mono white",
+    value: "white",
     label: "Mono White {w}",
   },
   {
-    value: "mono blue",
+    value: "blue",
     label: "Mono Blue {u}",
     alias: /^u$/,
   },
   {
-    value: "mono black",
+    value: "black",
     label: "Mono Black {b}",
   },
   {
-    value: "mono red",
+    value: "red",
     label: "Mono Red {r}",
   },
   {
-    value: "mono green",
+    value: "green",
     label: "Mono Green {g}",
   },
 
