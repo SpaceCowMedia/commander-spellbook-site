@@ -76,36 +76,7 @@ const DECK_ENTRY_REGEX =
 export type Deck = {
   cards: string[];
   numberOfCards: number;
-  colorIdentity: ColorIdentityColors[];
 };
-
-async function getColorIdentityFromDeck(
-  cards: string[]
-): Promise<ColorIdentityColors[]> {
-  try {
-    const cardsFromScryfall = await scryfall.getCollection(
-      cards.map((cardName) => {
-        return {
-          name: cardName,
-        };
-      })
-    );
-    const colorsAsSet = cardsFromScryfall.reduce((identity, card) => {
-      card.color_identity.forEach((color: ColorIdentityColors) => {
-        // Scryfall's color identity value is capitalized
-        identity.add(color.toLowerCase());
-      });
-
-      return identity;
-    }, new Set());
-
-    return Array.from(colorsAsSet) as ColorIdentityColors[];
-  } catch (err) {
-    // in case we encounter an error in Scryfall
-    // best to just default to a WUBRG identity
-    return ["w", "u", "b", "r", "g"];
-  }
-}
 
 export async function convertDecklistToDeck(decklist: string): Promise<Deck> {
   const deck = decklist
@@ -127,11 +98,10 @@ export async function convertDecklistToDeck(decklist: string): Promise<Deck> {
       }
     );
 
-  const colorIdentity = await getColorIdentityFromDeck(deck.cards);
+
 
   return {
     ...deck,
-    colorIdentity,
   };
 }
 
