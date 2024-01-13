@@ -62,6 +62,9 @@ export class RequestService {
     const text = res.text().catch(this.handleError)
 
     if (res.ok) return text
+    if (res.status === 404) {
+      return null
+    }
 
     return text.then(err => {
       throw err
@@ -71,7 +74,6 @@ export class RequestService {
   private handleError = (err: Error) => {
     // TODO report error
     if (!this.serverContext) console.error(err)
-
     throw err
   }
 

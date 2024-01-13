@@ -86,6 +86,11 @@ export type VariantBulkData = {
   variants: Variant[]
 }
 
+export type VariantAlias = {
+  id: string,
+  variant: Variant,
+  description: string,
+}
 
 export type ComboSubmissionErrorType = {
   [key: string]: (ComboSubmissionErrorType | string)[],

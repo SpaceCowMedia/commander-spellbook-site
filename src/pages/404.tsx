@@ -1,7 +1,9 @@
 import ErrorBase from "../components/layout/ErrorBase/ErrorBase";
 import styles from "./404.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import findMyCombosService from "../services/findMyCombos.service";
+import VariantService from "../services/variant.service";
 
 const NOT_FOUND_TEMPLATES = [
   [styles.barrenGlory, "You were looking for glory, but found an empty world."],
@@ -24,17 +26,28 @@ const NotFoundPage = () => {
   );
 
   const router = useRouter();
+  
+    const redirect = async () => {
+      if (router.asPath.includes("/combo/")) {
+        const attemptedId = router.asPath.split("/combo/")[1].split("/")[0];
+        const alias = await VariantService.fetchVariantAlias(attemptedId);
+        if (alias) {
+          await router.push(`/combo/${alias.variant}`);
+          return;
+        }
+        const card_ids = attemptedId.split("--")[0].split("-");
+        const results = await findMyCombosService.findFromLists([], card_ids);
+        // TODO: display the results and let user decide
+        // TODO: consider server side rendering
+      }
+    }
 
-  // useEffect(() => {
-  //   const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
-  //   setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
-  //   setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
-  //
-  //   if (router.asPath.includes("/combo/")) {
-  //     const retryId = router.asPath.split("/combo/")[1].split("/")[0];
-  //     router.push(`/combo-retry?id=${retryId}`);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
+    setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
+    setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
+    redirect();
+  }, []);
 
   return (
     <>
