@@ -203,50 +203,42 @@ export const getStaticProps: GetStaticProps = async ({
     notFound: true,
   }
 
-  // Check if it's a legacy combo and reroute if it's found
-  if (!params.id.includes('-') && !isNaN(Number(params.id))) {
-    const legacyComboMap = await variantService.fetchLegacyMap()
-    const variantId = legacyComboMap[params.id]
-    if (variantId) return {
+  try {
+    // 1. Check the backend
+    const backendCombo = await variantService.fetchVariant(params.id)
+    if (backendCombo) return {
+      props: {
+        combo: backendCombo,
+        revalidate: 60, // refreshes every minute
+      },
+    };
+    // 2. Check if it's an alias and reroute if it's found
+    const alias = await variantService.fetchVariantAlias(params.id);
+    if (alias) return {
       redirect: {
-        destination: `/combo/${variantId}`,
+        destination: `/combo/${alias.variant}`,
         permanent: false,
       },
     };
-  }
-  // If it's a new combo id, check the backend
-  else  {
-    try {
-      const backendCombo = await variantService.fetchVariant(params.id)
-      if (backendCombo) {
-        return {
-          props: {
-            combo: backendCombo,
-            revalidate: 60, // refreshes every minute
-          }
+    // 3. Check if it's a legacy combo and reroute if it's found
+    if (!params.id.includes('-') && !isNaN(Number(params.id))) {
+      const legacyComboMap = await variantService.fetchLegacyMap()
+      const variantId = legacyComboMap[params.id]
+      if (variantId) return {
+        redirect: {
+          destination: `/combo/${variantId}`,
+          permanent: false,
         }
-      } else {
-        const alias = await variantService.fetchVariantAlias(params.id);
-        if (alias) {
-          return {
-            redirect: {
-              destination: `/combo/${alias.variant}`,
-              permanent: false,
-            },
-          };
-        } else {
-          // const card_ids = params.id.split("--")[0].split("-");
-          // const results = await findMyCombosService.findFromLists([], card_ids);
-          // TODO: display the results and let user decide
-        }
-      }
-    } catch (err) {
-      console.log(err);
+      };
     }
+    // const card_ids = params.id.split("--")[0].split("-");
+    // const results = await findMyCombosService.findFromLists([], card_ids);
+    // TODO: display the results and let user decide which one to go to
+  } catch (err) {
+    console.log(err);
   }
   // Finally 404
   return {
     notFound: true,
   };
-
 };
