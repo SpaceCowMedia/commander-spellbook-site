@@ -12,8 +12,8 @@ import { Variant} from "../../lib/types";
 import PrerequisiteList from "../../components/combo/PrerequisiteList/PrerequisiteList";
 import {getPrerequisiteList} from "../../lib/backend-processors";
 import EDHRECService from "../../services/edhrec.service";
-import VariantService from "../../services/variant.service";
 import variantService from "../../services/variant.service";
+import findMyCombosService from "../../services/findMyCombos.service";
 
 type Props = {
   combo: Variant;
@@ -204,7 +204,7 @@ export const getStaticProps: GetStaticProps = async ({
   }
 
   // Check if it's a legacy combo and reroute if it's found
-  if (!params.id.includes('-')) {
+  if (!params.id.includes('-') && !isNaN(Number(params.id))) {
     const legacyComboMap = await variantService.fetchLegacyMap()
     const variantId = legacyComboMap[params.id]
     if (variantId) return {
@@ -225,11 +225,24 @@ export const getStaticProps: GetStaticProps = async ({
             revalidate: 60, // refreshes every minute
           }
         }
+      } else {
+        const alias = await variantService.fetchVariantAlias(params.id);
+        if (alias) {
+          return {
+            redirect: {
+              destination: `/combo/${alias.variant}`,
+              permanent: false,
+            },
+          };
+        } else {
+          // const card_ids = params.id.split("--")[0].split("-");
+          // const results = await findMyCombosService.findFromLists([], card_ids);
+          // TODO: display the results and let user decide
+        }
       }
     } catch (err) {
       console.log(err);
     }
-
   }
   // Finally 404
   return {

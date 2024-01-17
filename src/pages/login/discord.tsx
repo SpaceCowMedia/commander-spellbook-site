@@ -34,7 +34,7 @@ const Login: React.FC<Props> = ({}: Props) => {
         setError(err.message)
       })
     }
-  }, [router.isReady])
+  }, [router.isReady]);
 
   return (
     <>
