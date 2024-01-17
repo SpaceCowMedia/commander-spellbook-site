@@ -1,0 +1,43 @@
+.outerModalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity ease-in-out 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.visible {
+  opacity: 1;
+}
+
+.modal {
+  background-color: #fff;
+  width: 90%;
+  max-width: 40rem;
+  z-index: 1001;
+  margin-top: -50%;
+  transition: margin-top ease-in-out 0.2s;
+}
+
+.inPosition {
+  margin-top: 0;
+}
+
+.content {
+  padding: 2em;
+}
+
+.footer {
+  width: 100%;
+  padding: 1em 2em;
+  border-top: 1px solid #c5c5c5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}

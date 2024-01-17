@@ -13,6 +13,9 @@ type Props = {
 const PageWrapper: React.FC<Props> = ({ children, noMarginFooter }: Props) => {
   const router = useRouter();
   const isHome = router.pathname === '/';
+  const isEmbed = router.pathname.endsWith('/embed');
+
+  if (isEmbed) return <>{children}</>;
 
   return (
     <div className={`flex flex-col h-full`}>

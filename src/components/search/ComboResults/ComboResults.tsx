@@ -7,19 +7,15 @@ import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicS
 import pluralize from "pluralize";
 import {Deck} from "../../../lib/decklist-parser";
 
-type Props = {
+type ResultProps = {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
-  results: Variant[];
+  combo: Variant;
   sort?: string;
-  vendor?: VendorValue;
+  cards?: string[]
+  newTab?: boolean;
 }
+export const ComboResult = ({combo, deck, sort, cards=[], newTab}: ResultProps) => {
 
-const ComboResults = ({
-  results,
-  sort,
-  vendor,
-  deck,
-}: Props) => {
   const sortStatMessage = (combo: Variant) => {
     if (!sort) {
       return "";
@@ -61,61 +57,82 @@ const ComboResults = ({
     return "";
   };
 
+  return (
+    <Link
+      href={`/combo/${combo.id}`}
+      key={combo.id}
+      className={`${styles.comboResult} w-full md:w-1/4`}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      target={newTab ? "_blank" : undefined}
+    >
+      <div className="flex flex-col">
+        <div className="flex items-center flex-grow flex-col bg-dark text-white">
+          <ColorIdentity colors={Array.from(combo.identity)} size="small" />
+        </div>
+        <div className="flex-grow border-b-2 border-light">
+          <div className="py-1">
+            <span className="sr-only">Cards in combo:</span>
+            {combo.uses.map(({card}) => (
+              <CardTooltip cardName={card.name} key={card.name}>
+                <div className="card-name pl-3 pr-3">
+                  {(deck && !cards.includes(card.name.toLowerCase())) ? (
+                    <strong className="text-red-800">
+                      {card.name} (not in deck)
+                    </strong>
+                  ) : (
+                    <span>{card.name}</span>
+                  )}
+                </div>
+              </CardTooltip>
+            ))}
+            {combo.requires.length || combo.otherPrerequisites && (
+              <div className="prerequisites pl-3 pr-3">
+                <span className="text-gray-500">+{combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)} other prerequisite(s)</span>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex-grow">
+          <span className="sr-only">Results in combo:</span>
+          {combo.produces.map((result) => (
+            <div key={result.name} className={`result pl-3 pr-3`}>
+              <TextWithMagicSymbol text={result.name} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center flex-grow flex-col">
+        <div className="flex-grow" />
+        {sortStatMessage(combo) && (
+          <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
+            {sortStatMessage(combo)}
+          </div>
+        )}
+      </div>
+    </Link>
+  )
+}
+
+type Props = {
+  deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
+  results: Variant[];
+  sort?: string;
+  vendor?: VendorValue;
+}
+
+const ComboResults = ({
+  results,
+  sort,
+  deck,
+}: Props) => {
+
+
   const cards = deck?.cards.map((card) => card.toLowerCase()) ?? [];
 
   return (
     <div className={styles.comboResultsWrapper}>
       {results.map((combo) => (
-        <Link
-          href={`/combo/${combo.id}`}
-          key={combo.id}
-          className={`${styles.comboResult} w-full md:w-1/4`}
-        >
-          <div className="flex flex-col">
-            <div className="flex items-center flex-grow flex-col bg-dark text-white">
-              <ColorIdentity colors={Array.from(combo.identity)} size="small" />
-            </div>
-            <div className="flex-grow border-b-2 border-light">
-              <div className="py-1">
-                <span className="sr-only">Cards in combo:</span>
-                {combo.uses.map(({card}) => (
-                  <CardTooltip cardName={card.name} key={card.name}>
-                    <div className="card-name pl-3 pr-3">
-                      {(deck && !cards.includes(card.name.toLowerCase())) ? (
-                        <strong className="text-red-800">
-                          {card.name} (not in deck)
-                        </strong>
-                      ) : (
-                        <span>{card.name}</span>
-                      )}
-                    </div>
-                  </CardTooltip>
-                ))}
-                {combo.requires.length || combo.otherPrerequisites && (
-                  <div className="prerequisites pl-3 pr-3">
-                    <span className="text-gray-500">+{combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)} other prerequisite(s)</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex-grow">
-              <span className="sr-only">Results in combo:</span>
-              {combo.produces.map((result) => (
-                <div key={result.name} className={`result pl-3 pr-3`}>
-                  <TextWithMagicSymbol text={result.name} />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center flex-grow flex-col">
-            <div className="flex-grow" />
-            {sortStatMessage(combo) && (
-              <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
-                {sortStatMessage(combo)}
-              </div>
-            )}
-          </div>
-        </Link>
+        <ComboResult combo={combo} cards={cards} deck={deck} sort={sort} key={combo.id} />
       ))}
     </div>
   );
