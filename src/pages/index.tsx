@@ -135,7 +135,7 @@ export async function getStaticProps() {
   return {
     props: {
       featuredComboButtonText: buttonTextData.value,
-      revalidate: 60,
     },
+    revalidate: 60,
   };
 }
