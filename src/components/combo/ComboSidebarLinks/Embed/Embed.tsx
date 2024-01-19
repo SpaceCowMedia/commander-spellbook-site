@@ -17,7 +17,7 @@ const Embed = ({combo}: Props) => {
   const embedHeight = combo.produces.length * 24 + combo.uses.length * 24 + 24 + 48 + 16
 
   const embedCode =
-`<div style="width:300px; height: ${embedHeight}; position:relative; overflow: visible;">
+`<div style="width:300px; height: ${embedHeight}px; position:relative; overflow: visible;">
   <div style="position:absolute; margin:auto; left:0; right:0; top: 0; width: 600px; height: ${embedHeight+340}">
     <object type="text/html" data="${process.env.NEXT_PUBLIC_CLIENT_URL}/combo/${combo.id}/embed" width="100%" height="${embedHeight+340}"></object>
   </div>
