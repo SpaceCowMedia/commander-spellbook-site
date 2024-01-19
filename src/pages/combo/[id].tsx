@@ -85,7 +85,7 @@ const Combo = ({ combo }: Props) => {
       : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
   const numberOfDecks = combo.popularity;
   const metaData =
-    numberOfDecks !== undefined || numberOfDecks !== null
+    numberOfDecks !== undefined && numberOfDecks !== null
       ? [
           `In ${numberOfDecks} ${pluralize(
             "deck",
