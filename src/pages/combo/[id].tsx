@@ -232,9 +232,9 @@ export const getStaticProps: GetStaticProps = async ({
     const card_ids = params.id.split("--")[0].split("-");
     const results = await findMyCombosService.findFromLists([], card_ids);
     const alternatives = results
-      ? results.results.almostIncluded.concat(
-          results.results.almostIncludedByAddingColors).concat(
-            results.results.included) 
+      ? results.results.included.concat(
+          results.results.almostIncluded).concat(
+            results.results.almostIncludedByAddingColors) 
       : [];
     if (alternatives.length > 0) return {
       props: {
