@@ -16,6 +16,7 @@ import {PaginatedResponse} from "../types/api";
 
 type Props = {
   combos: Variant[]
+  bannedCombos?: Variant[]
   count: number
   page: number
 };
@@ -57,7 +58,7 @@ const AUTO_SORT_MAP: Record<string, "-"> = {
 }
 
 const PAGE_SIZE = 50
-const Search: React.FC<Props> = ({combos, count, page}: Props) => {
+const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => {
 
   const router = useRouter();
 
@@ -163,7 +164,10 @@ const Search: React.FC<Props> = ({combos, count, page}: Props) => {
               />
             </div>
           ) : (
-            <NoCombosFound  />
+            <NoCombosFound
+              alternatives={bannedCombos}
+              criteria="banned"
+            />
           )}
         </div>
       </div>
@@ -175,17 +179,37 @@ export default Search;
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let query = `${context.query.q}`
-  if (!query.includes('legal:') && !query.includes('banned:') && !query.includes('format:')) query = `${query} legal:commander`
+  let query = `${context.query.q}`;
+  const queryDoesntSpecifyFormat = !query.includes('legal:') && !query.includes('banned:') && !query.includes('format:');
+  if (queryDoesntSpecifyFormat) query = `${query} legal:commander`;
   query = encodeURIComponent(query)
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
   const sort = context.query.sort || DEFAULT_SORT
   const ordering = order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`
   const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`
-  const results = await requestService.get<PaginatedResponse<Variant>>(url)
+  const results = await requestService.get<PaginatedResponse<Variant>>(url);
 
-  const backendCombos = results ? results.results : []
+  const backendCombos = results ? results.results : [];
+
+  if (backendCombos.length === 0 && queryDoesntSpecifyFormat) {
+    // Try searching in banned combos
+    let query = `${context.query.q} banned:commander`;
+    query = encodeURIComponent(query)
+    const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&ordering=${ordering}`;
+    const results = await requestService.get<PaginatedResponse<Variant>>(url);
+    const bannedCombos = results ? results.results : [];
+    if (bannedCombos.length > 0) {
+      return {
+        props: {
+          combos: [],
+          bannedCombos: bannedCombos,
+          count: 0,
+          page: context.query.page || 1,
+        }
+      }
+    }
+  }
 
   if (backendCombos.length === 1) {
     return {
