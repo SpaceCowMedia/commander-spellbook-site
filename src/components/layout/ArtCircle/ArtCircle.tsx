@@ -125,6 +125,10 @@ const CARD_ARTS = {
     uid: "21e89101-f1cf-4bbd-a1d5-c5d48512e0dd",
     artist: "Zoltan Boros",
   },
+  "Fblthp, the Lost": {
+    uid: "79b2c547-0d9e-4fd7-a399-347ad908c70b",
+    artist: "Jesper Ejsing",
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({

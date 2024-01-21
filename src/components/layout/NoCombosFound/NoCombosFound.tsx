@@ -1,25 +1,42 @@
 import styles from "./noCombosFound.module.scss";
 import SplashPage from "../SplashPage/SplashPage";
 import Link from "next/link";
+import { Variant } from "lib/types";
+import ComboResults from "components/search/ComboResults/ComboResults";
 
-type Props = {};
+type Props = {
+  single?: boolean;
+  alternatives?: Variant[];
+  criteria?: string;
+};
 
-const NoCombosFound = ({}: Props) => {
-  const title = "No Combos Found"
-  const flavor = "The final pages of the experiment log were blank. Investigators found it abandoned on a desk in the researcher’s lab, open, the pages flipping in the wind from a shattered window."
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
+const NoCombosFound = ({single, alternatives, criteria}: Props) => {
+  const title = single ? "Combo Not Found" : "No Combos Found";
+  const flavor = alternatives && alternatives.length > 0
+    ? "" 
+    : "The final pages of the experiment log were blank. Investigators found it abandoned on a desk in the researcher’s lab, open, the pages flipping in the wind from a shattered window.";
+  const options = [
+    "try one of the links below",
+    single ? "change the address at the top of your browser" : "adjust your search",
+  ];
+  if (alternatives && alternatives.length > 0) {
+    options.push(`select a ${criteria} combo from the list below`);
+  }
   return (
     <SplashPage
       pulse={false}
       title={title}
       flavor={flavor}
-      artCircleCardName="Frantic Search"
+      artCircleCardName={single ? "Fblthp, the Lost" : "Frantic Search"}
     >
       <div className={`${styles.noCombosFoundButtons} opacity-100`}>
-        <p>
-          Your search didn’t match any combos. Adjust your search or try one of
-          the links below:
-        </p>
+        <h2 className="heading-subtitle">
+          Your {single ? "address" : "search"} didn't match any combos. {capitalizeFirstLetter(options.slice(0, -1).join(", "))} or {options[options.length - 1]}.
+        </h2>
         <div>
           <Link href="/advanced-search/" className="button">
             Advanced Search
@@ -28,6 +45,12 @@ const NoCombosFound = ({}: Props) => {
             Syntax Guide
           </Link>
         </div>
+        {alternatives && alternatives.length > 0 &&
+          <div className="container sm:flex flex-row">
+            <div className="w-full">
+              <ComboResults results={alternatives} />
+            </div>
+          </div>}
       </div>
     </SplashPage>
   );
