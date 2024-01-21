@@ -17,6 +17,7 @@ import ErrorBase from "../../components/layout/ErrorBase/ErrorBase";
 import ComboResults from "../../components/search/ComboResults/ComboResults";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
 import findMyCombosService from "../../services/findMyCombos.service";
+import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
 
 type Props = {
   combo?: Variant;
@@ -171,17 +172,11 @@ const Combo = ({ combo, alternatives }: Props) => {
           description="The combo you are looking for could not be found. Here are some similar alternatives."
         />
         <div className="static-page">
-          <ArtCircle
-            cardName="Fblthp, the Lost"
-            className="m-auto md:block hidden"
+          <NoCombosFound
+            single={true}
+            alternatives={alternatives}
+            criteria="similar"
           />
-          <h1 className="heading-title">Combo Not Found</h1>
-          <h2 className="heading-subtitle">Maybe it's been removed or changed id. Here are some similar alternatives.</h2>
-          <div className="container sm:flex flex-row">
-            <div className="w-full">
-              <ComboResults results={alternatives} />
-            </div>
-          </div>
         </div>
       </>
     );
