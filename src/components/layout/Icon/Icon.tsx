@@ -3,7 +3,7 @@ import {
   faArrowUpRightDots, faArrowUpWideShort, faCartShopping, faCertificate,
   faCheckDouble,
   faCircleExclamation,
-  faCircleInfo, faCircleXmark, faCoins, faDollarSign, faFileLines, faFingerprint, faHashtag, faInfinity,
+  faCircleInfo, faCircleXmark, faCode, faCoins, faDollarSign, faFileLines, faFingerprint, faHashtag, faInfinity,
   faKey,
   faLightbulb, faListCheck, faListOl, faPalette, faScaleBalanced, faSeedling, faSignature, faStar, faTags,
   faTriangleExclamation
@@ -46,6 +46,7 @@ const SPELLBOOK_FA_ICONS = {
   fileLines: faFileLines,
   key: faKey,
   coins: faCoins,
+  code: faCode,
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS

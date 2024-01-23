@@ -2,6 +2,8 @@ import BuyComboButtons from "./BuyComboButtons/BuyComboButtons";
 import EdhrecLink from "./EdhrecLink/EdhrecLink";
 import Link from "next/link";
 import ShareComboButtons from "./ShareComboButtons/ShareComboButtons";
+import Embed from "components/combo/ComboSidebarLinks/Embed/Embed";
+import {Variant} from "lib/types";
 
 type Props = {
   cards: string[];
@@ -10,6 +12,7 @@ type Props = {
   comboId: string;
   tcgPlayerPrice: string;
   cardKingdomPrice: string;
+  combo: Variant
 };
 
 const ComboSidebarLinks = ({
@@ -19,6 +22,7 @@ const ComboSidebarLinks = ({
   comboId,
   tcgPlayerPrice,
   cardKingdomPrice,
+  combo
 }: Props) => {
   return (
     <div className="mt-4 mb-4 w-full rounded overflow-hidden">
@@ -37,6 +41,7 @@ const ComboSidebarLinks = ({
         >
           Report an Error with this Combo
         </Link>
+        <Embed combo={combo} />
         <ShareComboButtons comboLink={comboLink} />
       </div>
     </div>
