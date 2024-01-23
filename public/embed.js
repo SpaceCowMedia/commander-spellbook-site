@@ -29,10 +29,8 @@
     position: relative;
     background-color: #fafafa;
     width: 300px;
-    & a {
-      &:hover {
-        text-decoration: none;
-      }
+    &:hover {
+      text-decoration: none;
     }
   }
   .list {
