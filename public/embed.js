@@ -32,6 +32,10 @@
     &:hover {
       text-decoration: none !important;
     }
+    &:focus {
+      outline: none;
+      text-decoration: none !important;
+    }
   }
   .list {
     display: flex;
