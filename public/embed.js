@@ -30,7 +30,7 @@
     background-color: #fafafa;
     width: 300px;
     &:hover {
-      text-decoration: none;
+      text-decoration: none !important;
     }
   }
   .list {
