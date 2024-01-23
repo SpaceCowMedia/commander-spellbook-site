@@ -25,10 +25,15 @@
     flex-direction: column;
     text-decoration: none;
     color: #212121 !important;
-    font-size: 1.1rem !important;
+    font-size: 14px !important;
     position: relative;
     background-color: #fafafa;
     width: 300px;
+    & a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
   .list {
     display: flex;
@@ -54,7 +59,7 @@
     justify-content: center;
     align-items: center;
     gap: 15px;
-    font-size: 1.75rem !important;
+    font-size: 27px !important;
   }
   .logoContainer {
     display: flex;
@@ -63,7 +68,7 @@
     background-color: #282828;
     color: #8f8f8f;
     gap: 5px;
-    font-size: 0.75rem !important;
+    font-size: 11px !important;
   }
   .cardHover {
     position: fixed;
