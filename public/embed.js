@@ -1,19 +1,20 @@
-function nameToId(name) {
-  return name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '');
-}
+{
+  function nameToId(name) {
+    return name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '');
+  }
 
-const url = new URL(document.currentScript.src);
-const params = new URLSearchParams(url.searchParams);
-const uses = JSON.parse(params.get('uses'));
-const produces = JSON.parse(params.get('produces'));
-const id = params.get('id');
-const color = params.get('color');
-const extraRequirementCount = params.get('extraRequirementCount');
-const parent = document.currentScript.parentElement;
+  const url = new URL(document.currentScript.src);
+  const params = new URLSearchParams(url.searchParams);
+  const uses = JSON.parse(params.get('uses'));
+  const produces = JSON.parse(params.get('produces'));
+  const id = params.get('id');
+  const color = params.get('color');
+  const extraRequirementCount = params.get('extraRequirementCount');
+  const parent = document.currentScript.parentElement;
 
-parent.querySelector("#csbLoad").remove();
+  parent.querySelector("#csbLoad").remove();
 
-parent.innerHTML = `
+  parent.innerHTML = `
 <link href="//cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" rel="stylesheet" type="text/css" />
 <style>
   .outer {
@@ -27,6 +28,7 @@ parent.innerHTML = `
     font-size: 1.1rem !important;
     position: relative;
     background-color: #fafafa;
+    width: 300px;
   }
   .list {
     display: flex;
@@ -103,20 +105,21 @@ parent.innerHTML = `
 <div id="card-hover" class="cardHover"></div>
 `
 
-const hoverElement = parent.querySelector("#card-hover");
-if (!hoverElement) throw new Error("No hover element found");
+  const hoverElement = parent.querySelector("#card-hover");
+  if (!hoverElement) throw new Error("No hover element found");
 
-uses.forEach((cardName) => {
-  const cardId = nameToId(cardName);
-  const el = parent.querySelector(`#${cardId}`);
-  if (!el) return;
-  el.addEventListener('mousemove', (e) => {
-    hoverElement.style.display = 'block';
-    hoverElement.style.left = `${e.clientX + 25}px`;
-    hoverElement.style.top = `${e.clientY + 25}px`;
-    hoverElement.style.backgroundImage = `url("https://api.scryfall.com/cards/named?exact=${cardName}&format=image")`;
+  uses.forEach((cardName) => {
+    const cardId = nameToId(cardName);
+    const el = parent.querySelector(`#${cardId}`);
+    if (!el) return;
+    el.addEventListener('mousemove', (e) => {
+      hoverElement.style.display = 'block';
+      hoverElement.style.left = `${e.clientX + 25}px`;
+      hoverElement.style.top = `${e.clientY + 25}px`;
+      hoverElement.style.backgroundImage = `url("https://api.scryfall.com/cards/named?exact=${cardName}&format=image")`;
+    });
+    el.addEventListener('mouseout', () => {
+      hoverElement.style.display = 'none';
+    })
   });
-  el.addEventListener('mouseout', () => {
-    hoverElement.style.display = 'none';
-  })
-});
+}

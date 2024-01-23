@@ -23,11 +23,13 @@ const Embed = ({combo}: Props) => {
   query += `&color=${combo.identity}`
   query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)}`
 
+  // The empty iframe ensures that wordpress detects the embed
   const embedCode =
 `<div style="width:100%; position:relative; overflow: visible; display: flex; justify-content: center" id="${combo.id}">
     <img alt="csb logo" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/images/gear.svg" width="300" id="csbLoad"/>
-    <script src="${process.env.NEXT_PUBLIC_CLIENT_URL}/embed.js?${query}"></script>
+    <script id="${combo.id}" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/embed.js?${query}"></script>
 </div>
+<iframe height="0" width="0" src="."></iframe>
 `
 
   const handleCopy = () => {
