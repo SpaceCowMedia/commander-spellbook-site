@@ -39,19 +39,14 @@ const nextConfig = {
       },
     };
   },
-  // async headers() {
-  //   return [
-  //     {
-  //       source: "/embed.js",
-  //       headers: OPEN_CORS_HEADERS,
-  //    },
-  //     {
-  //       source: "/combo/859-2569-4289-4452/embed",
-  //       headers: OPEN_CORS_HEADERS,
-  //     }
-  //
-  //   ]
-  // }
+  async headers() {
+    return [
+      {
+        source: "/embed.js",
+        headers: OPEN_CORS_HEADERS,
+     },
+    ]
+  }
 
 };
 
