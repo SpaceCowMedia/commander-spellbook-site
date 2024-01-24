@@ -4,7 +4,7 @@ import {
   faCheckDouble,
   faCircleExclamation,
   faCircleInfo, faCircleXmark, faCode, faCoins, faDollarSign, faFileLines, faFingerprint, faHashtag, faInfinity,
-  faKey,
+  faKey, faEye,
   faLightbulb, faListCheck, faListOl, faPalette, faScaleBalanced, faSeedling, faSignature, faStar, faTags,
   faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
@@ -47,6 +47,7 @@ const SPELLBOOK_FA_ICONS = {
   key: faKey,
   coins: faCoins,
   code: faCode,
+  eye: faEye,
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS

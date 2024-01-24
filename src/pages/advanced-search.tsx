@@ -204,13 +204,18 @@ const TAGS_OPTIONS: TagOption[] = [
   {
     name: "spoiler",
     label: "Contains a spoiler/previewed card",
-    labelIcon: "certificate"
+    labelIcon: "eye"
   },
   {
     name: "commander",
     label: "Does the combo require a commander?",
     labelIcon: "commandZone"
   },
+  {
+    name: "featured",
+    label: "Is the combo featured in the home page?",
+    labelIcon: "star"
+  }
 ]
 
 const COMMANDER_OPTIONS: OperatorOption[] = [
