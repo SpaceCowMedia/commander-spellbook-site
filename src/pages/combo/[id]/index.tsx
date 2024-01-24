@@ -13,36 +13,12 @@ import PrerequisiteList from "../../../components/combo/PrerequisiteList/Prerequ
 import {getPrerequisiteList} from "../../../lib/backend-processors";
 import EDHRECService from "../../../services/edhrec.service";
 import variantService from "../../../services/variant.service";
+import findMyCombosService from "../../../services/findMyCombos.service";
+import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
 
 type Props = {
-  combo: Variant;
-};
-
-type Price = {
-  tcgplayer: string;
-  cardkingdom: string;
-};
-type CardData = {
-  name: string;
-  oracleImageUrl: string;
-  artUrl: string;
-};
-
-type ComboData = {
-  hasBannedCard: boolean;
-  hasPreviewedCard: boolean;
-  link: string;
-  loaded: boolean;
-  comboNumber: string;
-  cards: CardData[];
-  prices: Price;
-  colorIdentity: string[];
-  prerequisites: string[];
-  steps: string[];
-  results: string[];
-  edhrecLink: string;
-  numberOfDecks: number;
-  commanderSpellbookId: string;
+  combo?: Variant;
+  alternatives?: Variant[];
 };
 
 const NUMBERS = [
@@ -59,135 +35,150 @@ const NUMBERS = [
   "ten",
 ];
 
-const Combo = ({ combo }: Props) => {
+const Combo = ({ combo, alternatives }: Props) => {
+  if (combo) {
+    const cards = combo.uses.map((card) => {
+      return {
+        name: card.card.name,
+        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${card.card.name}`,
+        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${card.card.name}`,
+      };
+    });
+    const cardNames = combo.uses.map(card => card.card.name)
+    const cardArts = cards.map((card) => card.artUrl);
+    const title =
+      cardNames.length === 0
+        ? "Looking up Combo"
+        : cardNames.slice(0, 3).join(" | ");
+    const subtitle =
+      cardNames.length < 4
+        ? ""
+        : cardNames.length === 4
+        ? `(and ${NUMBERS[1]} other card)`
+        : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
+    const numberOfDecks = combo.popularity;
+    const metaData =
+      numberOfDecks !== undefined && numberOfDecks !== null
+        ? [
+            `In ${numberOfDecks} ${pluralize(
+              "deck",
+              numberOfDecks
+            )} according to EDHREC.`,
+          ]
+        : [];
 
+    const colors = Array.from(combo.identity)
+    const prerequisites = getPrerequisiteList(combo)
+    const steps = combo.description.split('\n');
+    const results = combo.produces.map(feature => feature.name)
+    const loaded = true;
 
-
-  const cards = combo.uses.map((card) => {
-    return {
-      name: card.card.name,
-      artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${card.card.name}`,
-      oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${card.card.name}`,
-    };
-  });
-  const cardNames = combo.uses.map(card => card.card.name)
-  const cardArts = cards.map((card) => card.artUrl);
-  const title =
-    cardNames.length === 0
-      ? "Looking up Combo"
-      : cardNames.slice(0, 3).join(" | ");
-  const subtitle =
-    cardNames.length < 4
-      ? ""
-      : cardNames.length === 4
-      ? `(and ${NUMBERS[1]} other card)`
-      : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
-  const numberOfDecks = combo.popularity;
-  const metaData =
-    numberOfDecks !== undefined || numberOfDecks !== null
-      ? [
-          `In ${numberOfDecks} ${pluralize(
-            "deck",
-            numberOfDecks
-          )} according to EDHREC.`,
-        ]
-      : [];
-
-  const colors = Array.from(combo.identity)
-  const prerequisites = getPrerequisiteList(combo)
-  const steps = combo.description.split('\n');
-  const results = combo.produces.map(feature => feature.name)
-  const loaded = true;
-
-  return (
-    <>
-      <SpellbookHead
-        title={`${title} ${subtitle}`}
-        description={results.reduce(
-          (str, result) => str + `\n  * ${result}`,
-          "Combo Results:"
-        )}
-        imageUrl={cardArts[0]}
-        useCropDimensions
-      />
-      <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-      {loaded && <CardGroup key={combo.id} cards={cards} />}
-      <div className="container md:flex flex-row">
-        <div className="w-full md:w-2/3">
-          <div className="md:hidden pt-4">
-            <ColorIdentity colors={colors} />
-          </div>
-
-          <ComboList
-            title="Cards"
-            id="combo-cards"
-            className="lg:hidden"
-            includeCardLinks
-            cardsInCombo={cardNames}
-            iterations={cardNames}
-          />
-
-          <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames}/>
-
-          <ComboList
-            title="Steps"
-            id="combo-steps"
-            iterations={steps}
-            cardsInCombo={cardNames}
-            showNumbers
-            appendPeriod
-          />
-
-          <ComboList
-            title="Results"
-            id="combo-results"
-            iterations={results}
-            cardsInCombo={cardNames}
-            appendPeriod
-          />
-
-          {metaData.length > 0 && (
-            <ComboList
-              title="Metadata"
-              id="combo-metadata"
-              iterations={metaData}
-            />
+    return (
+      <>
+        <SpellbookHead
+          title={`${title} ${subtitle}`}
+          description={results.reduce(
+            (str, result) => str + `\n  * ${result}`,
+            "Combo Results:"
           )}
-        </div>
-
-        {loaded && (
-          <aside className="w-full md:w-1/3 text-center">
-            <div id="combo-color-identity" className="my-4 hidden md:block">
+          imageUrl={cardArts[0]}
+          useCropDimensions
+        />
+        <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
+        {loaded && <CardGroup key={combo.id} cards={cards} />}
+        <div className="container md:flex flex-row">
+          <div className="w-full md:w-2/3">
+            <div className="md:hidden pt-4">
               <ColorIdentity colors={colors} />
             </div>
 
-            {!combo.legalities?.commander && (
-              <div className={styles.bannedWarning}>
-                WARNING: Combo contains cards that are banned in Commander
-              </div>
-            )}
-
-            {combo.spoiler && (
-              <div className={styles.previewedWarning}>
-                WARNING: Combo contains cards that have not been released yet
-                (and are not yet legal in Commander)
-              </div>
-            )}
-
-            <ComboSidebarLinks
-              cards={cardNames}
-              comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
-              edhrecLink={EDHRECService.getComboUrl(combo)}
-              comboId={combo.id}
-              tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
-              cardKingdomPrice={combo.prices?.cardkingdom || "-"}
-              combo={combo}
+            <ComboList
+              title="Cards"
+              id="combo-cards"
+              className="lg:hidden"
+              includeCardLinks
+              cardsInCombo={cardNames}
+              iterations={cardNames}
             />
-          </aside>
-        )}
-      </div>
-    </>
-  );
+
+            <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames}/>
+
+            <ComboList
+              title="Steps"
+              id="combo-steps"
+              iterations={steps}
+              cardsInCombo={cardNames}
+              showNumbers
+              appendPeriod
+            />
+
+            <ComboList
+              title="Results"
+              id="combo-results"
+              iterations={results}
+              cardsInCombo={cardNames}
+              appendPeriod
+            />
+
+            {metaData.length > 0 && (
+              <ComboList
+                title="Metadata"
+                id="combo-metadata"
+                iterations={metaData}
+              />
+            )}
+          </div>
+
+          {loaded && (
+            <aside className="w-full md:w-1/3 text-center">
+              <div id="combo-color-identity" className="my-4 hidden md:block">
+                <ColorIdentity colors={colors} />
+              </div>
+
+              {!combo.legalities?.commander && (
+                <div className={styles.bannedWarning}>
+                  WARNING: Combo contains cards that are banned in Commander
+                </div>
+              )}
+
+              {combo.spoiler && (
+                <div className={styles.previewedWarning}>
+                  WARNING: Combo contains cards that have not been released yet
+                  (and are not yet legal in Commander)
+                </div>
+              )}
+
+              <ComboSidebarLinks
+                cards={cardNames}
+                comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
+                edhrecLink={EDHRECService.getComboUrl(combo)}
+                comboId={combo.id}
+                tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
+                cardKingdomPrice={combo.prices?.cardkingdom || "-"}
+                combo={combo}
+              />
+            </aside>
+          )}
+        </div>
+      </>
+    );
+  } else if (alternatives) {
+    return (
+      <>
+        <SpellbookHead
+          title="Combo Not Found"
+          description="The combo you are looking for could not be found. Here are some similar alternatives."
+        />
+        <div className="static-page">
+          <NoCombosFound
+            single={true}
+            alternatives={alternatives}
+            criteria="similar"
+          />
+        </div>
+      </>
+    );
+  }
 };
 
 export default Combo;
@@ -231,9 +222,19 @@ export const getStaticProps: GetStaticProps = async ({
         }
       };
     }
-    // const card_ids = params.id.split("--")[0].split("-");
-    // const results = await findMyCombosService.findFromLists([], card_ids);
-    // TODO: display the results and let user decide which one to go to
+    const card_ids = params.id.split("--")[0].split("-");
+    const results = await findMyCombosService.findFromLists([], card_ids);
+    const alternatives = results
+      ? results.results.included.concat(
+          results.results.almostIncluded).concat(
+            results.results.almostIncludedByAddingColors) 
+      : [];
+    if (alternatives.length > 0) return {
+      props: {
+        alternatives,
+        revalidate: 60, // refreshes every minute
+      },
+    };
   } catch (err) {
     console.log(err);
   }
