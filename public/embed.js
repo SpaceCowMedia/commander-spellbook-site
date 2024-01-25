@@ -63,14 +63,6 @@
     gap: 15px;
     font-size: 27px !important;
   }
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-  }
   .logoContainer {
     display: flex;
     justify-content: center;
@@ -78,21 +70,7 @@
     background-color: #282828;
     gap: 5px;
     font-size: 15px !important;
-  }
-  .logoContainer span {
-    background: linear-gradient(
-      to right,
-      #d958ef 20%,
-      #e297ef 30%,
-      #bc6dca 70%,
-      #bd59cf 80%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-fill-color: transparent;
-    background-size: 500% auto;
-    animation: gradient 5s ease-in-out infinite alternate;
+    color: #ba7aa8;
   }
   .cardHover {
     position: fixed;
