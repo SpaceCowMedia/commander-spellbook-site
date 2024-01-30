@@ -603,6 +603,11 @@
   resolved "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
+"@scryfall/api-types@^1.0.0-alpha.4":
+  version "1.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@scryfall/api-types/-/api-types-1.0.0-alpha.4.tgz#a6360d88269b621ade8c6dfb45bd74da608eea8d"
+  integrity sha512-uxoJPA5r0va3xo1h5Su+0J8ptG1BS7+Uw+67sV7NTBIhR7Ly9cYrRv0un4Q3Z/h+D8jjTWNwablUbDG6zULcVA==
+
 "@sideway/address@^4.1.3":
   version "4.1.4"
   resolved "https://registry.npmjs.org/@sideway/address/-/address-4.1.4.tgz"

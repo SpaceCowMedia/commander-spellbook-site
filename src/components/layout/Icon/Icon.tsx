@@ -6,9 +6,10 @@ import {
   faCircleInfo, faCircleXmark, faCode, faCoins, faDollarSign, faFileLines, faFingerprint, faHashtag, faInfinity,
   faKey, faEye,
   faLightbulb, faListCheck, faListOl, faPalette, faScaleBalanced, faSeedling, faSignature, faStar, faTags,
-  faTriangleExclamation, faClose
+  faTriangleExclamation, faClose, faChevronLeft, faChevronRight
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 
 const SPELLBOOK_ICONS = {
   graveyard: styles.graveyard,
@@ -49,17 +50,21 @@ const SPELLBOOK_FA_ICONS = {
   code: faCode,
   eye: faEye,
   close: faClose,
+  chevronLeft: faChevronLeft,
+  chevronRight: faChevronRight
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS
 
 type Props = {
   name: SpellbookIcon
+  className?: string
+  onClick?: () => void
 }
-const Icon = ({name}: Props) => {
+const Icon = ({name, className, onClick}: Props) => {
 
-  if (name in SPELLBOOK_ICONS) return <i className={`${styles.icon} ${SPELLBOOK_ICONS[name as keyof typeof SPELLBOOK_ICONS]}`}/>
-  if (name in SPELLBOOK_FA_ICONS) return <FontAwesomeIcon className={styles.icon} icon={SPELLBOOK_FA_ICONS[name as keyof typeof SPELLBOOK_FA_ICONS]} />
+  if (name in SPELLBOOK_ICONS) return <i className={classNames(styles.icon, SPELLBOOK_ICONS[name as keyof typeof SPELLBOOK_ICONS], className)} onClick={onClick}/>
+  if (name in SPELLBOOK_FA_ICONS) return <FontAwesomeIcon className={classNames(styles.icon, className)} icon={SPELLBOOK_FA_ICONS[name as keyof typeof SPELLBOOK_FA_ICONS]} onClick={onClick}/>
 
   return null
 }

@@ -2,19 +2,21 @@ import Modal from "components/ui/Modal/Modal";
 import {useEffect, useState} from "react";
 import Dimmer from "components/ui/Dimmer/Dimmer";
 import edhrecService from "services/edhrec.service";
-
+import { ScryfallCard } from "@scryfall/api-types";
+import {getScryfallImage} from "lib/getScryfallImage";
 
 type Props = {
   scryfallApiUrl: string
   textTrigger?: React.ReactNode
+  count?: number
 }
 
 const TEST = "https://api.scryfall.com/cards/search?order=cmc&q=c%3Ared+pow%3D3"
-const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger }: Props) => {
+const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger, count }: Props) => {
   const [loading, setLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [nextUrl, setNextUrl] = useState<string | null>(null)
-  const [results, setResults] = useState<Array<Record<string, any>>>([])
+  const [results, setResults] = useState<Array<ScryfallCard.Any>>([])
 
   const fetchResults = async () => {
     setLoading(true)
@@ -41,7 +43,10 @@ const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger }: 
 
   return (
     <>
-    {!textTrigger && <button className="button p-2 !text-white font-bold text-lg z-10 w-min whitespace-nowrap" onClick={() => setIsOpen(true)}>View Cards</button>}
+    {!textTrigger &&
+      <button className="button !p-0 !px-2 !text-white font-bold text-lg z-10 w-min whitespace-nowrap h-8 text-[14px]" onClick={() => setIsOpen(true)}>
+        View {!!count && count+" "}Cards
+      </button>}
     {textTrigger && <span className="cursor-pointer" onClick={() => setIsOpen(true)}>{textTrigger}</span>}
       <Modal
         closeIcon
@@ -51,9 +56,9 @@ const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger }: 
       >
         {loading && <Dimmer loading/>}
         <div className="flex flex-wrap gap-3 justify-center">
-          {results.map((result: any) => (
+          {results.map((result) => (
             <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
-              <img width="240" src={result.image_uris ? result.image_uris?.normal : result.card_faces[0].image_uris?.normal} alt={result.name} />
+              <img width="240" src={getScryfallImage(result)} alt={result.name} />
             </a>
           ))}
         </div>

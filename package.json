@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "tsc": "tsc",
     "cy:run": "cypress run",
     "prettier": "prettier --write .",
     "test:integration": "NODE_ENV=production yarn start & wait-on http://localhost:3000 && yarn run cy:run"
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/debounce": "^1.2.1",
     "@types/gtag.js": "^0.0.12",
     "@types/node": "18.11.19",
@@ -56,8 +58,8 @@
     "eslint-config-prettier": "^8.7.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
-    "prettier": "^2.8.4",
     "postcss": "^8.4.21",
+    "prettier": "^2.8.4",
     "wait-on": "^7.0.1"
   }
 }
