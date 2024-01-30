@@ -17,7 +17,6 @@ const TemplateCard = ({template}: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(template.template.scryfallApi)
     requestService.get(template.template.scryfallApi)
       .then((response) => {
         setResultCount(response.total_cards);
