@@ -20,9 +20,12 @@
   background-color: #fff;
   width: 90%;
   max-width: 40rem;
+  max-height: 95vh;
   z-index: 1001;
   margin-top: -50%;
   transition: margin-top ease-in-out 0.2s;
+  overflow: auto;
+  position: relative;
 }
 
 .inPosition {
@@ -40,4 +43,29 @@
   display: flex;
   justify-content: flex-end;
   gap: 5px;
+}
+
+.small {
+  max-width: 30rem;
+}
+.medium {
+  max-width: 50rem;
+}
+.large {
+  max-width: 100rem;
+}
+
+.closeIcon {
+  top: 5px;
+  position: sticky;
+  cursor: pointer;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+  padding-right: 10px;
+  height: 0;
+  font-size: 1.25em;
+  color: #424242;
 }

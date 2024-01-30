@@ -1,4 +1,4 @@
-import {CardComponent, NewPrerequisiteType, Variant } from "./types";
+import {CardComponent, NewPrerequisiteType, Template, Variant} from "./types";
 
 const ZONE_MAP = {
   "H": "in hand",
@@ -15,7 +15,7 @@ const comaAndOrJoin = (input: string[], joiner='and') => {
   if (input.length === 2) return input.join(` ${joiner} `)
   return `${input.slice(0, -1).join(', ')}, ${joiner} ${input.slice(-1)}`
 }
-const getZoneStateMap = (card: CardComponent) => {
+const getZoneStateMap = (card: CardComponent | Template) => {
   const output: Record<string, string> = {}
   if (card.battlefieldCardState) output['B'] = card.battlefieldCardState
   if (card.exileCardState) output['E'] = card.exileCardState
@@ -27,25 +27,31 @@ const getZoneStateMap = (card: CardComponent) => {
 export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
   let output: NewPrerequisiteType[] = []
 
+  const cardsAndTemplates: Array<(CardComponent | Template) & {name: string}> = (variant.uses as Array<CardComponent | Template> ).concat(variant.requires).map(
+    card => {
+      if ('card' in card) return {...card, name: card.card.name}
+      else return {...card, name: card.template.name}
+    })
+
   // Count if any coma split card names exist more than once
-  const cardNameCountMap = variant.uses.reduce((acc: Record<string,number>, card) => {
-    const split = card.card.name.split(', ')[0]
+  const cardNameCountMap = cardsAndTemplates.reduce((acc: Record<string,number>, card) => {
+    const split = 'card' in card ? card.card.name.split(', ')[0] : card.template.name
     acc[split] = acc[split] ? acc[split] + 1 :  1
     return acc
   }, {})
 
   // Map card names to coma split card names if they only exist once
-  const cardNameMap = variant.uses.reduce((acc: Record<string, string>, card) => {
-    const split = card.card.name.split(', ')[0]
-    acc[card.card.name] = cardNameCountMap[split] === 1 ? split : card.card.name
+  const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
+    const split = 'card' in card ? card.card.name.split(', ')[0] : card.template.name
+    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.name
     return acc
   }, {})
 
   // Handle any multi-zone cards
-  const multiZoneCards = variant.uses.filter(card => card.zoneLocations.length > 1)
-  for (const card of multiZoneCards.sort((a, b) => a.card.name.localeCompare(b.card.name))) {
+  const multiZoneCards = cardsAndTemplates.filter(card => card.zoneLocations.length > 1)
+  for (const card of multiZoneCards.sort((a, b) => a.name.localeCompare(b.name))) {
     let cardString = ''
-    cardString += `${cardNameMap[card.card.name]} `
+    cardString += `${cardNameMap[card.name]} `
     if (Object.keys(ZONE_MAP).length === card.zoneLocations.length) {
       cardString += 'in any zone';
     } else {
@@ -56,7 +62,7 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
     cardString += ". "
     output.push({z: 'multi', s: cardString})
   }
-  const singleZoneCards = variant.uses.filter(card => card.zoneLocations.length === 1)
+  const singleZoneCards = cardsAndTemplates.filter(card => card.zoneLocations.length === 1)
 
   const zoneGroups: {cardNames: string[], cardState: string, zone: keyof typeof ZONE_MAP}[] = []
 
@@ -67,7 +73,7 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
     // Pull out the card state for the current zone and if it exists store the card name in an array with the key of the card state string so it can be grouped with cards that match its state
     const stateMap = zoneCards.reduce((acc: Record<string, string[]>, card) => {
       const cardState = getZoneStateMap(card)[zoneKey]
-      if (cardState) acc[cardState] = acc[cardState] ? acc[cardState].concat([cardNameMap[card.card.name]]) : [cardNameMap[card.card.name]]
+      if (cardState) acc[cardState] = acc[cardState] ? acc[cardState].concat([cardNameMap[card.name]]) : [cardNameMap[card.name]]
       return acc
     }, {})
     let cardStateStrings: string[] = []
@@ -79,7 +85,7 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
     let cardState = comaAndOrJoin(cardStateStrings)
     if (cardState) cardState = ` (${cardState})`
     zoneGroups.push({
-      cardNames: zoneCards.map(card => cardNameMap[card.card.name]),
+      cardNames: zoneCards.map(card => cardNameMap[card.name]),
       zone: zoneKey as keyof typeof ZONE_MAP,
       cardState,
     })

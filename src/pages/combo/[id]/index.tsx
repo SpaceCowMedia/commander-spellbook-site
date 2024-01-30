@@ -44,18 +44,21 @@ const Combo = ({ combo, alternatives }: Props) => {
         oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${card.card.name}`,
       };
     });
-    const cardNames = combo.uses.map(card => card.card.name)
+    const cardNames = combo.uses.map(card => card.card.name);
     const cardArts = cards.map((card) => card.artUrl);
     const title =
       cardNames.length === 0
         ? "Looking up Combo"
         : cardNames.slice(0, 3).join(" | ");
+    const titleCount = cardNames.slice(0, 3).length;
+    const templateNames = combo.requires.map(template => template.template.name)
+    const combinedNames = [...cardNames, ...templateNames]
     const subtitle =
-      cardNames.length < 4
+      combinedNames.length === titleCount
         ? ""
-        : cardNames.length === 4
+        : combinedNames.length === titleCount + 1
         ? `(and ${NUMBERS[1]} other card)`
-        : `(and ${NUMBERS[cardNames.length - 3]} other cards)`;
+        : `(and ${NUMBERS[combinedNames.length - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
     const metaData =
       numberOfDecks !== undefined && numberOfDecks !== null
@@ -71,7 +74,6 @@ const Combo = ({ combo, alternatives }: Props) => {
     const prerequisites = getPrerequisiteList(combo)
     const steps = combo.description.split('\n');
     const results = combo.produces.map(feature => feature.name)
-    const loaded = true;
 
     return (
       <>
@@ -85,7 +87,7 @@ const Combo = ({ combo, alternatives }: Props) => {
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-        {loaded && <CardGroup key={combo.id} cards={cards} />}
+        <CardGroup key={combo.id} cards={cards} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
@@ -98,16 +100,18 @@ const Combo = ({ combo, alternatives }: Props) => {
               className="lg:hidden"
               includeCardLinks
               cardsInCombo={cardNames}
-              iterations={cardNames}
+              templatesInCombo={combo.requires}
+              iterations={combinedNames}
             />
 
-            <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames}/>
+            <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames} templatesInCombo={combo.requires}/>
 
             <ComboList
               title="Steps"
               id="combo-steps"
               iterations={steps}
               cardsInCombo={cardNames}
+              templatesInCombo={combo.requires}
               showNumbers
               appendPeriod
             />
@@ -117,6 +121,7 @@ const Combo = ({ combo, alternatives }: Props) => {
               id="combo-results"
               iterations={results}
               cardsInCombo={cardNames}
+              templatesInCombo={combo.requires}
               appendPeriod
             />
 
@@ -129,36 +134,36 @@ const Combo = ({ combo, alternatives }: Props) => {
             )}
           </div>
 
-          {loaded && (
-            <aside className="w-full md:w-1/3 text-center">
-              <div id="combo-color-identity" className="my-4 hidden md:block">
-                <ColorIdentity colors={colors} />
+
+          <aside className="w-full md:w-1/3 text-center">
+            <div id="combo-color-identity" className="my-4 hidden md:block">
+              <ColorIdentity colors={colors} />
+            </div>
+
+            {!combo.legalities?.commander && (
+              <div className={styles.bannedWarning}>
+                WARNING: Combo contains cards that are banned in Commander
               </div>
+            )}
 
-              {!combo.legalities?.commander && (
-                <div className={styles.bannedWarning}>
-                  WARNING: Combo contains cards that are banned in Commander
-                </div>
-              )}
+            {combo.spoiler && (
+              <div className={styles.previewedWarning}>
+                WARNING: Combo contains cards that have not been released yet
+                (and are not yet legal in Commander)
+              </div>
+            )}
 
-              {combo.spoiler && (
-                <div className={styles.previewedWarning}>
-                  WARNING: Combo contains cards that have not been released yet
-                  (and are not yet legal in Commander)
-                </div>
-              )}
+            <ComboSidebarLinks
+              cards={cardNames}
+              comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
+              edhrecLink={EDHRECService.getComboUrl(combo)}
+              comboId={combo.id}
+              tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
+              cardKingdomPrice={combo.prices?.cardkingdom || "-"}
+              combo={combo}
+            />
+          </aside>
 
-              <ComboSidebarLinks
-                cards={cardNames}
-                comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
-                edhrecLink={EDHRECService.getComboUrl(combo)}
-                comboId={combo.id}
-                tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
-                cardKingdomPrice={combo.prices?.cardkingdom || "-"}
-                combo={combo}
-              />
-            </aside>
-          )}
         </div>
       </>
     );
@@ -227,7 +232,7 @@ export const getStaticProps: GetStaticProps = async ({
     const alternatives = results
       ? results.results.included.concat(
           results.results.almostIncluded).concat(
-            results.results.almostIncludedByAddingColors) 
+            results.results.almostIncludedByAddingColors)
       : [];
     if (alternatives.length > 0) return {
       props: {

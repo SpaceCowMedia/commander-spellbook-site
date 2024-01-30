@@ -32,8 +32,18 @@ export type CardComponent = {
 }
 
 export type Template = {
-  name: string,
-  scryfallQuery: string,
+  template: {
+    id: number,
+    name: string,
+    scryfallQuery: string,
+    scryfallApi: string,
+  },
+  zoneLocations: string[],
+  exileCardState: string,
+  libraryCardState: string,
+  graveyardCardState: string,
+  battlefieldCardState: string,
+  mustBeCommander: boolean,
 }
 
 export type Feature = {

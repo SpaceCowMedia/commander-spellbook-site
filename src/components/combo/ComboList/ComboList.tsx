@@ -3,10 +3,12 @@ import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from "react";
 import PlaceholderText from "../../layout/PlaceholderText/PlaceholderText";
 import {addPeriod} from "../../../lib/addPeriod";
+import {Template} from "lib/types";
 
 type Props = {
   title: string;
   cardsInCombo?: string[];
+  templatesInCombo?: Template[];
   includeCardLinks?: boolean;
   showNumbers?: boolean;
   iterations: string[];
@@ -18,6 +20,7 @@ type Props = {
 const ComboList = ({
   title,
   cardsInCombo = [],
+  templatesInCombo = [],
   includeCardLinks,
   showNumbers,
   iterations,
@@ -45,6 +48,7 @@ const ComboList = ({
                 text={appendPeriod ? addPeriod(item) : item}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
+                templatesInCombo={templatesInCombo}
               />
             </li>
           ))}
