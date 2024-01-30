@@ -50,7 +50,6 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       filteredText = filteredText.replace(template.template.name, `template${template.template.id}`)
     })
     matchableValuesString += templatesInCombo.map(template => `template${template.template.id}`).join("|") + "|";
-    console.log(matchableValuesString)
   }
   const templateNames = templatesInCombo?.map(template => `template${template.template.id}`) || [];
 
@@ -62,7 +61,6 @@ const TextWithMagicSymbol: React.FC<Props> = ({
     .split(matchableValuesRegex)
     .filter((val) => val)
     .map((value) => {
-      if (value.includes('template2')) console.log(value, templateNames)
       if (cardsInCombo.includes(value.trim())) {
         return {
           nodeType: "card",
