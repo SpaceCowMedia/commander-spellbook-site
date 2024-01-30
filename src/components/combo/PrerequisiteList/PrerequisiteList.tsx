@@ -1,4 +1,4 @@
-import {NewPrerequisiteType} from "../../../lib/types";
+import {NewPrerequisiteType, Template} from "../../../lib/types";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import styles from "./prerequisiteList.module.scss";
 import Icon from "../../layout/Icon/Icon";
@@ -10,6 +10,7 @@ type Props = {
   id?: string;
   cardsInCombo?: string[];
   includeCardLinks?: boolean;
+  templatesInCombo?: Template[];
 }
 
 const ICON_MAP = {
@@ -20,7 +21,7 @@ const ICON_MAP = {
   "L": 'library',
   "E": 'exile',
 }
-const PrerequisiteList = ({ prerequisites, className, id, cardsInCombo, includeCardLinks }: Props) => {
+const PrerequisiteList = ({ prerequisites, className, id, cardsInCombo, includeCardLinks, templatesInCombo }: Props) => {
 
   return (
     <div
@@ -37,6 +38,7 @@ const PrerequisiteList = ({ prerequisites, className, id, cardsInCombo, includeC
                 text={addPeriod(prereq.s)}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
+                templatesInCombo={templatesInCombo}
               />
             </li>
           ))}

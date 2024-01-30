@@ -6,7 +6,7 @@ import {
   faCircleInfo, faCircleXmark, faCode, faCoins, faDollarSign, faFileLines, faFingerprint, faHashtag, faInfinity,
   faKey, faEye,
   faLightbulb, faListCheck, faListOl, faPalette, faScaleBalanced, faSeedling, faSignature, faStar, faTags,
-  faTriangleExclamation
+  faTriangleExclamation, faClose
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
@@ -48,6 +48,7 @@ const SPELLBOOK_FA_ICONS = {
   coins: faCoins,
   code: faCode,
   eye: faEye,
+  close: faClose,
 }
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS
