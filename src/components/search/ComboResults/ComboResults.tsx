@@ -57,6 +57,8 @@ export const ComboResult = ({combo, deck, sort, cards=[], newTab}: ResultProps) 
     return "";
   };
 
+  const prereqCount = combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0;
+
   return (
     <Link
       href={`/combo/${combo.id}`}
@@ -85,9 +87,14 @@ export const ComboResult = ({combo, deck, sort, cards=[], newTab}: ResultProps) 
                 </div>
               </CardTooltip>
             ))}
-            {combo.requires.length || combo.otherPrerequisites && (
+            {combo.requires.length > 0 && (
               <div className="prerequisites pl-3 pr-3">
-                <span className="text-gray-500">+{combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)} other prerequisite(s)</span>
+                <span className="text-gray-500">+{combo.requires.length} other card{combo.requires.length > 1 ? "s" : ""}</span>
+              </div>
+            )}
+            {prereqCount > 0 && (
+              <div className="prerequisites pl-3 pr-3">
+                <span className="text-gray-500">+{prereqCount} other prerequisite{prereqCount > 1 ? "s" : ""}</span>
               </div>
             )}
           </div>
