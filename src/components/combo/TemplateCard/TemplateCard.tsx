@@ -29,18 +29,17 @@ const TemplateCard = ({template}: Props) => {
 
   return (
     <div>
-      <div className="rounded-xl relative" style={{backgroundColor: '#380a2d'}}>
+      <div className="rounded-xl relative" style={{backgroundColor: '#404040'}}>
         <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] p-7"><TextWithMagicSymbol text={template.template.name}/></div>
         <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
           {loading ? <Loader/> : <ScryfallResultsWheel cards={results}/>}
         </div>
         <div className="absolute -bottom-1 flex flex-col justify-center w-full items-center">
           {/*<div className="text-center w-full font-bold italic text-gray-400">{loading ? <Loader/> : `${resultCount} legal cards`}</div>*/}
-          <ScryfallResultsModal count={resultCount} scryfallApiUrl={template.template.scryfallApi}/>
+          <ScryfallResultsModal count={resultCount} scryfallApiUrl={template.template.scryfallApi} title={template.template.name}/>
         </div>
         <img className="opacity-10" src={cardBack.src} alt="MTG Card Back"/>
       </div>
-
     </div>
   )
 }

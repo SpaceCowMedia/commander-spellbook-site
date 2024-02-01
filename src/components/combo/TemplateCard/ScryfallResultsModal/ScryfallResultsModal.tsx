@@ -3,16 +3,18 @@ import {useEffect, useState} from "react";
 import Dimmer from "components/ui/Dimmer/Dimmer";
 import edhrecService from "services/edhrec.service";
 import { ScryfallCard } from "@scryfall/api-types";
+import TextWithMagicSymbol from "components/layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import {getScryfallImage} from "lib/getScryfallImage";
 
 type Props = {
   scryfallApiUrl: string
   textTrigger?: React.ReactNode
   count?: number
+  title?: string
 }
 
 const TEST = "https://api.scryfall.com/cards/search?order=cmc&q=c%3Ared+pow%3D3"
-const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger, count }: Props) => {
+const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger, count, title }: Props) => {
   const [loading, setLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [nextUrl, setNextUrl] = useState<string | null>(null)
@@ -55,6 +57,7 @@ const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger, co
         onClose={() => setIsOpen(false)}
       >
         {loading && <Dimmer loading/>}
+        {title && <h2 className="text-center text-2xl font-bold mb-8"><TextWithMagicSymbol text={"Scryfall results for “" + title + "”"}/></h2>}
         <div className="flex flex-wrap gap-3 justify-center">
           {results.map((result) => (
             <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
