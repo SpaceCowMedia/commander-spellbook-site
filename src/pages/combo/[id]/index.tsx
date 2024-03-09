@@ -5,7 +5,7 @@ import ColorIdentity from "../../../components/layout/ColorIdentity/ColorIdentit
 import ComboList from "../../../components/combo/ComboList/ComboList";
 import styles from "./combo.module.scss";
 import ComboSidebarLinks from "../../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
-import {GetStaticPaths, GetStaticProps} from "next";
+import {GetServerSideProps} from "next";
 import SpellbookHead from "../../../components/SpellbookHead/SpellbookHead";
 import React from "react";
 import { Variant} from "../../../lib/types";
@@ -187,11 +187,8 @@ const Combo = ({ combo, alternatives }: Props) => {
 };
 
 export default Combo;
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: 'blocking' }; // Do not prerender any paths at build time.
-};
 
-export const getStaticProps: GetStaticProps = async ({
+export const getServerSideProps: GetServerSideProps = async ({
   params,
 }) => {
 
@@ -205,7 +202,6 @@ export const getStaticProps: GetStaticProps = async ({
     if (backendCombo) return {
       props: {
         combo: backendCombo,
-        revalidate: 60, // refreshes every minute
       },
     };
     // 2. Check if it's an alias and reroute if it's found
@@ -237,7 +233,6 @@ export const getStaticProps: GetStaticProps = async ({
     if (alternatives.length > 0) return {
       props: {
         alternatives,
-        revalidate: 60, // refreshes every minute
       },
     };
   } catch (err) {
