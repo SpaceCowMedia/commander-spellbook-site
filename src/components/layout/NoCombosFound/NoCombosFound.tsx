@@ -44,6 +44,9 @@ const NoCombosFound = ({single, alternatives, criteria}: Props) => {
           <Link href="/syntax-guide/" className="button">
             Syntax Guide
           </Link>
+          <Link href="/submit-a-combo/" className="button">
+            Submit a Combo
+          </Link>
         </div>
         {alternatives && alternatives.length > 0 &&
           <div className="container sm:flex flex-row">
