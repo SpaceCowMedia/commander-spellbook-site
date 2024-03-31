@@ -9,6 +9,7 @@
 
 .dropdown {
   @apply relative inline-block;
+  cursor: pointer;
 }
 
 .dropdownContent {

@@ -24,7 +24,7 @@ const UserDropdown = ({}: Props) => {
   if (!username) return null
 
   return (
-    <button type="button" tabIndex={0} className={styles.dropdown}>
+    <div tabIndex={0} className={styles.dropdown}>
       <div className={styles.userDropdownButton}>
         <div
           className={styles.discordIcon}
@@ -43,7 +43,7 @@ const UserDropdown = ({}: Props) => {
           <button type="button" className={styles.dropdownItem} onClick={signOut}>Sign out</button>
         </div>
       </div>
-    </button>
+    </div>
   )
 
 }
