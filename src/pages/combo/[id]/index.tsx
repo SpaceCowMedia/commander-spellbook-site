@@ -73,8 +73,11 @@ const Combo = ({ combo, alternatives }: Props) => {
 
     const colors = Array.from(combo.identity)
     const prerequisites = getPrerequisiteList(combo)
-    const steps = combo.description.split('\n');
+    const steps = combo.description?.split('\n')
     const results = combo.produces.map(feature => feature.name)
+    if (combo.status == 'E') {
+      metaData.push("This combo is an example of a variant and doesn't provide an explanation.")
+    }
 
     return (
       <>
@@ -107,7 +110,7 @@ const Combo = ({ combo, alternatives }: Props) => {
 
             <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames} templatesInCombo={combo.requires}/>
 
-            <ComboList
+            {steps != null && <ComboList
               title="Steps"
               id="combo-steps"
               iterations={steps}
@@ -115,7 +118,7 @@ const Combo = ({ combo, alternatives }: Props) => {
               templatesInCombo={combo.requires}
               showNumbers
               appendPeriod
-            />
+            />}
 
             <ComboList
               title="Results"

@@ -89,6 +89,7 @@ export type Variant = {
   }
   spoiler: boolean,
   popularity?: number,
+  status: string,
 }
 
 export type VariantBulkData = {
