@@ -1,6 +1,8 @@
 import { GetServerSidePropsContext, NextPageContext } from 'next'
 
 import CookieService from './cookie.service'
+import {expirationDurations} from './cookie.service'
+import { Cookies } from 'react-cookie'
 
 export function timeInSecondsToEpoch(): number {
   return Math.round(Date.now() / 1000)
@@ -67,27 +69,32 @@ function getTokenFromServerContext(
   const refreshToken = CookieService.get('csbRefresh', serverContext?.req.cookies || pageContext?.req?.headers?.cookie)
 
   if (!jwt && !refreshToken) return ''
-  if (!jwt && refreshToken) return fetchNewToken(refreshToken).then(setToken)
+  if (!jwt && refreshToken) return fetchNewToken(refreshToken).then(r => setToken(r, serverContext))
   if (!jwt) return
 
   const decodedToken = decodeJwt(jwt)
   const expirationCutoff = timeInSecondsToEpoch() + 60 // within 60 seconds of expiration
-
-  if (!decodedToken) return fetchNewToken(refreshToken).then(setToken)
+  
+  if (!decodedToken) return fetchNewToken(refreshToken).then(r => setToken(r, serverContext))
   if (decodedToken.exp > expirationCutoff) {
-    CookieService.set('csbJwt', 'day')
-
     return jwt
   }
 
-  return fetchNewToken(refreshToken).then(setToken)
+  return fetchNewToken(refreshToken).then(r => setToken(r,serverContext))
 }
 
-function setToken({ access, refresh }: RefreshResponse) {
+function setToken({ access, refresh }: RefreshResponse, serverContext?: GetServerSidePropsContext) {
   const jwt = access
 
-  CookieService.set('csbJwt', jwt, 'day')
-  if (refresh) CookieService.set('csbRefresh', refresh, 'day')
+  const cookies = new Cookies();
+  CookieService.set('csbJwt', jwt, 'day', cookies)
+  if (refresh) CookieService.set('csbRefresh', refresh, 'day', cookies)
+  const cookiesDict = cookies.getAll() as Record<string, string>
+  const cookieValues = [];
+  for (const key in cookiesDict) {
+    cookieValues.push(`${key}=${cookiesDict[key]}; Path=/; Max-Age={expirationDurations.day}; SameSite=Strict`)
+    serverContext?.res.setHeader('Set-Cookie', cookieValues)
+  }
 
   return jwt
 }

@@ -9,7 +9,9 @@ import NextNProgress from 'nextjs-progressbar';
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import PageWrapper from "components/layout/PageWrapper/PageWrapper";
+
 config.autoAddCss = false
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {

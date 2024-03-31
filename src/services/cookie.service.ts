@@ -18,12 +18,12 @@ export function get<T = any>(path: string, serverCookies?: Record<string, any> |
   return result as T
 }
 
-export function set(key: string, value: any, age?: keyof typeof expirationDurations) {
-  const cookies = new Cookies()
+export function set(key: string, value: any, age?: keyof typeof expirationDurations, cookies?: Cookies) {
+  const cookiesInstance = cookies ?? new Cookies()
 
   const maxAge = age ? expirationDurations[age] : undefined
 
-  cookies.set(key, value, { path: '/', maxAge, sameSite: 'strict', httpOnly: false })
+  cookiesInstance.set(key, value, { path: '/', maxAge, sameSite: 'strict', httpOnly: false })
 }
 
 export function remove(key: string) {

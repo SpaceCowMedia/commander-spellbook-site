@@ -15,6 +15,7 @@ import EDHRECService from "../../../services/edhrec.service";
 import variantService from "../../../services/variant.service";
 import findMyCombosService from "../../../services/findMyCombos.service";
 import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
+import {RequestService} from "../../../services/request.service";
 
 type Props = {
   combo?: Variant;
@@ -188,24 +189,25 @@ const Combo = ({ combo, alternatives }: Props) => {
 
 export default Combo;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-}) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { params } = context;
 
   if (!params || !params.id || typeof params.id !== 'string') return {
     notFound: true,
   }
 
+  const requestService = new RequestService(context)
+
   try {
     // 1. Check the backend
-    const backendCombo = await variantService.fetchVariant(params.id)
+    const backendCombo = await variantService.fetchVariant(requestService, params.id)
     if (backendCombo) return {
       props: {
         combo: backendCombo,
       },
     };
     // 2. Check if it's an alias and reroute if it's found
-    const alias = await variantService.fetchVariantAlias(params.id);
+    const alias = await variantService.fetchVariantAlias(requestService, params.id);
     if (alias) return {
       redirect: {
         destination: `/combo/${alias.variant}`,
@@ -214,7 +216,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
     // 3. Check if it's a legacy combo and reroute if it's found
     if (!params.id.includes('-') && !isNaN(Number(params.id))) {
-      const legacyComboMap = await variantService.fetchLegacyMap()
+      const legacyComboMap = await variantService.fetchLegacyMap(requestService)
       const variantId = legacyComboMap[params.id]
       if (variantId) return {
         redirect: {
