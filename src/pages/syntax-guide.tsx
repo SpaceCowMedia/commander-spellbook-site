@@ -572,6 +572,7 @@ Other tags are applied automatically, so their support is complete and always up
 * \`preview\`/\`previewed\`/\`spoiler\`/\`spoiled\`: the combo contains an unreleased card
 * \`commander\`: the combo requires you to have a commander, so it will not work in most non-Commander formats
 * \`featured\`: the combo appears in the feature page, which usually displays combos using cards from a recent or upcoming set
+* \`reserved\`: the combo contains at least one card from the Reserved List
 
 #### Manual tags
 
