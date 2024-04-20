@@ -120,22 +120,29 @@ export async function getStaticProps() {
     return DEFAULT_PROPS;
   }
 
-  const res = await fetch(`${NEXT_PUBLIC_EDITOR_BACKEND_URL}/properties/?format=json`);
-  const dataFromEditorBackend = await res.json();
-  const buttonTextData = dataFromEditorBackend.results.find(
-    (data: { key: string; value: string }) => {
-      return data.key === "featured_combos_title";
+  try {
+    const res = await fetch(`${NEXT_PUBLIC_EDITOR_BACKEND_URL}/properties/?format=json`);
+    const dataFromEditorBackend = await res.json();
+    const buttonTextData = dataFromEditorBackend.results.find(
+      (data: { key: string; value: string }) => {
+        return data.key === "featured_combos_title";
+      }
+    );
+    
+    if (!buttonTextData) {
+      return DEFAULT_PROPS;
     }
-  );
 
-  if (!buttonTextData) {
+    return {
+      props: {
+        featuredComboButtonText: buttonTextData.value,
+      },
+      revalidate: 60,
+    };
+  }
+  catch (error) {
+    console.error("Error fetching data from the editor backend:", error);
     return DEFAULT_PROPS;
   }
 
-  return {
-    props: {
-      featuredComboButtonText: buttonTextData.value,
-    },
-    revalidate: 60,
-  };
 }
