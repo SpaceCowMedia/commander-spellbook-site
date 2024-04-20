@@ -8,7 +8,7 @@ const getNameAutocomplete = async (): Promise<AutoCompleteOption[]> => {
   const res = await requestService.get('https://api.scryfall.com/catalog/card-names')
   cachedAutoCompleteOptions = res.data.map((name: string) => {
     const splitName = name.split(" // ")[0]
-    return {value: normalizeStringInput(splitName), label: splitName}
+    return {value: splitName, label: splitName}
   })
   return cachedAutoCompleteOptions || []
 }
