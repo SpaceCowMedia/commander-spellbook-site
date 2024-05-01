@@ -68,7 +68,7 @@ export const ComboResult = ({combo, deck, sort, cards=[], newTab}: ResultProps) 
       target={newTab ? "_blank" : undefined}
     >
       <div className="flex flex-col">
-        <div className="flex items-center flex-grow flex-col bg-dark text-white">
+        <div className={`flex items-center flex-grow flex-col ${combo.status === "OK" ? "bg-dark" : combo.status === "E" ? "bg-[#888888]" : "bg-light"} text-white`}>
           <ColorIdentity colors={Array.from(combo.identity)} size="small" />
         </div>
         <div className="flex-grow border-b-2 border-light">
