@@ -77,6 +77,10 @@ const Combo = ({ combo, alternatives }: Props) => {
     const results = combo.produces.map(feature => feature.name)
     if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.")
+    } else if (combo.status == 'D') {
+      metaData.push("This combo is a draft and is only visible to editors.")
+    } else if (combo.status == 'NR') {
+      metaData.push("This combo needs to be reviewed and is only visible to editors.")
     }
 
     return (
