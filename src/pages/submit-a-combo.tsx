@@ -29,6 +29,8 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
   const [features, setFeatures] = useState<FeatureSubmissionType[]>([])
   const [steps, setSteps] = useState<string[]>([])
   const [otherPrerequisites, setOtherPrerequisites] = useState('')
+  const [comment, setComment] = useState('')
+  const [spoiler, setSpoiler] = useState(false)
   const [manaCost, setManaCost] = useState('')
   const router = useRouter()
   const [cookies, setCookie] = useCookies(['csbUsername', 'csbJwt'])
@@ -86,6 +88,8 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
       description: steps.join('\n'),
       otherPrerequisites,
       manaNeeded: manaCost,
+      comment,
+      spoiler,
     }
     setSubmitting(true)
     setError('')
@@ -234,6 +238,26 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
             </ul>
           </Alert>
         }
+
+        <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
+        <ErrorMessage list={errorObj?.comment} />
+        <textarea
+          className="textarea w-full p-4 border-gray-300 border"
+          placeholder="notes useful for editors that review your submission"
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          maxLength={1024}
+        />
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            className="mr-2"
+            checked={spoiler}
+            onChange={() => setSpoiler(!spoiler)}
+          />
+          <label>Mark this combo as spoiler</label>
+        </div>
 
         <div className="flex justify-center">
           <button disabled={submitting} className="button" onClick={handleSubmit}>{submitting ? <Loader/> : 'Submit Combo'}</button>
