@@ -170,6 +170,28 @@ const Combo = ({ combo, alternatives }: Props) => {
               cardKingdomPrice={combo.prices?.cardkingdom || "-"}
               combo={combo}
             />
+
+            {combo.legalities && (
+              <table className="border-2 border-primary border-collapse relative overflow-x-auto w-full text-sm text-left rtl:text-right text-base text-link mt-20">
+                <thead className="text-dark">
+                  <tr className="bg-primary"><th>Format</th><th>Legality</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Commander</td><td>{combo.legalities.commander ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Pauper Commander</td><td>{combo.legalities.pauperCommanderCommander ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Pauper Commander (main deck)</td><td>{combo.legalities.pauperCommanderMain ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Oathbreaker</td><td>{combo.legalities.oathbreaker ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>PreDH</td><td>{combo.legalities.predh ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Brawl</td><td>{combo.legalities.brawl ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Vintage</td><td>{combo.legalities.vintage ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Legacy</td><td>{combo.legalities.legacy ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Modern</td><td>{combo.legalities.modern ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Pioneer</td><td>{combo.legalities.pioneer ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Standard</td><td>{combo.legalities.standard ? "Legal" : "Not legal"}</td></tr>
+                  <tr><td>Pauper</td><td>{combo.legalities.pauper ? "Legal" : "Not legal"}</td></tr>
+                </tbody>
+              </table>
+            )}
           </aside>
 
         </div>
