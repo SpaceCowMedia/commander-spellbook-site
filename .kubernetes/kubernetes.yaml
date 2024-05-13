@@ -8,7 +8,6 @@ spec:
   selector:
     matchLabels:
       app: spellbook-client
-  replicas: 2 # match the minReplicas in the autoscaler
   strategy:
     type: RollingUpdate
     rollingUpdate:
