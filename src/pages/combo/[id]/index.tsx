@@ -41,8 +41,8 @@ const Combo = ({ combo, alternatives }: Props) => {
     const cards = combo.uses.map((card) => {
       return {
         name: card.card.name,
-        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${card.card.name}`,
-        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${card.card.name}`,
+        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
+        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
       };
     });
     const cardNames = combo.uses.map(card => card.card.name);

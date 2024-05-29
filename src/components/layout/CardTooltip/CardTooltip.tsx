@@ -7,7 +7,7 @@ type Props = {
 };
 
 const CardTooltip = ({ cardName, children }: Props) => {
-  const url = cardName ? `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${cardName}` : "";
+  const url = cardName ? `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(cardName)}` : "";
 
   const divRef = useRef<HTMLDivElement>(null);
 
