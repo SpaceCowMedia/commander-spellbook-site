@@ -19,6 +19,7 @@ import ErrorMessage from "../components/submission/ErrorMessage/ErrorMessage";
 import {ComboSubmissionErrorType} from "../lib/types";
 import Alert from "components/layout/Alert/Alert";
 import {GetServerSideProps} from "next";
+import ExternalLink from "components/layout/ExternalLink/ExternalLink";
 
 
 type Props = {};
@@ -138,7 +139,7 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
           className="m-auto md:block hidden"
         />
         <h1 className="heading-title">Submit a Combo</h1>
-
+        <p className="heading-subtitle">Before submitting a combo, please read through our <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">FAQs</ExternalLink></p>
         <h2 className="heading-subtitle flex justify-start">Specific cards used in this combo ({cards.length})</h2>
         <ErrorMessage list={errorObj?.uses} />
         <div className="flex flex-col">
