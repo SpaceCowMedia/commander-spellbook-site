@@ -74,7 +74,7 @@ const Combo = ({ combo, alternatives }: Props) => {
     const colors = Array.from(combo.identity)
     const prerequisites = getPrerequisiteList(combo)
     const steps = combo.description?.split('\n')
-    const results = combo.produces.map(feature => feature.name)
+    const results = combo.produces.map(feature => feature.hasOwnProperty('name') ? feature.name : feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name)
     if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.")
     } else if (combo.status == 'D') {

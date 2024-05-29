@@ -18,7 +18,7 @@ const Embed = ({combo}: Props) => {
 
   let query = `v=1`
   query += `&uses=${encodeURIComponent(JSON.stringify(combo.uses.map(card => card.card.name)))}`
-  query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map(feature => feature.name)))}`
+  query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map(feature => feature.hasOwnProperty('name') ? feature.name : feature.feature.name)))}`
   query += `&id=${combo.id}`
   query += `&color=${combo.identity}`
   query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter(s => s.trim().length).length : 0)}`

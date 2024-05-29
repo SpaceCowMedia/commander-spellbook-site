@@ -49,8 +49,12 @@ export type Template = {
 export type Feature = {
   id: number,
   name: string,
-  description: string,
-  utility: boolean
+  uncountable: boolean,
+}
+
+export type FeatureComponent = {
+  feature: Feature,
+  quantity: number,
 }
 
 export type BackendCombo = {
@@ -61,7 +65,7 @@ export type Variant = {
   id: string,
   uses: CardComponent[],
   requires: Template[],
-  produces: Feature[],
+  produces: FeatureComponent[],
   of : BackendCombo[],
   includes: BackendCombo[],
   identity: string,
