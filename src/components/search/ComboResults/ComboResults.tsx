@@ -102,8 +102,8 @@ export const ComboResult = ({combo, deck, sort, cards=[], newTab}: ResultProps) 
         <div className="flex-grow">
           <span className="sr-only">Results in combo:</span>
           {combo.produces.map((result) => (
-            <div key={result.hasOwnProperty('name') ? result.name : result.feature.name} className={`result pl-3 pr-3`}>
-              <TextWithMagicSymbol text={result.hasOwnProperty('name') ? result.name : result.feature.name} />
+            <div key={result.name ?? result.feature.name} className={`result pl-3 pr-3`}>
+              <TextWithMagicSymbol text={result.name ?? result.feature.name} />
             </div>
           ))}
         </div>

@@ -54,6 +54,7 @@ export type Feature = {
 
 export type FeatureComponent = {
   feature: Feature,
+  name?: string,
   quantity: number,
 }
 
