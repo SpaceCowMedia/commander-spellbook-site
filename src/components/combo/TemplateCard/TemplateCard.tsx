@@ -10,9 +10,11 @@ import ScryfallResultsWheel from "components/combo/TemplateCard/ScryfallResultsW
 
 type Props = {
   template: Template
+  className?: string
+  imgClassName?: string
 }
 
-const TemplateCard = ({template}: Props) => {
+const TemplateCard = ({template, className, imgClassName}: Props) => {
 
   const [resultCount, setResultCount] = useState(0);
   const [results, setResults] = useState<ScryfallCard.Any[]>([]);
@@ -28,8 +30,8 @@ const TemplateCard = ({template}: Props) => {
   }, []);
 
   return (
-    <div>
-      <div className="rounded-xl relative" style={{backgroundColor: '#404040'}}>
+    <div className="relative">
+      <div className={`rounded-xl ${className ?? ''}`} style={{backgroundColor: '#404040'}}>
         <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] p-7"><TextWithMagicSymbol text={template.template.name}/></div>
         <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
           {loading ? <Loader/> : <ScryfallResultsWheel cards={results}/>}
@@ -38,7 +40,7 @@ const TemplateCard = ({template}: Props) => {
           {/*<div className="text-center w-full font-bold italic text-gray-400">{loading ? <Loader/> : `${resultCount} legal cards`}</div>*/}
           <ScryfallResultsModal count={resultCount} scryfallApiUrl={template.template.scryfallApi} title={template.template.name}/>
         </div>
-        <img className="opacity-10" src={cardBack.src} alt="MTG Card Back"/>
+        <img className={`opacity-10 ${imgClassName ?? ''}`} src={cardBack.src} alt="MTG Card Back"/>
       </div>
     </div>
   )

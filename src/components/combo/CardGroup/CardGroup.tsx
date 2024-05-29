@@ -36,7 +36,7 @@ const CardGroup = ({ cards, templates }: Props) => {
           onMouseLeave={() => setHoveredOverCardIndex(-1)}
         >
           {'template' in card ?
-            <TemplateCard template={card}/>
+            <TemplateCard className={styles.cardImg} template={card}/>
             :
           <CardLink className="relative" name={card.name}>
             <CardImage
