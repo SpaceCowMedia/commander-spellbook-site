@@ -71,7 +71,7 @@ const FindMyCombos = () => {
     if (deck.numberOfCards < 2) return setLookupInProgress(false);
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, newDeckList);
-    localStorage.setItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY, commanderList);
+    localStorage.setItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY, newCommanderList);
 
     const combos = await findMyCombosService.findFromString(newDeckList, newCommanderList, next)
 
