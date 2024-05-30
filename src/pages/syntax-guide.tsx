@@ -416,6 +416,7 @@ For example, \`cardkeywords:indestructible\` searches for combos that contain at
 
 ### \`cardkeywords\` keyword aliases
 
+* \`cardkeyword\`
 * \`keyword\`
 * \`keywords\`
 * \`kw\`
@@ -467,10 +468,10 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 
 ### \`coloridentity\` keyword aliases
 
-* \`color_identity\`
 * \`color\`
 * \`colors\`
 * \`id\`
+* \`identity\`
 * \`ids\`
 * \`c\`
 * \`ci\`
