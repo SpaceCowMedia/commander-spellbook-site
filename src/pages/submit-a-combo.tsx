@@ -20,6 +20,10 @@ import {ComboSubmissionErrorType} from "../lib/types";
 import Alert from "components/layout/Alert/Alert";
 import {GetServerSideProps} from "next";
 import ExternalLink from "components/layout/ExternalLink/ExternalLink";
+import findMyCombosService from "../services/findMyCombos.service";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Link from "next/link";
 
 
 type Props = {};
@@ -81,7 +85,7 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
     setKeyId(keyId + 1)
   }
 
-  const handleSubmit = async () => {
+  const confirmSubmit = async () => {
     const submission = {
       uses: cards,
       requires: templates,
@@ -105,6 +109,52 @@ const SubmitACombo: React.FC<Props> = ({}: Props) => {
         else setError(JSON.stringify(err))
         setErrorObj(err)
       })
+  }
+
+  const handleSubmit = async () => {
+    const result = await findMyCombosService.findFromLists([], cards.map(c => c.card))
+    const duplicates = result.results.included
+    if (duplicates.length > 0) {
+      confirmAlert({
+        message: `This combo appears to include ${duplicates.length} other combo${duplicates.length > 1 ? 's' : ''} already in the database.`,
+        childrenElement: function() {
+          return (
+            <div style={{marginTop: '1rem', textAlign: 'justify'}}>
+              <h3 className="heading-subtitle">{duplicates.length > 6 ? 'Some ' : ''}Included Combos</h3>
+              {duplicates.slice(0, 6).map((combo) => (
+                <div className="w-full text-center" key={combo.id}>
+                  <Link
+                    href={`/combo/${combo.id}`}
+                    key={combo.id}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {combo.uses.map(({card}) => card.name).join(' + ')}
+                  </Link>
+                </div>
+              ))}
+              <p style={{marginTop: '1rem'}}>
+                Please, make sure that your combo does not contain "payoff" cards and follows <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">our guidelines</ExternalLink>.
+                We only accept combos in their simplest form, and without any unnecessary card.
+              </p>
+              <p>Would you like to submit it anyway?</p>
+            </div>
+          )
+        },
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: confirmSubmit
+          },
+          {
+            label: 'No',
+            onClick: () => {}
+          }
+        ]
+      })
+    } else {
+      await confirmSubmit()
+    }
   }
 
   if (success) return (
