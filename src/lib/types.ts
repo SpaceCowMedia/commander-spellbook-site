@@ -73,6 +73,7 @@ export type Variant = {
   manaNeeded: string,
   otherPrerequisites: string,
   description: string,
+  notes?: string,
   legalities?: {
     commander: boolean,
     pauperCommanderMain: boolean,
@@ -105,7 +106,6 @@ export type VariantBulkData = {
 export type VariantAlias = {
   id: string,
   variant: Variant,
-  description: string,
 }
 
 export type ComboSubmissionErrorType = {

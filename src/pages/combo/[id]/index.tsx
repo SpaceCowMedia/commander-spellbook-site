@@ -74,6 +74,7 @@ const Combo = ({ combo, alternatives }: Props) => {
     const colors = Array.from(combo.identity)
     const prerequisites = getPrerequisiteList(combo)
     const steps = combo.description?.split('\n')
+    const notes = combo.notes?.split('\n')?.filter(note => note.length > 0)
     const results = combo.produces.map(feature => feature.name ?? (feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name))
     if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.")
@@ -121,6 +122,15 @@ const Combo = ({ combo, alternatives }: Props) => {
               cardsInCombo={cardNames}
               templatesInCombo={combo.requires}
               showNumbers
+              appendPeriod
+            />}
+
+            {notes != null && notes.length > 0 && <ComboList
+              title="Notes"
+              id="combo-notes"
+              iterations={notes}
+              cardsInCombo={cardNames}
+              templatesInCombo={combo.requires}
               appendPeriod
             />}
 
