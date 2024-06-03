@@ -218,7 +218,7 @@ jobs:
         run: aws eks --region us-east-2 update-kubeconfig --name $CLUSTER_NAME --kubeconfig kubeconfig.yaml
 
       - name: Install and configure kubectl
-        uses: azure/setup-kubectl@v3
+        uses: azure/setup-kubectl@v4
 
       - name: Rollout pods
         run: |
