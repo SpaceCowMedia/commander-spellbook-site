@@ -60,7 +60,7 @@ const AUTO_SORT_MAP: Record<string, "-"> = {
 const PAGE_SIZE = 50
 
 const doesQuerySpecifyFormat = (query: string) : boolean => {
-  return query.includes('legal:') || query.includes('banned:') || query.includes('restricted:') || query.includes('format:') || query.includes('f:');
+  return query.includes('legal:') || query.includes('banned:')|| query.includes('format:');
 }
 
 const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => {
