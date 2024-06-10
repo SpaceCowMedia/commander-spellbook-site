@@ -58,6 +58,11 @@ const AUTO_SORT_MAP: Record<string, "-"> = {
 }
 
 const PAGE_SIZE = 50
+
+const doesQuerySpecifyFormat: boolean = (query: string) => {
+  return query.includes('legal:') || query.includes('banned:') || query.includes('restricted:') || query.includes('format:') || query.includes('f:');
+}
+
 const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => {
 
   const router = useRouter();
@@ -89,7 +94,7 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => 
     router.push({ pathname: "/search/", query: { ...router.query, order: value, page: "1" } });
   };
 
-  const legalityMessage = (parsedSearchQuery.includes("legal:")) ? "" : " (legal:commander has been applied by default)"
+  const legalityMessage = doesQuerySpecifyFormat(parsedSearchQuery) ? "" : " (legal:commander has been applied by default)"
 
   return (
     <>
@@ -180,8 +185,8 @@ export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let query = `${context.query.q}`;
-  const queryDoesntSpecifyFormat = !query.includes('legal:') && !query.includes('banned:') && !query.includes('format:');
-  if (queryDoesntSpecifyFormat) query = `${query} legal:commander`;
+  let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
+  if (isQueryMissingFormat) query = `${query} legal:commander`;
   query = encodeURIComponent(query)
   const requestService = new RequestService(context)
   const order = context.query.order || DEFAULT_ORDER
@@ -192,7 +197,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const backendCombos = results ? results.results : [];
 
-  if (backendCombos.length === 0 && queryDoesntSpecifyFormat) {
+  if (backendCombos.length === 0 && isQueryMissingFormat) {
     // Try searching in banned combos
     let query = `${context.query.q} banned:commander`;
     query = encodeURIComponent(query)
