@@ -44,7 +44,7 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.4",
+    "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^17.4.4",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/debounce": "^1.2.1",
