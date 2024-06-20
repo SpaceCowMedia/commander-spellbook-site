@@ -32,13 +32,22 @@ const TemplateCard = ({template, className, imgClassName}: Props) => {
   return (
     <div className="relative">
       <div className={`rounded-xl ${className ?? ''}`} style={{backgroundColor: '#404040'}}>
-        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] p-7"><TextWithMagicSymbol text={template.template.name}/></div>
+        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] p-7">
+          <TextWithMagicSymbol text={template.template.name}/>
+          {template.quantity > 1 && <span className="text-[16px]"> (x{template.quantity})</span>}
+        </div>
         <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
           {loading ? <Loader/> : <ScryfallResultsWheel cards={results}/>}
         </div>
         <div className="absolute -bottom-1 flex flex-col justify-center w-full items-center">
           {/*<div className="text-center w-full font-bold italic text-gray-400">{loading ? <Loader/> : `${resultCount} legal cards`}</div>*/}
-          <ScryfallResultsModal count={resultCount} scryfallApiUrl={template.template.scryfallApi} title={template.template.name}/>
+          <ScryfallResultsModal
+            count={resultCount}
+            scryfallApiUrl={template.template.scryfallApi}
+            scryfallQuery={template.template.scryfallQuery}
+            title={template.template.name}
+            quantity={template.quantity}
+          />
         </div>
         <img className={`opacity-10 ${imgClassName ?? ''}`} src={cardBack.src} alt="MTG Card Back"/>
       </div>

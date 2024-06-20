@@ -44,6 +44,7 @@ export type Template = {
   graveyardCardState: string,
   battlefieldCardState: string,
   mustBeCommander: boolean,
+  quantity: number,
 }
 
 export type Feature = {

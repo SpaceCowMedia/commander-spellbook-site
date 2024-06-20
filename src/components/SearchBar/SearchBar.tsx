@@ -25,12 +25,13 @@ const countUpToString = (count: number) => {
 const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const countUpRef = useRef<number>(20000);
+  const initialCount = 20000;
+  const countUpRef = useRef<number>(initialCount);
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
-  const [cookies, setCookies] = useCookies(["variantCount"])
-  const [variantCount, setVariantCount] = useState<number>(20000)
+  const [cookies, setCookies] = useCookies(["variantCount"]);
+  const [variantCount, setVariantCount] = useState<number>(initialCount);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -41,8 +42,10 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
 
   const handleCountUp = () => {
     if (!inputRef.current) return;
-    if (countUpRef.current < 25000) {
-      countUpRef.current +=  Math.floor(Math.random() * (200 - 100 + 1)) + 100;
+    const target = (cookies.variantCount ?? 25000);
+    if (countUpRef.current < target) {
+      const increment = (target - initialCount) / 50;
+      countUpRef.current +=  Math.floor((1 + Math.random()) * increment);
       inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
       setTimeout(handleCountUp, 50);
     } else if (cookies.variantCount) {
@@ -106,7 +109,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }: Props) => {
             id="search-bar-input"
             type="text"
             className={`${styles.mainSearchInput} ${
-              onHomepage ? "text-2xl text-center" : "pl-8 -ml-6"
+              onHomepage ? "text-2xl text-center" : "pl-8 -ml-6 text-white"
             }`}
           />
         </div>
