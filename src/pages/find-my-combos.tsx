@@ -10,8 +10,8 @@ import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import findMyCombosService from "../services/findMyCombos.service";
 import { isValidHttpUrl } from "../lib/url-check";
-import archidektService from "services/archidekt.service";
-import moxfieldService from "services/moxfield.service";
+import decklistService from "../services/decklist.service";
+import { ErrorResult } from "../services/decklist.service";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -31,6 +31,7 @@ const DEFAULT_RESULTS = {
 
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
+  const [deckUrlHint, setDeckUrlHint] = useState<string>("");
   const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
@@ -121,24 +122,18 @@ const FindMyCombos = () => {
   };
 
   const handleUrlInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isValidHttpUrl(e.target.value)) return;
-    const url = new URL(e.target.value);
-    const hostname = url.hostname.replace(/^(www\.)/,"");
-    if (hostname === "archidekt.com") {
-      const deckId = url.pathname.match(/^\/decks\/([0-9]+)(?:\/.*)?$/)?.[1];
-      if (deckId !== undefined) {
-        const deck = await archidektService.getCardsFromId(deckId);
-        setDecklist(deck.cards.join("\n"));
-        setCommanderList(deck.commanderList.join("\n"));
-      }
-    } else if (hostname === "moxfield.com") {
-      const deckId = url.pathname.match(/^\/decks\/([0-9a-zA-Z_-]+)(?:\/.*)?$/)?.[1];
-      if (deckId !== undefined) {
-        console.log(deckId);
-        const deck = await moxfieldService.getCardsFromId(deckId);
-        setDecklist(deck.cards.join("\n"));
-        setCommanderList(deck.commanderList.join("\n"));
-      }
+    if (!isValidHttpUrl(e.target.value)) {
+      setDeckUrlHint("You must paste a valid URL.");
+      return;
+    }
+    try {
+      const deck = await decklistService.getCardsFromUrl(e.target.value);
+      setDeckUrlHint("");
+      setDecklist(deck.main.join("\n"));
+      setCommanderList(deck.commanders.join("\n"));
+    } catch (error: any) {
+      const err = error as ErrorResult;
+      setDeckUrlHint(err.error);
     }
   };
 
@@ -221,8 +216,8 @@ const FindMyCombos = () => {
               id="decklist-url-input"
               className={styles.decklistInput}
               type="text"
-              value={decklist}
-              placeholder={`Supported deckbuilding sites: Archidekt, Moxfield`}
+              value=""
+              placeholder={`${deckUrlHint ? deckUrlHint + '\t' : ''}Supported deckbuilding sites: Archidekt, Moxfield.`}
               onChange={handleUrlInput}
             />
           )}
