@@ -9,6 +9,9 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import findMyCombosService from "../services/findMyCombos.service";
+import { isValidHttpUrl } from "../lib/url-check";
+import archidektService from "services/archidekt.service";
+import moxfieldService from "services/moxfield.service";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -117,6 +120,28 @@ const FindMyCombos = () => {
     setDecklist(e.target.value);
   };
 
+  const handleUrlInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isValidHttpUrl(e.target.value)) return;
+    const url = new URL(e.target.value);
+    const hostname = url.hostname.replace(/^(www\.)/,"");
+    if (hostname === "archidekt.com") {
+      const deckId = url.pathname.match(/^\/decks\/([0-9]+)(?:\/.*)?$/)?.[1];
+      if (deckId !== undefined) {
+        const deck = await archidektService.getCardsFromId(deckId);
+        setDecklist(deck.cards.join("\n"));
+        setCommanderList(deck.commanderList.join("\n"));
+      }
+    } else if (hostname === "moxfield.com") {
+      const deckId = url.pathname.match(/^\/decks\/([0-9a-zA-Z_-]+)(?:\/.*)?$/)?.[1];
+      if (deckId !== undefined) {
+        console.log(deckId);
+        const deck = await moxfieldService.getCardsFromId(deckId);
+        setDecklist(deck.cards.join("\n"));
+        setCommanderList(deck.commanderList.join("\n"));
+      }
+    }
+  };
+
   return (
     <>
       <SpellbookHead
@@ -143,16 +168,16 @@ const FindMyCombos = () => {
             onChange={(e) => setCommanderList(e.target.value)}
           />
           <textarea
-                      id="decklist-input"
-                      className={styles.decklistInput}
-                      value={decklist}
-                      placeholder={`Supported decklist formats:
+            id="decklist-input"
+            className={styles.decklistInput}
+            value={decklist}
+            placeholder={`Supported decklist formats:
               Ancient Tomb
               1 Ancient Tomb
               1x Ancient Tomb
               Ancient Tomb (uma) 236
               `}
-                      onChange={handleInput}
+            onChange={handleInput}
           />
 
           {!!decklist && (
@@ -188,6 +213,27 @@ const FindMyCombos = () => {
               aria-hidden="true"
             >
               Paste your decklist
+            </div>
+          )}
+
+          {!decklist && (
+            <input
+              id="decklist-url-input"
+              className={styles.decklistInput}
+              type="text"
+              value={decklist}
+              placeholder={`Supported deckbuilding sites: Archidekt, Moxfield`}
+              onChange={handleUrlInput}
+            />
+          )}
+
+          {!decklist && (
+            <div
+              id="decklist-hint"
+              className={`${styles.decklistHint} heading-subtitle`}
+              aria-hidden="true"
+            >
+              Paste your decklist url
             </div>
           )}
         </section>

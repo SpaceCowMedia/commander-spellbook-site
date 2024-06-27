@@ -11,6 +11,10 @@
     @apply h-80 w-full py-2 px-4 pb-6 mt-4 border-2 border-dark resize-none;
   }
 
+  input.decklistInput {
+    @apply mb-4 h-20;
+  }
+
   .decklistInput:active {
     @apply border-primary;
   }
