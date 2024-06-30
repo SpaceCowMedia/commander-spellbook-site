@@ -9,7 +9,7 @@ const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
 const BLUR_CLOSE_DELAY = 900;
 
-export type AutoCompleteOption = { value: string; label: string; alias?: RegExp };
+export type AutoCompleteOption = { value: string; label: string; alias?: RegExp; normalizedValue?: string};
 
 type Props = {
   value: string;
@@ -50,7 +50,7 @@ const AutocompleteInput: React.FC<Props> = ({
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
 
   const active = autocompleteOptions.length > 0;
-
+  autocompleteOptions.forEach(option => option.normalizedValue = option.normalizedValue ?? normalizeStringInput(option.value));
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
   let screenReaderSelectionText = "";
@@ -139,8 +139,8 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const findAllMatches = (normalizedValue: string, options?: AutoCompleteOption[]) =>
-    (options ||autocompleteOptions).filter((option) => {
-      const mainMatch = option.value.includes(normalizedValue);
+    (options || autocompleteOptions).filter((option) => {
+      const mainMatch = option.normalizedValue?.includes(normalizedValue);
 
       if (mainMatch) return true;
 
