@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import pluralize from "pluralize";
-import {ColorIdentityColors, Variant} from "../lib/types";
-import {
-  convertDecklistToDeck, Deck,
-} from "../lib/decklist-parser";
+import {Variant} from "../lib/types";
+import {convertDecklistToDeck, Deck} from "../lib/decklist-parser";
 import styles from "./find-my-combos.module.scss";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import findMyCombosService from "../services/findMyCombos.service";
+import { isValidHttpUrl } from "../lib/url-check";
+import decklistService from "../services/decklist.service";
+import { ErrorResult } from "../services/decklist.service";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -28,6 +29,8 @@ const DEFAULT_RESULTS = {
 
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
+  const [deckUrlHint, setDeckUrlHint] = useState<string>("");
+  const [deckUrl, setDeckUrl] = useState<string>("");
   const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
@@ -117,6 +120,23 @@ const FindMyCombos = () => {
     setDecklist(e.target.value);
   };
 
+  const handleUrlInput = async () => {
+    if (!isValidHttpUrl(deckUrl)) {
+      setDeckUrl("");
+      setDeckUrlHint("You must paste a valid URL.");
+      return;
+    }
+    try {
+      const deck = await decklistService.getCardsFromUrl(deckUrl);
+      setDeckUrlHint("");
+      setDecklist(deck.main.join("\n"));
+      setCommanderList(deck.commanders.join("\n"));
+    } catch (error: any) {
+      const err = error as ErrorResult;
+      setDeckUrlHint(err.error);
+    }
+  };
+
   return (
     <>
       <SpellbookHead
@@ -143,16 +163,16 @@ const FindMyCombos = () => {
             onChange={(e) => setCommanderList(e.target.value)}
           />
           <textarea
-                      id="decklist-input"
-                      className={styles.decklistInput}
-                      value={decklist}
-                      placeholder={`Supported decklist formats:
+            id="decklist-input"
+            className={styles.decklistInput}
+            value={decklist}
+            placeholder={`Supported decklist formats:
               Ancient Tomb
               1 Ancient Tomb
               1x Ancient Tomb
               Ancient Tomb (uma) 236
               `}
-                      onChange={handleInput}
+            onChange={handleInput}
           />
 
           {!!decklist && (
@@ -188,6 +208,37 @@ const FindMyCombos = () => {
               aria-hidden="true"
             >
               Paste your decklist
+            </div>
+          )}
+
+          {!decklist && (
+            <div>
+              <p className={`${styles.or} heading-subtitle`}>
+                or  
+              </p>
+              <input
+                id="decklist-url-input"
+                className={styles.decklistInput}
+                type="text"
+                value={deckUrl}
+                placeholder={`${deckUrlHint ? deckUrlHint + ' ' : ''}Supported deckbuilding sites: Archidekt, Moxfield.`}
+                onChange={(e) => setDeckUrl(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleUrlInput() }}
+              />
+              <div
+                id="decklist-url-hint"
+                className={`${styles.decklistHint} heading-subtitle`}
+                aria-hidden="true"
+              >
+                Paste your decklist url
+              </div>
+              <button
+                id="submit-url-input"
+                className={`${styles.clearDecklistInput} button`}
+                onClick={handleUrlInput}
+              >
+                Submit URL
+              </button>
             </div>
           )}
         </section>

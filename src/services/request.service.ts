@@ -73,7 +73,7 @@ export class RequestService {
 
   private handleError = (err: Error) => {
     // TODO report error
-    if (!this.serverContext) console.error(err)
+    // if (!this.serverContext) console.error(err)
     throw err
   }
 
