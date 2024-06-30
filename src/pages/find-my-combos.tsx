@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import pluralize from "pluralize";
-import {ColorIdentityColors, Variant} from "../lib/types";
-import {
-  convertDecklistToDeck, Deck,
-} from "../lib/decklist-parser";
+import {Variant} from "../lib/types";
+import {convertDecklistToDeck, Deck} from "../lib/decklist-parser";
 import styles from "./find-my-combos.module.scss";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
@@ -32,6 +30,7 @@ const DEFAULT_RESULTS = {
 const FindMyCombos = () => {
   const [decklist, setDecklist] = useState<string>("");
   const [deckUrlHint, setDeckUrlHint] = useState<string>("");
+  const [deckUrl, setDeckUrl] = useState<string>("");
   const [commanderList, setCommanderList] = useState<string>("");
   const [numberOfCardsInDeck, setNumberOfCardsInDeck] = useState<number>(0);
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
@@ -121,13 +120,14 @@ const FindMyCombos = () => {
     setDecklist(e.target.value);
   };
 
-  const handleUrlInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isValidHttpUrl(e.target.value)) {
+  const handleUrlInput = async () => {
+    if (!isValidHttpUrl(deckUrl)) {
+      setDeckUrl("");
       setDeckUrlHint("You must paste a valid URL.");
       return;
     }
     try {
-      const deck = await decklistService.getCardsFromUrl(e.target.value);
+      const deck = await decklistService.getCardsFromUrl(deckUrl);
       setDeckUrlHint("");
       setDecklist(deck.main.join("\n"));
       setCommanderList(deck.commanders.join("\n"));
@@ -212,23 +212,33 @@ const FindMyCombos = () => {
           )}
 
           {!decklist && (
-            <input
-              id="decklist-url-input"
-              className={styles.decklistInput}
-              type="text"
-              value=""
-              placeholder={`${deckUrlHint ? deckUrlHint + '\t' : ''}Supported deckbuilding sites: Archidekt, Moxfield.`}
-              onChange={handleUrlInput}
-            />
-          )}
-
-          {!decklist && (
-            <div
-              id="decklist-hint"
-              className={`${styles.decklistHint} heading-subtitle`}
-              aria-hidden="true"
-            >
-              Paste your decklist url
+            <div>
+              <p className={`${styles.or} heading-subtitle`}>
+                or  
+              </p>
+              <input
+                id="decklist-url-input"
+                className={styles.decklistInput}
+                type="text"
+                value={deckUrl}
+                placeholder={`${deckUrlHint ? deckUrlHint + ' ' : ''}Supported deckbuilding sites: Archidekt, Moxfield.`}
+                onChange={(e) => setDeckUrl(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleUrlInput() }}
+              />
+              <div
+                id="decklist-url-hint"
+                className={`${styles.decklistHint} heading-subtitle`}
+                aria-hidden="true"
+              >
+                Paste your decklist url
+              </div>
+              <button
+                id="submit-url-input"
+                className={`${styles.clearDecklistInput} button`}
+                onClick={handleUrlInput}
+              >
+                Submit URL
+              </button>
             </div>
           )}
         </section>

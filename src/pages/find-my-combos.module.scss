@@ -3,6 +3,15 @@
     @apply my-4;
   }
 
+  p.or {
+    @apply uppercase;
+  }
+
+  div {
+    width: 100%;
+    @apply flex flex-col items-center justify-center;
+  }
+
   section {
     @apply flex flex-col items-center justify-center py-4;
   }
