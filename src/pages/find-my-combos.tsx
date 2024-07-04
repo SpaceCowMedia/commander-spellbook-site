@@ -129,8 +129,11 @@ const FindMyCombos = () => {
     try {
       const deck = await decklistService.getCardsFromUrl(deckUrl);
       setDeckUrlHint("");
-      setDecklist(deck.main.join("\n"));
-      setCommanderList(deck.commanders.join("\n"));
+      const decklist = deck.main.join("\n");
+      const commanderList = deck.commanders.join("\n");
+      setDecklist(decklist);
+      setCommanderList(commanderList);
+      lookupCombos(decklist, commanderList);
     } catch (error: any) {
       const err = error as ErrorResult;
       setDeckUrlHint(err.error);
@@ -212,7 +215,7 @@ const FindMyCombos = () => {
           )}
 
           {!decklist && (
-            <div>
+            <section>
               <p className={`${styles.or} heading-subtitle`}>
                 or  
               </p>
@@ -239,7 +242,7 @@ const FindMyCombos = () => {
               >
                 Submit URL
               </button>
-            </div>
+            </section>
           )}
         </section>
 
