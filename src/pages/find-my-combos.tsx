@@ -100,6 +100,7 @@ const FindMyCombos = () => {
     setCurrentlyParsedDeck(undefined)
     setDecklist("");
     setCommanderList("");
+    setDeckUrl("");
     setResults(DEFAULT_RESULTS)
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     localStorage.removeItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
