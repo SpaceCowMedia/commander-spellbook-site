@@ -10,6 +10,7 @@ import findMyCombosService from "../services/findMyCombos.service";
 import { isValidHttpUrl } from "../lib/url-check";
 import decklistService from "../services/decklist.service";
 import { ErrorResult } from "../services/decklist.service";
+import ErrorMessage from "components/submission/ErrorMessage/ErrorMessage";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -217,14 +218,14 @@ const FindMyCombos = () => {
           {!decklist && (
             <section>
               <p className={`${styles.or} heading-subtitle`}>
-                or  
+                or
               </p>
               <input
                 id="decklist-url-input"
                 className={styles.decklistInput}
                 type="text"
                 value={deckUrl}
-                placeholder={`${deckUrlHint ? deckUrlHint + ' ' : ''}Supported deckbuilding sites: Archidekt, Moxfield.`}
+                placeholder="Supported deckbuilding sites: Archidekt, Moxfield."
                 onChange={(e) => setDeckUrl(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleUrlInput() }}
               />
@@ -242,6 +243,11 @@ const FindMyCombos = () => {
               >
                 Submit URL
               </button>
+              {deckUrlHint &&
+                <ErrorMessage>
+                  {deckUrlHint}
+                </ErrorMessage>
+              }
             </section>
           )}
         </section>
