@@ -11,6 +11,7 @@ import { isValidHttpUrl } from "../lib/url-check";
 import decklistService from "../services/decklist.service";
 import { ErrorResult } from "../services/decklist.service";
 import ErrorMessage from "components/submission/ErrorMessage/ErrorMessage";
+import {useRouter} from "next/router";
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY =
   "commander-spellbook-combo-finder-last-decklist";
@@ -29,6 +30,9 @@ const DEFAULT_RESULTS = {
 }
 
 const FindMyCombos = () => {
+
+  const router = useRouter();
+
   const [decklist, setDecklist] = useState<string>("");
   const [deckUrlHint, setDeckUrlHint] = useState<string>("");
   const [deckUrl, setDeckUrl] = useState<string>("");
@@ -107,6 +111,15 @@ const FindMyCombos = () => {
   };
 
   useEffect(() => {
+    if (!router.isReady) return;
+
+    if (router.query.decklist || router.query.commanders) {
+      setDecklist(router.query.decklist as string || "");
+      setCommanderList(router.query.commanders as string || "");
+      lookupCombos(router.query.decklist as string || "", router.query.commanders as string || "");
+      return;
+    }
+
     const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     const savedCommanderList = localStorage.getItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
 
@@ -116,7 +129,7 @@ const FindMyCombos = () => {
     setCommanderList(savedCommanderList || "");
 
     lookupCombos(savedDeck, savedCommanderList || "");
-  }, []);
+  }, [router.isReady]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDecklist(e.target.value);
