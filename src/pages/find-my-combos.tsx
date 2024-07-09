@@ -226,7 +226,7 @@ const FindMyCombos = () => {
                 className={styles.decklistInput}
                 type="text"
                 value={deckUrl}
-                placeholder="Supported deckbuilding sites: Archidekt, Moxfield."
+                placeholder="Supported deckbuilding sites: Archidekt, Moxfield, Deckstats.net, TappedOut.net."
                 onChange={(e) => setDeckUrl(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleUrlInput() }}
               />
