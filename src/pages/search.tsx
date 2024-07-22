@@ -19,6 +19,7 @@ type Props = {
   bannedCombos?: Variant[]
   count: number
   page: number
+  error?: string
 };
 
 const SORT_OPTIONS: Option[] = [
@@ -63,7 +64,7 @@ const doesQuerySpecifyFormat = (query: string) : boolean => {
   return query.includes('legal:') || query.includes('banned:')|| query.includes('format:');
 }
 
-const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => {
+const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Props) => {
 
   const router = useRouter();
 
@@ -106,8 +107,8 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos}: Props) => 
         <h1 className="sr-only">Search Results</h1>
 
         <SearchMessage
-          message={`Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
-          errors={''}
+          message={error ? '' : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
+          errors={error ?? ''}
           currentPage={page}
           totalPages={1}
           totalResults={1}
@@ -193,44 +194,55 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const sort = context.query.sort || DEFAULT_SORT
   const ordering = (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) + ',identity_count,cards_count,-created'
   const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`
-  const results = await requestService.get<PaginatedResponse<Variant>>(url);
+  try {
 
-  const backendCombos = results ? results.results : [];
-
-  if (backendCombos.length === 0 && isQueryMissingFormat) {
-    // Try searching in banned combos
-    let query = `${context.query.q} banned:commander`;
-    query = encodeURIComponent(query)
-    const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&ordering=${ordering}`;
     const results = await requestService.get<PaginatedResponse<Variant>>(url);
-    const bannedCombos = results ? results.results : [];
-    if (bannedCombos.length > 0) {
-      return {
-        props: {
-          combos: [],
-          bannedCombos: bannedCombos,
-          count: 0,
-          page: context.query.page || 1,
+  
+    const backendCombos = results ? results.results : [];
+  
+    if (backendCombos.length === 0 && isQueryMissingFormat) {
+      // Try searching in banned combos
+      let query = `${context.query.q} banned:commander`;
+      query = encodeURIComponent(query)
+      const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&ordering=${ordering}`;
+      const results = await requestService.get<PaginatedResponse<Variant>>(url);
+      const bannedCombos = results ? results.results : [];
+      if (bannedCombos.length > 0) {
+        return {
+          props: {
+            combos: [],
+            bannedCombos: bannedCombos,
+            count: 0,
+            page: context.query.page || 1,
+          }
         }
       }
     }
-  }
-
-  if (backendCombos.length === 1) {
-    return {
-      redirect: {
-        destination: `/combo/${backendCombos[0].id}`,
-        permanent: false,
-      },
+  
+    if (backendCombos.length === 1) {
+      return {
+        redirect: {
+          destination: `/combo/${backendCombos[0].id}`,
+          permanent: false,
+        },
+      }
     }
-  }
-
-  return {
-    props: {
-      combos: backendCombos,
-      count: results.count,
-      page: context.query.page || 1,
-
+  
+    return {
+      props: {
+        combos: backendCombos,
+        count: results.count,
+        page: context.query.page || 1,
+      }
+    }
+  } catch (error: any) {
+    return {
+      props: {
+        combos: [],
+        count: 0,
+        page: context.query.page || 1,
+        error: Object.hasOwn(error, 'q') && error.q ? error.q : "An error occurred while searching for combos.",
+      }
     }
   }
 }
