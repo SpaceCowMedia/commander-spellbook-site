@@ -1,5 +1,7 @@
 import {Template} from "lib/types";
 import cardBack from "assets/images/card-back.png";
+import isFoolsDay from "services/fool.service";
+import weatheredCardBack from "assets/images/weathered-card-back.png";
 import TextWithMagicSymbol from "components/layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import {useEffect, useState} from "react";
 import requestService from "services/request.service";
@@ -49,7 +51,7 @@ const TemplateCard = ({template, className, imgClassName}: Props) => {
             quantity={template.quantity}
           />
         </div>
-        <img className={`opacity-10 ${imgClassName ?? ''}`} src={cardBack.src} alt="MTG Card Back"/>
+        <img className={`opacity-10 ${imgClassName ?? ''}`} src={isFoolsDay() ? weatheredCardBack.src : cardBack.src} alt="MTG Card Back"/>
       </div>
     </div>
   )
