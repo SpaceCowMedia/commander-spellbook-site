@@ -17,8 +17,6 @@ defaults:
 jobs:
   setup:
     runs-on: ubuntu-22.04
-    outputs:
-      workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -43,7 +41,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Cache Site Data ⏬
-        id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
@@ -225,4 +222,3 @@ jobs:
           export KUBECONFIG=kubeconfig.yaml
           kubectl rollout restart deployment/spellbook-client -n spellbook
 #          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
-

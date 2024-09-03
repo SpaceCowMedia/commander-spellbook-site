@@ -2,7 +2,6 @@ dist
 dist-*
 coverage
 frontend/public/api
-frontend/public/changelog.json
 frontend/out
 .next/
 external-data/

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "husky install",
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -22,6 +22,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@next/font": "13.1.6",
+    "@spacecowmedia/spellbook-client": "^3.7.8",
     "debounce": "^1.2.1",
     "eslint": "8.33.0",
     "eslint-config-next": "14.2.4",
@@ -57,10 +58,17 @@
     "autoprefixer": "^10.4.13",
     "cypress": "^12.6.0",
     "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
     "postcss": "^8.4.21",
-    "prettier": "^2.8.4",
+    "prettier": "^3.3.3",
     "wait-on": "^7.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
+    }
   }
 }
