@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       packages: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -28,6 +30,7 @@ jobs:
         with:
           node-version: 20
           cache: yarn
+          registry-url: https://npm.pkg.github.com
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
