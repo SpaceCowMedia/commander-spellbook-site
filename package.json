@@ -45,8 +45,8 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/debounce": "^1.2.1",
     "@types/gtag.js": "^0.0.12",
@@ -56,7 +56,6 @@
     "@types/react-dom": "18.0.10",
     "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.13",
-    "cypress": "^12.6.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^8.0.3",
