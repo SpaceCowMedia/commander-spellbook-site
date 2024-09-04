@@ -3,7 +3,7 @@ import styles from "./textWithMagicSymbol.module.scss";
 import Scryfall from "scryfall-client";
 import CardTooltip from "../CardTooltip/CardTooltip";
 import CardLink from "../CardLink/CardLink";
-import {Template} from "lib/types";
+import { Template } from "lib/types";
 import ScryfallResultsModal from "components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal";
 
 type Props = {
@@ -16,7 +16,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
   text,
   cardsInCombo = [],
   includeCardLinks,
-  templatesInCombo = []
+  templatesInCombo = [],
 }: Props) => {
   let matchableValuesString = "";
 
@@ -46,12 +46,20 @@ const TextWithMagicSymbol: React.FC<Props> = ({
 
   let filteredText = text;
   if (templatesInCombo.length) {
-    templatesInCombo?.forEach(template => {
-      filteredText = filteredText.replace(template.template.name, `template${template.template.id}`)
-    })
-    matchableValuesString += templatesInCombo.map(template => `template${template.template.id}`).join("|") + "|";
+    templatesInCombo?.forEach((template) => {
+      filteredText = filteredText.replace(
+        template.template.name,
+        `template${template.template.id}`,
+      );
+    });
+    matchableValuesString +=
+      templatesInCombo
+        .map((template) => `template${template.template.id}`)
+        .join("|") + "|";
   }
-  const templateNames = templatesInCombo?.map(template => `template${template.template.id}`) || [];
+  const templateNames =
+    templatesInCombo?.map((template) => `template${template.template.id}`) ||
+    [];
 
   matchableValuesString = `(${matchableValuesString}:mana[^:]+:|{[^}]+})`;
 
@@ -69,7 +77,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
         };
       } else if (cardShortNames.includes(value.trim())) {
         const fullName = cardsInCombo.find((card) =>
-          card.includes(value.trim())
+          card.includes(value.trim()),
         );
 
         if (fullName) {
@@ -83,7 +91,11 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       if (templateNames.includes(value.trim())) {
         return {
           nodeType: "template",
-          template: templatesInCombo.find(template => template.template.id === Number(value.trim().replace('template', ''))),
+          template: templatesInCombo.find(
+            (template) =>
+              template.template.id ===
+              Number(value.trim().replace("template", "")),
+          ),
           value,
         };
       }
@@ -98,8 +110,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             value: Scryfall.getSymbolUrl(manaSymbol),
             manaSymbol,
           };
-        }
-        catch (e) {
+        } catch (e) {
           console.log("Error getting mana symbol", manaSymbol);
           return {
             nodeType: "text",
@@ -142,17 +153,19 @@ const TextWithMagicSymbol: React.FC<Props> = ({
           )}
           {item.nodeType === "template" && (
             <ScryfallResultsModal
-              scryfallApiUrl={item.template?.template.scryfallApi || ''}
+              scryfallApiUrl={item.template?.template.scryfallApi || ""}
               textTrigger={
                 <span className="text-pink-800 cursor-pointer">
-                  <TextWithMagicSymbol text={item.template?.template.name || ''}/>
+                  <TextWithMagicSymbol
+                    text={item.template?.template.name || ""}
+                  />
                 </span>
               }
             />
           )}
-          {item.nodeType !== "card" && item.nodeType !== "image" && item.nodeType !== 'template' && (
-            <span>{item.value}</span>
-          )}
+          {item.nodeType !== "card" &&
+            item.nodeType !== "image" &&
+            item.nodeType !== "template" && <span>{item.value}</span>}
         </span>
       ))}
     </span>

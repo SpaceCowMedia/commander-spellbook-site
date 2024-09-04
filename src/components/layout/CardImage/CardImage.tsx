@@ -2,7 +2,7 @@ import styles from "./cardImage.module.scss";
 import FlipperCard from "../FlipperCard/FlipperCard";
 import React, { useEffect, useRef, useState } from "react";
 import cardBack from "assets/images/card-back.png";
-import isFoolsDay from "services/fool.service";
+import isFoolsDay from "lib/foolsDay";
 import weatheredCardBack from "assets/images/weathered-card-back.png";
 
 type Props = {
@@ -27,7 +27,13 @@ const CardImage = ({ img, name, className }: Props) => {
     <FlipperCard
       className={className}
       flipped={loaded && readyToFlip}
-      front={<img className={styles.frontCard} src={isFoolsDay() ? weatheredCardBack.src : cardBack.src} alt="" />}
+      front={
+        <img
+          className={styles.frontCard}
+          src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
+          alt=""
+        />
+      }
       back={
         <img
           ref={imageRef}

@@ -28,7 +28,6 @@ jobs:
         with:
           node-version: 20
           cache: yarn
-          registry-url: https://npm.pkg.github.com
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
@@ -52,8 +51,6 @@ jobs:
 
       - name: Install Node Modules 📦
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn install --frozen-lockfile
 
   linter:

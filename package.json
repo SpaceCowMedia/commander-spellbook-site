@@ -64,11 +64,5 @@
     "postcss": "^8.4.21",
     "prettier": "^3.3.3",
     "wait-on": "^7.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint --edit $HUSKY_GIT_PARAMS"
-    }
   }
 }

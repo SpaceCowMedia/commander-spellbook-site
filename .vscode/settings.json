@@ -8,5 +8,10 @@
     },
     "peacock.color": "#007fff",
     "eslint.format.enable": true,
-    "svg.preview.background": "transparent"
+    "svg.preview.background": "transparent",
+    "files.associations": {
+        "*.css": "tailwindcss",
+        "*.scss": "tailwindcss",
+    },
+    "editor.tabSize": 2,
 }
