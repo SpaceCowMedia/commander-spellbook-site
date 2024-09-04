@@ -56,6 +56,7 @@
     "@types/react-dom": "18.0.10",
     "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.13",
+    "cypress": "^13.14.1",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^8.0.3",
@@ -63,5 +64,8 @@
     "postcss": "^8.4.21",
     "prettier": "^3.3.3",
     "wait-on": "^7.0.1"
+  },
+  "resolutions": {
+    "listr2": "6.6.1"
   }
 }
