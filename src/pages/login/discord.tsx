@@ -6,7 +6,7 @@ import {useRouter} from "next/router";
 import TokenService from "../../services/token.service";
 import UserService from "../../services/user.service";
 import CookieService from "../../services/cookie.service";
-import requestService from "../../services/request.service";
+import requestService from "../../services/api.service";
 
 type Props = {};
 

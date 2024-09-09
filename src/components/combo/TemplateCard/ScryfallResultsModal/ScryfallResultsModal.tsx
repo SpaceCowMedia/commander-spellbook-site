@@ -65,7 +65,7 @@ const ScryfallResultsModal: React.FC<Props> = ({ scryfallApiUrl, textTrigger, co
         <div className="flex flex-wrap gap-3 justify-center">
           {results.map((result) => (
             <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
-              <img width="240" src={getScryfallImage(result)} alt={result.name} />
+              <img width="240" src={getScryfallImage(result)[0]} alt={result.name} />
             </a>
           ))}
         </div>

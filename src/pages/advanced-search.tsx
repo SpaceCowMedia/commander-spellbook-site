@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import resultAutocompleteData from "assets/autocomplete-data/results.json";
 import {SpellbookIcon} from "../components/layout/Icon/Icon";
-import CardService from "../services/card.service";
+import CardService from "../services/scryfall.service";
 
 type OperatorOption = {
   operator: string;

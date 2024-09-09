@@ -13,7 +13,7 @@ import TextWithMagicSymbol from "../components/layout/TextWithMagicSymbol/TextWi
 import {useRouter} from "next/router";
 import {useCookies} from "react-cookie";
 import FeatureSubmission from "../components/submission/Feature Submission/FeatureSubmission";
-import requestService from "../services/request.service";
+import requestService from "../services/api.service";
 import Loader from "../components/layout/Loader/Loader";
 import ErrorMessage from "../components/submission/ErrorMessage/ErrorMessage";
 import {ComboSubmissionErrorType} from "../lib/types";

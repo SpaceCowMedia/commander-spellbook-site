@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import pluralize from "pluralize";
 import {Variant} from "../lib/types";
-import {convertDecklistToDeck, Deck} from "../lib/decklist-parser";
 import styles from "./find-my-combos.module.scss";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";

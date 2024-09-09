@@ -10,12 +10,12 @@ import SpellbookHead from "../../../components/SpellbookHead/SpellbookHead";
 import React from "react";
 import { Variant} from "../../../lib/types";
 import PrerequisiteList from "../../../components/combo/PrerequisiteList/PrerequisiteList";
-import {getPrerequisiteList} from "../../../lib/backend-processors";
+import {getPrerequisiteList} from "../../../lib/prerequisitesProcessor";
 import EDHRECService from "../../../services/edhrec.service";
 import variantService from "../../../services/variant.service";
 import findMyCombosService from "../../../services/findMyCombos.service";
 import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
-import {RequestService} from "../../../services/request.service";
+import {RequestService} from "../../../services/api.service";
 
 type Props = {
   combo?: Variant;

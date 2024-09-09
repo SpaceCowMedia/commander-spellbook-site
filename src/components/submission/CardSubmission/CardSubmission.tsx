@@ -3,7 +3,7 @@ import AutocompleteInput, {AutoCompleteOption} from "../../advancedSearch/Autoco
 import {useEffect, useState} from "react";
 import Select, {MultiValue} from 'react-select'
 import TemplateService from "../../../services/template.service";
-import CardService from "../../../services/card.service";
+import CardService from "../../../services/scryfall.service";
 
 const ZONE_OPTIONS = [
   {value: 'H', label: 'Hand'},

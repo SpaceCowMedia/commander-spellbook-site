@@ -29,7 +29,7 @@ const ScryfallResultsWheel = ({cards}: Props) => {
       </div>
       <div className="h-full flex justify-center items-center">
         <a href={edhrecService.getCardUrl(cards[index].name)} target="_blank" rel="noopener noreferrer">
-          <div className="rounded-xl transition-all ease-in-out duration-300 w-[160px] h-[225px] bg-cover" style={{backgroundImage: `url(${getScryfallImage(cards[index])})`}} />
+          <div className="rounded-xl transition-all ease-in-out duration-300 w-[160px] h-[225px] bg-cover" style={{backgroundImage: `url(${getScryfallImage(cards[index])[0]})`}} />
         </a>
 
       </div>

@@ -1,6 +1,6 @@
 import SplashPage from "../components/layout/SplashPage/SplashPage";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import {RequestService} from "../services/request.service";
+import {RequestService} from "../services/api.service";
 import {GetServerSidePropsContext} from "next";
 
 const Random = () => {

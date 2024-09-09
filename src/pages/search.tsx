@@ -11,7 +11,7 @@ import ComboResults from "../components/search/ComboResults/ComboResults";
 import NoCombosFound from "../components/layout/NoCombosFound/NoCombosFound";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
 import {GetServerSideProps} from "next";
-import {RequestService} from "../services/request.service";
+import {RequestService} from "../services/api.service";
 import {PaginatedResponse} from "../types/api";
 
 type Props = {
