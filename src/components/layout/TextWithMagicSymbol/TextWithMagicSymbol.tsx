@@ -47,19 +47,11 @@ const TextWithMagicSymbol: React.FC<Props> = ({
   let filteredText = text;
   if (templatesInCombo.length) {
     templatesInCombo?.forEach((template) => {
-      filteredText = filteredText.replace(
-        template.template.name,
-        `template${template.template.id}`,
-      );
+      filteredText = filteredText.replace(template.template.name, `template${template.template.id}`);
     });
-    matchableValuesString +=
-      templatesInCombo
-        .map((template) => `template${template.template.id}`)
-        .join("|") + "|";
+    matchableValuesString += templatesInCombo.map((template) => `template${template.template.id}`).join("|") + "|";
   }
-  const templateNames =
-    templatesInCombo?.map((template) => `template${template.template.id}`) ||
-    [];
+  const templateNames = templatesInCombo?.map((template) => `template${template.template.id}`) || [];
 
   matchableValuesString = `(${matchableValuesString}:mana[^:]+:|{[^}]+})`;
 
@@ -76,9 +68,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
           value,
         };
       } else if (cardShortNames.includes(value.trim())) {
-        const fullName = cardsInCombo.find((card) =>
-          card.includes(value.trim()),
-        );
+        const fullName = cardsInCombo.find((card) => card.includes(value.trim()));
 
         if (fullName) {
           return {
@@ -92,9 +82,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
         return {
           nodeType: "template",
           template: templatesInCombo.find(
-            (template) =>
-              template.template.id ===
-              Number(value.trim().replace("template", "")),
+            (template) => template.template.id === Number(value.trim().replace("template", "")),
           ),
           value,
         };
@@ -131,9 +119,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
         <span key={i} className={styles[`${item.nodeType}Container`]}>
           {item.nodeType === "image" && (
             <span>
-              <span className="sr-only">
-                ({`{${item.manaSymbol}}`} magic symbol) &nbsp;
-              </span>
+              <span className="sr-only">({`{${item.manaSymbol}}`} magic symbol) &nbsp;</span>
               <img
                 aria-hidden="true"
                 className={styles.magicSymbol}
@@ -156,16 +142,14 @@ const TextWithMagicSymbol: React.FC<Props> = ({
               scryfallApiUrl={item.template?.template.scryfallApi || ""}
               textTrigger={
                 <span className="text-pink-800 cursor-pointer">
-                  <TextWithMagicSymbol
-                    text={item.template?.template.name || ""}
-                  />
+                  <TextWithMagicSymbol text={item.template?.template.name || ""} />
                 </span>
               }
             />
           )}
-          {item.nodeType !== "card" &&
-            item.nodeType !== "image" &&
-            item.nodeType !== "template" && <span>{item.value}</span>}
+          {item.nodeType !== "card" && item.nodeType !== "image" && item.nodeType !== "template" && (
+            <span>{item.value}</span>
+          )}
         </span>
       ))}
     </span>

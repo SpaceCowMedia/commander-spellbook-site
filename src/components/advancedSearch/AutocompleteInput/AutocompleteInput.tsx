@@ -1,4 +1,4 @@
-import React, {KeyboardEventHandler, useEffect} from "react";
+import React, { useEffect } from "react";
 import styles from "./autocompleteInput.module.scss";
 import { useState } from "react";
 import normalizeStringInput from "../../../lib/normalizeStringInput";
@@ -9,7 +9,7 @@ const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
 const BLUR_CLOSE_DELAY = 900;
 
-export type AutoCompleteOption = { value: string; label: string; alias?: RegExp; normalizedValue?: string};
+export type AutoCompleteOption = { value: string; label: string; alias?: RegExp; normalizedValue?: string };
 
 type Props = {
   value: string;
@@ -21,7 +21,7 @@ type Props = {
   matchAgainstOptionLabel?: boolean;
   hasError?: boolean;
   useValueForInput?: boolean;
-  onChange?: (value: string) => void;
+  onChange?: (_value: string) => void;
   loading?: boolean;
   maxLength?: number;
 };
@@ -45,12 +45,15 @@ const AutocompleteInput: React.FC<Props> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const [localValue, setLocalValue] = useState<string>(value);
-  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] =
-    useState<Array<{ value: string; label: string }>>([]);
+  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
 
   const active = autocompleteOptions.length > 0;
-  autocompleteOptions.forEach(option => option.normalizedValue = option.normalizedValue ?? normalizeStringInput(option.value));
+  autocompleteOptions.forEach(
+    (option) => (option.normalizedValue = option.normalizedValue ?? normalizeStringInput(option.value)),
+  );
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
   let screenReaderSelectionText = "";
@@ -127,7 +130,7 @@ const AutocompleteInput: React.FC<Props> = ({
     handleSelect(selection);
   };
 
-  const handleTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTab = (_e: React.KeyboardEvent<HTMLInputElement>) => {
     const selection = matchingAutoCompleteOptions[arrowCounter];
     if (!selection) return;
 
@@ -145,9 +148,7 @@ const AutocompleteInput: React.FC<Props> = ({
       if (mainMatch) return true;
 
       if (matchAgainstOptionLabel) {
-        const labelMatch = normalizeStringInput(option.label).includes(
-          normalizedValue
-        );
+        const labelMatch = normalizeStringInput(option.label).includes(normalizedValue);
 
         if (labelMatch) return true;
       }
@@ -157,10 +158,7 @@ const AutocompleteInput: React.FC<Props> = ({
       return false;
     });
 
-  const findBestMatches = (
-    totalOptions: AutoCompleteOption[],
-    normalizedValue: string
-  ) => {
+  const findBestMatches = (totalOptions: AutoCompleteOption[], normalizedValue: string) => {
     totalOptions.sort((a, b) => {
       const indexA = a.value.indexOf(normalizedValue);
       const indexB = b.value.indexOf(normalizedValue);
@@ -197,9 +195,7 @@ const AutocompleteInput: React.FC<Props> = ({
 
       const totalOptions = findAllMatches(normalizedValue);
 
-      setMatchingAutoCompleteOptions(
-        findBestMatches(totalOptions, normalizedValue)
-      );
+      setMatchingAutoCompleteOptions(findBestMatches(totalOptions, normalizedValue));
     }, AUTOCOMPLETE_DELAY);
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -215,22 +211,20 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (firstRender) return setFirstRender(false)
-    if (!localValue || !active) return
+    if (firstRender) return setFirstRender(false);
+    if (!localValue || !active) return;
     const normalizedValue = normalizeStringInput(localValue);
     setMatchingAutoCompleteOptions([]);
 
     const totalOptions = findAllMatches(normalizedValue, autocompleteOptions);
 
-    setMatchingAutoCompleteOptions(
-      findBestMatches(totalOptions, normalizedValue)
-    );
-  }, [localValue, active, autocompleteOptions])
+    setMatchingAutoCompleteOptions(findBestMatches(totalOptions, normalizedValue));
+  }, [localValue, active, autocompleteOptions]);
 
   useEffect(() => {
-    setFirstRender(true)
-    setLocalValue(value)
-  }, [value]  )
+    setFirstRender(true);
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div className={styles.autocompleteContainer}>
@@ -253,9 +247,11 @@ const AutocompleteInput: React.FC<Props> = ({
         onKeyDown={handleKeydown}
         maxLength={maxLength}
       />
-      {loading && <div className="absolute right-5 top-2">
-        <Loader/>
-      </div>}
+      {loading && (
+        <div className="absolute right-5 top-2">
+          <Loader />
+        </div>
+      )}
       <div role="status" aria-live="polite" className={`sr-only`}>
         {screenReaderSelectionText}
       </div>
@@ -264,9 +260,7 @@ const AutocompleteInput: React.FC<Props> = ({
           {matchingAutoCompleteOptions.map((item, index) => (
             <li
               key={index}
-              className={`${styles.autocompleteResult} ${
-                index === arrowCounter && styles.isActive
-              }`}
+              className={`${styles.autocompleteResult} ${index === arrowCounter && styles.isActive}`}
               onClick={() => handleClick(item)}
               onMouseOver={() => handleAutocompleteItemHover(index)}
             >

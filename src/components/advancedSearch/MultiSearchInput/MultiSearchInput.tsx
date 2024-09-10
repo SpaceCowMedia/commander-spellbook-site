@@ -1,9 +1,9 @@
 import pluralize from "pluralize";
-import {useEffect, useState} from "react";
+import React, { useState } from "react";
 import styles from "./multiSearchInput.module.scss";
-import StyledSelect from "../../layout/StyledSelect/StyledSelect";
-import AutocompleteInput from "../AutocompleteInput/AutocompleteInput";
-import Icon, {SpellbookIcon} from "../../layout/Icon/Icon";
+import StyledSelect, { Option } from "../../layout/StyledSelect/StyledSelect";
+import AutocompleteInput, { AutoCompleteOption } from "../AutocompleteInput/AutocompleteInput";
+import Icon, { SpellbookIcon } from "../../layout/Icon/Icon";
 
 type MultiSearchInputValue = {
   value: string;
@@ -15,8 +15,8 @@ type MultiSearchInputValue = {
 
 type Props = {
   value: MultiSearchInputValue;
-  autocompleteOptions?: Array<{ value: string; label: string }>;
-  selectOptions?: Array<{ value: string; label: string }>;
+  autocompleteOptions?: Array<AutoCompleteOption>;
+  selectOptions?: Array<Option>;
   useValueForAutocompleteInput?: boolean;
   label: string;
   labelIcon?: SpellbookIcon;
@@ -29,10 +29,10 @@ type Props = {
     negate?: boolean;
     placeholder?: string;
   }>;
-  onChange?: (value: MultiSearchInputValue) => void;
+  onChange?: (_value: MultiSearchInputValue) => void;
 };
 
-const MultiSearchInput = ({
+const MultiSearchInput: React.FC<Props> = ({
   value,
   autocompleteOptions = [],
   useValueForAutocompleteInput,
@@ -61,11 +61,9 @@ const MultiSearchInput = ({
     onChange && onChange(newInputs);
   };
 
-  const getInputId = (index: number) =>
-    `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
+  const getInputId = (index: number) => `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
 
-  const getSelectId = (index: number) =>
-    `${label.toLowerCase().replace(/\s/g, "-")}-select-${index}`;
+  const getSelectId = (index: number) => `${label.toLowerCase().replace(/\s/g, "-")}-select-${index}`;
 
   const getPlaceHolder = (input: {
     value: string;
@@ -74,10 +72,9 @@ const MultiSearchInput = ({
     negate?: boolean;
     error?: string;
   }) => {
-    const option = operatorOptions.find((option) =>
-      option.operator === input.operator &&
-      option.numeric === input.numeric &&
-      option.negate === input.negate
+    const option = operatorOptions.find(
+      (option) =>
+        option.operator === input.operator && option.numeric === input.numeric && option.negate === input.negate,
     );
     if (option && option.numeric == true && !option.placeholder) return `ex: 2`;
     if (!option || !option.placeholder) return defaultPlaceholder || "";
@@ -102,12 +99,11 @@ const MultiSearchInput = ({
 
   return (
     <div>
-      <label className={styles.inputLabel}>{labelIcon && <Icon name={labelIcon}/>} {inputLabel}</label>
+      <label className={styles.inputLabel}>
+        {labelIcon && <Icon name={labelIcon} />} {inputLabel}
+      </label>
       {inputs.map((input, index) => (
-        <div
-          key={`${label}-input-${index}`}
-          className={`my-2 input-wrapper-${index}`}
-        >
+        <div key={`${label}-input-${index}`} className={`my-2 input-wrapper-${index}`}>
           <div className="sm:flex">
             <StyledSelect
               label={`Modifier for ${label}`}
@@ -124,34 +120,34 @@ const MultiSearchInput = ({
               } border border-b-0 sm:border-b sm:border-r-0 sm:w-1/2 flex-grow`}
             />
             <div className="w-full flex-grow flex flex-col sm:flex-row">
-              {!selectOptions && <AutocompleteInput
-                value={input.value}
-                onChange={(value) => handleInputChange(index, value)}
-                label={inputLabel}
-                inputClassName="border-dark"
-                autocompleteOptions={autocompleteOptions}
-                inputId={getInputId(index)}
-                placeholder={getPlaceHolder(input)}
-                hasError={!!input.error}
-                useValueForInput={useValueForAutocompleteInput}
-              />}
-              {selectOptions &&
+              {!selectOptions && (
+                <AutocompleteInput
+                  value={input.value}
+                  onChange={(value) => handleInputChange(index, value)}
+                  label={inputLabel}
+                  inputClassName="border-dark"
+                  autocompleteOptions={autocompleteOptions}
+                  inputId={getInputId(index)}
+                  placeholder={getPlaceHolder(input)}
+                  hasError={!!input.error}
+                  useValueForInput={useValueForAutocompleteInput}
+                />
+              )}
+              {selectOptions && (
                 <StyledSelect
                   label={inputLabel}
-                  id={getInputId(index) + '-value'}
+                  id={getInputId(index) + "-value"}
                   options={selectOptions}
-                  onChange={value => handleInputChange(index, value)}
+                  onChange={(value) => handleInputChange(index, value)}
                   selectBackgroundClassName="flex-grow border-dark border"
                 />
-              }
+              )}
               <div className="flex">
                 {inputs.length > 1 && (
                   <button
                     type="button"
                     className={`minus-button ${styles.inputButton} ${
-                      input.error
-                        ? "bg-danger border-danger"
-                        : "bg-dark border-dark"
+                      input.error ? "bg-danger border-danger" : "bg-dark border-dark"
                     } minus-button-${index}`}
                     onClick={() => removeInput(index)}
                   >
@@ -165,9 +161,7 @@ const MultiSearchInput = ({
                 <button
                   type="button"
                   className={`plus-button ${styles.inputButton} ${
-                    input.error
-                      ? "bg-danger border-danger"
-                      : "bg-dark border-dark"
+                    input.error ? "bg-danger border-danger" : "bg-dark border-dark"
                   } plus-button-${index}`}
                   onClick={() => addInput(index)}
                 >
@@ -181,11 +175,7 @@ const MultiSearchInput = ({
             </div>
           </div>
           {input.error && (
-            <div
-              className={`input-error text-danger w-full py-2 px-4 text-center rounded-b-sm`}
-            >
-              {input.error}
-            </div>
+            <div className={`input-error text-danger w-full py-2 px-4 text-center rounded-b-sm`}>{input.error}</div>
           )}
         </div>
       ))}

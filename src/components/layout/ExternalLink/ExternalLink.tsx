@@ -1,15 +1,12 @@
 import React from "react";
 
-type Props = {
-  children: React.ReactNode;
+interface Props extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
   disabled?: boolean;
-} & React.DetailedHTMLProps<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  HTMLAnchorElement
->;
+  children?: React.ReactNode;
+}
 
-const ExternalLink: React.FC<Props> = (props: Props) => {
-  const { children, disabled } = props;
+const ExternalLink: React.FC<Props> = (props) => {
+  const { disabled, children } = props;
   const attributes = {
     ...props,
     target: "_blank",
