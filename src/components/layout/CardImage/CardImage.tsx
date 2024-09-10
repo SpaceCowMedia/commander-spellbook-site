@@ -11,13 +11,15 @@ type Props = {
   className?: string;
 };
 
-const CardImage = ({ img, name, className }: Props) => {
+const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [readyToFlip, setReadyToFlip] = useState(false);
 
   useEffect(() => {
-    if (imageRef.current && imageRef.current.complete) setLoaded(true);
+    if (imageRef.current && imageRef.current.complete) {
+      setLoaded(true);
+    }
     setTimeout(() => {
       setReadyToFlip(true);
     }, 300);
@@ -27,22 +29,8 @@ const CardImage = ({ img, name, className }: Props) => {
     <FlipperCard
       className={className}
       flipped={loaded && readyToFlip}
-      front={
-        <img
-          className={styles.frontCard}
-          src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
-          alt=""
-        />
-      }
-      back={
-        <img
-          ref={imageRef}
-          className={styles.frontCard}
-          src={img}
-          alt={name}
-          onLoad={() => setLoaded(true)}
-        />
-      }
+      front={<img className={styles.frontCard} src={isFoolsDay() ? weatheredCardBack.src : cardBack.src} alt="" />}
+      back={<img ref={imageRef} className={styles.frontCard} src={img} alt={name} onLoad={() => setLoaded(true)} />}
     />
   );
 };

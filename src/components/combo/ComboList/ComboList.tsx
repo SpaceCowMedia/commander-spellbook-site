@@ -2,8 +2,8 @@ import styles from "./comboList.module.scss";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import React, { useEffect, useState } from "react";
 import PlaceholderText from "../../layout/PlaceholderText/PlaceholderText";
-import {addPeriod} from "../../../lib/addPeriod";
-import {Template} from "lib/types";
+import { addPeriod } from "../../../lib/addPeriod";
+import { Template } from "@spacecowmedia/spellbook-client";
 
 type Props = {
   title: string;
@@ -17,7 +17,7 @@ type Props = {
   appendPeriod?: boolean;
 };
 
-const ComboList = ({
+const ComboList: React.FC<Props> = ({
   title,
   cardsInCombo = [],
   templatesInCombo = [],
@@ -26,7 +26,7 @@ const ComboList = ({
   iterations,
   id,
   className,
-  appendPeriod
+  appendPeriod,
 }: Props) => {
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
 
@@ -35,10 +35,7 @@ const ComboList = ({
   }, []);
 
   return (
-    <div
-      id={id}
-      className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}
-    >
+    <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
         <h2 className={styles.comboListTitle}>{title}</h2>
         <ol className={`${styles.comboList} ${showNumbers && "list-decimal"}`}>
