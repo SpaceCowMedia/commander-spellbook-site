@@ -29,7 +29,7 @@ const PrerequisiteList: React.FC<Props> = ({
   cardsInCombo,
   includeCardLinks,
   templatesInCombo,
-}: Props) => {
+}) => {
   return (
     <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
       <div className="pr-6 py-4">

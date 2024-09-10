@@ -76,8 +76,12 @@ const MultiSearchInput: React.FC<Props> = ({
       (option) =>
         option.operator === input.operator && option.numeric === input.numeric && option.negate === input.negate,
     );
-    if (option && option.numeric == true && !option.placeholder) return `ex: 2`;
-    if (!option || !option.placeholder) return defaultPlaceholder || "";
+    if (option && option.numeric == true && !option.placeholder) {
+      return `ex: 2`;
+    }
+    if (!option || !option.placeholder) {
+      return defaultPlaceholder || "";
+    }
     return option.placeholder;
   };
 

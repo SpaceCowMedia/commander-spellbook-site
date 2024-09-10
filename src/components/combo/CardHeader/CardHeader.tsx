@@ -7,7 +7,7 @@ type Props = {
   cardsArt?: string[];
 };
 
-const CardHeader: React.FC<Props> = ({ title = "", subtitle = "", cardsArt = [] }: Props) => {
+const CardHeader: React.FC<Props> = ({ title = "", subtitle = "", cardsArt = [] }) => {
   return (
     <header className={`hidden sm:flex ${styles.header}`}>
       <div className="flex w-full h-64">

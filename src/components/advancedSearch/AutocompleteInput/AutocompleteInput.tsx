@@ -39,7 +39,7 @@ const AutocompleteInput: React.FC<Props> = ({
   onChange,
   loading,
   maxLength,
-}: Props) => {
+}) => {
   const [firstRender, setFirstRender] = useState<boolean>(true);
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -57,22 +57,31 @@ const AutocompleteInput: React.FC<Props> = ({
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
   let screenReaderSelectionText = "";
-  if (total !== 0 && value)
+  if (total !== 0 && value) {
     screenReaderSelectionText = option
       ? `${option.label} (${arrowCounter + 1}/${total})`
       : `${total} match${
           total > 1 ? "es" : ""
         } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
+  }
 
   const lookupAutoComplete = () => {
-    if (!active) return;
-    if (!value) return handleClose();
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (!active) {
+      return;
+    }
+    if (!value) {
+      return handleClose();
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     timeoutRef.current = createAutocompleteTimeout();
   };
 
   const handleClose = () => {
-    if (resultsRef.current) resultsRef.current.scrollTop = 0;
+    if (resultsRef.current) {
+      resultsRef.current.scrollTop = 0;
+    }
 
     setArrowCounter(-1);
     setMatchingAutoCompleteOptions([]);
@@ -85,7 +94,9 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const handleBlur = () => {
-    if (!active) return;
+    if (!active) {
+      return;
+    }
     setTimeout(() => {
       handleClose();
     }, BLUR_CLOSE_DELAY);
@@ -103,27 +114,37 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const scrollToSelection = () => {
-    if (!resultsRef.current) return;
+    if (!resultsRef.current) {
+      return;
+    }
     const nodes = resultsRef.current.querySelectorAll("li");
     const li = nodes[arrowCounter];
-    if (!li) return;
+    if (!li) {
+      return;
+    }
     resultsRef.current.scrollTop = li.offsetTop - 50;
   };
 
   const handleArrowDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (arrowCounter + 1 < total) setArrowCounter(arrowCounter + 1);
+    if (arrowCounter + 1 < total) {
+      setArrowCounter(arrowCounter + 1);
+    }
     scrollToSelection();
   };
   const handleArrowUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (arrowCounter >= 0) setArrowCounter(arrowCounter - 1);
+    if (arrowCounter >= 0) {
+      setArrowCounter(arrowCounter - 1);
+    }
     scrollToSelection();
   };
 
   const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) return;
+    if (!selection) {
+      return;
+    }
 
     e.preventDefault();
 
@@ -132,28 +153,38 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const handleTab = (_e: React.KeyboardEvent<HTMLInputElement>) => {
     const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) return;
+    if (!selection) {
+      return;
+    }
 
     handleSelect(selection);
   };
   const handleClick = (item: AutoCompleteOption) => {
     handleSelect(item);
-    if (inputRef.current) inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const findAllMatches = (normalizedValue: string, options?: AutoCompleteOption[]) =>
     (options || autocompleteOptions).filter((option) => {
       const mainMatch = option.normalizedValue?.includes(normalizedValue);
 
-      if (mainMatch) return true;
+      if (mainMatch) {
+        return true;
+      }
 
       if (matchAgainstOptionLabel) {
         const labelMatch = normalizeStringInput(option.label).includes(normalizedValue);
 
-        if (labelMatch) return true;
+        if (labelMatch) {
+          return true;
+        }
       }
 
-      if (option.alias) return normalizedValue.match(option.alias);
+      if (option.alias) {
+        return normalizedValue.match(option.alias);
+      }
 
       return false;
     });
@@ -188,7 +219,9 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const createAutocompleteTimeout = () =>
     setTimeout(() => {
-      if (!value) return handleClose();
+      if (!value) {
+        return handleClose();
+      }
 
       const normalizedValue = normalizeStringInput(value);
       setMatchingAutoCompleteOptions([]);
@@ -211,8 +244,12 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (firstRender) return setFirstRender(false);
-    if (!localValue || !active) return;
+    if (firstRender) {
+      return setFirstRender(false);
+    }
+    if (!localValue || !active) {
+      return;
+    }
     const normalizedValue = normalizeStringInput(localValue);
     setMatchingAutoCompleteOptions([]);
 

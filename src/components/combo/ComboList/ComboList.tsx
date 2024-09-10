@@ -27,7 +27,7 @@ const ComboList: React.FC<Props> = ({
   id,
   className,
   appendPeriod,
-}: Props) => {
+}) => {
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
 
   useEffect(() => {

@@ -23,7 +23,7 @@ const ScryfallResultsModal: React.FC<Props> = ({
   title,
   scryfallQuery,
   quantity,
-}: Props) => {
+}) => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [nextUrl, setNextUrl] = useState<string | null>(null);

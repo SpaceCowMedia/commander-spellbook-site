@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import CardLink from "../../layout/CardLink/CardLink";
 import CardImage from "../../layout/CardImage/CardImage";
 import TemplateCard from "components/combo/TemplateCard/TemplateCard";
-import { Template } from "@spacecowmedia/spellbook-client";
+import { TemplateInVariant } from "@spacecowmedia/spellbook-client";
 
 type Props = {
   cards: Array<{ name: string; oracleImageUrl: string }>;
-  templates: Template[];
+  templates: TemplateInVariant[];
 };
 
-const CardGroup: React.FC<Props> = ({ cards, templates }: Props) => {
+const CardGroup: React.FC<Props> = ({ cards, templates }) => {
   const [hoveredOverCardIndex, setHoveredOverCardIndex] = useState(-1);
 
   const shouldExpand = (index: number): boolean => {
@@ -22,21 +22,23 @@ const CardGroup: React.FC<Props> = ({ cards, templates }: Props) => {
 
   return (
     <div className={`${styles.cardImages} container hidden lg:flex ${cards.length < 4 && "justify-center"}`}>
-      {(cards as Array<{ name: string; oracleImageUrl: string } | Template>).concat(templates).map((card, index) => (
-        <div
-          key={`oracle-card-image-${index}`}
-          className={`${styles.cardImgWrapper} ${shouldExpand(index) && styles.expand}`}
-          onMouseEnter={() => setHoveredOverCardIndex(index)}
-          onMouseLeave={() => setHoveredOverCardIndex(-1)}
-        >
-          {"template" in card && <TemplateCard className={styles.cardImg} template={card} />}
-          {"oracleImageUrl" in card && (
-            <CardLink className="relative" name={card.name}>
-              <CardImage img={card.oracleImageUrl} name={card.name} className={styles.cardImg} />
-            </CardLink>
-          )}
-        </div>
-      ))}
+      {(cards as Array<{ name: string; oracleImageUrl: string } | TemplateInVariant>)
+        .concat(templates)
+        .map((card, index) => (
+          <div
+            key={`oracle-card-image-${index}`}
+            className={`${styles.cardImgWrapper} ${shouldExpand(index) && styles.expand}`}
+            onMouseEnter={() => setHoveredOverCardIndex(index)}
+            onMouseLeave={() => setHoveredOverCardIndex(-1)}
+          >
+            {"template" in card && <TemplateCard className={styles.cardImg} template={card} />}
+            {"oracleImageUrl" in card && (
+              <CardLink className="relative" name={card.name}>
+                <CardImage img={card.oracleImageUrl} name={card.name} className={styles.cardImg} />
+              </CardLink>
+            )}
+          </div>
+        ))}
     </div>
   );
 };

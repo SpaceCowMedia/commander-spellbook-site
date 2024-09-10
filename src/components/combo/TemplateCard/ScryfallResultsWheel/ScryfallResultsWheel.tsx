@@ -8,7 +8,7 @@ type Props = {
   cards: ScryfallCard.Any[];
 };
 
-const ScryfallResultsWheel: React.FC<Props> = ({ cards }: Props) => {
+const ScryfallResultsWheel: React.FC<Props> = ({ cards }) => {
   const [index, setIndex] = useState(0);
 
   const next = () => {

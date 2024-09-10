@@ -24,12 +24,11 @@ const ComboSidebarLinks: React.FC<Props> = ({
   tcgPlayerPrice,
   cardKingdomPrice,
   combo,
-}: Props) => {
+}) => {
   return (
     <div className="mt-4 mb-4 w-full rounded overflow-hidden">
       <BuyComboButtons cards={cards} tcgPlayerPrice={tcgPlayerPrice} cardKingdomPrice={cardKingdomPrice} />
       <div className="mt-1">
-        {/*<SimilarComboButton cards={cards} comboId={comboId} />*/}
         {!!edhrecLink && <EdhrecLink link={edhrecLink} />}
         <Link id="report-error-button" className="button w-full" href={`/report-error/?comboId=${comboId}`}>
           Report an Error with this Combo

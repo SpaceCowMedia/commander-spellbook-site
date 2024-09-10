@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./copyComboLinkButton.module.scss";
 import { Tooltip } from "react-tooltip";
 import { event } from "../../../../lib/googleAnalytics";
@@ -9,17 +9,23 @@ type Props = {
   className: string;
 };
 
-const CopyComboLinkButton = ({ comboLink, children, className }: Props) => {
+const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showCopyNotification, setShowCopyNotification] = useState(false);
 
   const handleClick = () => {
-    if (!inputRef.current) return;
+    if (!inputRef.current) {
+      return;
+    }
     const copyInput = inputRef.current;
     copyInput.type = "text";
     copyInput.select();
-    document.execCommand("copy"); // TODO - fix this deprecated method
+    if (!navigator.clipboard) {
+      document.execCommand("copy");
+    } else {
+      navigator.clipboard.writeText(copyInput.value);
+    }
     copyInput.type = "hidden";
 
     setShowCopyNotification(true);
@@ -51,13 +57,7 @@ const CopyComboLinkButton = ({ comboLink, children, className }: Props) => {
         onClick={handleClick}
       >
         {children}
-        <input
-          ref={inputRef}
-          aria-hidden
-          type="hidden"
-          className={styles.hiddenComboLinkInput}
-          value={comboLink}
-        />
+        <input ref={inputRef} aria-hidden type="hidden" className={styles.hiddenComboLinkInput} value={comboLink} />
         {showCopyNotification && (
           <div role="alert" className="sr-only">
             Combo link copied to your clipboard
@@ -65,13 +65,9 @@ const CopyComboLinkButton = ({ comboLink, children, className }: Props) => {
         )}
         <div
           aria-hidden
-          className={`${
-            styles.copyComboNotification
-          } gradient w-full md:w-1/2 ${showCopyNotification && styles.show}`}
+          className={`${styles.copyComboNotification} gradient w-full md:w-1/2 ${showCopyNotification && styles.show}`}
         >
-          <div className="bg-dark p-4">
-            Combo link copied to your clipboard!
-          </div>
+          <div className="bg-dark p-4">Combo link copied to your clipboard!</div>
         </div>
       </button>
       <Tooltip id="copy-combo-tooltip" />

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import React from "react";
 import { Tooltip } from "react-tooltip";
+
 type Props = {
   className?: string;
   url: string;
@@ -7,7 +9,7 @@ type Props = {
   network: string;
 };
 
-const ShareNetwork = ({ className, url, children, network }: Props) => {
+const ShareNetwork: React.FC<Props> = ({ className, url, children, network }) => {
   const id = `share-combo-tooltip-${network}`;
   return (
     <>

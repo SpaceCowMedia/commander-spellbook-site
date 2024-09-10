@@ -10,7 +10,7 @@ type Props = {
   onChange?: (_value: string) => void;
 };
 
-const RadioSearchInput: React.FC<Props> = ({ checkedValue, options, formName, label, labelIcon, onChange }: Props) => {
+const RadioSearchInput: React.FC<Props> = ({ checkedValue, options, formName, label, labelIcon, onChange }) => {
   const [localValue, setLocalValue] = useState<string>(checkedValue);
 
   const handleChange = (value: string) => {

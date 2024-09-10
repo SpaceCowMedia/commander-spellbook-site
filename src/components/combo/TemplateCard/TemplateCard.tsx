@@ -15,7 +15,7 @@ type Props = {
   imgClassName?: string;
 };
 
-const TemplateCard: React.FC<Props> = ({ template, className, imgClassName }: Props) => {
+const TemplateCard: React.FC<Props> = ({ template, className, imgClassName }) => {
   const [resultCount, setResultCount] = useState(0);
   const [results, setResults] = useState<ScryfallCard.Any[]>([]);
   const [loading, setLoading] = useState(true);
