@@ -5,12 +5,12 @@ import Script from "next/script";
 import { GA_TRACKING_ID, pageview } from "../lib/googleAnalytics";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import NextNProgress from 'nextjs-progressbar';
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
+import NextNProgress from "nextjs-progressbar";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import PageWrapper from "components/layout/PageWrapper/PageWrapper";
 
-config.autoAddCss = false
+config.autoAddCss = false;
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      <NextNProgress options={{showSpinner: false}} color={"#9161f3"}/>
+      <NextNProgress options={{ showSpinner: false }} color={"#9161f3"} />
       <PageWrapper>
         <Component {...pageProps} />
       </PageWrapper>

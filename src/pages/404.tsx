@@ -6,10 +6,7 @@ const NOT_FOUND_TEMPLATES = [
   [styles.barrenGlory, "You were looking for glory, but found an empty world."],
   [styles.curiosity, "How curious..."],
   [styles.lostInTheWoods, "Must be lost in the woods."],
-  [
-    styles.oneWithNothing,
-    "You were looking for one thing. You found... nothing.",
-  ],
+  [styles.oneWithNothing, "You were looking for one thing. You found... nothing."],
   [styles.possibilityStorm, "So many possibilities... just not on this page."],
   [styles.totallyLost, "Looks like you're totally lost..."],
   [styles.unexpectedlyAbsent, "It was unexpectedly absent."],
@@ -28,11 +25,7 @@ const NotFoundPage = () => {
 
   return (
     <>
-      <ErrorBase
-        mainMessage="Page Not Found"
-        subMessage={notFoundMessage}
-        containerClassName={notFoundClass}
-      />
+      <ErrorBase mainMessage="Page Not Found" subMessage={notFoundMessage} containerClassName={notFoundClass} />
     </>
   );
 };

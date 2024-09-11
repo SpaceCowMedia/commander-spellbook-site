@@ -4,6 +4,8 @@ import { useState } from "react";
 import normalizeStringInput from "../../../lib/normalizeStringInput";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import Loader from "../../layout/Loader/Loader";
+import { apiConfiguration } from "services/api.service";
+import { CardsApi, FeaturesApi } from "@spacecowmedia/spellbook-client";
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
@@ -14,7 +16,9 @@ export type AutoCompleteOption = { value: string; label: string; alias?: RegExp;
 type Props = {
   value: string;
   inputClassName?: string;
-  autocompleteOptions: AutoCompleteOption[];
+  autocompleteOptions?: AutoCompleteOption[];
+  cardAutocomplete?: boolean;
+  resultAutocomplete?: boolean;
   inputId: string;
   placeholder?: string;
   label?: string;
@@ -30,6 +34,8 @@ const AutocompleteInput: React.FC<Props> = ({
   value,
   inputClassName,
   autocompleteOptions,
+  cardAutocomplete,
+  resultAutocomplete,
   inputId,
   label,
   matchAgainstOptionLabel,
@@ -43,17 +49,19 @@ const AutocompleteInput: React.FC<Props> = ({
   const [firstRender, setFirstRender] = useState<boolean>(true);
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const [localValue, setLocalValue] = useState<string>(value);
   const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<
     Array<{ value: string; label: string }>
   >([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
 
-  const active = autocompleteOptions.length > 0;
-  autocompleteOptions.forEach(
+  const active = (autocompleteOptions && autocompleteOptions.length > 0) || cardAutocomplete || resultAutocomplete;
+  const inMemory = !active || (!cardAutocomplete && !resultAutocomplete);
+
+  autocompleteOptions?.forEach(
     (option) => (option.normalizedValue = option.normalizedValue ?? normalizeStringInput(option.value)),
   );
+
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
   let screenReaderSelectionText = "";
@@ -65,17 +73,14 @@ const AutocompleteInput: React.FC<Props> = ({
         } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
   }
 
-  const lookupAutoComplete = () => {
+  const lookupAutoComplete = async () => {
     if (!active) {
       return;
     }
     if (!value) {
       return handleClose();
     }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = createAutocompleteTimeout();
+    waitForAutocomplete();
   };
 
   const handleClose = () => {
@@ -166,8 +171,31 @@ const AutocompleteInput: React.FC<Props> = ({
     }
   };
 
-  const findAllMatches = (normalizedValue: string, options?: AutoCompleteOption[]) =>
-    (options || autocompleteOptions).filter((option) => {
+  const configuration = apiConfiguration();
+  const cardsApi = new CardsApi(configuration);
+  const resultsApi = new FeaturesApi(configuration);
+
+  const findAllMatches = async (value: string, options?: AutoCompleteOption[]): Promise<AutoCompleteOption[]> => {
+    const normalizedValue = normalizeStringInput(value);
+    if (!options) {
+      options = [];
+      if (autocompleteOptions) {
+        options = options.concat(autocompleteOptions);
+      }
+      if (cardAutocomplete) {
+        const cards = await cardsApi.cardsList({ q: value });
+        options = options.concat(
+          cards.results.map((card) => ({ value: normalizeStringInput(card.name), label: card.name })),
+        );
+      }
+      if (resultAutocomplete) {
+        const results = await resultsApi.featuresList({ q: value });
+        options = options.concat(
+          results.results.map((result) => ({ value: normalizeStringInput(result.name), label: result.name })),
+        );
+      }
+    }
+    return options.filter((option) => {
       const mainMatch = option.normalizedValue?.includes(normalizedValue);
 
       if (mainMatch) {
@@ -188,8 +216,10 @@ const AutocompleteInput: React.FC<Props> = ({
 
       return false;
     });
+  };
 
-  const findBestMatches = (totalOptions: AutoCompleteOption[], normalizedValue: string) => {
+  const findBestMatches = (totalOptions: AutoCompleteOption[], value: string) => {
+    const normalizedValue = normalizeStringInput(value);
     totalOptions.sort((a, b) => {
       const indexA = a.value.indexOf(normalizedValue);
       const indexB = b.value.indexOf(normalizedValue);
@@ -217,19 +247,21 @@ const AutocompleteInput: React.FC<Props> = ({
     return totalOptions.slice(0, MAX_NUMBER_OF_MATCHING_RESULTS);
   };
 
-  const createAutocompleteTimeout = () =>
-    setTimeout(() => {
-      if (!value) {
-        return handleClose();
-      }
+  function timeout(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-      const normalizedValue = normalizeStringInput(value);
-      setMatchingAutoCompleteOptions([]);
-
-      const totalOptions = findAllMatches(normalizedValue);
-
-      setMatchingAutoCompleteOptions(findBestMatches(totalOptions, normalizedValue));
-    }, AUTOCOMPLETE_DELAY);
+  const waitForAutocomplete: () => Promise<void> = async () => {
+    if (inMemory) {
+      await timeout(AUTOCOMPLETE_DELAY);
+    }
+    if (!value) {
+      return handleClose();
+    }
+    setMatchingAutoCompleteOptions([]);
+    const totalOptions = await findAllMatches(value);
+    setMatchingAutoCompleteOptions(findBestMatches(totalOptions, value));
+  };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
@@ -250,12 +282,10 @@ const AutocompleteInput: React.FC<Props> = ({
     if (!localValue || !active) {
       return;
     }
-    const normalizedValue = normalizeStringInput(localValue);
     setMatchingAutoCompleteOptions([]);
-
-    const totalOptions = findAllMatches(normalizedValue, autocompleteOptions);
-
-    setMatchingAutoCompleteOptions(findBestMatches(totalOptions, normalizedValue));
+    findAllMatches(value, autocompleteOptions).then((options) => {
+      setMatchingAutoCompleteOptions(findBestMatches(options, value));
+    });
   }, [localValue, active, autocompleteOptions]);
 
   useEffect(() => {

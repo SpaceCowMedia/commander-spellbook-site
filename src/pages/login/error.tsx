@@ -1,17 +1,10 @@
-import React, {useEffect} from "react";
+import React from "react";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
 import styles from "../report-error.module.scss";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
-import TokenService from "../../services/token.service";
-import CookieService from "../../services/cookie.service";
-import UserService from "../../services/user.service";
 import Link from "next/link";
-import {useRouter} from "next/router";
-import ExternalLink from "components/layout/ExternalLink/ExternalLink";
 
-type Props = {};
-
-const Login: React.FC<Props> = ({}: Props) => {
+const Login: React.FC = () => {
   return (
     <>
       <SpellbookHead
@@ -23,23 +16,13 @@ const Login: React.FC<Props> = ({}: Props) => {
         <h1 className="heading-title">Login Error</h1>
 
         <div className="text-center">
-          <p>
-            You must be a member of the Commander Spellbook discord server to login.
-          </p>
-          <Link
-            role="button"
-            className="button"
-            href="https://discord.com/invite/DkAyVJG"
-          >
+          <p>You must be a member of the Commander Spellbook discord server to login.</p>
+          <Link role="button" className="button" href="https://discord.com/invite/DkAyVJG">
             Join the Commander Spellbook Discord
           </Link>
         </div>
         <div className="text-center">
-          <Link
-            role="button"
-            className="button"
-            href="/login"
-          >
+          <Link role="button" className="button" href="/login">
             Retry Login
           </Link>
         </div>

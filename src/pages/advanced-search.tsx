@@ -2,15 +2,13 @@ import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import Link from "next/link";
 import MultiSearchInput from "../components/advancedSearch/MultiSearchInput/MultiSearchInput";
 import { DEFAULT_VENDOR } from "../lib/constants";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import COLOR_AUTOCOMPLETES from "../lib/colorAutocompletes";
 import styles from "./advanced-search.module.scss";
 import RadioSearchInput from "../components/advancedSearch/RadioSearchInput/RadioSearchInput";
 import { useRouter } from "next/router";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import resultAutocompleteData from "assets/autocomplete-data/results.json";
-import {SpellbookIcon} from "../components/layout/Icon/Icon";
-import CardService from "../services/scryfall.service";
+import { SpellbookIcon } from "../components/layout/Icon/Icon";
 
 type OperatorOption = {
   operator: string;
@@ -24,7 +22,7 @@ type TagOption = {
   name: string;
   label: string;
   labelIcon?: SpellbookIcon;
-}
+};
 
 const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
   {
@@ -109,7 +107,7 @@ const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
     negate: true,
     label: "Does not have the keyword",
     placeholder: "ex: cycling, delve, partner",
-  }
+  },
 ];
 
 const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
@@ -195,28 +193,28 @@ const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
     label: "Is not exactly",
     placeholder: "ex: Infinite Colorless Mana",
   },
-  { operator: ">=", label: "Contains at least x (number)" , numeric: true },
-  { operator: "<", label: "Contains less than x (number)" , numeric: true },
-  { operator: "=", label: "Contains exactly x (number)" , numeric: true },
+  { operator: ">=", label: "Contains at least x (number)", numeric: true },
+  { operator: "<", label: "Contains less than x (number)", numeric: true },
+  { operator: "=", label: "Contains exactly x (number)", numeric: true },
 ];
 
 const TAGS_OPTIONS: TagOption[] = [
   {
     name: "spoiler",
     label: "Contains a spoiler/previewed card",
-    labelIcon: "eye"
+    labelIcon: "eye",
   },
   {
     name: "commander",
     label: "Does the combo require a commander?",
-    labelIcon: "commandZone"
+    labelIcon: "commandZone",
   },
   {
     name: "featured",
     label: "Is the combo featured in the home page?",
-    labelIcon: "star"
-  }
-]
+    labelIcon: "star",
+  },
+];
 
 const COMMANDER_OPTIONS: OperatorOption[] = [
   {
@@ -266,9 +264,8 @@ const PRICE_OPTIONS: OperatorOption[] = [
     operator: "=",
     label: "Costs exactly x",
     placeholder: "ex: 5",
-  }
+  },
 ];
-
 
 const PRICE_VENDORS = [
   {
@@ -288,7 +285,7 @@ const PRICE_VENDORS = [
 type LegalityFormat = {
   value: string;
   label: string;
-}
+};
 
 const LEGALITY_FORMATS: LegalityFormat[] = [
   {
@@ -355,7 +352,7 @@ const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
     label: "Is not legal in the format",
     negate: true,
   },
-]
+];
 
 type InputData = {
   value: string;
@@ -376,10 +373,7 @@ type AutoCompleteOption = {
 };
 
 type Data = {
-  cardNameAutocompletes: AutoCompleteOption[];
-  resultAutocompletes: AutoCompleteOption[];
   colorAutocompletes: AutoCompleteOption[];
-
   cards: InputData[];
   cardAmounts: InputData[];
   cardTypes: InputData[];
@@ -399,14 +393,11 @@ type Data = {
   validationError: string;
 };
 
-const AdvancedSearch = () => {
+const AdvancedSearch: React.FC = () => {
   const router = useRouter();
 
   const [formState, setFormStateHook] = useState<Data>({
-    cardNameAutocompletes: [],
-    resultAutocompletes: resultAutocompleteData,
     colorAutocompletes: COLOR_AUTOCOMPLETES,
-
     cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: "" }],
     cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: "" }],
     cardTypes: [{ ...CARD_TYPE_OPERATOR_OPTIONS[0], value: "" }],
@@ -427,8 +418,6 @@ const AdvancedSearch = () => {
   });
 
   const {
-    cardNameAutocompletes,
-    resultAutocompletes,
     colorAutocompletes,
     cards,
     cardAmounts,
@@ -463,10 +452,7 @@ const AdvancedSearch = () => {
     function val(input: InputData) {
       input.error = "";
 
-      if (
-        (input.numeric ?? false) &&
-        !Number.isInteger(Number(input.value))
-      ) {
+      if ((input.numeric ?? false) && !Number.isInteger(Number(input.value))) {
         input.error = "Contains a non-integer. Use a full number instead.";
       }
 
@@ -516,9 +502,7 @@ const AdvancedSearch = () => {
   const getQuery = () => {
     let query = "";
 
-    function makeQueryFunction(
-      key: string
-    ): Parameters<typeof Array.prototype.forEach>[0] {
+    function makeQueryFunction(key: string): Parameters<typeof Array.prototype.forEach>[0] {
       return (input: InputData) => {
         let value = input.value.trim();
         const negated = input.negate ?? false;
@@ -526,11 +510,7 @@ const AdvancedSearch = () => {
         const isSimpleValue = value.match(/^[\w\d]*$/);
         let operator = input.operator;
         let keyInQuery = key;
-        const isSimpleCardValue =
-          isSimpleValue &&
-          keyInQuery === "card" &&
-          operator === ":" &&
-          !negated;
+        const isSimpleCardValue = isSimpleValue && keyInQuery === "card" && operator === ":" && !negated;
 
         if (!value) {
           return;
@@ -543,7 +523,7 @@ const AdvancedSearch = () => {
 
           if (value.includes(quotes)) {
             // quotes = "'";
-            value = value.replace(/"/g, "\\\"");
+            value = value.replace(/"/g, '\\"');
           }
         }
 
@@ -604,14 +584,15 @@ const AdvancedSearch = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!query)
+    if (!query) {
       return setFormState({ validationError: "No search queries entered." });
+    }
 
-    if (validate())
+    if (validate()) {
       return setFormState({
-        validationError:
-          "Check for errors in your search terms before submitting.",
+        validationError: "Check for errors in your search terms before submitting.",
       });
+    }
 
     router.push({
       pathname: "/search/",
@@ -620,12 +601,6 @@ const AdvancedSearch = () => {
       },
     });
   };
-
-  useEffect(() => {
-    CardService.getNameAutocomplete().then((cardNameAutocompletes) => {
-      setFormState({ cardNameAutocompletes });
-    });
-  }, []);
 
   return (
     <>
@@ -647,17 +622,14 @@ const AdvancedSearch = () => {
           <MultiSearchInput
             value={cards}
             onChange={(cards) => setFormState({ cards })}
-            autocompleteOptions={cardNameAutocompletes}
+            cardAutocomplete={true}
             label="Card Names"
             labelIcon="signature"
             operatorOptions={CARD_OPERATOR_OPTIONS}
           />
         </div>
 
-        <div
-          id="card-amount-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="card-amount-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cardAmounts}
             onChange={(cardAmounts) => setFormState({ cardAmounts })}
@@ -668,10 +640,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="card-type-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="card-type-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cardTypes}
             onChange={(cardTypes) => setFormState({ cardTypes })}
@@ -682,10 +651,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="card-oracle-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="card-oracle-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={oracleText}
             onChange={(oracleText) => setFormState({ oracleText })}
@@ -696,10 +662,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="card-keywords-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="card-keywords-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cardKeywords}
             onChange={(cardKeywords) => setFormState({ cardKeywords })}
@@ -710,10 +673,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="card-mana-value-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="card-mana-value-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={manaValue}
             onChange={(manaValue) => setFormState({ manaValue })}
@@ -724,10 +684,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="color-identity-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="color-identity-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={colorIdentity}
             onChange={(colorIdentity) => setFormState({ colorIdentity })}
@@ -741,10 +698,7 @@ const AdvancedSearch = () => {
           />
         </div>
 
-        <div
-          id="prerequisite-inputs"
-          className={`${styles.container} container`}
-        >
+        <div id="prerequisite-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={prerequisites}
             onChange={(prerequisites) => setFormState({ prerequisites })}
@@ -769,7 +723,7 @@ const AdvancedSearch = () => {
           <MultiSearchInput
             value={results}
             onChange={(results) => setFormState({ results })}
-            autocompleteOptions={resultAutocompletes}
+            resultAutocomplete={true}
             label="Result"
             labelIcon="infinity"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
@@ -781,7 +735,7 @@ const AdvancedSearch = () => {
           <MultiSearchInput
             value={commanders}
             onChange={(commanders) => setFormState({ commanders })}
-            autocompleteOptions={cardNameAutocompletes}
+            cardAutocomplete={true}
             label="Commander"
             labelIcon="commandZone"
             operatorOptions={COMMANDER_OPTIONS}
@@ -839,18 +793,22 @@ const AdvancedSearch = () => {
           <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={i}>
             <RadioSearchInput
               checkedValue={tags.find((tag) => tag.name === tagOption.name)?.selected?.toString() ?? "null"}
-              options={[{ value: "true", label: "Yes" }, { value: "false", label: "No" }, { value: "null", label: "Either"}]}
+              options={[
+                { value: "true", label: "Yes" },
+                { value: "false", label: "No" },
+                { value: "null", label: "Either" },
+              ]}
               formName={tagOption.name}
               label={tagOption.label}
               labelIcon={tagOption.labelIcon}
               onChange={(tag) => {
                 const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
                 const newTag = {
-                    ...tagOption,
-                    selected: tag === "null" ? undefined : tag === "true",
+                  ...tagOption,
+                  selected: tag === "null" ? undefined : tag === "true",
                 };
                 setFormState({
-                  tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => i === tagIndex ? newTag : t)
+                  tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => (i === tagIndex ? newTag : t)),
                 });
               }}
             />
@@ -875,18 +833,12 @@ const AdvancedSearch = () => {
               {query ? (
                 <span>{query}</span>
               ) : (
-                <span className="text-dark">
-                  (your query will populate here when you've entered any search
-                  terms)
-                </span>
+                <span className="text-dark">(your query will populate here when you've entered any search terms)</span>
               )}
             </div>
           </div>
 
-          <div
-            id="advanced-search-validation-error"
-            className="text-danger p-4"
-          >
+          <div id="advanced-search-validation-error" className="text-danger p-4">
             {validationError}
           </div>
         </div>

@@ -3,21 +3,16 @@ import styles from "./textWithMagicSymbol.module.scss";
 import Scryfall from "scryfall-client";
 import CardTooltip from "../CardTooltip/CardTooltip";
 import CardLink from "../CardLink/CardLink";
-import { Template } from "lib/types";
 import ScryfallResultsModal from "components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal";
+import { TemplateInVariant } from "@spacecowmedia/spellbook-client";
 
 type Props = {
   text: string;
   cardsInCombo?: string[];
   includeCardLinks?: boolean;
-  templatesInCombo?: Template[];
+  templatesInCombo?: TemplateInVariant[];
 };
-const TextWithMagicSymbol: React.FC<Props> = ({
-  text,
-  cardsInCombo = [],
-  includeCardLinks,
-  templatesInCombo = [],
-}: Props) => {
+const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], includeCardLinks, templatesInCombo = [] }) => {
   let matchableValuesString = "";
 
   const cardShortNames = cardsInCombo.reduce((list, name) => {
@@ -91,7 +86,9 @@ const TextWithMagicSymbol: React.FC<Props> = ({
 
       if (manaMatch) {
         let manaSymbol = (manaMatch[1] || manaMatch[2]).replace("/", "");
-        if (manaSymbol[0] === "p") manaSymbol = manaSymbol[1] + manaSymbol[0]; // This is a hack to swap the p and other symbol for phyrexian mana
+        if (manaSymbol[0] === "p") {
+          manaSymbol = manaSymbol[1] + manaSymbol[0];
+        } // This is a hack to swap the p and other symbol for phyrexian mana
         try {
           return {
             nodeType: "image",

@@ -98,6 +98,5 @@ cypress/screenshots
 # remove once the transition to a SQL database is complete
 frontend/public/api/*.json
 external-data/*.json
-autocomplete-data/*.json
 
 tsconfig.tsbuildinfo

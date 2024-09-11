@@ -1,17 +1,16 @@
+import { PaginatedVariantList, Variant, VariantsApi } from "@spacecowmedia/spellbook-client";
 import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
 import ComboResults from "../components/search/ComboResults/ComboResults";
 import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import {GetServerSideProps} from "next";
-import {RequestService} from "../services/api.service";
-import {PaginatedResponse} from "../types/api";
-import {Variant} from "../lib/types";
+import { GetServerSideProps } from "next";
+import { apiConfiguration } from "services/api.service";
+import React from "react";
 
 type Props = {
   combos: Variant[];
 };
 
-const Featured = ({ combos }: Props) => {
-
+const Featured: React.FC<Props> = ({ combos }) => {
   return (
     <>
       <SpellbookHead
@@ -19,13 +18,10 @@ const Featured = ({ combos }: Props) => {
         description="The newest featured EDH combos on Commander Spellbook."
       />
       <div className="static-page">
-        <ArtCircle
-          cardName="Thespian's Stage"
-          className="m-auto md:block hidden"
-        />
+        <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden" />
         <h1 className="heading-title">Featured Combos</h1>
         <div className="container sm:flex flex-row">
-          {!!combos.length ? (
+          {combos.length ? (
             <div className="w-full">
               <ComboResults results={combos} />
             </div>
@@ -41,14 +37,23 @@ const Featured = ({ combos }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const requestService = new RequestService(context)
-  const results = await requestService.get<PaginatedResponse<Variant>>(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=is:featured legal:commander&ordering=identity_count,cards_count,-created`)
-  const backendCombos = results ? results.results : []
+  const configuration = apiConfiguration(context);
+  const variantsApi = new VariantsApi(configuration);
+  const results: Variant[] = [];
+  let result: PaginatedVariantList;
+  do {
+    result = await variantsApi.variantsList({
+      q: "is:featured legal:commander",
+      ordering: "identity_count,cards_count,-created",
+      offset: results.length,
+    });
+    results.push(...result.results);
+  } while (result.next);
   return {
     props: {
-      combos: backendCombos,
-    }
-  }
-}
+      combos: results,
+    },
+  };
+};
 
 export default Featured;

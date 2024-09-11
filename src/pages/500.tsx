@@ -5,9 +5,7 @@ import { useState } from "react";
 const UNKNOWN_TEMPLATES = ["apocalypse", "obliterate", "bookBurning"];
 
 const UnknownErrorPage = () => {
-  const [unknownErrorClass, setUnknownErrorClass] = useState(
-    UNKNOWN_TEMPLATES[0][0]
-  );
+  const [unknownErrorClass, setUnknownErrorClass] = useState(UNKNOWN_TEMPLATES[0][0]);
 
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * UNKNOWN_TEMPLATES.length);

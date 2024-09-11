@@ -16,6 +16,8 @@ type MultiSearchInputValue = {
 type Props = {
   value: MultiSearchInputValue;
   autocompleteOptions?: Array<AutoCompleteOption>;
+  cardAutocomplete?: boolean;
+  resultAutocomplete?: boolean;
   selectOptions?: Array<Option>;
   useValueForAutocompleteInput?: boolean;
   label: string;
@@ -34,7 +36,9 @@ type Props = {
 
 const MultiSearchInput: React.FC<Props> = ({
   value,
-  autocompleteOptions = [],
+  autocompleteOptions,
+  cardAutocomplete,
+  resultAutocomplete,
   useValueForAutocompleteInput,
   label,
   labelIcon,
@@ -131,6 +135,8 @@ const MultiSearchInput: React.FC<Props> = ({
                   label={inputLabel}
                   inputClassName="border-dark"
                   autocompleteOptions={autocompleteOptions}
+                  cardAutocomplete={cardAutocomplete}
+                  resultAutocomplete={resultAutocomplete}
                   inputId={getInputId(index)}
                   placeholder={getPlaceHolder(input)}
                   hasError={!!input.error}

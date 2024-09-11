@@ -1,27 +1,29 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
 import styles from "../report-error.module.scss";
 import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
 import TokenService from "../../services/token.service";
 import CookieService from "../../services/cookie.service";
-import UserService from "../../services/user.service";
 import Link from "next/link";
 import ExternalLink from "../../components/layout/ExternalLink/ExternalLink";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import { apiConfiguration } from "services/api.service";
+import { UsersApi } from "@spacecowmedia/spellbook-client";
 
-type Props = {};
-
-const Login: React.FC<Props> = ({}: Props) => {
-
-  const router = useRouter()
+const Login: React.FC = () => {
+  const router = useRouter();
 
   useEffect(() => {
-    const decodedJwt = TokenService.decodeJwt(CookieService.get('csbJwt'))
+    const decodedJwt = TokenService.decodeJwt(CookieService.get("csbJwt"));
 
-    if (decodedJwt) UserService.getPrivateUser(decodedJwt.user_id).then(user => {
-      console.log(user)
-    })
-  }, [])
+    if (decodedJwt) {
+      const configuration = apiConfiguration();
+      const usersApi = new UsersApi(configuration);
+      usersApi.usersRetrieve({ id: decodedJwt.user_id }).then((user) => {
+        console.log(user);
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -34,19 +36,15 @@ const Login: React.FC<Props> = ({}: Props) => {
         <h1 className="heading-title">Login</h1>
         <div className="text-center">
           <p>
-            Currently you can only login through discord. You must be a member of the 
-            &nbsp;
-            <ExternalLink href="https://discord.com/invite/DkAyVJG">
-              Commander Spellbook Discord server
-            </ExternalLink>
-            &nbsp;
-            to login.
+            Currently you can only login through discord. You must be a member of the &nbsp;
+            <ExternalLink href="https://discord.com/invite/DkAyVJG">Commander Spellbook Discord server</ExternalLink>
+            &nbsp; to login.
           </p>
 
           <Link
             role="button"
             className="button"
-            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ''}`}
+            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ""}`}
           >
             Login with Discord
           </Link>

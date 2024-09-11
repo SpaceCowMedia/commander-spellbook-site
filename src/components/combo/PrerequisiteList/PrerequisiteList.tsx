@@ -2,7 +2,7 @@ import { NewPrerequisiteType } from "../../../lib/types";
 import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
 import Icon from "../../layout/Icon/Icon";
 import { addPeriod } from "../../../lib/addPeriod";
-import { Template } from "@spacecowmedia/spellbook-client";
+import { TemplateInVariant } from "@spacecowmedia/spellbook-client";
 import React from "react";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   id?: string;
   cardsInCombo?: string[];
   includeCardLinks?: boolean;
-  templatesInCombo?: Template[];
+  templatesInCombo?: TemplateInVariant[];
 };
 
 const ICON_MAP = {
