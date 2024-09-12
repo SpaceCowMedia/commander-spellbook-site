@@ -21,25 +21,27 @@ import {
 } from "@spacecowmedia/spellbook-client";
 import { apiConfiguration } from "services/api.service";
 import BulkApiService from "services/bulk-api.service";
+import joinImages from "join-images";
 
 type Props = {
   combo?: Variant;
+  cardImages?: CardWithImages[];
   alternatives?: Variant[];
+  previewImageUrl?: string;
+};
+
+type CardWithImages = {
+  name: string;
+  artUrl: string;
+  oracleImageUrl: string;
 };
 
 const NUMBERS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 
-const Combo: React.FC<Props> = ({ combo, alternatives }) => {
-  if (combo) {
-    const cards = combo.uses.map((card) => {
-      return {
-        name: card.card.name,
-        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
-        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
-      };
-    });
+const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageUrl }) => {
+  if (combo && cardImages) {
     const cardNames = combo.uses.map((card) => card.card.name);
-    const cardArts = cards.map((card) => card.artUrl);
+    const cardArts = cardImages.map((card) => card.artUrl);
     const title = cardNames.length === 0 ? "Looking up Combo" : cardNames.slice(0, 3).join(" | ");
     const titleCount = cardNames.slice(0, 3).length;
     const templateNames = combo.requires.map((template) => template.template.name);
@@ -76,11 +78,11 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
         <SpellbookHead
           title={`${title} ${subtitle}`}
           description={results.reduce((str, result) => str + `\n  * ${result}`, "Combo Results:")}
-          imageUrl={cardArts[0]}
+          imageUrl={previewImageUrl ?? cardArts[0]}
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-        <CardGroup key={combo.id} cards={cards} templates={combo.requires} />
+        <CardGroup key={combo.id} cards={cardImages} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
@@ -199,9 +201,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // 1. Check the backend
     const backendCombo = await variantsApi.variantsRetrieve({ id: params.id });
+    const cardsWithImages = backendCombo.uses.map((card) => {
+      return {
+        name: card.card.name,
+        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
+        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
+      };
+    });
+    // 1.1 create an image preview
+    const artWidth = 457;
+    const imageAsBase64 = await joinImages(
+      cardsWithImages.map((card, index) => ({ src: card.artUrl, x: index * artWidth })),
+    );
     return {
       props: {
         combo: backendCombo,
+        cardImages: cardsWithImages,
+        previewImageUrl: imageAsBase64,
       },
     };
   } catch (err) {
