@@ -1,9 +1,9 @@
-import pluralize from "pluralize";
-import React, { useState } from "react";
-import styles from "./multiSearchInput.module.scss";
-import StyledSelect, { Option } from "../../layout/StyledSelect/StyledSelect";
-import AutocompleteInput, { AutoCompleteOption } from "../AutocompleteInput/AutocompleteInput";
-import Icon, { SpellbookIcon } from "../../layout/Icon/Icon";
+import pluralize from 'pluralize';
+import React, { useState } from 'react';
+import styles from './multiSearchInput.module.scss';
+import StyledSelect, { Option } from '../../layout/StyledSelect/StyledSelect';
+import AutocompleteInput, { AutoCompleteOption } from '../AutocompleteInput/AutocompleteInput';
+import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
 type MultiSearchInputValue = {
   value: string;
@@ -55,7 +55,7 @@ const MultiSearchInput: React.FC<Props> = ({
   const addInput = (index: number) =>
     setInputs([
       ...inputs.slice(0, index + 1),
-      { value: "", operator: operatorOptions[0].operator },
+      { value: '', operator: operatorOptions[0].operator },
       ...inputs.slice(index + 1),
     ]);
 
@@ -65,9 +65,9 @@ const MultiSearchInput: React.FC<Props> = ({
     onChange && onChange(newInputs);
   };
 
-  const getInputId = (index: number) => `${label.toLowerCase().replace(/\s/g, "-")}-input-${index}`;
+  const getInputId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-input-${index}`;
 
-  const getSelectId = (index: number) => `${label.toLowerCase().replace(/\s/g, "-")}-select-${index}`;
+  const getSelectId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-select-${index}`;
 
   const getPlaceHolder = (input: {
     value: string;
@@ -84,17 +84,17 @@ const MultiSearchInput: React.FC<Props> = ({
       return `ex: 2`;
     }
     if (!option || !option.placeholder) {
-      return defaultPlaceholder || "";
+      return defaultPlaceholder || '';
     }
     return option.placeholder;
   };
 
   const handleSelectChange = (index: number, value: string) => {
     const newInputs = [...inputs];
-    const [operator, numeric, negated] = value.split("|");
+    const [operator, numeric, negated] = value.split('|');
     newInputs[index].operator = operator;
-    newInputs[index].numeric = numeric === "" ? undefined : numeric === "true";
-    newInputs[index].negate = negated === "" ? undefined : negated === "true";
+    newInputs[index].numeric = numeric === '' ? undefined : numeric === 'true';
+    newInputs[index].negate = negated === '' ? undefined : negated === 'true';
     setInputs(newInputs);
     onChange && onChange(newInputs);
   };
@@ -119,12 +119,12 @@ const MultiSearchInput: React.FC<Props> = ({
               onChange={(value) => handleSelectChange(index, value)}
               id={getSelectId(index)}
               options={operatorOptions.map((option) => ({
-                value: option.operator + "|" + (option.numeric ?? "") + "|" + (option.negate ?? ""),
+                value: option.operator + '|' + (option.numeric ?? '') + '|' + (option.negate ?? ''),
                 label: option.label,
               }))}
               selectTextClassName="sm:w-1/2 flex-grow"
               selectBackgroundClassName={`${
-                input.error ? "border-danger" : "border-dark"
+                input.error ? 'border-danger' : 'border-dark'
               } border border-b-0 sm:border-b sm:border-r-0 sm:w-1/2 flex-grow`}
             />
             <div className="w-full flex-grow flex flex-col sm:flex-row">
@@ -146,7 +146,7 @@ const MultiSearchInput: React.FC<Props> = ({
               {selectOptions && (
                 <StyledSelect
                   label={inputLabel}
-                  id={getInputId(index) + "-value"}
+                  id={getInputId(index) + '-value'}
                   options={selectOptions}
                   onChange={(value) => handleInputChange(index, value)}
                   selectBackgroundClassName="flex-grow border-dark border"
@@ -157,7 +157,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   <button
                     type="button"
                     className={`minus-button ${styles.inputButton} ${
-                      input.error ? "bg-danger border-danger" : "bg-dark border-dark"
+                      input.error ? 'bg-danger border-danger' : 'bg-dark border-dark'
                     } minus-button-${index}`}
                     onClick={() => removeInput(index)}
                   >
@@ -171,7 +171,7 @@ const MultiSearchInput: React.FC<Props> = ({
                 <button
                   type="button"
                   className={`plus-button ${styles.inputButton} ${
-                    input.error ? "bg-danger border-danger" : "bg-dark border-dark"
+                    input.error ? 'bg-danger border-danger' : 'bg-dark border-dark'
                   } plus-button-${index}`}
                   onClick={() => addInput(index)}
                 >

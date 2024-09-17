@@ -1,28 +1,37 @@
-import styles from "./cardTooltip.module.scss";
-import { useRef } from "react";
+import styles from './cardTooltip.module.scss';
+import React, { useRef } from 'react';
 
 type Props = {
   cardName?: string;
   children?: React.ReactNode;
 };
 
-const CardTooltip = ({ cardName, children }: Props) => {
-  const url = cardName ? `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(cardName)}` : "";
+const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
+  const url = cardName
+    ? `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(cardName)}`
+    : '';
 
   const divRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: any) => {
-    if (!divRef.current) return;
+    if (!divRef.current) {
+      return;
+    }
     const displayOnRightSide = window.innerWidth / 2 - e.clientX > 0;
-    divRef.current.style.display = "unset";
-    divRef.current.style.top = e.clientY - 30 + "px";
+    divRef.current.style.display = 'unset';
+    divRef.current.style.top = e.clientY - 30 + 'px';
 
-    if (displayOnRightSide) divRef.current.style.left = e.clientX + 50 + "px";
-    else divRef.current.style.left = e.clientX - 290 + "px";
+    if (displayOnRightSide) {
+      divRef.current.style.left = e.clientX + 50 + 'px';
+    } else {
+      divRef.current.style.left = e.clientX - 290 + 'px';
+    }
   };
 
   const handleMouseOut = () => {
-    if (divRef.current) divRef.current.style.display = "none";
+    if (divRef.current) {
+      divRef.current.style.display = 'none';
+    }
   };
 
   return (

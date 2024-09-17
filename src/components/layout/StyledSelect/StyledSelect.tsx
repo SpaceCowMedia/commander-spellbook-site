@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import styles from "./styledSelect.module.scss";
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import styles from './styledSelect.module.scss';
 
 export type Option = { value: string; label: string };
 
@@ -19,11 +19,11 @@ const StyledSelect: React.FC<Props> = ({
   id,
   value,
   options,
-  selectBackgroundClassName = "border border-dark",
-  selectTextClassName = "text-dark",
+  selectBackgroundClassName = 'border border-dark',
+  selectTextClassName = 'text-dark',
   onChange,
   disabled,
-}: Props) => {
+}) => {
   const [localValue, setLocalValue] = useState(value);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {

@@ -1,8 +1,8 @@
-import { ScryfallCard } from "@scryfall/api-types";
-import React, { useState } from "react";
-import Icon from "components/layout/Icon/Icon";
-import { getScryfallImage } from "lib/getScryfallImage";
-import edhrecService from "services/edhrec.service";
+import { ScryfallCard } from '@scryfall/api-types';
+import React, { useState } from 'react';
+import Icon from 'components/layout/Icon/Icon';
+import { getScryfallImage } from 'lib/getScryfallImage';
+import edhrecService from 'services/edhrec.service';
 
 type Props = {
   cards: ScryfallCard.Any[];

@@ -10,7 +10,7 @@
                 "owner": "npm",
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "^ready . startedserver on .+$",
+                    "beginsPattern": "Ready in",
                     "endsPattern": "^event . compiled client and server successfully in .+$"
                 },
                 "pattern": {

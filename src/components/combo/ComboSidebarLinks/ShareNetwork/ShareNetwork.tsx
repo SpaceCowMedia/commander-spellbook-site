@@ -1,6 +1,6 @@
-import Link from "next/link";
-import React from "react";
-import { Tooltip } from "react-tooltip";
+import Link from 'next/link';
+import React from 'react';
+import { Tooltip } from 'react-tooltip';
 
 type Props = {
   className?: string;

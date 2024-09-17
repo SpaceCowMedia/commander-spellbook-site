@@ -1,11 +1,11 @@
-import styles from "./comboResults.module.scss";
-import Link from "next/link";
-import ColorIdentity from "../../layout/ColorIdentity/ColorIdentity";
-import CardTooltip from "../../layout/CardTooltip/CardTooltip";
-import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
-import pluralize from "pluralize";
-import { Deck, Variant, VariantPrices } from "@spacecowmedia/spellbook-client";
-import React from "react";
+import styles from './comboResults.module.scss';
+import Link from 'next/link';
+import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
+import CardTooltip from '../../layout/CardTooltip/CardTooltip';
+import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import pluralize from 'pluralize';
+import { Deck, Variant, VariantPrices } from '@spacecowmedia/spellbook-client';
+import React from 'react';
 
 type ResultProps = {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -17,26 +17,26 @@ type ResultProps = {
 export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newTab }) => {
   const sortStatMessage = (combo: Variant) => {
     if (!sort) {
-      return "";
+      return '';
     }
 
-    if (sort === "popularity") {
+    if (sort === 'popularity') {
       const numberOfDecks = combo.popularity;
 
       if (numberOfDecks === null || numberOfDecks === undefined) {
-        return "No deck data (EDHREC)";
+        return 'No deck data (EDHREC)';
       }
 
-      const deckString = pluralize("deck", numberOfDecks);
+      const deckString = pluralize('deck', numberOfDecks);
 
       return `${numberOfDecks} ${deckString} (EDHREC)`;
     }
 
-    if (sort.startsWith("price")) {
-      if (sort.includes("cardkingdom")) {
+    if (sort.startsWith('price')) {
+      if (sort.includes('cardkingdom')) {
         return `$${combo.prices.cardkingdom}`;
       }
-      if (sort.includes("cardmarket")) {
+      if (sort.includes('cardmarket')) {
         return `€${combo.prices.cardmarket}`;
       }
       return `$${combo.prices.tcgplayer}`;
@@ -53,11 +53,11 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
     //     return `${combo[sort].length} ${results.sort}`;
     // }
 
-    return "";
+    return '';
   };
 
   const prereqCount = combo.otherPrerequisites
-    ? combo.otherPrerequisites.split(".").filter((s) => s.trim().length).length
+    ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
   return (
@@ -65,14 +65,14 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
       href={`/combo/${combo.id}`}
       key={combo.id}
       className={`${styles.comboResult} w-full md:w-1/4`}
-      rel={newTab ? "noopener noreferrer" : undefined}
-      target={newTab ? "_blank" : undefined}
+      rel={newTab ? 'noopener noreferrer' : undefined}
+      target={newTab ? '_blank' : undefined}
     >
       <div className="flex flex-col">
         <div
-          className={`flex items-center flex-grow flex-col ${combo.status === "OK" ? "bg-dark" : combo.status === "E" ? "bg-[#888888]" : "bg-light"} text-white`}
+          className={`flex items-center flex-grow flex-col ${combo.status === 'OK' ? 'bg-dark' : combo.status === 'E' ? 'bg-[#888888]' : 'bg-light'} text-white`}
         >
-          <ColorIdentity colors={Array.from(combo.identity)} size="small" />
+          <ColorIdentity identity={combo.identity} size="small" />
         </div>
         <div className="flex-grow border-b-2 border-light">
           <div className="py-1">
@@ -91,14 +91,14 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
             {combo.requires.length > 0 && (
               <div className="prerequisites pl-3 pr-3">
                 <span className="text-gray-500">
-                  +{combo.requires.length} other card{combo.requires.length > 1 ? "s" : ""}
+                  +{combo.requires.length} other card{combo.requires.length > 1 ? 's' : ''}
                 </span>
               </div>
             )}
             {prereqCount > 0 && (
               <div className="prerequisites pl-3 pr-3">
                 <span className="text-gray-500">
-                  +{prereqCount} other prerequisite{prereqCount > 1 ? "s" : ""}
+                  +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
                 </span>
               </div>
             )}

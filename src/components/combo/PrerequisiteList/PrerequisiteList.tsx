@@ -1,9 +1,9 @@
-import { NewPrerequisiteType } from "../../../lib/types";
-import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
-import Icon from "../../layout/Icon/Icon";
-import { addPeriod } from "../../../lib/addPeriod";
-import { TemplateInVariant } from "@spacecowmedia/spellbook-client";
-import React from "react";
+import { NewPrerequisiteType } from '../../../lib/types';
+import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import Icon from '../../layout/Icon/Icon';
+import { addPeriod } from '../../../lib/addPeriod';
+import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import React from 'react';
 
 type Props = {
   prerequisites: NewPrerequisiteType[];
@@ -15,12 +15,12 @@ type Props = {
 };
 
 const ICON_MAP = {
-  B: "battlefield",
-  C: "commandZone",
-  G: "graveyard",
-  H: "hand",
-  L: "library",
-  E: "exile",
+  B: 'battlefield',
+  C: 'commandZone',
+  G: 'graveyard',
+  H: 'hand',
+  L: 'library',
+  E: 'exile',
 };
 const PrerequisiteList: React.FC<Props> = ({
   prerequisites,

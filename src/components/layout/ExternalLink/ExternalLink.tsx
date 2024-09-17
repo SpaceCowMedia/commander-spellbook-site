@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface Props extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
   disabled?: boolean;
@@ -9,8 +9,8 @@ const ExternalLink: React.FC<Props> = (props) => {
   const { disabled, children } = props;
   const attributes = {
     ...props,
-    target: "_blank",
-    rel: "noopener noreferrer",
+    target: '_blank',
+    rel: 'noopener noreferrer',
   };
 
   if (disabled) {

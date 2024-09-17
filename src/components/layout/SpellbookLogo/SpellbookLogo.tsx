@@ -1,8 +1,6 @@
-import React from "react";
+import React from 'react';
 
-type Props = {};
-
-const SpellbookLogo: React.FC<Props> = ({}: Props) => {
+const SpellbookLogo: React.FC = () => {
   return (
     <div className="sm:flex mt-4 md:mt-0 justify-center">
       <div className="mb-4 sm:mb-0">

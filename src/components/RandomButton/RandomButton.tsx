@@ -1,6 +1,6 @@
-import Link from "next/link";
-import React from "react";
-import { Url } from "url";
+import Link from 'next/link';
+import React from 'react';
+import { Url } from 'url';
 
 type Props = {
   query?: string;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const RandomButton: React.FC<Props> = ({ query, children, className }) => {
-  const link: Partial<Url> = { pathname: "/random" };
+  const link: Partial<Url> = { pathname: '/random' };
   if (query) {
     link.query = query;
   }

@@ -1,6 +1,6 @@
-import Head from "next/head";
-import React from "react";
-import { useRouter } from "next/router";
+import Head from 'next/head';
+import React from 'react';
+import { useRouter } from 'next/router';
 
 type Props = {
   children?: React.ReactNode;
@@ -34,10 +34,10 @@ const SpellbookHead: React.FC<Props> = ({
       <meta name="twitter:title" content={title} />
       <meta property="og:url" content={router.asPath} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content={imageUrl || "/images/link-preview.png"} />
+      <meta property="og:image" content={imageUrl || '/images/link-preview.png'} />
       <meta name="twitter:image" content={imageUrl} />
-      <meta property="og:image:width" content={imageWidth || (useCropDimensions ? "626" : "1200")} />
-      <meta property="og:image:height" content={imageHeight || (useCropDimensions ? "457" : "628")} />
+      <meta property="og:image:width" content={imageWidth || (useCropDimensions ? '626' : '1200')} />
+      <meta property="og:image:height" content={imageHeight || (useCropDimensions ? '457' : '628')} />
       <meta property="og:image:type" content="image/jpeg" />
       <meta name="twitter:card" content="summary_large_image" />
       {children}

@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import styles from "./copyComboLinkButton.module.scss";
-import { Tooltip } from "react-tooltip";
-import { event } from "../../../../lib/googleAnalytics";
+import React, { useRef, useState } from 'react';
+import styles from './copyComboLinkButton.module.scss';
+import { Tooltip } from 'react-tooltip';
+import { event } from '../../../../lib/googleAnalytics';
 
 type Props = {
   comboLink: string;
@@ -19,20 +19,20 @@ const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }
       return;
     }
     const copyInput = inputRef.current;
-    copyInput.type = "text";
+    copyInput.type = 'text';
     copyInput.select();
     if (!navigator.clipboard) {
-      document.execCommand("copy");
+      document.execCommand('copy');
     } else {
       navigator.clipboard.writeText(copyInput.value);
     }
-    copyInput.type = "hidden";
+    copyInput.type = 'hidden';
 
     setShowCopyNotification(true);
 
     event({
-      action: "Copy Combo Link Clicked",
-      category: "Combo Detail Page Actions",
+      action: 'Copy Combo Link Clicked',
+      category: 'Combo Detail Page Actions',
     });
 
     setTimeout(() => {

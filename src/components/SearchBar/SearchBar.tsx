@@ -1,11 +1,11 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import styles from "./searchBar.module.scss";
-import { useRouter } from "next/router";
-import UserDropdown from "../layout/UserDropdown/UserDropdown";
-import { useCookies } from "react-cookie";
-import { apiConfiguration } from "services/api.service";
-import { VariantsApi } from "@spacecowmedia/spellbook-client";
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import styles from './searchBar.module.scss';
+import { useRouter } from 'next/router';
+import UserDropdown from '../layout/UserDropdown/UserDropdown';
+import { useCookies } from 'react-cookie';
+import { apiConfiguration } from 'services/api.service';
+import { VariantsApi } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   onHomepage?: boolean;
@@ -17,7 +17,7 @@ const countUpToString = (count: number) => {
   const countLength = countString.length;
 
   if (countLength < 5) {
-    return "0".repeat(5 - countLength) + countString;
+    return '0'.repeat(5 - countLength) + countString;
   }
 
   return countString;
@@ -33,12 +33,12 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(router.query.q);
-  const [cookies, setCookies] = useCookies(["variantCount"]);
+  const [cookies, setCookies] = useCookies(['variantCount']);
   const [variantCount, setVariantCount] = useState<number>(initialCount);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (typeof inputValue === "string" && inputValue.trim()) {
+    if (typeof inputValue === 'string' && inputValue.trim()) {
       router.push(`/search/?q=${encodeURIComponent(inputValue)}`);
     }
   };
@@ -68,7 +68,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
       handleCountUp();
     } else if (!cookies.variantCount) {
       variantsApi.variantsList({ limit: 1 }).then((response) => {
-        setCookies("variantCount", response.count, { path: "/", maxAge: 3 * 60 * 60 });
+        setCookies('variantCount', response.count, { path: '/', maxAge: 3 * 60 * 60 });
         setVariantCount(response.count);
         handleCountUp();
       });
@@ -87,7 +87,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
         )}
 
         <div className="flex flex-grow items-center">
-          {!onHomepage && <div className={styles.searchInputIcon} aria-hidden="true" onClick={() => "focusSearch"} />}
+          {!onHomepage && <div className={styles.searchInputIcon} aria-hidden="true" onClick={() => 'focusSearch'} />}
           <label htmlFor="search-bar-input" className="sr-only text-white" aria-hidden="true">
             Combo Search
           </label>
@@ -99,7 +99,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             placeholder={`Search ${variantCount} EDH combos`}
             id="search-bar-input"
             type="text"
-            className={`${styles.mainSearchInput} ${onHomepage ? "text-2xl text-center" : "pl-8 -ml-6 text-white"}`}
+            className={`${styles.mainSearchInput} ${onHomepage ? 'text-2xl text-center' : 'pl-8 -ml-6 text-white'}`}
           />
         </div>
 

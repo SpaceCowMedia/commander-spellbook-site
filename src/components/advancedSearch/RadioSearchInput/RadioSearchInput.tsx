@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Icon, { SpellbookIcon } from "../../layout/Icon/Icon";
+import React, { useState } from 'react';
+import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
 type Props = {
   checkedValue: string;

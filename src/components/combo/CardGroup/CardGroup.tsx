@@ -1,9 +1,9 @@
-import styles from "./cardGroup.module.scss";
-import React, { useState } from "react";
-import CardLink from "../../layout/CardLink/CardLink";
-import CardImage from "../../layout/CardImage/CardImage";
-import TemplateCard from "components/combo/TemplateCard/TemplateCard";
-import { TemplateInVariant } from "@spacecowmedia/spellbook-client";
+import styles from './cardGroup.module.scss';
+import React, { useState } from 'react';
+import CardLink from '../../layout/CardLink/CardLink';
+import CardImage from '../../layout/CardImage/CardImage';
+import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
+import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   cards: Array<{ name: string; oracleImageUrl: string }>;
@@ -21,7 +21,7 @@ const CardGroup: React.FC<Props> = ({ cards, templates }) => {
   };
 
   return (
-    <div className={`${styles.cardImages} container hidden lg:flex ${cards.length < 4 && "justify-center"}`}>
+    <div className={`${styles.cardImages} container hidden lg:flex ${cards.length < 4 && 'justify-center'}`}>
       {(cards as Array<{ name: string; oracleImageUrl: string } | TemplateInVariant>)
         .concat(templates)
         .map((card, index) => (
@@ -31,8 +31,8 @@ const CardGroup: React.FC<Props> = ({ cards, templates }) => {
             onMouseEnter={() => setHoveredOverCardIndex(index)}
             onMouseLeave={() => setHoveredOverCardIndex(-1)}
           >
-            {"template" in card && <TemplateCard className={styles.cardImg} template={card} />}
-            {"oracleImageUrl" in card && (
+            {'template' in card && <TemplateCard className={styles.cardImg} template={card} />}
+            {'oracleImageUrl' in card && (
               <CardLink className="relative" name={card.name}>
                 <CardImage img={card.oracleImageUrl} name={card.name} className={styles.cardImg} />
               </CardLink>

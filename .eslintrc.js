@@ -20,6 +20,7 @@ module.exports = {
         trailingComma: 'all',
         eslintIntegration: true,
         printWidth: 120,
+        singleQuote: true,
       },
     ],
     'no-unused-vars': [

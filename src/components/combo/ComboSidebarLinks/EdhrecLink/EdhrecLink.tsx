@@ -1,5 +1,5 @@
-import React from "react";
-import ExternalLink from "../../../layout/ExternalLink/ExternalLink";
+import React from 'react';
+import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
 
 type Props = {
   link: string;

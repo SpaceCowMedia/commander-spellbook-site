@@ -1,6 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import styles from "./searchSnippet.module.scss";
+import React from 'react';
+import Link from 'next/link';
+import styles from './searchSnippet.module.scss';
 
 type Props = {
   search: string;

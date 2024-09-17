@@ -14,4 +14,6 @@
         "*.scss": "tailwindcss",
     },
     "editor.tabSize": 2,
+    "eslint.lintTask.enable": true,
+    "editor.formatOnSave": true,
 }

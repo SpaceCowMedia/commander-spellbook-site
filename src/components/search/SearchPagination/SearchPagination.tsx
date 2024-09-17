@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./searchPagination.module.scss";
+import React from 'react';
+import styles from './searchPagination.module.scss';
 
 type PaginationProps = {
   currentPage: number;
@@ -13,7 +13,7 @@ const SearchPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
     <div className="px-4 mt-3 flex items-center sm:px-1">
       <div className="flex-1 flex justify-between">
         <button
-          className={`back-button ${styles.navButton} ${currentPage === 1 ? "invisible" : ""}`}
+          className={`back-button ${styles.navButton} ${currentPage === 1 ? 'invisible' : ''}`}
           onClick={onGoBack}
         >
           <svg
@@ -33,7 +33,7 @@ const SearchPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
         </button>
 
         <button
-          className={`forward-button ${styles.navButton} ${currentPage >= totalPages ? "invisible" : ""}`}
+          className={`forward-button ${styles.navButton} ${currentPage >= totalPages ? 'invisible' : ''}`}
           onClick={onGoForward}
         >
           Next <span className="sr-only">78 combos</span>

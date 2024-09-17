@@ -1,27 +1,27 @@
-import pluralize from "pluralize";
-import CardHeader from "../../../components/combo/CardHeader/CardHeader";
-import CardGroup from "../../../components/combo/CardGroup/CardGroup";
-import ColorIdentity from "../../../components/layout/ColorIdentity/ColorIdentity";
-import ComboList from "../../../components/combo/ComboList/ComboList";
-import styles from "./combo.module.scss";
-import ComboSidebarLinks from "../../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
-import { GetServerSideProps } from "next";
-import SpellbookHead from "../../../components/SpellbookHead/SpellbookHead";
-import React from "react";
-import PrerequisiteList from "../../../components/combo/PrerequisiteList/PrerequisiteList";
-import { getPrerequisiteList } from "../../../lib/prerequisitesProcessor";
-import EDHRECService from "../../../services/edhrec.service";
-import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
+import pluralize from 'pluralize';
+import CardHeader from '../../../components/combo/CardHeader/CardHeader';
+import CardGroup from '../../../components/combo/CardGroup/CardGroup';
+import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
+import ComboList from '../../../components/combo/ComboList/ComboList';
+import styles from './combo.module.scss';
+import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
+import { GetServerSideProps } from 'next';
+import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
+import React from 'react';
+import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
+import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
+import EDHRECService from '../../../services/edhrec.service';
+import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
   FindMyCombosApi,
   ResponseError,
   Variant,
   VariantAliasesApi,
   VariantsApi,
-} from "@spacecowmedia/spellbook-client";
-import { apiConfiguration } from "services/api.service";
-import BulkApiService from "services/bulk-api.service";
-import joinImages from "join-images";
+} from '@spacecowmedia/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
+import BulkApiService from 'services/bulk-api.service';
+import joinImages from 'join-images';
 
 type Props = {
   combo?: Variant;
@@ -36,48 +36,48 @@ type CardWithImages = {
   oracleImageUrl: string;
 };
 
-const NUMBERS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
 const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageUrl }) => {
   if (combo && cardImages) {
     const cardNames = combo.uses.map((card) => card.card.name);
     const cardArts = cardImages.map((card) => card.artUrl);
-    const title = cardNames.length === 0 ? "Looking up Combo" : cardNames.slice(0, 3).join(" | ");
+    const title = cardNames.length === 0 ? 'Looking up Combo' : cardNames.slice(0, 3).join(' | ');
     const titleCount = cardNames.slice(0, 3).length;
     const templateNames = combo.requires.map((template) => template.template.name);
     const combinedNames = [...cardNames, ...templateNames];
     const subtitle =
       combinedNames.length === titleCount
-        ? ""
+        ? ''
         : combinedNames.length === titleCount + 1
           ? `(and ${NUMBERS[1]} other card)`
           : `(and ${NUMBERS[combinedNames.length - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
     const metaData =
       numberOfDecks !== undefined && numberOfDecks !== null
-        ? [`In ${numberOfDecks} ${pluralize("deck", numberOfDecks)} according to EDHREC.`]
+        ? [`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`]
         : [];
 
-    const colors = Array.from(combo.identity);
+    const identity = combo.identity;
     const prerequisites = getPrerequisiteList(combo);
-    const steps = combo.description?.split("\n");
-    const notes = combo.notes?.split("\n")?.filter((note) => note.length > 0);
+    const steps = combo.description?.split('\n');
+    const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
     const results = combo.produces.map((feature) =>
       feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name,
     );
-    if (combo.status == "E") {
+    if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.");
-    } else if (combo.status == "D") {
-      metaData.push("This combo is a draft and is only visible to editors.");
-    } else if (combo.status == "NR") {
-      metaData.push("This combo needs to be reviewed and is only visible to editors.");
+    } else if (combo.status == 'D') {
+      metaData.push('This combo is a draft and is only visible to editors.');
+    } else if (combo.status == 'NR') {
+      metaData.push('This combo needs to be reviewed and is only visible to editors.');
     }
 
     return (
       <>
         <SpellbookHead
           title={`${title} ${subtitle}`}
-          description={results.reduce((str, result) => str + `\n  * ${result}`, "Combo Results:")}
+          description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
           imageUrl={previewImageUrl ?? cardArts[0]}
           useCropDimensions
         />
@@ -86,7 +86,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
-              <ColorIdentity colors={colors} />
+              <ColorIdentity identity={identity} />
             </div>
 
             <ComboList
@@ -143,7 +143,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
 
           <aside className="w-full md:w-1/3 text-center">
             <div id="combo-color-identity" className="my-4 hidden md:block">
-              <ColorIdentity colors={colors} />
+              <ColorIdentity identity={identity} />
             </div>
 
             {!combo.legalities?.commander && (
@@ -161,8 +161,8 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
               comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
               edhrecLink={EDHRECService.getComboUrl(combo)}
               comboId={combo.id}
-              tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
-              cardKingdomPrice={combo.prices?.cardkingdom || "-"}
+              tcgPlayerPrice={combo.prices?.tcgplayer || '-'}
+              cardKingdomPrice={combo.prices?.cardkingdom || '-'}
               combo={combo}
             />
           </aside>
@@ -189,7 +189,7 @@ export default Combo;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
-  if (!params || !params.id || typeof params.id !== "string") {
+  if (!params || !params.id || typeof params.id !== 'string') {
     return {
       notFound: true,
     };
@@ -242,7 +242,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
   // 3. Check if it's a legacy combo and reroute if it's found
-  if (!params.id.includes("-") && !isNaN(Number(params.id))) {
+  if (!params.id.includes('-') && !isNaN(Number(params.id))) {
     const legacyComboMap = await BulkApiService.fetchLegacyMap();
     const variantId = legacyComboMap[params.id];
     if (variantId) {
@@ -257,7 +257,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   // 4. Check for alternatives with similar cards taken from the parsed combo id
   const findMyCombosApi = new FindMyCombosApi(configuration);
-  const card_ids = params.id.split("--")[0].split("-");
+  const card_ids = params.id.split('--')[0].split('-');
   const results = await findMyCombosApi.findMyCombosCreate({
     deckRequest: {
       main: card_ids.map((id) => ({ card: id })),

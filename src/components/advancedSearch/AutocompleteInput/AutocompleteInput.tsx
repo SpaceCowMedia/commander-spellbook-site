@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import styles from "./autocompleteInput.module.scss";
-import { useState } from "react";
-import normalizeStringInput from "../../../lib/normalizeStringInput";
-import TextWithMagicSymbol from "../../layout/TextWithMagicSymbol/TextWithMagicSymbol";
-import Loader from "../../layout/Loader/Loader";
-import { apiConfiguration } from "services/api.service";
-import { CardsApi, FeaturesApi } from "@spacecowmedia/spellbook-client";
+import React, { useEffect } from 'react';
+import styles from './autocompleteInput.module.scss';
+import { useState } from 'react';
+import normalizeStringInput from '../../../lib/normalizeStringInput';
+import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import Loader from '../../layout/Loader/Loader';
+import { apiConfiguration } from 'services/api.service';
+import { CardsApi, FeaturesApi, TemplatesApi } from '@spacecowmedia/spellbook-client';
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
@@ -19,6 +19,7 @@ type Props = {
   autocompleteOptions?: AutoCompleteOption[];
   cardAutocomplete?: boolean;
   resultAutocomplete?: boolean;
+  templateAutocomplete?: boolean;
   inputId: string;
   placeholder?: string;
   label?: string;
@@ -26,7 +27,6 @@ type Props = {
   hasError?: boolean;
   useValueForInput?: boolean;
   onChange?: (_value: string) => void;
-  loading?: boolean;
   maxLength?: number;
 };
 
@@ -36,6 +36,7 @@ const AutocompleteInput: React.FC<Props> = ({
   autocompleteOptions,
   cardAutocomplete,
   resultAutocomplete,
+  templateAutocomplete,
   inputId,
   label,
   matchAgainstOptionLabel,
@@ -43,7 +44,6 @@ const AutocompleteInput: React.FC<Props> = ({
   placeholder,
   hasError,
   onChange,
-  loading,
   maxLength,
 }) => {
   const [firstRender, setFirstRender] = useState<boolean>(true);
@@ -54,9 +54,14 @@ const AutocompleteInput: React.FC<Props> = ({
     Array<{ value: string; label: string }>
   >([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const active = (autocompleteOptions && autocompleteOptions.length > 0) || cardAutocomplete || resultAutocomplete;
-  const inMemory = !active || (!cardAutocomplete && !resultAutocomplete);
+  const active =
+    (autocompleteOptions && autocompleteOptions.length > 0) ||
+    cardAutocomplete ||
+    resultAutocomplete ||
+    templateAutocomplete;
+  const inMemory = !active || (!cardAutocomplete && !resultAutocomplete && !templateAutocomplete);
 
   autocompleteOptions?.forEach(
     (option) => (option.normalizedValue = option.normalizedValue ?? normalizeStringInput(option.value)),
@@ -64,12 +69,12 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
-  let screenReaderSelectionText = "";
+  let screenReaderSelectionText = '';
   if (total !== 0 && value) {
     screenReaderSelectionText = option
       ? `${option.label} (${arrowCounter + 1}/${total})`
       : `${total} match${
-          total > 1 ? "es" : ""
+          total > 1 ? 'es' : ''
         } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
   }
 
@@ -122,7 +127,7 @@ const AutocompleteInput: React.FC<Props> = ({
     if (!resultsRef.current) {
       return;
     }
-    const nodes = resultsRef.current.querySelectorAll("li");
+    const nodes = resultsRef.current.querySelectorAll('li');
     const li = nodes[arrowCounter];
     if (!li) {
       return;
@@ -173,6 +178,7 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const configuration = apiConfiguration();
   const cardsApi = new CardsApi(configuration);
+  const templatesApi = new TemplatesApi(configuration);
   const resultsApi = new FeaturesApi(configuration);
 
   const findAllMatches = async (value: string, options?: AutoCompleteOption[]): Promise<AutoCompleteOption[]> => {
@@ -182,10 +188,19 @@ const AutocompleteInput: React.FC<Props> = ({
       if (autocompleteOptions) {
         options = options.concat(autocompleteOptions);
       }
+      if (!inMemory) {
+        setLoading(true);
+      }
       if (cardAutocomplete) {
         const cards = await cardsApi.cardsList({ q: value });
         options = options.concat(
           cards.results.map((card) => ({ value: normalizeStringInput(card.name), label: card.name })),
+        );
+      }
+      if (templateAutocomplete) {
+        const templates = await templatesApi.templatesList({ q: value });
+        options = options.concat(
+          templates.results.map((template) => ({ value: normalizeStringInput(template.name), label: template.name })),
         );
       }
       if (resultAutocomplete) {
@@ -193,6 +208,9 @@ const AutocompleteInput: React.FC<Props> = ({
         options = options.concat(
           results.results.map((result) => ({ value: normalizeStringInput(result.name), label: result.name })),
         );
+      }
+      if (!inMemory) {
+        setLoading(false);
       }
     }
     return options.filter((option) => {
@@ -264,13 +282,13 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       handleArrowDown(e);
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
       handleArrowUp(e);
-    } else if (e.key === "Enter") {
+    } else if (e.key === 'Enter') {
       handleEnter(e);
-    } else if (e.key === "Tab") {
+    } else if (e.key === 'Tab') {
       handleTab(e);
     }
   };
@@ -304,7 +322,7 @@ const AutocompleteInput: React.FC<Props> = ({
         value={localValue}
         type="text"
         placeholder={placeholder}
-        className={`input ${inputClassName} ${hasError ? "error" : ""}`}
+        className={`input ${inputClassName} ${hasError ? 'error' : ''}`}
         autoComplete="off"
         autoCapitalize="none"
         autoCorrect="off"

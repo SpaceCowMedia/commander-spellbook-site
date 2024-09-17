@@ -1,7 +1,7 @@
-import Icon from "components/layout/Icon/Icon";
-import { useState } from "react";
-import Modal from "components/ui/Modal/Modal";
-import { Variant } from "@spacecowmedia/spellbook-client";
+import Icon from 'components/layout/Icon/Icon';
+import { useState } from 'react';
+import Modal from 'components/ui/Modal/Modal';
+import { Variant } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   combo: Variant;
@@ -16,7 +16,7 @@ const Embed = ({ combo }: Props) => {
   query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map((feature) => feature.feature.name)))}`;
   query += `&id=${combo.id}`;
   query += `&color=${combo.identity}`;
-  query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split(".").filter((s) => s.trim().length).length : 0)}`;
+  query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length : 0)}`;
 
   // The empty iframe ensures that wordpress detects the embed
   const embedCode = `<div style="width:100%; position:relative; overflow: visible; display: flex; justify-content: center" id="${combo.id}">
@@ -43,7 +43,7 @@ const Embed = ({ combo }: Props) => {
         open={modalOpen}
         footer={
           <button onClick={handleCopy} className="button">
-            {copied ? "Copied!" : "Copy to clipboard"}
+            {copied ? 'Copied!' : 'Copy to clipboard'}
           </button>
         }
       >

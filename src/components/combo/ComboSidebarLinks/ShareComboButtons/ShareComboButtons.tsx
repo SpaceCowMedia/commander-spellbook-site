@@ -1,7 +1,7 @@
-import styles from "./shareComboButtons.module.scss";
-import CopyComboLinkButton from "../CopyComboLinkButton/CopyComboLinkButton";
-import ShareNetwork from "../ShareNetwork/ShareNetwork";
-import React from "react";
+import styles from './shareComboButtons.module.scss';
+import CopyComboLinkButton from '../CopyComboLinkButton/CopyComboLinkButton';
+import ShareNetwork from '../ShareNetwork/ShareNetwork';
+import React from 'react';
 
 type Props = {
   comboLink: string;

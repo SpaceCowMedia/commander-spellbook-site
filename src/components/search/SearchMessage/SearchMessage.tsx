@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./searchMessage.module.scss";
+import React from 'react';
+import styles from './searchMessage.module.scss';
 
 type Props = {
   errors: string;

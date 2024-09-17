@@ -1,11 +1,11 @@
-import Modal from "components/ui/Modal/Modal";
-import React, { useEffect, useState } from "react";
-import Dimmer from "components/ui/Dimmer/Dimmer";
-import edhrecService from "services/edhrec.service";
-import { ScryfallCard } from "@scryfall/api-types";
-import TextWithMagicSymbol from "components/layout/TextWithMagicSymbol/TextWithMagicSymbol";
-import { getScryfallImage } from "lib/getScryfallImage";
-import ExternalLink from "components/layout/ExternalLink/ExternalLink";
+import Modal from 'components/ui/Modal/Modal';
+import React, { useEffect, useState } from 'react';
+import Dimmer from 'components/ui/Dimmer/Dimmer';
+import edhrecService from 'services/edhrec.service';
+import { ScryfallCard } from '@scryfall/api-types';
+import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import { getScryfallImage } from 'lib/getScryfallImage';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
 type Props = {
   scryfallApiUrl: string;
@@ -63,7 +63,7 @@ const ScryfallResultsModal: React.FC<Props> = ({
           className="button !p-0 !px-2 !text-white font-bold text-lg z-10 w-min whitespace-nowrap h-8 text-[14px]"
           onClick={() => setIsOpen(true)}
         >
-          View {!!count && count + " "}Cards
+          View {!!count && count + ' '}Cards
         </button>
       )}
       {textTrigger && (
@@ -75,7 +75,7 @@ const ScryfallResultsModal: React.FC<Props> = ({
         {loading && <Dimmer loading />}
         {title && (
           <h2 className="text-center text-2xl font-bold mb-8">
-            <TextWithMagicSymbol text={"Scryfall results for “" + title + "”"} />
+            <TextWithMagicSymbol text={'Scryfall results for “' + title + '”'} />
           </h2>
         )}
         {quantity && quantity > 1 && (
@@ -83,7 +83,7 @@ const ScryfallResultsModal: React.FC<Props> = ({
         )}
         {scryfallQuery && (
           <ExternalLink
-            href={"https://scryfall.com/search?q=" + encodeURIComponent(scryfallQuery + " legal:commander")}
+            href={'https://scryfall.com/search?q=' + encodeURIComponent(scryfallQuery + ' legal:commander')}
             className="text-center block mb-8"
           >
             View on Scryfall

@@ -1,10 +1,10 @@
-import BuyComboButtons from "./BuyComboButtons/BuyComboButtons";
-import EdhrecLink from "./EdhrecLink/EdhrecLink";
-import Link from "next/link";
-import ShareComboButtons from "./ShareComboButtons/ShareComboButtons";
-import Embed from "components/combo/ComboSidebarLinks/Embed/Embed";
-import React from "react";
-import { Variant } from "@spacecowmedia/spellbook-client";
+import BuyComboButtons from './BuyComboButtons/BuyComboButtons';
+import EdhrecLink from './EdhrecLink/EdhrecLink';
+import Link from 'next/link';
+import ShareComboButtons from './ShareComboButtons/ShareComboButtons';
+import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
+import React from 'react';
+import { Variant } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   cards: string[];

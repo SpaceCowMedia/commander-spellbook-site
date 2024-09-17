@@ -1,9 +1,9 @@
-import styles from "./cardImage.module.scss";
-import FlipperCard from "../FlipperCard/FlipperCard";
-import React, { useEffect, useRef, useState } from "react";
-import cardBack from "assets/images/card-back.png";
-import isFoolsDay from "lib/foolsDay";
-import weatheredCardBack from "assets/images/weathered-card-back.png";
+import styles from './cardImage.module.scss';
+import FlipperCard from '../FlipperCard/FlipperCard';
+import React, { useEffect, useRef, useState } from 'react';
+import cardBack from 'assets/images/card-back.png';
+import isFoolsDay from 'lib/foolsDay';
+import weatheredCardBack from 'assets/images/weathered-card-back.png';
 
 type Props = {
   img: string;

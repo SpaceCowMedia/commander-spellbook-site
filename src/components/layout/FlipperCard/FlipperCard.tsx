@@ -1,5 +1,5 @@
-import styles from "./flipperCard.module.scss";
-import React, { ReactNode } from "react";
+import styles from './flipperCard.module.scss';
+import React, { ReactNode } from 'react';
 
 type Props = {
   flipped: boolean;
@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-const FlipperCard: React.FC<Props> = ({ flipped, front, back, className }: Props) => {
+const FlipperCard: React.FC<Props> = ({ flipped, front, back, className }) => {
   return (
     <div className={`${styles.flipContainer} ${flipped && styles.flipped} ${className}`}>
       <div className={styles.flipper}>
