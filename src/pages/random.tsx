@@ -1,10 +1,11 @@
-import SplashPage from "../components/layout/SplashPage/SplashPage";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import {RequestService} from "../services/api.service";
-import {GetServerSidePropsContext} from "next";
+import React from 'react';
+import SplashPage from '../components/layout/SplashPage/SplashPage';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import { GetServerSidePropsContext } from 'next';
+import { apiConfiguration } from 'services/api.service';
+import { VariantsApi } from '@spacecowmedia/spellbook-client';
 
-const Random = () => {
-
+const Random: React.FC = () => {
   return (
     <>
       <SpellbookHead
@@ -23,23 +24,27 @@ const Random = () => {
   );
 };
 
-
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const requestService = new RequestService(context);
-  const combos = await requestService.get(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?ordering=%3F&limit=1&q=legal%3Acommander`)
-  const randomCombo = combos.results[0];
-  if (randomCombo) {
+  const configuration = apiConfiguration(context);
+  const variantsApi = new VariantsApi(configuration);
+  const combos = await variantsApi.variantsList({
+    limit: 1,
+    ordering: '?',
+    q: 'legal:commander',
+  });
+  if (combos.results.length > 0) {
+    const randomCombo = combos.results[0];
     return {
       redirect: {
         destination: `/combo/${randomCombo.id}`,
         basePath: true,
         permanent: false,
-      }
+      },
     };
   }
   return {
     notFound: true,
   };
-}
+};
 
 export default Random;

@@ -1,14 +1,14 @@
-import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import Link from "next/link";
-import MultiSearchInput from "../components/advancedSearch/MultiSearchInput/MultiSearchInput";
-import { DEFAULT_VENDOR } from "../lib/constants";
-import React, { useEffect, useState } from "react";
-import COLOR_AUTOCOMPLETES from "../lib/colorAutocompletes";
-import styles from "./advanced-search.module.scss";
-import RadioSearchInput from "../components/advancedSearch/RadioSearchInput/RadioSearchInput";
-import { useRouter } from "next/router";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import { SpellbookIcon } from "../components/layout/Icon/Icon";
+import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import Link from 'next/link';
+import MultiSearchInput from '../components/advancedSearch/MultiSearchInput/MultiSearchInput';
+import { DEFAULT_VENDOR } from '../lib/constants';
+import React, { useEffect, useState } from 'react';
+import COLOR_AUTOCOMPLETES from '../lib/colorAutocompletes';
+import styles from './advanced-search.module.scss';
+import RadioSearchInput from '../components/advancedSearch/RadioSearchInput/RadioSearchInput';
+import { useRouter } from 'next/router';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import { SpellbookIcon } from '../components/layout/Icon/Icon';
 
 type OperatorOption = {
   operator: string;
@@ -26,259 +26,259 @@ type TagOption = {
 
 const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Has card with name",
-    placeholder: "ex: isochron",
+    operator: ':',
+    label: 'Has card with name',
+    placeholder: 'ex: isochron',
   },
   {
-    operator: "=",
-    label: "Has card with exact name",
-    placeholder: "ex: basalt monolith",
+    operator: '=',
+    label: 'Has card with exact name',
+    placeholder: 'ex: basalt monolith',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not have card with name",
-    placeholder: "ex: isochron",
+    label: 'Does not have card with name',
+    placeholder: 'ex: isochron',
   },
   {
-    operator: "=",
+    operator: '=',
     negate: true,
-    label: "Does not have card with exact name",
-    placeholder: "ex: basalt monolith",
+    label: 'Does not have card with exact name',
+    placeholder: 'ex: basalt monolith',
   },
 ];
 
 const CARD_AMOUNT_OPERATOR_OPTIONS: OperatorOption[] = [
-  { operator: "=", label: "Contains exactly x cards (number)", numeric: true },
-  { operator: ">=", label: "Contains at least x cards (number)", numeric: true },
-  { operator: "<", label: "Contains less than x cards (number)", numeric: true },
+  { operator: '=', label: 'Contains exactly x cards (number)', numeric: true },
+  { operator: '>=', label: 'Contains at least x cards (number)', numeric: true },
+  { operator: '<', label: 'Contains less than x cards (number)', numeric: true },
 ];
 
 const CARD_TYPE_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Contains the phrase",
-    placeholder: "ex: sorcery, instant, artifact",
+    operator: ':',
+    label: 'Contains the phrase',
+    placeholder: 'ex: sorcery, instant, artifact',
   },
   {
-    operator: "=",
-    label: "Is exactly",
-    placeholder: "ex: sorcery, instant, artifact",
+    operator: '=',
+    label: 'Is exactly',
+    placeholder: 'ex: sorcery, instant, artifact',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not contain the phrase",
-    placeholder: "ex: sorcery, instant, artifact",
+    label: 'Does not contain the phrase',
+    placeholder: 'ex: sorcery, instant, artifact',
   },
   {
-    operator: "=",
+    operator: '=',
     negate: true,
-    label: "Is not exactly",
-    placeholder: "ex: sorcery, instant, artifact",
+    label: 'Is not exactly',
+    placeholder: 'ex: sorcery, instant, artifact',
   },
 ];
 
 const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Contains the phrase",
-    placeholder: "ex: mana, untap, additional",
+    operator: ':',
+    label: 'Contains the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
-  { operator: "=", label: "Is exactly" },
+  { operator: '=', label: 'Is exactly' },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not contain the phrase",
-    placeholder: "ex: mana, untap, additional",
+    label: 'Does not contain the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
-  { operator: "=", label: "Is not exactly", negate: true },
+  { operator: '=', label: 'Is not exactly', negate: true },
 ];
 
 const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Has the keyword",
-    placeholder: "ex: cycling, delve, partner",
+    operator: ':',
+    label: 'Has the keyword',
+    placeholder: 'ex: cycling, delve, partner',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not have the keyword",
-    placeholder: "ex: cycling, delve, partner",
+    label: 'Does not have the keyword',
+    placeholder: 'ex: cycling, delve, partner',
   },
 ];
 
 const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: "=",
-    label: "Has a mana value of x (number)",
+    operator: '=',
+    label: 'Has a mana value of x (number)',
     numeric: true,
   },
   {
-    operator: ">=",
-    label: "Has a mana value of at least x (number)",
+    operator: '>=',
+    label: 'Has a mana value of at least x (number)',
     numeric: true,
   },
   {
-    operator: "<",
-    label: "Has a mana value of less than x (number)",
+    operator: '<',
+    label: 'Has a mana value of less than x (number)',
     numeric: true,
   },
 ];
 
 const COLOR_IDENTITY_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Is within the color identity",
+    operator: ':',
+    label: 'Is within the color identity',
   },
   {
-    operator: "=",
-    label: "Is exactly the color identity",
+    operator: '=',
+    label: 'Is exactly the color identity',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Is not within the color identity",
+    label: 'Is not within the color identity',
   },
   {
-    operator: "=",
+    operator: '=',
     negate: true,
-    label: "Is not exactly the color identity",
+    label: 'Is not exactly the color identity',
   },
-  { operator: ">=", label: "Contains at least x colors (number)", numeric: true },
-  { operator: "<", label: "Contains less than x colors (number)", numeric: true },
-  { operator: "=", label: "Contains exactly x colors (number)", numeric: true },
+  { operator: '>=', label: 'Contains at least x colors (number)', numeric: true },
+  { operator: '<', label: 'Contains less than x colors (number)', numeric: true },
+  { operator: '=', label: 'Contains exactly x colors (number)', numeric: true },
 ];
 
 const COMBO_DATA_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Contains the phrase",
-    placeholder: "ex: mana, untap, additional",
+    operator: ':',
+    label: 'Contains the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
-  { operator: "=", label: "Is exactly" },
-  { operator: ">=", label: "Contains at least x (number)", numeric: true },
-  { operator: "<", label: "Contains less than x (number)", numeric: true },
+  { operator: '=', label: 'Is exactly' },
+  { operator: '>=', label: 'Contains at least x (number)', numeric: true },
+  { operator: '<', label: 'Contains less than x (number)', numeric: true },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not contain the phrase",
-    placeholder: "ex: mana, untap, additional",
+    label: 'Does not contain the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
-  { operator: "=", label: "Is not exactly", negate: true },
+  { operator: '=', label: 'Is not exactly', negate: true },
 ];
 
 const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Contains the phrase",
-    placeholder: "ex: mana, untap, additional",
+    operator: ':',
+    label: 'Contains the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
   {
-    operator: "=",
-    label: "Is exactly",
-    placeholder: "ex: Infinite Colorless Mana",
+    operator: '=',
+    label: 'Is exactly',
+    placeholder: 'ex: Infinite Colorless Mana',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not contain the phrase",
-    placeholder: "ex: mana, untap, additional",
+    label: 'Does not contain the phrase',
+    placeholder: 'ex: mana, untap, additional',
   },
   {
-    operator: "=",
+    operator: '=',
     negate: true,
-    label: "Is not exactly",
-    placeholder: "ex: Infinite Colorless Mana",
+    label: 'Is not exactly',
+    placeholder: 'ex: Infinite Colorless Mana',
   },
-  { operator: ">=", label: "Contains at least x (number)", numeric: true },
-  { operator: "<", label: "Contains less than x (number)", numeric: true },
-  { operator: "=", label: "Contains exactly x (number)", numeric: true },
+  { operator: '>=', label: 'Contains at least x (number)', numeric: true },
+  { operator: '<', label: 'Contains less than x (number)', numeric: true },
+  { operator: '=', label: 'Contains exactly x (number)', numeric: true },
 ];
 
 const TAGS_OPTIONS: TagOption[] = [
   {
-    name: "spoiler",
-    label: "Contains a spoiler/previewed card",
-    labelIcon: "eye",
+    name: 'spoiler',
+    label: 'Contains a spoiler/previewed card',
+    labelIcon: 'eye',
   },
   {
-    name: "commander",
-    label: "Does the combo require a commander?",
-    labelIcon: "commandZone",
+    name: 'commander',
+    label: 'Does the combo require a commander?',
+    labelIcon: 'commandZone',
   },
   {
-    name: "featured",
-    label: "Is the combo featured in the home page?",
-    labelIcon: "star",
+    name: 'featured',
+    label: 'Is the combo featured in the home page?',
+    labelIcon: 'star',
   },
 ];
 
 const COMMANDER_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Requires a commander whose name contains the phrase",
-    placeholder: "ex: Krark",
+    operator: ':',
+    label: 'Requires a commander whose name contains the phrase',
+    placeholder: 'ex: Krark',
   },
   {
-    operator: "=",
-    label: "Requires a commander whose name is exactly",
-    placeholder: "ex: Krark, the Thumbless",
+    operator: '=',
+    label: 'Requires a commander whose name is exactly',
+    placeholder: 'ex: Krark, the Thumbless',
   },
   {
-    operator: ":",
+    operator: ':',
     negate: true,
-    label: "Does not require a commander whose name contains the phrase",
-    placeholder: "ex: Krark",
+    label: 'Does not require a commander whose name contains the phrase',
+    placeholder: 'ex: Krark',
   },
   {
-    operator: "=",
+    operator: '=',
     negate: true,
-    label: "Does not require a commander whose name is exactly",
-    placeholder: "ex: Krark, the Thumbless",
+    label: 'Does not require a commander whose name is exactly',
+    placeholder: 'ex: Krark, the Thumbless',
   },
 ];
 
 const POPULARITY_OPTIONS: OperatorOption[] = [
-  { operator: ">=", label: "In at least x decks (number)", numeric: true },
-  { operator: "<", label: "In less than x decks (number)", numeric: true },
-  { operator: "=", label: "In exactly x decks (number)", numeric: true },
+  { operator: '>=', label: 'In at least x decks (number)', numeric: true },
+  { operator: '<', label: 'In less than x decks (number)', numeric: true },
+  { operator: '=', label: 'In exactly x decks (number)', numeric: true },
 ];
 
 const PRICE_OPTIONS: OperatorOption[] = [
   {
-    operator: "<=",
-    label: "Costs at most x",
-    placeholder: "ex: 5",
+    operator: '<=',
+    label: 'Costs at most x',
+    placeholder: 'ex: 5',
     numeric: true,
   },
   {
-    operator: ">=",
-    label: "Costs at least x",
-    placeholder: "ex: 5",
+    operator: '>=',
+    label: 'Costs at least x',
+    placeholder: 'ex: 5',
     numeric: true,
   },
   {
-    operator: "=",
-    label: "Costs exactly x",
-    placeholder: "ex: 5",
+    operator: '=',
+    label: 'Costs exactly x',
+    placeholder: 'ex: 5',
   },
 ];
 
 const PRICE_VENDORS = [
   {
-    value: "cardkingdom",
-    label: "Card Kingdom",
+    value: 'cardkingdom',
+    label: 'Card Kingdom',
   },
   {
-    value: "tcgplayer",
-    label: "TCGPlayer",
+    value: 'tcgplayer',
+    label: 'TCGPlayer',
   },
   {
-    value: "cardmarket",
-    label: "Cardmarket",
+    value: 'cardmarket',
+    label: 'Cardmarket',
   },
 ];
 
@@ -289,67 +289,67 @@ type LegalityFormat = {
 
 const LEGALITY_FORMATS: LegalityFormat[] = [
   {
-    value: "",
-    label: "-",
+    value: '',
+    label: '-',
   },
   {
-    value: "commander",
-    label: "EDH/Commander",
+    value: 'commander',
+    label: 'EDH/Commander',
   },
   {
-    value: "pauper_commander",
-    label: "Pauper EDH/Commander (including uncommon commanders)",
+    value: 'pauper_commander',
+    label: 'Pauper EDH/Commander (including uncommon commanders)',
   },
   {
-    value: "pauper_commander_main",
-    label: "Pauper EDH/Commander (excluding uncommon commanders)",
+    value: 'pauper_commander_main',
+    label: 'Pauper EDH/Commander (excluding uncommon commanders)',
   },
   {
-    value: "oathbreaker",
-    label: "Oathbreaker",
+    value: 'oathbreaker',
+    label: 'Oathbreaker',
   },
   {
-    value: "predh",
-    label: "Pre-EDH/Commander",
+    value: 'predh',
+    label: 'Pre-EDH/Commander',
   },
   {
-    value: "brawl",
-    label: "Brawl",
+    value: 'brawl',
+    label: 'Brawl',
   },
   {
-    value: "vintage",
-    label: "Vintage",
+    value: 'vintage',
+    label: 'Vintage',
   },
   {
-    value: "legacy",
-    label: "Legacy",
+    value: 'legacy',
+    label: 'Legacy',
   },
   {
-    value: "modern",
-    label: "Modern",
+    value: 'modern',
+    label: 'Modern',
   },
   {
-    value: "pioneer",
-    label: "Pioneer",
+    value: 'pioneer',
+    label: 'Pioneer',
   },
   {
-    value: "standard",
-    label: "Standard",
+    value: 'standard',
+    label: 'Standard',
   },
   {
-    value: "pauper",
-    label: "Pauper",
+    value: 'pauper',
+    label: 'Pauper',
   },
 ];
 
 const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
   {
-    operator: ":",
-    label: "Is legal in the format",
+    operator: ':',
+    label: 'Is legal in the format',
   },
   {
-    operator: ":",
-    label: "Is not legal in the format",
+    operator: ':',
+    label: 'Is not legal in the format',
     negate: true,
   },
 ];
@@ -398,23 +398,23 @@ const AdvancedSearch: React.FC = () => {
 
   const [formState, setFormStateHook] = useState<Data>({
     colorAutocompletes: COLOR_AUTOCOMPLETES,
-    cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: "" }],
-    cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: "" }],
-    cardTypes: [{ ...CARD_TYPE_OPERATOR_OPTIONS[0], value: "" }],
-    oracleText: [{ ...CARD_ORACLE_TEXT_OPERATOR_OPTIONS[0], value: "" }],
-    cardKeywords: [{ ...CARD_KEYWORD_OPERATOR_OPTIONS[0], value: "" }],
-    manaValue: [{ ...CARD_MANA_VALUE_OPERATOR_OPTIONS[0], value: "" }],
-    colorIdentity: [{ ...COLOR_IDENTITY_OPERATOR_OPTIONS[0], value: "" }],
-    prerequisites: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
-    steps: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: "" }],
-    results: [{ ...RESULTS_OPERATOR_OPTIONS[0], value: "" }],
+    cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
+    cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: '' }],
+    cardTypes: [{ ...CARD_TYPE_OPERATOR_OPTIONS[0], value: '' }],
+    oracleText: [{ ...CARD_ORACLE_TEXT_OPERATOR_OPTIONS[0], value: '' }],
+    cardKeywords: [{ ...CARD_KEYWORD_OPERATOR_OPTIONS[0], value: '' }],
+    manaValue: [{ ...CARD_MANA_VALUE_OPERATOR_OPTIONS[0], value: '' }],
+    colorIdentity: [{ ...COLOR_IDENTITY_OPERATOR_OPTIONS[0], value: '' }],
+    prerequisites: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: '' }],
+    steps: [{ ...COMBO_DATA_OPERATOR_OPTIONS[0], value: '' }],
+    results: [{ ...RESULTS_OPERATOR_OPTIONS[0], value: '' }],
     tags: TAGS_OPTIONS.map((tag) => ({ ...tag })),
-    commanders: [{ ...COMMANDER_OPTIONS[0], value: "" }],
-    popularity: [{ ...POPULARITY_OPTIONS[0], value: "" }],
-    prices: [{ ...PRICE_OPTIONS[0], value: "" }],
+    commanders: [{ ...COMMANDER_OPTIONS[0], value: '' }],
+    popularity: [{ ...POPULARITY_OPTIONS[0], value: '' }],
+    prices: [{ ...PRICE_OPTIONS[0], value: '' }],
     vendor: DEFAULT_VENDOR,
-    format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: "" }],
-    validationError: "",
+    format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: '' }],
+    validationError: '',
   });
 
   const {
@@ -450,10 +450,10 @@ const AdvancedSearch: React.FC = () => {
     const newFormState = { ...formState };
 
     function val(input: InputData) {
-      input.error = "";
+      input.error = '';
 
       if ((input.numeric ?? false) && !Number.isInteger(Number(input.value))) {
-        input.error = "Contains a non-integer. Use a full number instead.";
+        input.error = 'Contains a non-integer. Use a full number instead.';
       }
 
       if (input.error) {
@@ -500,7 +500,7 @@ const AdvancedSearch: React.FC = () => {
   ]);
 
   const getQuery = () => {
-    let query = "";
+    let query = '';
 
     function makeQueryFunction(key: string): Parameters<typeof Array.prototype.forEach>[0] {
       return (input: InputData) => {
@@ -510,13 +510,13 @@ const AdvancedSearch: React.FC = () => {
         const isSimpleValue = value.match(/^[\w\d]*$/);
         let operator = input.operator;
         let keyInQuery = key;
-        const isSimpleCardValue = isSimpleValue && keyInQuery === "card" && operator === ":" && !negated;
+        const isSimpleCardValue = isSimpleValue && keyInQuery === 'card' && operator === ':' && !negated;
 
         if (!value) {
           return;
         }
 
-        let quotes = "";
+        let quotes = '';
 
         if (!isSimpleValue) {
           quotes = '"';
@@ -528,17 +528,17 @@ const AdvancedSearch: React.FC = () => {
         }
 
         if (isSimpleCardValue) {
-          keyInQuery = "";
-          operator = "";
+          keyInQuery = '';
+          operator = '';
         } else if (numeric) {
-          if (keyInQuery === "ci") {
-            keyInQuery = "colors";
-          } else if (keyInQuery === "popularity") {
-            keyInQuery = "decks";
-          } else if (keyInQuery === "price") {
+          if (keyInQuery === 'ci') {
+            keyInQuery = 'colors';
+          } else if (keyInQuery === 'popularity') {
+            keyInQuery = 'decks';
+          } else if (keyInQuery === 'price') {
             keyInQuery = vendor;
-          } else if (keyInQuery !== "mv" && keyInQuery !== "pre") {
-            keyInQuery += "s";
+          } else if (keyInQuery !== 'mv' && keyInQuery !== 'pre') {
+            keyInQuery += 's';
           }
         }
         if (negated) {
@@ -558,21 +558,21 @@ const AdvancedSearch: React.FC = () => {
         }
       };
     }
-    cards.forEach(makeQueryFunction("card"));
-    cardAmounts.forEach(makeQueryFunction("card"));
-    cardTypes.forEach(makeQueryFunction("type"));
-    oracleText.forEach(makeQueryFunction("oracle"));
-    cardKeywords.forEach(makeQueryFunction("keyword"));
-    manaValue.forEach(makeQueryFunction("mv"));
-    colorIdentity.forEach(makeQueryFunction("ci"));
-    prerequisites.forEach(makeQueryFunction("pre"));
-    steps.forEach(makeQueryFunction("step"));
-    results.forEach(makeQueryFunction("result"));
+    cards.forEach(makeQueryFunction('card'));
+    cardAmounts.forEach(makeQueryFunction('card'));
+    cardTypes.forEach(makeQueryFunction('type'));
+    oracleText.forEach(makeQueryFunction('oracle'));
+    cardKeywords.forEach(makeQueryFunction('keyword'));
+    manaValue.forEach(makeQueryFunction('mv'));
+    colorIdentity.forEach(makeQueryFunction('ci'));
+    prerequisites.forEach(makeQueryFunction('pre'));
+    steps.forEach(makeQueryFunction('step'));
+    results.forEach(makeQueryFunction('result'));
     tags.forEach(makeQueryFunctionForTags());
-    commanders.forEach(makeQueryFunction("commander"));
-    popularity.forEach(makeQueryFunction("popularity"));
-    prices.forEach(makeQueryFunction("price"));
-    format.forEach(makeQueryFunction("legal"));
+    commanders.forEach(makeQueryFunction('commander'));
+    popularity.forEach(makeQueryFunction('popularity'));
+    prices.forEach(makeQueryFunction('price'));
+    format.forEach(makeQueryFunction('legal'));
 
     query = query.trim();
 
@@ -585,17 +585,17 @@ const AdvancedSearch: React.FC = () => {
     e.preventDefault();
 
     if (!query) {
-      return setFormState({ validationError: "No search queries entered." });
+      return setFormState({ validationError: 'No search queries entered.' });
     }
 
     if (validate()) {
       return setFormState({
-        validationError: "Check for errors in your search terms before submitting.",
+        validationError: 'Check for errors in your search terms before submitting.',
       });
     }
 
     router.push({
-      pathname: "/search/",
+      pathname: '/search/',
       query: {
         q: `${query}`,
       },
@@ -792,11 +792,11 @@ const AdvancedSearch: React.FC = () => {
         {TAGS_OPTIONS.map((tagOption, i) => (
           <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={i}>
             <RadioSearchInput
-              checkedValue={tags.find((tag) => tag.name === tagOption.name)?.selected?.toString() ?? "null"}
+              checkedValue={tags.find((tag) => tag.name === tagOption.name)?.selected?.toString() ?? 'null'}
               options={[
-                { value: "true", label: "Yes" },
-                { value: "false", label: "No" },
-                { value: "null", label: "Either" },
+                { value: 'true', label: 'Yes' },
+                { value: 'false', label: 'No' },
+                { value: 'null', label: 'Either' },
               ]}
               formName={tagOption.name}
               label={tagOption.label}
@@ -805,7 +805,7 @@ const AdvancedSearch: React.FC = () => {
                 const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
                 const newTag = {
                   ...tagOption,
-                  selected: tag === "null" ? undefined : tag === "true",
+                  selected: tag === 'null' ? undefined : tag === 'true',
                 };
                 setFormState({
                   tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => (i === tagIndex ? newTag : t)),

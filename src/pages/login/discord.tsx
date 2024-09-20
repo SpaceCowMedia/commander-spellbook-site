@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import ArtCircle from "../../components/layout/ArtCircle/ArtCircle";
-import styles from "../report-error.module.scss";
-import SpellbookHead from "../../components/SpellbookHead/SpellbookHead";
-import { useRouter } from "next/router";
-import TokenService from "../../services/token.service";
-import CookieService from "../../services/cookie.service";
-import { TokenApi, UsersApi } from "@spacecowmedia/spellbook-client";
-import { apiConfiguration } from "services/api.service";
+import React, { useEffect, useState } from 'react';
+import ArtCircle from '../../components/layout/ArtCircle/ArtCircle';
+import styles from '../report-error.module.scss';
+import SpellbookHead from '../../components/SpellbookHead/SpellbookHead';
+import { useRouter } from 'next/router';
+import TokenService from '../../services/token.service';
+import CookieService from '../../services/cookie.service';
+import { TokenApi, UsersApi } from '@spacecowmedia/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
 
 const Login: React.FC = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -29,12 +29,12 @@ const Login: React.FC = () => {
           if (decodedToken) {
             const usersApi = new UsersApi(configuration);
             usersApi.usersRetrieve({ id: decodedToken.user_id }).then((user) => {
-              CookieService.set("csbUsername", user.username, "month");
-              CookieService.set("csbUserId", user.id, "month");
+              CookieService.set('csbUsername', user.username, 'month');
+              CookieService.set('csbUserId', user.id, 'month');
               if (user.isStaff) {
-                CookieService.set("csbIsStaff", "true", "month");
+                CookieService.set('csbIsStaff', 'true', 'month');
               }
-              router.query.final ? router.push(`/${router.query.final}`) : router.push("/");
+              router.query.final ? router.push(`/${router.query.final}`) : router.push('/');
             });
           }
         })

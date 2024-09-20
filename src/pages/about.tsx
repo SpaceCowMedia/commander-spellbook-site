@@ -1,8 +1,8 @@
-import React from "react";
-import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import ExternalLink from "../components/layout/ExternalLink/ExternalLink";
-import styles from "./about.module.scss";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
+import React from 'react';
+import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import ExternalLink from '../components/layout/ExternalLink/ExternalLink';
+import styles from './about.module.scss';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 
 const About: React.FC = () => {
   return (

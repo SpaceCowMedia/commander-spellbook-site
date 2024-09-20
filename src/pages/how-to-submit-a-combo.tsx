@@ -1,3 +1,3 @@
-import SubmitACombo from "./submit-a-combo";
+import SubmitACombo from './submit-a-combo';
 
-export default SubmitACombo
+export default SubmitACombo;

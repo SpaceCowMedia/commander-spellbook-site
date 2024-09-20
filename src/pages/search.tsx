@@ -1,101 +1,99 @@
-import React from "react";
-import SearchMessage from "../components/search/SearchMessage/SearchMessage";
-import StyledSelect, {
-  Option,
-} from "../components/layout/StyledSelect/StyledSelect";
-import { useRouter } from "next/router";
-import {Variant} from "../lib/types";
-import { DEFAULT_ORDER, DEFAULT_SORT } from "../lib/constants";
-import SearchPagination from "../components/search/SearchPagination/SearchPagination";
-import ComboResults from "../components/search/ComboResults/ComboResults";
-import NoCombosFound from "../components/layout/NoCombosFound/NoCombosFound";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import {GetServerSideProps} from "next";
-import {RequestService} from "../services/api.service";
-import {PaginatedResponse} from "../types/api";
+import React from 'react';
+import SearchMessage from '../components/search/SearchMessage/SearchMessage';
+import StyledSelect, { Option } from '../components/layout/StyledSelect/StyledSelect';
+import { useRouter } from 'next/router';
+import { DEFAULT_ORDER, DEFAULT_SORT } from '../lib/constants';
+import SearchPagination from '../components/search/SearchPagination/SearchPagination';
+import ComboResults from '../components/search/ComboResults/ComboResults';
+import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import { GetServerSideProps } from 'next';
+import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
+import { Variant, VariantsApi } from '@spacecowmedia/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
 
 type Props = {
-  combos: Variant[]
-  bannedCombos?: Variant[]
-  count: number
-  page: number
-  error?: string
+  combos: Variant[];
+  bannedCombos?: Variant[];
+  count: number;
+  page: number;
+  error?: string;
+  featured?: boolean;
 };
 
 const SORT_OPTIONS: Option[] = [
-  { value: "popularity", label: "Popularity" },
-  { value: "identity_count", label: "Color Identity" },
-  { value: "price_tcgplayer", label: "Price (TCGPlayer)" },
-  { value: "price_cardkingdom", label: "Price (CardKingdom)" },
-  { value: "price_cardmarket", label: "Price (Cardmarket)" },
+  { value: 'popularity', label: 'Popularity' },
+  { value: 'identity_count', label: 'Color Identity' },
+  { value: 'price_tcgplayer', label: 'Price (TCGPlayer)' },
+  { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
+  { value: 'price_cardmarket', label: 'Price (Cardmarket)' },
   {
-    value: "cards_count",
-    label: "# of Cards",
+    value: 'cards_count',
+    label: '# of Cards',
   },
   {
-    value: "results_count",
-    label: "# of Results",
+    value: 'results_count',
+    label: '# of Results',
   },
   {
-    value: "created",
-    label: "Date Created",
+    value: 'created',
+    label: 'Date Created',
   },
   {
-    value: "updated",
-    label: "Date Updated",
-  }
+    value: 'updated',
+    label: 'Date Updated',
+  },
 ];
 
 const ORDER_OPTIONS: Option[] = [
-  { value: "auto", label: "Auto" },
-  { value: "asc", label: "Ascending" },
-  { value: "desc", label: "Descending" },
+  { value: 'auto', label: 'Auto' },
+  { value: 'asc', label: 'Ascending' },
+  { value: 'desc', label: 'Descending' },
 ];
 
-const AUTO_SORT_MAP: Record<string, "-"> = {
-  popularity: "-",
-  created: "-",
-  updated: "-",
-}
+const AUTO_SORT_MAP: Record<string, '-'> = {
+  popularity: '-',
+  created: '-',
+  updated: '-',
+};
 
-const PAGE_SIZE = 50
+const PAGE_SIZE = 50;
 
-const doesQuerySpecifyFormat = (query: string) : boolean => {
-  return query.includes('legal:') || query.includes('banned:')|| query.includes('format:');
-}
+const doesQuerySpecifyFormat = (query: string): boolean => {
+  return query.includes('legal:') || query.includes('banned:') || query.includes('format:');
+};
 
-const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Props) => {
-
+const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, featured }) => {
   const router = useRouter();
 
-  const sort = router.query.sort as string || DEFAULT_SORT;
-  const order = router.query.order as string || DEFAULT_ORDER;
-
+  const sort = (router.query.sort as string) || DEFAULT_SORT;
+  const order = (router.query.order as string) || DEFAULT_ORDER;
 
   const query = router.query.q;
-  const parsedSearchQuery = (!query || typeof query !== "string") ? "" : query;
-
+  const parsedSearchQuery = !query || typeof query !== 'string' ? '' : query;
 
   const totalPages = Math.floor(count / PAGE_SIZE) + 1;
 
-  const numberPage = Number(page) || 1
+  const numberPage = Number(page) || 1;
   const goForward = () => {
-    router.push({ pathname: "/search/", query: { ...router.query, page: numberPage+1 } });
+    router.push({ pathname: '/search/', query: { ...router.query, page: numberPage + 1 } });
   };
 
   const goBack = () => {
-    router.push({ pathname: "/search/", query: { ...router.query, page: numberPage-1 } });
+    router.push({ pathname: '/search/', query: { ...router.query, page: numberPage - 1 } });
   };
 
   const handleSortChange = (value: string) => {
-    router.push({ pathname: "/search/", query: { ...router.query, sort: value, page: "1" } });
+    router.push({ pathname: '/search/', query: { ...router.query, sort: value, page: '1' } });
   };
 
   const handleOrderChange = (value: string) => {
-    router.push({ pathname: "/search/", query: { ...router.query, order: value, page: "1" } });
+    router.push({ pathname: '/search/', query: { ...router.query, order: value, page: '1' } });
   };
 
-  const legalityMessage = doesQuerySpecifyFormat(parsedSearchQuery) ? "" : " (legal:commander has been applied by default)"
+  const legalityMessage = doesQuerySpecifyFormat(parsedSearchQuery)
+    ? ''
+    : ' (legal:commander has been applied by default)';
 
   return (
     <>
@@ -104,7 +102,14 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Pro
         description="Search results for all EDH combos matching your query."
       />
       <div>
-        <h1 className="sr-only">Search Results</h1>
+        {featured ? (
+          <>
+            <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden" />
+            <h1 className="heading-title">Featured Combos</h1>
+          </>
+        ) : (
+          <h1 className="sr-only">Search Results</h1>
+        )}
 
         <SearchMessage
           message={error ? '' : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
@@ -157,10 +162,7 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Pro
         <div className="container sm:flex flex-row">
           {combos.length > 0 ? (
             <div className="w-full">
-              <ComboResults
-                results={combos}
-                sort={sort}
-              />
+              <ComboResults results={combos} sort={sort} />
               <SearchPagination
                 currentPage={page}
                 totalPages={totalPages}
@@ -169,11 +171,12 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Pro
                 onGoBack={goBack}
               />
             </div>
+          ) : featured ? (
+            <div>
+              <p>No featured combos at this time!</p>
+            </div>
           ) : (
-            <NoCombosFound
-              alternatives={bannedCombos}
-              criteria="banned"
-            />
+            <NoCombosFound alternatives={bannedCombos} criteria="banned" />
           )}
         </div>
       </div>
@@ -183,29 +186,38 @@ const Search: React.FC<Props> = ({combos, count, page, bannedCombos, error}: Pro
 
 export default Search;
 
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let query = `${context.query.q}`;
   let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
-  if (isQueryMissingFormat) query = `${query} legal:commander`;
-  query = encodeURIComponent(query)
-  const requestService = new RequestService(context)
-  const order = context.query.order || DEFAULT_ORDER
-  const sort = context.query.sort || DEFAULT_SORT
-  const ordering = (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) + ',identity_count,cards_count,-created'
-  const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&offset=${((Number(context.query.page) || 1) - 1) * PAGE_SIZE}&ordering=${ordering}`
+  if (isQueryMissingFormat) {
+    query = `${query} legal:commander`;
+  }
+  const configuration = apiConfiguration(context);
+  const variantsApi = new VariantsApi(configuration);
+  const order = context.query.order || DEFAULT_ORDER;
+  const sort = context.query.sort || DEFAULT_SORT;
+  const ordering =
+    (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
+    ',identity_count,cards_count,-created';
   try {
+    const results = await variantsApi.variantsList({
+      q: query,
+      limit: PAGE_SIZE,
+      offset: ((Number(context.query.page) || 1) - 1) * PAGE_SIZE,
+      ordering: ordering,
+    });
 
-    const results = await requestService.get<PaginatedResponse<Variant>>(url);
-  
-    const backendCombos = results ? results.results : [];
-  
+    const backendCombos = results.results;
+
     if (backendCombos.length === 0 && isQueryMissingFormat) {
       // Try searching in banned combos
       let query = `${context.query.q} banned:commander`;
-      query = encodeURIComponent(query)
-      const url = `${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/variants/?q=${query}&limit=${PAGE_SIZE}&ordering=${ordering}`;
-      const results = await requestService.get<PaginatedResponse<Variant>>(url);
+      query = encodeURIComponent(query);
+      const results = await variantsApi.variantsList({
+        q: query,
+        limit: PAGE_SIZE,
+        ordering: ordering,
+      });
       const bannedCombos = results ? results.results : [];
       if (bannedCombos.length > 0) {
         return {
@@ -214,35 +226,35 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             bannedCombos: bannedCombos,
             count: 0,
             page: context.query.page || 1,
-          }
-        }
+          },
+        };
       }
     }
-  
+
     if (backendCombos.length === 1) {
       return {
         redirect: {
           destination: `/combo/${backendCombos[0].id}`,
           permanent: false,
         },
-      }
+      };
     }
-  
+
     return {
       props: {
         combos: backendCombos,
         count: results.count,
         page: context.query.page || 1,
-      }
-    }
+      },
+    };
   } catch (error: any) {
     return {
       props: {
         combos: [],
         count: 0,
         page: context.query.page || 1,
-        error: Object.hasOwn(error, 'q') && error.q ? error.q : "An error occurred while searching for combos.",
-      }
-    }
+        error: Object.hasOwn(error, 'q') && error.q ? error.q : 'An error occurred while searching for combos.',
+      },
+    };
   }
-}
+};

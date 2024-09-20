@@ -1,10 +1,10 @@
-import ErrorBase from "../components/layout/ErrorBase/ErrorBase";
-import { useEffect } from "react";
-import { useState } from "react";
+import ErrorBase from '../components/layout/ErrorBase/ErrorBase';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 
-const UNKNOWN_TEMPLATES = ["apocalypse", "obliterate", "bookBurning"];
+const UNKNOWN_TEMPLATES = ['apocalypse', 'obliterate', 'bookBurning'];
 
-const UnknownErrorPage = () => {
+const UnknownErrorPage: React.FC = () => {
   const [unknownErrorClass, setUnknownErrorClass] = useState(UNKNOWN_TEMPLATES[0][0]);
 
   useEffect(() => {
