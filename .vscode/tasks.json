@@ -7,14 +7,14 @@
             "script": "dev",
             "isBackground": true,
             "problemMatcher": {
-                "owner": "npm",
+                "owner": "custom",
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "Ready in",
-                    "endsPattern": "^event . compiled client and server successfully in .+$"
+                    "beginsPattern": "^.*Ready.*$",
+                    "endsPattern": "^.*Ready.*$"
                 },
                 "pattern": {
-                    "regexp": "",
+                    "regexp": "______",
                 }
             }
         },
