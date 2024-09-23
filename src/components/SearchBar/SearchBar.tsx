@@ -67,11 +67,16 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
       setVariantCount(cookies.variantCount);
       handleCountUp();
     } else if (!cookies.variantCount) {
-      variantsApi.variantsList({ limit: 1 }).then((response) => {
-        setCookies('variantCount', response.count, { path: '/', maxAge: 3 * 60 * 60 });
-        setVariantCount(response.count);
-        handleCountUp();
-      });
+      variantsApi
+        .variantsList({ limit: 1 })
+        .then((response) => {
+          setCookies('variantCount', response.count, { path: '/', maxAge: 3 * 60 * 60 });
+          setVariantCount(response.count);
+          handleCountUp();
+        })
+        .catch((_error) => {
+          setVariantCount(0);
+        });
     }
   }, []);
 
