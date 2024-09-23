@@ -8,18 +8,18 @@ import { isValidHttpUrl } from '../lib/url-check';
 import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
 import { useRouter } from 'next/router';
 import {
+  CardListFromTextApi,
   CardListFromUrlApi,
   Deck,
-  FetchParams,
   FindMyCombosApi,
-  Middleware,
-  RequestContext,
+  InvalidUrlResponse,
   Variant,
+  DeckToJSON,
+  DeckFromJSON,
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
-const LOCAL_STORAGE_COMMANDER_STORAGE_KEY = 'commander-spellbook-combo-finder-last-commander';
 
 const DEFAULT_RESULTS = {
   identity: '',
@@ -32,25 +32,33 @@ const DEFAULT_RESULTS = {
 };
 
 class Decklist {
-  main: string;
-  commanders: string;
+  deck: Deck;
 
-  constructor(deck?: Deck, main?: string, commanders?: string) {
-    if (deck) {
-      this.main = deck.main.map((card) => `${card.quantity} ${card.card}`).join('\n');
-      this.commanders = deck.commanders.map((card) => `${card.quantity} ${card.card}`).join('\n');
-    } else {
-      this.main = main || '';
-      this.commanders = commanders || '';
-    }
+  constructor(deck: Deck) {
+    this.deck = deck;
+  }
+
+  commanderListString(): string {
+    return this.deck.commanders.map((card) => `${card.quantity} ${card.card}`).join('\n');
+  }
+
+  mainListString(): string {
+    return this.deck.main.map((card) => `${card.quantity} ${card.card}`).join('\n');
   }
 
   toString(): string {
-    return `${this.main}\n// Commanders\n${this.commanders}`;
+    return `${this.mainListString()}\n// Commanders\n${this.commanderListString()}`;
   }
 
   isEmpty(): boolean {
-    return this.main.indexOf('\n') < 2 && this.commanders.indexOf('\n') < 2;
+    return !this.deck.main.length && !this.deck.commanders.length;
+  }
+
+  countCards(): number {
+    return (
+      this.deck.main.reduce((acc, card) => acc + card.quantity, 0) +
+      this.deck.commanders.reduce((acc, card) => acc + card.quantity, 0)
+    );
   }
 }
 
@@ -58,11 +66,13 @@ const FindMyCombos: React.FC = () => {
   const router = useRouter();
 
   const [decklist, setDecklist] = useState<string>('');
+  const [commanderList, setCommanderList] = useState<string>('');
   const [deckUrlHint, setDeckUrlHint] = useState<string>('');
   const [deckUrl, setDeckUrl] = useState<string>('');
-  const [commanderList, setCommanderList] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
+  const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
+  const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<{
     identity: string;
     included: Variant[];
@@ -92,32 +102,33 @@ const FindMyCombos: React.FC = () => {
   const configuration = apiConfiguration();
   const findMyCombosApi = new FindMyCombosApi(configuration);
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
+  const cardListFromTextApi = new CardListFromTextApi(configuration);
+
+  const parseDecklist = async (decklistRaw: string, commanderListRaw?: string): Promise<Decklist> => {
+    if (commanderListRaw) {
+      decklistRaw = `${decklistRaw}\n// Commanders\n${commanderListRaw}`;
+    }
+    const deck = await cardListFromTextApi.cardListFromTextCreate({ body: decklistRaw });
+    const decklist = new Decklist(deck);
+    setDecklist(decklist.mainListString());
+    setCommanderList(decklist.commanderListString());
+    return decklist;
+  };
 
   const lookupCombos = async (
-    newDeckList: string,
-    newCommanderList: string,
+    decklist: Decklist,
     forwardedResults?: typeof results,
-    next?: string,
-    page = 1,
-  ): Promise<any> => {
+    offset?: number,
+  ): Promise<void> => {
     setLookupInProgress(true);
-    const decklist = new Decklist(undefined, newDeckList, newCommanderList);
 
     if (decklist.isEmpty()) {
       return setLookupInProgress(false);
     }
 
-    localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, newDeckList);
-    localStorage.setItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY, newCommanderList);
+    localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
 
-    const body: Middleware = {
-      pre: (context: RequestContext) => {
-        context.init.body = `${newDeckList}\n// Commanders\n${newCommanderList}`;
-        return Promise.resolve({ url: context.url, init: context.init });
-      },
-    };
-
-    const combos = await findMyCombosApi.withMiddleware(body).findMyCombosRetrieve();
+    const combos = await findMyCombosApi.findMyCombosCreate({ deckRequest: decklist.deck, offset });
 
     setCurrentlyParsedDeck(decklist);
 
@@ -139,8 +150,15 @@ const FindMyCombos: React.FC = () => {
       ).concat(combos.results.almostIncludedByAddingColorsAndChangingCommanders),
     };
 
-    if (combos.next && page < 5) {
-      return lookupCombos(newDeckList, newCommanderList, newResults, combos.next, page + 1);
+    const resultCount =
+      newResults.included.length +
+      newResults.almostIncluded.length +
+      newResults.almostIncludedByAddingColors.length +
+      newResults.almostIncludedByChangingCommanders.length +
+      newResults.almostIncludedByAddingColorsAndChangingCommanders.length;
+
+    if (combos.next && (offset ?? 0) <= 5000) {
+      return lookupCombos(decklist, newResults, resultCount);
     } // Adding a page limit to prevent infinite loops
 
     setResults(newResults);
@@ -154,7 +172,6 @@ const FindMyCombos: React.FC = () => {
     setDeckUrl('');
     setResults(DEFAULT_RESULTS);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
   };
 
   useEffect(() => {
@@ -163,23 +180,21 @@ const FindMyCombos: React.FC = () => {
     }
 
     if (router.query.decklist || router.query.commanders) {
-      setDecklist((router.query.decklist as string) || '');
-      setCommanderList((router.query.commanders as string) || '');
-      lookupCombos((router.query.decklist as string) || '', (router.query.commanders as string) || '');
+      const decklist = (router.query.decklist as string) || '';
+      const commanderList = (router.query.commanders as string) || '';
+      parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist));
       return;
     }
 
-    const savedDeck = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
-    const savedCommanderList = localStorage.getItem(LOCAL_STORAGE_COMMANDER_STORAGE_KEY);
-
-    if (!savedDeck?.trim()) {
+    const savedDeckString = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    if (!savedDeckString) {
       return;
     }
 
-    setDecklist(savedDeck);
-    setCommanderList(savedCommanderList || '');
+    const savedDeck: Deck = DeckFromJSON(JSON.parse(savedDeckString));
+    const decklist: Decklist = new Decklist(savedDeck);
 
-    lookupCombos(savedDeck, savedCommanderList || '');
+    lookupCombos(decklist);
   }, [router.isReady]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -195,14 +210,13 @@ const FindMyCombos: React.FC = () => {
     try {
       const deck = await cardListFromUrlApi.cardListFromUrlRetrieve({ url: deckUrl });
       setDeckUrlHint('');
-      const decklist = deck.main.map((card) => `${card.quantity} ${card.card}`).join('\n');
-      const commanderList = deck.commanders.map((card) => `${card.quantity} ${card.card}`).join('\n');
-      setDecklist(decklist);
-      setCommanderList(commanderList);
-      lookupCombos(decklist, commanderList);
+      const decklist = new Decklist(deck);
+      setDecklist(decklist.mainListString());
+      setCommanderList(decklist.commanderListString());
+      lookupCombos(decklist);
     } catch (error: any) {
-      const err = error as ErrorResult;
-      setDeckUrlHint(err.error);
+      const err = error as InvalidUrlResponse;
+      setDeckUrlHint(err.detail);
     }
   };
 
@@ -245,10 +259,17 @@ const FindMyCombos: React.FC = () => {
 
           {!!decklist && (
             <>
+              <span
+                id="decklist-card-count"
+                className={`${styles.decklistCardCount} gradient relative`}
+                aria-hidden="true"
+              >
+                {numberOfCardsText}
+              </span>
               <button
                 id="clear-decklist-input"
                 className={`${styles.clearDecklistInput} button`}
-                onClick={() => lookupCombos(decklist, commanderList)}
+                onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
               >
                 Find New Combos!
               </button>
@@ -313,7 +334,7 @@ const FindMyCombos: React.FC = () => {
             <section id="potential-combos-in-deck-section">
               <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
               <p>List of combos where your decklist is missing 1 combo piece.</p>
-              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck} />
+              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} />
             </section>
           )}
 
@@ -323,7 +344,7 @@ const FindMyCombos: React.FC = () => {
               <p>
                 List of combos where your decklist is missing 1 combo piece, but requires at least one additional color.
               </p>
-              <ComboResults results={results.almostIncludedByAddingColors} deck={currentlyParsedDeck} />
+              <ComboResults results={results.almostIncludedByAddingColors} deck={currentlyParsedDeck?.deck} />
             </section>
           )}
           {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length && (
@@ -332,7 +353,7 @@ const FindMyCombos: React.FC = () => {
                 {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
               </h2>
               <p>List of combos where your decklist is missing 1 combo piece, but requires changing your commander.</p>
-              <ComboResults results={results.almostIncludedByChangingCommanders} deck={currentlyParsedDeck} />
+              <ComboResults results={results.almostIncludedByChangingCommanders} deck={currentlyParsedDeck?.deck} />
             </section>
           )}
           {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length && (
@@ -347,7 +368,7 @@ const FindMyCombos: React.FC = () => {
               </p>
               <ComboResults
                 results={results.almostIncludedByAddingColorsAndChangingCommanders}
-                deck={currentlyParsedDeck}
+                deck={currentlyParsedDeck?.deck}
               />
             </section>
           )}
