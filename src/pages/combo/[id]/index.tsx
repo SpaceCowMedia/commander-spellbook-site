@@ -21,7 +21,6 @@ import {
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import BulkApiService from 'services/bulk-api.service';
-import joinImages from 'join-images';
 
 type Props = {
   combo?: Variant;
@@ -208,16 +207,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
       };
     });
-    // 1.1 create an image preview
-    const artWidth = 457;
-    const imageAsBase64 = await joinImages(
-      cardsWithImages.map((card, index) => ({ src: card.artUrl, x: index * artWidth })),
-    );
     return {
       props: {
         combo: backendCombo,
         cardImages: cardsWithImages,
-        previewImageUrl: imageAsBase64,
       },
     };
   } catch (err) {

@@ -104,21 +104,22 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
       <div>
         {featured ? (
           <>
-            <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden" />
+            <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden my-8" />
             <h1 className="heading-title">Featured Combos</h1>
           </>
         ) : (
-          <h1 className="sr-only">Search Results</h1>
+          <>
+            <h1 className="sr-only">Search Results</h1>
+            <SearchMessage
+              message={error ? '' : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
+              errors={error ?? ''}
+              currentPage={page}
+              totalPages={1}
+              totalResults={1}
+              maxNumberOfCombosPerPage={1}
+            />
+          </>
         )}
-
-        <SearchMessage
-          message={error ? '' : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
-          errors={error ?? ''}
-          currentPage={page}
-          totalPages={1}
-          totalResults={1}
-          maxNumberOfCombosPerPage={1}
-        />
 
         {combos.length > 0 && (
           <div className="border-b border-light">
@@ -188,6 +189,7 @@ export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let query = `${context.query.q}`;
+  const isFeatured = query === 'is:featured';
   let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
   if (isQueryMissingFormat) {
     query = `${query} legal:commander`;
@@ -245,6 +247,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         combos: backendCombos,
         count: results.count,
         page: context.query.page || 1,
+        featured: isFeatured,
       },
     };
   } catch (error: any) {
