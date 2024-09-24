@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import styles from './searchBar.module.scss';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { useCookies } from 'react-cookie';
 import { apiConfiguration } from 'services/api.service';
@@ -23,6 +23,17 @@ const countUpToString = (count: number) => {
   return countString;
 };
 
+function getQueryFromRouter(router: NextRouter): string {
+  if (router.query.q) {
+    if (Array.isArray(router.query.q)) {
+      return router.query.q[0];
+    } else {
+      return router.query.q;
+    }
+  }
+  return '';
+}
+
 const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
@@ -32,7 +43,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   const countUpRef = useRef<number>(initialCount);
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(router.query.q);
+  const [inputValue, setInputValue] = useState(getQueryFromRouter(router));
   const [cookies, setCookies] = useCookies(['variantCount']);
   const [variantCount, setVariantCount] = useState<number>(initialCount);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -58,7 +69,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   };
 
   useEffect(() => {
-    setInputValue(router.query.q);
+    setInputValue(getQueryFromRouter(router));
   }, [router.query.q]);
 
   useEffect(() => {
@@ -91,7 +102,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
         )}
 
         <div className="flex flex-grow items-center">
-          {!onHomepage && <div className={styles.searchInputIcon} aria-hidden="true" onClick={() => 'focusSearch'} />}
+          {!onHomepage && <button className={styles.searchInputIcon} type="submit" />}
           <label htmlFor="search-bar-input" className="sr-only text-white" aria-hidden="true">
             Combo Search
           </label>
