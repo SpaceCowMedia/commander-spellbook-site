@@ -43,18 +43,17 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
     }
   };
 
-  const handleCountUp = () => {
+  const handleCountUp = (target: number) => {
     if (!inputRef.current) {
       return;
     }
-    const target = cookies.variantCount ?? 1000000;
     if (countUpRef.current < target) {
       const increment = (target - initialCount) / 50;
       countUpRef.current += Math.floor((1 + Math.random()) * increment);
       inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
-      setTimeout(handleCountUp, 50);
-    } else if (cookies.variantCount) {
-      inputRef.current.placeholder = `Search ${cookies.variantCount} EDH combos`;
+      setTimeout(() => handleCountUp(target), 50);
+    } else {
+      inputRef.current.placeholder = `Search ${target} EDH combos`;
     }
   };
 
@@ -65,14 +64,14 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   useEffect(() => {
     if (cookies.variantCount) {
       setVariantCount(cookies.variantCount);
-      handleCountUp();
+      handleCountUp(cookies.variantCount);
     } else if (!cookies.variantCount) {
       variantsApi
-        .variantsList({ limit: 1 })
+        .variantsList({ limit: 1, q: 'legal:commander' })
         .then((response) => {
           setCookies('variantCount', response.count, { path: '/', maxAge: 3 * 60 * 60 });
           setVariantCount(response.count);
-          handleCountUp();
+          handleCountUp(response.count);
         })
         .catch((_error) => {
           setVariantCount(0);
