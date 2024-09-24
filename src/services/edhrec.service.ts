@@ -1,4 +1,4 @@
-import { Variant } from '../lib/types';
+import { Variant } from '@spacecowmedia/spellbook-client';
 
 const getComboUrl = (variant: Variant) => {
   return `https://edhrec.com/combos/${variant.identity.toLowerCase()}/${variant.id}`;

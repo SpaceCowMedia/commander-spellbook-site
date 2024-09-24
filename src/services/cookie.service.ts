@@ -9,10 +9,7 @@ export const expirationDurations = {
   year: 31536000,
 };
 
-export function get<T = any>(
-  path: string,
-  serverCookies?: Record<string, any> | string,
-): T {
+export function get<T = any>(path: string, serverCookies?: Record<string, any> | string): T {
   const cookies = new Cookies(serverCookies);
 
   // @ts-ignore
@@ -21,12 +18,7 @@ export function get<T = any>(
   return result as T;
 }
 
-export function set(
-  key: string,
-  value: any,
-  age?: keyof typeof expirationDurations,
-  cookies?: Cookies,
-) {
+export function set(key: string, value: any, age?: keyof typeof expirationDurations, cookies?: Cookies) {
   const cookiesInstance = cookies ?? new Cookies();
 
   const maxAge = age ? expirationDurations[age] : undefined;

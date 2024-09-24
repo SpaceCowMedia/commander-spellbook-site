@@ -114,7 +114,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run typescript 👀
-        run: yarn tsc
+        run: yarn tsc --noEmit
 
   build-push:
     runs-on: ubuntu-latest
