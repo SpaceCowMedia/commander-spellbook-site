@@ -31,11 +31,18 @@ const ScryfallResultsModal: React.FC<Props> = ({
 
   const fetchResults = async () => {
     setLoading(true);
-    const response = await fetch(`${scryfallApiUrl}`);
-    const json = await response.json();
-    setLoading(false);
-    setResults(json.data);
-    setNextUrl(json.next_page);
+    try {
+      const response = await fetch(`${scryfallApiUrl}`);
+      const json = await response.json();
+      setLoading(false);
+      setResults(json.data);
+      setNextUrl(json.next_page);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setResults([]);
+      setNextUrl(null);
+    }
   };
 
   const fetchNextResults = async () => {

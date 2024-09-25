@@ -197,16 +197,30 @@ const AutocompleteInput: React.FC<Props> = ({
         setLoading(true);
       }
       if (cardAutocomplete) {
-        const cards: string[] = await scryfall.autocomplete(value, { include_extras: false });
-        options = options.concat(cards.map((card) => ({ value: card, label: card })));
+        try {
+          const cards: string[] = await scryfall.autocomplete(value, { include_extras: false });
+          options = options.concat(cards.map((card) => ({ value: card, label: card })));
+        } catch (e) {
+          console.error(e);
+        }
       }
       if (templateAutocomplete) {
-        const templates = await templatesApi.templatesList({ q: value });
-        options = options.concat(templates.results.map((template) => ({ value: template.name, label: template.name })));
+        try {
+          const templates = await templatesApi.templatesList({ q: value });
+          options = options.concat(
+            templates.results.map((template) => ({ value: template.name, label: template.name })),
+          );
+        } catch (e) {
+          console.error(e);
+        }
       }
       if (resultAutocomplete) {
-        const results = await resultsApi.featuresList({ q: value });
-        options = options.concat(results.results.map((result) => ({ value: result.name, label: result.name })));
+        try {
+          const results = await resultsApi.featuresList({ q: value });
+          options = options.concat(results.results.map((result) => ({ value: result.name, label: result.name })));
+        } catch (e) {
+          console.error(e);
+        }
       }
       if (!inMemory) {
         setLoading(false);

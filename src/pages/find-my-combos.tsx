@@ -16,6 +16,7 @@ import {
   Variant,
   DeckToJSON,
   DeckFromJSON,
+  ResponseError,
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
@@ -67,8 +68,9 @@ const FindMyCombos: React.FC = () => {
 
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
-  const [deckUrlHint, setDeckUrlHint] = useState<string>('');
+  const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
   const [deckUrl, setDeckUrl] = useState<string>('');
+  const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
@@ -104,15 +106,36 @@ const FindMyCombos: React.FC = () => {
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
+  const handleError = async (err: any) => {
+    const error = err as ResponseError;
+    const body = JSON.parse(await error.response.text());
+    const errorMessages: string[] = [];
+    Object.keys(body.main).forEach((key) => {
+      if (body.main[key].card) {
+        errorMessages.push(`Card #${key}: ${body.main[key].card}`);
+      }
+      if (body.main[key].quantity) {
+        errorMessages.push(`Card #${key} quantity: ${body.main[key].quantity}`);
+      }
+    });
+    setDecklistErrors(errorMessages);
+  };
+
   const parseDecklist = async (decklistRaw: string, commanderListRaw?: string): Promise<Decklist> => {
     if (commanderListRaw) {
       decklistRaw = `${decklistRaw}\n// Commanders\n${commanderListRaw}`;
     }
-    const deck = await cardListFromTextApi.cardListFromTextCreate({ body: decklistRaw });
-    const decklist = new Decklist(deck);
-    setDecklist(decklist.mainListString());
-    setCommanderList(decklist.commanderListString());
-    return decklist;
+    try {
+      const deck = await cardListFromTextApi.cardListFromTextCreate({ body: decklistRaw });
+      const decklist = new Decklist(deck);
+      setDecklist(decklist.mainListString());
+      setCommanderList(decklist.commanderListString());
+      setDecklistErrors([]);
+      return decklist;
+    } catch (err: any) {
+      await handleError(err);
+      return new Decklist({ commanders: [], main: [] });
+    }
   };
 
   const lookupCombos = async (
@@ -128,40 +151,46 @@ const FindMyCombos: React.FC = () => {
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
 
-    const combos = await findMyCombosApi.findMyCombosCreate({ deckRequest: decklist.deck, offset });
+    try {
+      const combos = await findMyCombosApi.findMyCombosCreate({ deckRequest: decklist.deck, offset });
 
-    setCurrentlyParsedDeck(decklist);
+      setCurrentlyParsedDeck(decklist);
 
-    const newResults = {
-      identity: combos.results.identity,
-      included: (forwardedResults?.included || []).concat(combos.results.included),
-      includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(
-        combos.results.includedByChangingCommanders,
-      ),
-      almostIncluded: (forwardedResults?.almostIncluded || []).concat(combos.results.almostIncluded),
-      almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(
-        combos.results.almostIncludedByChangingCommanders,
-      ),
-      almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(
-        combos.results.almostIncludedByAddingColors,
-      ),
-      almostIncludedByAddingColorsAndChangingCommanders: (
-        forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []
-      ).concat(combos.results.almostIncludedByAddingColorsAndChangingCommanders),
-    };
+      const newResults = {
+        identity: combos.results.identity,
+        included: (forwardedResults?.included || []).concat(combos.results.included),
+        includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(
+          combos.results.includedByChangingCommanders,
+        ),
+        almostIncluded: (forwardedResults?.almostIncluded || []).concat(combos.results.almostIncluded),
+        almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(
+          combos.results.almostIncludedByChangingCommanders,
+        ),
+        almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(
+          combos.results.almostIncludedByAddingColors,
+        ),
+        almostIncludedByAddingColorsAndChangingCommanders: (
+          forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []
+        ).concat(combos.results.almostIncludedByAddingColorsAndChangingCommanders),
+      };
 
-    const resultCount =
-      newResults.included.length +
-      newResults.almostIncluded.length +
-      newResults.almostIncludedByAddingColors.length +
-      newResults.almostIncludedByChangingCommanders.length +
-      newResults.almostIncludedByAddingColorsAndChangingCommanders.length;
+      const resultCount =
+        newResults.included.length +
+        newResults.almostIncluded.length +
+        newResults.almostIncludedByAddingColors.length +
+        newResults.almostIncludedByChangingCommanders.length +
+        newResults.almostIncludedByAddingColorsAndChangingCommanders.length;
 
-    if (combos.next && (offset ?? 0) <= 5000) {
-      return lookupCombos(decklist, newResults, resultCount);
-    } // Adding a page limit to prevent infinite loops
+      if (combos.next && (offset ?? 0) <= 5000) {
+        return lookupCombos(decklist, newResults, resultCount);
+      } // Adding a page limit to prevent infinite loops
 
-    setResults(newResults);
+      setResults(newResults);
+    } catch (error: any) {
+      await handleError(error);
+      setResults(DEFAULT_RESULTS);
+    }
+
     setLookupInProgress(false);
   };
 
@@ -170,6 +199,8 @@ const FindMyCombos: React.FC = () => {
     setDecklist('');
     setCommanderList('');
     setDeckUrl('');
+    setDeckUrlHint('');
+    setDecklistErrors([]);
     setResults(DEFAULT_RESULTS);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
   };
@@ -214,9 +245,10 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       lookupCombos(decklist);
-    } catch (error: any) {
-      const err = error as InvalidUrlResponse;
-      setDeckUrlHint(err.detail);
+    } catch (err: any) {
+      const error = err as ResponseError;
+      const body: InvalidUrlResponse = JSON.parse(await error.response.text());
+      setDeckUrlHint(body.detail);
     }
   };
 
@@ -266,20 +298,28 @@ const FindMyCombos: React.FC = () => {
               >
                 {numberOfCardsText}
               </span>
-              <button
-                id="clear-decklist-input"
-                className={`${styles.clearDecklistInput} button`}
-                onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
-              >
-                Find New Combos!
-              </button>
-              <button
-                id="clear-decklist-input"
-                className={`${styles.clearDecklistInput} button`}
-                onClick={clearDecklist}
-              >
-                Clear Decklist
-              </button>
+              {!lookupInProgress && (
+                <>
+                  <button
+                    id="clear-decklist-input"
+                    className={`${styles.clearDecklistInput} button`}
+                    onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
+                  >
+                    Find New Combos!
+                  </button>
+
+                  <button
+                    id="clear-decklist-input"
+                    className={`${styles.clearDecklistInput} button`}
+                    onClick={clearDecklist}
+                  >
+                    Clear Decklist
+                  </button>
+                </>
+              )}
+              {decklistErrors.map((error) => (
+                <ErrorMessage key={error}>{error}</ErrorMessage>
+              ))}
             </>
           )}
 
@@ -311,7 +351,7 @@ const FindMyCombos: React.FC = () => {
               <button id="submit-url-input" className={`${styles.clearDecklistInput} button`} onClick={handleUrlInput}>
                 Submit URL
               </button>
-              {deckUrlHint && <ErrorMessage>{deckUrlHint}</ErrorMessage>}
+              {deckUrlError && <ErrorMessage>{deckUrlError}</ErrorMessage>}
             </section>
           )}
         </section>

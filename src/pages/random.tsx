@@ -27,24 +27,30 @@ const Random: React.FC = () => {
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
-  const combos = await variantsApi.variantsList({
-    limit: 1,
-    ordering: '?',
-    q: 'legal:commander',
-  });
-  if (combos.results.length > 0) {
-    const randomCombo = combos.results[0];
+  try {
+    const combos = await variantsApi.variantsList({
+      limit: 1,
+      ordering: '?',
+      q: 'legal:commander',
+    });
+    if (combos.results.length > 0) {
+      const randomCombo = combos.results[0];
+      return {
+        redirect: {
+          destination: `/combo/${randomCombo.id}`,
+          basePath: true,
+          permanent: false,
+        },
+      };
+    }
     return {
-      redirect: {
-        destination: `/combo/${randomCombo.id}`,
-        basePath: true,
-        permanent: false,
-      },
+      notFound: true,
+    };
+  } catch (error) {
+    return {
+      notFound: true,
     };
   }
-  return {
-    notFound: true,
-  };
 };
 
 export default Random;
