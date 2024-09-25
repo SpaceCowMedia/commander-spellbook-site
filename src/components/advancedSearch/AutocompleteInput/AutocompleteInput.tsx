@@ -5,7 +5,9 @@ import normalizeStringInput from '../../../lib/normalizeStringInput';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Loader from '../../layout/Loader/Loader';
 import { apiConfiguration } from 'services/api.service';
-import { CardsApi, FeaturesApi, TemplatesApi } from '@spacecowmedia/spellbook-client';
+import { FeaturesApi, TemplatesApi } from '@spacecowmedia/spellbook-client';
+import scryfall from 'scryfall-client';
+import { useDebounce } from 'use-debounce';
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 150;
@@ -50,6 +52,7 @@ const AutocompleteInput: React.FC<Props> = ({
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState<string>(value);
+  const [debouncedLocalValue] = useDebounce(localValue, AUTOCOMPLETE_DELAY);
   const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<
     Array<{ value: string; label: string }>
   >([]);
@@ -100,8 +103,11 @@ const AutocompleteInput: React.FC<Props> = ({
   const handleChange = (value: string) => {
     setLocalValue(value);
     onChange && onChange(value);
-    lookupAutoComplete();
   };
+
+  useEffect(() => {
+    lookupAutoComplete();
+  }, [debouncedLocalValue]);
 
   const handleBlur = () => {
     if (!active) {
@@ -177,7 +183,6 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const configuration = apiConfiguration();
-  const cardsApi = new CardsApi(configuration);
   const templatesApi = new TemplatesApi(configuration);
   const resultsApi = new FeaturesApi(configuration);
 
@@ -192,22 +197,16 @@ const AutocompleteInput: React.FC<Props> = ({
         setLoading(true);
       }
       if (cardAutocomplete) {
-        const cards = await cardsApi.cardsList({ q: value });
-        options = options.concat(
-          cards.results.map((card) => ({ value: normalizeStringInput(card.name), label: card.name })),
-        );
+        const cards: string[] = await scryfall.autocomplete(value, { include_extras: false });
+        options = options.concat(cards.map((card) => ({ value: card, label: card })));
       }
       if (templateAutocomplete) {
         const templates = await templatesApi.templatesList({ q: value });
-        options = options.concat(
-          templates.results.map((template) => ({ value: normalizeStringInput(template.name), label: template.name })),
-        );
+        options = options.concat(templates.results.map((template) => ({ value: template.name, label: template.name })));
       }
       if (resultAutocomplete) {
         const results = await resultsApi.featuresList({ q: value });
-        options = options.concat(
-          results.results.map((result) => ({ value: normalizeStringInput(result.name), label: result.name })),
-        );
+        options = options.concat(results.results.map((result) => ({ value: result.name, label: result.name })));
       }
       if (!inMemory) {
         setLoading(false);

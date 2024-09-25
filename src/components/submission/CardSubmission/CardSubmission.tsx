@@ -69,7 +69,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
             inputClassName="border-dark"
             templateAutocomplete={true}
             inputId={index.toString()}
-            placeholder="Search for a template (ex: 'Creature with haste')..."
+            placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
             // hasError={!!input.error}
             useValueForInput
             matchAgainstOptionLabel
@@ -166,6 +166,21 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       )}
 
       <div className="mt-8">
+        <label className="cursor-pointer select-none mr-2" htmlFor={`quantity-input-${template ? 't' : 'c'}-${index}`}>
+          Quantity:
+        </label>
+        <input
+          className="mr-2 cursor-pointer border rounded-md"
+          type="number"
+          defaultValue="1"
+          id={`quantity-input-${template ? 't' : 'c'}-${index}`}
+          min="1"
+          max="10"
+          onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) })}
+        />
+      </div>
+
+      <div className="mt-2">
         <input
           className="mr-2 cursor-pointer"
           id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}

@@ -19,6 +19,7 @@ import {
   CardUsedInVariantSuggestionRequest,
   FeatureProducedInVariantSuggestionRequest,
   FindMyCombosApi,
+  ResponseError,
   TemplateRequiredInVariantSuggestionRequest,
   VariantSuggestionsApi,
 } from '@spacecowmedia/spellbook-client';
@@ -36,7 +37,6 @@ const SubmitACombo: React.FC = () => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [_error, setError] = useState('');
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
 
   const configuration = apiConfiguration();
@@ -51,6 +51,7 @@ const SubmitACombo: React.FC = () => {
       ...cards,
       {
         card: '',
+        quantity: 1,
         zoneLocations: [],
         battlefieldCardState: '',
         exileCardState: '',
@@ -66,6 +67,7 @@ const SubmitACombo: React.FC = () => {
       ...templates,
       {
         template: '',
+        quantity: 1,
         zoneLocations: [],
         battlefieldCardState: '',
         exileCardState: '',
@@ -114,89 +116,103 @@ const SubmitACombo: React.FC = () => {
 
   const confirmSubmit = async () => {
     setSubmitting(true);
-    setError('');
     setErrorObj(undefined);
-    await variantSuggestionsApi.variantSuggestionsCreate({
-      uses: cards,
-      requires: templates,
-      produces: features,
-      description: steps.join('\n'),
-      otherPrerequisites,
-      manaNeeded: manaCost,
-      comment,
-      spoiler,
-    });
-    setSubmitting(false);
-    setSuccess(true);
-    // requestService
-    //   .post('/api/variant-suggestions/', submission)
-    //   .then(() => {
-    //     setSubmitting(false);
-    //     setSuccess(true);
-    //   })
-    //   .catch((err) => {
-    //     setSubmitting(false);
-    //     if (Array.isArray(err)) {
-    //       setError(err.join('\n'));
-    //     } else {
-    //       setError(JSON.stringify(err));
-    //     }
-    //     setErrorObj(err);
-    //   });
+    try {
+      await variantSuggestionsApi.variantSuggestionsCreate({
+        variantSuggestionRequest: {
+          uses: cards,
+          requires: templates,
+          produces: features,
+          description: steps.join('\n'),
+          otherPrerequisites,
+          manaNeeded: manaCost,
+          comment,
+          spoiler,
+        },
+      });
+      setSubmitting(false);
+      setSuccess(true);
+    } catch (err) {
+      setSuccess(false);
+      setSubmitting(false);
+      const error = err as ResponseError;
+      const errorBody = await error.response.text();
+      const errorJson = JSON.parse(errorBody);
+      setErrorObj(errorJson);
+    }
   };
 
   function cardSubmissionToCardInDeck(card: CardUsedInVariantSuggestionRequest): CardInDeckRequest {
     return {
       card: card.card,
-      quantity: 1, // TODO: use card.quantity
+      quantity: card.quantity,
     };
   }
 
   const handleSubmit = async () => {
-    const result = await findMyCombosApi.findMyCombosCreate({
-      deckRequest: {
-        main: cards.map(cardSubmissionToCardInDeck),
-      },
-    });
-    const duplicates = result.results.included;
-    if (duplicates.length > 0) {
-      confirmAlert({
-        message: `This combo appears to include ${duplicates.length} other combo${duplicates.length > 1 ? 's' : ''} already in the database.`,
-        childrenElement: function () {
-          return (
-            <div style={{ marginTop: '1rem', textAlign: 'justify' }}>
-              <h3 className="heading-subtitle">{duplicates.length > 6 ? 'Some ' : ''}Included Combos</h3>
-              {duplicates.slice(0, 6).map((combo) => (
-                <div className="w-full text-center" key={combo.id}>
-                  <Link href={`/combo/${combo.id}`} key={combo.id} rel="noopener noreferrer" target="_blank">
-                    {combo.uses.map(({ card }) => card.name).join(' + ')}
-                  </Link>
-                </div>
-              ))}
-              <p style={{ marginTop: '1rem' }}>
-                Please, make sure that your combo does not contain "payoff" cards and follows{' '}
-                <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">
-                  our guidelines
-                </ExternalLink>
-                . We only accept combos in their simplest form, and without any unnecessary card.
-              </p>
-              <p>Would you like to submit it anyway?</p>
-            </div>
-          );
+    try {
+      const result = await findMyCombosApi.findMyCombosCreate({
+        deckRequest: {
+          main: cards.map(cardSubmissionToCardInDeck),
         },
-        buttons: [
-          {
-            label: 'Yes',
-            onClick: confirmSubmit,
-          },
-          {
-            label: 'No',
-            onClick: () => {},
-          },
-        ],
       });
-    } else {
-      await confirmSubmit();
+      const duplicates = result.results.included;
+      if (duplicates.length > 0) {
+        confirmAlert({
+          message: `This combo appears to include ${duplicates.length} other combo${duplicates.length > 1 ? 's' : ''} already in the database.`,
+          childrenElement: function () {
+            return (
+              <div style={{ marginTop: '1rem', textAlign: 'justify' }}>
+                <h3 className="heading-subtitle">{duplicates.length > 6 ? 'Some ' : ''}Included Combos</h3>
+                {duplicates.slice(0, 6).map((combo) => (
+                  <div className="w-full text-center" key={combo.id}>
+                    <Link href={`/combo/${combo.id}`} key={combo.id} rel="noopener noreferrer" target="_blank">
+                      {combo.uses
+                        .map(({ card, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${card.name}`)
+                        .concat(
+                          combo.requires.map(
+                            ({ template, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${template.name}`,
+                          ),
+                        )
+                        .join(' + ')}
+                    </Link>
+                  </div>
+                ))}
+                <p style={{ marginTop: '1rem' }}>
+                  Please, make sure that your combo does not contain "payoff" cards and follows{' '}
+                  <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">
+                    our guidelines
+                  </ExternalLink>
+                  . We only accept combos in their simplest form, and without any unnecessary card.
+                </p>
+                <p>Would you like to submit it anyway?</p>
+              </div>
+            );
+          },
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: confirmSubmit,
+            },
+            {
+              label: 'No',
+              onClick: () => {},
+            },
+          ],
+        });
+      } else {
+        await confirmSubmit();
+      }
+    } catch (err) {
+      setSuccess(false);
+      setSubmitting(false);
+      const error = err as ResponseError;
+      const errorBody = await error.response.text();
+      const errorJson = JSON.parse(errorBody);
+      const cardErrors = Object.keys(errorJson.main).map(parseInt);
+      cardErrors.sort((a, b) => a - b);
+      errorJson.uses = cardErrors.map((index) => errorJson.main[index.toString()]);
+      setErrorObj(errorJson);
     }
   };
 
