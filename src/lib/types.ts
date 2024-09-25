@@ -1,9 +1,10 @@
 import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
 
-export type NewPrerequisiteType = {
-  // TODO: rename with a better name
-  z: string; // zone either H, B, C, G, L, E or multi
-  s: string; // prerequisite string
+export type ComboPrerequisites = {
+  /* Zone either H, B, C, G, L, E or multiple of them */
+  zones: string;
+  /* Additional description of the prerequisite */
+  description: string;
 };
 
 export type ComboSubmissionErrorType = {

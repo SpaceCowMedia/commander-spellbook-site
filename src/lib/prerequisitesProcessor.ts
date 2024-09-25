@@ -1,4 +1,4 @@
-import { NewPrerequisiteType, getName, getNameBeforeComma } from './types';
+import { ComboPrerequisites, getName, getNameBeforeComma } from './types';
 import { CardInVariant, TemplateInVariant, Variant } from '@spacecowmedia/spellbook-client';
 
 const ZONE_MAP = {
@@ -40,8 +40,8 @@ const getZoneStateMap = (card: CardInVariant | TemplateInVariant) => {
   return output;
 };
 
-export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => {
-  let output: NewPrerequisiteType[] = [];
+export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
+  let output: ComboPrerequisites[] = [];
 
   const cardsAndTemplates: Array<CardInVariant | TemplateInVariant> = (
     variant.uses as Array<CardInVariant | TemplateInVariant>
@@ -85,7 +85,7 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
       cardString += ` (${combinedStateString})`;
     }
     cardString += '. ';
-    output.push({ z: 'multi', s: cardString });
+    output.push({ zones: 'multi', description: cardString });
   }
   const singleZoneCards = cardsAndTemplates.filter((card) => card.zoneLocations.length === 1);
 
@@ -135,14 +135,14 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
     // If this is the last zone group, and it has more than 2 cards, swap card names for combinations string
     if (index === zoneGroups.length - 1 && cards.length > 2) {
       output.push({
-        z: zoneGroup.zone,
-        s: `All${zoneGroups.length + multiZoneCards.length > 1 ? ' other' : ''} ${zoneGroup.zone === 'B' ? 'permanents' : 'cards'} ${ZONE_MAP[zoneGroup.zone]}${zoneGroup.cardState}`,
+        zones: zoneGroup.zone,
+        description: `All${zoneGroups.length + multiZoneCards.length > 1 ? ' other' : ''} ${zoneGroup.zone === 'B' ? 'permanents' : 'cards'} ${ZONE_MAP[zoneGroup.zone]}${zoneGroup.cardState}`,
       });
     } else {
       // Otherwise just list the cards
       output.push({
-        z: zoneGroup.zone,
-        s:
+        zones: zoneGroup.zone,
+        description:
           (cards.length < 3 ? cards.join(' and ') : cards.slice(0, -1).join(', ') + ' and ' + cards.slice(-1)) +
           ' ' +
           ZONE_MAP[zoneGroup.zone] +
@@ -154,10 +154,12 @@ export const getPrerequisiteList = (variant: Variant): NewPrerequisiteType[] => 
 
   // Add any other prerequisites
   if (variant.otherPrerequisites) {
-    variant.otherPrerequisites.split(/\.\s+/gi).forEach((prereq) => output.push({ z: 'other', s: prereq }));
+    variant.otherPrerequisites
+      .split(/\.\s+/gi)
+      .forEach((prereq) => output.push({ zones: 'other', description: prereq }));
   }
   if (variant.manaNeeded) {
-    output.push({ z: 'mana', s: `${variant.manaNeeded} available` });
+    output.push({ zones: 'mana', description: `${variant.manaNeeded} available` });
   }
 
   return output;

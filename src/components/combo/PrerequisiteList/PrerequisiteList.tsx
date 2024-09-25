@@ -1,4 +1,4 @@
-import { NewPrerequisiteType } from '../../../lib/types';
+import { ComboPrerequisites } from '../../../lib/types';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Icon from '../../layout/Icon/Icon';
 import { addPeriod } from '../../../lib/addPeriod';
@@ -6,7 +6,7 @@ import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
 import React from 'react';
 
 type Props = {
-  prerequisites: NewPrerequisiteType[];
+  prerequisites: ComboPrerequisites[];
   className?: string;
   id?: string;
   cardsInCombo?: string[];
@@ -36,15 +36,15 @@ const PrerequisiteList: React.FC<Props> = ({
         <h2 className="font-bold text-xl mb-2">Prerequisites</h2>
         <ol className="list-inside">
           {prerequisites.map((prereq, index) => (
-            <li key={`${prereq.z}-${index}`}>
-              {ICON_MAP[prereq.z as keyof typeof ICON_MAP] && (
+            <li key={`${prereq.zones}-${index}`}>
+              {ICON_MAP[prereq.zones as keyof typeof ICON_MAP] && (
                 <>
-                  <Icon name={ICON_MAP[prereq.z as keyof typeof ICON_MAP] as any} />
+                  <Icon name={ICON_MAP[prereq.zones as keyof typeof ICON_MAP] as any} />
                   &nbsp;
                 </>
               )}
               <TextWithMagicSymbol
-                text={addPeriod(prereq.s)}
+                text={addPeriod(prereq.description)}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
                 templatesInCombo={templatesInCombo}
