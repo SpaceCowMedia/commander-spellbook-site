@@ -10,8 +10,8 @@
                 "owner": "custom",
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "^.*Ready.*$",
-                    "endsPattern": "^.*Ready.*$"
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^.*$"
                 },
                 "pattern": {
                     "regexp": "______",
