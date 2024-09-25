@@ -22,7 +22,7 @@ const Login: React.FC = () => {
       const configuration = apiConfiguration();
       const tokensApi = new TokenApi(configuration);
       tokensApi
-        .tokenCreate({ code: code instanceof Array ? code[0] : code })
+        .tokenCreate({ tokenObtainPairRequest: { code: code instanceof Array ? code[0] : code } })
         .then((data) => {
           TokenService.setToken(data);
           const decodedToken = TokenService.decodeJwt(data.access);
