@@ -214,7 +214,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (backendCombos.length === 0 && isQueryMissingFormat) {
       // Try searching in banned combos
       let query = `${context.query.q} banned:commander`;
-      query = encodeURIComponent(query);
       const results = await variantsApi.variantsList({
         q: query,
         limit: PAGE_SIZE,

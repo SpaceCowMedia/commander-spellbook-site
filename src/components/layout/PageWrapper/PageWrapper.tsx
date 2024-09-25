@@ -22,15 +22,16 @@ const PageWrapper: React.FC<Props> = ({ children, noMarginFooter }: Props) => {
   return (
     <div className={`flex flex-col h-full`}>
       <AnalyticsCookieBanner />
-      <div className={`bg-dark  ${isHome ? 'hidden' : ''}`}>
-        <nav className="container">
-          <SearchBar />
-        </nav>
-        <div className={`gradient ${styles.searchBarBorder}`} />
-      </div>
+      {!isHome && (
+        <div className={`bg-dark`}>
+          <nav className="container">
+            <SearchBar />
+          </nav>
+          <div className={`gradient ${styles.searchBarBorder}`} />
+        </div>
+      )}
       <div className="flex-1">{children}</div>
-
-      <Footer noMargin={noMarginFooter} className={`mt-24 lg:mt-48 z-0 ${isHome ? 'hidden' : ''}`} />
+      {!isHome && <Footer noMargin={noMarginFooter} className={`mt-24 lg:mt-48 z-0`} />}
     </div>
   );
 };

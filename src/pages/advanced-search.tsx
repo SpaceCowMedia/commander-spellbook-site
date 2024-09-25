@@ -264,6 +264,7 @@ const PRICE_OPTIONS: OperatorOption[] = [
     operator: '=',
     label: 'Costs exactly x',
     placeholder: 'ex: 5',
+    numeric: true,
   },
 ];
 
@@ -537,7 +538,7 @@ const AdvancedSearch: React.FC = () => {
             keyInQuery = 'decks';
           } else if (keyInQuery === 'price') {
             keyInQuery = vendor;
-          } else if (keyInQuery !== 'mv' && keyInQuery !== 'pre') {
+          } else if (keyInQuery !== 'mv' && keyInQuery !== 'pre' && keyInQuery !== 'prereq') {
             keyInQuery += 's';
           }
         }
@@ -565,7 +566,7 @@ const AdvancedSearch: React.FC = () => {
     cardKeywords.forEach(makeQueryFunction('keyword'));
     manaValue.forEach(makeQueryFunction('mv'));
     colorIdentity.forEach(makeQueryFunction('ci'));
-    prerequisites.forEach(makeQueryFunction('pre'));
+    prerequisites.forEach(makeQueryFunction('prereq'));
     steps.forEach(makeQueryFunction('step'));
     results.forEach(makeQueryFunction('result'));
     tags.forEach(makeQueryFunctionForTags());

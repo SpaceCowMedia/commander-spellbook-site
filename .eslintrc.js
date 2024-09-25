@@ -4,9 +4,16 @@ module.exports = {
     browser: true,
     node: true,
     es2020: true,
+    'cypress/globals': true,
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended', 'next/core-web-vitals'],
-  plugins: ['react', 'react-hooks', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+    'next/core-web-vitals',
+    'plugin:cypress/recommended',
+  ],
+  plugins: ['react', 'react-hooks', 'prettier', 'cypress'],
   // add your custom rules here
   rules: {
     'react/no-deprecated': 'warn', // Warn about deprecated lifecycle methods

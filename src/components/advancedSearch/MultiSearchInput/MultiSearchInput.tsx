@@ -53,11 +53,7 @@ const MultiSearchInput: React.FC<Props> = ({
   const inputLabel = pluralLabel || pluralize(label, value.length);
 
   const addInput = (index: number) =>
-    setInputs([
-      ...inputs.slice(0, index + 1),
-      { value: '', operator: operatorOptions[0].operator },
-      ...inputs.slice(index + 1),
-    ]);
+    setInputs([...inputs.slice(0, index + 1), { ...operatorOptions[0], value: '' }, ...inputs.slice(index + 1)]);
 
   const removeInput = (index: number) => {
     const newInputs = [...inputs.slice(0, index), ...inputs.slice(index + 1)];

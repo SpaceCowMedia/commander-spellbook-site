@@ -11,6 +11,17 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "start-dev-server",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Open Cypress",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "cy:open"
+            ],
+            "preLaunchTask": "start-dev-server",
         }
     ]
 }
