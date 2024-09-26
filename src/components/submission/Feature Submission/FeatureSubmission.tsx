@@ -1,39 +1,21 @@
-import {FeatureSubmissionType} from "../../../types/submission";
-import React, {useState} from "react";
-import AutocompleteInput from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
-import FeatureService from "../../../services/feature.service";
+import React, { useState } from 'react';
+import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
+import { FeatureProducedInVariantSuggestionRequest } from '@spacecowmedia/spellbook-client';
 
 type Props = {
-  feature: FeatureSubmissionType
-  onChange: (feature: FeatureSubmissionType) => void
-  onDelete: () => void
-  index: number
-}
-const FeatureSubmission = ({
-  feature,
-  onChange,
-  onDelete,
-  index
-}: Props) => {
+  feature: FeatureProducedInVariantSuggestionRequest;
+  onChange: (_feature: FeatureProducedInVariantSuggestionRequest) => void;
+  onDelete: () => void;
+  index: number;
+};
 
-  const [featureInput, setFeatureInput] = useState(feature.feature)
-  const [featureOptions, setFeatureOptions] = useState<Array<{value: string, label: string}>>([])
-  const [featuresLoading, setFeaturesLoading] = useState(false)
+const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index }) => {
+  const [featureInput, setFeatureInput] = useState(feature.feature);
 
   const handleFeatureInputChange = (value: string) => {
-    setFeatureInput(value)
-    onChange({feature: value})
-
-    if (value.length < 3) return setFeatureOptions([])
-
-    setFeaturesLoading(true)
-    FeatureService.getFeatures(value)
-      .then(response => {
-        setFeatureOptions(response.results.map(feature => ({value: feature.name, label: feature.name})))
-        setFeaturesLoading(false)
-      }).catch(e => console.error(e))
-
-  }
+    setFeatureInput(value);
+    onChange({ feature: value });
+  };
 
   return (
     <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
@@ -41,12 +23,11 @@ const FeatureSubmission = ({
       <AutocompleteInput
         value={featureInput}
         onChange={handleFeatureInputChange}
-        label='Template Name'
+        label="Template Name"
         inputClassName="border-dark"
-        autocompleteOptions={featureOptions}
+        resultAutocomplete={true}
         inputId={index.toString()}
         placeholder="Search for a feature (ex: 'Infinite mana')..."
-        loading={featuresLoading}
         // hasError={!!input.error}
         useValueForInput
         matchAgainstOptionLabel
@@ -60,7 +41,7 @@ const FeatureSubmission = ({
         x
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default FeatureSubmission
+export default FeatureSubmission;

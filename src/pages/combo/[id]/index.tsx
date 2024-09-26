@@ -1,106 +1,91 @@
-import pluralize from "pluralize";
-import CardHeader from "../../../components/combo/CardHeader/CardHeader";
-import CardGroup from "../../../components/combo/CardGroup/CardGroup";
-import ColorIdentity from "../../../components/layout/ColorIdentity/ColorIdentity";
-import ComboList from "../../../components/combo/ComboList/ComboList";
-import styles from "./combo.module.scss";
-import ComboSidebarLinks from "../../../components/combo/ComboSidebarLinks/ComboSidebarLinks";
-import {GetServerSideProps} from "next";
-import SpellbookHead from "../../../components/SpellbookHead/SpellbookHead";
-import React from "react";
-import { Variant} from "../../../lib/types";
-import PrerequisiteList from "../../../components/combo/PrerequisiteList/PrerequisiteList";
-import {getPrerequisiteList} from "../../../lib/backend-processors";
-import EDHRECService from "../../../services/edhrec.service";
-import variantService from "../../../services/variant.service";
-import findMyCombosService from "../../../services/findMyCombos.service";
-import NoCombosFound from "components/layout/NoCombosFound/NoCombosFound";
-import {RequestService} from "../../../services/request.service";
+import pluralize from 'pluralize';
+import CardHeader from '../../../components/combo/CardHeader/CardHeader';
+import CardGroup from '../../../components/combo/CardGroup/CardGroup';
+import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
+import ComboList from '../../../components/combo/ComboList/ComboList';
+import styles from './combo.module.scss';
+import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
+import { GetServerSideProps } from 'next';
+import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
+import React from 'react';
+import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
+import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
+import EDHRECService from '../../../services/edhrec.service';
+import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
+import {
+  FindMyCombosApi,
+  ResponseError,
+  Variant,
+  VariantAliasesApi,
+  VariantsApi,
+} from '@spacecowmedia/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
+import BulkApiService from 'services/bulk-api.service';
 
 type Props = {
   combo?: Variant;
+  cardImages?: CardWithImages[];
   alternatives?: Variant[];
+  previewImageUrl?: string;
 };
 
-const NUMBERS = [
-  "zero",
-  "one",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
-  "ten",
-];
+type CardWithImages = {
+  name: string;
+  artUrl: string;
+  oracleImageUrl: string;
+};
 
-const Combo = ({ combo, alternatives }: Props) => {
-  if (combo) {
-    const cards = combo.uses.map((card) => {
-      return {
-        name: card.card.name,
-        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
-        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
-      };
-    });
-    const cardNames = combo.uses.map(card => card.card.name);
-    const cardArts = cards.map((card) => card.artUrl);
-    const title =
-      cardNames.length === 0
-        ? "Looking up Combo"
-        : cardNames.slice(0, 3).join(" | ");
+const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageUrl }) => {
+  if (combo && cardImages) {
+    const cardNames = combo.uses.map((card) => card.card.name);
+    const cardArts = cardImages.map((card) => card.artUrl);
+    const title = cardNames.length === 0 ? 'Looking up Combo' : cardNames.slice(0, 3).join(' | ');
     const titleCount = cardNames.slice(0, 3).length;
-    const templateNames = combo.requires.map(template => template.template.name)
-    const combinedNames = [...cardNames, ...templateNames]
+    const templateNames = combo.requires.map((template) => template.template.name);
+    const combinedNames = [...cardNames, ...templateNames];
     const subtitle =
       combinedNames.length === titleCount
-        ? ""
+        ? ''
         : combinedNames.length === titleCount + 1
-        ? `(and ${NUMBERS[1]} other card)`
-        : `(and ${NUMBERS[combinedNames.length - titleCount]} other cards)`;
+          ? `(and ${NUMBERS[1]} other card)`
+          : `(and ${NUMBERS[combinedNames.length - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
     const metaData =
       numberOfDecks !== undefined && numberOfDecks !== null
-        ? [
-            `In ${numberOfDecks} ${pluralize(
-              "deck",
-              numberOfDecks
-            )} according to EDHREC.`,
-          ]
+        ? [`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`]
         : [];
 
-    const colors = Array.from(combo.identity)
-    const prerequisites = getPrerequisiteList(combo)
-    const steps = combo.description?.split('\n')
-    const notes = combo.notes?.split('\n')?.filter(note => note.length > 0)
-    const results = combo.produces.map(feature => feature.name ?? (feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name))
+    const identity = combo.identity;
+    const prerequisites = getPrerequisiteList(combo);
+    const steps = combo.description?.split('\n');
+    const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
+    const results = combo.produces.map((feature) =>
+      feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name,
+    );
     if (combo.status == 'E') {
-      metaData.push("This combo is an example of a variant and doesn't provide an explanation.")
+      metaData.push("This combo is an example of a variant and doesn't provide an explanation.");
     } else if (combo.status == 'D') {
-      metaData.push("This combo is a draft and is only visible to editors.")
+      metaData.push('This combo is a draft and is only visible to editors.');
     } else if (combo.status == 'NR') {
-      metaData.push("This combo needs to be reviewed and is only visible to editors.")
+      metaData.push('This combo needs to be reviewed and is only visible to editors.');
     }
 
     return (
       <>
         <SpellbookHead
           title={`${title} ${subtitle}`}
-          description={results.reduce(
-            (str, result) => str + `\n  * ${result}`,
-            "Combo Results:"
-          )}
-          imageUrl={cardArts[0]}
+          description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
+          imageUrl={previewImageUrl ?? cardArts[0]}
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-        <CardGroup key={combo.id} cards={cards} templates={combo.requires} />
+        <CardGroup key={combo.id} cards={cardImages} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
-              <ColorIdentity colors={colors} />
+              <ColorIdentity identity={identity} />
             </div>
 
             <ComboList
@@ -113,26 +98,35 @@ const Combo = ({ combo, alternatives }: Props) => {
               iterations={combinedNames}
             />
 
-            <PrerequisiteList prerequisites={prerequisites} id="combo-prerequisites" cardsInCombo={cardNames} templatesInCombo={combo.requires}/>
-
-            {steps != null && <ComboList
-              title="Steps"
-              id="combo-steps"
-              iterations={steps}
+            <PrerequisiteList
+              prerequisites={prerequisites}
+              id="combo-prerequisites"
               cardsInCombo={cardNames}
               templatesInCombo={combo.requires}
-              showNumbers
-              appendPeriod
-            />}
+            />
 
-            {notes != null && notes.length > 0 && <ComboList
-              title="Notes"
-              id="combo-notes"
-              iterations={notes}
-              cardsInCombo={cardNames}
-              templatesInCombo={combo.requires}
-              appendPeriod
-            />}
+            {steps != null && (
+              <ComboList
+                title="Steps"
+                id="combo-steps"
+                iterations={steps}
+                cardsInCombo={cardNames}
+                templatesInCombo={combo.requires}
+                showNumbers
+                appendPeriod
+              />
+            )}
+
+            {notes != null && notes.length > 0 && (
+              <ComboList
+                title="Notes"
+                id="combo-notes"
+                iterations={notes}
+                cardsInCombo={cardNames}
+                templatesInCombo={combo.requires}
+                appendPeriod
+              />
+            )}
 
             <ComboList
               title="Results"
@@ -143,31 +137,21 @@ const Combo = ({ combo, alternatives }: Props) => {
               appendPeriod
             />
 
-            {metaData.length > 0 && (
-              <ComboList
-                title="Metadata"
-                id="combo-metadata"
-                iterations={metaData}
-              />
-            )}
+            {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}
           </div>
-
 
           <aside className="w-full md:w-1/3 text-center">
             <div id="combo-color-identity" className="my-4 hidden md:block">
-              <ColorIdentity colors={colors} />
+              <ColorIdentity identity={identity} />
             </div>
 
             {!combo.legalities?.commander && (
-              <div className={styles.bannedWarning}>
-                WARNING: Combo contains cards that are banned in Commander
-              </div>
+              <div className={styles.bannedWarning}>WARNING: Combo contains cards that are banned in Commander</div>
             )}
 
             {combo.spoiler && (
               <div className={styles.previewedWarning}>
-                WARNING: Combo contains cards that have not been released yet
-                (and are not yet legal in Commander)
+                WARNING: Combo contains cards that have not been released yet (and are not yet legal in Commander)
               </div>
             )}
 
@@ -176,12 +160,11 @@ const Combo = ({ combo, alternatives }: Props) => {
               comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
               edhrecLink={EDHRECService.getComboUrl(combo)}
               comboId={combo.id}
-              tcgPlayerPrice={combo.prices?.tcgplayer || "-"}
-              cardKingdomPrice={combo.prices?.cardkingdom || "-"}
+              tcgPlayerPrice={combo.prices?.tcgplayer || '-'}
+              cardKingdomPrice={combo.prices?.cardkingdom || '-'}
               combo={combo}
             />
           </aside>
-
         </div>
       </>
     );
@@ -193,11 +176,7 @@ const Combo = ({ combo, alternatives }: Props) => {
           description="The combo you are looking for could not be found. Here are some similar alternatives."
         />
         <div className="static-page">
-          <NoCombosFound
-            single={true}
-            alternatives={alternatives}
-            criteria="similar"
-          />
+          <NoCombosFound single={true} alternatives={alternatives} criteria="similar" />
         </div>
       </>
     );
@@ -209,54 +188,88 @@ export default Combo;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
-  if (!params || !params.id || typeof params.id !== 'string') return {
-    notFound: true,
+  if (!params || !params.id || typeof params.id !== 'string') {
+    return {
+      notFound: true,
+    };
   }
 
-  const requestService = new RequestService(context)
+  const configuration = apiConfiguration(context);
+  const variantsApi = new VariantsApi(configuration);
 
   try {
     // 1. Check the backend
-    const backendCombo = await variantService.fetchVariant(requestService, params.id)
-    if (backendCombo) return {
+    const backendCombo = await variantsApi.variantsRetrieve({ id: params.id });
+    const cardsWithImages = backendCombo.uses.map((card) => {
+      return {
+        name: card.card.name,
+        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
+        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
+      };
+    });
+    return {
       props: {
         combo: backendCombo,
+        cardImages: cardsWithImages,
       },
     };
+  } catch (err) {
+    if (!(err instanceof ResponseError && err.response.status === 404)) {
+      throw err;
+    }
+  }
+
+  const variantAliasesApi = new VariantAliasesApi(configuration);
+  try {
     // 2. Check if it's an alias and reroute if it's found
-    const alias = await variantService.fetchVariantAlias(requestService, params.id);
-    if (alias) return {
+    const alias = await variantAliasesApi.variantAliasesRetrieve({ id: params.id });
+    return {
       redirect: {
         destination: `/combo/${alias.variant}`,
         permanent: false,
       },
     };
-    // 3. Check if it's a legacy combo and reroute if it's found
-    if (!params.id.includes('-') && !isNaN(Number(params.id))) {
-      const legacyComboMap = await variantService.fetchLegacyMap(requestService)
-      const variantId = legacyComboMap[params.id]
-      if (variantId) return {
+  } catch (err) {
+    if (!(err instanceof ResponseError && err.response.status === 404)) {
+      throw err;
+    }
+  }
+  // 3. Check if it's a legacy combo and reroute if it's found
+  if (!params.id.includes('-') && !isNaN(Number(params.id))) {
+    const legacyComboMap = await BulkApiService.fetchLegacyMap();
+    const variantId = legacyComboMap[params.id];
+    if (variantId) {
+      return {
         redirect: {
           destination: `/combo/${variantId}`,
           permanent: false,
-        }
+        },
       };
     }
-    const card_ids = params.id.split("--")[0].split("-");
-    const results = await findMyCombosService.findFromLists([], card_ids);
-    const alternatives = results
-      ? results.results.included.concat(
-          results.results.almostIncluded).concat(
-            results.results.almostIncludedByAddingColors)
-      : [];
-    if (alternatives.length > 0) return {
+  }
+
+  // 4. Check for alternatives with similar cards taken from the parsed combo id
+  const findMyCombosApi = new FindMyCombosApi(configuration);
+  const card_ids = params.id.split('--')[0].split('-');
+  const results = await findMyCombosApi.findMyCombosCreate({
+    deckRequest: {
+      main: card_ids.map((id) => ({ card: id })),
+      commanders: [],
+    },
+  });
+  const alternatives = results
+    ? results.results.included
+        .concat(results.results.almostIncluded)
+        .concat(results.results.almostIncludedByAddingColors)
+    : [];
+  if (alternatives.length > 0) {
+    return {
       props: {
         alternatives,
       },
     };
-  } catch (err) {
-    console.log(err);
   }
+
   // Finally 404
   return {
     notFound: true,

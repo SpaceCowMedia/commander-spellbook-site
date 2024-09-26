@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./searchMessage.module.scss";
+import React from 'react';
+import styles from './searchMessage.module.scss';
 
 type Props = {
   errors: string;
@@ -17,14 +17,17 @@ const SearchMessage: React.FC<Props> = ({
   totalPages,
   totalResults,
   maxNumberOfCombosPerPage,
-}: Props) => {
-  const firstResult =
-    currentPage * maxNumberOfCombosPerPage - maxNumberOfCombosPerPage + 1;
+}) => {
+  const firstResult = currentPage * maxNumberOfCombosPerPage - maxNumberOfCombosPerPage + 1;
   let lastResult = firstResult + maxNumberOfCombosPerPage - 1;
-  if (firstResult > totalResults) lastResult = totalResults;
+  if (firstResult > totalResults) {
+    lastResult = totalResults;
+  }
 
   let fullMessage = `${firstResult}-${lastResult} of ${message}`;
-  if (totalPages <= 1) fullMessage = message;
+  if (totalPages <= 1) {
+    fullMessage = message;
+  }
 
   return (
     <div>

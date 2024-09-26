@@ -1,7 +1,9 @@
-import styles from "./cardImage.module.scss";
-import FlipperCard from "../FlipperCard/FlipperCard";
-import React, { useEffect, useRef, useState } from "react";
-import cardBack from "assets/images/card-back.png";
+import styles from './cardImage.module.scss';
+import FlipperCard from '../FlipperCard/FlipperCard';
+import React, { useEffect, useRef, useState } from 'react';
+import cardBack from 'assets/images/card-back.png';
+import isFoolsDay from 'lib/foolsDay';
+import weatheredCardBack from 'assets/images/weathered-card-back.png';
 
 type Props = {
   img: string;
@@ -9,13 +11,15 @@ type Props = {
   className?: string;
 };
 
-const CardImage = ({ img, name, className }: Props) => {
+const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [readyToFlip, setReadyToFlip] = useState(false);
 
   useEffect(() => {
-    if (imageRef.current && imageRef.current.complete) setLoaded(true);
+    if (imageRef.current && imageRef.current.complete) {
+      setLoaded(true);
+    }
     setTimeout(() => {
       setReadyToFlip(true);
     }, 300);
@@ -25,16 +29,8 @@ const CardImage = ({ img, name, className }: Props) => {
     <FlipperCard
       className={className}
       flipped={loaded && readyToFlip}
-      front={<img className={styles.frontCard} src={cardBack.src} alt="" />}
-      back={
-        <img
-          ref={imageRef}
-          className={styles.frontCard}
-          src={img}
-          alt={name}
-          onLoad={() => setLoaded(true)}
-        />
-      }
+      front={<img className={styles.frontCard} src={isFoolsDay() ? weatheredCardBack.src : cardBack.src} alt="" />}
+      back={<img ref={imageRef} className={styles.frontCard} src={img} alt={name} onLoad={() => setLoaded(true)} />}
     />
   );
 };

@@ -1,109 +1,106 @@
-import React from "react";
-import styles from "./syntax-guide.module.scss";
-import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import Link from "next/link";
-import SearchGuide from "../components/layout/SearchGuide/SearchGuide";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import SyntaxMarkdown from "../components/layout/SyntaxMarkdown/SyntaxMarkdown";
-import Icon, {SpellbookIcon} from "../components/layout/Icon/Icon";
-
-type Props = {};
-
+import React from 'react';
+import styles from './syntax-guide.module.scss';
+import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import Link from 'next/link';
+import SearchGuide from '../components/layout/SearchGuide/SearchGuide';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import SyntaxMarkdown from '../components/layout/SyntaxMarkdown/SyntaxMarkdown';
+import Icon, { SpellbookIcon } from '../components/layout/Icon/Icon';
 
 type SectionType = {
   id: string;
   text: string;
-  icon: SpellbookIcon
-}
+  icon: SpellbookIcon;
+};
 
 const DATA = {
   sections: [
     {
-      id: "cards",
-      text: "Cards",
-      icon: "signature"
+      id: 'cards',
+      text: 'Cards',
+      icon: 'signature',
     },
     {
-      id: "card-type",
-      text: "Card Type",
-      icon: "seedling"
+      id: 'card-type',
+      text: 'Card Type',
+      icon: 'seedling',
     },
     {
-      id: "card-oracle-text",
-      text: "Card Oracle Text",
-      icon: "fileLines"
+      id: 'card-oracle-text',
+      text: 'Card Oracle Text',
+      icon: 'fileLines',
     },
     {
-      id: "card-keywords",
-      text: "Card Keywords",
-      icon: "key"
+      id: 'card-keywords',
+      text: 'Card Keywords',
+      icon: 'key',
     },
     {
-      id: "card-mana-value",
-      text: "Card Mana Value",
-      icon: "coins"
+      id: 'card-mana-value',
+      text: 'Card Mana Value',
+      icon: 'coins',
     },
     {
-      id: "color-identity",
-      text: "Color Identity",
-      icon: "palette",
+      id: 'color-identity',
+      text: 'Color Identity',
+      icon: 'palette',
     },
     {
-      id: "prerequisites",
-      text: "Prerequisites",
-      icon: "listCheck"
+      id: 'prerequisites',
+      text: 'Prerequisites',
+      icon: 'listCheck',
     },
     {
-      id: "steps",
-      text: "Steps",
-      icon: "listOl"
+      id: 'steps',
+      text: 'Steps',
+      icon: 'listOl',
     },
     {
-      id: "results",
-      text: "Results",
-      icon: "infinity"
+      id: 'results',
+      text: 'Results',
+      icon: 'infinity',
     },
     {
-      id: "spellbook-id",
-      text: "Combo Identifier",
-      icon: "fingerprint"
+      id: 'spellbook-id',
+      text: 'Combo Identifier',
+      icon: 'fingerprint',
     },
     {
-      id: "tags",
-      text: "Tags",
-      icon: "tags",
+      id: 'tags',
+      text: 'Tags',
+      icon: 'tags',
     },
     {
-      id: "commander",
-      text: "Commander",
-      icon: "commandZone",
+      id: 'commander',
+      text: 'Commander',
+      icon: 'commandZone',
     },
     {
-      id: "popularity",
-      text: "Popularity",
-      icon: "arrowUpRightDots",
+      id: 'popularity',
+      text: 'Popularity',
+      icon: 'arrowUpRightDots',
     },
     {
-      id: "price",
-      text: "Price",
-      icon: "dollarSign",
+      id: 'price',
+      text: 'Price',
+      icon: 'dollarSign',
     },
     {
-      id: "legality",
-      text: "Legality",
-      icon: "scaleBalanced"
+      id: 'legality',
+      text: 'Legality',
+      icon: 'scaleBalanced',
     },
     {
-      id: "sort",
-      text: "Sort / Order",
-      icon: "arrowUpWideShort",
+      id: 'sort',
+      text: 'Sort / Order',
+      icon: 'arrowUpWideShort',
     },
   ] as SectionType[],
   cardSnippets: [
     {
-      search: "kenrith golem",
+      search: 'kenrith golem',
       description:
-        "Combos that contain a card with the word kenrith in the name and a card with the word golem in the name",
+        'Combos that contain a card with the word kenrith in the name and a card with the word golem in the name',
     },
     {
       search: 'card:"breath of" -card:brudiclad',
@@ -112,85 +109,80 @@ const DATA = {
     },
     {
       search: 'card="sydri, galvanic genius"',
-      description:
-        'Combos that contain card with the exact name "sydri, galvanic genius"',
+      description: 'Combos that contain card with the exact name "sydri, galvanic genius"',
     },
     {
-      search: "cards>2 cards<=5",
-      description:
-        "Combos that contain more than 2 cards but no greater than 5 cards",
+      search: 'cards>2 cards<=5',
+      description: 'Combos that contain more than 2 cards but no greater than 5 cards',
     },
   ],
   cardTypeSnippets: [
     {
-      search: "type:land",
-      description: "Combos that contain a land card",
+      search: 'type:land',
+      description: 'Combos that contain a land card',
     },
     {
-      search: "-t:creature -t:artifact",
-      description: "Combos that do not contain creature or artifact cards",
-    }
+      search: '-t:creature -t:artifact',
+      description: 'Combos that do not contain creature or artifact cards',
+    },
   ],
   cardOracleTextSnippets: [
     {
-      search: "oracle:draw",
-      description: "Combos that contain a card with the word draw in the oracle text",
+      search: 'oracle:draw',
+      description: 'Combos that contain a card with the word draw in the oracle text',
     },
     {
-      search: "text:\"extra turn\"",
-      description: "Combos that contain a card with the phrase \"extra turn\" in the oracle text",
+      search: 'text:"extra turn"',
+      description: 'Combos that contain a card with the phrase "extra turn" in the oracle text',
     },
     {
-      search: "-o:sacrifice",
-      description: "Combos that do not contain a card with the word sacrifice in the oracle text",
-    }
+      search: '-o:sacrifice',
+      description: 'Combos that do not contain a card with the word sacrifice in the oracle text',
+    },
   ],
   cardKeywordsSnippets: [
     {
-      search: "keyword:indestructible",
-      description: "Combos that contain a card with the keyword indestructible",
+      search: 'keyword:indestructible',
+      description: 'Combos that contain a card with the keyword indestructible',
     },
     {
-      search: "-keyword:partner",
-      description: "Combos that do not contain a card with the keyword partner",
+      search: '-keyword:partner',
+      description: 'Combos that do not contain a card with the keyword partner',
     },
   ],
   cardManaValueSnippets: [
     {
-      search: "mv=0",
-      description: "Combos that contain a card with a mana value equal to 0",
+      search: 'mv=0',
+      description: 'Combos that contain a card with a mana value equal to 0',
     },
     {
-      search: "manavalue>10",
-      description: "Combos that contain a card with a mana value greater than 10",
-    }
+      search: 'manavalue>10',
+      description: 'Combos that contain a card with a mana value greater than 10',
+    },
   ],
   colorIdentitySnippets: [
     {
-      search: "coloridentity:bug",
-      description: "Combos within the black, blue, green color identity.",
+      search: 'coloridentity:bug',
+      description: 'Combos within the black, blue, green color identity.',
     },
     {
-      search: "ci=temur",
-      description:
-        "Combos that have exactly the blue, green, red color identity.",
+      search: 'ci=temur',
+      description: 'Combos that have exactly the blue, green, red color identity.',
     },
     {
-      search: "c<3",
-      description:
-        "Combos that have no more than 2 colors in their color identity.",
+      search: 'c<3',
+      description: 'Combos that have no more than 2 colors in their color identity.',
     },
     {
-      search: "colors=3 ids>=wb",
+      search: 'colors=3 ids>=wb',
       description:
-        "Combos that have exactly 3 colors in their color identity and 2 of those colors must be white and black.",
+        'Combos that have exactly 3 colors in their color identity and 2 of those colors must be white and black.',
     },
   ],
   resultSnippets: [
     {
-      search: "result:infinite",
-      description:
-        'Combos that include the word "infinite" in one of the results.',
+      search: 'result:infinite',
+      description: 'Combos that include the word "infinite" in one of the results.',
     },
     {
       search: 'result:"win the game" -result:infinite',
@@ -198,15 +190,14 @@ const DATA = {
         'Combos that include the phrase "win the game" and do not include the word "infinite" in any of the results.',
     },
     {
-      search: "result=3",
-      description: "Combos that include exactly 3 results.",
+      search: 'result=3',
+      description: 'Combos that include exactly 3 results.',
     },
   ],
   prerequisiteSnippets: [
     {
-      search: "prerequisite:mana",
-      description:
-        'Combos that include the word "mana" in one of the prerequisites.',
+      search: 'prerequisite:mana',
+      description: 'Combos that include the word "mana" in one of the prerequisites.',
     },
     {
       search: 'pre:"mana to cast it" -pre:permanent',
@@ -214,104 +205,94 @@ const DATA = {
         'Combos that include the phrase "mana to cast it" in one of the prerequisites and no prerequisite with the word "permanent".',
     },
     {
-      search: "pre<=3",
-      description: "Combos that have no more than 3 prerequisites.",
+      search: 'pre<=3',
+      description: 'Combos that have no more than 3 prerequisites.',
     },
   ],
   stepSnippets: [
     {
-      search: "step:permanent",
-      description:
-        'Combos that include the word "permanent" in one of the steps.',
+      search: 'step:permanent',
+      description: 'Combos that include the word "permanent" in one of the steps.',
     },
     {
       search: 'steps:"mill target opponent"',
-      description:
-        'Combos that include the phrase "mill target opponent" in one of the steps.',
+      description: 'Combos that include the phrase "mill target opponent" in one of the steps.',
     },
     {
-      search: "steps>6",
-      description: "Combos that contain more than 6 steps.",
+      search: 'steps>6',
+      description: 'Combos that contain more than 6 steps.',
     },
   ],
   idSnippets: [
     {
-      search: "spellbookid:4131-4684",
-      description: "The combo for Basalt Monolith and Mesmeric Orb.",
+      search: 'spellbookid:4131-4684',
+      description: 'The combo for Basalt Monolith and Mesmeric Orb.',
     },
     {
       search: '-sid:4131-4684 card="Basalt Monolith" card="Mesmeric Orb"',
-      description:
-        "Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 4131-4684.",
+      description: 'Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 4131-4684.',
     },
   ],
   tagSnippets: [
     {
-      search: "is:commander",
-      description: "Combos that require a commander.",
+      search: 'is:commander',
+      description: 'Combos that require a commander.',
     },
     {
-      search: "is:featured",
-      description: "Combos that are featured on the home page.",
-    }
+      search: 'is:featured',
+      description: 'Combos that are featured on the home page.',
+    },
   ],
   commanderSnippets: [
     {
-      search: "commander:codie",
-      description: "Combos that require Codie, Vociferous Codex to be your commander.",
-    }
-
+      search: 'commander:codie',
+      description: 'Combos that require Codie, Vociferous Codex to be your commander.',
+    },
   ],
   popularitySnippets: [
     {
-      search: "popularity>1000",
-      description:
-        "Combos that are in more than 1000 decks according to EDHREC.",
+      search: 'popularity>1000',
+      description: 'Combos that are in more than 1000 decks according to EDHREC.',
     },
     {
-      search: "decks<10",
-      description: "Combos that are in less than 10 decks according to EDHREC.",
+      search: 'decks<10',
+      description: 'Combos that are in less than 10 decks according to EDHREC.',
     },
   ],
   priceSnippets: [
     {
-      search: "price<5",
-      description:
-        "Combos where the entire price of the combo is less than $5.00 according to Card Kingdom.",
+      search: 'price<5',
+      description: 'Combos where the entire price of the combo is less than $5.00 according to Card Kingdom.',
     },
     {
-      search: "tcgplayer>100",
-      description:
-        "Combos where the entire price of the combo is greater than $100.00 according to TCGplayer.",
+      search: 'tcgplayer>100',
+      description: 'Combos where the entire price of the combo is greater than $100.00 according to TCGplayer.',
     },
     {
-      search: "cardmarket<=100",
+      search: 'cardmarket<=100',
       description:
-        "Combos where the entire price of the combo is less than or equal to €100.00 according to Cardmarket.",
+        'Combos where the entire price of the combo is less than or equal to €100.00 according to Cardmarket.',
     },
   ],
   previewedSnippets: [
     {
-      search: "exclude:previewed",
-      description:
-        "Exclude any combos that contain cards that are not legal in Commander (yet).",
+      search: 'exclude:previewed',
+      description: 'Exclude any combos that contain cards that are not legal in Commander (yet).',
     },
     {
-      search: "is:spoiled",
+      search: 'is:spoiled',
       description:
-        "Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)",
+        'Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)',
     },
   ],
   legalitySnippets: [
     {
-      search: "legal:vintage",
-      description:
-        "Combos that are legal in Vintage.",
+      search: 'legal:vintage',
+      description: 'Combos that are legal in Vintage.',
     },
     {
-      search: "-legal:commander",
-      description:
-        "Combos that contain at least one card that is banned in Commander.",
+      search: '-legal:commander',
+      description: 'Combos that contain at least one card that is banned in Commander.',
     },
   ],
   sortOrderSnippets: [],
@@ -324,7 +305,7 @@ No matter what parameter is used, capitalization will be disregarded, so a searc
 > [!IMPORTANT]
 > You can prefix a \`-\` to any search term to negate it, excluding all matching combos from the search result.
 > For example, \`-card:" "\` will exclude all combos with a card whose name contains a space.
-`
+`;
 
 const CARDS_DESCRIPTION = `
 Type card names or parts of card names directly into the search bar to find combos that use those cards.
@@ -364,7 +345,7 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 ### \`card\` keyword aliases
 
 * \`cards\`
-`
+`;
 
 const CARD_TYPE_DESCRIPTION = `
 You can search for combos that contain specific card types.
@@ -385,7 +366,7 @@ For example, \`cardtype:land\` searches for combos that contain at least one lan
 * \`type\`
 * \`types\`
 * \`t\`
-`
+`;
 
 const CARD_ORACLE_TEXT_DESCRIPTION = `
 You can search for combos that contain cards with specific oracle text.
@@ -404,7 +385,7 @@ For example, \`cardoracle:draw\` searches for combos that contain at least one c
 * \`oracle\`
 * \`text\`
 * \`o\`
-`
+`;
 
 const CARD_KEYWORDS_DESCRIPTION = `
 You can search for combos that contain cards with specific keywords.
@@ -420,7 +401,7 @@ For example, \`cardkeywords:indestructible\` searches for combos that contain at
 * \`keyword\`
 * \`keywords\`
 * \`kw\`
-`
+`;
 
 const CARD_MANA_VALUE_DESCRIPTION = `
 You can search for combos that contain cards with specific mana values.
@@ -439,7 +420,7 @@ For example, \`cardmanavalue>10\` searches for combos that contain at least one 
 * \`manavalue\`
 * \`mv\`
 * \`cmc\`
-`
+`;
 
 const COLOR_IDENTITY_DESCRIPTION = `
 Each combo has a color identity determined by the color identities of its cards. This strictly follows Commander color identity rules.
@@ -475,7 +456,7 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 * \`ids\`
 * \`c\`
 * \`ci\`
-`
+`;
 
 const PREREQUISITES_DESCRIPTION = `
 A combo's prerequisites describe the game state required to start the combo.
@@ -502,7 +483,7 @@ For example, \`prerequisites:text\`, searches for _text_ in the prerequisites of
 * \`prerequisite\`
 * \`prereq\`
 * \`pre\`
-`
+`;
 
 const STEPS_DESCRIPTION = `
 Steps describe how to execute the combo.
@@ -524,7 +505,7 @@ Use double quotes if your search contains spaces (\`steps:"multiword text"\`).
 * \`step\`
 * \`description\`
 * \`desc\`
-`
+`;
 
 const RESULTS_DESCRIPTION = `
 Results are the effects that occur as a result of completing the combo.
@@ -543,7 +524,7 @@ For example, \`results:turns\` searches for combos that result in infinite or ne
 ## \`results\` keyword aliases
 
 * \`result\`
-`
+`;
 
 const SPELLBOOK_ID_DESCRIPTION = `
 Commander Spellbook assigns a unique ID to each combo. Use \`spellbookid\` to search by this ID.
@@ -557,7 +538,7 @@ For example, \`spellbookid:2120-5329\` searches for a variant whose id is exactl
 ### \`spellbookid\` aliases
 
 * \`sid\`
-`
+`;
 
 const TAG_DESCRIPTION = `
 Combos are tagged based on certain features.
@@ -585,7 +566,7 @@ The support for manual tags will be added in the future.
 * \`risky\`/\`allin\`: means that the variant steps have some chance to fail and result in a possible loss
 * \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
 -->
-`
+`;
 
 const COMMANDER_DESCRIPTION = `
 You can search for combos requiring a specific commander.
@@ -595,7 +576,7 @@ For example, \`commander:text\` searches for combos that require a commander who
 
 * \`commander:text\` searches for combos that require a commander whose name contains _text_
 * \`commander=text\` searches for combos that require a commander whose name is exactly _text_
-`
+`;
 
 const POPULARITY_DESCRIPTION = `
 You can filter and later sort combos by their popularity among EDHREC decklists.
@@ -616,7 +597,7 @@ For example, \`popularity>10000\` searches for combos that are present in more t
 * \`pop\`
 * \`deck\`
 * \`decks\`
-`
+`;
 
 const PRICE_DESCRIPTION = `
 You can filter combos based on the total price of the cards it contains.
@@ -640,7 +621,7 @@ For example, \`price<number\` searches for combos costing less than _number_ US 
 * \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic) prices in Euros
 
 For example, \`cardmarket>100\` searches for combos whose component cards cost more than 100€ in total on Cardmarket.
-`
+`;
 
 const LEGALITY_DESCRIPTION = `
 You can limit results to your preferred Magic format with the keyword \`legal\`.
@@ -674,16 +655,16 @@ On the other hand, \`banned:format\` searches for combos not legal in _format_
 
 * \`banned:format_name\`: same as \`-legal:format_name\`
 * \`format:format_name\`: same as \`legal:format_name\`
-`
+`;
 
 const SORT_ORDER_DESCRIPTION = `
 > [!CAUTION]
 > You can no longer sort results using the query syntax.
 > Removing this feature allows to support more powerful search logic such as AND, OR, and parentheticals (will be added in the future).
 > You can still sort results from the search results page, by selecting options from the drop-down menus.
-`
+`;
 
-const SyntaxGuide: React.FC<Props> = ({}: Props) => {
+const SyntaxGuide: React.FC = () => {
   return (
     <>
       <SpellbookHead
@@ -692,45 +673,29 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
       />
       <div className={styles.syntaxGuideContainer}>
         <div className="container pt-6 mb-6">
-          <ArtCircle
-            cardName="Goblin Guide"
-            className="m-auto md:block hidden"
-          />
+          <ArtCircle cardName="Goblin Guide" className="m-auto md:block hidden" />
           <h1 className="heading-title">Syntax Guide</h1>
-          <p className="text-center">
-            A variety of parameters can be used to search for combos.
-          </p>
+          <p className="text-center">A variety of parameters can be used to search for combos.</p>
         </div>
 
         <div className="border-b-2 border-gray-400 w-full">
           <div className="container pb-6">
             <div className="flex flex-col md:flex-row md:flex-wrap">
               {DATA.sections.map((section) => (
-                <Link
-                  key={section.id}
-                  href={`#${section.id}`}
-                  className="button flex-grow text-center md:w-1/4"
-                >
-                  <div><Icon name={section.icon} /> {section.text}</div>
+                <Link key={section.id} href={`#${section.id}`} className="button flex-grow text-center md:w-1/4">
+                  <div>
+                    <Icon name={section.icon} /> {section.text}
+                  </div>
                 </Link>
               ))}
             </div>
 
-            <SyntaxMarkdown>
-              {INTRODUCTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{INTRODUCTION}</SyntaxMarkdown>
           </div>
         </div>
         <div className={styles.searchGuideContainer}>
-          <SearchGuide
-            headingCardName="Peek"
-            snippets={DATA.cardSnippets}
-            heading="Cards"
-            icon="signature"
-          >
-            <SyntaxMarkdown>
-              {CARDS_DESCRIPTION}
-            </SyntaxMarkdown>
+          <SearchGuide headingCardName="Peek" snippets={DATA.cardSnippets} heading="Cards" icon="signature">
+            <SyntaxMarkdown>{CARDS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -739,9 +704,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             heading="Card Type"
             icon="seedling"
           >
-            <SyntaxMarkdown>
-              {CARD_TYPE_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{CARD_TYPE_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -750,9 +713,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             heading="Card Oracle Text"
             icon="fileLines"
           >
-            <SyntaxMarkdown>
-              {CARD_ORACLE_TEXT_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{CARD_ORACLE_TEXT_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -761,9 +722,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             heading="Card Keywords"
             icon="key"
           >
-            <SyntaxMarkdown>
-              {CARD_KEYWORDS_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{CARD_KEYWORDS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -772,9 +731,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             heading="Card Mana Value"
             icon="coins"
           >
-            <SyntaxMarkdown>
-              {CARD_MANA_VALUE_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{CARD_MANA_VALUE_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -783,9 +740,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Fist of Suns"
             snippets={DATA.colorIdentitySnippets}
           >
-            <SyntaxMarkdown>
-              {COLOR_IDENTITY_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{COLOR_IDENTITY_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -794,20 +749,11 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Long-Term Plans"
             snippets={DATA.prerequisiteSnippets}
           >
-            <SyntaxMarkdown>
-              {PREREQUISITES_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{PREREQUISITES_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
-          <SearchGuide
-            icon="listOl"
-            heading="Steps"
-            headingCardName="The Grand Calcutron"
-            snippets={DATA.stepSnippets}
-          >
-            <SyntaxMarkdown>
-              {STEPS_DESCRIPTION}
-            </SyntaxMarkdown>
+          <SearchGuide icon="listOl" heading="Steps" headingCardName="The Grand Calcutron" snippets={DATA.stepSnippets}>
+            <SyntaxMarkdown>{STEPS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -816,9 +762,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Revel in Riches"
             snippets={DATA.resultSnippets}
           >
-            <SyntaxMarkdown>
-              {RESULTS_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{RESULTS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -827,20 +771,11 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Fractured Identity"
             snippets={DATA.idSnippets}
           >
-            <SyntaxMarkdown>
-              {SPELLBOOK_ID_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{SPELLBOOK_ID_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
-          <SearchGuide
-            heading="Tags"
-            icon="tags"
-            headingCardName="Goblin Guide"
-            snippets={DATA.tagSnippets}
-            >
-            <SyntaxMarkdown>
-              {TAG_DESCRIPTION}
-            </SyntaxMarkdown>
+          <SearchGuide heading="Tags" icon="tags" headingCardName="Goblin Guide" snippets={DATA.tagSnippets}>
+            <SyntaxMarkdown>{TAG_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -849,9 +784,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Kenrith, the Returned King"
             snippets={DATA.commanderSnippets}
           >
-            <SyntaxMarkdown>
-              {COMMANDER_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{COMMANDER_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -860,9 +793,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Korvold, Fae-Cursed King"
             snippets={DATA.popularitySnippets}
           >
-            <SyntaxMarkdown>
-              {POPULARITY_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{POPULARITY_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -871,9 +802,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Smothering Tithe"
             snippets={DATA.priceSnippets}
           >
-            <SyntaxMarkdown>
-              {PRICE_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{PRICE_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -882,9 +811,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Leovold, Emissary of Trest"
             snippets={DATA.legalitySnippets}
           >
-            <SyntaxMarkdown>
-              {LEGALITY_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{LEGALITY_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide
@@ -894,9 +821,7 @@ const SyntaxGuide: React.FC<Props> = ({}: Props) => {
             headingCardName="Brainstorm"
             snippets={DATA.sortOrderSnippets}
           >
-            <SyntaxMarkdown>
-              {SORT_ORDER_DESCRIPTION}
-            </SyntaxMarkdown>
+            <SyntaxMarkdown>{SORT_ORDER_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
         </div>
       </div>

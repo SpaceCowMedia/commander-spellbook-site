@@ -1,87 +1,75 @@
-import {SubmissionCardType, TemplateSubmissionType} from "../../../types/submission";
-import AutocompleteInput, {AutoCompleteOption} from "../../advancedSearch/AutocompleteInput/AutocompleteInput";
-import {useEffect, useState} from "react";
-import Select, {MultiValue} from 'react-select'
-import TemplateService from "../../../services/template.service";
-import CardService from "../../../services/card.service";
+import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
+import { useState } from 'react';
+import Select, { MultiValue } from 'react-select';
+import {
+  CardUsedInVariantSuggestionRequest,
+  TemplateRequiredInVariantSuggestionRequest,
+  ZoneLocationsEnum,
+} from '@spacecowmedia/spellbook-client';
 
 const ZONE_OPTIONS = [
-  {value: 'H', label: 'Hand'},
-  {value: 'B', label: 'Battlefield'},
-  {value: 'G', label: 'Graveyard'},
-  {value: 'L', label: 'Library'},
-  {value: 'E', label: 'Exile'},
-  {value: 'C', label: 'Command Zone'},
-]
-
+  { value: 'H', label: 'Hand' },
+  { value: 'B', label: 'Battlefield' },
+  { value: 'G', label: 'Graveyard' },
+  { value: 'L', label: 'Library' },
+  { value: 'E', label: 'Exile' },
+  { value: 'C', label: 'Command Zone' },
+];
 
 type Props = {
-  card: SubmissionCardType | TemplateSubmissionType
-  onChange: (card: SubmissionCardType | TemplateSubmissionType) => void
-  onDelete: () => void
-  index: number
-  template?: boolean
-}
-const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
-
-  const [nameInput, setNameInput] = useState(card.card || '')
-  const [templateInput, setTemplateInput] = useState(card.template || '')
-  const [templateOptions, setTemplateOptions] = useState<Array<{value: string, label: string}>>([])
-  const [templatesLoading, setTemplatesLoading] = useState(false)
-  const [cardAutocompleteOptions, setCardAutocompleteOptions] = useState<AutoCompleteOption[]>([])
-
-  const handleZoneChange = (zoneLocations: MultiValue<{value: string, label: string}>) => {
-    const newZoneList = zoneLocations.map(zone => zone.value)
-    onChange({
-      ...card,
-      zoneLocations: newZoneList,
-      exileCardState: newZoneList.includes('E') ? card.exileCardState : '',
-      graveyardCardState: newZoneList.includes('G') ? card.graveyardCardState : '',
-      libraryCardState: newZoneList.includes('L') ? card.libraryCardState : '',
-      battlefieldCardState: newZoneList.includes('B') ? card.battlefieldCardState : '',
-    })
+  card?: CardUsedInVariantSuggestionRequest;
+  template?: TemplateRequiredInVariantSuggestionRequest;
+  onChange: (_card: CardUsedInVariantSuggestionRequest | TemplateRequiredInVariantSuggestionRequest) => void;
+  onDelete: () => void;
+  index: number;
+};
+const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) => {
+  if (card && template) {
+    throw new Error('CardSubmission cannot have both a card and a template');
   }
+  const cardOrTemplate = card || template;
+  if (!cardOrTemplate) {
+    throw new Error('CardSubmission must have either a card or a template');
+  }
+
+  const [nameInput, setNameInput] = useState(card?.card || '');
+  const [templateInput, setTemplateInput] = useState(template?.template || '');
+
+  const handleZoneChange = (zoneLocations: MultiValue<{ value: string; label: string }>) => {
+    const newZoneList = zoneLocations.map((zone) => ZoneLocationsEnum[zone.value as keyof typeof ZoneLocationsEnum]);
+    onChange({
+      ...cardOrTemplate,
+      zoneLocations: newZoneList,
+      exileCardState: newZoneList.includes(ZoneLocationsEnum.E) ? cardOrTemplate.exileCardState : '',
+      graveyardCardState: newZoneList.includes(ZoneLocationsEnum.G) ? cardOrTemplate.graveyardCardState : '',
+      libraryCardState: newZoneList.includes(ZoneLocationsEnum.L) ? cardOrTemplate.libraryCardState : '',
+      battlefieldCardState: newZoneList.includes(ZoneLocationsEnum.B) ? cardOrTemplate.battlefieldCardState : '',
+    });
+  };
 
   const handleTemplateInputChange = (value: string) => {
-    setTemplateInput(value)
-    onChange({...card as TemplateSubmissionType, template: value})
-
-    if (value.length < 3) return setTemplateOptions([])
-
-    setTemplatesLoading(true)
-    TemplateService.getTemplates(value)
-      .then(response => {
-        setTemplateOptions(response.results.map(template => ({value: template.name, label: template.name})))
-        setTemplatesLoading(false)
-      }).catch(e => console.error(e))
-
-  }
+    setTemplateInput(value);
+    onChange({ ...cardOrTemplate, template: value });
+  };
 
   const handleCardInputChange = (value: string) => {
-    setNameInput(value)
-    onChange({...card as SubmissionCardType, card: value})
-  }
-
-  useEffect(() => {
-    CardService.getNameAutocomplete()
-      .then(options => setCardAutocompleteOptions(options))
-  }, [])
+    setNameInput(value);
+    onChange({ ...cardOrTemplate, card: value });
+  };
 
   return (
     <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
-
       {template && (
         <>
           <label className="font-bold">Template Name:</label>
           <AutocompleteInput
             value={templateInput}
             onChange={handleTemplateInputChange}
-            label='Template Name'
+            label="Template Name"
             inputClassName="border-dark"
-            autocompleteOptions={templateOptions}
+            templateAutocomplete={true}
             inputId={index.toString()}
-            placeholder="Search for a template (ex: 'Creature with haste')..."
-            loading={templatesLoading}
+            placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
             // hasError={!!input.error}
             useValueForInput
             matchAgainstOptionLabel
@@ -90,15 +78,15 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
         </>
       )}
 
-      {!template && (
+      {card && (
         <>
           <label className="font-bold">Card Name:</label>
           <AutocompleteInput
             value={nameInput}
             onChange={handleCardInputChange}
-            label='Card Name'
+            label="Card Name"
             inputClassName="border-dark"
-            autocompleteOptions={cardAutocompleteOptions}
+            cardAutocomplete={true}
             inputId={index.toString()}
             placeholder="Search for a card..."
             // hasError={!!input.error}
@@ -123,70 +111,89 @@ const CardSubmission = ({card, onChange, index, onDelete, template}: Props) => {
           isMulti
           options={ZONE_OPTIONS}
           onChange={handleZoneChange}
-          value={card.zoneLocations.map(zone => ZONE_OPTIONS.find(z => z.value === zone) || {value: 'N/A', label: 'N/A'})}
+          value={cardOrTemplate.zoneLocations.map(
+            (zone) => ZONE_OPTIONS.find((z) => z.value === zone) || { value: 'N/A', label: 'N/A' },
+          )}
         />
       </div>
 
-      {card.zoneLocations.includes('E') && (
+      {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.E) && (
         <div>
           <label className="font-bold">Exile State (optional):</label>
           <input
             className="border border-gray-250 rounded p-1"
-            value={card.exileCardState}
-            onChange={(e) => onChange({...card, exileCardState: e.target.value})}
+            value={cardOrTemplate.exileCardState}
+            onChange={(e) => onChange({ ...cardOrTemplate, exileCardState: e.target.value })}
             placeholder="Exile state (ex: Exiled by...)"
           />
         </div>
       )}
 
-      {card.zoneLocations.includes('G') && (
+      {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.G) && (
         <div>
           <label className="font-bold">Graveyard State (optional):</label>
           <input
             className="border border-gray-250 rounded p-1"
-            value={card.graveyardCardState}
-            onChange={(e) => onChange({...card, graveyardCardState: e.target.value})}
+            value={cardOrTemplate.graveyardCardState}
+            onChange={(e) => onChange({ ...cardOrTemplate, graveyardCardState: e.target.value })}
             placeholder="Graveyard state (ex: Entered the graveyard this turn)"
           />
         </div>
       )}
 
-      {card.zoneLocations.includes('L') && (
+      {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.L) && (
         <div>
           <label className="font-bold">Library State (optional):</label>
           <input
             className="border border-gray-250 rounded p-1"
-            value={card.libraryCardState}
-            onChange={(e) => onChange({...card, libraryCardState: e.target.value})}
+            value={cardOrTemplate.libraryCardState}
+            onChange={(e) => onChange({ ...cardOrTemplate, libraryCardState: e.target.value })}
             placeholder="Library state (ex: On the top of your library)"
           />
         </div>
       )}
 
-      {card.zoneLocations.includes('B') && (
+      {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.B) && (
         <div>
           <label className="font-bold">Battlefield State (optional):</label>
           <input
             className="border border-gray-250 rounded p-1"
-            value={card.battlefieldCardState}
-            onChange={(e) => onChange({...card, battlefieldCardState: e.target.value})}
+            value={cardOrTemplate.battlefieldCardState}
+            onChange={(e) => onChange({ ...cardOrTemplate, battlefieldCardState: e.target.value })}
             placeholder="Battlefield state (ex: Untapped)"
           />
         </div>
       )}
 
       <div className="mt-8">
+        <label className="cursor-pointer select-none mr-2" htmlFor={`quantity-input-${template ? 't' : 'c'}-${index}`}>
+          Quantity:
+        </label>
+        <input
+          className="mr-2 cursor-pointer border rounded-md"
+          type="number"
+          defaultValue="1"
+          id={`quantity-input-${template ? 't' : 'c'}-${index}`}
+          min="1"
+          max="10"
+          onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) })}
+        />
+      </div>
+
+      <div className="mt-2">
         <input
           className="mr-2 cursor-pointer"
           id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
-          value={card.card}
-          onChange={() => onChange({...card, mustBeCommander: !card.mustBeCommander})}
+          checked={cardOrTemplate.mustBeCommander}
+          onChange={() => onChange({ ...cardOrTemplate, mustBeCommander: !cardOrTemplate.mustBeCommander })}
           type="checkbox"
         />
-        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>Must be commander?</label>
+        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>
+          Must be commander?
+        </label>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CardSubmission
+export default CardSubmission;

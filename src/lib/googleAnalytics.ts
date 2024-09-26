@@ -1,12 +1,14 @@
-export const GA_TRACKING_ID = "G-357BGWEVLV";
+export const GA_TRACKING_ID = 'G-357BGWEVLV';
 
 export const pageview = (url: string) => {
-  const gdprIsAccepted = localStorage.getItem("GDPR:accepted") === "true";
-  if (!gdprIsAccepted) return;
+  const gdprIsAccepted = localStorage.getItem('GDPR:accepted') === 'true';
+  if (!gdprIsAccepted) {
+    return;
+  }
   // @ts-ignore
   window.gtag &&
     // @ts-ignore
-    window.gtag("config", GA_TRACKING_ID, {
+    window.gtag('config', GA_TRACKING_ID, {
       page_path: url,
     });
 };
@@ -19,12 +21,14 @@ type EventProps = {
 };
 
 export const event = ({ action, category, label, value }: EventProps) => {
-  const gdprIsAccepted = localStorage.getItem("GDPR:accepted") === "true";
-  if (!gdprIsAccepted) return;
+  const gdprIsAccepted = localStorage.getItem('GDPR:accepted') === 'true';
+  if (!gdprIsAccepted) {
+    return;
+  }
   // @ts-ignore
   window.gtag &&
     // @ts-ignore
-    window.gtag("event", action, {
+    window.gtag('event', action, {
       event_category: category,
       event_label: label,
       value: value,

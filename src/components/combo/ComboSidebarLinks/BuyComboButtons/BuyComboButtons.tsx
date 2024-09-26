@@ -1,5 +1,6 @@
-import ExternalLink from "../../../layout/ExternalLink/ExternalLink";
-import { event } from "../../../../lib/googleAnalytics";
+import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
+import { event } from '../../../../lib/googleAnalytics';
+import React from 'react';
 
 type Props = {
   cards: string[];
@@ -7,28 +8,20 @@ type Props = {
   cardKingdomPrice: string;
 };
 
-const BuyComboButtons = ({
-  cards,
-  tcgPlayerPrice,
-  cardKingdomPrice,
-}: Props) => {
+const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPrice }) => {
   const cardsWithQuantities = cards.map((card) => `1 ${card}`);
-  const cardQuery = encodeURI(cardsWithQuantities.join("||"));
+  const cardQuery = encodeURI(cardsWithQuantities.join('||'));
   const cardKingdomLink = `https://www.cardkingdom.com/builder?partner=CommanderSpellbook&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=${cardQuery}`;
   const tcgPlayerLink = `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=commanderspellbook&utm_source=EDHREC&c=${cardQuery}`;
-  const tcgPlayerOutOfStock = tcgPlayerPrice === "";
-  const cardKingdomOutOfStock = cardKingdomPrice === "";
-  const tcgPlayerPriceLabel = tcgPlayerOutOfStock
-    ? "(Unavailable)"
-    : `($${tcgPlayerPrice})`;
-  const cardKingdomPriceLabel = cardKingdomOutOfStock
-    ? "(Unavailable)"
-    : `($${cardKingdomPrice})`;
+  const tcgPlayerOutOfStock = tcgPlayerPrice === '';
+  const cardKingdomOutOfStock = cardKingdomPrice === '';
+  const tcgPlayerPriceLabel = tcgPlayerOutOfStock ? '(Unavailable)' : `($${tcgPlayerPrice})`;
+  const cardKingdomPriceLabel = cardKingdomOutOfStock ? '(Unavailable)' : `($${cardKingdomPrice})`;
 
-  const handleClick = (priceSource: "TCGPlayer" | "Card Kingdom") => {
+  const handleClick = (priceSource: 'TCGPlayer' | 'Card Kingdom') => {
     event({
       action: `Buy on ${priceSource} button clicked`,
-      category: "Combo Detail Page Actions",
+      category: 'Combo Detail Page Actions',
     });
   };
 
@@ -36,11 +29,9 @@ const BuyComboButtons = ({
     <div className="lg:flex">
       <ExternalLink
         id="tcg-buy-this-combo"
-        className={`button w-full flex-shrink ${
-          tcgPlayerOutOfStock ? "disabled" : ""
-        }`}
+        className={`button w-full flex-shrink ${tcgPlayerOutOfStock ? 'disabled' : ''}`}
         disabled={tcgPlayerOutOfStock}
-        onClick={() => handleClick("TCGPlayer")}
+        onClick={() => handleClick('TCGPlayer')}
         href={tcgPlayerLink}
       >
         <svg
@@ -63,11 +54,9 @@ const BuyComboButtons = ({
       <span className="mx-1" />
       <ExternalLink
         id="ck-buy-this-combo"
-        className={`button w-full flex-shrink ${
-          cardKingdomOutOfStock ? "disabled" : ""
-        }`}
+        className={`button w-full flex-shrink ${cardKingdomOutOfStock ? 'disabled' : ''}`}
         disabled={cardKingdomOutOfStock}
-        onClick={() => handleClick("Card Kingdom")}
+        onClick={() => handleClick('Card Kingdom')}
         href={cardKingdomLink}
       >
         <svg

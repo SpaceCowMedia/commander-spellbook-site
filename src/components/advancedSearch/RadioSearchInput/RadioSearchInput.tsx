@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Icon, {SpellbookIcon} from "../../layout/Icon/Icon";
+import React, { useState } from 'react';
+import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
 type Props = {
   checkedValue: string;
@@ -7,17 +7,10 @@ type Props = {
   formName: string;
   label: string;
   labelIcon?: SpellbookIcon;
-  onChange?: (value: string) => void;
+  onChange?: (_value: string) => void;
 };
 
-const RadioSearchInput = ({
-  checkedValue,
-  options,
-  formName,
-  label,
-  labelIcon,
-  onChange,
-}: Props) => {
+const RadioSearchInput: React.FC<Props> = ({ checkedValue, options, formName, label, labelIcon, onChange }) => {
   const [localValue, setLocalValue] = useState<string>(checkedValue);
 
   const handleChange = (value: string) => {
@@ -27,7 +20,9 @@ const RadioSearchInput = ({
 
   return (
     <div>
-      <label className="font-semibold">{labelIcon && <Icon name={labelIcon}/>} {label}</label>
+      <label className="font-semibold">
+        {labelIcon && <Icon name={labelIcon} />} {label}
+      </label>
       <fieldset className="flex flex-wrap gap-7">
         <legend className="sr-only" aria-hidden="true">
           Choose settings for {label}

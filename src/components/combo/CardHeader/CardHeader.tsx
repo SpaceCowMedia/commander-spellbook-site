@@ -1,4 +1,5 @@
-import styles from "./cardHeader.module.scss";
+import React from 'react';
+import styles from './cardHeader.module.scss';
 
 type Props = {
   title?: string;
@@ -6,7 +7,7 @@ type Props = {
   cardsArt?: string[];
 };
 
-const CardHeader = ({ title = "", subtitle = "", cardsArt = [] }: Props) => {
+const CardHeader: React.FC<Props> = ({ title = '', subtitle = '', cardsArt = [] }) => {
   return (
     <header className={`hidden sm:flex ${styles.header}`}>
       <div className="flex w-full h-64">
@@ -22,16 +23,8 @@ const CardHeader = ({ title = "", subtitle = "", cardsArt = [] }: Props) => {
       </div>
       <div className={styles.mask} />
       <div className={styles.comboTitleWrapper}>
-        <h1
-          className={`heading-title ${styles.headingTitle} ${styles.comboTitle}`}
-        >
-          {title}
-        </h1>
-        <h2
-          className={`heading-title ${styles.headingTitle} ${styles.comboSubtitle}`}
-        >
-          {subtitle}
-        </h2>
+        <h1 className={`heading-title ${styles.headingTitle} ${styles.comboTitle}`}>{title}</h1>
+        <h2 className={`heading-title ${styles.headingTitle} ${styles.comboSubtitle}`}>{subtitle}</h2>
       </div>
     </header>
   );

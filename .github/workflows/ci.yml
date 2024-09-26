@@ -8,17 +8,20 @@ on:
       - "*"
   workflow_dispatch:
 
-
 defaults:
   run:
     shell: bash
 
+env:
+  NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
   setup:
     runs-on: ubuntu-22.04
-    outputs:
-      workflow_id: ${{ steps.generate-uuid.outputs.uuid }}
+    permissions:
+      packages: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -27,7 +30,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: "yarn"
+          cache: yarn
+          registry-url: https://npm.pkg.github.com
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
@@ -43,7 +47,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Cache Site Data ⏬
-        id: cache-downloaded-data
         uses: actions/cache@v3
         with:
           path: |
@@ -112,15 +115,52 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run typescript 👀
-        run: yarn tsc
+        run: yarn tsc --noEmit
 
-  build-push:
-    runs-on: ubuntu-latest
-    needs: [linter, type-check]
-    if: github.ref == 'refs/heads/main'
+  test:
+    runs-on: ubuntu-22.04
+    needs: setup
+    strategy:
+      matrix:
+        browser: [chrome, firefox, edge, electron]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Restore node modules from cache 📦
+        id: cache-nodemodules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache
+          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install 📦
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Cypress run 🧪
+        uses: cypress-io/github-action@v6
+        with:
+          install-command: "true"
+          build: yarn run build
+          start: yarn start
+          wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
+          browser: ${{ matrix.browser }}
+
+  docker:
+    runs-on: ubuntu-22.04
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      packages: read
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -128,12 +168,47 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Configure for GitHub Package Registry
+        run: |
+          tee .npmrc <<'EOF'
+          @spacecowmedia:registry="https://npm.pkg.github.com"
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
       - name: Build and export image
         uses: docker/build-push-action@v6
         with:
           push: false
           load: true
+          context: .
           tags: spellbook-client:latest
+          outputs: type=docker,dest=/tmp/spellbook-client.tar
+
+      - name: Upload image artifact 📦
+        uses: actions/upload-artifact@v4
+        with:
+          name: spellbook-client
+          path: /tmp/spellbook-client.tar
+
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: [linter, type-check, test, docker]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download image artifact 📦
+        uses: actions/download-artifact@v4
+        with:
+          name: spellbook-client
+          path: /tmp
+
+      - name: Load image 🐳
+        run: docker load --input /tmp/spellbook-backend.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -196,14 +271,13 @@ jobs:
           docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
 
-
-  rollout-pods:
-    runs-on: ubuntu-latest
-    needs: build-push
+  rollout:
+    runs-on: ubuntu-22.04
+    needs: deploy
     if: github.ref == 'refs/heads/main'
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -224,5 +298,5 @@ jobs:
         run: |
           export KUBECONFIG=kubeconfig.yaml
           kubectl rollout restart deployment/spellbook-client -n spellbook
-#          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
 
+#          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
