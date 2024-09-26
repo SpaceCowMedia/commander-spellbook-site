@@ -162,6 +162,9 @@ jobs:
       packages: read
       contents: read
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -177,6 +180,7 @@ jobs:
         with:
           push: false
           load: true
+          context: .
           tags: spellbook-client:latest
           outputs: type=docker,dest=/tmp/spellbook-backend.tar
           build-args: |
