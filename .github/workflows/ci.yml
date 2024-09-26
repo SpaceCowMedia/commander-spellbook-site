@@ -170,7 +170,7 @@ jobs:
 
       - name: Configure for GitHub Package Registry
         run: |
-          echo <<EOF > .npmrc
+          tee .npmrc <<'EOF'
           @my-gh-account-name:registry="https://npm.pkg.github.com"
           //npm.pkg.github.com/:_authToken=${GITHUB_AUTH_TOKEN}
           EOF
