@@ -117,6 +117,9 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     needs: setup
+    strategy:
+      matrix:
+        browser: [chrome, firefox, edge]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -148,9 +151,7 @@ jobs:
           build: yarn run build
           start: node .next/standalone/server.js
           wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
-
-      - name: Run e2e tests 👀
-        run: yarn cy:run
+          browser: ${{ matrix.browser }}
 
   build-push:
     runs-on: ubuntu-22.04
