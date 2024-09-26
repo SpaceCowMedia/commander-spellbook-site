@@ -156,17 +156,9 @@ jobs:
           wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
           browser: ${{ matrix.browser }}
 
-  build-push:
+  docker:
     runs-on: ubuntu-22.04
-    needs: [linter, type-check, test]
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -176,6 +168,33 @@ jobs:
           push: false
           load: true
           tags: spellbook-client:latest
+          outputs: type=docker,dest=/tmp/spellbook-backend.tar
+
+      - name: Upload image artifact 📦
+        uses: actions/upload-artifact@v4
+        with:
+          name: spellbook-client
+          path: /tmp/spellbook-backend.tar
+
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: [linter, type-check, test, docker]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download image artifact 📦
+        uses: actions/download-artifact@v4
+        with:
+          name: spellbook-client
+          path: /tmp
+
+      - name: Load image 🐳
+        run: docker load --input /tmp/spellbook-backend.tar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
