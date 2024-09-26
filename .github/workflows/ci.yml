@@ -8,11 +8,9 @@ on:
       - "*"
   workflow_dispatch:
 
-
 defaults:
   run:
     shell: bash
-
 
 jobs:
   setup:
@@ -143,6 +141,14 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
+      - name: Cypress run 🧪
+        uses: cypress-io/github-action@v6
+        with:
+          install-command: "true"
+          build: yarn run build
+          start: yarn start
+          wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
+
       - name: Run e2e tests 👀
         run: yarn cy:run
 
@@ -151,8 +157,8 @@ jobs:
     needs: [linter, type-check, test]
     if: github.ref == 'refs/heads/main'
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -228,14 +234,13 @@ jobs:
           docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
 
-
   rollout-pods:
     runs-on: ubuntu-22.04
     needs: build-push
     if: github.ref == 'refs/heads/main'
     permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -256,4 +261,5 @@ jobs:
         run: |
           export KUBECONFIG=kubeconfig.yaml
           kubectl rollout restart deployment/spellbook-client -n spellbook
+
 #          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
