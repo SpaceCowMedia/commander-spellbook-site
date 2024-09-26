@@ -257,9 +257,9 @@ jobs:
           docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
 
-  rollout-pods:
+  rollout:
     runs-on: ubuntu-22.04
-    needs: build-push
+    needs: deploy
     if: github.ref == 'refs/heads/main'
     permissions:
       id-token: write # This is required for requesting the JWT
