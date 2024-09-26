@@ -146,7 +146,7 @@ jobs:
         with:
           install-command: "true"
           build: yarn run build
-          start: yarn start
+          start: node .next/standalone/server.js
           wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
 
       - name: Run e2e tests 👀

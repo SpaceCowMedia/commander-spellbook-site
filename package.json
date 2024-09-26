@@ -39,6 +39,7 @@
     "remark-rehype": "^11.0.0",
     "sass": "^1.58.0",
     "scryfall-client": "^0.23.0",
+    "sharp": "^0.33.5",
     "use-debounce": "^10.0.3"
   },
   "devDependencies": {
