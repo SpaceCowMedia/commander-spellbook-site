@@ -172,7 +172,7 @@ jobs:
         run: |
           tee .npmrc <<'EOF'
           @my-gh-account-name:registry="https://npm.pkg.github.com"
-          //npm.pkg.github.com/:_authToken=${GITHUB_AUTH_TOKEN}
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
           EOF
 
       - name: Build and export image
@@ -183,8 +183,6 @@ jobs:
           context: .
           tags: spellbook-client:latest
           outputs: type=docker,dest=/tmp/spellbook-backend.tar
-          build-args: |
-            GITHUB_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload image artifact 📦
         uses: actions/upload-artifact@v4
