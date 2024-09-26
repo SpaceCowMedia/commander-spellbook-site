@@ -42,7 +42,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.config.js', '*.config.ts'],
+      files: ['*.config.js', '*.config.ts', '*.config.mjs'],
       rules: {
         'import/no-anonymous-default-export': 'off',
       },
