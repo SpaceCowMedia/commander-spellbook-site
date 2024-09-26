@@ -182,13 +182,13 @@ jobs:
           load: true
           context: .
           tags: spellbook-client:latest
-          outputs: type=docker,dest=/tmp/spellbook-backend.tar
+          outputs: type=docker,dest=/tmp/spellbook-client.tar
 
       - name: Upload image artifact 📦
         uses: actions/upload-artifact@v4
         with:
           name: spellbook-client
-          path: /tmp/spellbook-backend.tar
+          path: /tmp/spellbook-client.tar
 
   deploy:
     runs-on: ubuntu-22.04
