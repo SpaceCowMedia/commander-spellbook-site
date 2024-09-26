@@ -158,9 +158,19 @@ jobs:
 
   docker:
     runs-on: ubuntu-22.04
+    permissions:
+      packages: read
+      contents: read
     steps:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Configure for GitHub Package Registry
+        run: |
+          echo <<EOF > .npmrc
+          @my-gh-account-name:registry="https://npm.pkg.github.com"
+          //npm.pkg.github.com/:_authToken=${GITHUB_AUTH_TOKEN}
+          EOF
 
       - name: Build and export image
         uses: docker/build-push-action@v6
@@ -169,6 +179,8 @@ jobs:
           load: true
           tags: spellbook-client:latest
           outputs: type=docker,dest=/tmp/spellbook-backend.tar
+          build-args: |
+            GITHUB_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload image artifact 📦
         uses: actions/upload-artifact@v4
