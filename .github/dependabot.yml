@@ -12,6 +12,7 @@ updates:
       interval: weekly
     commit-message:
       prefix: chore
+    registries: "*"
   - package-ecosystem: docker
     directory: /
     schedule:
