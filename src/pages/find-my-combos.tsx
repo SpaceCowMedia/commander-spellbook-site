@@ -125,11 +125,16 @@ const FindMyCombos: React.FC = () => {
     if (commanderListRaw) {
       decklistRaw = `${decklistRaw}\n// Commanders\n${commanderListRaw}`;
     }
+    setDecklist(decklistRaw);
+    setCommanderList(commanderListRaw || '');
+    setCurrentlyParsedDeck(undefined);
+    setDeckUrl('');
     try {
       const deck = await cardListFromTextApi.cardListFromTextCreate({ body: decklistRaw });
       const decklist = new Decklist(deck);
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
+      setCurrentlyParsedDeck(decklist);
       setDecklistErrors([]);
       return decklist;
     } catch (err: any) {
@@ -153,8 +158,6 @@ const FindMyCombos: React.FC = () => {
 
     try {
       const combos = await findMyCombosApi.findMyCombosCreate({ deckRequest: decklist.deck, offset });
-
-      setCurrentlyParsedDeck(decklist);
 
       const newResults = {
         identity: combos.results.identity,
@@ -222,10 +225,17 @@ const FindMyCombos: React.FC = () => {
       return;
     }
 
-    const savedDeck: Deck = DeckFromJSON(JSON.parse(savedDeckString));
-    const decklist: Decklist = new Decklist(savedDeck);
-
-    lookupCombos(decklist);
+    try {
+      const savedDeck: Deck = DeckFromJSON(JSON.parse(savedDeckString));
+      const decklist: Decklist = new Decklist(savedDeck);
+      setDecklist(decklist.mainListString());
+      setCommanderList(decklist.commanderListString());
+      setCurrentlyParsedDeck(decklist);
+      lookupCombos(decklist);
+    } catch (e) {
+      console.error('Failed to load saved decklist from local storage', e);
+      clearDecklist();
+    }
   }, [router.isReady]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -244,6 +254,7 @@ const FindMyCombos: React.FC = () => {
       const decklist = new Decklist(deck);
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
+      setCurrentlyParsedDeck(decklist);
       lookupCombos(decklist);
     } catch (err: any) {
       const error = err as ResponseError;
@@ -285,6 +296,7 @@ const FindMyCombos: React.FC = () => {
               1 Ancient Tomb
               1x Ancient Tomb
               Ancient Tomb (uma) 236
+              1 Aetherflux Reservoir (KLD) 192 *F*
               `}
             onChange={handleInput}
           />
@@ -348,9 +360,15 @@ const FindMyCombos: React.FC = () => {
               <div id="decklist-url-hint" className={`${styles.decklistHint} heading-subtitle`} aria-hidden="true">
                 Paste your decklist url
               </div>
-              <button id="submit-url-input" className={`${styles.clearDecklistInput} button`} onClick={handleUrlInput}>
-                Submit URL
-              </button>
+              {!!deckUrl && (
+                <button
+                  id="submit-url-input"
+                  className={`${styles.clearDecklistInput} button`}
+                  onClick={handleUrlInput}
+                >
+                  Submit URL
+                </button>
+              )}
               {deckUrlError && <ErrorMessage>{deckUrlError}</ErrorMessage>}
             </section>
           )}
