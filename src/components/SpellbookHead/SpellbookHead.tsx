@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import { useRouter } from 'next/router';
+import { GA_TRACKING_ID } from 'lib/googleAnalytics';
 
 type Props = {
   children?: React.ReactNode;
@@ -24,6 +25,27 @@ const SpellbookHead: React.FC<Props> = ({
   const router = useRouter();
   return (
     <Head>
+      {/* Google Analytics */}
+      <script
+        id="ga1"
+        async={true}
+        defer={false}
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+      />
+      <script
+        id="ga2"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
+      {/* End Google Analytics */}
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta property="og:description" content={description} />

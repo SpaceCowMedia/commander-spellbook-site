@@ -1,8 +1,7 @@
 import '../assets/globals.scss';
 import type { AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
-import Script from 'next/script';
-import { GA_TRACKING_ID, pageview } from '../lib/googleAnalytics';
+import { pageview } from '../lib/googleAnalytics';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import NextNProgress from 'nextjs-progressbar';
@@ -26,25 +25,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Script
-        id="ga1"
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-      />
-      <Script
-        id="ga2"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
       <NextNProgress options={{ showSpinner: false }} color={'#9161f3'} />
       <PageWrapper>
         <Component {...pageProps} />
