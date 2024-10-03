@@ -95,6 +95,12 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
     ? ''
     : ' (legal:commander has been applied by default)';
 
+  const singleCardQuery = /^card="([^"]+)"$/.exec(parsedSearchQuery);
+
+  const searchMessage = singleCardQuery
+    ? `Showing ${count} combos with the card "${singleCardQuery[1]}"${legalityMessage}`
+    : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`;
+
   return (
     <>
       <SpellbookHead
@@ -109,9 +115,13 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
           </>
         ) : (
           <>
-            <h1 className="sr-only">Search Results</h1>
+            {singleCardQuery ? (
+              <h1 className="heading-title">Combos with "{singleCardQuery[1]}"</h1>
+            ) : (
+              <h1 className="sr-only">Search Results</h1>
+            )}
             <SearchMessage
-              message={error ? '' : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`}
+              message={error ? '' : searchMessage}
               errors={error ?? ''}
               currentPage={page}
               totalPages={1}
