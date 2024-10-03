@@ -35,6 +35,22 @@ async function generateSiteMap(): Promise<string> {
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <url>
        <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/`}</loc>
+       <priority>1.0</priority>
+     </url>
+     <url>
+       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/advanced-search/`}</loc>
+     </url>
+     <url>
+       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/syntax-guide/`}</loc>
+     </url>
+     <url>
+       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/find-my-combos/`}</loc>
+       <priority>0.9</priority>
+     </url>
+     <url>
+       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/search/?q=is:featured`}</loc>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
      </url>
      ${cards
        .map(({ name }) => {
@@ -42,7 +58,6 @@ async function generateSiteMap(): Promise<string> {
        <url>
            <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/search/?q=${encodeURIComponent(`card="${name}"`).replaceAll("'", '%27')}`}</loc>
            <changefreq>weekly</changefreq>
-           <priority>0.8</priority>
            <lastmod>${new Date(updateTime).toISOString()}</lastmod>
        </url>
      `;
