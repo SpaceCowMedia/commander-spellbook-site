@@ -14,6 +14,8 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   );
 
   const divRef = useRef<HTMLDivElement>(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map(() => false));
+  const loadedImages = isImageLoaded.filter((val) => val).length;
 
   const handleMouseMove = (e: any) => {
     if (!divRef.current) {
@@ -26,7 +28,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     if (displayOnRightSide) {
       divRef.current.style.left = e.clientX + 50 + 'px';
     } else {
-      divRef.current.style.left = e.clientX - 290 * cardNames.length + 'px';
+      divRef.current.style.left = e.clientX - 290 * loadedImages + 'px';
     }
   };
 
@@ -35,8 +37,6 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
       divRef.current.style.display = 'none';
     }
   };
-
-  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map(() => false));
 
   return (
     <span onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
