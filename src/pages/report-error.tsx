@@ -16,8 +16,10 @@ const ReportError: React.FC = () => {
         <h1 className="heading-title">Report an Error</h1>
         <p>
           The first step for reporting an error is&nbsp;
-          <ExternalLink href="https://discord.gg/KDnvP5f">joining our Discord server</ExternalLink>. Once you have
-          joined, copy and fill the following template to report an error in the&nbsp;
+          <ExternalLink href="https://discord.gg/commander-spellbook-673601282946236417">
+            joining our Discord server
+          </ExternalLink>
+          . Once you have joined, copy and fill the following template to report an error in the&nbsp;
           <ExternalLink href="https://discord.com/channels/673601282946236417/673734250402545676">
             #submit-an-update
           </ExternalLink>
