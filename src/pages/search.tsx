@@ -12,6 +12,8 @@ import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import { Variant, VariantsApi } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
+const PAGE_SIZE = 50;
+
 type Props = {
   combos: Variant[];
   bannedCombos?: Variant[];
@@ -57,8 +59,6 @@ const AUTO_SORT_MAP: Record<string, '-'> = {
   updated: '-',
 };
 
-const PAGE_SIZE = 50;
-
 const doesQuerySpecifyFormat = (query: string): boolean => {
   return query.includes('legal:') || query.includes('banned:') || query.includes('format:');
 };
@@ -72,15 +72,16 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
   const query = router.query.q;
   const parsedSearchQuery = !query || typeof query !== 'string' ? '' : query;
 
-  const totalPages = Math.floor(count / PAGE_SIZE) + 1;
+  const totalPages = Math.ceil(count / PAGE_SIZE);
 
-  const numberPage = Number(page) || 1;
+  const pageNumber = Number(page) || 1;
+
   const goForward = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, page: numberPage + 1 } });
+    router.push({ pathname: '/search/', query: { ...router.query, page: pageNumber + 1 } });
   };
 
   const goBack = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, page: numberPage - 1 } });
+    router.push({ pathname: '/search/', query: { ...router.query, page: pageNumber - 1 } });
   };
 
   const handleSortChange = (value: string) => {
@@ -160,7 +161,7 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
               />
               <div className="flex-grow" />
               <SearchPagination
-                currentPage={numberPage}
+                currentPage={pageNumber}
                 totalPages={totalPages}
                 aria-hidden="true"
                 onGoForward={goForward}
@@ -175,7 +176,7 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
             <div className="w-full">
               <ComboResults results={combos} sort={sort} />
               <SearchPagination
-                currentPage={page}
+                currentPage={pageNumber}
                 totalPages={totalPages}
                 aria-hidden="true"
                 onGoForward={goForward}
