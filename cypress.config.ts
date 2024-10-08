@@ -8,4 +8,7 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
   },
   blockHosts: '*.google-analytics.com',
+  retries: {
+    runMode: 2,
+  },
 });
