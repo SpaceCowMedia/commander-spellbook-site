@@ -1,10 +1,16 @@
 .cardTooltip {
   pointer-events: none;
   position: fixed;
-  z-index: 9000000;
-  overflow: hidden;
+  z-index: 9000;
   border-radius: 4.75% / 3.5%;
+  display: none;
+  max-width: none;
+  max-height: none;
+  height: 10cm;
+  flex-direction: row;
+}
+
+.cardTooltip img {
   height: 340px;
   width: 244px;
-  display: none;
 }
