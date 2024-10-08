@@ -63,7 +63,7 @@
     "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^8.0.3",
+    "husky": "^9.1.6",
     "lint-staged": "^13.1.2",
     "postcss": "^8.4.21",
     "prettier": "^3.3.3",
