@@ -28,6 +28,7 @@ const ComboList: React.FC<Props> = ({
   className,
   appendPeriod,
 }) => {
+  iterations = iterations.filter((item) => item.trim() !== '');
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
 
   useEffect(() => {
