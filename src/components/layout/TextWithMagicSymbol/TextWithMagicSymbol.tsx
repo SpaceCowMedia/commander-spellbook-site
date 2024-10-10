@@ -4,11 +4,11 @@ import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
 import ScryfallResultsModal from 'components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal';
-import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   text: string;
-  cardsInCombo?: string[];
+  cardsInCombo?: CardInVariant[];
   includeCardLinks?: boolean;
   templatesInCombo?: TemplateInVariant[];
 };
@@ -16,7 +16,8 @@ type Props = {
 const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], includeCardLinks, templatesInCombo = [] }) => {
   let matchableValuesString = '';
 
-  const cardShortNames = cardsInCombo.reduce((list, name) => {
+  const cardNames = cardsInCombo.map((card) => card.card.name);
+  const cardShortNames = cardNames.reduce((list, name) => {
     if (name.match(/^[^,]+,/)) {
       list.push(name.split(',')[0]);
     } else if (name.match(/^[^\s]+\s(the|of)\s/i)) {
@@ -33,8 +34,8 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
     return list;
   }, [] as string[]);
 
-  if (cardsInCombo.length) {
-    matchableValuesString = `${cardsInCombo.join('|')}|`;
+  if (cardNames.length) {
+    matchableValuesString = `${cardNames.join('|')}|`;
     if (cardShortNames.length) {
       matchableValuesString += `${cardShortNames.join('|')}|`;
     }
@@ -57,14 +58,14 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
     .split(matchableValuesRegex)
     .filter((val) => val)
     .map((value) => {
-      if (cardsInCombo.includes(value.trim())) {
+      if (cardNames.includes(value.trim())) {
         return {
           nodeType: 'card',
           cardName: value,
           value,
         };
       } else if (cardShortNames.includes(value.trim())) {
-        const fullName = cardsInCombo.find((card) => card.includes(value.trim()));
+        const fullName = cardNames.find((card) => card.includes(value.trim()));
 
         if (fullName) {
           return {

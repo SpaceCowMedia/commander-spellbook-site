@@ -3,11 +3,11 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from 'react';
 import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
 import { addPeriod } from '../../../lib/addPeriod';
-import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   title: string;
-  cardsInCombo?: string[];
+  cardsInCombo?: CardInVariant[];
   templatesInCombo?: TemplateInVariant[];
   includeCardLinks?: boolean;
   showNumbers?: boolean;

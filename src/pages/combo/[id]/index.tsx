@@ -24,33 +24,33 @@ import BulkApiService from 'services/bulk-api.service';
 
 type Props = {
   combo?: Variant;
-  cardImages?: CardWithImages[];
   alternatives?: Variant[];
   previewImageUrl?: string;
 };
 
-type CardWithImages = {
-  name: string;
-  artUrl: string;
-  oracleImageUrl: string;
-};
-
 const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
-const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageUrl }) => {
-  if (combo && cardImages) {
-    const cardNames = combo.uses.map((card) => card.card.name);
-    const cardArts = cardImages.map((card) => card.artUrl);
-    const title = cardNames.length === 0 ? 'Looking up Combo' : cardNames.slice(0, 3).join(' | ');
-    const titleCount = cardNames.slice(0, 3).length;
-    const templateNames = combo.requires.map((template) => template.template.name);
-    const combinedNames = [...cardNames, ...templateNames];
+const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
+  if (combo) {
+    const cardArts = combo.uses.map(
+      (card) =>
+        `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
+    );
+    const cardNamesWithQuantities = combo.uses.map((card) =>
+      card.quantity > 1 ? `${card.quantity} ${card.card.name}` : card.card.name,
+    );
+    const title = combo.uses.length === 0 ? 'No specific cards' : cardNamesWithQuantities.slice(0, 3).join(' | ');
+    const titleCount = combo.uses.slice(0, 3).reduce((a, b) => a + b.quantity, 0);
+    const templateNamesWithQuantities = combo.requires.map((template) =>
+      template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
+    );
+    const totalCount = titleCount + combo.requires.reduce((a, b) => a + b.quantity, 0);
     const subtitle =
-      combinedNames.length === titleCount
+      totalCount === titleCount
         ? ''
-        : combinedNames.length === titleCount + 1
+        : totalCount === titleCount + 1
           ? `(and ${NUMBERS[1]} other card)`
-          : `(and ${NUMBERS[combinedNames.length - titleCount]} other cards)`;
+          : `(and ${NUMBERS[totalCount - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
     const metaData =
       numberOfDecks !== undefined && numberOfDecks !== null
@@ -81,7 +81,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-        <CardGroup key={combo.id} cards={cardImages} templates={combo.requires} />
+        <CardGroup key={combo.id} cards={combo.uses} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
@@ -93,15 +93,15 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
               id="combo-cards"
               className="lg:hidden"
               includeCardLinks
-              cardsInCombo={cardNames}
+              cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
-              iterations={combinedNames}
+              iterations={cardNamesWithQuantities.concat(templateNamesWithQuantities)}
             />
 
             <PrerequisiteList
               prerequisites={prerequisites}
               id="combo-prerequisites"
-              cardsInCombo={cardNames}
+              cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
             />
 
@@ -110,7 +110,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
                 title="Steps"
                 id="combo-steps"
                 iterations={steps}
-                cardsInCombo={cardNames}
+                cardsInCombo={combo.uses}
                 templatesInCombo={combo.requires}
                 showNumbers
                 appendPeriod
@@ -122,7 +122,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
                 title="Notes"
                 id="combo-notes"
                 iterations={notes}
-                cardsInCombo={cardNames}
+                cardsInCombo={combo.uses}
                 templatesInCombo={combo.requires}
                 appendPeriod
               />
@@ -132,7 +132,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
               title="Results"
               id="combo-results"
               iterations={results}
-              cardsInCombo={cardNames}
+              cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               appendPeriod
             />
@@ -156,7 +156,7 @@ const Combo: React.FC<Props> = ({ combo, cardImages, alternatives, previewImageU
             )}
 
             <ComboSidebarLinks
-              cards={cardNames}
+              cards={combo.uses.map((card) => card.card.name)}
               comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
               edhrecLink={EDHRECService.getComboUrl(combo)}
               comboId={combo.id}
@@ -200,17 +200,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // 1. Check the backend
     const backendCombo = await variantsApi.variantsRetrieve({ id: params.id });
-    const cardsWithImages = backendCombo.uses.map((card) => {
-      return {
-        name: card.card.name,
-        artUrl: `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
-        oracleImageUrl: `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`,
-      };
-    });
     return {
       props: {
         combo: backendCombo,
-        cardImages: cardsWithImages,
       },
     };
   } catch (err) {

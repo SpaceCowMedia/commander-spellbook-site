@@ -2,15 +2,15 @@ import { ComboPrerequisites } from '../../../lib/types';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Icon from '../../layout/Icon/Icon';
 import { addPeriod } from '../../../lib/addPeriod';
-import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
 import React from 'react';
 
 type Props = {
   prerequisites: ComboPrerequisites[];
   className?: string;
   id?: string;
-  cardsInCombo?: string[];
   includeCardLinks?: boolean;
+  cardsInCombo?: CardInVariant[];
   templatesInCombo?: TemplateInVariant[];
 };
 

@@ -73,8 +73,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   // Handle any multi-zone cards
   const multiZoneCards = cardsAndTemplates.filter((card) => card.zoneLocations.length > 1);
   for (const card of multiZoneCards.sort((a, b) => getName(a).localeCompare(getName(b)))) {
-    let cardString = '';
-    cardString += `${cardNameMap[getName(card)]} `;
+    let cardString = `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[getName(card)]} `;
     if (Object.keys(ZONE_MAP).length === card.zoneLocations.length) {
       cardString += 'in any zone';
     } else {
@@ -123,7 +122,9 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
       cardState = ` (${cardState})`;
     }
     zoneGroups.push({
-      cardNames: zoneCards.map((card) => cardNameMap[getName(card)]),
+      cardNames: zoneCards.map(
+        (card) => `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[getName(card)]}`,
+      ),
       zone: zoneKey as keyof typeof ZONE_MAP,
       cardState,
     });

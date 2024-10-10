@@ -78,7 +78,7 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
           <div className="py-1">
             <span className="sr-only">Cards in combo:</span>
             {combo.uses.map(({ card, quantity }) => (
-              <CardTooltip cardName={card.name} key={card.name}>
+              <CardTooltip cardName={quantity > 1 ? `${quantity}x ${card.name}` : card.name} key={card.name}>
                 <div className="card-name pl-3 pr-3">
                   {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
                     <strong className="text-red-800">{card.name} (not in deck)</strong>
@@ -91,7 +91,8 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
             {combo.requires.length > 0 && (
               <div className="prerequisites pl-3 pr-3">
                 <span className="text-gray-500">
-                  +{combo.requires.length} other card{combo.requires.length > 1 ? 's' : ''}
+                  +{combo.requires.reduce((q, r) => q + r.quantity, 0)} other card
+                  {combo.requires.reduce((q, r) => q + r.quantity, 0) > 1 ? 's' : ''}
                 </span>
               </div>
             )}
