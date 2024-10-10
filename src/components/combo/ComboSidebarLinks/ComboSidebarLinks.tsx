@@ -5,6 +5,7 @@ import ShareComboButtons from './ShareComboButtons/ShareComboButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
 import { Variant } from '@spacecowmedia/spellbook-client';
+import { useCookies } from 'react-cookie';
 
 type Props = {
   cards: string[];
@@ -25,6 +26,7 @@ const ComboSidebarLinks: React.FC<Props> = ({
   cardKingdomPrice,
   combo,
 }) => {
+  const [cookies, _setCookies] = useCookies(['csbIsStaff']);
   return (
     <div className="mt-4 mb-4 w-full rounded overflow-hidden">
       <BuyComboButtons cards={cards} tcgPlayerPrice={tcgPlayerPrice} cardKingdomPrice={cardKingdomPrice} />
@@ -34,6 +36,15 @@ const ComboSidebarLinks: React.FC<Props> = ({
           Report an Error with this Combo
         </Link>
         <Embed combo={combo} />
+        {cookies.csbIsStaff && (
+          <Link
+            id="edit-combo-button"
+            className="button w-full"
+            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/spellbook/variant/${comboId}/change/`}
+          >
+            Edit this Combo
+          </Link>
+        )}
         <ShareComboButtons comboLink={comboLink} />
       </div>
     </div>
