@@ -59,7 +59,7 @@
     "cypress": "^13.15.0",
     "eslint": "^8.41.0",
     "eslint-config-next": "^14.2.9",
-    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-prettier": "^5.2.1",
