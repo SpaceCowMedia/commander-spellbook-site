@@ -33,9 +33,8 @@ const TemplateCard: React.FC<Props> = ({ template, className, imgClassName }) =>
   return (
     <div className="relative">
       <div className={`rounded-xl ${className ?? ''}`} style={{ backgroundColor: '#404040' }}>
-        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] p-7">
+        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] pt-7 z-11">
           <TextWithMagicSymbol text={template.template.name} />
-          {template.quantity > 1 && <span className="text-[16px]"> (x{template.quantity})</span>}
         </div>
         <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
           {loading ? <Loader /> : <ScryfallResultsWheel cards={results} />}
