@@ -44,7 +44,9 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     const templateNamesWithQuantities = combo.requires.map((template) =>
       template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
     );
-    const totalCount = titleCount + combo.requires.reduce((a, b) => a + b.quantity, 0);
+    const totalCount =
+      combo.uses.reduce((a, b) => a + b.quantity, 0) + combo.requires.reduce((a, b) => a + b.quantity, 0);
+    console.log(titleCount, totalCount);
     const subtitle =
       totalCount === titleCount
         ? ''
