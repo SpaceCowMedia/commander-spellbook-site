@@ -215,6 +215,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const results = await variantsApi.variantsList({
       q: query,
+      groupByCombo: true,
       limit: PAGE_SIZE,
       offset: ((Number(context.query.page) || 1) - 1) * PAGE_SIZE,
       ordering: ordering,
@@ -227,6 +228,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       let query = `${context.query.q} banned:commander`;
       const results = await variantsApi.variantsList({
         q: query,
+        groupByCombo: true,
         limit: PAGE_SIZE,
         ordering: ordering,
       });

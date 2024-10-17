@@ -384,7 +384,7 @@ const FindMyCombos: React.FC = () => {
           {!lookupInProgress && decklist && (
             <section id="combos-in-deck-section">
               <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-              <ComboResults results={results.included} />
+              <ComboResults results={results.included} hideVariants={true} />
             </section>
           )}
 
@@ -392,7 +392,7 @@ const FindMyCombos: React.FC = () => {
             <section id="potential-combos-in-deck-section">
               <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
               <p>List of combos where your decklist is missing 1 combo piece.</p>
-              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} />
+              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} hideVariants={true} />
             </section>
           )}
 
@@ -402,7 +402,11 @@ const FindMyCombos: React.FC = () => {
               <p>
                 List of combos where your decklist is missing 1 combo piece, but requires at least one additional color.
               </p>
-              <ComboResults results={results.almostIncludedByAddingColors} deck={currentlyParsedDeck?.deck} />
+              <ComboResults
+                results={results.almostIncludedByAddingColors}
+                deck={currentlyParsedDeck?.deck}
+                hideVariants={true}
+              />
             </section>
           )}
           {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length && (
@@ -411,7 +415,11 @@ const FindMyCombos: React.FC = () => {
                 {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
               </h2>
               <p>List of combos where your decklist is missing 1 combo piece, but requires changing your commander.</p>
-              <ComboResults results={results.almostIncludedByChangingCommanders} deck={currentlyParsedDeck?.deck} />
+              <ComboResults
+                results={results.almostIncludedByChangingCommanders}
+                deck={currentlyParsedDeck?.deck}
+                hideVariants={true}
+              />
             </section>
           )}
           {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length && (
@@ -427,6 +435,7 @@ const FindMyCombos: React.FC = () => {
               <ComboResults
                 results={results.almostIncludedByAddingColorsAndChangingCommanders}
                 deck={currentlyParsedDeck?.deck}
+                hideVariants={true}
               />
             </section>
           )}
