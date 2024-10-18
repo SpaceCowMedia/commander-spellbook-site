@@ -9,12 +9,21 @@ import React from 'react';
 
 type ResultProps = {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
+  decklistMessage?: string;
   combo: Variant;
   sort?: string;
   newTab?: boolean;
+  hideVariants?: boolean;
 };
 
-export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newTab }) => {
+export const ComboResult: React.FC<ResultProps> = ({
+  combo,
+  decklist,
+  sort,
+  newTab,
+  hideVariants,
+  decklistMessage,
+}) => {
   const sortStatMessage = (combo: Variant) => {
     if (!sort) {
       return '';
@@ -60,6 +69,8 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
     ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
+  const moreVariantsCount = combo.of.reduce((acc, v) => Math.max(acc, v.variantCount), 0) - 1;
+
   return (
     <Link
       href={`/combo/${combo.id}`}
@@ -81,7 +92,14 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
               <CardTooltip cardName={quantity > 1 ? `${quantity}x ${card.name}` : card.name} key={card.name}>
                 <div className="card-name pl-3 pr-3">
                   {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
-                    <strong className="text-red-800">{card.name} (not in deck)</strong>
+                    decklistMessage != undefined ? (
+                      <strong className="text-blue-800">
+                        {card.name}
+                        {decklistMessage ? ` (${decklistMessage})` : ''}
+                      </strong>
+                    ) : (
+                      <strong className="text-red-800">{card.name} (not in deck)</strong>
+                    )
                   ) : (
                     <span>{card.name}</span>
                   )}
@@ -116,6 +134,13 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
       </div>
       <div className="flex items-center flex-grow flex-col">
         <div className="flex-grow" />
+        {!hideVariants && moreVariantsCount > 0 && (
+          <div className="w-full bg-pink-300 text-right">
+            <span className="pl-3 pr-3">
+              + {moreVariantsCount} variant{moreVariantsCount > 1 ? 's' : ''}
+            </span>
+          </div>
+        )}
         {sortStatMessage(combo) && (
           <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
             {sortStatMessage(combo)}
@@ -128,12 +153,14 @@ export const ComboResult: React.FC<ResultProps> = ({ combo, decklist, sort, newT
 
 type Props = {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
+  decklistMessage?: string;
   results: Variant[];
   sort?: string;
   vendor?: Array<keyof VariantPrices>;
+  hideVariants?: boolean;
 };
 
-const ComboResults: React.FC<Props> = ({ results, sort, deck }) => {
+const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage }) => {
   const decklist = deck?.main.concat(deck.commanders).reduce((acc, card) => {
     const lowercase = card.card.toLowerCase();
     acc.set(lowercase, (acc.get(lowercase) ?? 0) + card.quantity);
@@ -143,7 +170,14 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck }) => {
   return (
     <div className={styles.comboResultsWrapper}>
       {results.map((combo) => (
-        <ComboResult combo={combo} decklist={decklist} sort={sort} key={combo.id} />
+        <ComboResult
+          combo={combo}
+          decklist={decklist}
+          sort={sort}
+          key={combo.id}
+          hideVariants={hideVariants}
+          decklistMessage={decklistMessage}
+        />
       ))}
     </div>
   );

@@ -7,7 +7,7 @@ import styles from './combo.module.scss';
 import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
 import { GetServerSideProps } from 'next';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
 import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
@@ -21,6 +21,8 @@ import {
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import BulkApiService from 'services/bulk-api.service';
+import Loader from 'components/layout/Loader/Loader';
+import ComboResults from 'components/search/ComboResults/ComboResults';
 
 type Props = {
   combo?: Variant;
@@ -30,7 +32,36 @@ type Props = {
 
 const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
+const MAX_VARIANTS_COUNT = 50;
+
 const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
+  const configuration = apiConfiguration();
+  const variantsApi = new VariantsApi(configuration);
+  const [variants, setVariants] = useState<Variant[]>([]);
+  const [variantsLoading, setVariantsLoading] = useState(false);
+  const totalVariants = combo ? combo.of.reduce((acc, v) => Math.max(acc, v.variantCount), 0) - 1 : 0;
+  const loadVariants = async (combo: Variant) => {
+    setVariantsLoading(true);
+    const generator = combo.of.find((v) => v.variantCount == totalVariants + 1);
+    if (generator) {
+      const variants = await variantsApi.variantsList({
+        groupByCombo: false,
+        of: generator.id,
+        limit: MAX_VARIANTS_COUNT,
+        ordering: '-popularity,identity_count,cards_count,-created',
+        q: `-sid:"${combo.id}"`,
+      });
+      setVariants(variants.results);
+    }
+    setVariantsLoading(false);
+  };
+  useEffect(() => {
+    setVariants([]);
+    setVariantsLoading(false);
+  }, [combo]);
+  if (totalVariants > 0 && combo && variants.length == 0 && !variantsLoading) {
+    loadVariants(combo);
+  }
   if (combo) {
     const cardArts = combo.uses.map(
       (card) =>
@@ -73,7 +104,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     } else if (combo.status == 'NR') {
       metaData.push('This combo needs to be reviewed and is only visible to editors.');
     }
-
     return (
       <>
         <SpellbookHead
@@ -167,6 +197,37 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               combo={combo}
             />
           </aside>
+        </div>
+        <div className="container flex-row">
+          <div className="w-full">
+            {totalVariants > 0 && (
+              <ComboList
+                title="Variants of this combo"
+                id="combo-variants"
+                iterations={
+                  variantsLoading
+                    ? []
+                    : [
+                        `Below you find ${variants.length == totalVariants ? `all ${variants.length}` : `${variants.length} out of ${totalVariants} total`} variants of this combo.`,
+                      ]
+                }
+              />
+            )}
+            {variantsLoading && <Loader />}
+            {variants.length == 0 && !variantsLoading && <p>No other variants found</p>}
+          </div>
+          {variants.length > 0 && !variantsLoading && (
+            <ComboResults
+              results={variants}
+              sort="popularity"
+              hideVariants={true}
+              decklistMessage=""
+              deck={{
+                commanders: [],
+                main: combo.uses.map((card) => ({ card: card.card.name, quantity: card.quantity })),
+              }}
+            />
+          )}
         </div>
       </>
     );
