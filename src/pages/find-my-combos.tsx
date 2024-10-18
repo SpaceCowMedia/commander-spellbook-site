@@ -199,8 +199,8 @@ const FindMyCombos: React.FC = () => {
   };
 
   const clearDecklist = () => {
-    if (query.url){
-      router.push({pathname: '/find-my-combos/',query: {}});
+    if (query.url) {
+      router.push({ pathname: '/find-my-combos/', query: {} });
     }
     setCurrentlyParsedDeck(undefined);
     setDecklist('');
