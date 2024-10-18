@@ -66,6 +66,7 @@ class Decklist {
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
 
+  const { query } = router;
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
@@ -198,6 +199,9 @@ const FindMyCombos: React.FC = () => {
   };
 
   const clearDecklist = () => {
+    if (query.url){
+      router.push({pathname: '/find-my-combos/',query: {}});
+    }
     setCurrentlyParsedDeck(undefined);
     setDecklist('');
     setCommanderList('');
@@ -207,6 +211,18 @@ const FindMyCombos: React.FC = () => {
     setResults(DEFAULT_RESULTS);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
   };
+
+  useEffect(() => {
+    if (query.url && !deckUrl) {
+      setDeckUrl(decodeURIComponent(query.url as string));
+    }
+  }, [query.url]);
+
+  useEffect(() => {
+    if (query.url && deckUrl) {
+      handleUrlInput();
+    }
+  }, [deckUrl]);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -313,7 +329,7 @@ const FindMyCombos: React.FC = () => {
               {!lookupInProgress && (
                 <>
                   <button
-                    id="clear-decklist-input"
+                    id="parse-decklist-input"
                     className={`${styles.clearDecklistInput} button`}
                     onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
                   >
