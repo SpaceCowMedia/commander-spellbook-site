@@ -65,12 +65,10 @@ class Decklist {
 
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
-
-  const { query } = router;
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
-  const [deckUrl, setDeckUrl] = useState<string>('');
+  const [deckUrl, setDeckUrl] = useState<string>(router.query.deckUrl ? decodeURIComponent(router.query.deckUrl as string) : '');
   const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
@@ -199,9 +197,6 @@ const FindMyCombos: React.FC = () => {
   };
 
   const clearDecklist = () => {
-    if (query.url) {
-      router.push({ pathname: '/find-my-combos/', query: {} });
-    }
     setCurrentlyParsedDeck(undefined);
     setDecklist('');
     setCommanderList('');
@@ -210,19 +205,10 @@ const FindMyCombos: React.FC = () => {
     setDecklistErrors([]);
     setResults(DEFAULT_RESULTS);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    if (router.query.deckUrl) {
+      router.push({ pathname: '/find-my-combos/', query: {} });
+    }
   };
-
-  useEffect(() => {
-    if (query.url && !deckUrl) {
-      setDeckUrl(decodeURIComponent(query.url as string));
-    }
-  }, [query.url]);
-
-  useEffect(() => {
-    if (query.url && deckUrl) {
-      handleUrlInput();
-    }
-  }, [deckUrl]);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -260,7 +246,6 @@ const FindMyCombos: React.FC = () => {
 
   const handleUrlInput = async () => {
     if (!isValidHttpUrl(deckUrl)) {
-      setDeckUrl('');
       setDeckUrlHint('You must paste a valid URL.');
       return;
     }
@@ -278,6 +263,12 @@ const FindMyCombos: React.FC = () => {
       setDeckUrlHint(body.detail);
     }
   };
+
+  useEffect(() => {
+    if (deckUrl && !decklist) {
+      handleUrlInput();
+    }
+  }, [router.query.deckUrl]);
 
   return (
     <>
@@ -380,7 +371,7 @@ const FindMyCombos: React.FC = () => {
                 <button
                   id="submit-url-input"
                   className={`${styles.clearDecklistInput} button`}
-                  onClick={handleUrlInput}
+                  onClick={() => router.push({ pathname: '/find-my-combos/', query: { deckUrl } })}
                 >
                   Submit URL
                 </button>
