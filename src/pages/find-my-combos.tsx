@@ -19,6 +19,7 @@ import {
   ResponseError,
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
+import { queryParameterAsString } from 'lib/queryParameters';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -68,7 +69,7 @@ const FindMyCombos: React.FC = () => {
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
-  const [deckUrl, setDeckUrl] = useState<string>(router.query.deckUrl ? decodeURIComponent(router.query.deckUrl as string) : '');
+  const [deckUrl, setDeckUrl] = useState<string>(queryParameterAsString(router.query.deckUrl) ?? '');
   const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();

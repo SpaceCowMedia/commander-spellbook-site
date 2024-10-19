@@ -11,6 +11,7 @@ import { GetServerSideProps } from 'next';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import { Variant, VariantsApi } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
+import { queryParameterAsString } from 'lib/queryParameters';
 
 const PAGE_SIZE = 50;
 
@@ -26,6 +27,7 @@ type Props = {
 const SORT_OPTIONS: Option[] = [
   { value: 'popularity', label: 'Popularity' },
   { value: 'identity_count', label: 'Color Identity' },
+  { value: 'variant_count', label: 'Number of Variants' },
   { value: 'price_tcgplayer', label: 'Price (TCGPlayer)' },
   { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
   { value: 'price_cardmarket', label: 'Price (Cardmarket)' },
@@ -57,6 +59,7 @@ const AUTO_SORT_MAP: Record<string, '-'> = {
   popularity: '-',
   created: '-',
   updated: '-',
+  variant_count: '-',
 };
 
 const doesQuerySpecifyFormat = (query: string): boolean => {
@@ -66,11 +69,14 @@ const doesQuerySpecifyFormat = (query: string): boolean => {
 const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, featured }) => {
   const router = useRouter();
 
-  const sort = (router.query.sort as string) || DEFAULT_SORT;
-  const order = (router.query.order as string) || DEFAULT_ORDER;
+  const sort = queryParameterAsString(router.query.sort) || DEFAULT_SORT;
+  const order = queryParameterAsString(router.query.order) || DEFAULT_ORDER;
 
-  const query = router.query.q;
-  const parsedSearchQuery = !query || typeof query !== 'string' ? '' : query;
+  const query = queryParameterAsString(router.query.q) || '';
+
+  const variant = queryParameterAsString(router.query.variant);
+
+  const groupBy = queryParameterAsString(router.query.groupByCombo) !== 'false';
 
   const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -92,15 +98,23 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
     router.push({ pathname: '/search/', query: { ...router.query, order: value, page: '1' } });
   };
 
-  const legalityMessage = doesQuerySpecifyFormat(parsedSearchQuery)
-    ? ''
-    : ' (legal:commander has been applied by default)';
+  const handleGroupByComboChange = (value: string) => {
+    router.push({ pathname: '/search/', query: { ...router.query, groupByCombo: value } });
+  };
 
-  const singleCardQuery = /^card="([^"]+)"$/.exec(parsedSearchQuery);
+  const handleClearVariant = () => {
+    router.push({ pathname: '/search/', query: { ...router.query, variant: undefined } });
+  };
 
-  const searchMessage = singleCardQuery
-    ? `Showing ${count} combos with the card "${singleCardQuery[1]}"${legalityMessage}`
-    : `Showing ${count} results for query "${parsedSearchQuery}"${legalityMessage}`;
+  const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
+
+  const singleCardQuery = /^card="([^"]+)"$/.exec(query);
+
+  const searchMessage =
+    (singleCardQuery
+      ? `Showing ${count} combos with the card "${singleCardQuery[1]}"${legalityMessage}`
+      : `Showing ${count} results for query "${query}"${legalityMessage}`) +
+    (variant ? `, which are all variants of the combo with ID "${variant}"` : '');
 
   return (
     <>
@@ -159,14 +173,38 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
                 label="Change sort direction, ascending or descending"
                 options={ORDER_OPTIONS}
               />
-              <div className="flex-grow" />
-              <SearchPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                aria-hidden="true"
-                onGoForward={goForward}
-                onGoBack={goBack}
+              <div className="mr-2 sm:mt-0 mt-2" aria-hidden="true">
+                Variants grouped by combo
+              </div>
+              <StyledSelect
+                id="group-by-combo-select"
+                value={groupBy ? 'true' : 'false'}
+                onChange={handleGroupByComboChange}
+                selectBackgroundClassName="border-dark border-2 my-2 sm:mr-2"
+                selectTextClassName="text-dark"
+                label="Group variants by combo"
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
+                ]}
               />
+              {variant && (
+                <button onClick={handleClearVariant} className="">
+                  Clear Variant Filter
+                </button>
+              )}
+              <div className="flex-grow min-h-2" />
+              {totalPages > 1 && (
+                <>
+                  <SearchPagination
+                    currentPage={pageNumber}
+                    totalPages={totalPages}
+                    aria-hidden="true"
+                    onGoForward={goForward}
+                    onGoBack={goBack}
+                  />
+                </>
+              )}
             </div>
           </div>
         )}
@@ -174,7 +212,7 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
         <div className="container sm:flex flex-row">
           {combos.length > 0 ? (
             <div className="w-full">
-              <ComboResults results={combos} sort={sort} />
+              <ComboResults results={combos} sort={sort} hideVariants={!groupBy} />
               <SearchPagination
                 currentPage={pageNumber}
                 totalPages={totalPages}
@@ -199,25 +237,28 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
 export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let query = `${context.query.q}`;
+  let query = queryParameterAsString(context.query.q) ?? '';
   const isFeatured = query === 'is:featured';
   let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
-  if (isQueryMissingFormat) {
+  const variant = queryParameterAsString(context.query.variant);
+  if (isQueryMissingFormat && !variant) {
     query = `${query} legal:commander`;
   }
-  const configuration = apiConfiguration(context);
-  const variantsApi = new VariantsApi(configuration);
-  const order = context.query.order || DEFAULT_ORDER;
-  const sort = context.query.sort || DEFAULT_SORT;
+  const order = queryParameterAsString(context.query.order) || DEFAULT_ORDER;
+  const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
   const ordering =
     (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
     ',identity_count,cards_count,-created';
+  const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
+  const configuration = apiConfiguration(context);
+  const variantsApi = new VariantsApi(configuration);
   try {
     const results = await variantsApi.variantsList({
       q: query,
-      groupByCombo: true,
+      groupByCombo: groupByCombo,
+      variant: variant,
       limit: PAGE_SIZE,
-      offset: ((Number(context.query.page) || 1) - 1) * PAGE_SIZE,
+      offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
       ordering: ordering,
     });
 
@@ -225,10 +266,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (backendCombos.length === 0 && isQueryMissingFormat) {
       // Try searching in banned combos
-      let query = `${context.query.q} banned:commander`;
+      query = query.replaceAll('legal:', 'banned:');
       const results = await variantsApi.variantsList({
         q: query,
-        groupByCombo: true,
+        groupByCombo: groupByCombo,
+        variant: variant,
         limit: PAGE_SIZE,
         ordering: ordering,
       });
@@ -257,9 +299,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combos: backendCombos,
+        featured: isFeatured,
         count: results.count,
         page: context.query.page || 1,
-        featured: isFeatured,
       },
     };
   } catch (error: any) {

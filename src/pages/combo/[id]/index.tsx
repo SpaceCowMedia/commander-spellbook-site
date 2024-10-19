@@ -23,6 +23,7 @@ import { apiConfiguration } from 'services/api.service';
 import BulkApiService from 'services/bulk-api.service';
 import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
+import Link from 'next/link';
 
 type Props = {
   combo?: Variant;
@@ -39,27 +40,23 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
   const variantsApi = new VariantsApi(configuration);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
-  const totalVariants = combo ? combo.of.reduce((acc, v) => Math.max(acc, v.variantCount), 0) - 1 : 0;
   const loadVariants = async (combo: Variant) => {
     setVariantsLoading(true);
-    const generator = combo.of.find((v) => v.variantCount == totalVariants + 1);
-    if (generator) {
-      const variants = await variantsApi.variantsList({
-        groupByCombo: false,
-        of: generator.id,
-        limit: MAX_VARIANTS_COUNT,
-        ordering: '-popularity,identity_count,cards_count,-created',
-        q: `-sid:"${combo.id}"`,
-      });
-      setVariants(variants.results);
-    }
+    const variants = await variantsApi.variantsList({
+      groupByCombo: false,
+      variant: combo.id,
+      limit: MAX_VARIANTS_COUNT,
+      ordering: '-popularity,identity_count,cards_count,-created',
+      q: `-sid:"${combo.id}"`,
+    });
+    setVariants(variants.results);
     setVariantsLoading(false);
   };
   useEffect(() => {
     setVariants([]);
     setVariantsLoading(false);
   }, [combo]);
-  if (totalVariants > 0 && combo && variants.length == 0 && !variantsLoading) {
+  if ((combo?.variantCount ?? 0) > 1 && combo && variants.length == 0 && !variantsLoading) {
     loadVariants(combo);
   }
   if (combo) {
@@ -77,7 +74,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     );
     const totalCount =
       combo.uses.reduce((a, b) => a + b.quantity, 0) + combo.requires.reduce((a, b) => a + b.quantity, 0);
-    console.log(titleCount, totalCount);
     const subtitle =
       totalCount === titleCount
         ? ''
@@ -200,21 +196,23 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         </div>
         <div className="container flex-row">
           <div className="w-full">
-            {totalVariants > 0 && (
-              <ComboList
-                title="Variants of this combo"
-                id="combo-variants"
-                iterations={
-                  variantsLoading
-                    ? []
-                    : [
-                        `Below you find ${variants.length == totalVariants ? `all ${variants.length}` : `${variants.length} out of ${totalVariants} total`} variants of this combo.`,
-                      ]
-                }
-              />
+            {combo.variantCount > 1 && (
+              <>
+                <ComboList
+                  title="Variants of this combo"
+                  id="combo-variants"
+                  iterations={
+                    variantsLoading
+                      ? []
+                      : [
+                          `Below you find ${variants.length == combo.variantCount - 1 ? `all ${variants.length}` : `${variants.length} out of ${combo.variantCount - 1} total`} variants of this combo, with the alternative cards highlighted.`,
+                        ]
+                  }
+                />
+                {variantsLoading && <Loader />}
+                {variants.length == 0 && !variantsLoading && <p>No other variants found</p>}
+              </>
             )}
-            {variantsLoading && <Loader />}
-            {variants.length == 0 && !variantsLoading && <p>No other variants found</p>}
           </div>
           {variants.length > 0 && !variantsLoading && (
             <ComboResults
@@ -227,6 +225,13 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                 main: combo.uses.map((card) => ({ card: card.card.name, quantity: card.quantity })),
               }}
             />
+          )}
+          {variants.length > 0 && !variantsLoading && (
+            <div className="flex justify-center">
+              <Link href={`/search?variant=${combo.id}&groupByCombo=false`} className="button">
+                Show all {combo.variantCount} variants
+              </Link>
+            </div>
           )}
         </div>
       </>

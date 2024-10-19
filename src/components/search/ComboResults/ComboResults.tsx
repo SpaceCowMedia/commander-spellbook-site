@@ -69,8 +69,6 @@ export const ComboResult: React.FC<ResultProps> = ({
     ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
-  const moreVariantsCount = combo.of.reduce((acc, v) => Math.max(acc, v.variantCount), 0) - 1;
-
   return (
     <Link
       href={`/combo/${combo.id}`}
@@ -134,10 +132,10 @@ export const ComboResult: React.FC<ResultProps> = ({
       </div>
       <div className="flex items-center flex-grow flex-col">
         <div className="flex-grow" />
-        {!hideVariants && moreVariantsCount > 0 && (
+        {!hideVariants && combo.variantCount > 1 && (
           <div className="w-full bg-pink-300 text-right">
             <span className="pl-3 pr-3">
-              + {moreVariantsCount} variant{moreVariantsCount > 1 ? 's' : ''}
+              + {combo.variantCount - 1} variant{combo.variantCount > 2 ? 's' : ''}
             </span>
           </div>
         )}
