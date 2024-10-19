@@ -2,7 +2,7 @@ describe('Find My Combos', () => {
   let testUrl = 'https://www.moxfield.com/decks/chDG34jh6E-vPEugnXO1BA';
 
   it('can find a combo using url parameter', () => {
-    cy.visit('/find-my-combos/?url=' + testUrl);
+    cy.visit('/find-my-combos/?deckUrl=' + testUrl);
 
     cy.url().should('include', testUrl);
 
@@ -11,7 +11,7 @@ describe('Find My Combos', () => {
   });
 
   it('can clear the url and data', () => {
-    cy.visit('/find-my-combos/?url=' + testUrl);
+    cy.visit('/find-my-combos/?deckUrl=' + testUrl);
     cy.url().should('include', testUrl);
 
     cy.get('#clear-decklist-input').click();

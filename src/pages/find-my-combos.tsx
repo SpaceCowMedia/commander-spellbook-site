@@ -69,7 +69,7 @@ const FindMyCombos: React.FC = () => {
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
-  const [deckUrl, setDeckUrl] = useState<string>(queryParameterAsString(router.query.deckUrl) ?? '');
+  const [deckUrl, setDeckUrl] = useState<string>('');
   const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
@@ -265,11 +265,17 @@ const FindMyCombos: React.FC = () => {
     }
   };
 
+  const urlQueryParam = queryParameterAsString(router.query.deckUrl) ?? '';
+
   useEffect(() => {
-    if (deckUrl && !decklist) {
+    setDeckUrl(urlQueryParam);
+  }, [router.query.deckUrl]);
+
+  useEffect(() => {
+    if (deckUrl === urlQueryParam) {
       handleUrlInput();
     }
-  }, [router.query.deckUrl]);
+  }, [deckUrl]);
 
   return (
     <>
