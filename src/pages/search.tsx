@@ -248,7 +248,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
   const ordering =
     (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
-    ',identity_count,cards_count,-created';
+    ',-popularity,identity_count,cards_count,-created';
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);

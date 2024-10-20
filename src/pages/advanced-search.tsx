@@ -585,10 +585,6 @@ const AdvancedSearch: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!query) {
-      return setFormState({ validationError: 'No search queries entered.' });
-    }
-
     if (validate()) {
       return setFormState({
         validationError: 'Check for errors in your search terms before submitting.',

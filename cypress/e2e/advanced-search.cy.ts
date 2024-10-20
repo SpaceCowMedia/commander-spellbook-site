@@ -279,12 +279,12 @@ describe('Advanced Search Page', () => {
     cy.url().should('include', `/search/?q=${encodeURIComponent('is:featured').replace(/%20/g, '+')}`);
   });
 
-  it('prevents searches when queries are empty', () => {
+  it('does not prevent searches when queries are empty', () => {
     cy.visit('/advanced-search/');
 
     cy.get('#advanced-search-submit-button').click();
 
-    cy.contains('#advanced-search-validation-error', 'No search queries entered.');
+    cy.url().should('include', '/search/?q=');
   });
 
   it('prevents searches when invalid queries are used', () => {
