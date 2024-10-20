@@ -99,11 +99,11 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
   };
 
   const handleGroupByComboChange = (value: string) => {
-    router.push({ pathname: '/search/', query: { ...router.query, groupByCombo: value } });
+    router.push({ pathname: '/search/', query: { ...router.query, groupByCombo: value, page: '1' } });
   };
 
   const handleClearVariant = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, variant: undefined } });
+    router.push({ pathname: '/search/', query: { ...router.query, variant: undefined, page: '1' } });
   };
 
   const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
