@@ -20,6 +20,6 @@
     },
     "sourceMap": true,
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/api/[id]/generate-image.js"],
   "exclude": ["node_modules"]
 }

@@ -105,7 +105,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         <SpellbookHead
           title={`${title} ${subtitle}`}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
-          imageUrl={previewImageUrl ?? cardArts[0]}
+          imageUrl={`/api/${combo.id}/generate-image/`}
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
