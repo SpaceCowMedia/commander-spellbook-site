@@ -268,14 +268,16 @@ const FindMyCombos: React.FC = () => {
   const urlQueryParam = queryParameterAsString(router.query.deckUrl) ?? '';
 
   useEffect(() => {
-    setDeckUrl(urlQueryParam);
+    if (router.query.deckUrl != undefined){
+      setDeckUrl(urlQueryParam);
+    }
   }, [router.query.deckUrl]);
 
   useEffect(() => {
-    if (deckUrl === urlQueryParam) {
+    if (deckUrl === urlQueryParam && urlQueryParam != "") {
       handleUrlInput();
     }
-  }, [deckUrl]);
+  }, [deckUrl,urlQueryParam]);
 
   return (
     <>
