@@ -9,6 +9,6 @@ export default defineConfig({
   },
   blockHosts: '*.google-analytics.com',
   retries: {
-    runMode: 2,
+    runMode: 3,
   },
 });
