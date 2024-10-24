@@ -105,7 +105,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         <SpellbookHead
           title={`${title} ${subtitle}`}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
-          imageUrl={`/api/${combo.id}/generate-image/`}
+          imageUrl={previewImageUrl ?? cardArts[0]}
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
@@ -271,6 +271,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combo: backendCombo,
+        previewImageUrl: `/api/${backendCombo.id}/generate-image/`,
       },
     };
   } catch (err) {

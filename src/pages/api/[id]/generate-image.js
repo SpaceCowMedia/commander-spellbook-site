@@ -43,7 +43,7 @@ function cardsUsedCanvas(cards) {
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px Roboto, sans-serif`;
   let nextLine = 0 + lineOffset;
-  for (let card of cards.entries()) {
+  for (let card of cards) {
     ctx.fillText(card.name, leftOffset, nextLine);
     nextLine = nextLine + lineOffset;
   }
