@@ -1,9 +1,25 @@
 FROM node:18-alpine AS base
 
+# If running docker build locally uncomment the following lines and run
+#    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
+
+#ARG github_token
+#ENV GITHUB_TOKEN=$github_token
+#RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
+#RUN echo @spacecowmedia:registry=https://npm.pkg.github.com/ >> ~/.npmrc
+#RUN echo //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN >> ~/.npmrc
+
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat \
+    build-base \
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    bash \
+    imagemagick
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
