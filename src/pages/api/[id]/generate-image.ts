@@ -17,6 +17,7 @@ const border = 4;
 const leftOffset = 10;
 const lineOffset = 24;
 const fontSize = 16;
+const fontFamily = 'Noto Sans';
 const headerHeight = iWidth + lineOffset;
 const footerHeight = 45;
 
@@ -42,7 +43,7 @@ function cardsUsedCanvas(cards: string | any[]) {
   let canvas2 = createCanvas(width, canvasHeight);
   let ctx = canvas2.getContext('2d');
   ctx.fillStyle = '#222';
-  ctx.font = `${fontSize}px Roboto, sans-serif`;
+  ctx.font = `${fontSize}px ${fontFamily}`;
   let nextLine = 0 + lineOffset;
   for (let card of cards) {
     ctx.fillText(card.name, leftOffset, nextLine);
@@ -57,7 +58,7 @@ function preReqCanvas(prereqs: string | any[]) {
   let ctx = canvas3.getContext('2d');
   let prereqCount = prereqs.length;
   ctx.fillStyle = '#6B7280';
-  ctx.font = `${fontSize - 2}px Roboto, sans-serif`;
+  ctx.font = `${fontSize - 2}px ${fontFamily}`;
   ctx.fillText(`+${prereqCount} other prerequisite${prereqCount > 1 ? 's' : ''}`, leftOffset, lineOffset);
   return canvas3;
 }
@@ -82,7 +83,7 @@ function comboOutcomesCanvas(produces: any[]) {
   let canvas5 = createCanvas(width, canvasHeight);
   let ctx = canvas5.getContext('2d');
   ctx.fillStyle = '#222';
-  ctx.font = `${fontSize}px Roboto, sans-serif`;
+  ctx.font = `${fontSize}px ${fontFamily}`;
   let nextLine = 0 + lineOffset;
   produces.forEach((product) => {
     ctx.fillText(product.feature.name, leftOffset, nextLine);
@@ -100,7 +101,7 @@ async function footerCanvas() {
   let text = 'Commander Spellbook';
   const gear = await loadImage('https://commanderspellbook.com/images/gear.svg');
   ctx.fillStyle = '#866da8';
-  ctx.font = `bold ${fontSize}px Roboto, sans-serif`;
+  ctx.font = `bold ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;
   const padding = 20;
   const totalWidth = iWidth + textWidth;

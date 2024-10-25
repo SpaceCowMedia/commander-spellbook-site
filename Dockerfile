@@ -3,11 +3,11 @@ FROM node:18-alpine AS base
 # If running docker build locally uncomment the following lines and run
 #    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
 
-#ARG github_token
-#ENV GITHUB_TOKEN=$github_token
-#RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
-#RUN echo @spacecowmedia:registry=https://npm.pkg.github.com/ >> ~/.npmrc
-#RUN echo //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN >> ~/.npmrc
+ARG github_token
+ENV GITHUB_TOKEN=$github_token
+RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
+RUN echo @spacecowmedia:registry=https://npm.pkg.github.com/ >> ~/.npmrc
+RUN echo //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN >> ~/.npmrc
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -15,11 +15,13 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat \
     build-base \
     g++ \
-    cairo-dev \
-    jpeg-dev \
+    cairo \
+    librsvg-dev \
     pango-dev \
-    bash \
-    imagemagick
+    imagemagick \
+    fontconfig \
+    font-noto 
+
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -53,6 +55,22 @@ RUN yarn build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+
+#deps for canvas
+RUN apk add --no-cache build-base \
+    g++ \
+    cairo \
+    librsvg-dev \
+    pango-dev \
+    imagemagick \
+    fontconfig \
+    font-noto 
+
+# Ensure symbolic links for musl compatibility
+RUN ln -s /usr/lib/libcairo.so.2 /usr/lib/libcairo.so || true && \
+    ln -s /usr/lib/libpango-1.0.so.0 /usr/lib/libpango-1.0.so || true && \
+    ln -s /usr/lib/libjpeg.so /usr/lib/libjpeg.so.8 || true
+
 WORKDIR /app
 
 ARG build_type=prod
