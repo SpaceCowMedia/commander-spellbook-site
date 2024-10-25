@@ -18,15 +18,16 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-# If running docker build locally create a .env file with the following
-#    GITHUB_TOKEN=<yourGitHubToken>
+# If running docker build locally create a .github_token file with the following
+# <yourGitHubToken>
 # Then run the following command to build the image
-#    ( source '.env' && docker build --secret id=github_token -t spellbook-client:latest . )
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+#    docker build --secret id=github_token,src=.github_token -t spellbook-client:latest .
+# Which you can run with
+#    docker run -p 3000:3000 spellbook-client:latest
+RUN --mount=type=secret,required=true,id=github_token,env=GITHUB_TOKEN \
     echo '@spacecowmedia:registry="https://npm.pkg.github.com"' >> .npmrc && \
-    echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> .npmrc
-RUN cat .npmrc && exit 1
-RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+    echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> .npmrc && \
+    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
     elif [ -f package-lock.json ]; then npm ci; \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
     else echo "Lockfile not found." && exit 101; \

@@ -90,8 +90,13 @@ sw.*
 # Vim swap files
 *.swp
 
+# Cypress artifacts
 cypress/fixtures
 cypress/videos
 cypress/screenshots
 
+# Build files
 tsconfig.tsbuildinfo
+
+# Secrets
+.github_token
