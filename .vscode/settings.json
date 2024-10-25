@@ -16,4 +16,7 @@
     "editor.tabSize": 2,
     "eslint.lintTask.enable": true,
     "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.eol": "\n",
 }
