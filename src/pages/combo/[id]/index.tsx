@@ -271,7 +271,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combo: backendCombo,
-        previewImageUrl: `/api/${backendCombo.id}/generate-image/`,
+        previewImageUrl: `/api/combo/${backendCombo.id}/generate-image/`,
       },
     };
   } catch (err) {

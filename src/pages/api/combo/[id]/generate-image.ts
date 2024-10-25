@@ -2,6 +2,7 @@ import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canva
 import { VariantsApi } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
+import serverPath from 'lib/serverPath';
 
 const manaSymbols: { [key: string]: string } = {
   W: 'https://svgs.scryfall.io/card-symbols/W.svg',
@@ -39,8 +40,7 @@ async function headerCanvas(identityArray: any[]) {
 
 function cardsUsedCanvas(cards: string | any[]) {
   // Cards Used
-  let canvasHeight = cards.length * lineOffset + border;
-  let canvas2 = createCanvas(width, canvasHeight);
+  let canvas2 = createCanvas(width, cards.length * lineOffset + border * 2);
   let ctx = canvas2.getContext('2d');
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px ${fontFamily}`;
@@ -52,14 +52,17 @@ function cardsUsedCanvas(cards: string | any[]) {
   return canvas2;
 }
 
-function preReqCanvas(prereqs: string | any[]) {
+function preReqCanvas(prereqCount: number, templateCount: number) {
   // more pre-reqs
   let canvas3 = createCanvas(width, lineOffset + border);
   let ctx = canvas3.getContext('2d');
-  let prereqCount = prereqs.length;
   ctx.fillStyle = '#6B7280';
   ctx.font = `${fontSize - 2}px ${fontFamily}`;
-  ctx.fillText(`+${prereqCount} other prerequisite${prereqCount > 1 ? 's' : ''}`, leftOffset, lineOffset);
+  ctx.fillText(
+    `${templateCount > 0 ? `+${templateCount} card${templateCount > 1 ? 's' : ''}\n` : ''}+${prereqCount} other prerequisite${prereqCount > 1 ? 's' : ''}`,
+    leftOffset,
+    lineOffset,
+  );
   return canvas3;
 }
 
@@ -99,11 +102,11 @@ async function footerCanvas() {
   ctx.fillStyle = '#333';
   ctx.fillRect(0 + border, 0 + border, width - border * 2, footerHeight - border * 2);
   let text = 'Commander Spellbook';
-  const gear = await loadImage('https://commanderspellbook.com/images/gear.svg');
+  const gear = await loadImage(serverPath('public/images/gear.svg'));
   ctx.fillStyle = '#866da8';
   ctx.font = `bold ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;
-  const padding = 20;
+  const padding = 15;
   const totalWidth = iWidth + textWidth;
   const startX = (canvas6.width - totalWidth) / 2;
   let nextLine = 0 + lineOffset + border;
@@ -127,14 +130,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const identityArray = combo.identity.split('');
     const cards = combo.uses.map((item) => item.card);
-    const prereqs = combo.otherPrerequisites.split('\n');
+    const templateCount = combo.requires.length;
+    const prereqCount = combo.otherPrerequisites.split('\n').length;
     const produces = combo.produces;
 
     let header_c = await headerCanvas(identityArray);
-    let cardsUsed_c = await cardsUsedCanvas(cards);
-    let prereq_c = await preReqCanvas(prereqs);
-    let separator_c = await separatorCanvas();
-    let produces_c = await comboOutcomesCanvas(produces);
+    let cardsUsed_c = cardsUsedCanvas(cards);
+    let prereq_c = preReqCanvas(prereqCount, templateCount);
+    let separator_c = separatorCanvas();
+    let produces_c = comboOutcomesCanvas(produces);
     let footer_c = await footerCanvas();
 
     let calcHeight =
