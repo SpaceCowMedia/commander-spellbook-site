@@ -130,7 +130,9 @@ const FindMyCombos: React.FC = () => {
     setCurrentlyParsedDeck(undefined);
     setDeckUrl('');
     try {
-      const deck = await cardListFromTextApi.cardListFromTextCreate({ body: decklistRaw });
+      const deck = await cardListFromTextApi.cardListFromTextCreate({
+        body: decklistRaw,
+      });
       const decklist = new Decklist(deck);
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
@@ -157,7 +159,10 @@ const FindMyCombos: React.FC = () => {
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
 
     try {
-      const combos = await findMyCombosApi.findMyCombosCreate({ deckRequest: decklist.deck, offset });
+      const combos = await findMyCombosApi.findMyCombosCreate({
+        deckRequest: decklist.deck,
+        offset,
+      });
 
       const newResults = {
         identity: combos.results.identity,
@@ -251,7 +256,9 @@ const FindMyCombos: React.FC = () => {
       return;
     }
     try {
-      const deck = await cardListFromUrlApi.cardListFromUrlRetrieve({ url: deckUrl });
+      const deck = await cardListFromUrlApi.cardListFromUrlRetrieve({
+        url: deckUrl,
+      });
       setDeckUrlHint('');
       const decklist = new Decklist(deck);
       setDecklist(decklist.mainListString());
@@ -268,14 +275,16 @@ const FindMyCombos: React.FC = () => {
   const urlQueryParam = queryParameterAsString(router.query.deckUrl) ?? '';
 
   useEffect(() => {
-    setDeckUrl(urlQueryParam);
+    if (router.query.deckUrl != undefined) {
+      setDeckUrl(urlQueryParam);
+    }
   }, [router.query.deckUrl]);
 
   useEffect(() => {
-    if (deckUrl === urlQueryParam) {
+    if (deckUrl === urlQueryParam && urlQueryParam != '') {
       handleUrlInput();
     }
-  }, [deckUrl]);
+  }, [deckUrl, urlQueryParam]);
 
   return (
     <>
@@ -378,7 +387,12 @@ const FindMyCombos: React.FC = () => {
                 <button
                   id="submit-url-input"
                   className={`${styles.clearDecklistInput} button`}
-                  onClick={() => router.push({ pathname: '/find-my-combos/', query: { deckUrl } })}
+                  onClick={() =>
+                    router.push({
+                      pathname: '/find-my-combos/',
+                      query: { deckUrl },
+                    })
+                  }
                 >
                   Submit URL
                 </button>

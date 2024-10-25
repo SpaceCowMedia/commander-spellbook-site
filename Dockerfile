@@ -1,4 +1,13 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
+
+# If running docker build locally uncomment the following lines and run
+#    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
+
+#ARG github_token
+#ENV GITHUB_TOKEN=$github_token
+#RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
+#RUN echo @spacecowmedia:registry=https://npm.pkg.github.com/ >> ~/.npmrc
+#RUN echo //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN >> ~/.npmrc
 
 # If running docker build locally uncomment the following lines and run
 #    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
@@ -21,7 +30,6 @@ RUN apk add --no-cache libc6-compat \
     imagemagick \
     fontconfig \
     font-noto 
-
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -30,7 +38,7 @@ RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+  else echo "Lockfile not found." && exit 101; \
   fi
 
 
@@ -42,7 +50,6 @@ COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG build_type=prod
@@ -76,7 +83,7 @@ WORKDIR /app
 ARG build_type=prod
 ENV BUILD_TYPE=$build_type
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
