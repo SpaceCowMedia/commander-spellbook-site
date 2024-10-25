@@ -176,15 +176,13 @@ jobs:
 
       - name: Build and export image
         uses: docker/build-push-action@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           push: false
           load: true
           context: .
           tags: spellbook-client:latest
-          secret-envs: |
-            github=GITHUB_TOKEN
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
           outputs: type=docker,dest=/tmp/spellbook-client.tar
 
       - name: Upload image artifact 📦
