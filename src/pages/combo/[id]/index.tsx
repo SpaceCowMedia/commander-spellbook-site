@@ -46,7 +46,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
       groupByCombo: false,
       variant: combo.id,
       limit: MAX_VARIANTS_COUNT,
-      ordering: '-popularity,identity_count,cards_count,-created',
+      ordering: '-popularity,identity_count,card_count,-created',
       q: `-sid:"${combo.id}"`,
     });
     setVariants(variants.results);

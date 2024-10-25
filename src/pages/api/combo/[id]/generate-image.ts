@@ -10,28 +10,30 @@ const manaSymbols: { [key: string]: string } = {
   B: 'https://svgs.scryfall.io/card-symbols/B.svg',
   R: 'https://svgs.scryfall.io/card-symbols/R.svg',
   G: 'https://svgs.scryfall.io/card-symbols/G.svg',
+  C: 'https://svgs.scryfall.io/card-symbols/C.svg',
 };
-const width = 500;
-const manaOffset = 20;
-const iWidth = 32;
-const border = 4;
-const leftOffset = 10;
-const lineOffset = 24;
-const fontSize = 16;
+
+const width = 1080;
+const manaOffset = width / 25;
+const iWidth = (width * 32) / 500;
+const border = width / 125;
+const leftOffset = width / 50;
+const lineOffset = width / 20;
+const fontSize = iWidth / 2;
 const fontFamily = 'Noto Sans';
 const headerHeight = iWidth + lineOffset;
-const footerHeight = 45;
+const footerHeight = (width * 9) / 100;
+const padding = leftOffset;
 
 async function headerCanvas(identityArray: any[]) {
   // Mana pips background
   let canvas1 = createCanvas(width, headerHeight);
   let ctx = canvas1.getContext('2d');
   ctx.fillStyle = '#333';
-  ctx.fillRect(0 + border, 0 + border, canvas1.width - border * 2, canvas1.height - border * 2);
-  let spacer = manaOffset + iWidth;
-  let startManaPos = width / 2 - ((identityArray.length - 1) * spacer) / 2;
+  ctx.fillRect(border, border, canvas1.width - border * 2, canvas1.height - border * 2);
+  let startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
   for (let [index, letter] of identityArray.entries()) {
-    let position = index * spacer + startManaPos;
+    let position = index * (iWidth + manaOffset) + startManaPos;
     let img = await loadImage(manaSymbols[letter]);
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
@@ -40,11 +42,11 @@ async function headerCanvas(identityArray: any[]) {
 
 function cardsUsedCanvas(cards: string | any[]) {
   // Cards Used
-  let canvas2 = createCanvas(width, cards.length * lineOffset + border * 2);
+  let canvas2 = createCanvas(width, cards.length * lineOffset + border);
   let ctx = canvas2.getContext('2d');
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px ${fontFamily}`;
-  let nextLine = 0 + lineOffset;
+  let nextLine = lineOffset;
   for (let card of cards) {
     ctx.fillText(card.name, leftOffset, nextLine);
     nextLine = nextLine + lineOffset;
@@ -54,7 +56,7 @@ function cardsUsedCanvas(cards: string | any[]) {
 
 function preReqCanvas(prereqCount: number, templateCount: number) {
   // more pre-reqs
-  let canvas3 = createCanvas(width, lineOffset + border);
+  let canvas3 = createCanvas(width, lineOffset + border * 2);
   let ctx = canvas3.getContext('2d');
   ctx.fillStyle = '#6B7280';
   ctx.font = `${fontSize - 2}px ${fontFamily}`;
@@ -87,7 +89,7 @@ function comboOutcomesCanvas(produces: any[]) {
   let ctx = canvas5.getContext('2d');
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px ${fontFamily}`;
-  let nextLine = 0 + lineOffset;
+  let nextLine = lineOffset;
   produces.forEach((product) => {
     ctx.fillText(product.feature.name, leftOffset, nextLine);
     nextLine = nextLine + lineOffset;
@@ -100,17 +102,17 @@ async function footerCanvas() {
   let canvas6 = createCanvas(width, footerHeight);
   let ctx = canvas6.getContext('2d');
   ctx.fillStyle = '#333';
-  ctx.fillRect(0 + border, 0 + border, width - border * 2, footerHeight - border * 2);
+  ctx.fillRect(border, border, width - border * 2, footerHeight - border * 2);
   let text = 'Commander Spellbook';
   const gear = await loadImage(serverPath('public/images/gear.svg'));
   ctx.fillStyle = '#866da8';
   ctx.font = `bold ${fontSize}px ${fontFamily}`;
-  const textWidth = ctx.measureText(text).width;
-  const padding = 15;
-  const totalWidth = iWidth + textWidth;
+  const textSize = ctx.measureText(text);
+  const totalWidth = iWidth + textSize.width + padding;
   const startX = (canvas6.width - totalWidth) / 2;
-  let nextLine = 0 + lineOffset + border;
-  ctx.drawImage(gear, startX, nextLine + border / 2 - lineOffset, iWidth, iWidth);
+  const startY = (canvas6.height - iWidth) / 2;
+  let nextLine = (canvas6.height - fontSize) / 2 + fontSize - border;
+  ctx.drawImage(gear, startX, startY, iWidth, iWidth);
   ctx.fillText(text, startX + iWidth + padding, nextLine);
   return canvas6;
 }

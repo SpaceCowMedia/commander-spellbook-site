@@ -32,11 +32,11 @@ const SORT_OPTIONS: Option[] = [
   { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
   { value: 'price_cardmarket', label: 'Price (Cardmarket)' },
   {
-    value: 'cards_count',
+    value: 'card_count',
     label: '# of Cards',
   },
   {
-    value: 'results_count',
+    value: 'result_count',
     label: '# of Results',
   },
   {
@@ -248,7 +248,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
   const ordering =
     (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
-    ',-popularity,identity_count,cards_count,-created';
+    ',-popularity,identity_count,card_count,-created';
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
