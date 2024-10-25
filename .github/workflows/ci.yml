@@ -174,13 +174,6 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Configure for GitHub Package Registry
-        run: |
-          tee .npmrc <<'EOF'
-          @spacecowmedia:registry="https://npm.pkg.github.com"
-          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
-          EOF
-
       - name: Build and export image
         uses: docker/build-push-action@v6
         with:
@@ -188,6 +181,8 @@ jobs:
           load: true
           context: .
           tags: spellbook-client:latest
+          secret-envs: |
+            key=github,GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           outputs: type=docker,dest=/tmp/spellbook-client.tar
 
       - name: Upload image artifact 📦

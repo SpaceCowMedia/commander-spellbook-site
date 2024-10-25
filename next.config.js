@@ -35,6 +35,9 @@ module.exports = (phase, { _defaultConfig }) => {
     images: {
       unoptimized: true,
     },
+    serverRuntimeConfig: {
+      PROJECT_ROOT: __dirname,
+    },
     webpack(webpackConfig) {
       return {
         ...webpackConfig,
