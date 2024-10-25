@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:23-alpine AS base
 
 # If running docker build locally uncomment the following lines and run
 #    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
