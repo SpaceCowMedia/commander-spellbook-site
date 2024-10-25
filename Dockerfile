@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # If running docker build locally uncomment the following lines and run
 #    docker build --no-cache --build-arg github_token=<yourGitHubToken> -t spellbook-client:latest .
@@ -13,13 +13,13 @@ FROM node:18-alpine AS base
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat \
-    build-base \
-    g++ \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    bash \
-    imagemagick
+  build-base \
+  g++ \
+  cairo-dev \
+  jpeg-dev \
+  pango-dev \
+  bash \
+  imagemagick
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -28,7 +28,7 @@ RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+  else echo "Lockfile not found." && exit 101; \
   fi
 
 
@@ -40,7 +40,6 @@ COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG build_type=prod
@@ -53,12 +52,15 @@ RUN yarn build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+
+RUN apk add --no-cache cairo pango jpeg
+
 WORKDIR /app
 
 ARG build_type=prod
 ENV BUILD_TYPE=$build_type
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
