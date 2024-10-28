@@ -1,3 +1,9 @@
 .frontCard {
   @apply rounded-xl;
 }
+.centerContainer {
+  display: flex;
+  flex-direction: column; /* Center items vertically within the column */
+  justify-content: center; /* Center items vertically */
+  align-items: center; /* Center items horizontally */
+}

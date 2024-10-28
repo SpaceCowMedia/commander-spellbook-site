@@ -1,6 +1,6 @@
 import styles from './cardGroup.module.scss';
 import React, { useState } from 'react';
-import CardLink from '../../layout/CardLink/CardLink';
+
 import CardImage from '../../layout/CardImage/CardImage';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
 import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
@@ -31,16 +31,20 @@ const CardGroup: React.FC<Props> = ({ cards, templates }) => {
             className={`${styles.cardImgWrapper} ${shouldExpand(index) && styles.expand}`}
             onMouseEnter={() => setHoveredOverCardIndex(index)}
             onMouseLeave={() => setHoveredOverCardIndex(-1)}
+            style={{
+              zIndex: hoveredOverCardIndex === index ? 10 : 1, // Bring hovered card to the front
+              transition: 'z-index 0.2s',
+            }}
           >
             {'template' in card && <TemplateCard className={styles.cardImg} template={card} />}
             {'card' in card && (
-              <CardLink className="relative" name={card.card.name}>
+              <div>
                 <CardImage
-                  img={`https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(card.card.name)}`}
+                  img={`https://api.scryfall.com/cards/named?format=image&face=front&version=normal&exact=${encodeURIComponent(card.card.name)}`}
                   name={card.card.name}
                   className={styles.cardImg}
                 />
-              </CardLink>
+              </div>
             )}
           </div>
         ))}
