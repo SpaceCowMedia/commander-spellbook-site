@@ -10,6 +10,7 @@ type Props = {
 const Embed = ({ combo }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [imageMode, setImageMode] = useState(false);
 
   let query = `v=1`;
   query += `&uses=${encodeURIComponent(JSON.stringify(combo.uses.map((card) => card.card.name)))}`;
@@ -19,7 +20,10 @@ const Embed = ({ combo }: Props) => {
   query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length : 0)}`;
 
   // The empty iframe ensures that wordpress detects the embed
-  const embedCode = `<div style="width:100%; position:relative; overflow: visible; display: flex; justify-content: center" id="${combo.id}">
+  const embedCode = imageMode
+    ? `<a href="https://commanderspellbook.com/combo/${combo.id}" rel="noopener noreferrer" target="_blank">
+    <img src="https://commanderspellbook.com/api/combo/${combo.id}/generate-image" alt="Preview of the combo with id ${combo.id}" /></a>`
+    : `<div style="width:100%; position:relative; overflow: visible; display: flex; justify-content: center" id="${combo.id}">
     <img alt="csb logo" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/images/gear.svg" width="300" id="csbLoad"/>
     <script id="${combo.id}" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/embed.js?${query}"></script>
 </div>
@@ -42,9 +46,18 @@ const Embed = ({ combo }: Props) => {
         onClose={() => setModalOpen(false)}
         open={modalOpen}
         footer={
-          <button onClick={handleCopy} className="button">
-            {copied ? 'Copied!' : 'Copy to clipboard'}
-          </button>
+          <>
+            <button
+              onClick={() => setImageMode(!imageMode)}
+              className="button"
+              title={imageMode ? 'Switch to HTML/CSS/JS with card previews' : 'Switch to a plain static image'}
+            >
+              {imageMode ? 'As HTML/CSS/JS' : 'As image'}
+            </button>
+            <button onClick={handleCopy} className="button">
+              {copied ? 'Copied!' : 'Copy to clipboard'}
+            </button>
+          </>
         }
       >
         <div>
