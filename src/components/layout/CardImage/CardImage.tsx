@@ -2,7 +2,9 @@ import styles from './cardImage.module.scss';
 import FlipperCard from '../FlipperCard/FlipperCard';
 import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
+import weatheredCardBack from 'assets/images/weathered-card-back.png';
 import CardLink from '../../layout/CardLink/CardLink';
+import isFoolsDay from 'lib/foolsDay';
 
 type Props = {
   img: string;
@@ -10,16 +12,30 @@ type Props = {
   className?: string;
 };
 
+function isLoaded(e: HTMLImageElement) {
+  return e.complete && e.naturalHeight !== 0;
+}
+
 const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
-  //const CardImage: React.FC<Props> = forwardRef(({ img, imgBack, name, className }, ref) => {
-  const imgBack = img.replaceAll('face=front', 'face=back');
-  const [backImageSrc, setBackImageSrc] = useState(imgBack);
+  const imgSplit = img.split('?');
+  const imgBackQuery = imgSplit[1].includes('face=front')
+    ? imgSplit[1].replaceAll('face=front', 'face=back')
+    : imgSplit[1]
+      ? imgSplit[1] + '&face=back'
+      : 'face=back';
+  let imgBack = imgSplit[0] + '?' + imgBackQuery;
+
+  if (!img.includes(encodeURIComponent(name))) {
+    [img, imgBack] = [imgBack, img];
+  }
+
   const frontImageRef = useRef<HTMLImageElement>(null);
+  const [frontLoaded, setFrontLoaded] = useState(false);
   const backImageRef = useRef<HTMLImageElement>(null);
+  const [backLoaded, setBackLoaded] = useState(false);
+  const [backFacing, setBackFacing] = useState(true);
   const [hasBack, setHasBack] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [readyToFlip, setReadyToFlip] = useState(false);
-  const [backFacing, setBackFacing] = useState(!img.includes(encodeURIComponent(name)));
+  const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
 
   const flip = () => {
     setBackFacing((prev) => !prev);
@@ -31,38 +47,58 @@ const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
   };
 
   useEffect(() => {
-    if (loaded && !readyToFlip) {
-      setTimeout(() => {
-        setReadyToFlip(true);
-      }, 300);
-    }
-  }, []);
+    setTimeout(() => {
+      setReadyToFlipToFront(true);
+    }, 350);
+  }, [frontImageRef.current]);
 
   useEffect(() => {
-    if (backImageRef.current && backImageRef.current.complete && backImageSrc != cardBack.src) {
-      //If there is no back image then set to cardBack.src
-      if (backImageRef.current.naturalHeight == 0) {
-        setBackImageSrc(cardBack.src);
-      } else {
+    if (backFacing && backImageRef.current !== null && isLoaded(backImageRef.current) && readyToFlipToFront) {
+      flip(); // reveal moment
+      setTimeout(() => {
         setHasBack(true);
-      }
+      }, 400);
     }
-  }, [imgBack]);
+  }, [readyToFlipToFront, frontLoaded]);
 
-  //removed isFoolsDay() ? weatheredCardBack.src : cardBack.src
   return (
     <div className={styles.centerContainer}>
       <CardLink className="relative" name={name}>
         <FlipperCard
           className={className}
           flipped={backFacing}
-          back={<img className={styles.frontCard} src={backImageSrc} ref={backImageRef} alt="" />}
+          back={
+            hasBack ? (
+              <img
+                className={styles.frontCard}
+                src={imgBack}
+                ref={backImageRef}
+                alt={`the back side of ${name}`}
+                onLoad={() => setBackLoaded(true)}
+                onError={() => setBackLoaded(false)}
+              />
+            ) : (
+              <img
+                className={styles.frontCard}
+                src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
+                ref={backImageRef}
+                alt="the back of a classic MtG card"
+              />
+            )
+          }
           front={
-            <img ref={frontImageRef} className={styles.frontCard} src={img} alt={name} onLoad={() => setLoaded(true)} />
+            <img
+              ref={frontImageRef}
+              className={styles.frontCard}
+              src={img}
+              alt={`the front side of ${name}`}
+              onLoad={() => setFrontLoaded(true)}
+              onError={() => setFrontLoaded(false)}
+            />
           }
         />
       </CardLink>
-      {hasBack && (
+      {backLoaded && (
         <button
           id={`flip-${name}`}
           className={`cardImage_${name} md:flex ${styles.flipperButton}`}
