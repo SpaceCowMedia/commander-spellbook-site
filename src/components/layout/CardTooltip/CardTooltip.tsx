@@ -14,7 +14,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   );
 
   const divRef = useRef<HTMLDivElement>(null);
-  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map(() => false));
+  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_, i) => i == 0));
   const loadedImages = isImageLoaded.filter((val) => val).length;
 
   const handleMouseMove = (e: any) => {
@@ -50,6 +50,9 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
             /* set flag after image loading is complete */
             onLoad={() => {
               setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? true : val)));
+            }}
+            onError={() => {
+              setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? false : val)));
             }}
           />
         ))}
