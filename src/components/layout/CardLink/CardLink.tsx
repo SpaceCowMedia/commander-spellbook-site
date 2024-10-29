@@ -21,8 +21,25 @@ const CardLink: React.FC<Props> = ({ name, children, className }: Props) => {
     link = `https://scryfall.com/search?q=%21${quotes}${encodeURIComponent(name)}${quotes}`;
   }
 
+  // prevent single click on mobile
+  const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.innerWidth <= 1024) {
+      event.preventDefault();
+    }
+  };
+
+  // allow double click on mobile
+  const handleDoubleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.innerWidth <= 1024) {
+      window.open(link, '_blank', 'noopener,noreferrer');
+    } else {
+      //Do nothing
+      event.preventDefault();
+    }
+  };
+
   return (
-    <ExternalLink className={className} href={link}>
+    <ExternalLink className={className} href={link} onClick={handleSingleClick} onDoubleClick={handleDoubleClick}>
       {children}
     </ExternalLink>
   );
