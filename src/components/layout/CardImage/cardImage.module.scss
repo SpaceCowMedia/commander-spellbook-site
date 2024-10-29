@@ -1,9 +1,26 @@
 .frontCard {
   @apply rounded-xl;
 }
+
 .centerContainer {
   display: flex;
   flex-direction: column; /* Center items vertically within the column */
   justify-content: center; /* Center items vertically */
   align-items: center; /* Center items horizontally */
+}
+
+.flipperButton {
+  @apply inline-block py-2 px-2 bg-white bg-opacity-60 text-link border-2 border-primary rounded-full no-underline;
+  position: absolute;
+  right: 30px;
+  top: 30%;
+}
+
+.flipperButton svg {
+  @apply inline-block fill-current;
+}
+
+.flipperButton:hover,
+.flipperButton:focus {
+  @apply bg-link text-white border-link;
 }
