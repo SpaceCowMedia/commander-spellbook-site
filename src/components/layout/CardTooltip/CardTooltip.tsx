@@ -17,6 +17,17 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_, i) => i == 0));
   const loadedImages = isImageLoaded.filter((val) => val).length;
 
+  const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (window.innerWidth <= 1024) {
+      if (!divRef.current) {
+        return;
+      }
+      divRef.current.style.display = 'flex';
+    } else {
+      event.preventDefault();
+    }
+  };
+
   const handleMouseMove = (e: any) => {
     if (!divRef.current) {
       return;
@@ -39,7 +50,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   };
 
   return (
-    <span onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
+    <span onMouseMove={handleMouseMove} onMouseOut={handleMouseOut} onClick={handleSingleClick}>
       <div ref={divRef} className={styles.cardTooltip}>
         {urls.map((url, index) => (
           <img

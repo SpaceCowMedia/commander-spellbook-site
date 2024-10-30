@@ -2,16 +2,14 @@
   @apply relative flex-wrap -mt-20 mb-4;
 }
 
-.cardImages .cardImgWrapper .cardImg {
-  @apply rounded-xl relative top-0 transition-all duration-500 ease-in-out;
-}
-
-.cardImages .cardImgWrapper.expand .cardImg {
-  top: 310px;
-}
-
 .cardImages .cardImgWrapper {
-  @apply relative w-1/4 p-1 flex-shrink rounded-xl;
+  @apply relative w-1/4 p-1 flex-shrink rounded-xl top-0 transition-all duration-500 ease-in-out;
+}
+
+@for $i from 1 through 4 {
+  .cardImages .cardImgWrapper:nth-child(4n + #{$i}):hover ~ .cardImgWrapper:nth-child(4n + #{$i}) {
+    top: 310px;
+  }
 }
 
 .cardImages .cardImgWrapper:nth-child(1n + 5) {
