@@ -191,6 +191,29 @@ jobs:
           name: spellbook-client
           path: /tmp/spellbook-client.tar
 
+  tag:
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+      - lint
+      - type-check
+      - test
+      - docker
+    if: github.ref == 'refs/heads/main' && github.ref_type == 'branch' && github.repository == 'SpaceCowMedia/commander-spellbook-site'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout full commit history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Run semantic-release
+        run: npx semantic-release
+
   release:
     runs-on: ubuntu-22.04
     needs:
