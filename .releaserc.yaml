@@ -8,6 +8,6 @@ plugins:
   - [
       "@semantic-release/exec",
       {
-        "successCmd": 'echo "version=v${nextRelease.version}" >> ${process.env.GITHUB_OUTPUT}',
+        "successCmd": 'echo "version=${nextRelease.version}" >> $GITHUB_OUTPUT',
       },
     ]
