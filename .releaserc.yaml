@@ -5,3 +5,9 @@ plugins:
   - "@semantic-release/release-notes-generator"
   - ["@semantic-release/git", { "assets": ["CHANGELOG.md"] }]
   - "@semantic-release/github"
+  - [
+      "@semantic-release/exec",
+      {
+        "successCmd": 'echo "version=v${nextRelease.version}" >> ${process.env.GITHUB_OUTPUT}',
+      },
+    ]
