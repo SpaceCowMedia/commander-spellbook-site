@@ -23,14 +23,9 @@ jobs:
       packages: read
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    outputs:
-      version: ${{ steps.semver.outputs.version }}
-      should-release: ${{ steps.semver.outputs.should-release }}
-      is-prerelease: ${{ steps.semver.outputs.is-github-prerelease }}
     steps:
-      - id: semver
-        name: Checkout 🛎️
-        uses: EasyDesk/action-semver-checkout@v1
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
@@ -202,6 +197,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.ref_type == 'branch' && github.repository == 'SpaceCowMedia/commander-spellbook-site'
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
     env:
       GIT_AUTHOR_NAME: GitHub Actions
       GIT_AUTHOR_EMAIL: action@github.com
@@ -221,28 +218,9 @@ jobs:
       - name: Run semantic-release
         run: npx semantic-release
 
-  release:
-    runs-on: ubuntu-22.04
-    needs:
-      - build
-      - lint
-      - type-check
-      - test
-      - docker
-    if: needs.build.outputs.should-release == 'true'
-    permissions:
-      contents: write
-    steps:
-      - name: Release
-        uses: EasyDesk/action-semver-release@v1
-        with:
-          version: ${{ needs.build.outputs.version }}
-          prerelease: ${{ needs.build.outputs.is-prerelease }}
-          prefix: CSB client
-
   deploy:
     runs-on: ubuntu-22.04
-    needs: [build, release]
+    needs: [build, tag]
     concurrency:
       group: production
       cancel-in-progress: false
