@@ -3,9 +3,12 @@
 }
 .button {
   @apply mx-0 mt-2 mb-0 flex-grow;
+  border: 2px solid rgba(255, 255, 255, 0.05) !important;
 }
 .button:hover {
   @apply bg-transparent text-dark;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px); 
 }
 @media (min-width: 768px) {
   .button {
