@@ -216,7 +216,7 @@ jobs:
         with:
           node-version: "lts/*"
       - name: Install semantic-release
-        run: npm -g install @semantic-release/git semantic-release
+        run: npm -g install @semantic-release/git @semantic-release/exec semantic-release
       - id: release
         name: Run semantic-release
         env:
