@@ -186,7 +186,7 @@ jobs:
           name: spellbook-client
           path: /tmp/spellbook-client.tar
 
-  tag:
+  release:
     runs-on: ubuntu-22.04
     needs:
       - build
@@ -216,11 +216,13 @@ jobs:
       - name: Install semantic-release
         run: npm -g install @semantic-release/git semantic-release
       - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
   deploy:
     runs-on: ubuntu-22.04
-    needs: [build, tag]
+    needs: [build, release]
     concurrency:
       group: production
       cancel-in-progress: false
