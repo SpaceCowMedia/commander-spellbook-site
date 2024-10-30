@@ -30,6 +30,17 @@ const PrerequisiteList: React.FC<Props> = ({
   includeCardLinks,
   templatesInCombo,
 }) => {
+  //Small semantic adjustment from "All other permanents" to "All permanents"
+  prerequisites = prerequisites.map((item) => {
+    if (item.description.includes('All other permanents')) {
+      return {
+        ...item,
+        description: item.description.replace('All other permanents', 'All permanents'),
+      };
+    }
+    return item;
+  });
+
   return (
     <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
