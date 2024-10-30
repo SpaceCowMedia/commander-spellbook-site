@@ -1,0 +1,13 @@
+branches:
+  - main
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - ["@semantic-release/git", { "assets": ["CHANGELOG.md"] }]
+  - "@semantic-release/github"
+  - [
+      "@semantic-release/exec",
+      {
+        "successCmd": 'echo "version=${nextRelease.version}" >> $GITHUB_OUTPUT',
+      },
+    ]

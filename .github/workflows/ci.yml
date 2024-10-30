@@ -23,14 +23,9 @@ jobs:
       packages: read
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    outputs:
-      version: ${{ steps.semver.outputs.version }}
-      should-release: ${{ steps.semver.outputs.should-release }}
-      is-prerelease: ${{ steps.semver.outputs.is-github-prerelease }}
     steps:
-      - id: semver
-        name: Checkout 🛎️
-        uses: EasyDesk/action-semver-checkout@v1
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
@@ -199,20 +194,39 @@ jobs:
       - type-check
       - test
       - docker
-    if: needs.build.outputs.should-release == 'true'
+    if: github.ref == 'refs/heads/main' && github.ref_type == 'branch' && github.repository == 'SpaceCowMedia/commander-spellbook-site'
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
+    env:
+      GIT_AUTHOR_NAME: GitHub Actions
+      GIT_AUTHOR_EMAIL: action@github.com
+      GIT_COMMITTER_NAME: GitHub Actions
+      GIT_COMMITTER_EMAIL: action@github.com
+    outputs:
+      version: ${{ steps.release.outputs.version }}
     steps:
-      - name: Release
-        uses: EasyDesk/action-semver-release@v1
+      - name: Checkout full commit history
+        uses: actions/checkout@v4
         with:
-          version: ${{ needs.build.outputs.version }}
-          prerelease: ${{ needs.build.outputs.is-prerelease }}
-          prefix: CSB client
+          fetch-depth: 0
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install semantic-release
+        run: npm -g install @semantic-release/git @semantic-release/exec semantic-release
+      - id: release
+        name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
 
   deploy:
     runs-on: ubuntu-22.04
     needs: [build, release]
+    if: needs.release.outputs.version
     concurrency:
       group: production
       cancel-in-progress: false
@@ -288,7 +302,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO_NAME }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ needs.release.outputs.version }}
         run: |
           docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker tag spellbook-client:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
