@@ -20,10 +20,10 @@ const PageWrapper: React.FC<Props> = ({ children, noMarginFooter }: Props) => {
   }
 
   return (
-    <div className={`flex flex-col h-full`}>
+    <div className={`flex flex-col h-full ${!isHome ? styles.padtop : ''}`}>
       <AnalyticsCookieBanner />
       {!isHome && (
-        <div className={`bg-dark`}>
+        <div className={`bg-dark ${styles.locked}`}>
           <nav className="container">
             <SearchBar />
           </nav>
