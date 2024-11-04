@@ -129,6 +129,10 @@ const CARD_ARTS = {
     uid: '79b2c547-0d9e-4fd7-a399-347ad908c70b',
     artist: 'Jesper Ejsing',
   },
+  'Phantasmal Image': {
+    uid: 'e7472958-dd1b-48a7-a960-ec2ef3b69ded',
+    artist: 'Nils Hamm',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {

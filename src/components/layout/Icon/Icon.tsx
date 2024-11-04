@@ -30,6 +30,7 @@ import {
   faClose,
   faChevronLeft,
   faChevronRight,
+  faClone,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -76,6 +77,7 @@ const SPELLBOOK_FA_ICONS = {
   close: faClose,
   chevronLeft: faChevronLeft,
   chevronRight: faChevronRight,
+  copy: faClone,
 };
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;

@@ -91,6 +91,11 @@ const DATA = {
       icon: 'scaleBalanced',
     },
     {
+      id: 'variants',
+      text: 'Variants',
+      icon: 'copy',
+    },
+    {
       id: 'sort',
       text: 'Sort / Order',
       icon: 'arrowUpWideShort',
@@ -295,7 +300,12 @@ const DATA = {
       description: 'Combos that contain at least one card that is banned in Commander.',
     },
   ],
-  sortOrderSnippets: [],
+  variantsSnippets: [
+    {
+      search: 'variants>1',
+      description: 'Combos that have more than one variant.',
+    },
+  ],
 };
 
 const INTRODUCTION = `
@@ -657,6 +667,23 @@ On the other hand, \`banned:format\` searches for combos not legal in _format_
 * \`format:format_name\`: same as \`legal:format_name\`
 `;
 
+const VARIANT_DESCRIPTION = `
+You can search for combos that have multiple variants.
+For example, \`variants>1\` searches for combos that have more than one variant.
+
+### \`variants\` operators
+
+* \`variants=number\` or \`variants:number\` searches for combos that have exactly _number_ variants
+* \`variants>number\` searches for combos that have more than _number_ variants
+* \`variants>=number\` searches for combos that have _number_ or more variants
+* \`variants<number\` searches for combos that have fewer than _number_ variants
+* \`variants<=number\` searches for combos that have _number_ or fewer variants
+
+### \`variants\` keyword aliases
+
+* \`variant\`
+`;
+
 const SORT_ORDER_DESCRIPTION = `
 > [!CAUTION]
 > You can no longer sort results using the query syntax.
@@ -815,11 +842,20 @@ const SyntaxGuide: React.FC = () => {
           </SearchGuide>
 
           <SearchGuide
+            heading="Variants"
+            icon="copy"
+            headingCardName="Phantasmal Image"
+            snippets={DATA.variantsSnippets}
+          >
+            <SyntaxMarkdown>{VARIANT_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
             id="sort"
             heading="Sort / Order"
             icon="arrowUpWideShort"
             headingCardName="Brainstorm"
-            snippets={DATA.sortOrderSnippets}
+            snippets={[]}
           >
             <SyntaxMarkdown>{SORT_ORDER_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
