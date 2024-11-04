@@ -98,6 +98,30 @@ a {
   @apply bg-link text-white border-link;
 }
 
+.centered-container {
+  @apply flex flex-col items-center justify-center text-center m-auto;
+}
+
+.home-button {
+  @apply mx-0 mt-2 mb-0 flex-grow;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.home-button:hover {
+  @apply bg-transparent text-dark;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px); 
+}
+
+@media (min-width: 768px) {
+  .home-button {
+    @apply ml-2;
+  }
+  .home-button:first-child {
+    @apply ml-0;
+  }
+}
+
 .input {
   @apply border px-3 py-2 w-full appearance-none rounded-none;
 }

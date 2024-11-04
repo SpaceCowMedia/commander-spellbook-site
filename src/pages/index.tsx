@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Footer from '../components/layout/Footer/Footer';
 import SearchBar from '../components/SearchBar/SearchBar';
-import styles from './index.module.scss';
 import SpellbookLogo from '../components/layout/SpellbookLogo/SpellbookLogo';
 import RandomButton from '../components/RandomButton/RandomButton';
 import { useRouter } from 'next/router';
@@ -59,7 +58,7 @@ const Home: React.FC<Props> = ({ featuredComboButtonText }) => {
           <UserDropdown />
         </div>
         <div className="gradient relative z-10">
-          <div className={`container ${styles.container} relative md:h-screen z-10`}>
+          <div className={`container centered-container relative md:h-screen z-10`}>
             <div className="w-full">
               <SpellbookLogo />
 
@@ -70,25 +69,25 @@ const Home: React.FC<Props> = ({ featuredComboButtonText }) => {
               <SearchBar onHomepage className="bg-white mt-4 md:w-2/3 h-20" />
 
               <div className="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
-                <Link href="/advanced-search/" className={`dark ${styles.button} button md:m-1`}>
+                <Link href="/advanced-search/" className={`dark home-button button md:m-1`}>
                   Advanced Search
                 </Link>
-                <Link href="/syntax-guide/" className={`dark ${styles.button} button md:m-1`}>
+                <Link href="/syntax-guide/" className={`dark home-button button md:m-1`}>
                   Syntax Guide
                 </Link>
-                <RandomButton query={query} className={`random-button ${styles.button} dark button md:m-1`}>
+                <RandomButton query={query} className={`random-button home-button dark button md:m-1`}>
                   Random Combo
                 </RandomButton>
               </div>
 
               <div className="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
-                <Link href="/find-my-combos/" className={`dark ${styles.button} button md:m-1`}>
+                <Link href="/find-my-combos/" className={`dark home-button button md:m-1`}>
                   Find My Combos
                 </Link>
                 <Link
                   id="featured-combos-button"
                   href="/search/?q=is:featured"
-                  className={`previwed-combos-button dark ${styles.button} button md:m-1`}
+                  className={`previwed-combos-button dark home-button button md:m-1`}
                 >
                   {featuredComboButtonText}
                 </Link>
