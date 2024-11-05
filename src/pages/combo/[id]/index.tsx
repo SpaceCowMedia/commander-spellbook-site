@@ -37,7 +37,7 @@ const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 
 const MAX_VARIANTS_COUNT = 50;
 
 function booleanToIcon(value: boolean) {
-  return value ? <Icon name={'check'} /> : <Icon name={'cross'} />;
+  return value ? <Icon name={'check'} className="text-green-500" /> : <Icon name={'cross'} className="text-red-500" />;
 }
 
 const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
