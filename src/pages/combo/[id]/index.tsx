@@ -24,6 +24,7 @@ import BulkApiService from 'services/bulk-api.service';
 import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
+import Icon from 'components/layout/Icon/Icon';
 
 type Props = {
   combo?: Variant;
@@ -34,6 +35,10 @@ type Props = {
 const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
 const MAX_VARIANTS_COUNT = 50;
+
+function booleanToIcon(value: boolean) {
+  return value ? <Icon name={'check'} /> : <Icon name={'cross'} />;
+}
 
 const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
   const configuration = apiConfiguration();
@@ -100,6 +105,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     } else if (combo.status == 'NR') {
       metaData.push('This combo needs to be reviewed and is only visible to editors.');
     }
+
     return (
       <>
         <SpellbookHead
@@ -194,23 +200,62 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
             />
 
             {combo.legalities && (
-              <table className="border-2 border-primary border-collapse relative overflow-x-auto w-full text-sm text-left rtl:text-right text-base text-link mt-20">
-                <thead className="text-dark">
-                  <tr className="bg-primary"><th>Format</th><th>Legality</th></tr>
+              <table className={styles.legalityTable}>
+                <thead>
+                  <tr>
+                    <th>Legality</th>
+                    <th>Format</th>
+                  </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Commander</td><td>{combo.legalities.commander ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Pauper Commander</td><td>{combo.legalities.pauperCommanderCommander ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Pauper Commander (main deck)</td><td>{combo.legalities.pauperCommanderMain ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Oathbreaker</td><td>{combo.legalities.oathbreaker ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>PreDH</td><td>{combo.legalities.predh ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Brawl</td><td>{combo.legalities.brawl ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Vintage</td><td>{combo.legalities.vintage ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Legacy</td><td>{combo.legalities.legacy ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Modern</td><td>{combo.legalities.modern ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Pioneer</td><td>{combo.legalities.pioneer ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Standard</td><td>{combo.legalities.standard ? "Legal" : "Not legal"}</td></tr>
-                  <tr><td>Pauper</td><td>{combo.legalities.pauper ? "Legal" : "Not legal"}</td></tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.commander)}</td>
+                    <td>Commander</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.pauperCommander)}</td>
+                    <td>Pauper Commander</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.pauperCommanderMain)}</td>
+                    <td>Pauper Commander in 99</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.oathbreaker)}</td>
+                    <td>Oathbreaker</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.predh)}</td>
+                    <td>PreDH</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.brawl)}</td>
+                    <td>Brawl</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.standard)}</td>
+                    <td>Standard</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.pioneer)}</td>
+                    <td>Pioneer</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.modern)}</td>
+                    <td>Modern</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.pauper)}</td>
+                    <td>Pauper</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.legacy)}</td>
+                    <td>Legacy</td>
+                  </tr>
+                  <tr>
+                    <td>{booleanToIcon(combo.legalities.vintage)}</td>
+                    <td>Vintage</td>
+                  </tr>
                 </tbody>
               </table>
             )}
