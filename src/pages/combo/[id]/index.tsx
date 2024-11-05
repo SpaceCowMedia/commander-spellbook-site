@@ -199,66 +199,64 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               combo={combo}
             />
 
-            {combo.legalities && (
-              <table className={styles.legalityTable}>
-                <thead>
-                  <tr>
-                    <th>Legality</th>
-                    <th>Format</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.commander)}</td>
-                    <td>Commander</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.pauperCommander)}</td>
-                    <td>Pauper Commander</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.pauperCommanderMain)}</td>
-                    <td>Pauper Commander in 99</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.oathbreaker)}</td>
-                    <td>Oathbreaker</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.predh)}</td>
-                    <td>PreDH</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.brawl)}</td>
-                    <td>Brawl</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.standard)}</td>
-                    <td>Standard</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.pioneer)}</td>
-                    <td>Pioneer</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.modern)}</td>
-                    <td>Modern</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.pauper)}</td>
-                    <td>Pauper</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.legacy)}</td>
-                    <td>Legacy</td>
-                  </tr>
-                  <tr>
-                    <td>{booleanToIcon(combo.legalities.vintage)}</td>
-                    <td>Vintage</td>
-                  </tr>
-                </tbody>
-              </table>
-            )}
+            <table className={styles.legalityTable}>
+              <thead>
+                <tr>
+                  <th>Legality</th>
+                  <th>Format</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.commander)}</td>
+                  <td>Commander</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.pauperCommander)}</td>
+                  <td>Pauper Commander</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.pauperCommanderMain)}</td>
+                  <td>Pauper Commander in 99</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.oathbreaker)}</td>
+                  <td>Oathbreaker</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.predh)}</td>
+                  <td>PreDH</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.brawl)}</td>
+                  <td>Brawl</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.standard)}</td>
+                  <td>Standard</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.pioneer)}</td>
+                  <td>Pioneer</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.modern)}</td>
+                  <td>Modern</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.pauper)}</td>
+                  <td>Pauper</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.legacy)}</td>
+                  <td>Legacy</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.vintage)}</td>
+                  <td>Vintage</td>
+                </tr>
+              </tbody>
+            </table>
           </aside>
         </div>
         <div className="container flex-row">
