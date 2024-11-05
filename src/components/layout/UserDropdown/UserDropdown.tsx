@@ -5,11 +5,11 @@ import CookieService from '../../../services/cookie.service';
 import Link from 'next/link';
 
 const UserDropdown: React.FC = () => {
-  const [cookies, _setCookies] = useCookies(['csbUsername', 'csbJwt', 'csbIsStaff']);
+  const [cookies, _setCookies] = useCookies(['csbUsername', 'csbIsStaff']);
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    if (cookies.csbJwt && cookies.csbUsername) {
+    if (cookies.csbUsername) {
       setUsername(cookies.csbUsername);
     }
   }, []);

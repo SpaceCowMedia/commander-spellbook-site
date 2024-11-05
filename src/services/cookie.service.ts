@@ -42,6 +42,7 @@ export function logout() {
   remove('csbJwt');
   remove('csbUsername');
   remove('csbUserId');
+  remove('csbIsStaff');
 }
 
 export function serverLogout(ctx: NextPageContext) {
