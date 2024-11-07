@@ -244,6 +244,10 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                   <td>Modern</td>
                 </tr>
                 <tr>
+                  <td>{booleanToIcon(combo.legalities.premodern)}</td>
+                  <td>Premodern</td>
+                </tr>
+                <tr>
                   <td>{booleanToIcon(combo.legalities.pauper)}</td>
                   <td>Pauper</td>
                 </tr>
