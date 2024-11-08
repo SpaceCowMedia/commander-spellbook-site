@@ -141,7 +141,7 @@ async function fetchNewToken(providedRefreshToken?: string) {
       throw new Error('Refresh fetch failed');
     }
     return response.json();
-  } catch (err) {
+  } catch (_err) {
     CookieService.logout();
     return '';
   }

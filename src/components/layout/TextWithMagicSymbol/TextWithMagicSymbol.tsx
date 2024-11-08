@@ -97,7 +97,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
             value: Scryfall.getSymbolUrl(manaSymbol),
             manaSymbol,
           };
-        } catch (e) {
+        } catch (_e) {
           console.log('Error getting mana symbol', manaSymbol);
           return {
             nodeType: 'text',

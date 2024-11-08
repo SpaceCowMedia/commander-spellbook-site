@@ -54,5 +54,8 @@ module.exports = (phase, { _defaultConfig }) => {
         },
       ];
     },
+    sassOptions: {
+      silenceDeprecations: ['legacy-js-api'],
+    },
   };
 };
