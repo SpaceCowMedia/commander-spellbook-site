@@ -2,7 +2,7 @@ import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-clien
 
 export type ComboPrerequisites = {
   /* Zone either H, B, C, G, L, E or multiple of them */
-  zones: string;
+  zones: string[];
   /* Additional description of the prerequisite */
   description: string;
 };
@@ -17,4 +17,8 @@ export function getName(card: CardInVariant | TemplateInVariant): string {
 
 export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
   return 'card' in card ? card.card.name.split(', ')[0] : card.template.name;
+}
+
+export function getTypes(card: CardInVariant | TemplateInVariant): string {
+  return 'card' in card ? card.card.typeLine : '';
 }

@@ -1,5 +1,7 @@
-import { ComboPrerequisites, getName, getNameBeforeComma } from './types';
+import { ComboPrerequisites, getName, getNameBeforeComma, getTypes } from './types';
 import { CardInVariant, TemplateInVariant, Variant } from '@spacecowmedia/spellbook-client';
+
+const NONPERMANENT_TYPES = ['instant', 'sorcery'];
 
 const ZONE_MAP = {
   H: 'in hand',
@@ -10,7 +12,7 @@ const ZONE_MAP = {
   E: 'in exile',
 };
 
-const comaAndOrJoin = (input: string[], joiner = 'and') => {
+function comaAndOrJoin(input: string[], joiner = 'and') {
   if (input.length === 0) {
     return '';
   }
@@ -21,39 +23,42 @@ const comaAndOrJoin = (input: string[], joiner = 'and') => {
     return input.join(` ${joiner} `);
   }
   return `${input.slice(0, -1).join(', ')}, ${joiner} ${input.slice(-1)}`;
-};
+}
 
-const getZoneStateMap = (card: CardInVariant | TemplateInVariant) => {
-  const output: Record<string, string> = {};
+function getCardState(card: CardInVariant | TemplateInVariant) {
+  const output: Array<{ zone: keyof typeof ZONE_MAP; state: string }> = [];
   if (card.battlefieldCardState) {
-    output['B'] = card.battlefieldCardState;
+    output.push({ zone: 'B', state: card.battlefieldCardState });
   }
   if (card.exileCardState) {
-    output['E'] = card.exileCardState;
+    output.push({ zone: 'E', state: card.exileCardState });
   }
   if (card.graveyardCardState) {
-    output['G'] = card.graveyardCardState;
+    output.push({ zone: 'G', state: card.graveyardCardState });
   }
   if (card.libraryCardState) {
-    output['L'] = card.libraryCardState;
+    output.push({ zone: 'L', state: card.libraryCardState });
   }
-  return output;
-};
+  if (output.length === 0) {
+    return '';
+  }
+  if (output.length === 1) {
+    return output[0].state;
+  }
+  return comaAndOrJoin(
+    output.map((o) => `${o.state} ${ZONE_MAP[o.zone]}`),
+    'or',
+  );
+}
+
+type Card = (CardInVariant | TemplateInVariant) & { name: string; type: string };
+
+// TODO: consider DFCs
 
 export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
-  let output: ComboPrerequisites[] = [];
-
-  const cardsAndTemplates: Array<CardInVariant | TemplateInVariant> = (
-    variant.uses as Array<CardInVariant | TemplateInVariant>
-  )
+  const cardsAndTemplates: Array<Card> = (variant.uses as Array<CardInVariant | TemplateInVariant>)
     .concat(variant.requires)
-    .map((card) => {
-      if ('card' in card) {
-        return { ...card, name: card.card.name };
-      } else {
-        return { ...card, name: card.template.name };
-      }
-    });
+    .map((card) => ({ ...card, name: getName(card), type: getTypes(card) }));
 
   // Count if any coma split card names exist more than once
   const cardNameCountMap = cardsAndTemplates.reduce((acc: Record<string, number>, card) => {
@@ -64,103 +69,107 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
 
   // Map card names to coma split card names if they only exist once
   const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
-    const name = getName(card);
     const split = getNameBeforeComma(card);
-    acc[name] = cardNameCountMap[split] === 1 ? split : name;
+    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.name;
     return acc;
   }, {});
 
-  // Handle any multi-zone cards
-  const multiZoneCards = cardsAndTemplates.filter((card) => card.zoneLocations.length > 1);
-  for (const card of multiZoneCards.sort((a, b) => getName(a).localeCompare(getName(b)))) {
-    let cardString = `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[getName(card)]} `;
+  // Handle zones descriptions
+  const zonesToDescriptions: Record<string, string> = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
+    const zoneKey = card.zoneLocations.join('');
+    if (acc[zoneKey]) {
+      return acc;
+    }
     if (Object.keys(ZONE_MAP).length === card.zoneLocations.length) {
-      cardString += 'in any zone';
+      acc[zoneKey] = 'in any zone';
     } else {
-      cardString += card.zoneLocations.map((zone) => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ');
+      acc[zoneKey] = card.zoneLocations.map((zone) => ZONE_MAP[zone as keyof typeof ZONE_MAP]).join(' or ');
     }
-    const combinedStateString = comaAndOrJoin(Object.values(getZoneStateMap(card)));
-    if (combinedStateString) {
-      cardString += ` (${combinedStateString})`;
-    }
-    cardString += '. ';
-    output.push({ zones: 'multi', description: cardString });
-  }
-  const singleZoneCards = cardsAndTemplates.filter((card) => card.zoneLocations.length === 1);
-
-  const zoneGroups: {
-    cardNames: string[];
-    cardState: string;
-    zone: keyof typeof ZONE_MAP;
-  }[] = [];
+    return acc;
+  }, {});
 
   // Sort cards into groups by zone
-  for (const zoneKey in ZONE_MAP) {
-    const zoneCards = singleZoneCards.filter((card) => card.zoneLocations[0] === zoneKey);
-    if (zoneCards.length === 0) {
-      continue;
-    }
-    // Pull out the card state for the current zone and if it exists store the card name in an array with the key of the card state string so it can be grouped with cards that match its state
-    const stateMap = zoneCards.reduce((acc: Record<string, string[]>, card) => {
-      const cardState = getZoneStateMap(card)[zoneKey];
-      if (cardState) {
-        const name = getName(card);
-        acc[cardState] = acc[cardState] ? acc[cardState].concat([cardNameMap[name]]) : [cardNameMap[name]];
+  let zoneGroups: Array<{ cards: Card[]; zones: string[]; cardState: string }> = [];
+  for (const zoneKey of Object.keys(zonesToDescriptions).toSorted((a, b) =>
+    a.length == b.length
+      ? a
+          .split('')
+          .map((c) => Object.keys(ZONE_MAP).indexOf(c).toString())
+          .join('')
+          .localeCompare(
+            b
+              .split('')
+              .map((c) => Object.keys(ZONE_MAP).indexOf(c).toString())
+              .join(''),
+          )
+      : a.length - b.length,
+  )) {
+    const zoneCards = cardsAndTemplates.filter((card) => card.zoneLocations.join('') === zoneKey);
+    const reverseCardStateMap: Record<string, Card[]> = zoneCards.reduce((acc: Record<string, Card[]>, card) => {
+      const state = getCardState(card);
+      if (state) {
+        if (acc[state]) {
+          acc[state].push(card);
+        } else {
+          acc[state] = [card];
+        }
       }
       return acc;
     }, {});
-    let cardStateStrings: string[] = [];
-    for (const stateKey in stateMap) {
-      let cardStateString = comaAndOrJoin(stateMap[stateKey]);
-      if (stateKey) {
-        cardStateString += ` ${stateKey}`;
-      }
-      cardStateStrings.push(cardStateString);
-    }
-    let cardState = comaAndOrJoin(cardStateStrings);
-    if (cardState) {
-      cardState = ` (${cardState})`;
-    }
+    const cardStateStrings = Object.keys(reverseCardStateMap).map(
+      (stateKey) =>
+        (zoneCards.length > 1 && reverseCardStateMap[stateKey].length < zoneCards.length
+          ? comaAndOrJoin(reverseCardStateMap[stateKey].map((card) => cardNameMap[card.name])) + ' '
+          : '') + stateKey,
+    );
+    const cardState = comaAndOrJoin(cardStateStrings);
     zoneGroups.push({
-      cardNames: zoneCards.map(
-        (card) => `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[getName(card)]}`,
-      ),
-      zone: zoneKey as keyof typeof ZONE_MAP,
+      cards: zoneCards,
+      zones: zoneKey.split(''),
       cardState,
     });
   }
-
   let index = 0;
-  for (const zoneGroup of zoneGroups.sort((a, b) => (a.cardNames.length > b.cardNames.length ? 1 : -1))) {
-    const cards = zoneGroup.cardNames;
+  const output: ComboPrerequisites[] = [];
+  for (const zoneGroup of zoneGroups.sort((a, b) => a.cards.length - b.cards.length)) {
+    const cards = zoneGroup.cards.map(
+      (card) => `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[card.name]}`,
+    );
     // If this is the last zone group, and it has more than 2 cards, swap card names for combinations string
-    if (index === zoneGroups.length - 1 && cards.length > 2) {
+    const stateBit = zoneGroup.cardState ? ` (${zoneGroup.cardState})` : '';
+    if (index === zoneGroups.length - 1 && zoneGroup.cards.length > 2) {
+      const otherGroups = zoneGroups.slice(0, -1);
+      const otherGroupsHaveAPermanent = otherGroups.some((g) =>
+        g.cards.some((c) => !NONPERMANENT_TYPES.some((t) => c.type.toLowerCase().includes(t))),
+      );
+      const thisGroupIsOfPermanents = zoneGroup.cards.every((c) => !NONPERMANENT_TYPES.some((t) => c.type.includes(t)));
+      const description = `All${zoneGroups.length > 1 && (!thisGroupIsOfPermanents || otherGroupsHaveAPermanent) ? ' other' : ''} ${thisGroupIsOfPermanents ? 'permanents' : 'cards'} ${zonesToDescriptions[zoneGroup.zones.join('')]}${stateBit}.`;
       output.push({
-        zones: zoneGroup.zone,
-        description: `All${zoneGroups.length + multiZoneCards.length > 1 ? ' other' : ''} ${zoneGroup.zone === 'B' ? 'permanents' : 'cards'} ${ZONE_MAP[zoneGroup.zone]}${zoneGroup.cardState}`,
+        zones: zoneGroup.zones,
+        description: description,
       });
     } else {
       // Otherwise just list the cards
       output.push({
-        zones: zoneGroup.zone,
+        zones: zoneGroup.zones,
         description:
           (cards.length < 3 ? cards.join(' and ') : cards.slice(0, -1).join(', ') + ' and ' + cards.slice(-1)) +
           ' ' +
-          ZONE_MAP[zoneGroup.zone] +
-          zoneGroup.cardState,
+          zonesToDescriptions[zoneGroup.zones.join('')] +
+          stateBit +
+          '.',
       });
     }
     index++;
   }
-
   // Add any other prerequisites
   if (variant.otherPrerequisites) {
     variant.otherPrerequisites
       .split(/\.\s+/gi)
-      .forEach((prereq) => output.push({ zones: 'other', description: prereq }));
+      .forEach((prereq) => output.push({ zones: ['other'], description: prereq }));
   }
   if (variant.manaNeeded) {
-    output.push({ zones: 'mana', description: `${variant.manaNeeded} available` });
+    output.push({ zones: ['mana'], description: `${variant.manaNeeded} available` });
   }
 
   return output;

@@ -1,6 +1,6 @@
 import { ComboPrerequisites } from '../../../lib/types';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
-import Icon from '../../layout/Icon/Icon';
+import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 import { addPeriod } from '../../../lib/addPeriod';
 import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
 import React from 'react';
@@ -14,7 +14,7 @@ type Props = {
   templatesInCombo?: TemplateInVariant[];
 };
 
-const ICON_MAP = {
+const ICON_MAP: Record<string, SpellbookIcon> = {
   B: 'battlefield',
   C: 'commandZone',
   G: 'graveyard',
@@ -22,6 +22,7 @@ const ICON_MAP = {
   L: 'library',
   E: 'exile',
 };
+
 const PrerequisiteList: React.FC<Props> = ({
   prerequisites,
   className,
@@ -36,13 +37,15 @@ const PrerequisiteList: React.FC<Props> = ({
         <h2 className="font-bold text-xl mb-2">Prerequisites</h2>
         <ol className="list-inside">
           {prerequisites.map((prereq, index) => (
-            <li key={`${prereq.zones}-${index}`}>
-              {ICON_MAP[prereq.zones as keyof typeof ICON_MAP] && (
-                <>
-                  <Icon name={ICON_MAP[prereq.zones as keyof typeof ICON_MAP] as any} />
-                  &nbsp;
-                </>
-              )}
+            <li key={`${prereq.zones.join('')}-${index}`}>
+              {prereq.zones
+                .filter((z) => ICON_MAP[z])
+                .map((z) => (
+                  <span key={`${prereq.zones.join('')}-${index}-${z}`}>
+                    <Icon name={ICON_MAP[z]} />
+                    &nbsp;
+                  </span>
+                ))}
               <TextWithMagicSymbol
                 text={addPeriod(prereq.description)}
                 cardsInCombo={cardsInCombo}
