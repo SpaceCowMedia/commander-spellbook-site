@@ -287,7 +287,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    if (backendCombos.length === 1) {
+    if (backendCombos.length === 1 && (context.query.page || '1') === '1') {
       return {
         redirect: {
           destination: `/combo/${backendCombos[0].id}`,
