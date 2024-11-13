@@ -20,6 +20,9 @@ import {
 } from '@spacecowmedia/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
+import { LEGALITY_FORMATS } from 'lib/types';
+import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
+import { DEFAULT_ORDERING } from 'lib/constants';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -73,6 +76,7 @@ const FindMyCombos: React.FC = () => {
   const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
+  const [format, setFormat] = useState<string>('commander');
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<{
@@ -87,7 +91,7 @@ const FindMyCombos: React.FC = () => {
 
   const numOfCombos = results.included.length;
   const combosInDeckHeadingText = !numOfCombos
-    ? 'No combos found'
+    ? 'No combos found' + (format ? ' in the selected format' : '')
     : `${numOfCombos} ${pluralize('Combo', numOfCombos)} Found`;
 
   const numPotentialCombos = results.almostIncluded.length;
@@ -162,6 +166,8 @@ const FindMyCombos: React.FC = () => {
       const combos = await findMyCombosApi.findMyCombosCreate({
         deckRequest: decklist.deck,
         offset,
+        ordering: DEFAULT_ORDERING,
+        q: format ? `legal:${format}` : undefined,
       });
 
       const newResults = {
@@ -286,6 +292,12 @@ const FindMyCombos: React.FC = () => {
     }
   }, [deckUrl, urlQueryParam]);
 
+  useEffect(() => {
+    if (currentlyParsedDeck) {
+      lookupCombos(currentlyParsedDeck);
+    }
+  }, [format]);
+
   return (
     <>
       <SpellbookHead
@@ -400,6 +412,23 @@ const FindMyCombos: React.FC = () => {
               {deckUrlError && <ErrorMessage>{deckUrlError}</ErrorMessage>}
             </section>
           )}
+
+          <div className="w-full flex mt-4">
+            <label
+              htmlFor="format-select"
+              className="border-dark border text-center align-middle p-2 bg-dark text-white"
+            >
+              Format
+            </label>
+            <StyledSelect
+              label="Format"
+              id="format-select"
+              options={LEGALITY_FORMATS}
+              value={format}
+              onChange={setFormat}
+              selectBackgroundClassName="flex-grow border-dark border"
+            />
+          </div>
         </section>
 
         <div id="decklist-app" className={styles.decklistApp}>
