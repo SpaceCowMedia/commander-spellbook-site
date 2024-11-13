@@ -653,6 +653,7 @@ On the other hand, \`banned:format\` searches for combos not legal in _format_
 * \`vintage\`
 * \`legacy\`
 * \`modern\`
+* \`premodern\`
 * \`pioneer\`
 * \`standard\`
 * \`pauper\`
