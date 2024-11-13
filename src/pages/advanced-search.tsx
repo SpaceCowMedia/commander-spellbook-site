@@ -9,6 +9,7 @@ import RadioSearchInput from '../components/advancedSearch/RadioSearchInput/Radi
 import { useRouter } from 'next/router';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { SpellbookIcon } from '../components/layout/Icon/Icon';
+import { LEGALITY_FORMATS } from 'lib/types';
 
 type OperatorOption = {
   operator: string;
@@ -280,66 +281,6 @@ const PRICE_VENDORS = [
   {
     value: 'cardmarket',
     label: 'Cardmarket',
-  },
-];
-
-type LegalityFormat = {
-  value: string;
-  label: string;
-};
-
-const LEGALITY_FORMATS: LegalityFormat[] = [
-  {
-    value: '',
-    label: '-',
-  },
-  {
-    value: 'commander',
-    label: 'EDH/Commander',
-  },
-  {
-    value: 'pauper_commander',
-    label: 'Pauper EDH/Commander (including uncommon commanders)',
-  },
-  {
-    value: 'pauper_commander_main',
-    label: 'Pauper EDH/Commander (excluding uncommon commanders)',
-  },
-  {
-    value: 'oathbreaker',
-    label: 'Oathbreaker',
-  },
-  {
-    value: 'predh',
-    label: 'Pre-EDH/Commander',
-  },
-  {
-    value: 'brawl',
-    label: 'Brawl',
-  },
-  {
-    value: 'vintage',
-    label: 'Vintage',
-  },
-  {
-    value: 'legacy',
-    label: 'Legacy',
-  },
-  {
-    value: 'modern',
-    label: 'Modern',
-  },
-  {
-    value: 'pioneer',
-    label: 'Pioneer',
-  },
-  {
-    value: 'standard',
-    label: 'Standard',
-  },
-  {
-    value: 'pauper',
-    label: 'Pauper',
   },
 ];
 

@@ -25,6 +25,7 @@ import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
+import { DEFAULT_ORDERING } from 'lib/constants';
 
 type Props = {
   combo?: Variant;
@@ -51,7 +52,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
       groupByCombo: false,
       variant: combo.id,
       limit: MAX_VARIANTS_COUNT,
-      ordering: '-popularity,identity_count,card_count,-created',
+      ordering: DEFAULT_ORDERING,
       q: `-sid:"${combo.id}"`,
     });
     setVariants(variants.results);

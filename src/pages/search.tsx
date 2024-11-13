@@ -2,7 +2,7 @@ import React from 'react';
 import SearchMessage from '../components/search/SearchMessage/SearchMessage';
 import StyledSelect, { Option } from '../components/layout/StyledSelect/StyledSelect';
 import { useRouter } from 'next/router';
-import { DEFAULT_ORDER, DEFAULT_SORT } from '../lib/constants';
+import { DEFAULT_ORDER, DEFAULT_ORDERING, DEFAULT_SORT } from '../lib/constants';
 import SearchPagination from '../components/search/SearchPagination/SearchPagination';
 import ComboResults from '../components/search/ComboResults/ComboResults';
 import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
@@ -248,7 +248,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
   const ordering =
     (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
-    ',-popularity,identity_count,card_count,-created';
+    `,${DEFAULT_ORDERING}`;
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
