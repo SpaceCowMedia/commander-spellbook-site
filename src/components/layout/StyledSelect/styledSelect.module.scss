@@ -1,3 +1,7 @@
 .operatorSelector {
   @apply w-full h-10 pl-3 pr-6 appearance-none bg-transparent;
 }
+
+.selectOption {
+  @apply text-dark bg-white dark:text-light dark:bg-dark;
+}

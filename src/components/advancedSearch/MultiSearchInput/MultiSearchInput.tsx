@@ -129,7 +129,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   value={input.value}
                   onChange={(value) => handleInputChange(index, value)}
                   label={inputLabel}
-                  inputClassName="border-dark"
+                  inputClassName={styles.autocompleteInput}
                   autocompleteOptions={autocompleteOptions}
                   cardAutocomplete={cardAutocomplete}
                   resultAutocomplete={resultAutocomplete}

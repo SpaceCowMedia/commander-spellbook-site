@@ -5,3 +5,7 @@
 .inputButton {
   @apply px-2 text-white flex flex-row items-center text-3xl border flex-grow justify-center;
 }
+
+.autocompleteInput {
+  @apply border-dark bg-white dark:bg-dark dark:text-light;
+}
