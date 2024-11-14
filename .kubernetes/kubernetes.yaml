@@ -11,7 +11,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 2  # You can specify a number or a percentage here
+      maxUnavailable: 1  # You can specify a number or a percentage here
   template:
     metadata:
       labels:
