@@ -8,6 +8,9 @@
 
 .searchQuery {
   @apply w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate dark:bg-gray-800 dark:border-gray-800;
+  .suggestion {
+    @apply text-gray-600 dark:text-gray-400;
+  }
 }
 
 .submitButton {

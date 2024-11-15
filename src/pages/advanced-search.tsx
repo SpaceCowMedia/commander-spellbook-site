@@ -763,7 +763,9 @@ const AdvancedSearch: React.FC = () => {
               {query ? (
                 <span>{query}</span>
               ) : (
-                <span className="text-dark">(your query will populate here when you've entered any search terms)</span>
+                <span className={styles.suggestion}>
+                  (your query will populate here when you've entered any search terms)
+                </span>
               )}
             </div>
           </div>
