@@ -755,19 +755,11 @@ const AdvancedSearch: React.FC = () => {
 
         <div className={`${styles.container} container text-center pb-8`}>
           <div className="flex flex-row items-center">
-            <button
-              id="advanced-search-submit-button"
-              type="submit"
-              className="border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white"
-            >
+            <button id="advanced-search-submit-button" type="submit" className={styles.submitButton}>
               Search&nbsp;With&nbsp;Query
             </button>
 
-            <div
-              id="search-query"
-              className="w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate"
-              aria-hidden="true"
-            >
+            <div id="search-query" className={styles.searchQuery} aria-hidden="true">
               {query ? (
                 <span>{query}</span>
               ) : (
