@@ -920,10 +920,10 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@spacecowmedia/spellbook-client@^3.14.0":
-  version "3.14.2"
-  resolved "https://npm.pkg.github.com/download/@spacecowmedia/spellbook-client/3.14.2/33e56867b880bd2c8495f47a49c3cdcd9d073fd0#33e56867b880bd2c8495f47a49c3cdcd9d073fd0"
-  integrity sha512-tUsNhX8w53PmZ6Ln6OCGc4TNMs0SxXt0wdvr1tAaKuCavOxNTgDE4dmmuWVCgAW5sEp9addA43MI5TkqFiSeHw==
+"@spacecowmedia/spellbook-client@^3.14.3":
+  version "3.14.3"
+  resolved "https://npm.pkg.github.com/download/@spacecowmedia/spellbook-client/3.14.3/31e2f47b05851cc6462e4f0bfd31d9150e7495bf#31e2f47b05851cc6462e4f0bfd31d9150e7495bf"
+  integrity sha512-+lDrlwJJVilxBFVQ8CR4P4Mai7HFdHKP6dxdLOl6H6Va8pOsiv2xWcV+kBBs0Ky2oCdO4d6Qx/dG0X4/MqHWaA==
 
 "@swc/counter@0.1.3":
   version "0.1.3"
