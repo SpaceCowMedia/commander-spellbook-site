@@ -48,7 +48,7 @@
     "@eslint/compat": "^1.2.2",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/gtag.js": "^0.0.20",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.10.1",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
