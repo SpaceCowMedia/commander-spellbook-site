@@ -25,7 +25,7 @@
     "@spacecowmedia/spellbook-client": "^3.14.6",
     "canvas": "^2.11.2",
     "debounce": "^2.2.0",
-    "markdown-to-jsx": "^7.6.2",
+    "markdown-to-jsx": "^7.7.2",
     "next": "^15.0.3",
     "nextjs-progressbar": "^0.0.16",
     "pluralize": "^8.0.0",
