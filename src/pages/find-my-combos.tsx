@@ -338,13 +338,15 @@ const FindMyCombos: React.FC = () => {
 
           {!!decklist && (
             <>
-              <span
-                id="decklist-card-count"
-                className={`${styles.decklistCardCount} gradient relative`}
-                aria-hidden="true"
-              >
-                {numberOfCardsText}
-              </span>
+              {currentlyParsedDeck && (
+                <span
+                  id="decklist-card-count"
+                  className={`${styles.decklistCardCount} gradient relative`}
+                  aria-hidden="true"
+                >
+                  {numberOfCardsText}
+                </span>
+              )}
               {!lookupInProgress && (
                 <>
                   <button
@@ -438,7 +440,7 @@ const FindMyCombos: React.FC = () => {
             </section>
           )}
 
-          {!lookupInProgress && decklist && (
+          {!lookupInProgress && currentlyParsedDeck && (
             <section id="combos-in-deck-section">
               <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
               <ComboResults results={results.included} hideVariants={true} />
