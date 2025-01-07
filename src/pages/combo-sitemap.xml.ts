@@ -1,6 +1,5 @@
-import { CardDetail, CardsApi } from '@spacecowmedia/spellbook-client';
+import { Variant } from '@spacecowmedia/spellbook-client';
 import { NextPageContext } from 'next';
-import { apiConfiguration } from 'services/api.service';
 
 type SitemapCache = {
   sitemap?: string;
@@ -9,39 +8,23 @@ type SitemapCache = {
 
 const cardsCache: SitemapCache = {};
 
-async function getCards(): Promise<CardDetail[]> {
-  const configuration = apiConfiguration();
-  const cardsApi = new CardsApi(configuration);
-  const firstPage = await cardsApi.cardsList();
-  const cards = firstPage.results;
-  const pageSize = firstPage.results.length;
-  const pageCount = Math.ceil(firstPage.count / pageSize);
-  const promises = [];
-  for (let i = 1; i < pageCount; i++) {
-    promises.push(cardsApi.cardsList({ limit: pageSize, offset: i * pageSize }));
-  }
-  const restPages = await Promise.all(promises);
-  restPages.forEach((page) => cards.push(...page.results));
-  return cards;
+async function getCombos(): Promise<Variant[]> {
+  const bulkVariants = JSON.parse(await (await fetch('https://json.commanderspellbook.com/variants.json')).text());
+  const variants: Variant[] = bulkVariants.variants;
+  return variants;
 }
 
 async function generateSiteMap(): Promise<string> {
   if (cardsCache.sitemap && cardsCache.lastUpdated && Date.now() - cardsCache.lastUpdated < 1000 * 60 * 60 * 24 * 6) {
     return cardsCache.sitemap;
   }
-  const cards = await getCards();
+  const combos = await getCombos();
   const updateTime = Date.now();
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <url>
        <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/`}</loc>
        <priority>1.0</priority>
-     </url>
-     <url>
-       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/advanced-search/`}</loc>
-     </url>
-     <url>
-       <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/syntax-guide/`}</loc>
      </url>
      <url>
        <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/find-my-combos/`}</loc>
@@ -52,11 +35,11 @@ async function generateSiteMap(): Promise<string> {
        <changefreq>monthly</changefreq>
        <priority>0.8</priority>
      </url>
-     ${cards
-       .map(({ name }) => {
+     ${combos
+       .map(({ id }) => {
          return `
        <url>
-           <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/search/?q=${encodeURIComponent(`card="${name}"`).replaceAll("'", '%27')}`}</loc>
+           <loc>${`${process.env.NEXT_PUBLIC_CLIENT_URL}/combo/${encodeURIComponent(id)}/`}</loc>
            <changefreq>weekly</changefreq>
            <lastmod>${new Date(updateTime).toISOString()}</lastmod>
        </url>
