@@ -1,18 +1,22 @@
 {
   function nameToId(name) {
-    return name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '');
+    return name
+      .toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   }
 
   const url = new URL(document.currentScript.src);
   const params = new URLSearchParams(url.searchParams);
   const uses = JSON.parse(params.get('uses'));
+  const requires = JSON.parse(params.get('requires'));
   const produces = JSON.parse(params.get('produces'));
   const id = params.get('id');
   const color = params.get('color');
   const extraRequirementCount = params.get('extraRequirementCount');
   const parent = document.currentScript.parentElement;
 
-  parent.querySelector("#csbLoad").remove();
+  parent.querySelector('#csbLoad').remove();
 
   parent.innerHTML = `
 <link href="//cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" rel="stylesheet" type="text/css" />
@@ -85,24 +89,47 @@
 </style>
 <a href="https://commanderspellbook.com/combo/${id}" rel="noopener noreferrer" target="_blank" class="outer">
   <div class="idContainer">
-    ${color.split("").map((c) => `<i class="ms ms-${c.toLowerCase()} ms-cost ms-shadow"></i>`).join(' ')}
+    ${color
+      .split('')
+      .map((c) => `<i class="ms ms-${c.toLowerCase()} ms-cost ms-shadow"></i>`)
+      .join(' ')}
   </div>
 
   <div class="list">
-    ${uses.map((cardName) => `
+    ${uses
+      .map(
+        (cardName) => `
       <div id="${nameToId(cardName)}" class="cardEntry">
         ${cardName}
-       </div>`).join('')}
-    ${extraRequirementCount > 0 ? `
+       </div>`,
+      )
+      .join('')}
+    ${requires
+      .map(
+        (cardName) => `
+      <div class="cardEntry">
+        ${cardName}
+       </div>`,
+      )
+      .join('')}
+    ${
+      extraRequirementCount > 0
+        ? `
       <div class="cardEntry otherPrereq">
         +${extraRequirementCount} other prerequisite${extraRequirementCount > 1 ? 's' : ''}
-        </div>` : ''}
+        </div>`
+        : ''
+    }
   </div>
   <div class="list noborder">
-    ${produces.map((feature) => `
+    ${produces
+      .map(
+        (feature) => `
       <div class="cardEntry">
         ${feature}
-       </div>`).join('')}
+       </div>`,
+      )
+      .join('')}
   </div>
   <div class="logoContainer">
     <img src="https://commanderspellbook.com/images/gear.svg" height="30"  />
@@ -110,15 +137,19 @@
   </div>
 </a>
 <div id="card-hover" class="cardHover"></div>
-`
+`;
 
-  const hoverElement = parent.querySelector("#card-hover");
-  if (!hoverElement) throw new Error("No hover element found");
+  const hoverElement = parent.querySelector('#card-hover');
+  if (!hoverElement) {
+    throw new Error('No hover element found');
+  }
 
   uses.forEach((cardName) => {
     const cardId = nameToId(cardName);
     const el = parent.querySelector(`#${cardId}`);
-    if (!el) return;
+    if (!el) {
+      return;
+    }
     el.addEventListener('mousemove', (e) => {
       hoverElement.style.display = 'block';
       hoverElement.style.left = `${e.clientX + 25}px`;
@@ -127,6 +158,6 @@
     });
     el.addEventListener('mouseout', () => {
       hoverElement.style.display = 'none';
-    })
+    });
   });
 }

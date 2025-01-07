@@ -8,6 +8,12 @@
     },
     "peacock.color": "#007fff",
     "eslint.format.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
     "svg.preview.background": "transparent",
     "files.associations": {
         "*.css": "tailwindcss",
