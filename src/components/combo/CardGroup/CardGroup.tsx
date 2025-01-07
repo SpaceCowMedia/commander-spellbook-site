@@ -12,7 +12,7 @@ type Props = {
 
 const CardGroup: React.FC<Props> = ({ cards, templates }) => {
   return (
-    <div className={`${styles.cardImages} container hidden lg:flex ${cards.length < 4 && 'justify-center'}`}>
+    <div className={`${styles.cardImages} container hidden lg:flex${cards.length + templates.length < 4 ? ' justify-center' : ''}`}>
       {(cards as (CardInVariant | TemplateInVariant)[])
         .concat(templates)
         .flatMap((c) => Array<CardInVariant | TemplateInVariant>(c.quantity).fill(c))
