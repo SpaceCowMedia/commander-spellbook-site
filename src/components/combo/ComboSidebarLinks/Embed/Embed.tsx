@@ -14,15 +14,16 @@ const Embed = ({ combo }: Props) => {
 
   let query = `v=1`;
   query += `&uses=${encodeURIComponent(JSON.stringify(combo.uses.map((card) => card.card.name)))}`;
+  query += `&requires=${encodeURIComponent(JSON.stringify(combo.requires.map((card) => card.template.name)))}`;
   query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map((feature) => feature.feature.name)))}`;
   query += `&id=${combo.id}`;
   query += `&color=${combo.identity}`;
-  query += `&extraRequirementCount=${combo.requires.length + (combo.otherPrerequisites ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length : 0)}`;
+  query += `&extraRequirementCount=${combo.otherPrerequisites ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length : 0}`;
 
   // The empty iframe ensures that wordpress detects the embed
   const embedCode = imageMode
-    ? `<a href="https://commanderspellbook.com/combo/${combo.id}" rel="noopener noreferrer" target="_blank">
-    <img src="https://commanderspellbook.com/api/combo/${combo.id}/generate-image" alt="Preview of the combo with id ${combo.id}" /></a>`
+    ? `<a href="${process.env.NEXT_PUBLIC_CLIENT_URL}/combo/${combo.id}" rel="noopener noreferrer" target="_blank">
+    <img src="${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image" alt="Preview of the combo with id ${combo.id}" /></a>`
     : `<div style="width:100%; position:relative; overflow: visible; display: flex; justify-content: center" id="${combo.id}">
     <img alt="csb logo" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/images/gear.svg" width="300" id="csbLoad"/>
     <script id="${combo.id}" src="${process.env.NEXT_PUBLIC_CLIENT_URL}/embed.js?${query}"></script>
