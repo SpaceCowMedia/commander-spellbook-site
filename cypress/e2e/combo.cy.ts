@@ -36,6 +36,16 @@ describe('Combo Detail Page', () => {
 
     cy.get('#ck-buy-this-combo').should('have.attr', 'href').and('include', 'https://www.cardkingdom.com/builder');
   });
+
+  it('provides combo preview', () => {
+    cy.visit('/combo/450/');
+
+    cy.get('meta[property="og:image"]').each(($img) => {
+      const src = $img.attr('content');
+      cy.wrap(src).should('not.be', undefined);
+      cy.request(src!).its('status').should('eq', 200);
+    });
+  });
 });
 
 export {};
