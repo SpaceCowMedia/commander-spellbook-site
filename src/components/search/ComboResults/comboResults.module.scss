@@ -21,6 +21,11 @@
     @apply w-full bg-pink-300 text-right dark:bg-link;
   }
 
+  .cardName {
+    text-indent: -1em;
+    margin-left: 1em;
+  }
+
   @media (min-width: 768px) {
     .comboResult {
       @apply m-2;
