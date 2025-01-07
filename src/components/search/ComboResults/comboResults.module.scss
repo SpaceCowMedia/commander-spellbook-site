@@ -9,6 +9,11 @@
     @apply max-w-lg mx-0 my-2 rounded border-2 border-dark flex-grow flex flex-col content-center;
   }
 
+  .cardName {
+    text-indent: -1em;
+    margin-left: 1em;
+  }
+
   @media (min-width: 768px) {
     .comboResult {
       @apply m-2;
