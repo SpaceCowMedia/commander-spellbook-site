@@ -118,7 +118,7 @@ const DATA = {
     },
     {
       search: 'cards>2 cards<=5',
-      description: 'Combos that contain more than 2 cards but no greater than 5 cards',
+      description: 'Combos that contain more than 2 cards but at most 5 cards',
     },
   ],
   cardTypeSnippets: [
@@ -246,6 +246,10 @@ const DATA = {
     {
       search: 'is:featured',
       description: 'Combos that are featured on the home page.',
+    },
+    {
+      search: 'is:hulkline',
+      description: 'Combos that are fetchable with Protean Hulk.',
     },
   ],
   commanderSnippets: [
@@ -565,6 +569,7 @@ Other tags are applied automatically, so their support is complete and always up
 * \`commander\`: the combo requires you to have a commander, so it will not work in most non-Commander formats
 * \`featured\`: the combo appears in the feature page, which usually displays combos using cards from a recent or upcoming set
 * \`reserved\`: the combo contains at least one card from the Reserved List
+* \`hulkline\`/\`meatandeggs\`: the combo is fetchable with [Protean Hulk](https://scryfall.com/search?q=!%22Protean%20Hulk%22)
 
 #### Manual tags
 
