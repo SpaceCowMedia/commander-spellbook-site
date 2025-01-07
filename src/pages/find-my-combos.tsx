@@ -110,10 +110,17 @@ const FindMyCombos: React.FC = () => {
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
-  const handleError = async (err: any) => {
+  const handleFindMyCombosError = async (err: any) => {
     const error = err as ResponseError;
     const body = JSON.parse(await error.response.text());
     const errorMessages: string[] = [];
+    if (Array.isArray(body.main)) {
+      body.main.forEach((message: string) => {
+        if (typeof message === 'string') {
+          errorMessages.push(message);
+        }
+      });
+    }
     Object.keys(body.main).forEach((key) => {
       if (body.main[key].card) {
         errorMessages.push(`Card #${key}: ${body.main[key].card}`);
@@ -144,7 +151,7 @@ const FindMyCombos: React.FC = () => {
       setDecklistErrors([]);
       return decklist;
     } catch (err: any) {
-      await handleError(err);
+      await handleFindMyCombosError(err);
       return new Decklist({ commanders: [], main: [] });
     }
   };
@@ -157,7 +164,8 @@ const FindMyCombos: React.FC = () => {
     setLookupInProgress(true);
 
     if (decklist.isEmpty()) {
-      return setLookupInProgress(false);
+      setLookupInProgress(false);
+      return;
     }
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
@@ -201,7 +209,7 @@ const FindMyCombos: React.FC = () => {
 
       setResults(newResults);
     } catch (error: any) {
-      await handleError(error);
+      await handleFindMyCombosError(error);
       setResults(DEFAULT_RESULTS);
     }
 
