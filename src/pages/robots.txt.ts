@@ -5,7 +5,12 @@ function RobotsTxt() {
 }
 
 function getRobotsTxt(): string {
-  return `User-agent: *\nAllow: /\nSitemap: ${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap.xml\n`;
+  return [
+    'User-agent: *',
+    'Allow: /',
+    `Sitemap: ${process.env.NEXT_PUBLIC_CLIENT_URL}/combo-sitemap.xml`,
+    `Sitemap: ${process.env.NEXT_PUBLIC_CLIENT_URL}/card-sitemap.xml`,
+  ].join('\n');
 }
 
 export async function getServerSideProps({ res }: NextPageContext) {
