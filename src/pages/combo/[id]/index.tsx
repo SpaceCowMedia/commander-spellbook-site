@@ -46,6 +46,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
   const variantsApi = new VariantsApi(configuration);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
+  const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
   const loadVariants = async (combo: Variant) => {
     setVariantsLoading(true);
     const variants = await variantsApi.variantsList({
@@ -56,6 +57,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
       q: `-sid:"${combo.id}"`,
     });
     setVariants(variants.results);
+    setVariantCount(variants.count);
     setVariantsLoading(false);
   };
   useEffect(() => {
@@ -266,7 +268,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         </div>
         <div className="container flex-row">
           <div className="w-full">
-            {combo.variantCount > 1 && (
+            {variantCount > 0 && (
               <>
                 <ComboList
                   title="Variants of this combo"
@@ -275,7 +277,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                     variantsLoading
                       ? []
                       : [
-                          `Below you find ${variants.length == combo.variantCount - 1 ? `all ${variants.length}` : `${variants.length} out of ${combo.variantCount - 1} total`} variants of this combo, with the alternative cards highlighted.`,
+                          `Below you find ${variants.length == variantCount ? `all ${variants.length}` : `${variants.length} out of ${variantCount} total`} variants of this combo, with the alternative cards highlighted.`,
                         ]
                   }
                 />
