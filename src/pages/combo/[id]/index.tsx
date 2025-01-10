@@ -278,8 +278,8 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                     variantsLoading
                       ? []
                       : [
-                        `Below you find ${variants.length == variantCount ? `all ${variants.length}` : `${variants.length} out of ${variantCount} total`} variants of this combo, with the alternative cards highlighted.`,
-                      ]
+                          `Below you find ${variants.length == variantCount ? `all ${variants.length}` : `${variants.length} out of ${variantCount} total`} variants of this combo, with the alternative cards highlighted.`,
+                        ]
                   }
                 />
                 {variantsLoading && <Loader />}
@@ -393,8 +393,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const alternatives = results
     ? results.results.included
-      .concat(results.results.almostIncluded)
-      .concat(results.results.almostIncludedByAddingColors)
+        .concat(results.results.almostIncluded)
+        .concat(results.results.almostIncludedByAddingColors)
     : [];
   if (alternatives.length > 0) {
     return {
