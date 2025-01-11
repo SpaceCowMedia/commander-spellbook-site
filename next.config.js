@@ -57,5 +57,14 @@ module.exports = (phase, { _defaultConfig }) => {
     sassOptions: {
       silenceDeprecations: ['legacy-js-api'],
     },
+    async redirects() {
+      return [
+        {
+          source: '/ads.txt',
+          destination: 'https://adstxt.mediavine.com/sites/commander-spellbook/ads.txt',
+          permanent: false,
+        },
+      ];
+    },
   };
 };

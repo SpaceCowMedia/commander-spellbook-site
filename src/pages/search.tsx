@@ -27,10 +27,10 @@ type Props = {
 const SORT_OPTIONS: Option[] = [
   { value: 'popularity', label: 'Popularity' },
   { value: 'identity_count', label: 'Color Identity' },
-  { value: 'variant_count', label: 'Number of Variants' },
   { value: 'price_tcgplayer', label: 'Price (TCGPlayer)' },
   { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
   { value: 'price_cardmarket', label: 'Price (Cardmarket)' },
+  { value: 'variant_count', label: '# of Variants' },
   {
     value: 'card_count',
     label: '# of Cards',
