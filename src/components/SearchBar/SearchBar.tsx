@@ -6,7 +6,7 @@ import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@spacecowmedia/spellbook-client';
 import DarkMode from 'components/ui/DarkMode/DarkMode';
-import { useCookies } from 'react-cookie';
+import CookieService from 'services/cookie.service';
 
 type Props = {
   onHomepage?: boolean;
@@ -45,7 +45,6 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
 
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(getQueryFromRouter(router));
-  const [cookies, setCookies] = useCookies(['variantCount']);
   const [variantCount, setVariantCount] = useState<number>(initialCount);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,14 +73,16 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   }, [router.query.q]);
 
   useEffect(() => {
-    if (cookies.variantCount) {
-      setVariantCount(cookies.variantCount);
-      handleCountUp(cookies.variantCount);
-    } else if (!cookies.variantCount) {
+    const variantCountCookie = CookieService.get('variantCount');
+    const variantCount = variantCountCookie ? parseInt(variantCountCookie) : undefined;
+    if (variantCount) {
+      setVariantCount(variantCount);
+      handleCountUp(variantCount);
+    } else if (!variantCount) {
       variantsApi
         .variantsList({ limit: 1, q: 'legal:commander' })
         .then((response) => {
-          setCookies('variantCount', response.count, { path: '/', maxAge: 3 * 60 * 60 });
+          CookieService.set('variantCount', response.count, 'hours');
           setVariantCount(response.count);
           handleCountUp(response.count);
         })

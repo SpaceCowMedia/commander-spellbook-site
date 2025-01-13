@@ -1,40 +1,35 @@
-import { NextPageContext } from 'next';
-import Cookies from 'universal-cookie';
+import { deleteCookie, getCookie, OptionsType, setCookie } from 'cookies-next';
 
 export const expirationDurations = {
   hour: 3600,
+  hours: 10800,
   day: 86400,
   week: 604800,
   month: 2592000,
   year: 31536000,
 };
 
-export function get<T = any>(path: string, serverCookies?: Record<string, any> | string): T {
-  const cookies = new Cookies(serverCookies);
-
+export function get<T = string>(path: string, options?: OptionsType): T {
   // @ts-ignore
-  const result = cookies.get(path, { path: '/' });
+  const result = getCookie(path, { path: '/', ...options });
 
   return result as T;
 }
 
-export function set(key: string, value: any, age?: keyof typeof expirationDurations, cookies?: Cookies) {
-  const cookiesInstance = cookies ?? new Cookies();
-
+export function set(key: string, value: any, age?: keyof typeof expirationDurations, options?: OptionsType) {
   const maxAge = age ? expirationDurations[age] : undefined;
 
-  cookiesInstance.set(key, value, {
+  setCookie(key, value, {
     path: '/',
     maxAge,
     sameSite: 'strict',
     httpOnly: false,
+    ...options,
   });
 }
 
-export function remove(key: string) {
-  const cookies = new Cookies();
-
-  cookies.remove(key, { path: '/' });
+export function remove(key: string, options?: OptionsType) {
+  deleteCookie(key, { path: '/', ...options });
 }
 
 export function logout() {
@@ -45,21 +40,11 @@ export function logout() {
   remove('csbIsStaff');
 }
 
-export function serverLogout(ctx: NextPageContext) {
-  ctx.res?.setHeader('Set-Cookie', [
-    'csbRefresh=deleted; path=/; Max-Age=0',
-    'csbJwt=deleted; path=/; Max-Age=0',
-    'csbUsername=deleted; path=/; Max-Age=0',
-    'csbUserId=deleted; path=/; Max-Age=0',
-  ]);
-}
-
-const cookieService = {
+const CookieService = {
   get,
   set,
   remove,
   logout,
-  serverLogout,
 };
 
-export default cookieService;
+export default CookieService;
