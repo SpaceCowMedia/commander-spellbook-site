@@ -9,7 +9,7 @@ export const expirationDurations = {
   year: 31536000,
 };
 
-export function get<T = string>(path: string, options?: OptionsType): T {
+export function get<T = string>(path: string, options?: OptionsType): T | undefined {
   // @ts-ignore
   const result = getCookie(path, { path: '/', ...options });
 

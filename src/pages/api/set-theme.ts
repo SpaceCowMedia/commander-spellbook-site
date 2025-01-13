@@ -1,6 +1,6 @@
-import { DARK_THEME, LIGHT_THEME, SYSTEM_THEME, THEME_COOKIE_NAME } from 'components/ui/DarkMode/DarkMode';
 import { NextApiRequest, NextApiResponse } from 'next';
 import CookieService from 'services/cookie.service';
+import { DARK_THEME, LIGHT_THEME, SYSTEM_THEME, THEME_COOKIE_NAME } from 'services/theme.service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const mode = req.query.theme;

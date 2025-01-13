@@ -5,7 +5,7 @@ import { NextRouter, useRouter } from 'next/router';
 import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@spacecowmedia/spellbook-client';
-import DarkMode from 'components/ui/DarkMode/DarkMode';
+import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
 import CookieService from 'services/cookie.service';
 
 type Props = {
@@ -133,7 +133,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             </button>
 
             <span className={`text-white mr-2`}>
-              <DarkMode />
+              <ThemeSelector />
             </span>
             <Link href="/advanced-search/" className={`hidden md:flex ${styles.menuLink}`}>
               <div className={`${styles.advancedSearchIcon} ${styles.linkIcon}`} aria-hidden="true" />
