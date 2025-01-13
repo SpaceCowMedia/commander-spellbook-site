@@ -17,7 +17,7 @@ export type DecodedJWTType = {
   token_type?: string;
 };
 
-function decodeJwt(jwt: string): DecodedJWTType | null {
+function decodeJwt(jwt?: string): DecodedJWTType | null {
   if (!jwt) {
     return null;
   }
