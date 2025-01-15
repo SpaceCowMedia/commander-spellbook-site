@@ -11,9 +11,10 @@ const ThemeSelector: React.FC = () => {
     if (!cookies.theme) {
       const isOsDarkMode = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
       updateTheme(isOsDarkMode ? DARK_THEME : LIGHT_THEME);
+    } else {
+      applyTheme(cookies.theme);
     }
-  }, []);
-
+  }, [cookies.theme]);
   const updateTheme = (theme: string) => {
     setCookies('theme', theme, { maxAge: 31536000 });
     applyTheme(theme);
