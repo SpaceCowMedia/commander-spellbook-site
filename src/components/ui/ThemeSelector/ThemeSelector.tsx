@@ -1,29 +1,32 @@
 import Icon from 'components/layout/Icon/Icon';
-import React, { useEffect, useState } from 'react';
-import { DARK_THEME, getTheme, LIGHT_THEME, setTheme, SYSTEM_THEME } from 'services/theme.service';
+import React, { useEffect } from 'react';
+import { DARK_THEME, LIGHT_THEME, applyTheme } from 'services/theme.service';
+import { useCookies } from 'react-cookie';
+import styles from './ThemeSelector.module.scss';
 
 const ThemeSelector: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(SYSTEM_THEME);
-
+  const [cookies, setCookies] = useCookies(['theme']);
+  const isDarkMode = cookies.theme === 'dark';
   useEffect(() => {
-    setDarkMode(getTheme());
+    if (!cookies.theme) {
+      const isOsDarkMode = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateTheme(isOsDarkMode ? DARK_THEME : LIGHT_THEME);
+    }
   }, []);
 
   const updateTheme = (theme: string) => {
-    setDarkMode(theme);
-    setTheme(theme);
+    setCookies('theme', theme, { maxAge: 31536000 });
+    applyTheme(theme);
   };
 
   return (
-    <>
-      {darkMode == LIGHT_THEME ? (
-        <Icon name="sun" onClick={() => updateTheme(DARK_THEME)} />
-      ) : darkMode == DARK_THEME ? (
-        <Icon name="moon" onClick={() => updateTheme(SYSTEM_THEME)} />
+    <button className={styles.iconButton}>
+      {isDarkMode ? (
+        <Icon name="sun" onClick={() => updateTheme(LIGHT_THEME)} />
       ) : (
-        <Icon name="halfStrokeCircle" onClick={() => updateTheme(LIGHT_THEME)} />
+        <Icon name="moon" onClick={() => updateTheme(DARK_THEME)} />
       )}
-    </>
+    </button>
   );
 };
 
