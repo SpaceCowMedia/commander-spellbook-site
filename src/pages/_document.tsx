@@ -15,7 +15,7 @@ export default class MyDocument extends Document<MyDocumentInitialProps> {
   }
   render() {
     return (
-      <Html lang="en" className={this.props.documentClass}>
+      <Html lang="en" className={this.props.documentClass === 'light' ? 'light' : 'dark'}>
         <Head>
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin%20Sans&display=swap" />
         </Head>
