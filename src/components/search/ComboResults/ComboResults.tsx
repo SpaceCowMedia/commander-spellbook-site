@@ -69,6 +69,11 @@ export const ComboResult: React.FC<ResultProps> = ({
     ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
+  const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'light';
+  const stateBasedColorInverse = combo.status === 'OK' ? 'light' : 'dark';
+  const stateBasedTooltip =
+    combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
+
   return (
     <Link
       href={`/combo/${combo.id}`}
@@ -79,7 +84,8 @@ export const ComboResult: React.FC<ResultProps> = ({
     >
       <div className="flex flex-col">
         <div
-          className={`flex items-center flex-grow flex-col ${combo.status === 'OK' ? 'bg-dark' : combo.status === 'E' ? 'bg-[#888888]' : 'bg-light'} text-white`}
+          className={`flex items-center flex-grow flex-col bg-${stateBasedColor} text-white`}
+          title={stateBasedTooltip}
         >
           <ColorIdentity identity={combo.identity} size="small" />
         </div>
@@ -140,7 +146,10 @@ export const ComboResult: React.FC<ResultProps> = ({
           </div>
         )}
         {sortStatMessage(combo) && (
-          <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
+          <div
+            className={`sort-footer w-full py-1 text-center flex-shrink bg-${stateBasedColor} text-${stateBasedColorInverse}`}
+            title={stateBasedTooltip}
+          >
             {sortStatMessage(combo)}
           </div>
         )}
