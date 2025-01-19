@@ -19,7 +19,16 @@ const ThemeSelector: React.FC = () => {
   };
 
   return (
-    <button className={styles.iconButton}>
+    <button
+      className={styles.iconButton}
+      title={
+        cookies.theme == LIGHT_THEME
+          ? 'Switch to dark theme'
+          : cookies.theme == DARK_THEME
+            ? 'Switch to system theme'
+            : 'Switch to light theme'
+      }
+    >
       {cookies.theme == LIGHT_THEME ? (
         <Icon name="sun" onClick={() => updateTheme(DARK_THEME)} />
       ) : cookies.theme == DARK_THEME ? (
