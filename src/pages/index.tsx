@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import UserDropdown from '../components/layout/UserDropdown/UserDropdown';
+import { apiConfiguration } from 'services/api.service';
+import { PropertiesApi } from '@spacecowmedia/spellbook-client';
 
 type Props = {
   featuredComboButtonText: string;
@@ -109,9 +111,10 @@ export async function getStaticProps() {
   }
 
   try {
-    const res = await fetch(`${NEXT_PUBLIC_EDITOR_BACKEND_URL}/properties/?format=json`);
-    const dataFromEditorBackend = await res.json();
-    const buttonTextData = dataFromEditorBackend.results.find((data: { key: string; value: string }) => {
+    const configuration = apiConfiguration();
+    const propertiesApi = new PropertiesApi(configuration);
+    const res = await propertiesApi.propertiesList();
+    const buttonTextData = res.results.find((data) => {
       return data.key === 'featured_combos_title';
     });
 
