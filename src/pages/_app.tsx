@@ -1,5 +1,5 @@
 import '../assets/globals.scss';
-import type { AppProps } from 'next/app';
+import type { AppContext, AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
 import { useRouter } from 'next/router';
@@ -9,10 +9,12 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import PageWrapper from 'components/layout/PageWrapper/PageWrapper';
 import Script from 'next/script';
+import { CookiesProvider } from 'react-cookie';
+import Cookies from 'universal-cookie';
 
 config.autoAddCss = false;
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
@@ -44,9 +46,15 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         )}
       </header>
-      <PageWrapper>
-        <Component {...pageProps} />
-      </PageWrapper>
+      <CookiesProvider cookies={typeof window !== 'undefined' ? undefined : new Cookies(cookies)}>
+        <PageWrapper>
+          <Component {...pageProps} />
+        </PageWrapper>
+      </CookiesProvider>
     </>
   );
 }
+
+App.getInitialProps = async (context: AppContext): Promise<any> => {
+  return { cookies: context.ctx.req?.headers?.cookie };
+};
