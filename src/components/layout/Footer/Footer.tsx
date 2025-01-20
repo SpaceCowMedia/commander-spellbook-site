@@ -24,6 +24,7 @@ const Footer: React.FC<Props> = ({ className, noMargin }) => {
             <Link href="/syntax-guide/">Syntax Guide</Link>
             <Link href="/random/">Random Combo</Link>
             <Link href="/find-my-combos/">Find My Combos</Link>
+            <Link href="/search/?q=is:featured">Featured Combos</Link>
           </div>
           <div className={styles.linkCollection}>
             <h3 className={styles.header}>Commander Spellbook</h3>
