@@ -28,13 +28,18 @@ const ThemeSelector: React.FC = () => {
             ? 'Switch to system theme'
             : 'Switch to light theme'
       }
+      onClick={() =>
+        updateTheme(
+          cookies.theme == LIGHT_THEME ? DARK_THEME : cookies.theme == DARK_THEME ? SYSTEM_THEME : LIGHT_THEME,
+        )
+      }
     >
       {cookies.theme == LIGHT_THEME ? (
-        <Icon name="sun" onClick={() => updateTheme(DARK_THEME)} />
+        <Icon name="sun" />
       ) : cookies.theme == DARK_THEME ? (
-        <Icon name="moon" onClick={() => updateTheme(SYSTEM_THEME)} />
+        <Icon name="moon" />
       ) : (
-        <Icon name="halfStrokeCircle" onClick={() => updateTheme(LIGHT_THEME)} />
+        <Icon name="halfStrokeCircle" />
       )}
     </button>
   );
