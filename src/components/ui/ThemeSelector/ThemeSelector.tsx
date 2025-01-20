@@ -20,6 +20,7 @@ const ThemeSelector: React.FC = () => {
 
   return (
     <button
+      type="button"
       className={styles.iconButton}
       title={
         cookies.theme == LIGHT_THEME
