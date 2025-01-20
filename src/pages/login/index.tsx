@@ -36,9 +36,9 @@ const Login: React.FC = () => {
         <h1 className="heading-title">Login</h1>
         <div className="text-center">
           <p>
-            Currently you can only login through discord. You must be a member of the &nbsp;
-            <ExternalLink href="https://discord.com/invite/DkAyVJG">Commander Spellbook Discord server</ExternalLink>
-            &nbsp; to login.
+            Currently you can only login through discord. You must be a member of the{' '}
+            <ExternalLink href="https://discord.com/invite/DkAyVJG">Commander Spellbook Discord server</ExternalLink> to
+            login.
           </p>
 
           <Link
