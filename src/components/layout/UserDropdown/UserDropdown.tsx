@@ -20,8 +20,6 @@ const UserDropdown: React.FC = () => {
 
   const signOut = () => {
     CookieService.logout();
-    setUsername('');
-    setCsbIsStaff(false);
   };
 
   if (!username) {

@@ -8,9 +8,11 @@ type Props = {
 };
 
 const ShareComboButtons: React.FC<Props> = ({ comboLink }) => {
-  const twitterUrl = `https://twitter.com/intent/tweet?text=Check out this combo!&url=${comboLink}&hashtags=commanderspellbook&via=CommanderSpell`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${comboLink}&title=Check out this combo!&description=Check out this combo!&quote=&hashtag=%23commanderspellbook`;
-  const redditUrl = `https://www.reddit.com/submit?url=${comboLink}&title=Check out this combo!`;
+  const embedComboLink = encodeURIComponent(comboLink);
+  const embedComboText = encodeURIComponent('Check out this combo!');
+  const blueskyUrl = `https://bsky.app/intent/compose?text=${embedComboText}${encodeURIComponent('\n\n')}${embedComboLink}&hashtags=commanderspellbook&via=CommanderSpell`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${embedComboLink}&title=${embedComboText}&description=${embedComboText}&quote=&hashtag=%23commanderspellbook`;
+  const redditUrl = `https://www.reddit.com/submit?url=${embedComboLink}&title=${embedComboText}`;
 
   return (
     <div className={`border-t border-gray pt-2 mt-1 ${styles.shareContainer}`}>
@@ -20,8 +22,8 @@ const ShareComboButtons: React.FC<Props> = ({ comboLink }) => {
             <div className="sr-only">Copy to Clipboard</div>
           </div>
         </CopyComboLinkButton>
-        <ShareNetwork url={twitterUrl} className={`button ${styles.shareNetwork}`} network="Twitter">
-          <div className={`${styles.linkIcon} ${styles.twitterIcon}`} />
+        <ShareNetwork url={blueskyUrl} className={`button ${styles.shareNetwork}`} network="Bluesky">
+          <div className={`${styles.linkIcon} ${styles.blueskyIcon}`} />
         </ShareNetwork>
         <ShareNetwork url={redditUrl} className={`button ${styles.shareNetwork}`} network="Reddit">
           <div className={`${styles.linkIcon} ${styles.redditIcon}`} />

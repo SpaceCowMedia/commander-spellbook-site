@@ -39,7 +39,7 @@ const Footer: React.FC<Props> = ({ className, noMargin }) => {
             <h3 className={styles.header}>Community</h3>
             <a href="https://www.patreon.com/commanderspellbook">Patreon</a>
             <a href="https://discord.gg/DkAyVJG">Discord</a>
-            <a href="https://twitter.com/CommanderSpell">Twitter</a>
+            <a href="https://bsky.app/profile/commanderspellbook.com">Bluesky</a>
             <a href="https://github.com/EDHREC/commander-spellbook-site">Github</a>
             <a href="https://edhrec.com/combos">EDHREC</a>
             <a href="https://draftsim.com">Draftsim</a>
