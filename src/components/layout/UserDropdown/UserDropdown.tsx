@@ -20,6 +20,8 @@ const UserDropdown: React.FC = () => {
 
   const signOut = () => {
     CookieService.logout();
+    setUsername('');
+    setCsbIsStaff(false);
   };
 
   if (!username) {
@@ -35,6 +37,11 @@ const UserDropdown: React.FC = () => {
           <Link href="/submit-a-combo">
             <button type="button" className={styles.dropdownItem}>
               Submit Combo
+            </button>
+          </Link>
+          <Link href="/my-submissions">
+            <button type="button" className={styles.dropdownItem}>
+              My Submissions
             </button>
           </Link>
           {csbIsStaff && (

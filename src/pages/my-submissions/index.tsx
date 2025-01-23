@@ -50,11 +50,11 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
                 onGoForward={goForward}
                 onGoBack={goBack}
               />
-              <div className={styles.suggestionsWrapper}>
+              <ul className={styles.suggestionsWrapper}>
                 {submissions.map((suggestion) => (
                   <ComboSubmissionItem key={suggestion.id} submission={suggestion} />
                 ))}
-              </div>
+              </ul>
               <SearchPagination
                 currentPage={pageNumber}
                 totalPages={totalPages}
