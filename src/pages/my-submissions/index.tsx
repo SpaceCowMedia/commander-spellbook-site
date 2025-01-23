@@ -8,7 +8,7 @@ import { GetServerSideProps } from 'next';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
-import ComboSubmission from 'components/submission/ComboSubmission/ComboSubmission';
+import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 
 const PAGE_SIZE = 20;
@@ -52,7 +52,7 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
               />
               <div className={styles.suggestionsWrapper}>
                 {submissions.map((suggestion) => (
-                  <ComboSubmission key={suggestion.id} submission={suggestion} />
+                  <ComboSubmissionItem key={suggestion.id} submission={suggestion} />
                 ))}
               </div>
               <SearchPagination

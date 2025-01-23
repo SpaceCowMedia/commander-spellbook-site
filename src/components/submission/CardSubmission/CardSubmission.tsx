@@ -74,6 +74,15 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
             useValueForInput
             maxLength={256}
           />
+          <div>
+            <label className="font-bold">Scryfall query (optional):</label>
+            <input
+              className="border border-gray-250 rounded p-1 w-full"
+              value={(cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || ''}
+              onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
+              placeholder="(ex: t:creature)"
+            />
+          </div>
         </>
       )}
 
