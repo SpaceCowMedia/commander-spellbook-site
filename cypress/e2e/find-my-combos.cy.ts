@@ -1,5 +1,5 @@
 describe('Find My Combos', () => {
-  let testUrl = 'https://www.moxfield.com/decks/chDG34jh6E-vPEugnXO1BA';
+  let testUrl = 'https://archidekt.com/decks/11035094/drc_living_energy';
 
   it('can find a combo using url parameter', () => {
     cy.visit('/find-my-combos/?deckUrl=' + testUrl);
