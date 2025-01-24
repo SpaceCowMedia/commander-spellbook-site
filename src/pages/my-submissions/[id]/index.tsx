@@ -5,6 +5,7 @@ import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/Combo
 import { apiConfiguration } from 'services/api.service';
 import { VariantSuggestion, VariantSuggestionsApi } from '@spacecowmedia/spellbook-client';
 import CookieService from 'services/cookie.service';
+import TokenService from 'services/token.service';
 
 type Props = {
   submission: VariantSuggestion;
@@ -25,8 +26,8 @@ const EditSubmission: React.FC<Props> = ({ submission }) => {
 export default EditSubmission;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const csbUsername = CookieService.get('csbUsername', { req: context.req, res: context.res });
-  const csbJwt = CookieService.get('csbJwt', { req: context.req, res: context.res });
+  const csbUsername = await CookieService.get<Promise<string>>('csbUsername', { req: context.req, res: context.res });
+  const csbJwt = await TokenService.getTokenFromServerContext(context);
   const submissionIdRaw = context.params?.id;
   if (!csbUsername || !csbJwt) {
     return {

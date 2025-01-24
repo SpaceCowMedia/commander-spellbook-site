@@ -3,6 +3,7 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
 import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import CookieService from 'services/cookie.service';
+import TokenService from 'services/token.service';
 
 const SubmitACombo: React.FC = () => {
   return (
@@ -20,7 +21,7 @@ export default SubmitACombo;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const csbUsername = CookieService.get('csbUsername', { req: context.req, res: context.res });
-  const csbJwt = CookieService.get('csbJwt', { req: context.req, res: context.res });
+  const csbJwt = await TokenService.getTokenFromServerContext(context);
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {

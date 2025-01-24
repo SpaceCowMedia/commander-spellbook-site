@@ -10,6 +10,7 @@ import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
+import TokenService from 'services/token.service';
 
 const PAGE_SIZE = 20;
 
@@ -74,7 +75,7 @@ export default MySubmissions;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = await CookieService.get<Promise<string>>('csbUserId', { req: context.req, res: context.res });
-  const csbJwt = await CookieService.get<Promise<string>>('csbJwt', { req: context.req, res: context.res });
+  const csbJwt = await TokenService.getTokenFromServerContext(context);
   if (!userId || !csbJwt) {
     return {
       redirect: {

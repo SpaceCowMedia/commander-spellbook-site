@@ -8,6 +8,10 @@ const UserDropdown: React.FC = () => {
   const [csbIsStaff, setCsbIsStaff] = useState(false);
 
   useEffect(() => {
+    const csbJwt = CookieService.get('csbJwt');
+    if (!csbJwt) {
+      return;
+    }
     const csbUsername = CookieService.get('csbUsername');
     if (csbUsername) {
       setUsername(csbUsername);
@@ -25,7 +29,7 @@ const UserDropdown: React.FC = () => {
   };
 
   if (!username) {
-    return null;
+    return false;
   }
 
   return (
