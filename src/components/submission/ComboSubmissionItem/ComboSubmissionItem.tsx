@@ -1,5 +1,5 @@
 import { VariantSuggestion, VariantSuggestionsApi, VariantSuggestionStatusEnum } from '@spacecowmedia/spellbook-client';
-import styles from './ComboSubmissionItem.module.scss';
+import styles from './comboSubmissionItem.module.scss';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
