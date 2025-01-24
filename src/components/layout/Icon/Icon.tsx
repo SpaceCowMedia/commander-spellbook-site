@@ -36,6 +36,10 @@ import {
   faSun,
   faMoon,
   faCircleHalfStroke,
+  faPencil,
+  faQuestion,
+  faComments,
+  faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -88,6 +92,10 @@ const SPELLBOOK_FA_ICONS = {
   sun: faSun,
   moon: faMoon,
   halfStrokeCircle: faCircleHalfStroke,
+  pencil: faPencil,
+  question: faQuestion,
+  comments: faComments,
+  trash: faTrashCan,
 };
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;

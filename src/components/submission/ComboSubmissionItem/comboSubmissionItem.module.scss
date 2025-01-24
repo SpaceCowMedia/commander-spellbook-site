@@ -1,3 +1,27 @@
 .item {
-  @apply w-full;
+  @apply w-full rounded border-2 border-gray-500 dark:border-gray-600;
+}
+
+.itemContainer {
+  @apply flex flex-row align-middle justify-between gap-6 p-3;
+
+  .info {
+    @apply flex-col;
+  }
+
+  .title {
+    @apply text-xl;
+  }
+
+  .ingredients {
+
+  }
+
+  .results {
+
+  }
+
+  .icons {
+    @apply text-xl flex flex-col gap-4;
+  }
 }
