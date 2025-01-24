@@ -74,7 +74,8 @@ export default MySubmissions;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = await CookieService.get<Promise<string>>('csbUserId', { req: context.req, res: context.res });
-  if (!userId) {
+  const csbJwt = await CookieService.get<Promise<string>>('csbJwt', { req: context.req, res: context.res });
+  if (!userId || !csbJwt) {
     return {
       redirect: {
         destination: '/login?final=my-submissions',

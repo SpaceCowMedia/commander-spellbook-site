@@ -6,19 +6,15 @@
   @apply flex flex-row align-middle justify-between gap-6 p-3;
 
   .info {
-    @apply flex-col;
+    @apply flex flex-col gap-1;
   }
 
   .title {
     @apply text-xl;
   }
 
-  .ingredients {
-
-  }
-
-  .results {
-
+  .subtitle {
+    @apply text-sm;
   }
 
   .icons {

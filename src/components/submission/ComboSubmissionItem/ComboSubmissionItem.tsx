@@ -1,14 +1,25 @@
-import { VariantSuggestion, VariantSuggestionStatusEnum } from '@spacecowmedia/spellbook-client';
+import { VariantSuggestion, VariantSuggestionsApi, VariantSuggestionStatusEnum } from '@spacecowmedia/spellbook-client';
 import styles from './ComboSubmissionItem.module.scss';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
+import Modal from 'components/ui/Modal/Modal';
+import { apiConfiguration } from 'services/api.service';
+import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 
 type Props = {
   submission: VariantSuggestion;
 };
 
 const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  if (deleted) {
+    return false;
+  }
+  const configuration = apiConfiguration();
+  const suggestionsApi = new VariantSuggestionsApi(configuration);
+
   const submissionIngredients = submission.uses
     .map((u) => u.card)
     .concat(submission.requires.map((r) => r.template))
@@ -26,16 +37,40 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
             : submission.status == VariantSuggestionStatusEnum.Pa
               ? 'Pending Approval'
               : 'Unknown';
+
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('delete');
+    setModalOpen(false);
+    suggestionsApi
+      .variantSuggestionsDestroy({
+        id: submission.id,
+      })
+      .then(() => {
+        setDeleted(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert('An error occurred while deleting the submission.');
+      });
   };
+
+  const handleModalOpen = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setModalOpen(true);
+  };
+
   let result = (
     <div className={styles.itemContainer}>
       <div className={styles.info}>
-        <h2 className={styles.title}>Combo Suggestion #{submission.id}</h2>
-        <div className={styles.ingredients}>Cards: {submissionIngredients}</div>
-        <div className={styles.results}>Results: {submissionResults}</div>
+        <h2 className={styles.title}>#{submission.id}</h2>
+        <div className={styles.ingredients}>
+          <h3 className={styles.subtitle}>Cards</h3>
+          <TextWithMagicSymbol text={submissionIngredients} />
+        </div>
+        <div className={styles.results}>
+          <h3 className={styles.subtitle}>Results</h3>
+          <TextWithMagicSymbol text={submissionResults} />
+        </div>
       </div>
       <div className={styles.icons}>
         <div className={styles.status} title={statusAsText}>
@@ -46,7 +81,9 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
           ) : submission.status == VariantSuggestionStatusEnum.R ? (
             <Icon name="cross" />
           ) : submission.status == VariantSuggestionStatusEnum.N ? (
-            <Icon name="pencil" />
+            <Link href={`/my-submissions/${submission.id}`} key={submission.id}>
+              <Icon name="pencil" />
+            </Link>
           ) : submission.status == VariantSuggestionStatusEnum.Ad ? (
             <Icon name="comments" />
           ) : (
@@ -54,20 +91,39 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
           )}
         </div>
         {submission.status == VariantSuggestionStatusEnum.N && (
-          <div className={styles.action} title="Delete this submission" onClick={handleDelete}>
-            <Icon name="trash" />
-          </div>
+          <>
+            <button className={styles.action} title="Delete this submission" onClick={handleModalOpen}>
+              <Icon name="trash" />
+            </button>
+            <Modal
+              onClose={() => setModalOpen(false)}
+              open={modalOpen}
+              footer={
+                <>
+                  <button onClick={() => setModalOpen(false)} className="button">
+                    Cancel
+                  </button>
+                  <button onClick={handleDelete} className="button">
+                    Delete
+                  </button>
+                </>
+              }
+            >
+              <h2 className="text-xl">Are you sure you want to delete this submission?</h2>
+              <p>
+                Submission #{submission.id}
+                <br />
+                {submissionIngredients}
+                <br />
+                <br />
+                This action cannot be undone.
+              </p>
+            </Modal>
+          </>
         )}
       </div>
     </div>
   );
-  if (submission.status == VariantSuggestionStatusEnum.N) {
-    result = (
-      <Link href={`/my-submissions/${submission.id}`} key={submission.id}>
-        {result}
-      </Link>
-    );
-  }
   return <li className={styles.item}>{result}</li>;
 };
 
