@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_TEST } = require('next/constants');
 
-const beta = process.env.BUILD_TYPE === 'beta' ? 'beta' : '';
+const beta = process.env.BUILD_TYPE === 'dev' ? 'dev-' : '';
 
 const OPEN_CORS_HEADERS = [
   // Allow for specific domains to have access or * for all
