@@ -4,7 +4,7 @@ import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
 import ScryfallResultsModal from 'components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal';
-import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 type Props = {
   text: string;

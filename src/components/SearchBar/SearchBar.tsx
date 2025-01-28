@@ -5,7 +5,7 @@ import { NextRouter, useRouter } from 'next/router';
 import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { useCookies } from 'react-cookie';
 import { apiConfiguration } from 'services/api.service';
-import { VariantsApi } from '@spacecowmedia/spellbook-client';
+import { VariantsApi } from '@space-cow-media/spellbook-client';
 
 type Props = {
   onHomepage?: boolean;

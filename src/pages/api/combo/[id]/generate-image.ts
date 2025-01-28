@@ -1,5 +1,5 @@
 import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
-import { VariantsApi } from '@spacecowmedia/spellbook-client';
+import { VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverPath from 'lib/serverPath';

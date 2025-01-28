@@ -4,7 +4,7 @@ import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
-import { Deck, Variant, VariantPrices } from '@spacecowmedia/spellbook-client';
+import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React from 'react';
 
 type ResultProps = {

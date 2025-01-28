@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import CookieService from './cookie.service';
 import { Cookies } from 'react-cookie';
 import tokenService from './token.service';
-import { Configuration, HTTPHeaders } from '@spacecowmedia/spellbook-client';
+import { Configuration, HTTPHeaders } from '@space-cow-media/spellbook-client';
 
 export function apiConfiguration(serverContext?: GetServerSidePropsContext) {
   const _cookies = serverContext ? new Cookies(serverContext.req.cookies) : CookieService;

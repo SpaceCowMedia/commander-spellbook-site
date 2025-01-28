@@ -10,7 +10,7 @@ import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 type Props = {
   scryfallApiUrl: string;
   quantity?: number;
-  scryfallQuery?: string;
+  scryfallQuery?: string | null;
   textTrigger?: React.ReactNode;
   count?: number;
   title?: string;

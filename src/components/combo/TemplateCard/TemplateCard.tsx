@@ -7,7 +7,7 @@ import Loader from 'components/layout/Loader/Loader';
 import ScryfallResultsModal from 'components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal';
 import { ScryfallCard } from '@scryfall/api-types';
 import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsWheel/ScryfallResultsWheel';
-import { TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 type Props = {
   template: TemplateInVariant;

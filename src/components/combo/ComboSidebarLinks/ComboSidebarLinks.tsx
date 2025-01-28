@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ShareComboButtons from './ShareComboButtons/ShareComboButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
-import { Variant } from '@spacecowmedia/spellbook-client';
+import { Variant } from '@space-cow-media/spellbook-client';
 import { useCookies } from 'react-cookie';
 
 type Props = {

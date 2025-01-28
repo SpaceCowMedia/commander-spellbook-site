@@ -3,7 +3,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from 'react';
 import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 type Props = {
   title: string;

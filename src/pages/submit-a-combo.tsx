@@ -22,7 +22,7 @@ import {
   ResponseError,
   TemplateRequiredInVariantSuggestionRequest,
   VariantSuggestionsApi,
-} from '@spacecowmedia/spellbook-client';
+} from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
 const SubmitACombo: React.FC = () => {

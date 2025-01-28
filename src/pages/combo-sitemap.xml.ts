@@ -1,4 +1,4 @@
-import { Variant } from '@spacecowmedia/spellbook-client';
+import { Variant } from '@space-cow-media/spellbook-client';
 import { NextPageContext } from 'next';
 
 type SitemapCache = {

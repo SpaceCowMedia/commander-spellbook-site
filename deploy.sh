@@ -105,7 +105,7 @@ aws_setup_profile
 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
 ## Client build
-docker build -f Dockerfile --platform linux/amd64 . -t spellbook-client:latest
+docker build -f Dockerfile --build-arg build_type=$APP_ENVIRONMENT --platform linux/amd64 . -t spellbook-client:latest
 
 # Upload static files to S3
 id=$(docker create spellbook-client:latest)
@@ -146,11 +146,11 @@ docker tag spellbook-client:latest $ECR_REGISTRY/spellbook-$APP_ENVIRONMENT-ecr:
 docker push --all-tags $ECR_REGISTRY/spellbook-$APP_ENVIRONMENT-ecr
 
 ## Configure kubectl to connect to your cluster
-#aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME
+aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME
 #
 ## Apply Kubernetes configuration
-#kubectl apply -k .kubernetes/app/$APP_ENVIRONMENT/
+kubectl apply -k .kubernetes/app/$APP_ENVIRONMENT/
 #
 ## Rollout pods
-#kubectl rollout restart deployment/spellbook-api -n spellbook-$APP_ENVIRONMENT
-#kubectl rollout status deployment/spellbook-api -n spellbook-$APP_ENVIRONMENT --timeout=600s
+kubectl rollout restart deployment/spellbook-client -n spellbook-$APP_ENVIRONMENT
+kubectl rollout status deployment/spellbook-client -n spellbook-$APP_ENVIRONMENT --timeout=600s

@@ -3,7 +3,7 @@ import React from 'react';
 
 import CardImage from '../../layout/CardImage/CardImage';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
-import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 type Props = {
   cards: CardInVariant[];

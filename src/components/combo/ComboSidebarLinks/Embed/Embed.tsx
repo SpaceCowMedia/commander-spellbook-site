@@ -1,7 +1,7 @@
 import Icon from 'components/layout/Icon/Icon';
 import { useState } from 'react';
 import Modal from 'components/ui/Modal/Modal';
-import { Variant } from '@spacecowmedia/spellbook-client';
+import { Variant } from '@space-cow-media/spellbook-client';
 
 type Props = {
   combo: Variant;

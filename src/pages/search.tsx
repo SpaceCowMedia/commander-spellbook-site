@@ -9,7 +9,7 @@ import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
-import { Variant, VariantsApi } from '@spacecowmedia/spellbook-client';
+import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 

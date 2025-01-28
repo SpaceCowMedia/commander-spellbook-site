@@ -1,6 +1,6 @@
 import React from 'react';
 import ManaSymbol from '../ManaSymbol/ManaSymbol';
-import { IdentityEnum } from '@spacecowmedia/spellbook-client';
+import { IdentityEnum } from '@space-cow-media/spellbook-client';
 
 type Props = {
   identity: IdentityEnum;

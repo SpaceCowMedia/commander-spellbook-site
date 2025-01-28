@@ -12,22 +12,13 @@ RUN apk add --no-cache libc6-compat \
     pango-dev \
     imagemagick \
     fontconfig \
-    font-noto 
+    font-noto
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-# If running docker build locally create a .github_token file with the following
-# <yourGitHubToken>
-# Then run the following command to build the image
-#    docker build --secret id=github_token,src=.github_token -t spellbook-client:latest .
-# Which you can run with
-#    docker run -p 3000:3000 spellbook-client:latest
-RUN --mount=type=secret,required=true,id=github_token,env=GITHUB_TOKEN \
-    echo '@spacecowmedia:registry="https://npm.pkg.github.com"' >> .npmrc && \
-    echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> .npmrc && \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
     elif [ -f package-lock.json ]; then npm ci; \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
     else echo "Lockfile not found." && exit 101; \
@@ -41,12 +32,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-ENV NEXT_TELEMETRY_DISABLED=1
-
 ARG build_type=prod
 ENV BUILD_TYPE=$build_type
+
+RUN if [ "$BUILD_TYPE" != "prod" ]; then \
+    echo "NEXT_PUBLIC_CLIENT_URL=https://$BUILD_TYPE.commanderspellbook.com" >> .env.production; \
+    echo "NEXT_PUBLIC_EDITOR_BACKEND_URL=https://$BUILD_TYPE-backend.commanderspellbook.com" >> .env.production; \
+    fi
+
 RUN yarn install
 RUN yarn build
 
@@ -62,7 +55,7 @@ RUN apk add --no-cache build-base \
     pango \
     librsvg \
     fontconfig \
-    font-noto 
+    font-noto
 
 # Ensure symbolic links for musl compatibility
 RUN ln -s /usr/lib/libcairo.so.2 /usr/lib/libcairo.so || true && \
