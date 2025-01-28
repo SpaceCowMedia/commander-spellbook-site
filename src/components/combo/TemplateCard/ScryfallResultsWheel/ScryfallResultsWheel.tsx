@@ -1,31 +1,86 @@
-import { ScryfallCard } from '@scryfall/api-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
-import { getScryfallImage } from 'lib/getScryfallImage';
 import edhrecService from 'services/edhrec.service';
+import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
+import Loader from 'components/layout/Loader/Loader';
 
 type Props = {
-  cards: ScryfallCard.Any[];
+  fetchResults: (_page: number) => Promise<ScryfallResultsPage>;
 };
 
-const ScryfallResultsWheel: React.FC<Props> = ({ cards }) => {
+const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
+  const [pageCount, setPageCount] = useState<number>(0);
   const [index, setIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState<ScryfallResultsPage | undefined>(undefined);
+  const [pageSize, setPageSize] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const next = () => {
-    if (index === cards.length - 1) {
-      setIndex(0);
-    } else {
-      setIndex(index + 1);
+    let newIndex = index + 1;
+    let newPageIndex = pageIndex;
+    if (newIndex >= pageSize || (currentPage !== undefined && newIndex >= currentPage.results.length)) {
+      newIndex = 0;
+      newPageIndex += 1;
+    }
+    if (newPageIndex >= pageCount) {
+      newPageIndex = 0;
+    }
+    setIndex(newIndex);
+    if (pageIndex !== newPageIndex) {
+      setPageIndex(newPageIndex);
     }
   };
 
   const previous = () => {
-    if (index === 0) {
-      setIndex(cards.length - 1);
-    } else {
-      setIndex(index - 1);
+    let newIndex = index - 1;
+    let newPageIndex = pageIndex;
+    if (newIndex < 0) {
+      newIndex = pageSize - 1;
+      newPageIndex -= 1;
+    }
+    if (newPageIndex < 0) {
+      newPageIndex = pageCount - 1;
+    }
+    setIndex(newIndex);
+    if (pageIndex !== newPageIndex) {
+      setPageIndex(newPageIndex);
     }
   };
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    fetchResults(pageIndex)
+      .then((page) => {
+        let size = pageSize;
+        if (pageIndex === 0 && page.results.length !== pageSize) {
+          size = page.results.length;
+          setPageSize(size);
+        }
+        const count = Math.ceil((page.count ?? 0) / size);
+        if (count !== pageCount) {
+          setPageCount(count);
+        }
+        setCurrentPage(page);
+        setIndex(Math.min(index, page.results.length - 1));
+      })
+      .catch((error) => {
+        console.error(error);
+        setPageCount(0);
+        setCurrentPage(undefined);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [pageIndex]);
+
+  const current = currentPage?.results[index];
+  if (loading || current === undefined) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -33,10 +88,12 @@ const ScryfallResultsWheel: React.FC<Props> = ({ cards }) => {
         <Icon name="chevronLeft" onClick={previous} className="cursor-pointer text-white text-2xl" />
       </div>
       <div className="h-full flex justify-center items-center">
-        <a href={edhrecService.getCardUrl(cards[index].name)} target="_blank" rel="noopener noreferrer">
+        <a href={edhrecService.getCardUrl(current.name ?? '')} target="_blank" rel="noopener noreferrer">
           <div
-            className="rounded-xl transition-all ease-in-out duration-300 w-[160px] h-[225px] bg-cover"
-            style={{ backgroundImage: `url(${getScryfallImage(cards[index])[0]})` }}
+            className="rounded-xl w-[160px] h-[225px] bg-cover"
+            style={{
+              backgroundImage: `url(${ScryfallService.getScryfallImage(current)[0]})`,
+            }}
           />
         </a>
       </div>

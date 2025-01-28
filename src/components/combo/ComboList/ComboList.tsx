@@ -3,7 +3,8 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from 'react';
 import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {
   title: string;
@@ -15,6 +16,7 @@ type Props = {
   id?: string;
   className?: string;
   appendPeriod?: boolean;
+  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 };
 
 const ComboList: React.FC<Props> = ({
@@ -27,6 +29,7 @@ const ComboList: React.FC<Props> = ({
   id,
   className,
   appendPeriod,
+  fetchTemplateReplacements,
 }) => {
   iterations = iterations.filter((item) => item.trim() !== '');
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
@@ -47,6 +50,7 @@ const ComboList: React.FC<Props> = ({
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
                 templatesInCombo={templatesInCombo}
+                fetchTemplateReplacements={fetchTemplateReplacements}
               />
             </li>
           ))}
