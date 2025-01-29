@@ -15,6 +15,7 @@ import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
   FindMyCombosApi,
   ResponseError,
+  Template,
   Variant,
   VariantAliasesApi,
   VariantsApi,
@@ -26,6 +27,7 @@ import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
 import { DEFAULT_ORDERING } from 'lib/constants';
+import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {
   combo?: Variant;
@@ -47,6 +49,25 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
+  const templateReplacements = new Map<number, Promise<ScryfallResultsPage>[]>();
+
+  async function fetchResultsPage(template: Template, page: number): Promise<ScryfallResultsPage> {
+    let cache = templateReplacements.get(template.id);
+    if (!cache) {
+      cache = [];
+      templateReplacements.set(template.id, cache);
+    }
+    for (const cachedPage of cache) {
+      const r = await cachedPage;
+      if (r.page == page) {
+        return r;
+      }
+    }
+    const newPage = ScryfallService.templateReplacements(template, page);
+    cache.push(newPage);
+    return newPage;
+  }
+
   const loadVariants = async (combo: Variant) => {
     setVariantsLoading(true);
     const variants = await variantsApi.variantsList({
@@ -119,7 +140,12 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
           useCropDimensions
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
-        <CardGroup key={combo.id} cards={combo.uses} templates={combo.requires} />
+        <CardGroup
+          key={combo.id}
+          cards={combo.uses}
+          templates={combo.requires}
+          fetchTemplateReplacements={fetchResultsPage}
+        />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
@@ -134,6 +160,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               iterations={cardNamesWithQuantities.concat(templateNamesWithQuantities)}
+              fetchTemplateReplacements={fetchResultsPage}
             />
 
             <PrerequisiteList
@@ -141,6 +168,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               id="combo-prerequisites"
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
+              fetchTemplateReplacements={fetchResultsPage}
             />
 
             {steps != null && (
@@ -152,6 +180,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                 templatesInCombo={combo.requires}
                 showNumbers
                 appendPeriod
+                fetchTemplateReplacements={fetchResultsPage}
               />
             )}
 
@@ -163,6 +192,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
                 cardsInCombo={combo.uses}
                 templatesInCombo={combo.requires}
                 appendPeriod
+                fetchTemplateReplacements={fetchResultsPage}
               />
             )}
 
@@ -173,9 +203,17 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               appendPeriod
+              fetchTemplateReplacements={fetchResultsPage}
             />
 
-            {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}
+            {metaData.length > 0 && (
+              <ComboList
+                title="Metadata"
+                id="combo-metadata"
+                iterations={metaData}
+                fetchTemplateReplacements={fetchResultsPage}
+              />
+            )}
           </div>
 
           <aside className="w-full md:w-1/3 text-center">

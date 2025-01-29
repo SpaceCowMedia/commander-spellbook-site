@@ -1,6 +1,8 @@
-import { GetServerSidePropsContext, NextPageContext } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import CookieService from './cookie.service';
-import { Cookies } from 'react-cookie';
+import { getCookies } from 'cookies-next';
+import { apiConfiguration } from './api.service';
+import { TokenApi, TokenObtainPair } from '@spacecowmedia/spellbook-client';
 
 export function timeInSecondsToEpoch(): number {
   return Math.round(Date.now() / 1000);
@@ -15,12 +17,7 @@ export type DecodedJWTType = {
   token_type?: string;
 };
 
-type RefreshResponse = {
-  refresh: string;
-  access: string;
-};
-
-function decodeJwt(jwt: string): DecodedJWTType | null {
+function decodeJwt(jwt?: string): DecodedJWTType | null {
   if (!jwt) {
     return null;
   }
@@ -46,13 +43,13 @@ async function getToken(): Promise<string> {
   const refreshToken = CookieService.get('csbRefresh') || null;
   const jwt = CookieService.get('csbJwt') || null;
 
-  if (!jwt && !refreshToken) {
-    return '';
-  }
-
-  if (!jwt && refreshToken) {
-    const result = await fetchNewToken();
-    return setToken(result);
+  if (!jwt) {
+    if (!refreshToken) {
+      return '';
+    } else {
+      const result = await fetchNewToken();
+      return setToken(result);
+    }
   }
 
   const decodedToken = decodeJwt(jwt);
@@ -72,20 +69,18 @@ async function getToken(): Promise<string> {
   return setToken(result);
 }
 
-async function getTokenFromServerContext(
-  serverContext?: GetServerSidePropsContext,
-  pageContext?: NextPageContext,
-): Promise<string> {
-  const jwt = CookieService.get('csbJwt', serverContext?.req.cookies || pageContext?.req?.headers?.cookie);
-  const refreshToken = CookieService.get('csbRefresh', serverContext?.req.cookies || pageContext?.req?.headers?.cookie);
+async function getTokenFromServerContext(serverContext?: GetServerSidePropsContext): Promise<string> {
+  const cookies = await getCookies({ ...serverContext });
+  const jwt = cookies?.csbJwt;
+  const refreshToken = cookies?.csbRefresh;
 
-  if (!jwt && !refreshToken) {
-    return Promise.resolve('');
-  }
-
-  if (!jwt && refreshToken) {
-    const r = await fetchNewToken(refreshToken);
-    return setToken(r, serverContext);
+  if (!jwt) {
+    if (!refreshToken) {
+      return Promise.resolve('');
+    } else {
+      const r = await fetchNewToken(refreshToken);
+      return setToken(r, serverContext);
+    }
   }
 
   const decodedToken = decodeJwt(jwt);
@@ -104,46 +99,46 @@ async function getTokenFromServerContext(
   return setToken(result, serverContext);
 }
 
-function setToken({ access, refresh }: RefreshResponse, serverContext?: GetServerSidePropsContext) {
+function setToken({ access, refresh }: TokenObtainPair, serverContext?: GetServerSidePropsContext) {
   const jwt = access;
 
-  const cookies = new Cookies();
-  CookieService.set('csbJwt', jwt, 'day', cookies);
+  CookieService.set('csbJwt', jwt, 'day', { req: serverContext?.req, res: serverContext?.res });
   if (refresh) {
-    CookieService.set('csbRefresh', refresh, 'day', cookies);
-  }
-  const cookiesDict = cookies.getAll() as Record<string, string>;
-  const cookieValues = [];
-  for (const key in cookiesDict) {
-    cookieValues.push(`${key}=${cookiesDict[key]}; Path=/; Max-Age={expirationDurations.day}; SameSite=Strict`);
-    serverContext?.res.setHeader('Set-Cookie', cookieValues);
+    CookieService.set('csbRefresh', refresh, 'day', { req: serverContext?.req, res: serverContext?.res });
   }
 
   return jwt;
 }
 
-async function fetchNewToken(providedRefreshToken?: string) {
-  // TODO: use spellbook client to fetch new token
-  const refreshToken = providedRefreshToken ? providedRefreshToken : CookieService.get('csbRefresh') || null;
+async function fetchNewToken(
+  providedRefreshToken?: string,
+  serverContext?: GetServerSidePropsContext,
+): Promise<TokenObtainPair> {
+  const refreshToken = providedRefreshToken
+    ? providedRefreshToken
+    : CookieService.get('csbRefresh', { req: serverContext?.req, res: serverContext?.res }) || null;
 
-  console.log('fetching new token');
+  if (!refreshToken) {
+    CookieService.logout();
+    return { access: '', refresh: '' };
+  }
+
+  const configuration = apiConfiguration(serverContext);
+  const tokensApi = new TokenApi(configuration);
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/token/refresh/`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    const response = await tokensApi.tokenRefreshCreate({
+      tokenRefreshRequest: {
+        refresh: refreshToken,
       },
-      body: JSON.stringify({ refresh: refreshToken }),
     });
-    if (!response.ok) {
-      throw new Error('Refresh fetch failed');
-    }
-    return response.json();
+    return {
+      refresh: refreshToken,
+      ...response,
+    };
   } catch (_err) {
     CookieService.logout();
-    return '';
+    return { access: '', refresh: '' };
   }
 }
 

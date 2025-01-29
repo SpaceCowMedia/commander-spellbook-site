@@ -69,6 +69,11 @@ export const ComboResult: React.FC<ResultProps> = ({
     ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
+  const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'light';
+  const stateBasedColorInverse = combo.status === 'OK' ? 'light' : 'dark';
+  const stateBasedTooltip =
+    combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
+
   return (
     <Link
       href={`/combo/${combo.id}`}
@@ -79,11 +84,12 @@ export const ComboResult: React.FC<ResultProps> = ({
     >
       <div className="flex flex-col">
         <div
-          className={`flex items-center flex-grow flex-col ${combo.status === 'OK' ? 'bg-dark' : combo.status === 'E' ? 'bg-[#888888]' : 'bg-light'} text-white`}
+          className={`flex items-center flex-grow flex-col bg-${stateBasedColor} text-white`}
+          title={stateBasedTooltip}
         >
           <ColorIdentity identity={combo.identity} size="small" />
         </div>
-        <div className="flex-grow border-b-2 border-light">
+        <div className={`flex-grow  ${styles.comboResultSection}`}>
           <div className="py-1">
             <span className="sr-only">Cards in combo:</span>
             {combo.uses.map(({ card, quantity }) => (
@@ -105,16 +111,16 @@ export const ComboResult: React.FC<ResultProps> = ({
               </CardTooltip>
             ))}
             {combo.requires.length > 0 && (
-              <div className="prerequisites pl-3 pr-3">
-                <span className="text-gray-500">
+              <div className={`${styles.prerequisites} pl-3 pr-3`}>
+                <span>
                   +{combo.requires.reduce((q, r) => q + r.quantity, 0)} other card
                   {combo.requires.reduce((q, r) => q + r.quantity, 0) > 1 ? 's' : ''}
                 </span>
               </div>
             )}
             {prereqCount > 0 && (
-              <div className="prerequisites pl-3 pr-3">
-                <span className="text-gray-500">
+              <div className={`${styles.prerequisites} pl-3 pr-3`}>
+                <span>
                   +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
                 </span>
               </div>
@@ -133,14 +139,17 @@ export const ComboResult: React.FC<ResultProps> = ({
       <div className="flex items-center flex-grow flex-col">
         <div className="flex-grow" />
         {!hideVariants && combo.variantCount > 1 && (
-          <div className="w-full bg-pink-300 text-right">
+          <div className={styles.variantBanner}>
             <span className="pl-3 pr-3">
               + {combo.variantCount - 1} variant{combo.variantCount > 2 ? 's' : ''}
             </span>
           </div>
         )}
         {sortStatMessage(combo) && (
-          <div className="sort-footer w-full py-1 text-center flex-shrink bg-dark text-white">
+          <div
+            className={`sort-footer w-full py-1 text-center flex-shrink bg-${stateBasedColor} text-${stateBasedColorInverse}`}
+            title={stateBasedTooltip}
+          >
             {sortStatMessage(combo)}
           </div>
         )}

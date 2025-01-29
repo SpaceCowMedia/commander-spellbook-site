@@ -163,6 +163,14 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     index++;
   }
   // Add any other prerequisites
+  const commanders = cardsAndTemplates.filter((card) => card.mustBeCommander).map((card) => cardNameMap[card.name]);
+  if (commanders.length > 0) {
+    output.push({
+      zones: ['commander'],
+      description: `${comaAndOrJoin(commanders)} must be your commander${commanders.length > 1 ? 's' : ''}.`,
+    });
+  }
+
   if (variant.otherPrerequisites) {
     variant.otherPrerequisites
       .split(/\.\s+/gi)

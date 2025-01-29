@@ -1,26 +1,35 @@
 import styles from './userDropdown.module.scss';
 import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import CookieService from '../../../services/cookie.service';
 import Link from 'next/link';
 
 const UserDropdown: React.FC = () => {
-  const [cookies, _setCookies] = useCookies(['csbUsername', 'csbIsStaff']);
   const [username, setUsername] = useState('');
+  const [csbIsStaff, setCsbIsStaff] = useState(false);
 
   useEffect(() => {
-    if (cookies.csbUsername) {
-      setUsername(cookies.csbUsername);
+    const csbJwt = CookieService.get('csbJwt');
+    if (!csbJwt) {
+      return;
+    }
+    const csbUsername = CookieService.get('csbUsername');
+    if (csbUsername) {
+      setUsername(csbUsername);
+    }
+    const isStaff = CookieService.get('csbIsStaff') === 'true';
+    if (isStaff) {
+      setCsbIsStaff(true);
     }
   }, []);
 
   const signOut = () => {
     CookieService.logout();
     setUsername('');
+    setCsbIsStaff(false);
   };
 
   if (!username) {
-    return null;
+    return false;
   }
 
   return (
@@ -34,7 +43,12 @@ const UserDropdown: React.FC = () => {
               Submit Combo
             </button>
           </Link>
-          {cookies.csbIsStaff && (
+          <Link href="/my-submissions">
+            <button type="button" className={styles.dropdownItem}>
+              My Submissions
+            </button>
+          </Link>
+          {csbIsStaff && (
             <Link onClick={() => console.log('hello')} href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/`}>
               <button type="button" className={styles.dropdownItem}>
                 Admin Page

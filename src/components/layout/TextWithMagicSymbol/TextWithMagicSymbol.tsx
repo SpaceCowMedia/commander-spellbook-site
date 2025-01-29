@@ -3,17 +3,25 @@ import styles from './textWithMagicSymbol.module.scss';
 import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
-import ScryfallResultsModal from 'components/combo/TemplateCard/ScryfallResultsModal/ScryfallResultsModal';
-import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
+import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
+import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {
   text: string;
   cardsInCombo?: CardInVariant[];
   includeCardLinks?: boolean;
   templatesInCombo?: TemplateInVariant[];
+  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 };
 
-const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], includeCardLinks, templatesInCombo = [] }) => {
+const TextWithMagicSymbol: React.FC<Props> = ({
+  text,
+  cardsInCombo = [],
+  includeCardLinks,
+  templatesInCombo = [],
+  fetchTemplateReplacements,
+}) => {
   let matchableValuesString = '';
 
   const cardNames = cardsInCombo.map((card) => card.card.name);
@@ -43,8 +51,9 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
 
   let filteredText = text;
   if (templatesInCombo.length) {
-    templatesInCombo?.forEach((template) => {
+    templatesInCombo.forEach((template) => {
       filteredText = filteredText.replace(template.template.name, `template${template.template.id}`);
+      filteredText = filteredText.replace(template.template.name.toLowerCase(), `template${template.template.id}`);
     });
     matchableValuesString += templatesInCombo.map((template) => `template${template.template.id}`).join('|') + '|';
   }
@@ -136,14 +145,15 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
               )}
             </CardTooltip>
           )}
-          {item.nodeType === 'template' && (
-            <ScryfallResultsModal
-              scryfallApiUrl={item.template?.template.scryfallApi || ''}
-              textTrigger={
+          {item.nodeType === 'template' && item.template && (
+            <TemplateReplacementsModal
+              template={item.template}
+              textTrigger={(_) => (
                 <span className="text-pink-800 cursor-pointer">
-                  <TextWithMagicSymbol text={item.template?.template.name || ''} />
+                  <TextWithMagicSymbol text={item.template!.template.name} />
                 </span>
-              }
+              )}
+              fetchTemplateReplacements={fetchTemplateReplacements}
             />
           )}
           {item.nodeType !== 'card' && item.nodeType !== 'image' && item.nodeType !== 'template' && (

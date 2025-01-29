@@ -24,6 +24,7 @@ const Footer: React.FC<Props> = ({ className, noMargin }) => {
             <Link href="/syntax-guide/">Syntax Guide</Link>
             <Link href="/random/">Random Combo</Link>
             <Link href="/find-my-combos/">Find My Combos</Link>
+            <Link href="/search/?q=is:featured">Featured Combos</Link>
           </div>
           <div className={styles.linkCollection}>
             <h3 className={styles.header}>Commander Spellbook</h3>
@@ -38,7 +39,7 @@ const Footer: React.FC<Props> = ({ className, noMargin }) => {
             <h3 className={styles.header}>Community</h3>
             <a href="https://www.patreon.com/commanderspellbook">Patreon</a>
             <a href="https://discord.gg/DkAyVJG">Discord</a>
-            <a href="https://twitter.com/CommanderSpell">Twitter</a>
+            <a href="https://bsky.app/profile/commanderspellbook.com">Bluesky</a>
             <a href="https://github.com/EDHREC/commander-spellbook-site">Github</a>
             <a href="https://edhrec.com/combos">EDHREC</a>
             <a href="https://draftsim.com">Draftsim</a>
@@ -54,7 +55,7 @@ const Footer: React.FC<Props> = ({ className, noMargin }) => {
           </p>
           <p className="my-4">
             Commander Spellbook utilizes icons provided by&nbsp;
-            <a href="https://fontawesome.com/">Font Awesome</a>&nbsp; according to the&nbsp;
+            <a href="https://fontawesome.com/">Font Awesome</a> according to the&nbsp;
             <a href="https://fontawesome.com/license">Font Awesome License</a>.
           </p>
         </div>

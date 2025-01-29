@@ -72,9 +72,17 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
             placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
             // hasError={!!input.error}
             useValueForInput
-            matchAgainstOptionLabel
             maxLength={256}
           />
+          <div>
+            <label className="font-bold">Scryfall query (optional):</label>
+            <input
+              className="border border-gray-250 rounded p-1 w-full"
+              value={(cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || ''}
+              onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
+              placeholder="(ex: t:creature)"
+            />
+          </div>
         </>
       )}
 
@@ -91,7 +99,6 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
             placeholder="Search for a card..."
             // hasError={!!input.error}
             useValueForInput
-            matchAgainstOptionLabel
             maxLength={256}
           />
         </>
@@ -114,6 +121,17 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           value={cardOrTemplate.zoneLocations.map(
             (zone) => ZONE_OPTIONS.find((z) => z.value === zone) || { value: 'N/A', label: 'N/A' },
           )}
+          className="inputControl"
+          styles={{
+            control: (base) => ({
+              ...base,
+              background: 'inherit',
+            }),
+            menu: (base) => ({
+              ...base,
+              background: 'inherit',
+            }),
+          }}
         />
       </div>
 
