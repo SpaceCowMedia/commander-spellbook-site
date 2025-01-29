@@ -1,7 +1,8 @@
 import React from 'react';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
-import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import ComboSubmissionForm from '../components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 

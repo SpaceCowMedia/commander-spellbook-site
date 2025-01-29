@@ -5,7 +5,7 @@ import normalizeStringInput from '../../../lib/normalizeStringInput';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Loader from '../../layout/Loader/Loader';
 import { apiConfiguration } from 'services/api.service';
-import { FeaturesApi, TemplatesApi } from '@spacecowmedia/spellbook-client';
+import { FeaturesApi, TemplatesApi } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import { useDebounce } from 'use-debounce';
 

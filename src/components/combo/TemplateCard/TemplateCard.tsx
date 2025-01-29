@@ -5,7 +5,7 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import React from 'react';
 import TemplateReplacementsModal from 'components/combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsWheel/ScryfallResultsWheel';
-import { Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {

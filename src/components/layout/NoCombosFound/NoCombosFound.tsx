@@ -2,7 +2,7 @@ import styles from './noCombosFound.module.scss';
 import SplashPage from '../SplashPage/SplashPage';
 import Link from 'next/link';
 import ComboResults from 'components/search/ComboResults/ComboResults';
-import { Variant } from '@spacecowmedia/spellbook-client';
+import { Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 
 type Props = {

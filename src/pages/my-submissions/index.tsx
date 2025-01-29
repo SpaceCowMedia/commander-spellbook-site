@@ -1,5 +1,5 @@
 import React from 'react';
-import { VariantSuggestion, VariantSuggestionsApi } from '@spacecowmedia/spellbook-client';
+import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
 import { useRouter } from 'next/router';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';

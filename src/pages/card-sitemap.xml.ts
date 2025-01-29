@@ -1,4 +1,4 @@
-import { CardDetail, CardsApi } from '@spacecowmedia/spellbook-client';
+import { CardDetail, CardsApi } from '@space-cow-media/spellbook-client';
 import { NextPageContext } from 'next';
 import { apiConfiguration } from 'services/api.service';
 

@@ -1,4 +1,4 @@
-import { CardInVariant, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 export type ComboPrerequisites = {
   /* Zone either H, B, C, G, L, E or multiple of them */

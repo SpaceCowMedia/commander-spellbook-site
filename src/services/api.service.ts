@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import tokenService from './token.service';
-import { Configuration, HTTPHeaders } from '@spacecowmedia/spellbook-client';
+import { Configuration, HTTPHeaders } from '@space-cow-media/spellbook-client';
 
 export function apiConfiguration(serverContext?: GetServerSidePropsContext) {
   const headers: HTTPHeaders = {};

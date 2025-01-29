@@ -19,7 +19,7 @@ import {
   Variant,
   VariantAliasesApi,
   VariantsApi,
-} from '@spacecowmedia/spellbook-client';
+} from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import BulkApiService from 'services/bulk-api.service';
 import Loader from 'components/layout/Loader/Loader';

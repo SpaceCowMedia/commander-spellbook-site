@@ -5,7 +5,7 @@ import {
   CardUsedInVariantSuggestionRequest,
   TemplateRequiredInVariantSuggestionRequest,
   ZoneLocationsEnum,
-} from '@spacecowmedia/spellbook-client';
+} from '@space-cow-media/spellbook-client';
 
 const ZONE_OPTIONS = [
   { value: 'H', label: 'Hand' },

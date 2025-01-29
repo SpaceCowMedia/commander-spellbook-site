@@ -1,9 +1,8 @@
 import styles from './cardGroup.module.scss';
 import React from 'react';
-
 import CardImage from '../../layout/CardImage/CardImage';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
-import { CardInVariant, Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {

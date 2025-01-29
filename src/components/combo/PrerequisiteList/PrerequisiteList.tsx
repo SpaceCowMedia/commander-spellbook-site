@@ -2,7 +2,7 @@ import { ComboPrerequisites } from '../../../lib/types';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 

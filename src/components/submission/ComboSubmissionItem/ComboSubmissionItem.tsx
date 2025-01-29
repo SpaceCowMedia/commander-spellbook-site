@@ -1,4 +1,8 @@
-import { VariantSuggestion, VariantSuggestionsApi, VariantSuggestionStatusEnum } from '@spacecowmedia/spellbook-client';
+import {
+  VariantSuggestion,
+  VariantSuggestionsApi,
+  VariantSuggestionStatusEnum,
+} from '@space-cow-media/spellbook-client';
 import styles from './comboSubmissionItem.module.scss';
 import Link from 'next/link';
 import React, { useState } from 'react';

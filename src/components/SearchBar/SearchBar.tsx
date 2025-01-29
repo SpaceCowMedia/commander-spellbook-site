@@ -4,7 +4,7 @@ import styles from './searchBar.module.scss';
 import { NextRouter, useRouter } from 'next/router';
 import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
-import { VariantsApi } from '@spacecowmedia/spellbook-client';
+import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
 import CookieService from 'services/cookie.service';
 

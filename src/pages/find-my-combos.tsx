@@ -17,7 +17,7 @@ import {
   DeckToJSON,
   DeckFromJSON,
   ResponseError,
-} from '@spacecowmedia/spellbook-client';
+} from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { LEGALITY_FORMATS } from 'lib/types';

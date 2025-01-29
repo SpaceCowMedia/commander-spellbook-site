@@ -3,8 +3,8 @@ import styles from './textWithMagicSymbol.module.scss';
 import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
-import TemplateReplacementsModal from 'components/combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
-import { CardInVariant, Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
+import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {

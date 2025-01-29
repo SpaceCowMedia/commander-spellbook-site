@@ -8,7 +8,7 @@ import Link from 'next/link';
 import ExternalLink from '../../components/layout/ExternalLink/ExternalLink';
 import { useRouter } from 'next/router';
 import { apiConfiguration } from 'services/api.service';
-import { UsersApi } from '@spacecowmedia/spellbook-client';
+import { UsersApi } from '@space-cow-media/spellbook-client';
 
 const Login: React.FC = () => {
   const router = useRouter();

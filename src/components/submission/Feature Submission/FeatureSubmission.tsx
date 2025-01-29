@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
-import { FeatureProducedInVariantSuggestionRequest } from '@spacecowmedia/spellbook-client';
+import { FeatureProducedInVariantSuggestionRequest } from '@space-cow-media/spellbook-client';
 
 type Props = {
   feature: FeatureProducedInVariantSuggestionRequest;

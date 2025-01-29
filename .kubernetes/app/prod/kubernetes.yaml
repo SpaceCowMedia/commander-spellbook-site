@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spellbook-client
-  namespace: spellbook
+  namespace: spellbook-prod
 spec:
   selector:
     matchLabels:
@@ -20,6 +20,10 @@ spec:
       containers:
         - name: spellbook-client
           image: 083767677168.dkr.ecr.us-east-2.amazonaws.com/spellbook-client-prod-ecr:latest
+          resources:
+            requests:
+              cpu: 256m
+              memory: 512M
           env:
             - name: BUILD_TYPE
               value: "prod"
@@ -43,7 +47,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: spellbook-client-autoscaler
-  namespace: spellbook
+  namespace: spellbook-prod
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -58,7 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spellbook-client-service
-  namespace: spellbook
+  namespace: spellbook-prod
   labels:
     app: spellbook-client
     tier: web

@@ -1,5 +1,5 @@
 import { ComboPrerequisites, getName, getNameBeforeComma, getTypes } from './types';
-import { CardInVariant, TemplateInVariant, Variant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, TemplateInVariant, Variant } from '@space-cow-media/spellbook-client';
 
 const NONPERMANENT_TYPES = ['instant', 'sorcery'];
 

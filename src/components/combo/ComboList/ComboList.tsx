@@ -3,7 +3,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from 'react';
 import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
 type Props = {

@@ -5,7 +5,7 @@ import SpellbookHead from '../../components/SpellbookHead/SpellbookHead';
 import { useRouter } from 'next/router';
 import TokenService from '../../services/token.service';
 import CookieService from '../../services/cookie.service';
-import { TokenApi, UsersApi } from '@spacecowmedia/spellbook-client';
+import { TokenApi, UsersApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
 const Login: React.FC = () => {
