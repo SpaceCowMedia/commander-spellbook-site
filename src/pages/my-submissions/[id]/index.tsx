@@ -3,7 +3,7 @@ import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
 import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import { apiConfiguration } from 'services/api.service';
-import { VariantSuggestion, VariantSuggestionsApi } from '@spacecowmedia/spellbook-client';
+import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 

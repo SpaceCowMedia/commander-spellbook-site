@@ -21,7 +21,7 @@ import {
   TemplateRequiredInVariantSuggestionRequest,
   VariantSuggestion,
   VariantSuggestionsApi,
-} from '@spacecowmedia/spellbook-client';
+} from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
 type Props = {

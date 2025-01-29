@@ -1,5 +1,5 @@
 import { ScryfallCard } from '@scryfall/api-types';
-import { CardsApi, Template } from '@spacecowmedia/spellbook-client';
+import { CardsApi, Template } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import Card from 'scryfall-client/dist/models/card';
 import List from 'scryfall-client/dist/models/list';

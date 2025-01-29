@@ -4,7 +4,7 @@ import Dimmer from 'components/ui/Dimmer/Dimmer';
 import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { Template, TemplateInVariant } from '@spacecowmedia/spellbook-client';
+import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 import Card from 'scryfall-client/dist/models/card';
 import ScryfallService from 'services/scryfall.service';

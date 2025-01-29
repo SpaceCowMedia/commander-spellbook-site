@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import CookieService from './cookie.service';
 import { getCookies } from 'cookies-next';
 import { apiConfiguration } from './api.service';
-import { TokenApi, TokenObtainPair } from '@spacecowmedia/spellbook-client';
+import { TokenApi, TokenObtainPair } from '@space-cow-media/spellbook-client';
 
 export function timeInSecondsToEpoch(): number {
   return Math.round(Date.now() / 1000);
