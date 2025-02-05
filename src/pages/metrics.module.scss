@@ -1,0 +1,15 @@
+.metrics {
+  @apply mx-auto text-xl border-collapse table-fixed;
+  tr {
+    @apply border-b-2 border-solid border-gray-500 dark:border-gray-300;
+  }
+  th {
+    @apply p-3 pt-6;
+  }
+  th, td {
+    @apply h-12;
+  }
+  td:last-child {
+    @apply text-right;
+  }
+}
