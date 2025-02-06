@@ -26,6 +26,11 @@ CACHE_CONTROL_MAX_AGE=1
 if [[ "$APP_ENVIRONMENT" == "prod" ]]; then
     CACHE_CONTROL_MAX_AGE=2592000
 fi
+if [[ "$APP_ENVIRONMENT" == "prod" ]]; then
+    CLOUDFRONT_DISTRIBUTION_ID='E16YLRUSY0N705'
+elif [[ "$APP_ENVIRONMENT" == "dev" ]]; then
+    CLOUDFRONT_DISTRIBUTION_ID='E262PMCZL83GOK'
+fi
 
 # Configure AWS credentials
 ROLE_ARN="arn:aws:iam::$ACCOUNT_ID:role/spellbook-client-deploy-role"
@@ -141,9 +146,9 @@ aws cloudfront create-invalidation \
 
 
 # Push image to Amazon ECR
-docker tag spellbook-client:latest $ECR_REGISTRY/spellbook-$APP_ENVIRONMENT-ecr:$IMAGE_TAG
-docker tag spellbook-client:latest $ECR_REGISTRY/spellbook-$APP_ENVIRONMENT-ecr:latest
-docker push --all-tags $ECR_REGISTRY/spellbook-$APP_ENVIRONMENT-ecr
+docker tag spellbook-client:latest $ECR_REGISTRY/spellbook-client-$APP_ENVIRONMENT-ecr:$IMAGE_TAG
+docker tag spellbook-client:latest $ECR_REGISTRY/spellbook-client-$APP_ENVIRONMENT-ecr:latest
+docker push --all-tags $ECR_REGISTRY/spellbook-client-$APP_ENVIRONMENT-ecr
 
 ## Configure kubectl to connect to your cluster
 aws eks --region $REGION update-kubeconfig --name $CLUSTER_NAME

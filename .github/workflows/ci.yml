@@ -336,6 +336,6 @@ jobs:
       - name: Rollout pods
         run: |
           export KUBECONFIG=kubeconfig.yaml
-          kubectl rollout restart deployment/spellbook-client -n spellbook
+          kubectl rollout restart deployment/spellbook-client -n spellbook-prod
 
 #          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
