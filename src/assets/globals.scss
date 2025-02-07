@@ -124,6 +124,9 @@ input, textarea, select, option, .input, .inputControl {
   .home-button:first-child {
     @apply ml-0;
   }
+  .home-button:last-child {
+    @apply mr-0;
+  }
 }
 
 .input {
