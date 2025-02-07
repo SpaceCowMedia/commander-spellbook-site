@@ -14,6 +14,7 @@ import EDHRECService from '../../../services/edhrec.service';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
   FindMyCombosApi,
+  PropertiesApi,
   ResponseError,
   Template,
   Variant,
@@ -374,6 +375,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const configuration = apiConfiguration(context);
+  if (params.id === 'combo-of-the-day') {
+    const propertiesApi = new PropertiesApi(configuration);
+    try {
+      const comboOfTheDayData = await propertiesApi.propertiesRetrieve({ key: 'combo_of_the_day' });
+      if (comboOfTheDayData.value) {
+        return {
+          redirect: {
+            destination: `/combo/${comboOfTheDayData.value}`,
+            permanent: false,
+          },
+        };
+      }
+    } catch (err) {
+      if (!(err instanceof ResponseError && err.response.status === 404)) {
+        throw err;
+      }
+    }
+  }
   const variantsApi = new VariantsApi(configuration);
 
   try {

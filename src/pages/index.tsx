@@ -12,6 +12,7 @@ import { PropertiesApi } from '@space-cow-media/spellbook-client';
 
 type Props = {
   featuredComboButtonText: string;
+  comboOfTheDay?: string;
 };
 
 const DEFAULT_PROPS = {
@@ -20,7 +21,7 @@ const DEFAULT_PROPS = {
   },
 };
 
-const Home: React.FC<Props> = ({ featuredComboButtonText }) => {
+const Home: React.FC<Props> = ({ featuredComboButtonText, comboOfTheDay }) => {
   const router = useRouter();
   const query = router.query.q ? `${router.query.q}` : ``;
 
@@ -96,7 +97,7 @@ const Home: React.FC<Props> = ({ featuredComboButtonText }) => {
               </div>
             </div>
           </div>
-          <Footer />
+          <Footer comboOfTheDay={comboOfTheDay} />
         </div>
       </main>
     </>
@@ -117,6 +118,9 @@ export async function getStaticProps() {
     const buttonTextData = res.results.find((data) => {
       return data.key === 'featured_combos_title';
     });
+    const comboOfTheDayData = res.results.find((data) => {
+      return data.key === 'combo_of_the_day';
+    });
 
     if (!buttonTextData) {
       return DEFAULT_PROPS;
@@ -125,6 +129,7 @@ export async function getStaticProps() {
     return {
       props: {
         featuredComboButtonText: buttonTextData.value,
+        comboOfTheDay: comboOfTheDayData?.value,
       },
       revalidate: 60,
     };
