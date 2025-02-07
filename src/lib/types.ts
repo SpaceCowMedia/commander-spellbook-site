@@ -1,4 +1,4 @@
-import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { CardInVariant, TemplateInVariant, VariantSuggestion } from '@space-cow-media/spellbook-client';
 
 export type ComboPrerequisites = {
   /* Zone either H, B, C, G, L, E or multiple of them */
@@ -10,6 +10,24 @@ export type ComboPrerequisites = {
 export type ComboSubmissionErrorType = {
   [key: string]: (ComboSubmissionErrorType | string)[];
 } & { statusCode: number };
+
+export type ComboSubmission = Omit<VariantSuggestion, 'created'> & {
+  created: string;
+};
+
+export function variantSuggestionToSubmission(variantSuggestion: VariantSuggestion): ComboSubmission {
+  return {
+    ...variantSuggestion,
+    created: variantSuggestion.created.toISOString(),
+  };
+}
+
+export function variantSuggestionFromSubmission(comboSubmission: ComboSubmission): VariantSuggestion {
+  return {
+    ...comboSubmission,
+    created: new Date(comboSubmission.created),
+  };
+}
 
 export function getName(card: CardInVariant | TemplateInVariant): string {
   return 'card' in card ? card.card.name : card.template.name;

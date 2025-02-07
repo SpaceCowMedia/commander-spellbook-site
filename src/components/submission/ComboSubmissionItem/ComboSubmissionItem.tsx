@@ -5,7 +5,7 @@ import {
 } from '@space-cow-media/spellbook-client';
 import styles from './comboSubmissionItem.module.scss';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
 import Modal from 'components/ui/Modal/Modal';
 import { apiConfiguration } from 'services/api.service';
@@ -15,9 +15,15 @@ type Props = {
   submission: VariantSuggestion;
 };
 
-const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
+const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [submission, setSubmission] = useState(initialSubmission);
+  const [createdAt, setCreatedAt] = useState('');
+  useEffect(() => {
+    setCreatedAt(submission.created.toLocaleString());
+  }, [submission]);
+
   if (deleted) {
     return false;
   }
@@ -42,6 +48,13 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
               ? 'Pending Approval'
               : 'Unknown';
 
+  const refreshSubmission = async () => {
+    const updatedSubmission = await suggestionsApi.variantSuggestionsRetrieve({
+      id: submission.id,
+    });
+    setSubmission(updatedSubmission);
+  };
+
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     setModalOpen(false);
@@ -54,7 +67,10 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
       })
       .catch((error) => {
         console.error(error);
-        alert('An error occurred while deleting the submission.');
+        alert(
+          "An error occurred while deleting the submission. It is possible that you don't have the permission to delete it, maybe because an editor already took action on it.",
+        );
+        refreshSubmission();
       });
   };
 
@@ -74,6 +90,9 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission }: Props) => {
         <div className={styles.results}>
           <h3 className={styles.subtitle}>Results</h3>
           <TextWithMagicSymbol text={submissionResults} />
+        </div>
+        <div className={styles.extra}>
+          <h3 className={styles.subtitle}>Created: {createdAt}</h3>
         </div>
       </div>
       <div className={styles.icons}>

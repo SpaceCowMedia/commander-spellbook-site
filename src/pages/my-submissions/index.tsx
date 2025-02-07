@@ -1,5 +1,5 @@
 import React from 'react';
-import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
+import { VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
 import { useRouter } from 'next/router';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
@@ -11,11 +11,12 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
+import { ComboSubmission, variantSuggestionFromSubmission, variantSuggestionToSubmission } from 'lib/types';
 
 const PAGE_SIZE = 20;
 
 type Props = {
-  submissions: VariantSuggestion[];
+  submissions: ComboSubmission[];
   count: number;
   page: number;
   error?: string;
@@ -53,7 +54,7 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
               />
               <ul className={styles.suggestionsWrapper}>
                 {submissions.map((suggestion) => (
-                  <ComboSubmissionItem key={suggestion.id} submission={suggestion} />
+                  <ComboSubmissionItem key={suggestion.id} submission={variantSuggestionFromSubmission(suggestion)} />
                 ))}
               </ul>
               <SearchPagination
@@ -95,7 +96,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: {
-        submissions: results.results,
+        submissions: results.results.map(variantSuggestionToSubmission),
         count: results.count,
         page: context.query.page || 1,
       },
