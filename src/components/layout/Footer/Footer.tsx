@@ -27,7 +27,7 @@ const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
             <Link href="/find-my-combos/">Find My Combos</Link>
             <Link href="/search/?q=is:featured">Featured Combos</Link>
             <Link href="/metrics/">Metrics</Link>
-            <Link href={comboOfTheDay ? `/combo/${comboOfTheDay}` : '/combo/combo-of-the-day/'}>Combo of the Day</Link>
+            <Link href={comboOfTheDay ? `/combo/${comboOfTheDay}` : '/combo-of-the-day/'}>Combo of the Day</Link>
           </div>
           <div className={styles.linkCollection}>
             <h3 className={styles.header}>Commander Spellbook</h3>
