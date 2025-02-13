@@ -330,7 +330,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             placeholder="e.g. Cast Splinter Twin on Deceiver Exarch"
             value={step}
             onChange={(e) => setSteps([...steps.slice(0, index), e.target.value, ...steps.slice(index + 1)])}
-            maxLength={256}
           />
 
           <button
