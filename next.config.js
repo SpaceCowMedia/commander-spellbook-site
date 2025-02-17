@@ -64,6 +64,11 @@ module.exports = (phase, { _defaultConfig }) => {
           destination: 'https://adstxt.mediavine.com/sites/commander-spellbook/ads.txt',
           permanent: false,
         },
+        {
+          source: '/how-to-submit-a-combo',
+          destination: '/submit-a-combo',
+          permanent: true,
+        },
       ];
     },
   };
