@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ArtCircle from '../../layout/ArtCircle/ArtCircle';
 import CardSubmission from '../CardSubmission/CardSubmission';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
@@ -41,6 +41,29 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (submitting) {
+        e.preventDefault();
+      }
+      if (
+        cards.length > 0 ||
+        templates.length > 0 ||
+        features.length > 0 ||
+        steps.length > 0 ||
+        otherPrerequisites ||
+        comment ||
+        manaCost ||
+        spoiler
+      ) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
+    };
+  });
 
   const configuration = apiConfiguration();
   const variantSuggestionsApi = new VariantSuggestionsApi(configuration);
