@@ -7,10 +7,19 @@ type Props = {
   formName: string;
   label: string;
   labelIcon?: SpellbookIcon;
+  description?: string;
   onChange?: (_value: string) => void;
 };
 
-const RadioSearchInput: React.FC<Props> = ({ checkedValue, options, formName, label, labelIcon, onChange }) => {
+const RadioSearchInput: React.FC<Props> = ({
+  checkedValue,
+  options,
+  formName,
+  label,
+  labelIcon,
+  description,
+  onChange,
+}) => {
   const [localValue, setLocalValue] = useState<string>(checkedValue);
 
   const handleChange = (value: string) => {
@@ -23,6 +32,7 @@ const RadioSearchInput: React.FC<Props> = ({ checkedValue, options, formName, la
       <label className="font-semibold">
         {labelIcon && <Icon name={labelIcon} />} {label}
       </label>
+      {description && <p className="text-sm text-gray-500">{description}</p>}
       <fieldset className="flex flex-wrap gap-7">
         <legend className="sr-only" aria-hidden="true">
           Choose settings for {label}

@@ -44,12 +44,12 @@ function booleanToIcon(value: boolean) {
 }
 
 const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
-  const configuration = apiConfiguration();
-  const variantsApi = new VariantsApi(configuration);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
   const templateReplacements = new Map<number, Promise<ScryfallResultsPage>[]>();
+  const configuration = apiConfiguration();
+  const variantsApi = new VariantsApi(configuration);
 
   async function fetchResultsPage(template: Template, page: number): Promise<ScryfallResultsPage> {
     let cache = templateReplacements.get(template.id);
@@ -81,11 +81,13 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     setVariantCount(variants.count);
     setVariantsLoading(false);
   };
+
   useEffect(() => {
     setVariants([]);
     setVariantsLoading(false);
     setVariantCount((combo?.variantCount ?? 1) - 1);
   }, [combo]);
+
   if ((combo?.variantCount ?? 0) > 1 && combo && variants.length == 0 && !variantsLoading) {
     loadVariants(combo);
   }
@@ -111,10 +113,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
           ? `(and ${NUMBERS[1]} other card)`
           : `(and ${NUMBERS[totalCount - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
-    const metaData =
-      numberOfDecks !== undefined && numberOfDecks !== null
-        ? [`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`]
-        : [];
+    const metaData = [];
 
     const identity = combo.identity;
     const prerequisites = getPrerequisiteList(combo);
@@ -123,12 +122,17 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     const results = combo.produces.map((feature) =>
       feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name,
     );
+
+    // metadata
     if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.");
     } else if (combo.status == 'D') {
       metaData.push('This combo is a draft and is only visible to editors.');
     } else if (combo.status == 'NR') {
       metaData.push('This combo needs to be reviewed and is only visible to editors.');
+    }
+    if (numberOfDecks !== undefined && numberOfDecks !== null) {
+      metaData.push(`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`);
     }
 
     return (

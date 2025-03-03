@@ -18,7 +18,7 @@ const Embed = ({ combo }: Props) => {
   query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map((feature) => feature.feature.name)))}`;
   query += `&id=${combo.id}`;
   query += `&color=${combo.identity}`;
-  query += `&extraRequirementCount=${combo.otherPrerequisites ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length : 0}`;
+  query += `&extraRequirementCount=${combo.notablePrerequisites ? combo.notablePrerequisites.split('.').filter((s) => s.trim().length).length : 0}`;
 
   // The empty iframe ensures that wordpress detects the embed
   const embedCode = imageMode

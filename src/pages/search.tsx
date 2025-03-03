@@ -302,12 +302,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error: any) {
+    let e = error as { q?: string } | Response;
+    if ('response' in error) {
+      e = (await error.response.json()) as { q?: string };
+    }
+    e = e as { q?: string };
     return {
       props: {
         combos: [],
         count: 0,
         page: context.query.page || 1,
-        error: Object.hasOwn(error, 'q') && error.q ? error.q : 'An error occurred while searching for combos.',
+        error: e.q ? e.q : 'An error occurred while searching for combos.',
       },
     };
   }

@@ -40,6 +40,9 @@ import {
   faQuestion,
   faComments,
   faTrashCan,
+  faDiamond,
+  faArrowDown19,
+  faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -96,6 +99,9 @@ const SPELLBOOK_FA_ICONS = {
   question: faQuestion,
   comments: faComments,
   trash: faTrashCan,
+  template: faDiamond,
+  bracket: faArrowDown19,
+  complete: faCheckCircle,
 };
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;

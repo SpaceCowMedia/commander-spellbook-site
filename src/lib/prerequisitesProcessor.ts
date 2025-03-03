@@ -171,11 +171,17 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     });
   }
 
-  if (variant.otherPrerequisites) {
-    variant.otherPrerequisites
+  if (variant.easyPrerequisites) {
+    variant.easyPrerequisites
       .split(/\.\s+/gi)
-      .forEach((prereq) => output.push({ zones: ['other'], description: prereq }));
+      .forEach((prereq) => output.push({ zones: ['easy'], description: prereq }));
   }
+  if (variant.notablePrerequisites) {
+    variant.notablePrerequisites
+      .split(/\.\s+/gi)
+      .forEach((prereq) => output.push({ zones: ['notable'], description: prereq }));
+  }
+
   if (variant.manaNeeded) {
     output.push({ zones: ['mana'], description: `${variant.manaNeeded} available` });
   }

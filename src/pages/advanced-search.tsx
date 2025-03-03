@@ -23,6 +23,7 @@ type TagOption = {
   name: string;
   label: string;
   labelIcon?: SpellbookIcon;
+  description?: string;
 };
 
 const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
@@ -215,6 +216,12 @@ const TAGS_OPTIONS: TagOption[] = [
     label: 'Is the combo featured in the home page?',
     labelIcon: 'star',
   },
+  {
+    name: 'complete',
+    label: 'Is the combo complete?',
+    labelIcon: 'complete',
+    description: "Complete combos don't need additional cards to be relevant when played.",
+  },
 ];
 
 const COMMANDER_OPTIONS: OperatorOption[] = [
@@ -296,6 +303,27 @@ const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
+const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
+  {
+    operator: '<=',
+    label: 'Could probably be included in bracket',
+    placeholder: 'ex: 3',
+    numeric: true,
+  },
+  {
+    operator: '>',
+    label: "Can't probably be included in bracket",
+    placeholder: 'ex: 3',
+    numeric: true,
+  },
+  {
+    operator: '=',
+    label: 'Is probably suitable statring from bracket',
+    placeholder: 'ex: 3',
+    numeric: true,
+  },
+];
+
 type InputData = {
   value: string;
   operator: string;
@@ -317,6 +345,7 @@ type AutoCompleteOption = {
 type Data = {
   colorAutocompletes: AutoCompleteOption[];
   cards: InputData[];
+  templates: InputData[];
   cardAmounts: InputData[];
   cardTypes: InputData[];
   oracleText: InputData[];
@@ -332,6 +361,7 @@ type Data = {
   prices: InputData[];
   vendor: string;
   format: InputData[];
+  bracket: InputData[];
   validationError: string;
 };
 
@@ -341,6 +371,7 @@ const AdvancedSearch: React.FC = () => {
   const [formState, setFormStateHook] = useState<Data>({
     colorAutocompletes: COLOR_AUTOCOMPLETES,
     cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
+    templates: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
     cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: '' }],
     cardTypes: [{ ...CARD_TYPE_OPERATOR_OPTIONS[0], value: '' }],
     oracleText: [{ ...CARD_ORACLE_TEXT_OPERATOR_OPTIONS[0], value: '' }],
@@ -356,12 +387,14 @@ const AdvancedSearch: React.FC = () => {
     prices: [{ ...PRICE_OPTIONS[0], value: '' }],
     vendor: DEFAULT_VENDOR,
     format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: '' }],
+    bracket: [{ ...BRACKET_OPERATOR_OPTIONS[0], value: '' }],
     validationError: '',
   });
 
   const {
     colorAutocompletes,
     cards,
+    templates,
     cardAmounts,
     cardTypes,
     oracleText,
@@ -377,6 +410,7 @@ const AdvancedSearch: React.FC = () => {
     prices,
     vendor,
     format,
+    bracket,
     validationError,
   } = formState;
 
@@ -404,6 +438,7 @@ const AdvancedSearch: React.FC = () => {
     }
 
     newFormState.cards.forEach(val);
+    newFormState.templates.forEach(val);
     newFormState.cardAmounts.forEach(val);
     newFormState.cardTypes.forEach(val);
     newFormState.oracleText.forEach(val);
@@ -416,6 +451,7 @@ const AdvancedSearch: React.FC = () => {
     newFormState.commanders.forEach(val);
     newFormState.popularity.forEach(val);
     newFormState.prices.forEach(val);
+    newFormState.bracket.forEach(val);
     setFormState(newFormState);
     return hasValidationError;
   };
@@ -424,6 +460,7 @@ const AdvancedSearch: React.FC = () => {
     validate();
   }, [
     cards,
+    templates,
     cardAmounts,
     cardTypes,
     oracleText,
@@ -439,6 +476,7 @@ const AdvancedSearch: React.FC = () => {
     prices,
     vendor,
     format,
+    bracket,
   ]);
 
   const getQuery = () => {
@@ -479,7 +517,12 @@ const AdvancedSearch: React.FC = () => {
             keyInQuery = 'decks';
           } else if (keyInQuery === 'price') {
             keyInQuery = vendor;
-          } else if (keyInQuery !== 'mv' && keyInQuery !== 'pre' && keyInQuery !== 'prereq') {
+          } else if (
+            keyInQuery !== 'mv' &&
+            keyInQuery !== 'pre' &&
+            keyInQuery !== 'prereq' &&
+            keyInQuery !== 'bracket'
+          ) {
             keyInQuery += 's';
           }
         }
@@ -501,6 +544,7 @@ const AdvancedSearch: React.FC = () => {
       };
     }
     cards.forEach(makeQueryFunction('card'));
+    templates.forEach(makeQueryFunction('template'));
     cardAmounts.forEach(makeQueryFunction('card'));
     cardTypes.forEach(makeQueryFunction('type'));
     oracleText.forEach(makeQueryFunction('oracle'));
@@ -515,6 +559,7 @@ const AdvancedSearch: React.FC = () => {
     popularity.forEach(makeQueryFunction('popularity'));
     prices.forEach(makeQueryFunction('price'));
     format.forEach(makeQueryFunction('legal'));
+    bracket.forEach(makeQueryFunction('bracket'));
 
     query = query.trim();
 
@@ -575,6 +620,17 @@ const AdvancedSearch: React.FC = () => {
             labelIcon="hashtag"
             pluralLabel="Number of Cards"
             operatorOptions={CARD_AMOUNT_OPERATOR_OPTIONS}
+          />
+        </div>
+
+        <div id="template-name-inputs" className={`${styles.container} container`}>
+          <MultiSearchInput
+            value={templates}
+            onChange={(templates) => setFormState({ templates })}
+            templateAutocomplete={true}
+            label="Template Card Names"
+            labelIcon="template"
+            operatorOptions={CARD_OPERATOR_OPTIONS}
           />
         </div>
 
@@ -727,6 +783,16 @@ const AdvancedSearch: React.FC = () => {
           />
         </div>
 
+        <div id="bracket-inputs" className={`${styles.container} container`}>
+          <MultiSearchInput
+            value={bracket}
+            onChange={(bracket) => setFormState({ bracket })}
+            label="Bracket"
+            labelIcon="bracket"
+            operatorOptions={BRACKET_OPERATOR_OPTIONS}
+          />
+        </div>
+
         {TAGS_OPTIONS.map((tagOption, i) => (
           <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={i}>
             <RadioSearchInput
@@ -739,6 +805,7 @@ const AdvancedSearch: React.FC = () => {
               formName={tagOption.name}
               label={tagOption.label}
               labelIcon={tagOption.labelIcon}
+              description={tagOption.description}
               onChange={(tag) => {
                 const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
                 const newTag = {

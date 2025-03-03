@@ -125,7 +125,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const identityArray = combo.identity.split('');
     const cards = combo.uses.map((item) => item.card);
     const templateCount = combo.requires.length;
-    const prereqCount = combo.otherPrerequisites.split('\n').length;
+    const prereqCount = combo.notablePrerequisites.split('\n').length;
     const produces = combo.produces;
 
     let header_c = await headerCanvas(identityArray);

@@ -923,10 +923,10 @@
   resolved "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@space-cow-media/spellbook-client@^3.14.15":
-  version "3.14.15"
-  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-3.14.15.tgz#d765f96a95d461ef21f39ec98b1a3267d33b200b"
-  integrity sha512-VTW6FJo/oe75oVQeMwYxL5JMwDKXp06BKP7Ac8Z4hO0uegY+DMMz7pxPOQxu9rUprmIB2Tzd2JyCE2SVDgA2Jg==
+"@space-cow-media/spellbook-client@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-4.0.1.tgz#0aacc0488cc456a1ea2b364650e6a87700db61bf"
+  integrity sha512-stjyOBAZBvBQMlgTax6/9RTfqz1w5XYtn8PwYjyCZBSbwBUaRdXHGS2dm2yNwqN32LqrGLx6h5ER5e5mzKBnbQ==
 
 "@swc/counter@0.1.3":
   version "0.1.3"
@@ -1109,7 +1109,18 @@
     natural-compare "^1.4.0"
     ts-api-utils "^2.0.1"
 
-"@typescript-eslint/parser@^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0", "@typescript-eslint/parser@^8.26.0":
+"@typescript-eslint/parser@^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0":
+  version "8.24.1"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.24.1.tgz#67965c2d2ddd7eadb2f094c395695db8334ef9a2"
+  integrity sha512-Tqoa05bu+t5s8CTZFaGpCH2ub3QeT9YDkXbPd3uQ4SfsLoh1/vv2GEYAioPoxCWJJNsenXlC88tRjwoHNts1oQ==
+  dependencies:
+    "@typescript-eslint/scope-manager" "8.24.1"
+    "@typescript-eslint/types" "8.24.1"
+    "@typescript-eslint/typescript-estree" "8.24.1"
+    "@typescript-eslint/visitor-keys" "8.24.1"
+    debug "^4.3.4"
+
+"@typescript-eslint/parser@^8.26.0":
   version "8.26.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-8.26.0.tgz#9b4d2198e89f64fb81e83167eedd89a827d843a9"
   integrity sha512-mNtXP9LTVBy14ZF3o7JG69gRPBK/2QWtQd0j0oH26HcY/foyJJau6pNUez7QrM5UHnSvwlQcJXKsk0I99B9pOA==
@@ -1127,6 +1138,14 @@
   dependencies:
     "@typescript-eslint/types" "8.24.0"
     "@typescript-eslint/visitor-keys" "8.24.0"
+
+"@typescript-eslint/scope-manager@8.24.1":
+  version "8.24.1"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.24.1.tgz#1e1e76ec4560aa85077ab36deb9b2bead4ae124e"
+  integrity sha512-OdQr6BNBzwRjNEXMQyaGyZzgg7wzjYKfX2ZBV3E04hUCBDv3GQCHiz9RpqdUIiVrMgJGkXm3tcEh4vFSHreS2Q==
+  dependencies:
+    "@typescript-eslint/types" "8.24.1"
+    "@typescript-eslint/visitor-keys" "8.24.1"
 
 "@typescript-eslint/scope-manager@8.26.0":
   version "8.26.0"
@@ -1151,6 +1170,11 @@
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.24.0.tgz#694e7fb18d70506c317b816de9521300b0f72c8e"
   integrity sha512-VacJCBTyje7HGAw7xp11q439A+zeGG0p0/p2zsZwpnMzjPB5WteaWqt4g2iysgGFafrqvyLWqq6ZPZAOCoefCw==
 
+"@typescript-eslint/types@8.24.1":
+  version "8.24.1"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.24.1.tgz#8777a024f3afc4ace5e48f9a804309c6dd38f95a"
+  integrity sha512-9kqJ+2DkUXiuhoiYIUvIYjGcwle8pcPpdlfkemGvTObzgmYfJ5d0Qm6jwb4NBXP9W1I5tss0VIAnWFumz3mC5A==
+
 "@typescript-eslint/types@8.26.0":
   version "8.26.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.26.0.tgz#c4e93a8faf3a38a8d8adb007dc7834f1c89ee7bf"
@@ -1163,6 +1187,20 @@
   dependencies:
     "@typescript-eslint/types" "8.24.0"
     "@typescript-eslint/visitor-keys" "8.24.0"
+    debug "^4.3.4"
+    fast-glob "^3.3.2"
+    is-glob "^4.0.3"
+    minimatch "^9.0.4"
+    semver "^7.6.0"
+    ts-api-utils "^2.0.1"
+
+"@typescript-eslint/typescript-estree@8.24.1":
+  version "8.24.1"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.24.1.tgz#3bb479401f8bd471b3c6dd3db89e7256977c54db"
+  integrity sha512-UPyy4MJ/0RE648DSKQe9g0VDSehPINiejjA6ElqnFaFIhI6ZEiZAkUI0D5MCk0bQcTf/LVqZStvQ6K4lPn/BRg==
+  dependencies:
+    "@typescript-eslint/types" "8.24.1"
+    "@typescript-eslint/visitor-keys" "8.24.1"
     debug "^4.3.4"
     fast-glob "^3.3.2"
     is-glob "^4.0.3"
@@ -1200,6 +1238,14 @@
   integrity sha512-kArLq83QxGLbuHrTMoOEWO+l2MwsNS2TGISEdx8xgqpkbytB07XmlQyQdNDrCc1ecSqx0cnmhGvpX+VBwqqSkg==
   dependencies:
     "@typescript-eslint/types" "8.24.0"
+    eslint-visitor-keys "^4.2.0"
+
+"@typescript-eslint/visitor-keys@8.24.1":
+  version "8.24.1"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.24.1.tgz#8bdfe47a89195344b34eb21ef61251562148202b"
+  integrity sha512-EwVHlp5l+2vp8CoqJm9KikPZgi3gbdZAtabKT9KPShGeOcJhsv4Zdo3oc8T8I0uKEmYoU4ItyxbptjF08enaxg==
+  dependencies:
+    "@typescript-eslint/types" "8.24.1"
     eslint-visitor-keys "^4.2.0"
 
 "@typescript-eslint/visitor-keys@8.26.0":
@@ -1676,9 +1722,9 @@ camelcase-css@^2.0.1:
   integrity sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==
 
 caniuse-lite@^1.0.30001579, caniuse-lite@^1.0.30001646:
-  version "1.0.30001660"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001660.tgz"
-  integrity sha512-GacvNTTuATm26qC74pt+ad1fW15mlQ/zuTzzY1ZoIzECTP8HURDfF43kNxPgf7H1jmelCBQTTbBNxdSXOA7Bqg==
+  version "1.0.30001701"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001701.tgz"
+  integrity sha512-faRs/AW3jA9nTwmJBSO1PQ6L/EOgsB5HMQQq4iCu5zhPgVVgO/pZRHlmatwijZKetFw8/Pr4q6dEN8sJuq8qTw==
 
 canvas@^2.11.2:
   version "2.11.2"
@@ -6469,7 +6515,12 @@ yaml@^1.10.0:
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.2.tgz"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaml@^2.3.4, yaml@^2.7.0:
+yaml@^2.3.4:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.6.1.tgz#42f2b1ba89203f374609572d5349fb8686500773"
+  integrity sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==
+
+yaml@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.7.0.tgz#aef9bb617a64c937a9a748803786ad8d3ffe1e98"
   integrity sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==

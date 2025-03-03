@@ -17,6 +17,7 @@ type Props = {
   value: MultiSearchInputValue;
   autocompleteOptions?: Array<AutoCompleteOption>;
   cardAutocomplete?: boolean;
+  templateAutocomplete?: boolean;
   resultAutocomplete?: boolean;
   selectOptions?: Array<Option>;
   useValueForAutocompleteInput?: boolean;
@@ -38,6 +39,7 @@ const MultiSearchInput: React.FC<Props> = ({
   value,
   autocompleteOptions,
   cardAutocomplete,
+  templateAutocomplete,
   resultAutocomplete,
   useValueForAutocompleteInput,
   label,
@@ -132,6 +134,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   inputClassName={styles.autocompleteInput}
                   autocompleteOptions={autocompleteOptions}
                   cardAutocomplete={cardAutocomplete}
+                  templateAutocomplete={templateAutocomplete}
                   resultAutocomplete={resultAutocomplete}
                   inputId={getInputId(index)}
                   placeholder={getPlaceHolder(input)}

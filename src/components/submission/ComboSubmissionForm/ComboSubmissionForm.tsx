@@ -34,7 +34,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const [templates, setTemplates] = useState<TemplateRequiredInVariantSuggestionRequest[]>(submission?.requires ?? []);
   const [features, setFeatures] = useState<FeatureProducedInVariantSuggestionRequest[]>(submission?.produces ?? []);
   const [steps, setSteps] = useState<string[]>(submission?.description.split('\n') ?? []);
-  const [otherPrerequisites, setOtherPrerequisites] = useState(submission?.otherPrerequisites ?? '');
+  const [easyPrerequisites, setEasyPrerequisites] = useState(submission?.easyPrerequisites ?? '');
+  const [notablePrerequisites, setNotablePrerequisites] = useState(submission?.notablePrerequisites ?? '');
   const [comment, setComment] = useState(submission?.comment ?? '');
   const [spoiler, setSpoiler] = useState(submission?.spoiler ?? false);
   const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? '');
@@ -51,7 +52,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
         templates.length > 0 ||
         features.length > 0 ||
         steps.length > 0 ||
-        otherPrerequisites ||
+        easyPrerequisites ||
+        notablePrerequisites ||
         comment ||
         manaCost ||
         spoiler
@@ -152,7 +154,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             requires: templates,
             produces: features,
             description: steps.join('\n'),
-            otherPrerequisites,
+            easyPrerequisites,
+            notablePrerequisites,
             manaNeeded: manaCost,
             comment,
             spoiler,
@@ -165,7 +168,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             requires: templates,
             produces: features,
             description: steps.join('\n'),
-            otherPrerequisites,
+            easyPrerequisites,
+            notablePrerequisites,
             manaNeeded: manaCost,
             comment,
             spoiler,
@@ -334,13 +338,22 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
         </div>
       </div>
 
-      <h2 className="heading-subtitle flex justify-start">Other prerequisites (optional)</h2>
-      <ErrorMessage list={errorObj?.otherPrerequisites} />
+      <h2 className="heading-subtitle flex justify-start">Easily achievable prerequisites (optional)</h2>
+      <ErrorMessage list={errorObj?.easyPrerequisites} />
       <textarea
         className="textarea w-full p-4 border-gray-300 border"
         placeholder="e.g. It must be your opponent's turn"
-        value={otherPrerequisites}
-        onChange={(e) => setOtherPrerequisites(e.target.value)}
+        value={easyPrerequisites}
+        onChange={(e) => setEasyPrerequisites(e.target.value)}
+      />
+
+      <h2 className="heading-subtitle flex justify-start">Notable prerequisites (optional)</h2>
+      <ErrorMessage list={errorObj?.notablePrerequisites} />
+      <textarea
+        className="textarea w-full p-4 border-gray-300 border"
+        placeholder="e.g. You need a way to make an opponent lose life"
+        value={notablePrerequisites}
+        onChange={(e) => setNotablePrerequisites(e.target.value)}
       />
 
       <h2 className="heading-subtitle flex justify-start">Steps to execute combo ({steps.length})</h2>

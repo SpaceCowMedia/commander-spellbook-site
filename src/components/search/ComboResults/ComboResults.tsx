@@ -65,8 +65,8 @@ export const ComboResult: React.FC<ResultProps> = ({
     return '';
   };
 
-  const prereqCount = combo.otherPrerequisites
-    ? combo.otherPrerequisites.split('.').filter((s) => s.trim().length).length
+  const prereqCount = combo.notablePrerequisites
+    ? combo.notablePrerequisites.split('.').filter((s) => s.trim().length).length
     : 0;
 
   const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'light';
