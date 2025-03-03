@@ -923,10 +923,10 @@
   resolved "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@space-cow-media/spellbook-client@^3.14.15":
-  version "3.14.15"
-  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-3.14.15.tgz#d765f96a95d461ef21f39ec98b1a3267d33b200b"
-  integrity sha512-VTW6FJo/oe75oVQeMwYxL5JMwDKXp06BKP7Ac8Z4hO0uegY+DMMz7pxPOQxu9rUprmIB2Tzd2JyCE2SVDgA2Jg==
+"@space-cow-media/spellbook-client@^3.15.5":
+  version "3.15.5"
+  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-3.15.5.tgz#cb66ae426c1a880ed20ed0ea9490c96e7de0e12c"
+  integrity sha512-MfOp8a/CVOL2EREn1FYaxVwNhzF3sB5E/Qf3jteQz3etqT3PbZDOR7Xo+K5hZ4e2GfAeb+IAufwKAJtQmTyZGw==
 
 "@swc/counter@0.1.3":
   version "0.1.3"
