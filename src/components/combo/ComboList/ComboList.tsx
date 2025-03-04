@@ -21,8 +21,8 @@ type Props = {
 
 const ComboList: React.FC<Props> = ({
   title,
-  cardsInCombo = [],
-  templatesInCombo = [],
+  cardsInCombo,
+  templatesInCombo,
   includeCardLinks,
   showNumbers,
   iterations,
@@ -43,17 +43,19 @@ const ComboList: React.FC<Props> = ({
       <div className="pr-6 py-4">
         <h2 className={styles.comboListTitle}>{title}</h2>
         <ol className={`${styles.comboList} ${showNumbers && 'list-decimal'}`}>
-          {iterations.map((item, index) => (
-            <li key={`${title}-${index}`}>
-              <TextWithMagicSymbol
-                text={appendPeriod ? addPeriod(item) : item}
-                cardsInCombo={cardsInCombo}
-                includeCardLinks={includeCardLinks}
-                templatesInCombo={templatesInCombo}
-                fetchTemplateReplacements={fetchTemplateReplacements}
-              />
-            </li>
-          ))}
+          {iterations
+            .map((item) => (appendPeriod ? addPeriod(item) : item))
+            .map((text, index) => (
+              <li key={`${title}-${index}`}>
+                <TextWithMagicSymbol
+                  text={text}
+                  cardsInCombo={cardsInCombo}
+                  includeCardLinks={includeCardLinks}
+                  templatesInCombo={templatesInCombo}
+                  fetchTemplateReplacements={fetchTemplateReplacements}
+                />
+              </li>
+            ))}
           {iterations.length === 0 &&
             Array.from(Array(numberOfPlaceHolderItems).keys()).map((index) => (
               <li key={index}>

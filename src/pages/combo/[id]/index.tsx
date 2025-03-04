@@ -13,6 +13,7 @@ import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
+  BracketTagEnum,
   FindMyCombosApi,
   ResponseError,
   Template,
@@ -28,6 +29,7 @@ import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
 type Props = {
   combo?: Variant;
@@ -134,6 +136,33 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     if (numberOfDecks !== undefined && numberOfDecks !== null) {
       metaData.push(`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`);
     }
+    let showBracketGuidelinesLink = false;
+    if (combo.bracketTag) {
+      let bracketMessage = "This combo's bracket tag is classified as ";
+      switch (combo.bracketTag) {
+        case BracketTagEnum.C:
+          bracketMessage += '"casual", as it can probably be included in any deck, fitting bracket 1 guidelines.';
+          break;
+        case BracketTagEnum.Pa:
+          bracketMessage +=
+            '"precon appropriate", and can probably be included in any preconstructed deck, fitting bracket 2 guidelines.';
+          break;
+        case BracketTagEnum.O:
+          bracketMessage += '"oddball", as it might not fit perfectly within any precon or deck meant to be bracket 2.';
+          break;
+        case BracketTagEnum.P:
+          bracketMessage += '"powerful", as it can probably be included in decks meant to be bracket 3 or higher.';
+          break;
+        case BracketTagEnum.S:
+          bracketMessage += '"spicy", as it might not fit perfectly withy any deck meant to be bracket 3.';
+          break;
+        case BracketTagEnum.R:
+          bracketMessage += '"ruthless", as it can probably be included only in decks meant to be bracket 4 or higher.';
+          break;
+      }
+      metaData.push(bracketMessage);
+      showBracketGuidelinesLink = true;
+    }
 
     return (
       <>
@@ -210,13 +239,16 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
               fetchTemplateReplacements={fetchResultsPage}
             />
 
-            {metaData.length > 0 && (
-              <ComboList
-                title="Metadata"
-                id="combo-metadata"
-                iterations={metaData}
-                fetchTemplateReplacements={fetchResultsPage}
-              />
+            {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}
+            {showBracketGuidelinesLink && (
+              <div className="flex justify-center">
+                <ExternalLink
+                  href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta"
+                  className="text-center"
+                >
+                  Learn more about the Commander format bracket system
+                </ExternalLink>
+              </div>
             )}
           </div>
 

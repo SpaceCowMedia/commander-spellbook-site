@@ -87,7 +87,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
           handleCountUp(response.count);
         })
         .catch((_error) => {
-          setVariantCount(0);
+          setVariantCount(initialCount);
         });
     }
   }, []);
@@ -113,7 +113,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             name="q"
             ref={inputRef}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={`Search ${variantCount} EDH combos`}
+            placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
             id="search-bar-input"
             type="text"
             className={`${styles.mainSearchInput} ${onHomepage ? 'text-2xl text-center' : 'pl-8 -ml-6 text-white'}`}

@@ -120,6 +120,10 @@ const DATA = {
       search: 'cards>2 cards<=5',
       description: 'Combos that contain more than 2 cards but at most 5 cards',
     },
+    {
+      search: 'all-cards:dragon',
+      description: 'Combos where all cards contain the word dragon in the name',
+    },
   ],
   cardTypeSnippets: [
     {
@@ -129,6 +133,10 @@ const DATA = {
     {
       search: '-t:creature -t:artifact',
       description: 'Combos that do not contain creature or artifact cards',
+    },
+    {
+      search: 'all-type:artifact',
+      description: 'Combos that involve only artifact cards',
     },
   ],
   cardOracleTextSnippets: [
@@ -144,6 +152,10 @@ const DATA = {
       search: '-o:sacrifice',
       description: 'Combos that do not contain a card with the word sacrifice in the oracle text',
     },
+    {
+      search: 'all-oracle:"draw a card"',
+      description: 'Combos where all cards contain the phrase "draw a card" in the oracle text',
+    },
   ],
   cardKeywordsSnippets: [
     {
@@ -154,6 +166,10 @@ const DATA = {
       search: '-keyword:partner',
       description: 'Combos that do not contain a card with the keyword partner',
     },
+    {
+      search: 'all-keyword:flying',
+      description: 'Combos that involve only cards with flying',
+    },
   ],
   cardManaValueSnippets: [
     {
@@ -163,6 +179,10 @@ const DATA = {
     {
       search: 'manavalue>10',
       description: 'Combos that contain a card with a mana value greater than 10',
+    },
+    {
+      search: 'all-mv<=3',
+      description: 'Combos where all cards have a mana value of 3 or less',
     },
   ],
   colorIdentitySnippets: [
@@ -197,6 +217,10 @@ const DATA = {
     {
       search: 'result=3',
       description: 'Combos that include exactly 3 results.',
+    },
+    {
+      search: 'all-results:infinite',
+      description: 'Combos where all results include the word "infinite".',
     },
   ],
   prerequisiteSnippets: [
@@ -319,6 +343,11 @@ No matter what parameter is used, capitalization will be disregarded, so a searc
 > [!IMPORTANT]
 > You can prefix a \`-\` to any search term to negate it, excluding all matching combos from the search result.
 > For example, \`-card:" "\` will exclude all combos with a card whose name contains a space.
+
+> [!TIP]
+> You can prefix a \`all-\` or \`@\` to some search terms to require that all related entities (cards, templates or results) match the search term.
+> For example, \`all-cards:dragon\` or \`@card:dragon\` will only return combos where all cards contain the word "dragon" in the name.
+> You can negate it with \`-all-cards:dragon\` or \`-@card:dragon\` to exclude all combos where all cards contain the word "dragon" in the name.
 `;
 
 const CARDS_DESCRIPTION = `
@@ -359,6 +388,11 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 ### \`card\` keyword aliases
 
 * \`cards\`
+
+### \`card\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
 `;
 
 const CARD_TYPE_DESCRIPTION = `
@@ -380,6 +414,11 @@ For example, \`cardtype:land\` searches for combos that contain at least one lan
 * \`type\`
 * \`types\`
 * \`t\`
+
+### \`cardtype\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
 `;
 
 const CARD_ORACLE_TEXT_DESCRIPTION = `
@@ -399,6 +438,11 @@ For example, \`cardoracle:draw\` searches for combos that contain at least one c
 * \`oracle\`
 * \`text\`
 * \`o\`
+
+### \`cardoracle\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
 `;
 
 const CARD_KEYWORDS_DESCRIPTION = `
@@ -415,6 +459,11 @@ For example, \`cardkeywords:indestructible\` searches for combos that contain at
 * \`keyword\`
 * \`keywords\`
 * \`kw\`
+
+### \`cardkeywords\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
 `;
 
 const CARD_MANA_VALUE_DESCRIPTION = `
@@ -434,6 +483,11 @@ For example, \`cardmanavalue>10\` searches for combos that contain at least one 
 * \`manavalue\`
 * \`mv\`
 * \`cmc\`
+
+### \`cardmanavalue\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
 `;
 
 const COLOR_IDENTITY_DESCRIPTION = `
@@ -470,6 +524,10 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 * \`ids\`
 * \`c\`
 * \`ci\`
+
+### \`coloridentity\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const PREREQUISITES_DESCRIPTION = `
@@ -481,6 +539,9 @@ For example, \`prerequisites:text\`, searches for _text_ in the prerequisites of
 > * Mana available
 > * Starting card locations
 > * Some starting card states (especially those that appear in the same line as the starting location, such as "Clone on the battlefield as a copy of Kiki-Jiki")
+
+> [!WARNING]
+> Using this parameter with a string will automatically exclude all variants flagged as EXAMPLES, meaning they don't contain steps and prerequisites.
 
 ### \`prerequisites\` operators
 
@@ -497,12 +558,19 @@ For example, \`prerequisites:text\`, searches for _text_ in the prerequisites of
 * \`prerequisite\`
 * \`prereq\`
 * \`pre\`
+
+### \`prerequisites\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const STEPS_DESCRIPTION = `
 Steps describe how to execute the combo.
 For example, \`steps:text\` searches for _text_ in the Steps field.
 Use double quotes if your search contains spaces (\`steps:"multiword text"\`).
+
+> [!WARNING]
+> Using this parameter with a string will automatically exclude all variants flagged as EXAMPLES, meaning they don't contain steps and prerequisites.
 
 ### \`steps\` operators
 
@@ -519,6 +587,10 @@ Use double quotes if your search contains spaces (\`steps:"multiword text"\`).
 * \`step\`
 * \`description\`
 * \`desc\`
+
+### \`steps\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const RESULTS_DESCRIPTION = `
@@ -538,6 +610,11 @@ For example, \`results:turns\` searches for combos that result in infinite or ne
 ## \`results\` keyword aliases
 
 * \`result\`
+
+### \`results\` prefixes
+
+* \`all-\` or \`@\` requires that all results match the search term
+* \`-\` negates the search term
 `;
 
 const SPELLBOOK_ID_DESCRIPTION = `
@@ -552,6 +629,10 @@ For example, \`spellbookid:2120-5329\` searches for a variant whose id is exactl
 ### \`spellbookid\` aliases
 
 * \`sid\`
+
+### \`spellbookid\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const TAG_DESCRIPTION = `
@@ -573,14 +654,19 @@ Other tags are applied automatically, so their support is complete and always up
 
 #### Manual tags
 
-The support for manual tags will be added in the future.
+* \`lock\`: means that the variant locks your opponent
+* \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
+
+The support for other manual tags will be added in the future.
 
 <!--
-* \`lock\`: means that the variant locks your opponent
 * \`infinite\`: means that the variant contains an infinite loop
 * \`risky\`/\`allin\`: means that the variant steps have some chance to fail and result in a possible loss
-* \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
 -->
+
+### \`is\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const COMMANDER_DESCRIPTION = `
@@ -591,6 +677,10 @@ For example, \`commander:text\` searches for combos that require a commander who
 
 * \`commander:text\` searches for combos that require a commander whose name contains _text_
 * \`commander=text\` searches for combos that require a commander whose name is exactly _text_
+
+### \`commander\` prefixes
+
+- \`-\` negates the search term
 `;
 
 const POPULARITY_DESCRIPTION = `
@@ -612,6 +702,10 @@ For example, \`popularity>10000\` searches for combos that are present in more t
 * \`pop\`
 * \`deck\`
 * \`decks\`
+
+### \`popularity\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const PRICE_DESCRIPTION = `
@@ -636,6 +730,10 @@ For example, \`price<number\` searches for combos costing less than _number_ US 
 * \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic) prices in Euros
 
 For example, \`cardmarket>100\` searches for combos whose component cards cost more than 100€ in total on Cardmarket.
+
+### \`price\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const LEGALITY_DESCRIPTION = `
@@ -671,6 +769,11 @@ On the other hand, \`banned:format\` searches for combos not legal in _format_
 
 * \`banned:format_name\`: same as \`-legal:format_name\`
 * \`format:format_name\`: same as \`legal:format_name\`
+
+
+### \`legal\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const VARIANT_DESCRIPTION = `
@@ -688,13 +791,10 @@ For example, \`variants>1\` searches for combos that have more than one variant.
 ### \`variants\` keyword aliases
 
 * \`variant\`
-`;
 
-const SORT_ORDER_DESCRIPTION = `
-> [!CAUTION]
-> You can no longer sort results using the query syntax.
-> Removing this feature allows to support more powerful search logic such as AND, OR, and parentheticals (will be added in the future).
-> You can still sort results from the search results page, by selecting options from the drop-down menus.
+### \`variants\` prefixes
+
+* \`-\` negates the search term
 `;
 
 const SyntaxGuide: React.FC = () => {
@@ -854,16 +954,6 @@ const SyntaxGuide: React.FC = () => {
             snippets={DATA.variantsSnippets}
           >
             <SyntaxMarkdown>{VARIANT_DESCRIPTION}</SyntaxMarkdown>
-          </SearchGuide>
-
-          <SearchGuide
-            id="sort"
-            heading="Sort / Order"
-            icon="arrowUpWideShort"
-            headingCardName="Brainstorm"
-            snippets={[]}
-          >
-            <SyntaxMarkdown>{SORT_ORDER_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
         </div>
       </div>
