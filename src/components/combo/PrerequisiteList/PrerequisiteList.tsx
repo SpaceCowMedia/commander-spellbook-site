@@ -37,6 +37,7 @@ const PrerequisiteList: React.FC<Props> = ({
   const zonePrerequisites = prerequisites.filter((prereq) => prereq.zones.filter((z) => ICON_MAP[z]).length > 0);
   const easyPrerequisites = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'easy'));
   const notablePrerequisites = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'notable'));
+  const manaNeeded = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'mana'));
   return (
     <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
@@ -86,6 +87,22 @@ const PrerequisiteList: React.FC<Props> = ({
             <li>
               <TextWithMagicSymbol
                 text={addPeriod(notablePrerequisites.description)}
+                cardsInCombo={cardsInCombo}
+                includeCardLinks={includeCardLinks}
+                templatesInCombo={templatesInCombo}
+                fetchTemplateReplacements={fetchTemplateReplacements}
+              />
+            </li>
+          </ol>
+        </div>
+      )}
+      {manaNeeded && (
+        <div className="pr-6 py-4">
+          <h2 className="font-bold text-xl mb-2">Mana Needed</h2>
+          <ol className="list-inside">
+            <li>
+              <TextWithMagicSymbol
+                text={addPeriod(manaNeeded.description)}
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
                 templatesInCombo={templatesInCombo}
