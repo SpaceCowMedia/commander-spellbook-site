@@ -318,7 +318,7 @@ const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
   },
   {
     operator: '=',
-    label: 'Is probably suitable statring from bracket',
+    label: 'Is probably suitable starting from bracket',
     placeholder: 'ex: 3',
     numeric: true,
   },
