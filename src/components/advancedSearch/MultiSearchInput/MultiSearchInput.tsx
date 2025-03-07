@@ -5,13 +5,24 @@ import StyledSelect, { Option } from '../../layout/StyledSelect/StyledSelect';
 import AutocompleteInput, { AutoCompleteOption } from '../AutocompleteInput/AutocompleteInput';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
-type MultiSearchInputValue = {
-  value: string;
+type OperatorOptionBase = {
   operator: string;
   numeric?: boolean;
   negate?: boolean;
+  prefix?: string;
+};
+
+export type OperatorOption = {
+  label: string;
+  placeholder?: string;
+} & OperatorOptionBase;
+
+export type InputData = {
+  value: string;
   error?: string;
-}[];
+} & OperatorOptionBase;
+
+type MultiSearchInputValue = InputData[];
 
 type Props = {
   value: MultiSearchInputValue;
@@ -25,13 +36,7 @@ type Props = {
   labelIcon?: SpellbookIcon;
   pluralLabel?: string;
   defaultPlaceholder?: string;
-  operatorOptions: Array<{
-    operator: string;
-    label: string;
-    numeric?: boolean;
-    negate?: boolean;
-    placeholder?: string;
-  }>;
+  operatorOptions: Array<OperatorOption>;
   onChange?: (_value: MultiSearchInputValue) => void;
 };
 
@@ -67,16 +72,13 @@ const MultiSearchInput: React.FC<Props> = ({
 
   const getSelectId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-select-${index}`;
 
-  const getPlaceHolder = (input: {
-    value: string;
-    operator: string;
-    numeric?: boolean;
-    negate?: boolean;
-    error?: string;
-  }) => {
+  const getPlaceHolder = (input: InputData) => {
     const option = operatorOptions.find(
       (option) =>
-        option.operator === input.operator && option.numeric === input.numeric && option.negate === input.negate,
+        option.operator === input.operator &&
+        option.numeric === input.numeric &&
+        option.negate === input.negate &&
+        option.prefix === input.prefix,
     );
     if (option && option.numeric == true && !option.placeholder) {
       return `ex: 2`;
@@ -89,10 +91,11 @@ const MultiSearchInput: React.FC<Props> = ({
 
   const handleSelectChange = (index: number, value: string) => {
     const newInputs = [...inputs];
-    const [operator, numeric, negated] = value.split('|');
+    const [operator, numeric, negated, prefix] = value.split('|');
     newInputs[index].operator = operator;
     newInputs[index].numeric = numeric === '' ? undefined : numeric === 'true';
     newInputs[index].negate = negated === '' ? undefined : negated === 'true';
+    newInputs[index].prefix = prefix;
     setInputs(newInputs);
     onChange && onChange(newInputs);
   };
@@ -117,7 +120,14 @@ const MultiSearchInput: React.FC<Props> = ({
               onChange={(value) => handleSelectChange(index, value)}
               id={getSelectId(index)}
               options={operatorOptions.map((option) => ({
-                value: option.operator + '|' + (option.numeric ?? '') + '|' + (option.negate ?? ''),
+                value:
+                  option.operator +
+                  '|' +
+                  (option.numeric ?? '') +
+                  '|' +
+                  (option.negate ?? '') +
+                  '|' +
+                  (option.prefix ?? ''),
                 label: option.label,
               }))}
               selectTextClassName="sm:w-1/2 flex-grow bg-transparent"

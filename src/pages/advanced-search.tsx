@@ -1,6 +1,9 @@
 import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
 import Link from 'next/link';
-import MultiSearchInput from '../components/advancedSearch/MultiSearchInput/MultiSearchInput';
+import MultiSearchInput, {
+  InputData,
+  OperatorOption,
+} from '../components/advancedSearch/MultiSearchInput/MultiSearchInput';
 import { DEFAULT_VENDOR } from '../lib/constants';
 import React, { useEffect, useState } from 'react';
 import COLOR_AUTOCOMPLETES from '../lib/colorAutocompletes';
@@ -10,14 +13,6 @@ import { useRouter } from 'next/router';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { SpellbookIcon } from '../components/layout/Icon/Icon';
 import { LEGALITY_FORMATS } from 'lib/types';
-
-type OperatorOption = {
-  operator: string;
-  label: string;
-  numeric?: boolean;
-  negate?: boolean;
-  placeholder?: string;
-};
 
 type TagOption = {
   name: string;
@@ -80,6 +75,25 @@ const CARD_TYPE_OPERATOR_OPTIONS: OperatorOption[] = [
     label: 'Is not exactly',
     placeholder: 'ex: sorcery, instant, artifact',
   },
+  {
+    operator: ':',
+    label: "All cards' types must contain the phrase",
+    placeholder: 'ex: sorcery, instant, artifact',
+    prefix: 'all-',
+  },
+  {
+    operator: '=',
+    label: "All cards' types must be exactly",
+    placeholder: 'ex: sorcery, instant, artifact',
+    prefix: 'all-',
+  },
+  {
+    operator: ':',
+    label: "Not all cards' types must contain the phrase",
+    placeholder: 'ex: sorcery, instant, artifact',
+    prefix: 'all-',
+    negate: true,
+  },
 ];
 
 const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
@@ -96,6 +110,19 @@ const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
     placeholder: 'ex: mana, untap, additional',
   },
   { operator: '=', label: 'Is not exactly', negate: true },
+  {
+    operator: ':',
+    label: "All cards' text must contain the phrase",
+    placeholder: 'ex: mana, untap, additional',
+    prefix: 'all-',
+  },
+  {
+    operator: ':',
+    label: "Not all cards' text must contain the phrase",
+    placeholder: 'ex: mana, untap, additional',
+    prefix: 'all-',
+    negate: true,
+  },
 ];
 
 const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
@@ -109,6 +136,12 @@ const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
     negate: true,
     label: 'Does not have the keyword',
     placeholder: 'ex: cycling, delve, partner',
+  },
+  {
+    operator: ':',
+    label: "All cards' text must contain the keyword",
+    placeholder: 'ex: cycling, delve, partner',
+    prefix: 'all-',
   },
 ];
 
@@ -127,6 +160,24 @@ const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
     operator: '<',
     label: 'Has a mana value of less than x (number)',
     numeric: true,
+  },
+  {
+    operator: '=',
+    label: 'Each card has a mana value of x (number)',
+    numeric: true,
+    prefix: 'all-',
+  },
+  {
+    operator: '>=',
+    label: 'Each card has a mana value of at least x (number)',
+    numeric: true,
+    prefix: 'all-',
+  },
+  {
+    operator: '<',
+    label: 'Each card has a mana value of less than x (number)',
+    numeric: true,
+    prefix: 'all-',
   },
 ];
 
@@ -198,6 +249,19 @@ const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
   { operator: '>=', label: 'Contains at least x (number)', numeric: true },
   { operator: '<', label: 'Contains less than x (number)', numeric: true },
   { operator: '=', label: 'Contains exactly x (number)', numeric: true },
+  {
+    operator: ':',
+    label: 'All the results contain the phrase',
+    placeholder: 'ex: mana, untap, additional',
+    prefix: 'all-',
+  },
+  {
+    operator: ':',
+    label: 'Not all the results contain the phrase',
+    placeholder: 'ex: mana, untap, additional',
+    prefix: 'all-',
+    negate: true,
+  },
 ];
 
 const TAGS_OPTIONS: TagOption[] = [
@@ -323,14 +387,6 @@ const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
     numeric: true,
   },
 ];
-
-type InputData = {
-  value: string;
-  operator: string;
-  numeric?: boolean;
-  negate?: boolean;
-  error?: string;
-};
 
 interface SelectedTag extends TagOption {
   selected?: boolean;
@@ -525,6 +581,9 @@ const AdvancedSearch: React.FC = () => {
           ) {
             keyInQuery += 's';
           }
+        }
+        if (input.prefix) {
+          keyInQuery = `${input.prefix}${keyInQuery}`;
         }
         if (negated) {
           keyInQuery = `-${keyInQuery}`;
