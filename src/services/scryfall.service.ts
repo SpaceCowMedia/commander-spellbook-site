@@ -39,7 +39,7 @@ export type ScryfallResultsPage = {
 
 export async function templateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
   if (template.scryfallQuery) {
-    const response = await scryfall.search(template.scryfallQuery + ' legal:commander', { page: page + 1 }); // Scryfall pages are 1-indexed
+    const response = await scryfall.search(`(${template.scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
     return {
       results: response,
       page: page,

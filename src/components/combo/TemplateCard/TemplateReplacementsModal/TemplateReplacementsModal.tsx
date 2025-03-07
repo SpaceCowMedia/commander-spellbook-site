@@ -84,7 +84,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({
           <ExternalLink
             href={
               'https://scryfall.com/search?q=' +
-              encodeURIComponent(template.template.scryfallQuery + ' legal:commander')
+              encodeURIComponent(`(${template.template.scryfallQuery}) legal:commander`)
             }
             className="text-center block mb-8"
           >

@@ -25,12 +25,10 @@ const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacement
               <TemplateCard template={card} fetchTemplateReplacements={fetchTemplateReplacements} />
             )}
             {'card' in card && (
-              <div>
-                <CardImage
-                  img={`https://api.scryfall.com/cards/named?format=image&face=front&version=normal&exact=${encodeURIComponent(card.card.name)}`}
-                  name={card.card.name}
-                />
-              </div>
+              <CardImage
+                img={`https://api.scryfall.com/cards/named?format=image&face=front&version=normal&exact=${encodeURIComponent(card.card.name)}`}
+                name={card.card.name}
+              />
             )}
           </div>
         ))}
