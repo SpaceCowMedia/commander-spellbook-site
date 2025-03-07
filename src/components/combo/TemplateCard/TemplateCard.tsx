@@ -24,7 +24,7 @@ const TemplateCard: React.FC<Props> = ({
   return (
     <div className="relative">
       <div className={`rounded-xl ${className ?? ''}`} style={{ backgroundColor: '#404040' }}>
-        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] pt-7 z-11">
+        <div className="absolute -top-5 text-center w-full text-white font-bold text-[16px] mt-7 z-11">
           <TextWithMagicSymbol text={template.template.name} />
         </div>
         <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
