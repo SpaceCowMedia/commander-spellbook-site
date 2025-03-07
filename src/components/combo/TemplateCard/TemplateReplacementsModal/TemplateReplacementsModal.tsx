@@ -94,7 +94,12 @@ const TemplateReplacementsModal: React.FC<Props> = ({
         <div className="flex flex-wrap gap-3 justify-center">
           {results.map((result) => (
             <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
-              <img width="240" src={ScryfallService.getScryfallImage(result)[0]} alt={result.name} />
+              <img
+                className="rounded-xl"
+                width="240"
+                src={ScryfallService.getScryfallImage(result)[0]}
+                alt={result.name}
+              />
             </a>
           ))}
         </div>

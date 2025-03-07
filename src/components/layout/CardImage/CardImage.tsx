@@ -9,14 +9,13 @@ import isFoolsDay from 'lib/foolsDay';
 type Props = {
   img: string;
   name: string;
-  className?: string;
 };
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
+const CardImage: React.FC<Props> = ({ img, name }: Props) => {
   const imgSplit = img.split('?');
   const imgBackQuery = imgSplit[1].includes('face=front')
     ? imgSplit[1].replaceAll('face=front', 'face=back')
@@ -62,42 +61,43 @@ const CardImage: React.FC<Props> = ({ img, name, className }: Props) => {
   }, [readyToFlipToFront, frontLoaded]);
 
   return (
-    <div className={styles.centerContainer}>
-      <CardLink className="relative" name={name}>
-        <FlipperCard
-          className={className}
-          flipped={backFacing}
-          back={
-            hasBack ? (
+    <div className={`${styles.centerContainer}`}>
+      <FlipperCard
+        flipped={backFacing}
+        back={
+          hasBack ? (
+            <CardLink className="relative" name={name}>
               <img
-                className={styles.frontCard}
+                className="rounded-xl"
                 src={imgBack}
                 ref={backImageRef}
                 alt={`the back side of ${name}`}
                 onLoad={() => setBackLoaded(true)}
                 onError={() => setBackLoaded(false)}
               />
-            ) : (
-              <img
-                className={styles.frontCard}
-                src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
-                ref={backImageRef}
-                alt="the back of a classic MtG card"
-              />
-            )
-          }
-          front={
+            </CardLink>
+          ) : (
             <img
+              className="rounded-xl"
+              src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
+              ref={backImageRef}
+              alt="the back of a classic MtG card"
+            />
+          )
+        }
+        front={
+          <CardLink className="relative" name={name}>
+            <img
+              className="rounded-xl"
               ref={frontImageRef}
-              className={styles.frontCard}
               src={img}
               alt={`the front side of ${name}`}
               onLoad={() => setFrontLoaded(true)}
               onError={() => setFrontLoaded(false)}
             />
-          }
-        />
-      </CardLink>
+          </CardLink>
+        }
+      />
       {backLoaded && (
         <button
           id={`flip-${name}`}
