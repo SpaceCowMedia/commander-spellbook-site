@@ -46,7 +46,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
-    "@eslint/compat": "^1.2.4",
+    "@eslint/compat": "^1.2.7",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/gtag.js": "^0.0.20",
     "@types/node": "^22.10.1",
