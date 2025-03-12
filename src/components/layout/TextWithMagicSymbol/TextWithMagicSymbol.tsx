@@ -149,7 +149,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             <TemplateReplacementsModal
               template={item.template}
               textTrigger={(_) => (
-                <span className="text-pink-800 cursor-pointer">
+                <span className={`cursor-pointer ${includeCardLinks ? 'text-link dark:text-primary' : ''}`}>
                   <TextWithMagicSymbol text={item.template!.template.name} />
                 </span>
               )}

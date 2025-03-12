@@ -35,9 +35,9 @@ const PrerequisiteList: React.FC<Props> = ({
   fetchTemplateReplacements,
 }) => {
   const zonePrerequisites = prerequisites.filter((prereq) => prereq.zones.filter((z) => ICON_MAP[z]).length > 0);
-  const easyPrerequisites = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'easy'));
-  const notablePrerequisites = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'notable'));
-  const manaNeeded = prerequisites.find((prereq) => prereq.zones.find((z) => z == 'mana'));
+  const easyPrerequisites = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'easy'));
+  const notablePrerequisites = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'notable'));
+  const manaNeeded = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'mana'));
   return (
     <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
@@ -64,51 +64,57 @@ const PrerequisiteList: React.FC<Props> = ({
           ))}
         </ol>
       </div>
-      {easyPrerequisites && (
+      {easyPrerequisites.length > 0 && (
         <div className="pr-6 py-4">
           <h2 className="font-bold text-xl mb-2">Easy Prerequisites</h2>
           <ol className="list-inside">
-            <li>
-              <TextWithMagicSymbol
-                text={addPeriod(easyPrerequisites.description)}
-                cardsInCombo={cardsInCombo}
-                includeCardLinks={includeCardLinks}
-                templatesInCombo={templatesInCombo}
-                fetchTemplateReplacements={fetchTemplateReplacements}
-              />
-            </li>
+            {easyPrerequisites.map((prereq, index) => (
+              <li key={`${prereq.zones.join('')}-${index}`}>
+                <TextWithMagicSymbol
+                  text={addPeriod(prereq.description)}
+                  cardsInCombo={cardsInCombo}
+                  includeCardLinks={includeCardLinks}
+                  templatesInCombo={templatesInCombo}
+                  fetchTemplateReplacements={fetchTemplateReplacements}
+                />
+              </li>
+            ))}
           </ol>
         </div>
       )}
-      {notablePrerequisites && (
+      {notablePrerequisites.length > 0 && (
         <div className="pr-6 py-4">
           <h2 className="font-bold text-xl mb-2">Notable Prerequisites</h2>
           <ol className="list-inside">
-            <li>
-              <TextWithMagicSymbol
-                text={addPeriod(notablePrerequisites.description)}
-                cardsInCombo={cardsInCombo}
-                includeCardLinks={includeCardLinks}
-                templatesInCombo={templatesInCombo}
-                fetchTemplateReplacements={fetchTemplateReplacements}
-              />
-            </li>
+            {notablePrerequisites.map((prereq, index) => (
+              <li key={`${prereq.zones.join('')}-${index}`}>
+                <TextWithMagicSymbol
+                  text={addPeriod(prereq.description)}
+                  cardsInCombo={cardsInCombo}
+                  includeCardLinks={includeCardLinks}
+                  templatesInCombo={templatesInCombo}
+                  fetchTemplateReplacements={fetchTemplateReplacements}
+                />
+              </li>
+            ))}
           </ol>
         </div>
       )}
-      {manaNeeded && (
+      {manaNeeded.length > 0 && (
         <div className="pr-6 py-4">
           <h2 className="font-bold text-xl mb-2">Mana Needed</h2>
           <ol className="list-inside">
-            <li>
-              <TextWithMagicSymbol
-                text={addPeriod(manaNeeded.description)}
-                cardsInCombo={cardsInCombo}
-                includeCardLinks={includeCardLinks}
-                templatesInCombo={templatesInCombo}
-                fetchTemplateReplacements={fetchTemplateReplacements}
-              />
-            </li>
+            {manaNeeded.map((manaNeeded, index) => (
+              <li key={`${manaNeeded.zones.join('')}-${index}`}>
+                <TextWithMagicSymbol
+                  text={addPeriod(manaNeeded.description)}
+                  cardsInCombo={cardsInCombo}
+                  includeCardLinks={includeCardLinks}
+                  templatesInCombo={templatesInCombo}
+                  fetchTemplateReplacements={fetchTemplateReplacements}
+                />
+              </li>
+            ))}
           </ol>
         </div>
       )}
