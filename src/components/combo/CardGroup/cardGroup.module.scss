@@ -1,25 +1,25 @@
 .cardImages {
-  @apply relative flex-wrap -mt-20 mb-4;
+  @apply relative flex-wrap md:-mt-20 mb-4;
 }
 
 .cardImages .cardImgWrapper {
-  @apply relative w-1/4 p-1 flex-shrink rounded-xl top-0 transition-all duration-500 ease-in-out;
+  @apply relative w-1/2 md:w-1/4 p-1 flex-shrink rounded-xl top-0 transition-all duration-500 ease-in-out;
 }
 
 @for $i from 1 through 4 {
   .cardImages .cardImgWrapper:nth-child(4n + #{$i}):hover ~ .cardImgWrapper:nth-child(4n + #{$i}) {
-    top: 310px;
+    @apply md:top-[310px]
   }
 }
 
 .cardImages .cardImgWrapper:nth-child(1n + 5) {
-  margin-top: -30%;
+  @apply md:mt-[-30%];
 }
 
 .cardImages .cardImgWrapper:nth-child(4n + 1) {
-  @apply pl-0 pr-2;
+  @apply md:pl-0 md:pr-2;
 }
 
 .cardImages .cardImgWrapper:nth-child(4n) {
-  @apply pr-0 pl-2;
+  @apply md:pr-0 md:pl-2;
 }

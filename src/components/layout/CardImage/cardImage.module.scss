@@ -17,8 +17,7 @@
   @apply inline-block fill-current;
 }
 
-.flipperButton:hover,
-.flipperButton:focus {
+.flipperButton:active {
   @apply bg-link text-white border-link;
 }
 

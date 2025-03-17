@@ -9,12 +9,13 @@ type Props = {
   cards: CardInVariant[];
   templates: TemplateInVariant[];
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
+  className?: string;
 };
 
-const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacements }) => {
+const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacements, className }) => {
   return (
     <div
-      className={`${styles.cardImages} container hidden lg:flex${cards.length + templates.length < 4 ? ' justify-center' : ''}`}
+      className={`${styles.cardImages} ${className ?? ''} container flex ${cards.length + templates.length < 4 ? 'justify-center' : ''}`}
     >
       {(cards as (CardInVariant | TemplateInVariant)[])
         .concat(templates)

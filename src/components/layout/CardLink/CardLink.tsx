@@ -6,9 +6,10 @@ type Props = {
   name: string;
   children?: React.ReactNode;
   className?: string;
+  disableMobileSingleClickAsPreview?: boolean;
 };
 
-const CardLink: React.FC<Props> = ({ name, children, className }: Props) => {
+const CardLink: React.FC<Props> = ({ name, children, className, disableMobileSingleClickAsPreview }: Props) => {
   let link = '';
   const edhrecLink = EDHRECService.getCardUrl(name);
   if (edhrecLink) {
@@ -23,14 +24,14 @@ const CardLink: React.FC<Props> = ({ name, children, className }: Props) => {
 
   // prevent single click on mobile
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (window.innerWidth <= 1024) {
+    if (!disableMobileSingleClickAsPreview && window.innerWidth <= 1024) {
       event.preventDefault();
     }
   };
 
   // allow double click on mobile
   const handleDoubleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (window.innerWidth <= 1024) {
+    if (!disableMobileSingleClickAsPreview && window.innerWidth <= 1024) {
       window.open(link, '_blank', 'noopener,noreferrer');
     } else {
       //Do nothing

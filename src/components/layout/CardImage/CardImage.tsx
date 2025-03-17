@@ -66,7 +66,7 @@ const CardImage: React.FC<Props> = ({ img, name }: Props) => {
         flipped={backFacing}
         back={
           hasBack ? (
-            <CardLink className="relative" name={name}>
+            <CardLink className="relative" name={name} disableMobileSingleClickAsPreview={true}>
               <img
                 className="rounded-xl"
                 src={imgBack}
@@ -86,7 +86,7 @@ const CardImage: React.FC<Props> = ({ img, name }: Props) => {
           )
         }
         front={
-          <CardLink className="relative" name={name}>
+          <CardLink className="relative" name={name} disableMobileSingleClickAsPreview={true}>
             <img
               className="rounded-xl"
               ref={frontImageRef}

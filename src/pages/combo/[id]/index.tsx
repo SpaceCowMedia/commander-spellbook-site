@@ -175,6 +175,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         <CardGroup
           key={combo.id}
           cards={combo.uses}
+          className={combo.uses.length > 4 ? 'hidden md:flex' : ''}
           templates={combo.requires}
           fetchTemplateReplacements={fetchResultsPage}
         />
