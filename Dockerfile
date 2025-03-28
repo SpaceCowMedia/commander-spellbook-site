@@ -29,8 +29,8 @@ RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+COPY --from=deps /app/node_modules ./node_modules
 
 ARG build_type=prod
 ENV BUILD_TYPE=$build_type
