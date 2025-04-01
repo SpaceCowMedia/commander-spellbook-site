@@ -51,6 +51,11 @@ const DATA = {
       icon: 'listCheck',
     },
     {
+      id: 'templates',
+      text: 'Templates',
+      icon: 'template',
+    },
+    {
       id: 'steps',
       text: 'Steps',
       icon: 'listOl',
@@ -94,11 +99,6 @@ const DATA = {
       id: 'variants',
       text: 'Variants',
       icon: 'copy',
-    },
-    {
-      id: 'sort',
-      text: 'Sort / Order',
-      icon: 'arrowUpWideShort',
     },
   ] as SectionType[],
   cardSnippets: [
@@ -202,6 +202,20 @@ const DATA = {
       search: 'colors=3 ids>=wb',
       description:
         'Combos that have exactly 3 colors in their color identity and 2 of those colors must be white and black.',
+    },
+  ],
+  templateSnippets: [
+    {
+      search: 'template:creature',
+      description: 'Combos that require a template card which has the word "creature" in its name.',
+    },
+    {
+      search: 'template="Artifact Land"',
+      description: 'Combos that require a template card with the exact name "Artifact Land".',
+    },
+    {
+      search: 'template>0',
+      description: 'Combos that require at least one template card.',
     },
   ],
   resultSnippets: [
@@ -383,7 +397,7 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 * \`card<=number\` searches for combos with less than or equal _number_ cards
 * \`card>number\` searches for combos with more than _number_ cards
 * \`card>=number\` searches for combos with at least _number_ cards
-* \`card=number\` searches for combos with exactly _number_ cards
+* \`card=number\` or \`card:number\` searches for combos with exactly _number_ cards
 
 ### \`card\` keyword aliases
 
@@ -391,7 +405,7 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 
 ### \`card\` prefixes
 
-* \`all-\` or \`@\` requires that all cards match the search term
+* \`all-\` or \`@\` requires that all cards match the search term (not compatible with number operators)
 * \`-\` negates the search term
 `;
 
@@ -561,6 +575,29 @@ For example, \`prerequisites:text\`, searches for _text_ in the prerequisites of
 
 ### \`prerequisites\` prefixes
 
+* \`-\` negates the search term
+`;
+
+const TEMPLATES_DESCRIPTION = `
+You can search for combos that require one or more template cards, which are wildcards for a well-known set of replacements.
+For example, \`template:creature\` searches for combos that require a template card with the word "creature" in its name.
+
+### \`template\` operators
+* \`template:text\` searches for combos containing a template card whose name contains _text_
+* \`template=text\` searches for combos containing a template card whose name is exactly _text_
+* \`template<number\` searches for combos containing fewer than _number_ template cards
+* \`template<=number\` searches for combos containing _number_ or fewer template cards
+* \`template>number\` searches for combos containing more than _number_ template cards
+* \`template>=number\` searches for combos containing _number_ or more template cards
+* \`template=number\` or \`template:number\` searches for combos containing exactly _number_ template cards
+
+### \`template\` keyword aliases
+
+* \`templates\`
+
+### \`template\` prefixes
+
+* \`all-\` or \`@\` requires that all template cards match the search term (not compatible with number operators)
 * \`-\` negates the search term
 `;
 
@@ -883,6 +920,15 @@ const SyntaxGuide: React.FC = () => {
             snippets={DATA.prerequisiteSnippets}
           >
             <SyntaxMarkdown>{PREREQUISITES_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Templates"
+            icon="template"
+            headingCardName="Exchange of Words"
+            snippets={DATA.templateSnippets}
+          >
+            <SyntaxMarkdown>{TEMPLATES_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide icon="listOl" heading="Steps" headingCardName="The Grand Calcutron" snippets={DATA.stepSnippets}>

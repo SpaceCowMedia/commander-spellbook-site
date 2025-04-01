@@ -133,6 +133,10 @@ const CARD_ARTS = {
     uid: 'e7472958-dd1b-48a7-a960-ec2ef3b69ded',
     artist: 'Nils Hamm',
   },
+  'Exchange of Words': {
+    uid: '8c28cebf-f849-4353-9dd1-c62f05c15d0f',
+    artist: 'Zoltan Boros',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {
