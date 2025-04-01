@@ -109,7 +109,7 @@ export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOO
 type Props = {
   name: SpellbookIcon;
   className?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
 };
 
 const Icon: React.FC<Props> = ({ name, className, onClick }) => {

@@ -44,10 +44,10 @@ const TemplateCard: React.FC<Props> = ({
         front={
           <div className="relative">
             <div className="rounded-xl" style={{ backgroundColor: '#404040' }}>
-              <div className="absolute top-1 text-center w-full text-white font-bold text-[16px] z-11">
+              <div className="absolute top-1 text-center w-full text-white font-bold text-[16px] z-20">
                 <TextWithMagicSymbol text={template.template.name} />
               </div>
-              <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10">
+              <div className="absolute top-[60px] flex flex-col justify-center w-full items-center z-10 h-3/4">
                 {<ScryfallResultsWheel fetchResults={(page) => fetchTemplateReplacements(template.template, page)} />}
               </div>
               <div className="absolute -bottom-1 flex flex-col justify-center w-full items-center">

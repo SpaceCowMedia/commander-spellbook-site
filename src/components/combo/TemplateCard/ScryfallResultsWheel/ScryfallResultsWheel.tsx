@@ -16,7 +16,8 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [pageSize, setPageSize] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const next = () => {
+  const next = (e: React.MouseEvent) => {
+    e.preventDefault();
     let newIndex = index + 1;
     let newPageIndex = pageIndex;
     if (newIndex >= pageSize || (currentPage !== undefined && newIndex >= currentPage.results.length)) {
@@ -32,7 +33,8 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
     }
   };
 
-  const previous = () => {
+  const previous = (e: React.MouseEvent) => {
+    e.preventDefault();
     let newIndex = index - 1;
     let newPageIndex = pageIndex;
     if (newIndex < 0) {
@@ -83,17 +85,21 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   }
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center select-none">
       <div className="h-full flex justify-center items-center flex-grow">
         <Icon name="chevronLeft" onClick={previous} className="cursor-pointer text-white text-2xl" />
       </div>
       <div className="h-full flex justify-center items-center">
-        <a href={edhrecService.getCardUrl(current.name ?? '')} target="_blank" rel="noopener noreferrer">
-          <div
-            className="rounded-xl w-[160px] h-[225px] bg-cover"
-            style={{
-              backgroundImage: `url(${ScryfallService.getScryfallImage(current)[0]})`,
-            }}
+        <a
+          className="h-full"
+          href={edhrecService.getCardUrl(current.name ?? '')}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            className="max-h-full rounded-xl bg-cover"
+            src={ScryfallService.getScryfallImage(current)[0]}
+            alt={`Template replacement: ${current.name}`}
           />
         </a>
       </div>
