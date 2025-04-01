@@ -59,8 +59,8 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
       return;
     }
     if (countUpRef.current < target) {
-      const increment = (target - initialCount) / 50;
-      countUpRef.current += Math.floor((1 + Math.random()) * increment);
+      const increment = Math.max((target - initialCount) / 50, 1);
+      countUpRef.current = Math.min(countUpRef.current + Math.floor((1 + Math.random()) * increment), target);
       inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
       setTimeout(() => handleCountUp(target), 50);
     } else {
