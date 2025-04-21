@@ -1,8 +1,7 @@
 import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
-import { VariantsApi } from '@space-cow-media/spellbook-client';
+import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
-import scryfall from 'scryfall-client';
 import serverPath from 'lib/serverPath';
 
 const width = 1080;
@@ -26,7 +25,9 @@ async function headerCanvas(identityArray: any[]) {
   let startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
   for (let [index, letter] of identityArray.entries()) {
     let position = index * (iWidth + manaOffset) + startManaPos;
-    let img = await loadImage(scryfall.getSymbolUrl(letter));
+    // the local mana symbols svg files come from scryfall and have been modified to have a width and height of 100
+    // width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0
+    let img = await loadImage(serverPath(`public/images/scryfall/identity/${letter.toUpperCase()}.svg`));
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
   return canvas1;
@@ -117,23 +118,38 @@ function drawImage(ctx: CanvasRenderingContext2D, canvas: Canvas, yPos: number) 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
+  let combo: Variant;
   try {
-    const combo = await variantsApi.variantsRetrieve({ id: req.query.id as string });
-    if (!combo) {
-      return res.status(404).json({ error: 'Combo not found' });
-    }
-    const identityArray = combo.identity.split('');
-    const cards = combo.uses.map((item) => item.card);
-    const templateCount = combo.requires.length;
-    const prereqCount = combo.notablePrerequisites.split('\n').length;
-    const produces = combo.produces;
+    combo = await variantsApi.variantsRetrieve({ id: req.query.id as string });
+  } catch (error) {
+    console.error('Error fetching variants:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+    return;
+  }
 
+  if (!combo) {
+    return res.status(404).json({ error: 'Combo not found' });
+  }
+
+  const identityArray = combo.identity.split('');
+  const cards = combo.uses.map((item) => item.card);
+  const templateCount = combo.requires.length;
+  const prereqCount = combo.notablePrerequisites.split('\n').length;
+  const produces = combo.produces;
+
+  try {
     let header_c = await headerCanvas(identityArray);
+    console.log('header_c', header_c);
     let cardsUsed_c = cardsUsedCanvas(cards);
+    console.log('cardsUsed_c', cardsUsed_c);
     let prereq_c = preReqCanvas(prereqCount, templateCount);
+    console.log('prereq_c', prereq_c);
     let separator_c = separatorCanvas();
+    console.log('separator_c', separator_c);
     let produces_c = comboOutcomesCanvas(produces);
+    console.log('produces_c', produces_c);
     let footer_c = await footerCanvas();
+    console.log('footer_c', footer_c);
 
     let calcHeight =
       header_c.height + cardsUsed_c.height + prereq_c.height + separator_c.height + produces_c.height + footer_c.height;
@@ -155,7 +171,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const buffer = canvas.toBuffer('image/png');
     res.send(buffer);
   } catch (error) {
-    console.error('Error fetching variants:', error);
-    res.status(500).json({ error: 'Failed to fetch image' });
+    console.error('Error generating image:', error);
+    res.status(500).json({ error: 'Failed to generate image' });
   }
 }
