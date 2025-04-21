@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 23
           cache: yarn
           registry-url: https://npm.pkg.github.com
 
@@ -68,8 +68,8 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "yarn"
+          node-version: 23
+          cache: yarn
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -98,8 +98,8 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "yarn"
+          node-version: 23
+          cache: yarn
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
@@ -131,8 +131,8 @@ jobs:
       - name: Setup Node ⬢
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "yarn"
+          node-version: 23
+          cache: yarn
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
