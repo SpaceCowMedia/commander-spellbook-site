@@ -188,3 +188,10 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
 
   return output;
 };
+
+export function countPrerequisites(variant: Variant) {
+  return variant.notablePrerequisites
+    .split('.')
+    .concat(variant.easyPrerequisites.split('.'))
+    .filter((s) => s.trim().length).length;
+}

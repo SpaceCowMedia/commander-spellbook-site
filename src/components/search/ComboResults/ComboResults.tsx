@@ -6,6 +6,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React from 'react';
+import { countPrerequisites } from 'lib/prerequisitesProcessor';
 
 type ResultProps = {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -65,9 +66,7 @@ export const ComboResult: React.FC<ResultProps> = ({
     return '';
   };
 
-  const prereqCount = combo.notablePrerequisites
-    ? combo.notablePrerequisites.split('.').filter((s) => s.trim().length).length
-    : 0;
+  const prereqCount = countPrerequisites(combo);
 
   const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'light';
   const stateBasedColorInverse = combo.status === 'OK' ? 'light' : 'dark';
