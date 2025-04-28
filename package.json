@@ -36,7 +36,7 @@
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.3",
     "react-select": "^5.9.0",
-    "react-tooltip": "^5.28.0",
+    "react-tooltip": "^5.28.1",
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.1",
     "scryfall-client": "^0.24.8",
