@@ -10,10 +10,24 @@ type Props = {
 const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   const [variantIdInput, setVariantIdInput] = useState(variant?.variant || '');
   const [issueInput, setIssueInput] = useState(variant?.issue || '');
+
   const handleIdInputChange = (value: string) => {
+    try {
+      const url = new URL(value);
+      if (url.protocol == window.location.protocol && url.hostname === window.location.hostname) {
+        // If the URL is a valid one, we can extract the ID from it
+        // and use it as the variant ID
+        value = url.pathname.split('/')[2];
+      }
+    } catch (_e) {
+      // If the URL is invalid, we can just use the input as is
+      // and let the API handle it
+      // as a string
+    }
     setVariantIdInput(value);
     onChange({ ...variant, variant: value });
   };
+
   const handleIssueInputChange = (value: string) => {
     setIssueInput(value);
     onChange({ ...variant, issue: value });
