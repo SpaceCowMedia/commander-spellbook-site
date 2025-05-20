@@ -269,7 +269,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
 
             <ComboSidebarLinks
               cards={combo.uses.map((card) => card.card.name)}
-              comboLink={`https://commanderspellbook.com/combo/${combo.id}`}
               edhrecLink={EDHRECService.getComboUrl(combo)}
               comboId={combo.id}
               tcgPlayerPrice={combo.prices?.tcgplayer || '-'}
