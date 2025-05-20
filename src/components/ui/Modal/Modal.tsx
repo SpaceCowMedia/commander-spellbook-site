@@ -17,7 +17,7 @@ type Props = {
 const Modal: React.FC<Props> = ({ open, children, onClose, footer, size, closeIcon }) => {
   const [visible, setVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const bodyRef = useRef<HTMLBodyElement>();
+  const bodyRef = useRef<HTMLBodyElement>(null);
 
   useEffect(() => {
     bodyRef.current = document.querySelector('body') as HTMLBodyElement;
