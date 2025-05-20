@@ -775,7 +775,7 @@ For example, \`cardmarket>100\` searches for combos whose component cards cost m
 
 const LEGALITY_DESCRIPTION = `
 You can limit results to your preferred Magic format with the keyword \`legal\`.
-For example, \`legality:format\` searches for combos legal in _format_.
+For example, \`legal:format\` searches for combos legal in _format_.
 On the other hand, \`banned:format\` searches for combos not legal in _format_
 (either because of the format's banlist or its deck construction rules).
 
