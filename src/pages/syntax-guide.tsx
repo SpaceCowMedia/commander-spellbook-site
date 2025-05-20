@@ -334,8 +334,12 @@ const DATA = {
   ],
   legalitySnippets: [
     {
-      search: 'legal:vintage',
-      description: 'Combos that are legal in Vintage.',
+      search: 'legal:standard',
+      description: 'Combos that are legal in Standard.',
+    },
+    {
+      search: 'legal:modern',
+      description: 'Combos that are legal in Modern.',
     },
     {
       search: '-legal:commander',
