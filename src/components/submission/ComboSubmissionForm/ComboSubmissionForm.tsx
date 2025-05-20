@@ -39,6 +39,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const [comment, setComment] = useState(submission?.comment ?? '');
   const [spoiler, setSpoiler] = useState(submission?.spoiler ?? false);
   const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? '');
+  const [notes, setNotes] = useState(submission?.notes ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
@@ -46,17 +47,18 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (submitting) {
         e.preventDefault();
-      }
-      if (
-        cards.length > 0 ||
-        templates.length > 0 ||
-        features.length > 0 ||
-        steps.length > 0 ||
-        easyPrerequisites ||
-        notablePrerequisites ||
-        comment ||
-        manaCost ||
-        spoiler
+      } else if (
+        (cards.length > 0 ||
+          templates.length > 0 ||
+          features.length > 0 ||
+          steps.length > 0 ||
+          easyPrerequisites ||
+          notablePrerequisites ||
+          comment ||
+          manaCost ||
+          spoiler ||
+          notes) &&
+        !success
       ) {
         e.preventDefault();
       }
@@ -158,6 +160,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             notablePrerequisites,
             manaNeeded: manaCost,
             comment,
+            notes,
             spoiler,
           },
         });
@@ -172,6 +175,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             notablePrerequisites,
             manaNeeded: manaCost,
             comment,
+            notes,
             spoiler,
           },
         });
@@ -182,8 +186,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       setSuccess(false);
       setSubmitting(false);
       const error = err as ResponseError;
-      const errorBody = await error.response.text();
-      const errorJson = JSON.parse(errorBody);
+      const errorJson = await error.response.json();
       setErrorObj(errorJson);
     }
   };
@@ -226,7 +229,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
                 ))}
                 <p style={{ marginTop: '1rem' }}>
                   Please, make sure that your combo does not contain "payoff" cards and follows{' '}
-                  <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">
+                  <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">
                     our guidelines
                   </ExternalLink>
                   . We only accept combos in their simplest form, and without any unnecessary card.
@@ -285,9 +288,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       <h1 className="heading-title">{submission ? 'Update Combo Submission' : 'Submit a Combo'}</h1>
       <p className="heading-subtitle">
         Before {submission && 're-'}submitting a combo, please read through our{' '}
-        <ExternalLink href="https://docs.google.com/document/d/1AUEdKKvViHADXQ5Mr7cqw2AHl47eHvqTaNtfYeR8P9M/preview">
-          FAQs
-        </ExternalLink>
+        <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
       <h2 className="heading-subtitle flex justify-start mt-6">Specific cards used in this combo ({cards.length})</h2>
       <ErrorMessage list={errorObj?.uses} />
@@ -415,11 +416,21 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
         </Alert>
       )}
 
+      <h2 className="heading-subtitle flex justify-start">Notes (optional)</h2>
+      <ErrorMessage list={errorObj?.notes} />
+      <textarea
+        className="textarea w-full p-4 border-gray-300 border"
+        placeholder="Notes useful for users to understand the combo"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        maxLength={1024}
+      />
+
       <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
       <ErrorMessage list={errorObj?.comment} />
       <textarea
         className="textarea w-full p-4 border-gray-300 border"
-        placeholder="notes useful for editors that review your submission"
+        placeholder="Notes useful for editors that review your submission"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         maxLength={1024}
