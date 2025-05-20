@@ -1,7 +1,10 @@
 blank_issues_enabled: false
 contact_links:
   - name: Report Error with Existing Combo
-    url: https://discord.gg/DkAyVJG
+    url: https://commanderspellbook.com/submit-an-update/
+    about: Please report errors with an existing combo here. Be sure to include the url of the incorrect combo.
+  - name: Suggest an Update to one or more Existing Combos
+    url: https://commanderspellbook.com/submit-an-update/
     about: Please report errors with an existing combo here. Be sure to include the url of the incorrect combo.
   - name: Add New Combo to Commander Spellbook
     url: https://commanderspellbook.com/submit-a-combo/

@@ -48,6 +48,11 @@ const UserDropdown: React.FC = () => {
               My Submissions
             </button>
           </Link>
+          <Link href="/my-update-submissions">
+            <button type="button" className={styles.dropdownItem}>
+              My Update Submissions
+            </button>
+          </Link>
           {csbIsStaff && (
             <Link onClick={() => console.log('hello')} href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/`}>
               <button type="button" className={styles.dropdownItem}>

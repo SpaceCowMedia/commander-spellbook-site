@@ -9,6 +9,10 @@ export type ArtCircleProps = {
 };
 
 const CARD_ARTS = {
+  'Arcane Teachings': {
+    uid: '02c56677-c8e2-4500-9ee0-0b102496f454',
+    artist: 'Mark Brill',
+  },
   Brainstorm: {
     uid: 'beb755c1-9221-480e-bef9-73f1f13a3345.jpg?1592712969',
     artist: 'DiTerlizzi',

@@ -4,10 +4,11 @@ import ShareNetwork from '../ShareNetwork/ShareNetwork';
 import React from 'react';
 
 type Props = {
-  comboLink: string;
+  comboId: string;
 };
 
-const ShareComboButtons: React.FC<Props> = ({ comboLink }) => {
+const ShareComboButtons: React.FC<Props> = ({ comboId }) => {
+  const comboLink = `https://commanderspellbook.com/combo/${comboId}`;
   const embedComboLink = encodeURIComponent(comboLink);
   const embedComboText = encodeURIComponent('Check out this combo!');
   const blueskyUrl = `https://bsky.app/intent/compose?text=${embedComboText}${encodeURIComponent('\n\n')}${embedComboLink}&hashtags=commanderspellbook&via=CommanderSpell`;

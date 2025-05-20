@@ -1,5 +1,10 @@
-import { VariantSuggestion, VariantSuggestionsApi, SuggestionStatusEnum } from '@space-cow-media/spellbook-client';
-import styles from './comboSubmissionItem.module.scss';
+import {
+  KindEnum,
+  SuggestionStatusEnum,
+  VariantUpdateSuggestion,
+  VariantUpdateSuggestionsApi,
+} from '@space-cow-media/spellbook-client';
+import styles from './updateSubmissionItem.module.scss';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
@@ -8,10 +13,10 @@ import { apiConfiguration } from 'services/api.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 
 type Props = {
-  submission: VariantSuggestion;
+  submission: VariantUpdateSuggestion;
 };
 
-const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }) => {
+const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [submission, setSubmission] = useState(initialSubmission);
@@ -24,13 +29,8 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
     return false;
   }
   const configuration = apiConfiguration();
-  const suggestionsApi = new VariantSuggestionsApi(configuration);
-
-  const submissionIngredients = submission.uses
-    .map((u) => u.card)
-    .concat(submission.requires.map((r) => r.template))
-    .join(' + ');
-  const submissionResults = submission.produces.map((p) => p.feature).join(' + ');
+  const suggestionsApi = new VariantUpdateSuggestionsApi(configuration);
+  const combosText = submission.variants.map((v) => v.variant).join(', ');
   const statusAsText =
     submission.status == SuggestionStatusEnum.A
       ? 'Accepted'
@@ -43,9 +43,21 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
             : submission.status == SuggestionStatusEnum.Pa
               ? 'Pending Approval'
               : 'Unknown';
+  const kindAsText =
+    submission.kind == KindEnum.Nw
+      ? 'Not Working'
+      : submission.kind == KindEnum.Ii
+        ? 'Incorrect Information'
+        : submission.kind == KindEnum.Se
+          ? 'Spelling Error'
+          : submission.kind == KindEnum.Wc
+            ? 'Wrong Card'
+            : submission.kind == KindEnum.O
+              ? 'Other'
+              : 'Unknown';
 
   const refreshSubmission = async () => {
-    const updatedSubmission = await suggestionsApi.variantSuggestionsRetrieve({
+    const updatedSubmission = await suggestionsApi.variantUpdateSuggestionsRetrieve({
       id: submission.id,
     });
     setSubmission(updatedSubmission);
@@ -55,7 +67,7 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
     e.preventDefault();
     setModalOpen(false);
     suggestionsApi
-      .variantSuggestionsDestroy({
+      .variantUpdateSuggestionsDestroy({
         id: submission.id,
       })
       .then(() => {
@@ -78,14 +90,21 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
   let result = (
     <div className={styles.itemContainer}>
       <div className={styles.info}>
-        <h2 className={styles.title}>Combo Submission #{submission.id}</h2>
-        <div className={styles.ingredients}>
-          <h3 className={styles.subtitle}>Cards</h3>
-          <TextWithMagicSymbol text={submissionIngredients} />
+        <h2 className={styles.title}>Update Submission #{submission.id}</h2>
+        <div className={styles.kind}>
+          <h3 className={styles.subtitle}>Kind: {kindAsText}</h3>
         </div>
-        <div className={styles.results}>
-          <h3 className={styles.subtitle}>Results</h3>
-          <TextWithMagicSymbol text={submissionResults} />
+        {submission.variants.length > 0 && (
+          <div className={styles.combos}>
+            <h3 className={styles.subtitle}>Combos</h3>
+            <p>{combosText}</p>
+          </div>
+        )}
+        <div className={styles.issue}>
+          <h3 className={styles.subtitle}>Issue</h3>
+          <TextWithMagicSymbol
+            text={submission.issue.substring(0, 100) + (submission.issue.length > 128 ? '...' : '')}
+          />
         </div>
         <div className={styles.extra}>
           <h3 className={styles.subtitle}>Created: {createdAt}</h3>
@@ -100,7 +119,7 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
           ) : submission.status == SuggestionStatusEnum.R ? (
             <Icon name="cross" />
           ) : submission.status == SuggestionStatusEnum.N ? (
-            <Link href={`/my-submissions/${submission.id}`} key={submission.id}>
+            <Link href={`/my-update-submissions/${submission.id}`} key={submission.id}>
               <Icon name="pencil" />
             </Link>
           ) : submission.status == SuggestionStatusEnum.Ad ? (
@@ -132,7 +151,7 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
               <p>
                 Submission #{submission.id}
                 <br />
-                {submissionIngredients}
+                {submission.issue.substring(0, 100) + (submission.issue.length > 128 ? '...' : '')}
                 <br />
                 <br />
                 This action cannot be undone.
@@ -146,4 +165,4 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
   return <li className={styles.item}>{result}</li>;
 };
 
-export default ComboSubmissionItem;
+export default UpdateSubmissionItem;

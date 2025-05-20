@@ -33,8 +33,9 @@ const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
             <h3 className={styles.header}>Commander Spellbook</h3>
             <Link href="/about/">About</Link>
             <Link href="/submit-a-combo/">Combo Submission</Link>
+            <Link href="/submit-an-update/">Update Submission</Link>
+            <Link href="/submit-an-update/">Report an Error</Link>
             <Link href="/style-guide/">Combo Style Guide</Link>
-            <Link href="/report-error/">Report an Error with a Combo</Link>
             <Link href="/privacy-policy/">Privacy Policy</Link>
             <Link href="/login/?final=">Login</Link>
           </div>

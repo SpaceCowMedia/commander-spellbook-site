@@ -9,7 +9,6 @@ import { useCookies } from 'react-cookie';
 
 type Props = {
   cards: string[];
-  comboLink: string;
   edhrecLink: string;
   comboId: string;
   tcgPlayerPrice: string;
@@ -19,7 +18,6 @@ type Props = {
 
 const ComboSidebarLinks: React.FC<Props> = ({
   cards,
-  comboLink,
   edhrecLink,
   comboId,
   tcgPlayerPrice,
@@ -32,7 +30,7 @@ const ComboSidebarLinks: React.FC<Props> = ({
       <BuyComboButtons cards={cards} tcgPlayerPrice={tcgPlayerPrice} cardKingdomPrice={cardKingdomPrice} />
       <div className="mt-1">
         {!!edhrecLink && <EdhrecLink link={edhrecLink} />}
-        <Link id="report-error-button" className="button w-full" href={`/report-error/?comboId=${comboId}`}>
+        <Link id="report-error-button" className="button w-full" href={`/submit-an-update/?comboId=${comboId}`}>
           Report an Error with this Combo
         </Link>
         <Embed combo={combo} />
@@ -45,7 +43,7 @@ const ComboSidebarLinks: React.FC<Props> = ({
             Edit this Combo
           </Link>
         )}
-        <ShareComboButtons comboLink={comboLink} />
+        <ShareComboButtons comboId={combo.id} />
       </div>
     </div>
   );
