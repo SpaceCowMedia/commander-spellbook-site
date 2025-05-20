@@ -15,8 +15,8 @@ const EditSubmission: React.FC<Props> = ({ submission }) => {
   return (
     <>
       <SpellbookHead
-        title="Commander Spellbook: How to Submit a Combo"
-        description="Learn how to contribute to Commander Spellbook by submitting a new combo."
+        title="Commander Spellbook: Update Combo Submission"
+        description="Changed your mind? Edit your combo submission."
       />
       <ComboSubmissionForm submission={submission} />
     </>
@@ -57,9 +57,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
   const submissionsApi = new VariantSuggestionsApi(configuration);
   const submission = await submissionsApi.variantSuggestionsRetrieve({ id: submissionId });
+  // Create a new object without the 'created' property
+  const { created: _, ...submissionWithoutCreated } = submission;
   return {
     props: {
-      submission,
+      submission: submissionWithoutCreated,
     },
   };
 };
