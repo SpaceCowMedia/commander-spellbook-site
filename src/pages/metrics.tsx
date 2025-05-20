@@ -8,11 +8,16 @@ import React from 'react';
 import { apiConfiguration } from 'services/api.service';
 import styles from './metrics.module.scss';
 
+type Count = {
+  count: number;
+};
+
 type Props = {
-  numberOfTotalCombos: number;
-  numberOfTotalVariants: number;
-  numberOfVariantsPerColorIdentity: Record<IdentityEnum, number>;
-  numberOfVariantsPerSupportedFormat: Record<string, number>;
+  numberOfCombos: Count;
+  numberOfVariants: Count;
+  numberOfVariantsPerColorIdentity: Record<IdentityEnum, Count>;
+  numberOfVariantsPerSupportedFormat: Record<string, Count>;
+  numberOfVariantsPerCardCount: Record<string, Count>;
 };
 
 const Metrics: React.FC<Props> = (stats) => {
@@ -29,28 +34,38 @@ const Metrics: React.FC<Props> = (stats) => {
               <th>Value</th>
             </tr>
             <tr>
-              <td>Number of total combos</td>
-              <td>{stats.numberOfTotalCombos}</td>
+              <td>Number of Combos</td>
+              <td>{stats.numberOfCombos.count}</td>
             </tr>
             <tr>
-              <td>Number of total variants</td>
-              <td>{stats.numberOfTotalVariants}</td>
+              <td>Number of Variants</td>
+              <td>{stats.numberOfVariants.count}</td>
             </tr>
+            <tr>
+              <th>Card Count</th>
+              <th>Variants</th>
+            </tr>
+            {Object.entries(stats.numberOfVariantsPerCardCount).map(([count, { count: variants }]) => (
+              <tr key={count}>
+                <td>{count}</td>
+                <td>{variants}</td>
+              </tr>
+            ))}
             <tr>
               <th>Format</th>
               <th>Variants</th>
             </tr>
-            {Object.entries(stats.numberOfVariantsPerSupportedFormat).map(([format, count]) => (
+            {Object.entries(stats.numberOfVariantsPerSupportedFormat).map(([format, { count: variants }]) => (
               <tr key={format}>
                 <td>{format}</td>
-                <td>{count}</td>
+                <td>{variants}</td>
               </tr>
             ))}
             <tr>
               <th>Color Identities</th>
               <th>Variants</th>
             </tr>
-            {Object.entries(stats.numberOfVariantsPerColorIdentity).map(([identity, count]) => (
+            {Object.entries(stats.numberOfVariantsPerColorIdentity).map(([identity, { count: variants }]) => (
               <tr key={identity}>
                 <td>
                   {identity
@@ -60,7 +75,7 @@ const Metrics: React.FC<Props> = (stats) => {
                       <ManaSymbol symbol={color} size="small" key={color} ariaHidden />
                     ))}
                 </td>
-                <td>{count}</td>
+                <td>{variants}</td>
               </tr>
             ))}
           </tbody>
@@ -75,7 +90,7 @@ export default Metrics;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
-  const numberOfTotalCombos = (
+  const numberOfCombos = (
     await variantsApi.variantsList({
       limit: 1,
       groupByCombo: true,
@@ -91,13 +106,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await Promise.all(
       Object.values(IdentityEnum).map(async (identity) => [
         identity,
-        (
-          await variantsApi.variantsList({
-            limit: 1,
-            groupByCombo: false,
-            q: `identity=${identity}`,
-          })
-        ).count,
+        {
+          count: (
+            await variantsApi.variantsList({
+              limit: 1,
+              groupByCombo: false,
+              q: `identity=${identity}`,
+            })
+          ).count,
+        },
       ]),
     ),
   );
@@ -105,23 +122,49 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await Promise.all(
       LEGALITY_FORMATS.filter(({ value }) => value).map(async ({ value, label }) => [
         label,
-        (
-          await variantsApi.variantsList({
-            limit: 1,
-            groupByCombo: false,
-            q: `format:${value}`,
-          })
-        ).count,
+        {
+          count: (
+            await variantsApi.variantsList({
+              limit: 1,
+              groupByCombo: false,
+              q: `format:${value}`,
+            })
+          ).count,
+        },
       ]),
     ),
   );
 
-  return {
-    props: {
-      numberOfTotalCombos,
-      numberOfTotalVariants,
-      numberOfVariantsPerColorIdentity,
-      numberOfVariantsPerSupportedFormat,
+  const numberOfVariantsPerCardCount = Object.fromEntries(
+    await Promise.all(
+      ['2', '3', '4', '5', '6+'].map(async (count) => [
+        count,
+        {
+          count: (
+            await variantsApi.variantsList({
+              limit: 1,
+              groupByCombo: false,
+              q: count.endsWith('+') ? `card>=${count.substring(0, count.length - 1)}` : `card=${count}`,
+            })
+          ).count,
+        },
+      ]),
+    ),
+  );
+
+  const props: Props = {
+    numberOfCombos: {
+      count: numberOfCombos,
     },
+    numberOfVariants: {
+      count: numberOfTotalVariants,
+    },
+    numberOfVariantsPerColorIdentity,
+    numberOfVariantsPerSupportedFormat,
+    numberOfVariantsPerCardCount,
+  };
+
+  return {
+    props: props,
   };
 };
