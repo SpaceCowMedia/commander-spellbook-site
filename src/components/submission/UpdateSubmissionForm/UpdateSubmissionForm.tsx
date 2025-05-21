@@ -12,10 +12,12 @@ import {
   ResponseError,
   VariantInVariantUpdateSuggestion,
   VariantUpdateSuggestion,
+  VariantUpdateSuggestionRequest,
   VariantUpdateSuggestionsApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import VariantIdSubmission from '../VariantIdSubmission/VariantIdSubmission';
+import { useDebounce } from 'use-debounce';
 
 type Props = {
   submission?: VariantUpdateSuggestion;
@@ -34,6 +36,11 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
+  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantUpdateSuggestionRequest | undefined>(
+    undefined,
+    2000,
+  );
+
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (submitting) {
@@ -50,6 +57,47 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
 
   const configuration = apiConfiguration();
   const updateSuggestionsApi = new VariantUpdateSuggestionsApi(configuration);
+
+  useEffect(() => {
+    if (!suggestionRequest) {
+      return;
+    }
+    let validationRequest: Promise<VariantUpdateSuggestion>;
+    if (submission) {
+      validationRequest = updateSuggestionsApi.variantUpdateSuggestionsValidateUpdate({
+        id: submission.id,
+        variantUpdateSuggestionRequest: suggestionRequest,
+      });
+    } else {
+      validationRequest = updateSuggestionsApi.variantUpdateSuggestionsValidateCreate({
+        variantUpdateSuggestionRequest: suggestionRequest,
+      });
+    }
+    validationRequest
+      .then(() => {
+        setErrorObj(undefined);
+      })
+      .catch((err) => {
+        const error = err as ResponseError;
+        error.response.json().then(setErrorObj);
+      });
+  }, [suggestionRequest]);
+
+  useEffect(() => {
+    if (submitting || success) {
+      if (suggestionRequest) {
+        setSuggestionRequest(undefined);
+      }
+      return;
+    }
+    setSuggestionRequest({
+      kind: kind,
+      variants: variants,
+      issue: issue,
+      solution: solution ?? undefined,
+      comment: comment ?? undefined,
+    });
+  }, [kind, variants, issue, solution, comment]);
 
   // Makes sure the keys of lists are distinct after an element is deleted
   const [keyId, setKeyId] = useState<number>(0);
@@ -203,8 +251,9 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
         </button>
       </div>
 
+      {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
       {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
-      {errorObj && !errorObj.nonFieldErrors && (
+      {errorObj && !errorObj.nonFieldErrors && !errorObj.detail && (
         <ErrorMessage>
           There were errors in your submission. Please fix the mistakes outlined above and resubmit.
         </ErrorMessage>

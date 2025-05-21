@@ -20,9 +20,11 @@ import {
   ResponseError,
   TemplateRequiredInVariantSuggestionRequest,
   VariantSuggestion,
+  VariantSuggestionRequest,
   VariantSuggestionsApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
+import { useDebounce } from 'use-debounce';
 
 type Props = {
   submission?: VariantSuggestion;
@@ -43,6 +45,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
+  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantSuggestionRequest | undefined>(undefined, 2000);
+
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (submitting) {
@@ -72,6 +76,52 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const configuration = apiConfiguration();
   const variantSuggestionsApi = new VariantSuggestionsApi(configuration);
   const findMyCombosApi = new FindMyCombosApi(configuration);
+
+  useEffect(() => {
+    if (!suggestionRequest) {
+      return;
+    }
+    let validationRequest: Promise<VariantSuggestion>;
+    if (submission) {
+      validationRequest = variantSuggestionsApi.variantSuggestionsValidateUpdate({
+        id: submission.id,
+        variantSuggestionRequest: suggestionRequest,
+      });
+    } else {
+      validationRequest = variantSuggestionsApi.variantSuggestionsValidateCreate({
+        variantSuggestionRequest: suggestionRequest,
+      });
+    }
+    validationRequest
+      .then(() => {
+        setErrorObj(undefined);
+      })
+      .catch((err) => {
+        const error = err as ResponseError;
+        error.response.json().then(setErrorObj);
+      });
+  }, [suggestionRequest]);
+
+  useEffect(() => {
+    if (submitting || success) {
+      if (suggestionRequest) {
+        setSuggestionRequest(undefined);
+      }
+      return;
+    }
+    setSuggestionRequest({
+      uses: cards,
+      requires: templates,
+      produces: features,
+      description: steps.join('\n'),
+      easyPrerequisites,
+      notablePrerequisites,
+      manaNeeded: manaCost,
+      comment,
+      notes,
+      spoiler,
+    });
+  }, [cards, templates, features, steps, easyPrerequisites, notablePrerequisites, manaCost, comment, notes, spoiler]);
 
   // Makes sure the keys of lists are distinct after an element is deleted
   const [keyId, setKeyId] = useState<number>(0);
@@ -447,8 +497,9 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
         </button>
       </div>
 
+      {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
       {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
-      {errorObj && !errorObj.nonFieldErrors && (
+      {errorObj && !errorObj.nonFieldErrors && !errorObj.detail && (
         <ErrorMessage>
           There were errors in your submission. Please fix the mistakes outlined above and resubmit.
         </ErrorMessage>

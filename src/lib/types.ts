@@ -14,7 +14,7 @@ export type ComboPrerequisites = {
 
 export type ComboSubmissionErrorType = {
   [key: string]: (ComboSubmissionErrorType | string)[];
-} & { statusCode: number };
+} & { statusCode: number; detail?: string };
 
 export type ComboSubmission = Omit<VariantSuggestion, 'created'> & {
   created: string;

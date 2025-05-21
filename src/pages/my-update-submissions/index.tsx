@@ -50,7 +50,7 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
             <SplashPage
               pulse={false}
               title="No Update Submissions Found"
-              flavor={"No, it's not quite as simple as 'point and boom,' but if you must summarize."}
+              flavor={"No, it's not quite as simple as 'point and boom,' but if you must summarize.\n\n- Daretti"}
               artCircleCardName="Frantic Search"
             >
               <div className={`${styles.noCombosFoundButtons} opacity-100`}>
