@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {
-        destination: '/login?final=submit-a-combo',
+        destination: `/login?final=${context.resolvedUrl}`,
         permanent: false,
       },
     };
