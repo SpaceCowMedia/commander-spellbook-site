@@ -336,11 +336,15 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
     <div className="static-page">
       <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
       <h1 className="heading-title">{submission ? 'Update Combo Submission' : 'Submit a Combo'}</h1>
-      <p className="heading-subtitle">
+      <p className="heading-subtitle mb-20">
         Before {submission && 're-'}submitting a combo, please read through our{' '}
         <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
-      <h2 className="heading-subtitle flex justify-start mt-6">Specific cards used in this combo ({cards.length})</h2>
+
+      {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
+      {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
+
+      <h2 className="heading-subtitle flex justify-start">Specific cards used in this combo ({cards.length})</h2>
       <ErrorMessage list={errorObj?.uses} />
       <div className="flex flex-col">
         {cards.map((card, index) => (

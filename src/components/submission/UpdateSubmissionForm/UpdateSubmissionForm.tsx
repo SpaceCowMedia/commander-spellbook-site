@@ -179,12 +179,15 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     <div className="static-page">
       <ArtCircle cardName="Arcane Teachings" className="m-auto md:block hidden" />
       <h1 className="heading-title">{submission ? 'Update Combo Update Submission' : 'Submit an Update'}</h1>
-      <p className="heading-subtitle">
+      <p className="heading-subtitle mb-6">
         Before {submission && 're-'}submitting an update, please read through our{' '}
         <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
 
-      <h2 className="heading-subtitle flex justify-start mt-6">Update Kind</h2>
+      {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
+      {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
+
+      <h2 className="heading-subtitle flex justify-start">Update Kind</h2>
       <ErrorMessage list={errorObj?.kind} />
       <div className="flex flex-col">
         <select
