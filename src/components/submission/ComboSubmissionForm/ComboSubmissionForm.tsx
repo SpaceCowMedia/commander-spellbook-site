@@ -41,7 +41,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   const [comment, setComment] = useState(submission?.comment ?? '');
   const [spoiler, setSpoiler] = useState(submission?.spoiler ?? false);
   const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? '');
-  const [notes, setNotes] = useState(submission?.notes ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
@@ -60,8 +59,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
           notablePrerequisites ||
           comment ||
           manaCost ||
-          spoiler ||
-          notes) &&
+          spoiler) &&
         !success
       ) {
         e.preventDefault();
@@ -118,10 +116,9 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       notablePrerequisites,
       manaNeeded: manaCost,
       comment,
-      notes,
       spoiler,
     });
-  }, [cards, templates, features, steps, easyPrerequisites, notablePrerequisites, manaCost, comment, notes, spoiler]);
+  }, [cards, templates, features, steps, easyPrerequisites, notablePrerequisites, manaCost, comment, spoiler]);
 
   // Makes sure the keys of lists are distinct after an element is deleted
   const [keyId, setKeyId] = useState<number>(0);
@@ -210,7 +207,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             notablePrerequisites,
             manaNeeded: manaCost,
             comment,
-            notes,
             spoiler,
           },
         });
@@ -225,7 +221,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             notablePrerequisites,
             manaNeeded: manaCost,
             comment,
-            notes,
             spoiler,
           },
         });
@@ -469,16 +464,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
           </ul>
         </Alert>
       )}
-
-      <h2 className="heading-subtitle flex justify-start">Notes (optional)</h2>
-      <ErrorMessage list={errorObj?.notes} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="Notes useful for users to understand the combo"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        maxLength={1024}
-      />
 
       <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
       <ErrorMessage list={errorObj?.comment} />
