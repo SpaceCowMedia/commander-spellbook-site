@@ -10,7 +10,7 @@ import scryfall from 'scryfall-client';
 import { useDebounce } from 'use-debounce';
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
-const AUTOCOMPLETE_DELAY = 150;
+const AUTOCOMPLETE_DELAY = 200;
 const BLUR_CLOSE_DELAY = 900;
 
 export type AutoCompleteOption = {
@@ -85,7 +85,7 @@ const AutocompleteInput: React.FC<Props> = ({
     if (!active) {
       return;
     }
-    if (!value) {
+    if (!localValue) {
       return handleClose();
     }
     waitForAutocomplete();
@@ -106,8 +106,15 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
+    if (!debouncedLocalValue || !active) {
+      return;
+    }
     lookupAutoComplete();
-  }, [debouncedLocalValue]);
+  }, [debouncedLocalValue, active, autocompleteOptions]);
 
   const handleBlur = () => {
     if (!active) {
@@ -126,6 +133,7 @@ const AutocompleteInput: React.FC<Props> = ({
     const value = useValueForInput ? selection.value : selection.label;
     setLocalValue(value);
     onChange && onChange(value);
+    setFirstRender(true);
     handleClose();
   };
 
@@ -161,20 +169,19 @@ const AutocompleteInput: React.FC<Props> = ({
     if (!selection) {
       return;
     }
-
     e.preventDefault();
-
     handleSelect(selection);
   };
 
-  const handleTab = (_e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const selection = matchingAutoCompleteOptions[arrowCounter];
     if (!selection) {
       return;
     }
-
+    e.preventDefault();
     handleSelect(selection);
   };
+
   const handleClick = (item: AutoCompleteOption) => {
     handleSelect(item);
     if (inputRef.current) {
@@ -289,12 +296,12 @@ const AutocompleteInput: React.FC<Props> = ({
     if (inMemory) {
       await timeout(AUTOCOMPLETE_DELAY);
     }
-    if (!value) {
+    if (!localValue) {
       return handleClose();
     }
     setMatchingAutoCompleteOptions([]);
-    const totalOptions = await findAllMatches(value);
-    const matchingOptions = findBestMatches(totalOptions, value);
+    const totalOptions = await findAllMatches(localValue, autocompleteOptions);
+    const matchingOptions = findBestMatches(totalOptions, localValue);
     setMatchingAutoCompleteOptions(matchingOptions);
   };
 
@@ -309,24 +316,6 @@ const AutocompleteInput: React.FC<Props> = ({
       handleTab(e);
     }
   };
-
-  useEffect(() => {
-    if (firstRender) {
-      return setFirstRender(false);
-    }
-    if (!localValue || !active) {
-      return;
-    }
-    setMatchingAutoCompleteOptions([]);
-    findAllMatches(value, autocompleteOptions).then((options) => {
-      setMatchingAutoCompleteOptions(findBestMatches(options, value));
-    });
-  }, [localValue, active, autocompleteOptions]);
-
-  useEffect(() => {
-    setFirstRender(true);
-    setLocalValue(value);
-  }, [value]);
 
   return (
     <div className={styles.autocompleteContainer}>
