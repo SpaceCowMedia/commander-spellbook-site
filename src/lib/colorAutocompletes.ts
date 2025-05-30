@@ -165,6 +165,10 @@ const colorAutocomplete = [
     label: 'Five Color {w}{u}{b}{r}{g}',
     alias: /^(5|[wubrg]{0,5})$/,
   },
+  {
+    value: 'penta',
+    label: 'Penta-Color {w}{u}{b}{r}{g}',
+  },
 
   // these are their own entries instaead of
   // aliases for their 4 color name so that
