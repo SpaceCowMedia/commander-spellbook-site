@@ -199,6 +199,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
           <option value={KindEnum.Ii}>Incorrect Information</option>
           <option value={KindEnum.Se}>Spelling/Grammar Error</option>
           <option value={KindEnum.Wc}>Wrong Card</option>
+          <option value={KindEnum.Vg}>Variant Grouping</option>
           <option value={KindEnum.O}>Other</option>
         </select>
       </div>

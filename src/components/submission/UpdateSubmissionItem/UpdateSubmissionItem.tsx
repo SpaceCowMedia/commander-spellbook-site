@@ -52,9 +52,11 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
           ? 'Spelling Error'
           : submission.kind == KindEnum.Wc
             ? 'Wrong Card'
-            : submission.kind == KindEnum.O
-              ? 'Other'
-              : 'Unknown';
+            : submission.kind == KindEnum.Vg
+              ? 'Variant Grouping'
+              : submission.kind == KindEnum.O
+                ? 'Other'
+                : 'Unknown';
 
   const refreshSubmission = async () => {
     const updatedSubmission = await suggestionsApi.variantUpdateSuggestionsRetrieve({
