@@ -33,6 +33,9 @@ const ComboSidebarLinks: React.FC<Props> = ({
         <Link id="report-error-button" className="button w-full" href={`/submit-an-update/?comboId=${comboId}`}>
           Report an Error with this Combo
         </Link>
+        <Link id="submit-variant-button" className="button w-full" href={`/submit-a-combo/?variantOf=${comboId}`}>
+          Submit a Variant of this Combo
+        </Link>
         <Embed combo={combo} />
         {cookies.csbIsStaff && (
           <Link

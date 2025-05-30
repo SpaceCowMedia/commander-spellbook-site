@@ -19,28 +19,71 @@ import {
   FindMyCombosApi,
   ResponseError,
   TemplateRequiredInVariantSuggestionRequest,
+  Variant,
   VariantSuggestion,
   VariantSuggestionRequest,
   VariantSuggestionsApi,
+  ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
 
 type Props = {
   submission?: VariantSuggestion;
+  variant?: Variant;
 };
 
-const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
+const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const router = useRouter();
-  const [cards, setCards] = useState<CardUsedInVariantSuggestionRequest[]>(submission?.uses ?? []);
-  const [templates, setTemplates] = useState<TemplateRequiredInVariantSuggestionRequest[]>(submission?.requires ?? []);
-  const [features, setFeatures] = useState<FeatureProducedInVariantSuggestionRequest[]>(submission?.produces ?? []);
-  const [steps, setSteps] = useState<string[]>(submission?.description.split('\n') ?? []);
-  const [easyPrerequisites, setEasyPrerequisites] = useState(submission?.easyPrerequisites ?? '');
-  const [notablePrerequisites, setNotablePrerequisites] = useState(submission?.notablePrerequisites ?? '');
-  const [comment, setComment] = useState(submission?.comment ?? '');
-  const [spoiler, setSpoiler] = useState(submission?.spoiler ?? false);
-  const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? '');
+  const [cards, setCards] = useState<CardUsedInVariantSuggestionRequest[]>(
+    submission?.uses ??
+      variant?.uses.map<CardUsedInVariantSuggestionRequest>((c) => ({
+        card: c.card.name,
+        quantity: c.quantity,
+        zoneLocations: c.zoneLocations as ZoneLocationsEnum[],
+        battlefieldCardState: c.battlefieldCardState,
+        exileCardState: c.exileCardState,
+        graveyardCardState: c.graveyardCardState,
+        libraryCardState: c.libraryCardState,
+        mustBeCommander: c.mustBeCommander,
+      })) ??
+      [],
+  );
+  const [templates, setTemplates] = useState<TemplateRequiredInVariantSuggestionRequest[]>(
+    submission?.requires ??
+      variant?.requires.map<TemplateRequiredInVariantSuggestionRequest>((t) => ({
+        template: t.template.name,
+        scryfallQuery: t.template.scryfallQuery,
+        quantity: t.quantity,
+        zoneLocations: t.zoneLocations as ZoneLocationsEnum[],
+        battlefieldCardState: t.battlefieldCardState,
+        exileCardState: t.exileCardState,
+        graveyardCardState: t.graveyardCardState,
+        libraryCardState: t.libraryCardState,
+        mustBeCommander: t.mustBeCommander,
+      })) ??
+      [],
+  );
+  const [features, setFeatures] = useState<FeatureProducedInVariantSuggestionRequest[]>(
+    submission?.produces ??
+      variant?.produces.map<FeatureProducedInVariantSuggestionRequest>((f) => ({
+        feature: f.feature.name,
+      })) ??
+      [],
+  );
+  const [steps, setSteps] = useState<string[]>(
+    submission?.description.split('\n') ?? variant?.description.split('\n') ?? [],
+  );
+  const [easyPrerequisites, setEasyPrerequisites] = useState(
+    submission?.easyPrerequisites ?? variant?.easyPrerequisites ?? '',
+  );
+  const [notablePrerequisites, setNotablePrerequisites] = useState(
+    submission?.notablePrerequisites ?? variant?.notablePrerequisites ?? '',
+  );
+  const [comment, setComment] = useState(submission?.comment ?? variant?.notes ?? '');
+  const [variantOf, setVariantOf] = useState(submission?.variantOf ?? variant?.id);
+  const [spoiler, setSpoiler] = useState(submission?.spoiler ?? variant?.spoiler ?? false);
+  const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? variant?.manaNeeded ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
@@ -58,6 +101,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
           easyPrerequisites ||
           notablePrerequisites ||
           comment ||
+          variantOf ||
           manaCost ||
           spoiler) &&
         !success
@@ -80,7 +124,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       return;
     }
     let validationRequest: Promise<VariantSuggestion>;
-    if (submission) {
+    if (submission?.id) {
       validationRequest = variantSuggestionsApi.variantSuggestionsValidateUpdate({
         id: submission.id,
         variantSuggestionRequest: suggestionRequest,
@@ -111,6 +155,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       uses: cards,
       requires: templates,
       produces: features,
+      variantOf: variantOf,
       description: steps.join('\n'),
       easyPrerequisites,
       notablePrerequisites,
@@ -118,7 +163,18 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
       comment,
       spoiler,
     });
-  }, [cards, templates, features, steps, easyPrerequisites, notablePrerequisites, manaCost, comment, spoiler]);
+  }, [
+    cards,
+    templates,
+    features,
+    steps,
+    easyPrerequisites,
+    notablePrerequisites,
+    manaCost,
+    comment,
+    variantOf,
+    spoiler,
+  ]);
 
   // Makes sure the keys of lists are distinct after an element is deleted
   const [keyId, setKeyId] = useState<number>(0);
@@ -195,13 +251,14 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
     setSubmitting(true);
     setErrorObj(undefined);
     try {
-      if (submission) {
+      if (submission?.id) {
         await variantSuggestionsApi.variantSuggestionsUpdate({
           id: submission.id,
           variantSuggestionRequest: {
             uses: cards,
             requires: templates,
             produces: features,
+            variantOf: variantOf,
             description: steps.join('\n'),
             easyPrerequisites,
             notablePrerequisites,
@@ -216,6 +273,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
             uses: cards,
             requires: templates,
             produces: features,
+            variantOf: variantOf,
             description: steps.join('\n'),
             easyPrerequisites,
             notablePrerequisites,
@@ -330,9 +388,9 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
   return (
     <div className="static-page">
       <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
-      <h1 className="heading-title">{submission ? 'Update Combo Submission' : 'Submit a Combo'}</h1>
+      <h1 className="heading-title">{submission?.id ? 'Update Combo Submission' : 'Submit a Combo'}</h1>
       <p className="heading-subtitle mb-20">
-        Before {submission && 're-'}submitting a combo, please read through our{' '}
+        Before {submission?.id && 're-'}submitting a combo, please read through our{' '}
         <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
 
@@ -465,6 +523,17 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
         </Alert>
       )}
 
+      <h2 className="heading-subtitle flex justify-start">Variant of (optional)</h2>
+      <ErrorMessage list={errorObj?.variantOf} />
+      <input
+        type="text"
+        placeholder='ID of the combo this is a variant of (e.g. "1234-4567")'
+        className="textarea w-full p-4 border-gray-300 border mb-3"
+        value={variantOf || ''}
+        onChange={(e) => setVariantOf(e.target.value || undefined)}
+        maxLength={128}
+      />
+
       <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
       <ErrorMessage list={errorObj?.comment} />
       <textarea
@@ -482,7 +551,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission }) => {
 
       <div className="flex justify-center">
         <button disabled={submitting} className="button" onClick={handleSubmit}>
-          {submitting ? <Loader /> : submission ? 'Re-submit Combo' : 'Submit Combo'}
+          {submitting ? <Loader /> : submission?.id ? 'Re-submit Combo' : 'Submit Combo'}
         </button>
       </div>
 

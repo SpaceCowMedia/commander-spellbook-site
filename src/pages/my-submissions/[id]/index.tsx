@@ -8,7 +8,7 @@ import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 
 type Props = {
-  submission: VariantSuggestion;
+  submission?: VariantSuggestion;
 };
 
 const EditSubmission: React.FC<Props> = ({ submission }) => {
