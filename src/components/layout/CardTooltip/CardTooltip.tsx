@@ -1,5 +1,7 @@
 import styles from './cardTooltip.module.scss';
 import React, { useRef, useState } from 'react';
+import cardBack from 'assets/images/card-back.png';
+import Loader from 'components/layout/Loader/Loader';
 
 type Props = {
   cardName?: string;
@@ -14,8 +16,8 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   );
 
   const divRef = useRef<HTMLDivElement>(null);
-  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_, i) => i == 0));
-  const loadedImages = isImageLoaded.filter((val) => val).length;
+  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_) => false));
+  const [hasHovered, setHasHovered] = useState(false);
 
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (window.innerWidth <= 1024) {
@@ -32,6 +34,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     if (!divRef.current) {
       return;
     }
+    setHasHovered(true);
     const displayOnRightSide = window.innerWidth / 2 - e.clientX > 0;
     divRef.current.style.display = 'flex';
     divRef.current.style.top = e.clientY - 30 + 'px';
@@ -39,7 +42,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     if (displayOnRightSide) {
       divRef.current.style.left = e.clientX + 50 + 'px';
     } else {
-      divRef.current.style.left = e.clientX - 290 * loadedImages + 'px';
+      divRef.current.style.left = e.clientX - 290 * urls.length + 'px';
     }
   };
 
@@ -49,24 +52,45 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     }
   };
 
+  const allImagesLoaded = isImageLoaded.every((val) => val);
+
   return (
-    <span onMouseMove={handleMouseMove} onMouseOut={handleMouseOut} onClick={handleSingleClick}>
+    <span
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseMove}
+      onMouseOut={handleMouseOut}
+      onClick={handleSingleClick}
+    >
       <div ref={divRef} className={styles.cardTooltip}>
-        {urls.map((url, index) => (
-          <img
-            key={index}
-            src={url}
-            alt={cardNames[index]}
-            style={{ ...(isImageLoaded[index] ? {} : { display: 'none' }) }}
-            /* set flag after image loading is complete */
-            onLoad={() => {
-              setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? true : val)));
-            }}
-            onError={() => {
-              setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? false : val)));
-            }}
-          />
-        ))}
+        <div className="relative flex">
+          <div className={styles.cardBack} style={{ opacity: allImagesLoaded ? 0 : 1 }}>
+            {urls.map((_, i) => (
+              <img key={i} src={cardBack.src} className={styles.cardImage} alt="Card Back" />
+            ))}
+          </div>
+          {!allImagesLoaded && (
+            <div className={styles.loader}>
+              <Loader />
+            </div>
+          )}
+          {hasHovered &&
+            urls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={cardNames[index]}
+                className={styles.cardImage}
+                style={{ opacity: allImagesLoaded ? 1 : 0 }}
+                /* set flag after image loading is complete */
+                onLoad={() => {
+                  setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? true : val)));
+                }}
+                onError={() => {
+                  setIsImageLoaded((prev) => prev.map((val, i) => (i === index ? false : val)));
+                }}
+              />
+            ))}
+        </div>
       </div>
       {children}
     </span>
