@@ -149,6 +149,16 @@ input, textarea, select, option, .input, .inputControl {
   }
 }
 
+.bg-wip {
+  background: repeating-linear-gradient(
+    -45deg,
+    #BE9800FF,
+    #BE9800FF 20px,
+    #000000 20px,
+    #000000 40px
+  );
+}
+
 /* v-tooltip styles */
 .tooltip {
   @apply block z-50;

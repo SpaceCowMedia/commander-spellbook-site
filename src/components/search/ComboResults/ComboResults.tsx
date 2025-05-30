@@ -68,8 +68,8 @@ export const ComboResult: React.FC<ResultProps> = ({
 
   const prereqCount = countPrerequisites(combo);
 
-  const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'light';
-  const stateBasedColorInverse = combo.status === 'OK' ? 'light' : 'dark';
+  const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'wip';
+  const stateBasedColorInverse = combo.status === 'OK' ? 'light' : combo.status === 'E' ? 'dark' : 'light';
   const stateBasedTooltip =
     combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
 
