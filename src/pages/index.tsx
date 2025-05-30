@@ -15,12 +15,6 @@ type Props = {
   comboOfTheDay?: string;
 };
 
-const DEFAULT_PROPS = {
-  props: {
-    featuredComboButtonText: 'Featured Combos (Mocked Data)',
-  },
-};
-
 const Home: React.FC<Props> = ({ featuredComboButtonText, comboOfTheDay }) => {
   const router = useRouter();
   const query = router.query.q ? `${router.query.q}` : ``;
@@ -108,7 +102,13 @@ export async function getStaticProps() {
   const { NEXT_PUBLIC_EDITOR_BACKEND_URL } = process.env;
 
   if (!NEXT_PUBLIC_EDITOR_BACKEND_URL) {
-    return DEFAULT_PROPS;
+    return {
+      props: {
+        featuredComboButtonText: 'Featured Combos',
+        comboOfTheDay: undefined,
+      },
+      revalidate: 60,
+    };
   }
 
   try {
@@ -122,20 +122,22 @@ export async function getStaticProps() {
       return data.key === 'combo_of_the_day';
     });
 
-    if (!buttonTextData) {
-      return DEFAULT_PROPS;
-    }
-
     return {
       props: {
-        featuredComboButtonText: buttonTextData.value,
+        featuredComboButtonText: buttonTextData?.value,
         comboOfTheDay: comboOfTheDayData?.value,
       },
       revalidate: 60,
     };
   } catch (error) {
     console.error('Error fetching data from the editor backend:', error);
-    return DEFAULT_PROPS;
+    return {
+      props: {
+        featuredComboButtonText: 'Featured Combos',
+        comboOfTheDay: undefined,
+      },
+      revalidate: 60,
+    };
   }
 }
 
