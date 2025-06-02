@@ -38,7 +38,7 @@
     "react-select": "^5.10.1",
     "react-tooltip": "^5.28.1",
     "remark-gfm": "^4.0.1",
-    "remark-rehype": "^11.1.1",
+    "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
     "sharp": "^0.33.5",
     "use-debounce": "^10.0.4"
