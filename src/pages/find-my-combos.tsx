@@ -451,7 +451,7 @@ const FindMyCombos: React.FC = () => {
           {!lookupInProgress && currentlyParsedDeck && (
             <section id="combos-in-deck-section">
               <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-              <ComboResults results={results.included} hideVariants={true} />
+              <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />
             </section>
           )}
 
@@ -459,7 +459,7 @@ const FindMyCombos: React.FC = () => {
             <section id="potential-combos-in-deck-section">
               <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
               <p>List of combos where your decklist is missing 1 combo piece.</p>
-              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} hideVariants={true} />
+              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} hideVariants={true} localPageLimit={100} />
             </section>
           )}
 
@@ -473,6 +473,7 @@ const FindMyCombos: React.FC = () => {
                 results={results.almostIncludedByAddingColors}
                 deck={currentlyParsedDeck?.deck}
                 hideVariants={true}
+                localPageLimit={100}
               />
             </section>
           )}
@@ -486,6 +487,7 @@ const FindMyCombos: React.FC = () => {
                 results={results.almostIncludedByChangingCommanders}
                 deck={currentlyParsedDeck?.deck}
                 hideVariants={true}
+                localPageLimit={100}
               />
             </section>
           )}
@@ -503,6 +505,7 @@ const FindMyCombos: React.FC = () => {
                 results={results.almostIncludedByAddingColorsAndChangingCommanders}
                 deck={currentlyParsedDeck?.deck}
                 hideVariants={true}
+                localPageLimit={100}
               />
             </section>
           )}

@@ -5,7 +5,7 @@ import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
-import React from 'react';
+import React, {useState} from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 
 type ResultProps = {
@@ -164,18 +164,33 @@ type Props = {
   sort?: string;
   vendor?: Array<keyof VariantPrices>;
   hideVariants?: boolean;
+  localPageLimit?: number; // If passed in, will limit the number of results shown on the local page
 };
 
-const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage }) => {
+const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage, localPageLimit }) => {
+  const [id] = useState(Math.random().toString(36).substring(2, 15));
+  const [page, setPage] = useState(1);
   const decklist = deck?.main.concat(deck.commanders).reduce((acc, card) => {
     const lowercase = card.card.toLowerCase();
     acc.set(lowercase, (acc.get(lowercase) ?? 0) + card.quantity);
     return acc;
   }, new Map<string, number>());
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView();
+    }
+  };
+
+  const hasMoreResults = localPageLimit ? page * localPageLimit < results.length : false;
+
+  const localResults = localPageLimit ? results.slice((page-1) * localPageLimit, page * localPageLimit) : results;
+
   return (
-    <div className={styles.comboResultsWrapper}>
-      {results.map((combo) => (
+    <div id={id} className={styles.comboResultsWrapper}>
+      {localResults.map((combo) => (
         <ComboResult
           combo={combo}
           decklist={decklist}
@@ -185,6 +200,12 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
           decklistMessage={decklistMessage}
         />
       ))}
+      {!!localPageLimit && (
+        <div className="w-full flex justify-center">
+          {page > 1 && <button className="button" onClick={() => handlePageChange(page - 1)}>View Previous</button>}
+          {hasMoreResults && <button className="button" onClick={() => handlePageChange(page + 1)}>View More</button>}
+        </div>
+      )}
     </div>
   );
 };
