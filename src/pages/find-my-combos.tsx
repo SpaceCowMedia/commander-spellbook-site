@@ -459,7 +459,12 @@ const FindMyCombos: React.FC = () => {
             <section id="potential-combos-in-deck-section">
               <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
               <p>List of combos where your decklist is missing 1 combo piece.</p>
-              <ComboResults results={results.almostIncluded} deck={currentlyParsedDeck?.deck} hideVariants={true} localPageLimit={100} />
+              <ComboResults
+                results={results.almostIncluded}
+                deck={currentlyParsedDeck?.deck}
+                hideVariants={true}
+                localPageLimit={100}
+              />
             </section>
           )}
 

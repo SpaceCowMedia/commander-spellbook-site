@@ -5,7 +5,7 @@ import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 
 type ResultProps = {
@@ -186,7 +186,7 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
 
   const hasMoreResults = localPageLimit ? page * localPageLimit < results.length : false;
 
-  const localResults = localPageLimit ? results.slice((page-1) * localPageLimit, page * localPageLimit) : results;
+  const localResults = localPageLimit ? results.slice((page - 1) * localPageLimit, page * localPageLimit) : results;
 
   return (
     <div id={id} className={styles.comboResultsWrapper}>
@@ -202,8 +202,16 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
       ))}
       {!!localPageLimit && (
         <div className="w-full flex justify-center">
-          {page > 1 && <button className="button" onClick={() => handlePageChange(page - 1)}>View Previous</button>}
-          {hasMoreResults && <button className="button" onClick={() => handlePageChange(page + 1)}>View More</button>}
+          {page > 1 && (
+            <button className="button" onClick={() => handlePageChange(page - 1)}>
+              View Previous
+            </button>
+          )}
+          {hasMoreResults && (
+            <button className="button" onClick={() => handlePageChange(page + 1)}>
+              View More
+            </button>
+          )}
         </div>
       )}
     </div>
