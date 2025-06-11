@@ -5,7 +5,7 @@ import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 
 type ResultProps = {
@@ -168,7 +168,7 @@ type Props = {
 };
 
 const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage, localPageLimit }) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);
   const decklist = deck?.main.concat(deck.commanders).reduce((acc, card) => {
     const lowercase = card.card.toLowerCase();
