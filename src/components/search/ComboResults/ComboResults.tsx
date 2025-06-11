@@ -5,7 +5,7 @@ import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 
 type ResultProps = {
@@ -168,7 +168,7 @@ type Props = {
 };
 
 const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage, localPageLimit }) => {
-  const [id] = useState(Math.random().toString(36).substring(2, 15));
+  const ref = useRef<HTMLDivElement>(null)
   const [page, setPage] = useState(1);
   const decklist = deck?.main.concat(deck.commanders).reduce((acc, card) => {
     const lowercase = card.card.toLowerCase();
@@ -178,7 +178,7 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    const element = document.getElementById(id);
+    const element = ref.current;
     if (element) {
       element.scrollIntoView();
     }
@@ -189,7 +189,7 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
   const localResults = localPageLimit ? results.slice((page - 1) * localPageLimit, page * localPageLimit) : results;
 
   return (
-    <div id={id} className={styles.comboResultsWrapper}>
+    <div ref={ref} className={styles.comboResultsWrapper}>
       {localResults.map((combo) => (
         <ComboResult
           combo={combo}
