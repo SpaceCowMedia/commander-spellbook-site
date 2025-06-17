@@ -40,7 +40,7 @@
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
-    "sharp": "^0.33.5",
+    "sharp": "^0.34.2",
     "use-debounce": "^10.0.5"
   },
   "devDependencies": {
