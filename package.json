@@ -49,7 +49,7 @@
     "@eslint/compat": "^1.2.9",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/gtag.js": "^0.0.20",
-    "@types/node": "^22.10.1",
+    "@types/node": "^24.0.3",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
