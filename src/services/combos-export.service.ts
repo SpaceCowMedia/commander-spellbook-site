@@ -20,12 +20,10 @@ function exportToText(combos: Variant[]): string {
 
   const lines: string[] = [];
 
-  for (let combo of combos) {
-    if (!combo) {
-      continue;
-    }
+  for (let indexCombo = 0; indexCombo < combos.length; indexCombo++) {
+    const combo = combos[indexCombo];
 
-    lines.push('--------------------------------------');
+    lines.push(`${indexCombo + 1}. --------------------------------------`);
     lines.push(getIdentity(combo));
     lines.push(LINE_BREAK);
 
