@@ -114,8 +114,10 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
       return;
     }
 
-    const txt = CombosExportService.exportToText(combos);
-    DownloadFileService.downloadTextFile('combos.txt', txt);
+    const combosExport = CombosExportService.exportToText(combos);
+    const queryFormated = query.replace(/\s/g, '_').replace(/\W/g, '');
+
+    DownloadFileService.downloadTextFile(`combos_${queryFormated}.txt`, combosExport);
   };
 
   const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
@@ -217,7 +219,12 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
             </div>
 
             <div className="container sm:flex flex-row mb-2">
-              <button type="button" onClick={handleExportCombosToText} className={styles.exportToTextButton}>
+              <button
+                id="download-combos-btn"
+                type="button"
+                onClick={handleExportCombosToText}
+                className={styles.exportToTextButton}
+              >
                 Export combos to text
               </button>
             </div>
