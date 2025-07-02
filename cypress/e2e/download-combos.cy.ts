@@ -12,20 +12,7 @@ describe('Download combos button', () => {
     cy.get('#download-combos-btn').click();
 
     // THEN
-    const comboFileName = 'combos_' + searchQuery + '.txt';
-    cy.readFile(path.join(downloadDir, comboFileName));
-  });
-
-  it('Should concat query word with underscores', () => {
-    // GIVEN
-    const searchQuery = 'selvala, heart of the wilds';
-    cy.visit('/search?q=' + searchQuery);
-
-    // WHEN
-    cy.get('#download-combos-btn').click();
-
-    // THEN
-    const comboFileName = 'combos_selvala_heart_of_the_wilds.txt';
+    const comboFileName = 'commander_spellbook_combos.txt';
     cy.readFile(path.join(downloadDir, comboFileName));
   });
 

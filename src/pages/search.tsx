@@ -115,9 +115,8 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
     }
 
     const combosExport = CombosExportService.exportToText(combos);
-    const queryFormated = query.replace(/\s/g, '_').replace(/\W/g, '');
 
-    DownloadFileService.downloadTextFile(`combos_${queryFormated}.txt`, combosExport);
+    DownloadFileService.downloadTextFile('commander_spellbook_combos.txt', combosExport);
   };
 
   const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
