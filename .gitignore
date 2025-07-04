@@ -95,6 +95,8 @@ sw.*
 cypress/fixtures
 cypress/videos
 cypress/screenshots
+cypress/downloads
+
 
 # Build files
 tsconfig.tsbuildinfo

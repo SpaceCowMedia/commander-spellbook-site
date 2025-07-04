@@ -12,6 +12,9 @@ import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
+import CombosExportService from 'services/combos-export.service';
+import DownloadFileService from 'services/download-file.service';
+import styles from './search.module.scss';
 
 const PAGE_SIZE = 50;
 
@@ -104,6 +107,16 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
 
   const handleClearVariant = () => {
     router.push({ pathname: '/search/', query: { ...router.query, variant: undefined, page: '1' } });
+  };
+
+  const handleExportCombosToText = () => {
+    if (combos.length === 0) {
+      return;
+    }
+
+    const combosExport = CombosExportService.exportToText(combos);
+
+    DownloadFileService.downloadTextFile('commander_spellbook_combos.txt', combosExport);
   };
 
   const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
@@ -202,6 +215,17 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
                   />
                 </>
               )}
+            </div>
+
+            <div className="container sm:flex flex-row mb-2">
+              <button
+                id="download-combos-btn"
+                type="button"
+                onClick={handleExportCombosToText}
+                className={styles.exportToTextButton}
+              >
+                Export combos to text
+              </button>
             </div>
           </div>
         )}
