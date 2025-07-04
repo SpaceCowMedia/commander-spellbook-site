@@ -31,6 +31,10 @@
     @apply cursor-pointer;
   }
 
+  .exportCombosInput {
+    @apply cursor-pointer;
+  }
+
   .decklistCardCount {
     @apply border-2 border-dark w-1/3 text-center py-2 -mt-4;
   }

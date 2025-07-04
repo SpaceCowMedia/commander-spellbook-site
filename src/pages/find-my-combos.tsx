@@ -23,6 +23,9 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { LEGALITY_FORMATS } from 'lib/types';
 import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
 import { DEFAULT_ORDERING } from 'lib/constants';
+import CombosExportService from 'services/combos-export.service';
+import DownloadFileService from 'services/download-file.service';
+import normalizeStringInput from 'lib/normalizeStringInput';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -306,6 +309,26 @@ const FindMyCombos: React.FC = () => {
     }
   }, [format]);
 
+  const handleExportCombosToText = () => {
+    if (results.included.length === 0) {
+      return;
+    }
+
+    const combosExport = CombosExportService.exportToText(results.included);
+    const commandersNormalized = currentlyParsedDeck
+      ? currentlyParsedDeck.deck.commanders
+          .map((c) => normalizeStringInput(c.card))
+          .join('+')
+          .trim()
+          .replace(/\s+/g, '_')
+          .substring(0, 50)
+      : '';
+    DownloadFileService.downloadTextFile(
+      `${commandersNormalized ? `${commandersNormalized}_` : ''}decklist_combos.txt`,
+      combosExport,
+    );
+  };
+
   return (
     <>
       <SpellbookHead
@@ -356,7 +379,7 @@ const FindMyCombos: React.FC = () => {
                 </span>
               )}
               {!lookupInProgress && (
-                <>
+                <div className="flex row gap-2">
                   <button
                     id="parse-decklist-input"
                     className={`${styles.clearDecklistInput} button`}
@@ -372,7 +395,18 @@ const FindMyCombos: React.FC = () => {
                   >
                     Clear Decklist
                   </button>
-                </>
+
+                  {results.included.length > 0 && (
+                    <button
+                      id="download-combos-btn"
+                      type="button"
+                      className={`${styles.exportCombosInput} button`}
+                      onClick={handleExportCombosToText}
+                    >
+                      Export Included Combos to Text
+                    </button>
+                  )}
+                </div>
               )}
               {decklistErrors.map((error) => (
                 <ErrorMessage key={error}>{error}</ErrorMessage>

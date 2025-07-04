@@ -47,6 +47,11 @@ function exportToText(combos: Variant[]): string {
       lines.push(`${stepIndex + 1}. ${steps[stepIndex]}`);
     }
     lines.push(LINE_BREAK);
+
+    lines.push('Results:');
+    for (let result of combo.produces) {
+      lines.push(`- ${result.feature.name}`);
+    }
   }
 
   return lines.join(LINE_BREAK);
