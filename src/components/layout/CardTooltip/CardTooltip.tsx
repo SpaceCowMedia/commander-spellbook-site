@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 
+const VISIBLE_TOOLTIP_DISPLAY = 'flex';
+
 type Props = {
   cardName?: string;
   children?: React.ReactNode;
@@ -20,6 +22,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   const [isImageRequested, setIsImageRequested] = useState(cardNames.map((_) => false));
   const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_) => false));
   const [hasHovered, setHasHovered] = useState(false);
+  const [currentlyHovered, setCurrentlyHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -49,18 +52,19 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
       setHasHovered(true);
     }
 
-    if (divRef.current.style.display !== 'flex') {
+    if (divRef.current.style.display !== VISIBLE_TOOLTIP_DISPLAY) {
+      // make tooltip movement smoother
       divRef.current.style.left = getTooltipLeft(e.clientX);
       divRef.current.style.top = getTooltipTop(e.clientY);
-      divRef.current.style.display = 'flex';
     }
 
+    setCurrentlyHovered(true);
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseOut = () => {
     if (divRef.current) {
-      divRef.current.style.display = 'none';
+      setCurrentlyHovered(false);
     }
   };
 
@@ -92,7 +96,11 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
       <div
         ref={divRef}
         className={`${styles.cardTooltip}`}
-        style={{ top: getTooltipTop(mousePosition.y), left: getTooltipLeft(mousePosition.x) }}
+        style={{
+          display: currentlyHovered ? VISIBLE_TOOLTIP_DISPLAY : 'none',
+          top: getTooltipTop(mousePosition.y),
+          left: getTooltipLeft(mousePosition.x),
+        }}
       >
         <div className="relative flex">
           {!allImagesGotRequested && (
@@ -117,9 +125,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
                   alt={cardNames[index]}
                   className={styles.cardImage}
                   /* set flag after image loading is complete */
-                  onLoad={() => {
-                    onImageLoaded(index, true);
-                  }}
+                  onLoad={() => onImageLoaded(index, true)}
                   onError={() => onImageLoaded(index, false)}
                 />
               ))}
