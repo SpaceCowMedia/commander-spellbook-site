@@ -1,5 +1,5 @@
 import styles from './cardTooltip.module.scss';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 
@@ -16,12 +16,18 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   );
 
   const divRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [isImageRequested, setIsImageRequested] = useState(cardNames.map((_) => false));
   const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_) => false));
   const [hasHovered, setHasHovered] = useState(false);
-  const [cardsShownCount, setCardsShownCount] = useState(urls.length);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const mousePosition = { x: undefined, y: undefined };
+  useEffect(() => {
+    setIsMounted(true);
+  });
+
+  const allImagesGotRequested = isImageRequested.every((v) => v);
+  const cardsToShow = allImagesGotRequested ? isImageLoaded.filter((v) => v).length : urls.length;
 
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (window.innerWidth <= 1024) {
@@ -38,33 +44,19 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     if (!divRef.current) {
       return;
     }
-    setHasHovered(true);
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    mousePosition.x = mouseX;
-    mousePosition.y = mouseY;
+    if (!hasHovered) {
+      setHasHovered(true);
+    }
 
-    moveTooltipAccordingToMouse(mouseX, mouseY, cardsShownCount);
+    if (divRef.current.style.display !== 'flex') {
+      divRef.current.style.left = getTooltipLeft(e.clientX);
+      divRef.current.style.top = getTooltipTop(e.clientY);
+      divRef.current.style.display = 'flex';
+    }
+
+    setMousePosition({ x: e.clientX, y: e.clientY });
   };
-
-  function moveTooltipAccordingToMouse(mouseX: number, mouseY: number, cardsToShow: number): void {
-    if (!divRef.current) {
-      return;
-    }
-
-    const displayOnRightSide = window.innerWidth / 2 - mouseX > 0;
-    divRef.current.style.display = 'flex';
-    divRef.current.style.top = mouseY - 30 + 'px';
-
-    console.log({ cardsToShow });
-
-    if (displayOnRightSide) {
-      divRef.current.style.left = mouseX + 50 + 'px';
-    } else {
-      divRef.current.style.left = mouseX - 290 * cardsToShow + 'px';
-    }
-  }
 
   const handleMouseOut = () => {
     if (divRef.current) {
@@ -73,23 +65,22 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   };
 
   const onImageLoaded = (imgIndex: number, wasSuccessful: boolean) => {
-    const imagesRequestedNextValue = isImageRequested.map((val, i) => (i === imgIndex ? true : val));
-    setIsImageRequested(imagesRequestedNextValue);
-    const imagesLoadedNextValue = isImageLoaded.map((val, i) => (i === imgIndex ? wasSuccessful : val));
-    setIsImageLoaded(imagesLoadedNextValue);
-
-    const imageLoadedCount = imagesLoadedNextValue.filter((loaded) => loaded).length;
-    const allImagesRequested = imagesRequestedNextValue.every((loaded) => loaded);
-
-    const cardsShownCount = allImagesRequested ? imageLoadedCount : urls.length;
-    setCardsShownCount(cardsShownCount);
-
-    if (mousePosition?.x && mousePosition?.y) {
-      moveTooltipAccordingToMouse(mousePosition.x, mousePosition.y, cardsShownCount);
-    }
+    setIsImageRequested((prev) => prev.map((val, i) => (i === imgIndex ? true : val)));
+    setIsImageLoaded((prev) => prev.map((val, i) => (i === imgIndex ? wasSuccessful : val)));
   };
 
-  const allImagesRequested = isImageRequested.every((gotRequested) => gotRequested);
+  const getTooltipTop = (mouseY: number): string => {
+    return mouseY - 30 + 'px';
+  };
+
+  const getTooltipLeft = (mouseX: number): string => {
+    if (!isMounted) {
+      return '0px';
+    }
+
+    const displayOnRightSide = window?.innerWidth / 2 - mouseX > 0;
+    return displayOnRightSide ? mouseX + 50 + 'px' : mouseX - 290 * cardsToShow + 'px';
+  };
 
   return (
     <span
@@ -98,21 +89,27 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
       onMouseOut={handleMouseOut}
       onClick={handleSingleClick}
     >
-      <div ref={divRef} className={styles.cardTooltip}>
+      <div
+        ref={divRef}
+        className={`${styles.cardTooltip}`}
+        style={{ top: getTooltipTop(mousePosition.y), left: getTooltipLeft(mousePosition.x) }}
+      >
         <div className="relative flex">
-          <div className={styles.cardBack} style={{ opacity: allImagesRequested ? 0 : 1 }}>
-            {urls.map((_, i) => (
-              <img key={i} src={cardBack.src} className={styles.cardImage} alt="Card Back" />
-            ))}
-          </div>
-          {!allImagesRequested && (
+          {!allImagesGotRequested && (
+            <div className={styles.cardBack}>
+              {urls.map((_, i) => (
+                <img key={i} src={cardBack.src} className={styles.cardImage} alt="Card Back" />
+              ))}
+            </div>
+          )}
+          {!allImagesGotRequested && (
             <div className={styles.loader}>
               <Loader />
             </div>
           )}
           {hasHovered &&
             urls
-              .filter((_, index) => !allImagesRequested || isImageLoaded[index])
+              .filter((_, index) => !allImagesGotRequested || isImageLoaded[index])
               .map((url, index) => (
                 <img
                   key={index}
@@ -120,7 +117,9 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
                   alt={cardNames[index]}
                   className={styles.cardImage}
                   /* set flag after image loading is complete */
-                  onLoad={() => onImageLoaded(index, true)}
+                  onLoad={() => {
+                    onImageLoaded(index, true);
+                  }}
                   onError={() => onImageLoaded(index, false)}
                 />
               ))}
