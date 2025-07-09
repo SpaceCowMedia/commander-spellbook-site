@@ -16,8 +16,9 @@ type Props = {
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 };
 
-const ICON_MAP: Record<string, SpellbookIcon> = {
+const PREREQ_ICON_MAP: Record<string, SpellbookIcon> = {
   B: 'battlefield',
+  commander: 'commander',
   C: 'commandZone',
   G: 'graveyard',
   H: 'hand',
@@ -34,7 +35,9 @@ const PrerequisiteList: React.FC<Props> = ({
   templatesInCombo,
   fetchTemplateReplacements,
 }) => {
-  const zonePrerequisites = prerequisites.filter((prereq) => prereq.zones.filter((z) => ICON_MAP[z]).length > 0);
+  const initialStatePrerequisites = prerequisites.filter(
+    (prereq) => prereq.zones.filter((z) => PREREQ_ICON_MAP[z]).length > 0,
+  );
   const easyPrerequisites = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'easy'));
   const notablePrerequisites = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'notable'));
   const manaNeeded = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'mana'));
@@ -43,13 +46,13 @@ const PrerequisiteList: React.FC<Props> = ({
       <div className="pr-6 py-4">
         <h2 className="font-bold text-xl mb-2">Initial Card State</h2>
         <ol className="list-inside">
-          {zonePrerequisites.map((prereq, index) => (
+          {initialStatePrerequisites.map((prereq, index) => (
             <li key={`${prereq.zones.join('')}-${index}`}>
               {prereq.zones
-                .filter((z) => ICON_MAP[z])
+                .filter((z) => PREREQ_ICON_MAP[z])
                 .map((z) => (
                   <span key={`${prereq.zones.join('')}-${index}-${z}`}>
-                    <Icon name={ICON_MAP[z]} />
+                    <Icon name={PREREQ_ICON_MAP[z]} />
                     &nbsp;
                   </span>
                 ))}

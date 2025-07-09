@@ -51,6 +51,7 @@ import React from 'react';
 const SPELLBOOK_ICONS = {
   graveyard: styles.graveyard,
   battlefield: styles.battlefield,
+  commander: styles.commandZone,
   commandZone: styles.commandZone,
   hand: styles.hand,
   library: styles.library,
