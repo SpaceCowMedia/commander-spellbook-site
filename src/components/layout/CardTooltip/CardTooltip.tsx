@@ -14,7 +14,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   const cardNames = cardName?.split(' // ') || [];
   const urls = cardNames.map(
     (name, index) =>
-      `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index == 1 ? 'back' : 'front'}`,
+      `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index == 1 ? 'back' : 'front'}`,
   );
 
   const divRef = useRef<HTMLDivElement>(null);

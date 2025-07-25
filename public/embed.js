@@ -154,7 +154,7 @@
       hoverElement.style.display = 'block';
       hoverElement.style.left = `${e.clientX + 25}px`;
       hoverElement.style.top = `${e.clientY + 25}px`;
-      hoverElement.style.backgroundImage = `url("https://api.scryfall.com/cards/named?exact=${cardName}&format=image")`;
+      hoverElement.style.backgroundImage = `url("https://scryfall-api-prod.spacecowmedia.com/cards/named?exact=${cardName}&format=image")`;
     });
     el.addEventListener('mouseout', () => {
       hoverElement.style.display = 'none';
