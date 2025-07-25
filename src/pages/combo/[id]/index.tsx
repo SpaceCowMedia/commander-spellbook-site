@@ -95,7 +95,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
   if (combo) {
     const cardArts = combo.uses.map(
       (card) =>
-        `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
+        `https://api.scryfall.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
     );
     const cardNamesWithQuantities = combo.uses.map((card) =>
       card.quantity > 1 ? `${card.quantity} ${card.card.name}` : card.card.name,
