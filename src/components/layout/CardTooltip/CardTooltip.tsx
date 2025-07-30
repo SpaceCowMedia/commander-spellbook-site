@@ -4,6 +4,7 @@ import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
+const TOOLTIP_RIGHT_SHIFT_PX = 50;
 
 type Props = {
   cardName?: string;
@@ -43,6 +44,8 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     }
   };
 
+  const isMobile = () => window.innerWidth <= 1024;
+
   const handleMouseMove = (e: any) => {
     if (!divRef.current) {
       return;
@@ -77,13 +80,31 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
     return mouseY - 30 + 'px';
   };
 
+  const isClickOnLeftSide = (clickX: number) => window?.innerWidth / 2 - clickX > 0;
+
   const getTooltipLeft = (mouseX: number): string => {
-    if (!isMounted) {
+    if (!isMounted || !divRef?.current) {
       return '0px';
     }
 
-    const displayOnRightSide = window?.innerWidth / 2 - mouseX > 0;
-    return displayOnRightSide ? mouseX + 50 + 'px' : mouseX - 290 * cardsToShow + 'px';
+    if(isMobile()) {
+      const cardRightLimit = window.innerWidth - 10;
+      const cardWidth = divRef.current.clientWidth;
+
+      const cardRightXIfShiftedRight = mouseX + cardWidth + TOOLTIP_RIGHT_SHIFT_PX;
+
+      if(cardRightXIfShiftedRight > cardRightLimit) {
+        return cardRightLimit - cardWidth + 'px';
+      } else {
+        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
+      }
+    } else {
+      if (isClickOnLeftSide(mouseX)) {
+        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
+      } else {
+        return mouseX - 290 * cardsToShow + 'px';
+      }
+    }
   };
 
   return (
