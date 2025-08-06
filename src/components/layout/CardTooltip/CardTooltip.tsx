@@ -21,14 +21,16 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
 
   let cardNames = (deviceIsMobile() ? cardName?.split(' // ').slice(0, 1) : cardName?.split(' // ')) || [];
 
-  const [cards, setCards] = useState(cardNames.map((name, index) => {
-    return {
-      name: name,
-      url: `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index === 1 ? 'back' : 'front'}`,
-      isRequested: false,
-      isLoaded: false
-    };
-  }));
+  const [cards, setCards] = useState(
+    cardNames.map((name, index) => {
+      return {
+        name: name,
+        url: `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index === 1 ? 'back' : 'front'}`,
+        isRequested: false,
+        isLoaded: false,
+      };
+    }),
+  );
 
   useEffect(() => {
     setIsMounted(true);
@@ -39,10 +41,10 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   };
 
   const allImagesGotRequested = (): boolean => {
-    return getCards().every(card => card.isRequested);
+    return getCards().every((card) => card.isRequested);
   };
 
-  const cardsToShow = allImagesGotRequested() ? cards.filter(card => card.isLoaded).length : cards.length;
+  const cardsToShow = allImagesGotRequested() ? cards.filter((card) => card.isLoaded).length : cards.length;
 
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (deviceIsMobile()) {
@@ -81,18 +83,19 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   };
 
   const onImageLoaded = (imgIndex: number, wasSuccessful: boolean) => {
-    setCards(previousCardsState => previousCardsState.map((card, index) => {
-      if(index !== imgIndex) {
-        return card;
-      }
+    setCards((previousCardsState) =>
+      previousCardsState.map((card, index) => {
+        if (index !== imgIndex) {
+          return card;
+        }
 
-      return {
-        ...card,
-        isRequested: true,
-        isLoaded: wasSuccessful
-      };
-    }));
-
+        return {
+          ...card,
+          isRequested: true,
+          isLoaded: wasSuccessful,
+        };
+      }),
+    );
   };
 
   const getTooltipTop = (mouseY: number): string => {
@@ -110,13 +113,13 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
       return '0px';
     }
 
-    if(deviceIsMobile()) {
+    if (deviceIsMobile()) {
       const cardRightLimit = window.innerWidth - 10;
       const cardWidth = divRef.current.clientWidth;
 
       const cardRightXIfShiftedRight = mouseX + cardWidth + TOOLTIP_RIGHT_SHIFT_PX;
 
-      if(cardRightXIfShiftedRight > cardRightLimit) {
+      if (cardRightXIfShiftedRight > cardRightLimit) {
         return cardRightLimit - cardWidth + 'px';
       } else {
         return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
