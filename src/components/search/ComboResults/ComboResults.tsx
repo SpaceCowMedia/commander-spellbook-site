@@ -92,7 +92,7 @@ export const ComboResult: React.FC<ResultProps> = ({
           <div className="py-1">
             <span className="sr-only">Cards in combo:</span>
             {combo.uses.map(({ card, quantity }) => (
-              <CardTooltip cardName={quantity > 1 ? `${quantity}x ${card.name}` : card.name} key={card.name}>
+              <CardTooltip card={card} key={card.name}>
                 <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
                   {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
                     decklistMessage != undefined ? (
@@ -104,7 +104,10 @@ export const ComboResult: React.FC<ResultProps> = ({
                       <strong className="text-red-800">{card.name} (not in deck)</strong>
                     )
                   ) : (
-                    <span>{card.name}</span>
+                    <span>
+                      {quantity > 1 ? `${quantity} ` : ''}
+                      {card.name}
+                    </span>
                   )}
                 </div>
               </CardTooltip>

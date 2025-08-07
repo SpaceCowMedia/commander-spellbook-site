@@ -3,6 +3,7 @@ import Icon from 'components/layout/Icon/Icon';
 import edhrecService from 'services/edhrec.service';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 import Loader from 'components/layout/Loader/Loader';
+import { useSwipeable } from 'react-swipeable';
 
 type Props = {
   fetchResults: (_page: number) => Promise<ScryfallResultsPage>;
@@ -16,8 +17,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [pageSize, setPageSize] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const next = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const next = () => {
     let newIndex = index + 1;
     let newPageIndex = pageIndex;
     if (newIndex >= pageSize || (currentPage !== undefined && newIndex >= currentPage.results.length)) {
@@ -33,8 +33,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
     }
   };
 
-  const previous = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const previous = () => {
     let newIndex = index - 1;
     let newPageIndex = pageIndex;
     if (newIndex < 0) {
@@ -49,6 +48,12 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
       setPageIndex(newPageIndex);
     }
   };
+
+  const handlers = useSwipeable({
+    preventScrollOnSwipe: true,
+    onSwipedLeft: next,
+    onSwipedRight: previous,
+  });
 
   useEffect(() => {
     if (loading) {
@@ -85,9 +90,16 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   }
 
   return (
-    <div className="w-full h-full flex justify-center items-center select-none">
+    <div className="w-full h-full flex justify-center items-center select-none" {...handlers}>
       <div className="h-full flex justify-center items-center flex-grow">
-        <Icon name="chevronLeft" onClick={previous} className="cursor-pointer text-white text-2xl" />
+        <Icon
+          name="chevronLeft"
+          onClick={(e) => {
+            e.preventDefault();
+            previous();
+          }}
+          className="cursor-pointer text-white text-2xl"
+        />
       </div>
       <div className="h-full flex justify-center items-center">
         <a
@@ -104,7 +116,14 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
         </a>
       </div>
       <div className="h-full flex justify-center items-center flex-grow">
-        <Icon name="chevronRight" onClick={next} className="cursor-pointer text-white text-2xl" />
+        <Icon
+          name="chevronRight"
+          onClick={(e) => {
+            e.preventDefault();
+            next();
+          }}
+          className="cursor-pointer text-white text-2xl"
+        />
       </div>
     </div>
   );

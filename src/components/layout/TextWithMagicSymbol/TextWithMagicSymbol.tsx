@@ -15,6 +15,21 @@ type Props = {
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 };
 
+function replaceAlli(text: string, searchValue: string, replaceValue: string): string {
+  const positions = [];
+  const lowerText = text.toLowerCase();
+  const lowerSearchValue = searchValue.toLowerCase();
+  let pos = lowerText.indexOf(lowerSearchValue);
+  while (pos !== -1) {
+    positions.push(pos);
+    pos = lowerText.indexOf(lowerSearchValue, pos + searchValue.length);
+  }
+  positions.forEach((i) => {
+    text = text.substring(0, i) + replaceValue + text.substring(i + searchValue.length);
+  });
+  return text;
+}
+
 const TextWithMagicSymbol: React.FC<Props> = ({
   text,
   cardsInCombo = [],
@@ -52,8 +67,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
   let filteredText = text;
   if (templatesInCombo.length) {
     templatesInCombo.forEach((template) => {
-      filteredText = filteredText.replace(template.template.name, `template${template.template.id}`);
-      filteredText = filteredText.replace(template.template.name.toLowerCase(), `template${template.template.id}`);
+      filteredText = replaceAlli(filteredText, template.template.name, `template${template.template.id}`);
     });
     matchableValuesString += templatesInCombo.map((template) => `template${template.template.id}`).join('|') + '|';
   }
@@ -70,16 +84,16 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       if (cardNames.includes(value.trim())) {
         return {
           nodeType: 'card',
-          cardName: value,
+          card: cardsInCombo.find((card) => card.card.name === value.trim()),
           value,
         };
       } else if (cardShortNames.includes(value.trim())) {
-        const fullName = cardNames.find((card) => card.includes(value.trim()));
+        const card = cardsInCombo.find((card) => card.card.name.includes(value.trim()));
 
-        if (fullName) {
+        if (card) {
           return {
             nodeType: 'card',
-            cardName: fullName,
+            card: card,
             value,
           };
         }
@@ -136,10 +150,10 @@ const TextWithMagicSymbol: React.FC<Props> = ({
               />
             </span>
           )}
-          {item.nodeType === 'card' && (
-            <CardTooltip cardName={item.cardName}>
+          {item.nodeType === 'card' && item.card && (
+            <CardTooltip card={item.card.card}>
               {includeCardLinks ? (
-                <CardLink name={item.cardName || ''}>{item.value}</CardLink>
+                <CardLink name={item.card.card.name}>{item.value}</CardLink>
               ) : (
                 <span>{item.value}</span>
               )}

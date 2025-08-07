@@ -2,39 +2,41 @@ import styles from './cardTooltip.module.scss';
 import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
+import { Card } from '@space-cow-media/spellbook-client';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
 const TOOLTIP_RIGHT_SHIFT_PX = 30;
 
 type Props = {
-  cardName?: string;
+  card?: Card;
   children?: React.ReactNode;
 };
 
-const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
-  const divRef = useRef<HTMLDivElement>(null);
+type CardImage = {
+  url: string;
+  isRequested: boolean;
+  isLoaded: boolean;
+};
 
+const CardTooltip: React.FC<Props> = ({ card, children }) => {
+  const divRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [hasHovered, setHasHovered] = useState(false);
   const [currentlyHovered, setCurrentlyHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  let cardNames = (deviceIsMobile() ? cardName?.split(' // ').slice(0, 1) : cardName?.split(' // ')) || [];
-
-  const [cards, setCards] = useState(
-    cardNames.map((name, index) => {
-      return {
-        name: name,
-        url: `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index === 1 ? 'back' : 'front'}`,
-        isRequested: false,
-        isLoaded: false,
-      };
-    }),
-  );
+  const [cards, setCards] = useState<CardImage[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
-  });
+    setCards(
+      card && card.imageUriFrontNormal
+        ? [
+            { url: card.imageUriFrontNormal, isRequested: false, isLoaded: false },
+            ...(card.imageUriBackNormal ? [{ url: card.imageUriBackNormal, isRequested: false, isLoaded: false }] : []),
+          ]
+        : [],
+    );
+  }, [card]);
 
   const getCards = () => {
     return deviceIsMobile() ? cards.slice(0, 1) : cards;
@@ -169,7 +171,7 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
                 <img
                   key={index}
                   src={card.url}
-                  alt={cardNames[index]}
+                  alt={index === 0 ? 'Front Image' : 'Back Image'}
                   className={styles.cardImage}
                   /* set flag after image loading is complete */
                   onLoad={() => onImageLoaded(index, true)}

@@ -93,10 +93,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     loadVariants(combo);
   }
   if (combo) {
-    const cardArts = combo.uses.map(
-      (card) =>
-        `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=art_crop&exact=${encodeURIComponent(card.card.name)}`,
-    );
+    const cardArts = combo.uses.map((card) => card.card.imageUriFrontArtCrop).filter((uri) => uri != null);
     const cardNamesWithQuantities = combo.uses.map((card) =>
       card.quantity > 1 ? `${card.quantity} ${card.card.name}` : card.card.name,
     );
@@ -162,7 +159,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
     //   metaData.push(bracketMessage);
     //   showBracketGuidelinesLink = true;
     // }
-
     return (
       <>
         <SpellbookHead
