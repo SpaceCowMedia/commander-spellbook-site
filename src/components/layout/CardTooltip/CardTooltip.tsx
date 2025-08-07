@@ -4,6 +4,7 @@ import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
+const TOOLTIP_RIGHT_SHIFT_PX = 30;
 
 type Props = {
   cardName?: string;
@@ -11,29 +12,42 @@ type Props = {
 };
 
 const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
-  const cardNames = cardName?.split(' // ') || [];
-  const urls = cardNames.map(
-    (name, index) =>
-      `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index == 1 ? 'back' : 'front'}`,
-  );
-
   const divRef = useRef<HTMLDivElement>(null);
+
   const [isMounted, setIsMounted] = useState(false);
-  const [isImageRequested, setIsImageRequested] = useState(cardNames.map((_) => false));
-  const [isImageLoaded, setIsImageLoaded] = useState(cardNames.map((_) => false));
   const [hasHovered, setHasHovered] = useState(false);
   const [currentlyHovered, setCurrentlyHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  let cardNames = (deviceIsMobile() ? cardName?.split(' // ').slice(0, 1) : cardName?.split(' // ')) || [];
+
+  const [cards, setCards] = useState(
+    cardNames.map((name, index) => {
+      return {
+        name: name,
+        url: `https://scryfall-api-prod.spacecowmedia.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}&face=${index === 1 ? 'back' : 'front'}`,
+        isRequested: false,
+        isLoaded: false,
+      };
+    }),
+  );
 
   useEffect(() => {
     setIsMounted(true);
   });
 
-  const allImagesGotRequested = isImageRequested.every((v) => v);
-  const cardsToShow = allImagesGotRequested ? isImageLoaded.filter((v) => v).length : urls.length;
+  const getCards = () => {
+    return deviceIsMobile() ? cards.slice(0, 1) : cards;
+  };
+
+  const allImagesGotRequested = (): boolean => {
+    return getCards().every((card) => card.isRequested);
+  };
+
+  const cardsToShow = allImagesGotRequested() ? cards.filter((card) => card.isLoaded).length : cards.length;
 
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (window.innerWidth <= 1024) {
+    if (deviceIsMobile()) {
       if (!divRef.current) {
         return;
       }
@@ -69,21 +83,54 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
   };
 
   const onImageLoaded = (imgIndex: number, wasSuccessful: boolean) => {
-    setIsImageRequested((prev) => prev.map((val, i) => (i === imgIndex ? true : val)));
-    setIsImageLoaded((prev) => prev.map((val, i) => (i === imgIndex ? wasSuccessful : val)));
+    setCards((previousCardsState) =>
+      previousCardsState.map((card, index) => {
+        if (index !== imgIndex) {
+          return card;
+        }
+
+        return {
+          ...card,
+          isRequested: true,
+          isLoaded: wasSuccessful,
+        };
+      }),
+    );
   };
 
   const getTooltipTop = (mouseY: number): string => {
     return mouseY - 30 + 'px';
   };
 
+  function deviceIsMobile(): boolean {
+    return isMounted && window?.innerWidth <= 1024;
+  }
+
+  const isClickOnScreenLeftSide = (clickX: number) => window?.innerWidth / 2 - clickX > 0;
+
   const getTooltipLeft = (mouseX: number): string => {
-    if (!isMounted) {
+    if (!isMounted || !divRef?.current) {
       return '0px';
     }
 
-    const displayOnRightSide = window?.innerWidth / 2 - mouseX > 0;
-    return displayOnRightSide ? mouseX + 50 + 'px' : mouseX - 290 * cardsToShow + 'px';
+    if (deviceIsMobile()) {
+      const cardRightLimit = window.innerWidth - 10;
+      const cardWidth = divRef.current.clientWidth;
+
+      const cardRightXIfShiftedRight = mouseX + cardWidth + TOOLTIP_RIGHT_SHIFT_PX;
+
+      if (cardRightXIfShiftedRight > cardRightLimit) {
+        return cardRightLimit - cardWidth + 'px';
+      } else {
+        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
+      }
+    } else {
+      if (isClickOnScreenLeftSide(mouseX)) {
+        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
+      } else {
+        return mouseX - 290 * cardsToShow + 'px';
+      }
+    }
   };
 
   return (
@@ -103,25 +150,25 @@ const CardTooltip: React.FC<Props> = ({ cardName, children }) => {
         }}
       >
         <div className="relative flex">
-          {!allImagesGotRequested && (
+          {!allImagesGotRequested() && (
             <div className={styles.cardBack}>
-              {urls.map((_, i) => (
+              {getCards().map((_, i) => (
                 <img key={i} src={cardBack.src} className={styles.cardImage} alt="Card Back" />
               ))}
             </div>
           )}
-          {!allImagesGotRequested && (
+          {!allImagesGotRequested() && (
             <div className={styles.loader}>
               <Loader />
             </div>
           )}
           {hasHovered &&
-            urls
-              .filter((_, index) => !allImagesGotRequested || isImageLoaded[index])
-              .map((url, index) => (
+            getCards()
+              .filter((card) => !allImagesGotRequested() || card.isLoaded)
+              .map((card, index) => (
                 <img
                   key={index}
-                  src={url}
+                  src={card.url}
                   alt={cardNames[index]}
                   className={styles.cardImage}
                   /* set flag after image loading is complete */
