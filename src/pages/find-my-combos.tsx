@@ -379,22 +379,24 @@ const FindMyCombos: React.FC = () => {
                 </span>
               )}
               {!lookupInProgress && (
-                <div className="flex row gap-2">
-                  <button
-                    id="parse-decklist-input"
-                    className={`${styles.clearDecklistInput} button`}
-                    onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
-                  >
-                    Find New Combos!
-                  </button>
+                <div className="flex flex-col gap-y-2 lg:flex-row">
+                  <div className="flex flex-row gap-y-2">
+                    <button
+                      id="parse-decklist-input"
+                      className={`${styles.clearDecklistInput} button`}
+                      onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
+                    >
+                      Find New Combos!
+                    </button>
 
-                  <button
-                    id="clear-decklist-input"
-                    className={`${styles.clearDecklistInput} button`}
-                    onClick={clearDecklist}
-                  >
-                    Clear Decklist
-                  </button>
+                    <button
+                      id="clear-decklist-input"
+                      className={`${styles.clearDecklistInput} button`}
+                      onClick={clearDecklist}
+                    >
+                      Clear Decklist
+                    </button>
+                  </div>
 
                   {results.included.length > 0 && (
                     <button
