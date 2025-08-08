@@ -439,7 +439,7 @@ const FindMyCombos: React.FC = () => {
                         className={`${styles.exportCombosInput} button`}
                         onClick={() => setExportModalOpen(true)}
                       >
-                        Export Combos to file
+                        Export Combos To File
                       </button>
                     </>
                   )}
