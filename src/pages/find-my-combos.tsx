@@ -26,6 +26,7 @@ import { DEFAULT_ORDERING } from 'lib/constants';
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
+import Modal from 'components/ui/Modal/Modal';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -72,6 +73,7 @@ class Decklist {
 
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
+  const [exportModalOpen, setExportModalOpen] = useState(false);
   const [decklist, setDecklist] = useState<string>('');
   const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
@@ -309,12 +311,7 @@ const FindMyCombos: React.FC = () => {
     }
   }, [format]);
 
-  const handleExportCombosToText = () => {
-    if (results.included.length === 0) {
-      return;
-    }
-
-    const combosExport = CombosExportService.exportToText(results.included);
+  const getNormalizedFileName = () => {
     const commandersNormalized = currentlyParsedDeck
       ? currentlyParsedDeck.deck.commanders
           .map((c) => normalizeStringInput(c.card))
@@ -323,10 +320,25 @@ const FindMyCombos: React.FC = () => {
           .replace(/\s+/g, '_')
           .substring(0, 50)
       : '';
-    DownloadFileService.downloadTextFile(
-      `${commandersNormalized ? `${commandersNormalized}_` : ''}decklist_combos.txt`,
-      combosExport,
-    );
+    return `${commandersNormalized ? `${commandersNormalized}_` : ''}decklist_combos`;
+  };
+
+  const handleExportCombosToText = () => {
+    if (results.included.length === 0) {
+      return;
+    }
+
+    const combosExport = CombosExportService.exportToText(results.included);
+    DownloadFileService.downloadTextFile(`${getNormalizedFileName()}.txt`, combosExport);
+  };
+
+  const handleExportCombosToCsv = () => {
+    if (results.included.length === 0) {
+      return;
+    }
+
+    const combosExport = CombosExportService.exportToCsv(results.included);
+    DownloadFileService.downloadTextFile(`${getNormalizedFileName()}.csv`, combosExport);
   };
 
   return (
@@ -399,14 +411,37 @@ const FindMyCombos: React.FC = () => {
                   </div>
 
                   {results.included.length > 0 && (
-                    <button
-                      id="download-combos-btn"
-                      type="button"
-                      className={`${styles.exportCombosInput} button`}
-                      onClick={handleExportCombosToText}
-                    >
-                      Export Included Combos to Text
-                    </button>
+                    <>
+                      <Modal open={exportModalOpen} onClose={() => setExportModalOpen(false)} closeIcon={true}>
+                        <h2>Select a file format to export combos</h2>
+                        <div className="flex flex-row gap-y-2">
+                          <button
+                            id="download-combos-txt-btn"
+                            type="button"
+                            className={`${styles.exportCombosInput} button`}
+                            onClick={handleExportCombosToText}
+                          >
+                            TXT
+                          </button>
+                          <button
+                            id="download-combos-csv-btn"
+                            type="button"
+                            className={`${styles.exportCombosInput} button`}
+                            onClick={handleExportCombosToCsv}
+                          >
+                            CSV
+                          </button>
+                        </div>
+                      </Modal>
+                      <button
+                        id="download-combos-file-btn"
+                        type="button"
+                        className={`${styles.exportCombosInput} button`}
+                        onClick={() => setExportModalOpen(true)}
+                      >
+                        Export Combos to file
+                      </button>
+                    </>
                   )}
                 </div>
               )}
