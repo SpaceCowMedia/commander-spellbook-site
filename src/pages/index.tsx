@@ -10,12 +10,17 @@ import UserDropdown from '../components/layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi } from '@space-cow-media/spellbook-client';
 
-type Props = {
-  featuredComboButtonText: string;
-  comboOfTheDay?: string;
+type FeaturedTab = {
+  id: number;
+  title: string;
 };
 
-const Home: React.FC<Props> = ({ featuredComboButtonText, comboOfTheDay }) => {
+type Props = {
+  comboOfTheDay?: string;
+  featuredTabs: FeaturedTab[];
+};
+
+const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
   const router = useRouter();
   const query = router.query.q ? `${router.query.q}` : ``;
 
@@ -63,31 +68,34 @@ const Home: React.FC<Props> = ({ featuredComboButtonText, comboOfTheDay }) => {
                 The Search Engine for EDH Combos
               </h2>
 
-              <SearchBar onHomepage className="bg-white mt-4 md:w-2/3 h-20" />
+              <SearchBar onHomepage className="bg-white mt-4 mb-1 md:w-2/3 h-20" />
 
               <div className="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
                 <Link href="/advanced-search/" className={`dark home-button button md:m-1`}>
                   Advanced Search
                 </Link>
                 <Link href="/syntax-guide/" className={`dark home-button button md:m-1`}>
-                  Syntax Guide
+                  Syntax
                 </Link>
                 <RandomButton query={query} className={`random-button home-button dark button md:m-1`}>
-                  Random Combo
+                  Random
                 </RandomButton>
-              </div>
-
-              <div className="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
                 <Link href="/find-my-combos/" className={`dark home-button button md:m-1`}>
                   Find My Combos
                 </Link>
-                <Link
-                  id="featured-combos-button"
-                  href="/search/?q=is:featured"
-                  className={`previwed-combos-button dark home-button button md:m-1`}
-                >
-                  {featuredComboButtonText}
-                </Link>
+              </div>
+
+              <div className="button-links md:flex-row md:w-2/3 m-auto flex flex-col">
+                {featuredTabs.length > 0 &&
+                  featuredTabs.map((tab) => (
+                    <Link
+                      key={tab.id}
+                      href={`/search/?q=is:featured-${tab.id}`}
+                      className={`previwed-combos-button dark home-button button md:m-1`}
+                    >
+                      {tab.title}
+                    </Link>
+                  ))}
               </div>
             </div>
           </div>
@@ -104,8 +112,8 @@ export async function getStaticProps() {
   if (!NEXT_PUBLIC_EDITOR_BACKEND_URL) {
     return {
       props: {
-        featuredComboButtonText: 'Featured Combos',
         comboOfTheDay: undefined,
+        featuredTabs: [],
       },
       revalidate: 60,
     };
@@ -115,17 +123,21 @@ export async function getStaticProps() {
     const configuration = apiConfiguration();
     const propertiesApi = new PropertiesApi(configuration);
     const res = await propertiesApi.propertiesList();
-    const buttonTextData = res.results.find((data) => {
-      return data.key === 'featured_combos_title';
-    });
+    const featuredPrefix = 'featured_combos_title_';
+    const featuredTabs = res.results
+      .filter((data) => data.key.startsWith(featuredPrefix) && data.value)
+      .map<FeaturedTab>((data) => ({
+        id: Number(data.key.replace(featuredPrefix, '')),
+        title: data.value,
+      }));
     const comboOfTheDayData = res.results.find((data) => {
       return data.key === 'combo_of_the_day';
     });
 
     return {
       props: {
-        featuredComboButtonText: buttonTextData?.value,
         comboOfTheDay: comboOfTheDayData?.value,
+        featuredTabs,
       },
       revalidate: 60,
     };
@@ -133,8 +145,8 @@ export async function getStaticProps() {
     console.error('Error fetching data from the editor backend:', error);
     return {
       props: {
-        featuredComboButtonText: 'Featured Combos',
         comboOfTheDay: undefined,
+        featuredTabs: [],
       },
       revalidate: 60,
     };

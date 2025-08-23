@@ -9,7 +9,7 @@ import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
-import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
+import { PropertiesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 
@@ -21,7 +21,7 @@ type Props = {
   count: number;
   page: number;
   error?: string;
-  featured?: boolean;
+  featured?: string;
 };
 
 const SORT_OPTIONS: Option[] = [
@@ -123,10 +123,11 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
         description="Search results for all EDH combos matching your query."
       />
       <div>
-        {featured ? (
+        {featured !== null ? (
           <>
             <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden my-8" />
             <h1 className="heading-title">Featured Combos</h1>
+            {featured && <h2 className="heading-subtitle">{featured}</h2>}
           </>
         ) : (
           <>
@@ -234,8 +235,23 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
 export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const configuration = apiConfiguration(context);
   let query = queryParameterAsString(context.query.q) ?? '';
-  const isFeatured = query === 'is:featured';
+  let featured: string | null = null;
+  const featuredMatch = query.match(/^is:featured(?:-(\d+))?$/);
+  if (featuredMatch) {
+    const featuredNumber = featuredMatch[1] ? Number(featuredMatch[1]) : null;
+    if (featuredNumber) {
+      const propertiesApi = new PropertiesApi(configuration);
+      const res = await propertiesApi.propertiesList();
+      const property = res.results.find((data) => data.key === `featured_combos_title_${featuredNumber}`);
+      if (property && property.value) {
+        featured = property.value;
+      }
+    } else {
+      featured = '';
+    }
+  }
   let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
   const variant = queryParameterAsString(context.query.variant);
   if (isQueryMissingFormat && !variant) {
@@ -247,7 +263,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
     `,${DEFAULT_ORDERING}`;
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
-  const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
   try {
     const results = await variantsApi.variantsList({
@@ -296,7 +311,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combos: backendCombos,
-        featured: isFeatured,
+        featured,
         count: results.count,
         page: context.query.page || 1,
       },
