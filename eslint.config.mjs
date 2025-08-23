@@ -16,60 +16,63 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default [...compat.extends(
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "next/core-web-vitals",
-    "plugin:cypress/recommended",
-), {
-    plugins: {
-        react,
-        reactHooks,
-        prettier,
-        cypress,
-    },
+export default [
+    ...compat.extends(
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:prettier/recommended",
+        "next/core-web-vitals",
+    ),
+    cypress.configs.recommended,
+    {
+        plugins: {
+            react,
+            reactHooks,
+            prettier,
+            cypress,
+        },
 
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...globals.node,
-            ...cypress.environments.globals.globals,
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
+        },
+
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
+
+        rules: {
+            "react/no-deprecated": "warn",
+            "react/no-direct-mutation-state": "error",
+            "react/no-unescaped-entities": "off",
+            "react-hooks/exhaustive-deps": "off",
+            "@next/next/no-img-element": "off",
+
+            "prettier/prettier": ["error", {
+                trailingComma: "all",
+                eslintIntegration: true,
+                printWidth: 120,
+                singleQuote: true,
+            }],
+
+            "no-unused-vars": ["error", {
+                argsIgnorePattern: "^_",
+                varsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_",
+            }],
+
+            curly: ["error", "all"],
         },
     },
+    {
+        files: ["**/*.config.js", "**/*.config.ts", "**/*.config.mjs"],
 
-    settings: {
-        react: {
-            version: "detect",
+        rules: {
+            "import/no-anonymous-default-export": "off",
         },
     },
-
-    rules: {
-        "react/no-deprecated": "warn",
-        "react/no-direct-mutation-state": "error",
-        "react/no-unescaped-entities": "off",
-        "react-hooks/exhaustive-deps": "off",
-        "@next/next/no-img-element": "off",
-
-        "prettier/prettier": ["error", {
-            trailingComma: "all",
-            eslintIntegration: true,
-            printWidth: 120,
-            singleQuote: true,
-        }],
-
-        "no-unused-vars": ["error", {
-            argsIgnorePattern: "^_",
-            varsIgnorePattern: "^_",
-            caughtErrorsIgnorePattern: "^_",
-        }],
-
-        curly: ["error", "all"],
-    },
-}, {
-    files: ["**/*.config.js", "**/*.config.ts", "**/*.config.mjs"],
-
-    rules: {
-        "import/no-anonymous-default-export": "off",
-    },
-}];
+];
