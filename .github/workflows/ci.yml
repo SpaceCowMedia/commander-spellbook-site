@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node ⬢
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 23
           cache: yarn
@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node ⬢
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 23
           cache: yarn
@@ -96,7 +96,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node ⬢
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 23
           cache: yarn
@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node ⬢
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 23
           cache: yarn
@@ -212,7 +212,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Node ⬢
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "lts/*"
       - name: Install semantic-release
