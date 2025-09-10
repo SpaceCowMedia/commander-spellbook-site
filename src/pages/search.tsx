@@ -123,7 +123,7 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
         description="Search results for all EDH combos matching your query."
       />
       <div>
-        {featured !== null ? (
+        {featured !== null && featured !== undefined ? (
           <>
             <ArtCircle cardName="Thespian's Stage" className="m-auto md:block hidden my-8" />
             <h1 className="heading-title">Featured Combos</h1>
@@ -322,12 +322,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       e = (await error.response.json()) as { q?: string };
     }
     e = e as { q?: string };
+    const error_message = e.q
+      ? Array.isArray(e.q)
+        ? e.q.join('. ')
+        : e.q
+      : 'An error occurred while searching for combos.';
     return {
       props: {
         combos: [],
         count: 0,
         page: context.query.page || 1,
-        error: e.q ? e.q : 'An error occurred while searching for combos.',
+        error: error_message,
       },
     };
   }
