@@ -5,7 +5,7 @@ import normalizeStringInput from '../../../lib/normalizeStringInput';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Loader from '../../layout/Loader/Loader';
 import { apiConfiguration } from 'services/api.service';
-import { FeaturesApi, TemplatesApi } from '@space-cow-media/spellbook-client';
+import { FeaturesApi, FeaturesListStatusEnum, TemplatesApi } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import { useDebounce } from 'use-debounce';
 
@@ -191,7 +191,7 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const configuration = apiConfiguration();
   const templatesApi = new TemplatesApi(configuration);
-  const resultsApi = new FeaturesApi(configuration);
+  const feturesApi = new FeaturesApi(configuration);
 
   const findAllMatches = async (value: string, options?: AutoCompleteOption[]): Promise<AutoCompleteOption[]> => {
     const normalizedValue = normalizeStringInput(value);
@@ -214,8 +214,10 @@ const AutocompleteInput: React.FC<Props> = ({
       if (templateAutocomplete) {
         try {
           const templates = await templatesApi.templatesList({ q: value });
+          const features = await feturesApi.featuresList({ q: value, status: [FeaturesListStatusEnum.Pu] });
           options = options.concat(
             templates.results.map((template) => ({ value: template.name, label: template.name })),
+            features.results.map((feature) => ({ value: feature.name, label: feature.name })),
           );
         } catch (e) {
           console.error(e);
@@ -223,7 +225,10 @@ const AutocompleteInput: React.FC<Props> = ({
       }
       if (resultAutocomplete) {
         try {
-          const results = await resultsApi.featuresList({ q: value });
+          const results = await feturesApi.featuresList({
+            q: value,
+            status: [FeaturesListStatusEnum.S, FeaturesListStatusEnum.H, FeaturesListStatusEnum.C],
+          });
           options = options.concat(results.results.map((result) => ({ value: result.name, label: result.name })));
         } catch (e) {
           console.error(e);

@@ -58,7 +58,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
   };
 
   return (
-    <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
+    <div className="border border-gray-250 rounded flex-col p-5 shadow-lg mb-5 relative space-y-2">
       {template && (
         <>
           <label className="font-bold">Template Name:</label>
