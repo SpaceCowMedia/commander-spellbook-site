@@ -42,7 +42,7 @@
     "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
     "sharp": "^0.34.2",
-    "use-debounce": "^10.0.5"
+    "use-debounce": "^10.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
