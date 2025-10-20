@@ -49,8 +49,14 @@ function cardsUsedCanvas(cards: string | any[]) {
 }
 
 function preReqCanvas(prereqCount: number, templateCount: number) {
+  const lines = (prereqCount > 0 ? 1 : 0) + (templateCount > 0 ? 1 : 0);
+  if (lines === 0) {
+    // No prerequisites
+    let canvasEmpty = createCanvas(width, border);
+    return canvasEmpty;
+  }
   // more pre-reqs
-  let canvas3 = createCanvas(width, lineOffset + border * 2);
+  let canvas3 = createCanvas(width, lineOffset * lines + border * 2);
   let ctx = canvas3.getContext('2d');
   ctx.fillStyle = '#6B7280';
   ctx.font = `${fontSize - 2}px ${fontFamily}`;
