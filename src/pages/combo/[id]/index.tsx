@@ -33,7 +33,6 @@ import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 type Props = {
   combo?: Variant;
   alternatives?: Variant[];
-  previewImageUrl?: string;
 };
 
 const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
@@ -44,7 +43,7 @@ function booleanToIcon(value: boolean) {
   return value ? <Icon name={'check'} className="text-green-500" /> : <Icon name={'cross'} className="text-red-500" />;
 }
 
-const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
+const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
@@ -164,8 +163,8 @@ const Combo: React.FC<Props> = ({ combo, alternatives, previewImageUrl }) => {
         <SpellbookHead
           title={`${title} ${subtitle}`}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
-          imageUrl={previewImageUrl ?? cardArts[0]}
-          useCropDimensions
+          // Image URL must be absolute to properly work on Reddit, even though the specification says it can be relative
+          imageUrl={`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image`}
         />
         <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
         <CardGroup
@@ -413,7 +412,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combo: backendCombo,
-        previewImageUrl: `/api/combo/${backendCombo.id}/generate-image/`,
       },
     };
   } catch (err) {

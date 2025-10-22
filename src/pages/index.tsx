@@ -112,7 +112,7 @@ export async function getStaticProps() {
   if (!NEXT_PUBLIC_EDITOR_BACKEND_URL) {
     return {
       props: {
-        comboOfTheDay: undefined,
+        comboOfTheDay: null,
         featuredTabs: [],
       },
       revalidate: 60,
@@ -136,7 +136,7 @@ export async function getStaticProps() {
 
     return {
       props: {
-        comboOfTheDay: comboOfTheDayData?.value,
+        comboOfTheDay: comboOfTheDayData?.value || null,
         featuredTabs,
       },
       revalidate: 60,
@@ -145,7 +145,7 @@ export async function getStaticProps() {
     console.error('Error fetching data from the editor backend:', error);
     return {
       props: {
-        comboOfTheDay: undefined,
+        comboOfTheDay: null,
         featuredTabs: [],
       },
       revalidate: 60,
