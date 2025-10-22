@@ -12,7 +12,7 @@ const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPr
   const cardsWithQuantities = cards.map((card) => `1 ${card}`);
   const cardQuery = encodeURI(cardsWithQuantities.join('||'));
   const cardKingdomLink = `https://www.cardkingdom.com/builder?partner=CommanderSpellbook&utm_source=edhrec&utm_medium=commanderspellbook&utm_campaign=edhrec&c=${cardQuery}`;
-  const tcgPlayerLink = `https://www.tcgplayer.com/massentry?partner=EDHREC&utm_campaign=affiliate&utm_medium=commanderspellbook&utm_source=EDHREC&c=${cardQuery}`;
+  const tcgPlayerLink = `https://partner.tcgplayer.com/c/4913290/1830156/21018?partnerpropertyid=5237567&subId1=csb%2CbuyThisCombo&u=https%3A%2F%2Fstore.tcgplayer.com%2Fmassentry%3Fc%3D${cardQuery}`;
   const tcgPlayerOutOfStock = tcgPlayerPrice === '';
   const cardKingdomOutOfStock = cardKingdomPrice === '';
   const tcgPlayerPriceLabel = tcgPlayerOutOfStock ? '(Unavailable)' : `($${tcgPlayerPrice})`;
