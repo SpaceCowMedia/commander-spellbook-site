@@ -8,20 +8,9 @@ type Props = {
   title: string;
   description: string;
   imageUrl?: string;
-  imageWidth?: string;
-  imageHeight?: string;
-  useCropDimensions?: boolean;
 };
 
-const SpellbookHead: React.FC<Props> = ({
-  children,
-  title,
-  description,
-  imageUrl,
-  imageWidth,
-  imageHeight,
-  useCropDimensions,
-}) => {
+const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl }) => {
   const router = useRouter();
   return (
     <Head>
@@ -57,10 +46,8 @@ const SpellbookHead: React.FC<Props> = ({
       <meta property="og:url" content={router.asPath} />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={imageUrl || '/images/link-preview.png'} />
-      <meta name="twitter:image" content={imageUrl} />
-      <meta property="og:image:width" content={imageWidth || (useCropDimensions ? '626' : '1200')} />
-      <meta property="og:image:height" content={imageHeight || (useCropDimensions ? '457' : '628')} />
-      <meta name="twitter:card" content="summary_large_image" />
+      {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+      {imageUrl && <meta name="twitter:card" content="summary_large_image" />}
       {children}
     </Head>
   );
