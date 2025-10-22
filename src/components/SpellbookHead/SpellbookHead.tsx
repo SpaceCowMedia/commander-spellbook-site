@@ -46,6 +46,9 @@ const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl
       <meta property="og:url" content={router.asPath} />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={imageUrl || '/images/link-preview.png'} />
+      {imageUrl && ['png', 'jpg', 'jpeg', 'gif', 'webp'].every((ext) => !imageUrl.endsWith(`.${ext}`)) && (
+        <meta property="og:image:type" content="image/png" />
+      )}
       {imageUrl && <meta name="twitter:image" content={imageUrl} />}
       {imageUrl && <meta name="twitter:card" content="summary_large_image" />}
       {children}
