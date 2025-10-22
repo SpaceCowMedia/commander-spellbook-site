@@ -28,7 +28,9 @@ describe('Combo Detail Page', () => {
   it('can buy combo on TCGplayer', () => {
     cy.visit('/combo/3616/');
 
-    cy.get('#tcg-buy-this-combo').should('have.attr', 'href').and('include', 'https://www.tcgplayer.com/massentry');
+    cy.get('#tcg-buy-this-combo')
+      .should('have.attr', 'href')
+      .and('include', encodeURIComponent('store.tcgplayer.com/massentry'));
   });
 
   it('can buy combo on Card Kingdom', () => {
