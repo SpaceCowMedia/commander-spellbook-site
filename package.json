@@ -45,7 +45,7 @@
     "use-debounce": "^10.0.6"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
+    "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/compat": "^1.2.9",
     "@scryfall/api-types": "^1.0.0-alpha.4",
