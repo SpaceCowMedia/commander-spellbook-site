@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 
 type Props = {
   cards: string[];
-  edhrecLink: string;
+  edhrecLink?: string;
   comboId: string;
   tcgPlayerPrice: string;
   cardKingdomPrice: string;

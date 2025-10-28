@@ -264,7 +264,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
 
             <ComboSidebarLinks
               cards={combo.uses.map((card) => card.card.name)}
-              edhrecLink={EDHRECService.getComboUrl(combo)}
+              edhrecLink={combo.popularity && combo.popularity > 0 ? EDHRECService.getComboUrl(combo) : undefined}
               comboId={combo.id}
               tcgPlayerPrice={combo.prices?.tcgplayer || '-'}
               cardKingdomPrice={combo.prices?.cardkingdom || '-'}
