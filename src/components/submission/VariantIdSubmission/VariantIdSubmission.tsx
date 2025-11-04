@@ -24,7 +24,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
       // and let the API handle it
       // as a string
     }
-    setVariantIdInput(value);
+    setVariantIdInput(value.trim());
     onChange({ ...variant, variant: value });
   };
 
