@@ -424,12 +424,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // 2. Check if it's an alias and reroute if it's found
     const alias = await variantAliasesApi.variantAliasesRetrieve({ id: params.id });
-    return {
-      redirect: {
-        destination: `/combo/${alias.variant}`,
-        permanent: false,
-      },
-    };
+    if (alias.variant) {
+      return {
+        redirect: {
+          destination: `/combo/${alias.variant}`,
+          permanent: false,
+        },
+      };
+    }
   } catch (err) {
     if (!(err instanceof ResponseError && err.response.status === 404)) {
       throw err;
