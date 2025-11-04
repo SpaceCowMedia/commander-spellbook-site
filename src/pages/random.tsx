@@ -32,6 +32,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       limit: 1,
       ordering: '?',
       q: 'legal:commander',
+      groupByCombo: false,
     });
     if (combos.results.length > 0) {
       const randomCombo = combos.results[0];
