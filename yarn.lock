@@ -1058,10 +1058,10 @@
   resolved "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@space-cow-media/spellbook-client@^4.8.0":
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-4.8.0.tgz#9716e7e4505f058c8defc6f603f8a0e5d2000231"
-  integrity sha512-tkg2V86JVruxSPudN6jPo8WzFdxjL9aF6GsIqa8qIsFNp2B/gJ4lVedJeoAXgK2bSoUYl1g3Fz37fQBAvNwDSQ==
+"@space-cow-media/spellbook-client@^4.8.19":
+  version "4.8.19"
+  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-4.8.19.tgz#37cf90c4875079bf2c24c22982ceee325a4d82bb"
+  integrity sha512-LKCz+K+C0Dv0oYK7A9wLiwHbbpWuVIDGyofOkqLOXLNwxcHmiPLv2WJyB/Ickp3r/UrXiWuf9n2+zjCSS4pnWw==
 
 "@swc/helpers@0.5.15":
   version "0.5.15"
