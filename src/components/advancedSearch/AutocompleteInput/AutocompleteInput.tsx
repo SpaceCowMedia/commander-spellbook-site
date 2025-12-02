@@ -17,8 +17,8 @@ export type AutoCompleteOption = {
   value: string;
   label: string;
   alias?: RegExp;
-  normalizedValue?: string;
-  normalizedLabel?: string;
+  normalizedValue: string;
+  normalizedLabel: string;
 };
 
 type Props = {
@@ -57,9 +57,7 @@ const AutocompleteInput: React.FC<Props> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState<string>(value);
   const [debouncedLocalValue] = useDebounce(localValue, AUTOCOMPLETE_DELAY);
-  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<
-    Array<{ value: string; label: string }>
-  >([]);
+  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<Array<AutoCompleteOption>>([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -206,7 +204,14 @@ const AutocompleteInput: React.FC<Props> = ({
       if (cardAutocomplete) {
         try {
           const cards: string[] = await scryfall.autocomplete(value, { include_extras: false });
-          options = options.concat(cards.map((card) => ({ value: card, label: card })));
+          options = options.concat(
+            cards.map((card) => ({
+              value: card,
+              label: card,
+              normalizedValue: normalizeStringInput(card),
+              normalizedLabel: normalizeStringInput(card),
+            })),
+          );
         } catch (e) {
           console.error(e);
         }
@@ -216,8 +221,18 @@ const AutocompleteInput: React.FC<Props> = ({
           const templates = await templatesApi.templatesList({ q: value });
           const features = await feturesApi.featuresList({ q: value, status: [FeaturesListStatusEnum.Pu] });
           options = options.concat(
-            templates.results.map((template) => ({ value: template.name, label: template.name })),
-            features.results.map((feature) => ({ value: feature.name, label: feature.name })),
+            templates.results.map((template) => ({
+              value: template.name,
+              label: template.name,
+              normalizedValue: normalizeStringInput(template.name),
+              normalizedLabel: normalizeStringInput(template.name),
+            })),
+            features.results.map((feature) => ({
+              value: feature.name,
+              label: feature.name,
+              normalizedValue: normalizeStringInput(feature.name),
+              normalizedLabel: normalizeStringInput(feature.name),
+            })),
           );
         } catch (e) {
           console.error(e);
@@ -229,7 +244,14 @@ const AutocompleteInput: React.FC<Props> = ({
             q: value,
             status: [FeaturesListStatusEnum.S, FeaturesListStatusEnum.H, FeaturesListStatusEnum.C],
           });
-          options = options.concat(results.results.map((result) => ({ value: result.name, label: result.name })));
+          options = options.concat(
+            results.results.map((result) => ({
+              value: result.name,
+              label: result.name,
+              normalizedValue: normalizeStringInput(result.name),
+              normalizedLabel: normalizeStringInput(result.name),
+            })),
+          );
         } catch (e) {
           console.error(e);
         }
@@ -238,12 +260,6 @@ const AutocompleteInput: React.FC<Props> = ({
         setLoading(false);
       }
     }
-    options
-      .filter((o) => o.normalizedValue === undefined)
-      .forEach((o) => (o.normalizedValue = o.normalizedValue ?? normalizeStringInput(o.value)));
-    options
-      .filter((o) => o.normalizedLabel === undefined)
-      .forEach((o) => (o.normalizedLabel = o.normalizedLabel ?? normalizeStringInput(o.label)));
     return options.filter((option) => {
       const mainMatch = option.normalizedValue?.includes(normalizedValue);
 
@@ -267,8 +283,8 @@ const AutocompleteInput: React.FC<Props> = ({
   const findBestMatches = (totalOptions: AutoCompleteOption[], value: string) => {
     const normalizedValue = normalizeStringInput(value);
     totalOptions.sort((a, b) => {
-      const indexA = a.value.indexOf(normalizedValue);
-      const indexB = b.value.indexOf(normalizedValue);
+      const indexA = a.normalizedValue.indexOf(normalizedValue);
+      const indexB = b.normalizedValue.indexOf(normalizedValue);
 
       if (indexA === indexB) {
         return 0;
