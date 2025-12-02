@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { SpellbookIcon } from '../components/layout/Icon/Icon';
 import { LEGALITY_FORMATS } from 'lib/types';
+import normalizeStringInput from 'lib/normalizeStringInput';
 
 type TagOption = {
   name: string;
@@ -392,14 +393,7 @@ interface SelectedTag extends TagOption {
   selected?: boolean;
 }
 
-type AutoCompleteOption = {
-  value: string;
-  label: string;
-  alias?: RegExp;
-};
-
 type Data = {
-  colorAutocompletes: AutoCompleteOption[];
   cards: InputData[];
   templates: InputData[];
   cardAmounts: InputData[];
@@ -422,10 +416,14 @@ type Data = {
 };
 
 const AdvancedSearch: React.FC = () => {
+  const colorAutocompletes = COLOR_AUTOCOMPLETES.map((color) => ({
+    value: color.value,
+    label: color.label,
+    normalizedValue: normalizeStringInput(color.value),
+    normalizedLabel: normalizeStringInput(color.label),
+  }));
   const router = useRouter();
-
   const [formState, setFormStateHook] = useState<Data>({
-    colorAutocompletes: COLOR_AUTOCOMPLETES,
     cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
     templates: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
     cardAmounts: [{ ...CARD_AMOUNT_OPERATOR_OPTIONS[0], value: '' }],
@@ -448,7 +446,6 @@ const AdvancedSearch: React.FC = () => {
   });
 
   const {
-    colorAutocompletes,
     cards,
     templates,
     cardAmounts,
