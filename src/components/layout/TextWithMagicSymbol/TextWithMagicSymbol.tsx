@@ -17,6 +17,8 @@ type Props = {
 
 function replaceAlli(text: string, searchValue: string, replaceValue: string): string {
   const positions = [];
+  let shift = 0;
+  const delta = replaceValue.length - searchValue.length;
   const lowerText = text.toLowerCase();
   const lowerSearchValue = searchValue.toLowerCase();
   let pos = lowerText.indexOf(lowerSearchValue);
@@ -25,7 +27,9 @@ function replaceAlli(text: string, searchValue: string, replaceValue: string): s
     pos = lowerText.indexOf(lowerSearchValue, pos + searchValue.length);
   }
   positions.forEach((i) => {
+    i += shift;
     text = text.substring(0, i) + replaceValue + text.substring(i + searchValue.length);
+    shift += delta;
   });
   return text;
 }
