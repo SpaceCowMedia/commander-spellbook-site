@@ -35,7 +35,7 @@
     "react-cookie": "^8.0.1",
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",
-    "react-select": "^5.10.1",
+    "react-select": "^5.10.2",
     "react-swipeable": "^7.0.2",
     "react-tooltip": "^5.28.1",
     "remark-gfm": "^4.0.1",
