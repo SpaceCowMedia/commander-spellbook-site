@@ -36,7 +36,7 @@ jobs:
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           # npm packages are cached in node_modules
           # npm also provides a local cache in .npm
@@ -48,7 +48,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
 
       - name: Cache Site Data ⏬
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             dist/
@@ -73,7 +73,7 @@ jobs:
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             node_modules
@@ -103,7 +103,7 @@ jobs:
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             node_modules
@@ -136,7 +136,7 @@ jobs:
 
       - name: Restore node modules from cache 📦
         id: cache-nodemodules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             node_modules
