@@ -28,6 +28,7 @@ module.exports = (phase, { _defaultConfig }) => {
   const isTest = phase === PHASE_TEST || 'CI' in process.env;
   return {
     output: !isDev && !isTest ? 'standalone' : undefined,
+    staticPageGenerationTimeout: 120,
     reactStrictMode: true,
     trailingSlash: true,
     productionBrowserSourceMaps: true,
