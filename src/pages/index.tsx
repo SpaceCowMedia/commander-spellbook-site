@@ -9,6 +9,7 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import UserDropdown from '../components/layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi } from '@space-cow-media/spellbook-client';
+import { GetStaticProps } from 'next';
 
 type FeaturedTab = {
   id: number;
@@ -106,7 +107,7 @@ const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const { NEXT_PUBLIC_EDITOR_BACKEND_URL } = process.env;
 
   if (!NEXT_PUBLIC_EDITOR_BACKEND_URL) {
@@ -151,6 +152,6 @@ export async function getStaticProps() {
       revalidate: 60,
     };
   }
-}
+};
 
 export default Home;

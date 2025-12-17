@@ -3,7 +3,7 @@ import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import ManaSymbol from 'components/layout/ManaSymbol/ManaSymbol';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import { LEGALITY_FORMATS } from 'lib/types';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import React from 'react';
 import { apiConfiguration } from 'services/api.service';
 import styles from './metrics.module.scss';
@@ -87,84 +87,99 @@ const Metrics: React.FC<Props> = (stats) => {
 
 export default Metrics;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const configuration = apiConfiguration(context);
-  const variantsApi = new VariantsApi(configuration);
-  const numberOfCombos = (
-    await variantsApi.variantsList({
-      limit: 1,
-      groupByCombo: true,
-    })
-  ).count;
-  const numberOfTotalVariants = (
-    await variantsApi.variantsList({
-      limit: 1,
-      groupByCombo: false,
-    })
-  ).count;
-  const numberOfVariantsPerColorIdentity = Object.fromEntries(
-    await Promise.all(
-      Object.values(IdentityEnum).map(async (identity) => [
-        identity,
-        {
-          count: (
-            await variantsApi.variantsList({
-              limit: 1,
-              groupByCombo: false,
-              q: `identity=${identity}`,
-            })
-          ).count,
-        },
-      ]),
-    ),
-  );
-  const numberOfVariantsPerSupportedFormat = Object.fromEntries(
-    await Promise.all(
-      LEGALITY_FORMATS.filter(({ value }) => value).map(async ({ value, label }) => [
-        label,
-        {
-          count: (
-            await variantsApi.variantsList({
-              limit: 1,
-              groupByCombo: false,
-              q: `format:${value}`,
-            })
-          ).count,
-        },
-      ]),
-    ),
-  );
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const configuration = apiConfiguration();
+    const variantsApi = new VariantsApi(configuration);
+    const numberOfCombos = (
+      await variantsApi.variantsList({
+        limit: 1,
+        groupByCombo: true,
+      })
+    ).count;
+    const numberOfTotalVariants = (
+      await variantsApi.variantsList({
+        limit: 1,
+        groupByCombo: false,
+      })
+    ).count;
+    const numberOfVariantsPerColorIdentity = Object.fromEntries(
+      await Promise.all(
+        Object.values(IdentityEnum).map(async (identity) => [
+          identity,
+          {
+            count: (
+              await variantsApi.variantsList({
+                limit: 1,
+                groupByCombo: false,
+                q: `identity=${identity}`,
+              })
+            ).count,
+          },
+        ]),
+      ),
+    );
+    const numberOfVariantsPerSupportedFormat = Object.fromEntries(
+      await Promise.all(
+        LEGALITY_FORMATS.filter(({ value }) => value).map(async ({ value, label }) => [
+          label,
+          {
+            count: (
+              await variantsApi.variantsList({
+                limit: 1,
+                groupByCombo: false,
+                q: `format:${value}`,
+              })
+            ).count,
+          },
+        ]),
+      ),
+    );
 
-  const numberOfVariantsPerCardCount = Object.fromEntries(
-    await Promise.all(
-      ['2', '3', '4', '5', '6+'].map(async (count) => [
-        count,
-        {
-          count: (
-            await variantsApi.variantsList({
-              limit: 1,
-              groupByCombo: false,
-              q: count.endsWith('+') ? `card>=${count.substring(0, count.length - 1)}` : `card=${count}`,
-            })
-          ).count,
-        },
-      ]),
-    ),
-  );
+    const numberOfVariantsPerCardCount = Object.fromEntries(
+      await Promise.all(
+        ['2', '3', '4', '5', '6+'].map(async (count) => [
+          count,
+          {
+            count: (
+              await variantsApi.variantsList({
+                limit: 1,
+                groupByCombo: false,
+                q: count.endsWith('+') ? `card>=${count.substring(0, count.length - 1)}` : `card=${count}`,
+              })
+            ).count,
+          },
+        ]),
+      ),
+    );
 
-  const props: Props = {
-    numberOfCombos: {
-      count: numberOfCombos,
-    },
-    numberOfVariants: {
-      count: numberOfTotalVariants,
-    },
-    numberOfVariantsPerColorIdentity,
-    numberOfVariantsPerSupportedFormat,
-    numberOfVariantsPerCardCount,
-  };
+    const props: Props = {
+      numberOfCombos: {
+        count: numberOfCombos,
+      },
+      numberOfVariants: {
+        count: numberOfTotalVariants,
+      },
+      numberOfVariantsPerColorIdentity,
+      numberOfVariantsPerSupportedFormat,
+      numberOfVariantsPerCardCount,
+    };
 
-  return {
-    props: props,
-  };
+    return {
+      props: props,
+      revalidate: 86400, // Revalidate once a day
+    };
+  } catch (error) {
+    console.error('Error fetching metrics:', error);
+    return {
+      props: {
+        numberOfCombos: { count: 0 },
+        numberOfVariants: { count: 0 },
+        numberOfVariantsPerColorIdentity: {},
+        numberOfVariantsPerSupportedFormat: {},
+        numberOfVariantsPerCardCount: {},
+      },
+      revalidate: 60, // Revalidate in one minute
+    };
+  }
 };
