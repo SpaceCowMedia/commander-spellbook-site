@@ -181,7 +181,7 @@ jobs:
           outputs: type=docker,dest=/tmp/spellbook-client.tar
 
       - name: Upload image artifact 📦
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: spellbook-client
           path: /tmp/spellbook-client.tar
