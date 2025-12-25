@@ -289,6 +289,18 @@ const DATA = {
       search: 'is:hulkline',
       description: 'Combos that are fetchable with Protean Hulk.',
     },
+    {
+      search: 'is:winning',
+      description: 'Combos that win the game as a result of the combo.',
+    },
+    {
+      search: 'is:lock',
+      description: 'Combos that lock your opponents out of taking some actions.',
+    },
+    {
+      search: 'is:mld',
+      description: 'Combos that destroy or otherwise disable all lands or almost all lands.',
+    },
   ],
   commanderSnippets: [
     {
@@ -695,8 +707,9 @@ Other tags are applied automatically, so their support is complete and always up
 
 #### Manual tags
 
-* \`lock\`: means that the variant locks your opponent
 * \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
+* \`lock\`: means that the variant locks your opponents out of taking some actions
+* \`mld\`/\`masslanddestruction\`/\`masslanddenial\`/\`masslanddenial\`: means that the variant destroys or otherwise disables all lands or almost all lands
 
 The support for other manual tags will be added in the future.
 
