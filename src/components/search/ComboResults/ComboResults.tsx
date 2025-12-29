@@ -7,6 +7,8 @@ import pluralize from 'pluralize';
 import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { useRef, useState } from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
+import Icon from 'components/layout/Icon/Icon';
+import { IS_LOCK } from 'lib/constants';
 
 type ResultProps = {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -72,6 +74,7 @@ export const ComboResult: React.FC<ResultProps> = ({
   const stateBasedColorInverse = combo.status === 'OK' ? 'light' : combo.status === 'E' ? 'dark' : 'light';
   const stateBasedTooltip =
     combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
+  const isLock = combo.produces.some((result) => result.feature.name.toLowerCase() === 'lock');
 
   return (
     <Link
@@ -81,7 +84,10 @@ export const ComboResult: React.FC<ResultProps> = ({
       rel={newTab ? 'noopener noreferrer' : undefined}
       target={newTab ? '_blank' : undefined}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col relative">
+        <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
+          {isLock && <Icon name="lock" />}
+        </div>
         <div
           className={`flex items-center flex-grow flex-col bg-${stateBasedColor} text-white`}
           title={stateBasedTooltip}
@@ -131,11 +137,13 @@ export const ComboResult: React.FC<ResultProps> = ({
         </div>
         <div className="flex-grow">
           <span className="sr-only">Results in combo:</span>
-          {combo.produces.map((result) => (
-            <div key={result.feature.name} className={`result pl-3 pr-3`}>
-              <TextWithMagicSymbol text={result.feature.name} />
-            </div>
-          ))}
+          {combo.produces
+            .filter((result) => result.feature.name.toLowerCase() != 'lock')
+            .map((result) => (
+              <div key={result.feature.name} className={`result pl-3 pr-3`}>
+                <TextWithMagicSymbol text={result.feature.name} />
+              </div>
+            ))}
         </div>
       </div>
       <div className="flex items-center flex-grow flex-col">

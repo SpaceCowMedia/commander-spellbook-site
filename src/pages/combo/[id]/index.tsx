@@ -26,7 +26,7 @@ import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
-import { DEFAULT_ORDERING } from 'lib/constants';
+import { DEFAULT_ORDERING, IS_LOCK } from 'lib/constants';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
@@ -116,11 +116,15 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     const prerequisites = getPrerequisiteList(combo);
     const steps = combo.description?.split('\n');
     const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
-    const results = combo.produces.map((feature) =>
-      feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name,
-    );
+    const isLock = combo.produces.some((feature) => feature.feature.name.toLowerCase() === 'lock');
+    const results = combo.produces
+      .filter((feature) => feature.feature.name.toLowerCase() !== 'lock')
+      .map((feature) => (feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name));
 
     // metadata
+    if (isLock) {
+      metaData.push(IS_LOCK);
+    }
     if (combo.status == 'E') {
       metaData.push("This combo is an example of a variant and doesn't provide an explanation.");
     } else if (combo.status == 'D') {

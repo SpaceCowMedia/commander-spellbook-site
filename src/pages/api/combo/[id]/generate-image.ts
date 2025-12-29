@@ -17,12 +17,21 @@ const headerHeight = iWidth + lineOffset;
 const footerHeight = (width * 9) / 100;
 const padding = leftOffset;
 
-async function headerCanvas(identityArray: any[]) {
+async function headerCanvas(identityArray: any[], isLock: boolean) {
   // Mana pips background
   let canvas1 = createCanvas(width, headerHeight);
   let ctx = canvas1.getContext('2d');
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#111111';
   ctx.fillRect(border, border, canvas1.width - border * 2, canvas1.height - border * 2);
+  if (isLock) {
+    // Draw lock icon if the combo is a lock
+    const lockImg = await loadImage(serverPath('public/images/lock.svg'));
+    const lockSize = iWidth;
+    const lockX = border + padding;
+    const lockY = (canvas1.height - lockSize) / 2;
+    ctx.drawImage(lockImg, lockX, lockY, lockSize, lockSize);
+  }
+  // Mana pips
   let startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
   for (let [index, letter] of identityArray.entries()) {
     let position = index * (iWidth + manaOffset) + startManaPos;
@@ -142,10 +151,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const cards = combo.uses.map((item) => item.card);
   const templateCount = combo.requires.length;
   const prereqCount = countPrerequisites(combo);
-  const produces = combo.produces;
+  const produces = combo.produces.filter((produces) => produces.feature.name.toLowerCase() !== 'lock');
+  const isLock = combo.produces.some((produces) => produces.feature.name.toLowerCase() === 'lock');
 
   try {
-    let header_c = await headerCanvas(identityArray);
+    let header_c = await headerCanvas(identityArray, isLock);
     let cardsUsed_c = cardsUsedCanvas(cards);
     let prereq_c = preReqCanvas(prereqCount, templateCount);
     let separator_c = separatorCanvas();
