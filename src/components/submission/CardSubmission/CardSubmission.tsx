@@ -131,6 +131,11 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
               ...base,
               background: 'inherit',
             }),
+            option: (base, state) => ({
+              ...base,
+              background: state.isFocused ? '#888888' : 'inherit',
+              color: 'inherit',
+            }),
           }}
         />
       </div>
