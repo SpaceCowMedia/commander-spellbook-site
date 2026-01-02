@@ -302,6 +302,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   }
 
   const handleSubmit = async () => {
+    setSubmitting(true);
     try {
       const result = await findMyCombosApi.findMyCombosCreate({
         deckRequest: {
