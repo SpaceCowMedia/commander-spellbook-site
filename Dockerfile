@@ -92,6 +92,12 @@ ENV PORT=3000
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0"
 
+# Load balancers have 60 sec idle timeout
+# "Make sure that the duration of the keep-alive timeout is longer than the idle timeout value"
+# https://nextjs.org/docs/pages/api-reference/next-cli#keep-alive-timeout
+# https://github.com/vercel/next.js/discussions/28642
+ENV KEEP_ALIVE_TIMEOUT 61000
+
 CMD [\
   "node", \
   "--enable-source-maps", \
