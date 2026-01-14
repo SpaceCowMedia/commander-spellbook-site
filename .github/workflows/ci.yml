@@ -155,6 +155,9 @@ jobs:
 
       - name: Cypress run 🧪
         uses: cypress-io/github-action@v6
+        env:
+          NEXT_PUBLIC_EDITOR_BACKEND_URL: http://127.0.0.1:8000
+          NEXT_PUBLIC_CLIENT_URL: http://localhost:3000
         with:
           install-command: "true"
           build: yarn run build
