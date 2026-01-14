@@ -72,11 +72,24 @@ runs:
           type_line="Artifact",
           price_tcgplayer=2.49,
         )
+        c3 = Card.objects.create(
+          id=3,
+          name="Forsaken Monument",
+          identity="C",
+          color="C",
+          oracle_id="7777fab1-df3f-467f-b9e2-46dd2bd2166e",
+          type_line="Legendary Artifact",
+          price_tcgplayer=12.99,
+        )
         f1 = Feature.objects.create(
           id=1,
           name="Infinite mill",
         )
-        combo = Combo.objects.create(
+        f2 = Feature.objects.create(
+          id=2,
+          name="Infinite mana",
+        )
+        combo1 = Combo.objects.create(
           id=1,
           description="This is a sample combo.",
           easy_prerequisites="Easy prerequisites here.",
@@ -84,16 +97,35 @@ runs:
           notes="These are some notes about the combo.",
           status=Combo.Status.GENERATOR,
         )
-        combo.cardincombo_set.create(
+        combo1.cardincombo_set.create(
           card=c1,
           zone_locations=ZoneLocation.BATTLEFIELD,
         )
-        combo.cardincombo_set.create(
+        combo1.cardincombo_set.create(
           card=c2,
           zone_locations=ZoneLocation.BATTLEFIELD,
         )
-        combo.featureproducedincombo_set.create(
+        combo1.featureproducedincombo_set.create(
           feature=f1,
+        )
+        combo2 = Combo.objects.create(
+          id=2,
+          description="This is another sample combo.",
+          easy_prerequisites="Easy prerequisites here.",
+          notable_prerequisites="Notable prerequisites here.",
+          notes="These are some notes about the combo.",
+          status=Combo.Status.GENERATOR,
+        )
+        combo2.cardincombo_set.create(
+          card=c1,
+          zone_locations=ZoneLocation.BATTLEFIELD,
+        )
+        combo2.cardincombo_set.create(
+          card=c3,
+          zone_locations=ZoneLocation.BATTLEFIELD,
+        )
+        combo2.featureproducedincombo_set.create(
+          feature=f2,
         )
         launch_job_command('generate_variants', group='all', background=False)
         Variant.objects.update(status=Variant.Status.OK)
