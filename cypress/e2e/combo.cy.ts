@@ -26,7 +26,7 @@ describe('Combo Detail Page', () => {
   });
 
   it('can buy combo on TCGplayer', () => {
-    cy.visit('/combo/3616/');
+    cy.visit('/combo/1-2/');
 
     cy.get('#tcg-buy-this-combo')
       .should('have.attr', 'href')
