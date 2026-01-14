@@ -32,8 +32,14 @@ runs:
       shell: bash
       run: |
         echo "Waiting for backend to be ready on port ${{ inputs.port }}..."
+        i=0
         until curl -s http://localhost:${{ inputs.port }}/ --fail-with-body
         do
           echo "Backend not ready yet, waiting..."
           sleep 5
+          i=$((i+1))
+          if [ $i -gt 24 ]; then
+            echo "Backend did not become ready in time, exiting."
+            exit 1
+          fi
         done
