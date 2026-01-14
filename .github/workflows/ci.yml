@@ -149,7 +149,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Startup Backend Service 🖥️
-        uses: ./.github/actions/backend.yaml
+        uses: ./.github/actions/backend/
         with:
           port: "8000"
 
