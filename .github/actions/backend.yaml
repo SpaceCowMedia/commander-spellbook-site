@@ -1,0 +1,33 @@
+name: "Startup Backend"
+description: "Clone and run the backend service using docker compose"
+
+inputs:
+  port:
+    required: true
+    default: "8000"
+
+runs:
+  using: "composite"
+  env:
+    PORT: ${{ inputs.port }}
+  steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v6
+      with:
+        repository: "SpaceCowMedia/commander-spellbook-backend"
+        ref: latest
+        path: backend
+    - name: Build Backend 🏗
+      working-directory: ./backend
+      run: docker-compose build
+    - name: Start Backend 🚀
+      working-directory: ./backend
+      run: docker-compose up -d
+    - name: Wait for Backend to be ready ⏱️
+      run: |
+        echo "Waiting for backend to be ready on port ${{ inputs.port }}..."
+        until curl -s http://localhost:${{ inputs.port }}/ --fail-with-body
+        do
+          echo "Backend not ready yet, waiting..."
+          sleep 5
+        done

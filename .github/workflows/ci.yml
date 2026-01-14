@@ -148,13 +148,18 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
+      - name: Startup Backend Service 🖥️
+        uses: ./.github/actions/backend.yaml
+        with:
+          port: "8000"
+
       - name: Cypress run 🧪
         uses: cypress-io/github-action@v6
         with:
           install-command: "true"
           build: yarn run build
           start: yarn start
-          wait-on: "http://localhost:3000, https://backend.commanderspellbook.com"
+          wait-on: "http://localhost:3000, http://localhost:8000"
           browser: ${{ matrix.browser }}
 
   docker:
