@@ -43,3 +43,59 @@ runs:
             exit 1
           fi
         done
+    - name: Seed Backend Database 🌱
+      working-directory: ./backend
+      shell: bash
+      run: |
+        docker compose exec --no-tty web python manage.py shell <<EOF
+        from spellbook.models import ZoneLocation
+        from spellbook.utils import launch_job_command
+        Card.objects.all().delete()
+        Template.objects.all().delete()
+        Combo.objects.all().delete()
+        Variant.objects.all().delete()
+        c1 = Card.objects.create(
+          id=1,
+          name="Basalt Monolith",
+          identity="C",
+          color="C",
+          oracle_id="6b8cf2a0-b045-4d91-9d91-c602d40c6237",
+          type_line="Artifact",
+          price_tcgplayer=4.99,
+        )
+        c2 = Card.objects.create(
+          id=2,
+          name="Mesmeric Orb",
+          identity="C",
+          color="C",
+          oracle_id="03efb4f3-b8e2-4441-824f-886dc40712c4",
+          type_line="Artifact",
+          price_tcgplayer=2.49,
+        )
+        f1 = Feature.objects.create(
+          id=1,
+          name="Infinite mill",
+        )
+        combo = Combo.objects.create(
+          id=1,
+          description="This is a sample combo.",
+          easy_prerequisites="Easy prerequisites here.",
+          notable_prerequisites="Notable prerequisites here.",
+          notes="These are some notes about the combo.",
+          status=Combo.Status.GENERATOR,
+        )
+        combo.cardincombo_set.create(
+          card=c1,
+          zone_locations=ZoneLocation.BATTLEFIELD,
+        )
+        combo.cardincombo_set.create(
+          card=c2,
+          zone_locations=ZoneLocation.BATTLEFIELD,
+        )
+        combo.featureproducedincombo_set.create(
+          feature=f1,
+        )
+        launch_job_command('generate_variants', group='all', background=False)
+        Variant.objects.update(status=Variant.Status.OK)
+        launch_job_command('export_variants', background=False)
+        EOF

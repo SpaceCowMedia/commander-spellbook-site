@@ -1,6 +1,6 @@
 describe('Combo Detail Page', () => {
   it('includes combo data', () => {
-    cy.visit('/combo/450/');
+    cy.visit('/combo/1-2/');
 
     cy.get('#combo-cards ol li').should((items) => {
       expect(items).to.have.length(2);
@@ -34,13 +34,13 @@ describe('Combo Detail Page', () => {
   });
 
   it('can buy combo on Card Kingdom', () => {
-    cy.visit('/combo/3616/');
+    cy.visit('/combo/1-2/');
 
     cy.get('#ck-buy-this-combo').should('have.attr', 'href').and('include', 'https://www.cardkingdom.com/builder');
   });
 
   it('provides combo preview', () => {
-    cy.visit('/combo/450/');
+    cy.visit('/combo/1-2/');
 
     cy.get('meta[property="og:image"]').each(($img) => {
       const src = $img.attr('content');

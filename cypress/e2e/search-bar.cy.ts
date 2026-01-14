@@ -1,6 +1,6 @@
 describe('Search Bar', () => {
   it('is present on many pages', () => {
-    const pages = ['advanced-search', 'combo/450', 'search', 'syntax-guide'];
+    const pages = ['advanced-search', 'combo/1-2', 'search', 'syntax-guide'];
 
     pages.forEach((page) => {
       cy.visit(`/${page}/`);
