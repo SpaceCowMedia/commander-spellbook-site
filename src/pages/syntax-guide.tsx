@@ -41,6 +41,11 @@ const DATA = {
       icon: 'coins',
     },
     {
+      id: 'card-color',
+      text: 'Card Color',
+      icon: 'pentagon',
+    },
+    {
       id: 'color-identity',
       text: 'Color Identity',
       icon: 'palette',
@@ -183,6 +188,20 @@ const DATA = {
     {
       search: 'all-mv<=3',
       description: 'Combos where all cards have a mana value of 3 or less',
+    },
+  ],
+  cardColorSnippets: [
+    {
+      search: 'cardcolor:gw',
+      description: 'Combos that contain a green and white card',
+    },
+    {
+      search: 'all-cardcolor=2',
+      description: 'Combos where all cards have exactly 2 colors',
+    },
+    {
+      search: '-cardcolor<=simic',
+      description: "Combos that don't contain a card that is within the simic color combination",
     },
   ],
   colorIdentitySnippets: [
@@ -520,6 +539,34 @@ For example, \`cardmanavalue>10\` searches for combos that contain at least one 
 * \`-\` negates the search term
 `;
 
+const CARD_COLOR_DESCRIPTION = `
+You can search for combos that contain cards of specific colors. For example, \`cardcolor:gw\` searches for combos that contain at least one green and white card.
+
+The cardcolor parameter accepts full color names (such as \`green\`), single character abbreviations (\`w\`, \`u\`, \`b\`, \`r\`, \`g\`, and \`c\` for colorless),
+and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`penta\`, etc.).
+
+### \`cardcolor\` operators
+
+* \`cardcolor:text\` or \`cardcolor=text\` search for combos containing a card whose color is _text_
+* \`cardcolor<text\` searches for combos containing a card within _text_ color combination but excludes cards whose color is exactly _text_
+* \`cardcolor<=text\` searches for combos containing a card within _text_ color combination
+* \`cardcolor>text\` searches for combos containing a card whose color contains _text_ but is not exactly _text_
+* \`cardcolor>=text\` searches for combos containing a card whose color contains _text_
+* \`cardcolor:number\` or \`cardcolor=number\` searches for combos containing a card that is exactly _number_ colors
+* \`cardcolor>number\` searches for combos containing a card that is more than _number_ colors
+* \`cardcolor>=number\` searches for combos containing a card that is _number_ or more colors
+* \`cardcolor<number\` searches for combos containing a card that is fewer than _number_ colors
+* \`cardcolor<=number\` searches for combos containing a card that is _number_ or fewer colors
+
+### \`cardcolor\` keyword aliases
+
+* \`cardcolors\`
+
+### \`cardcolor\` prefixes
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
+`;
+
 const COLOR_IDENTITY_DESCRIPTION = `
 Each combo has a color identity determined by the color identities of its cards. This strictly follows Commander color identity rules.
 By default, the color identity search finds all combos that a deck of that color identity could include. For example, \`coloridentity:bg\`
@@ -529,7 +576,7 @@ The coloridentity parameter accepts full color names (such as \`green\`), single
 and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`penta\`, etc.).
 
 > [!NOTE]
-> Color is not tracked separately from color identity. [Noble Hierarch](https://scryfall.com/search?q=!%22Noble%20Hierarch%22)
+> Color is different from color identity. [Noble Hierarch](https://scryfall.com/search?q=!%22Noble%20Hierarch%22)
 > is always green, white, and blue for the purpose of these searches.
 
 ### \`coloridentity\` operators
@@ -539,7 +586,7 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 * \`coloridentity<text\` searches for combos within _text_ identity but excludes combos whose identity is exactly _text_
 * \`coloridentity>=text\` searches for combos whose identity contains _text_
 * \`coloridentity>text\` searches for combos whose identity contains _text_ but is not exactly _text_
-* \`coloridentity=number\` searches for combos whose identity has exactly _number_ colors
+* \`coloridentity:number\` or \`coloridentity=number\` searches for combos whose identity has exactly _number_ colors
 * \`coloridentity>number\` searches for combos whose identity has more than _number_ colors
 * \`coloridentity>=number\` searches for combos whose identity has _number_ or more colors
 * \`coloridentity<number\` searches for combos whose identity has fewer than _number_ colors
@@ -919,6 +966,15 @@ const SyntaxGuide: React.FC = () => {
             icon="coins"
           >
             <SyntaxMarkdown>{CARD_MANA_VALUE_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Card Color"
+            snippets={DATA.cardColorSnippets}
+            headingCardName="Chromatic Lantern"
+            icon="pentagon"
+          >
+            <SyntaxMarkdown>{CARD_COLOR_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide

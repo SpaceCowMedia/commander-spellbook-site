@@ -141,6 +141,10 @@ const CARD_ARTS = {
     uid: '8c28cebf-f849-4353-9dd1-c62f05c15d0f',
     artist: 'Zoltan Boros',
   },
+  'Chromatic Lantern': {
+    uid: 'bf810ace-f866-457c-8671-a84c73b6f733',
+    artist: 'Jung Park',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {
