@@ -47,7 +47,7 @@ runs:
       working-directory: ./backend
       shell: bash
       run: |
-        docker compose exec --no-tty web python manage.py shell <<EOF
+        docker compose exec web python manage.py shell <<EOF
         from spellbook.models import ZoneLocation
         from spellbook.utils import launch_job_command
         Card.objects.all().delete()
