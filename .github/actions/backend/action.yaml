@@ -21,11 +21,10 @@ runs:
       shell: bash
       run: docker compose build
     - name: Start Backend 🚀
-      env:
-        PORT: ${{ inputs.port }}
       working-directory: ./backend
       shell: bash
       run: |
+        export PORT=${{ inputs.port }}
         docker compose config
         docker compose up -d
     - name: Wait for Backend to be ready ⏱️
