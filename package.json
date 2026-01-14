@@ -11,7 +11,7 @@
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "prettier": "prettier --write .",
-    "test:integration": "NODE_ENV=test yarn start & wait-on http://localhost:3000 && yarn run cy:run",
+    "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run",
     "prepare": "husky"
   },
   "lint-staged": {

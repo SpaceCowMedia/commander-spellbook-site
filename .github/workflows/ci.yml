@@ -124,6 +124,8 @@ jobs:
     strategy:
       matrix:
         browser: [chrome, firefox, edge, electron]
+    env:
+      NODE_ENV: test
     steps:
       - name: Setup Docker Buildx 🐳
         uses: docker/setup-buildx-action@v3
