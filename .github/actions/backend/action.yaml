@@ -4,12 +4,11 @@ description: "Clone and run the backend service using docker compose"
 inputs:
   port:
     required: true
+    description: "The port on which the backend service will be accessible"
     default: "8000"
 
 runs:
-  using: "composite"
-  env:
-    PORT: ${{ inputs.port }}
+  using: composite
   steps:
     - name: Checkout 🛎️
       uses: actions/checkout@v6
@@ -19,11 +18,16 @@ runs:
         path: backend
     - name: Build Backend 🏗
       working-directory: ./backend
-      run: docker-compose build
+      shell: bash
+      run: docker compose build
     - name: Start Backend 🚀
+      env:
+        PORT: ${{ inputs.port }}
       working-directory: ./backend
-      run: docker-compose up -d
+      shell: bash
+      run: docker compose up -d
     - name: Wait for Backend to be ready ⏱️
+      shell: bash
       run: |
         echo "Waiting for backend to be ready on port ${{ inputs.port }}..."
         until curl -s http://localhost:${{ inputs.port }}/ --fail-with-body
