@@ -4307,10 +4307,10 @@ markdown-table@^3.0.0:
   resolved "https://registry.npmjs.org/markdown-table/-/markdown-table-3.0.3.tgz"
   integrity sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==
 
-markdown-to-jsx@^7.7.4:
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.7.4.tgz#507d17c15af72ddf970fca84a95f0243244fcfa9"
-  integrity sha512-1bSfXyBKi+EYS3YY+e0Csuxf8oZ3decdfhOav/Z7Wrk89tjudyL5FOmwZQUoy0/qVXGUl+6Q3s2SWtpDEWITfQ==
+markdown-to-jsx@^9.5.7:
+  version "9.5.7"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-9.5.7.tgz#33698e51b065dce4c16b2b5aff955c2b421bdb74"
+  integrity sha512-0RO+9IgcURudRI6tmsKFt0S9fCHeUMFzfWmJ84XOKOQ+CEb8pARtWHAxpCPmlbDIs2HAlOXjJKJz4oOwAZBGRg==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"
