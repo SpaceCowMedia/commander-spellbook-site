@@ -49,7 +49,7 @@ runs:
       run: |
         docker compose exec web python manage.py shell <<EOF
         from spellbook.models import ZoneLocation
-        from spellbook.utils import launch_job_command
+        from spellbook.tasks import generate_variants_task, export_variants_task
         Card.objects.all().delete()
         Template.objects.all().delete()
         Combo.objects.all().delete()
@@ -127,7 +127,7 @@ runs:
         combo2.featureproducedincombo_set.create(
           feature=f2,
         )
-        launch_job_command('generate_variants', group='all', background=False)
+        generate_variants_task()
         Variant.objects.update(status=Variant.Status.OK)
-        launch_job_command('export_variants', background=False)
+        export_variants_task()
         EOF
