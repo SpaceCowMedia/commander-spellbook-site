@@ -50,6 +50,8 @@ runs:
         docker compose exec web python manage.py shell <<EOF
         from spellbook.models import ZoneLocation
         from spellbook.tasks import generate_variants_task, export_variants_task
+        from django.conf import settings
+        settings.TASKS = {"default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"}}
         Card.objects.all().delete()
         Template.objects.all().delete()
         Combo.objects.all().delete()
@@ -127,7 +129,7 @@ runs:
         combo2.featureproducedincombo_set.create(
           feature=f2,
         )
-        generate_variants_task()
+        generate_variants_task.enqueue()
         Variant.objects.update(status=Variant.Status.OK)
-        export_variants_task()
+        export_variants_task.enqueue()
         EOF
