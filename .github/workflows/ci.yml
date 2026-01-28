@@ -155,6 +155,7 @@ jobs:
 
       - name: Startup Backend Service 🖥️
         uses: ./.github/actions/backend/
+        timeout-minutes: 15
         with:
           port: "8000"
 

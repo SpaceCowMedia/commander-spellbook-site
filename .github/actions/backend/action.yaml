@@ -129,7 +129,14 @@ runs:
         combo2.featureproducedincombo_set.create(
           feature=f2,
         )
-        generate_variants_task.enqueue()
+        import time
+        task = generate_variants_task.enqueue()
+        while not task.is_finished():
+          time.sleep(1)
+          task.refresh()
         Variant.objects.update(status=Variant.Status.OK)
-        export_variants_task.enqueue()
+        task = export_variants_task.enqueue()
+        while not task.is_finished():
+          time.sleep(1)
+          task.refresh()
         EOF
