@@ -54,6 +54,7 @@ export async function templateReplacements(template: Template, page: number): Pr
       limit: pageSize,
       replaces: [template.id],
       offset: pageSize * page,
+      count: true,
     });
     const response = await scryfall.getCollection(
       replacements.results.map((card) =>
@@ -70,7 +71,7 @@ export async function templateReplacements(template: Template, page: number): Pr
       results: response,
       page: page,
       nextPage: replacements.next !== null ? page + 1 : undefined,
-      count: replacements.count,
+      count: replacements.count!,
     };
   }
 }

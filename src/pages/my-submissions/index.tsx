@@ -26,6 +26,7 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
   const router = useRouter();
   const totalPages = Math.ceil(count / PAGE_SIZE);
   const pageNumber = Number(page) || 1;
+  const hasNextPage = pageNumber < totalPages;
 
   const goForward = () => {
     router.push({ pathname: '/my-submissions', query: { page: pageNumber + 1 } });
@@ -40,31 +41,36 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
       <SpellbookHead title="Commander Spellbook: Combo Submissions" description="View your combo submissions." />
       <div>
         {error && <p className={styles.error}>{error}</p>}
-        <div className="container sm:flex flex-row">
+        <div className="container sm:flex flex-col">
           {submissions.length === 0 ? (
             <NoCombosFound />
           ) : (
-            <div className="w-full">
-              <SearchPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                aria-hidden="true"
-                onGoForward={goForward}
-                onGoBack={goBack}
-              />
-              <ul className={styles.suggestionsWrapper}>
-                {submissions.map((suggestion) => (
-                  <ComboSubmissionItem key={suggestion.id} submission={variantSuggestionFromSubmission(suggestion)} />
-                ))}
-              </ul>
-              <SearchPagination
-                currentPage={pageNumber}
-                totalPages={totalPages}
-                aria-hidden="true"
-                onGoForward={goForward}
-                onGoBack={goBack}
-              />
-            </div>
+            <>
+              <h2 className="heading-subtitle w-full mt-10">
+                You have submitted {count} combo{count !== 1 ? 's' : ''}.
+              </h2>
+              <div className="w-full">
+                <SearchPagination
+                  currentPage={pageNumber}
+                  hasNextPage={hasNextPage}
+                  aria-hidden="true"
+                  onGoForward={goForward}
+                  onGoBack={goBack}
+                />
+                <ul className={styles.suggestionsWrapper}>
+                  {submissions.map((suggestion) => (
+                    <ComboSubmissionItem key={suggestion.id} submission={variantSuggestionFromSubmission(suggestion)} />
+                  ))}
+                </ul>
+                <SearchPagination
+                  currentPage={pageNumber}
+                  hasNextPage={hasNextPage}
+                  aria-hidden="true"
+                  onGoForward={goForward}
+                  onGoBack={goBack}
+                />
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -92,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       suggestedBy: Number(userId),
       limit: PAGE_SIZE,
       offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
+      count: true,
     });
 
     return {

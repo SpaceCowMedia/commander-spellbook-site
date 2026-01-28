@@ -18,7 +18,6 @@ const PAGE_SIZE = 50;
 type Props = {
   combos: Variant[];
   bannedCombos?: Variant[];
-  count: number;
   page: number;
   error?: string;
   featured?: string;
@@ -66,7 +65,7 @@ const doesQuerySpecifyFormat = (query: string): boolean => {
   return query.includes('legal:') || query.includes('banned:') || query.includes('format:');
 };
 
-const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, featured }) => {
+const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }) => {
   const router = useRouter();
 
   const sort = queryParameterAsString(router.query.sort) || DEFAULT_SORT;
@@ -77,8 +76,6 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
   const variant = queryParameterAsString(router.query.variant);
 
   const groupBy = queryParameterAsString(router.query.groupByCombo) !== 'false';
-
-  const totalPages = Math.ceil(count / PAGE_SIZE);
 
   const pageNumber = Number(page) || 1;
 
@@ -112,10 +109,12 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
 
   const searchMessage =
     (singleCardQuery
-      ? `Showing ${count} combos with the card "${singleCardQuery[1]}"${legalityMessage}`
-      : `Showing ${count} results for query "${query}"${legalityMessage}`) +
+      ? `Showing combos with the card "${singleCardQuery[1]}"${legalityMessage}`
+      : `Showing results for query "${query}"${legalityMessage}`) +
     (variant ? `, which are all variants of the combo with ID "${variant}"` : '');
 
+  const hasNextPage = combos.length === PAGE_SIZE;
+  const showPagination = page > 0 || hasNextPage;
   return (
     <>
       <SpellbookHead
@@ -192,11 +191,11 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
                 </button>
               )}
               <div className="flex-grow min-h-2" />
-              {totalPages > 1 && (
+              {showPagination && (
                 <>
                   <SearchPagination
                     currentPage={pageNumber}
-                    totalPages={totalPages}
+                    hasNextPage={hasNextPage}
                     aria-hidden="true"
                     onGoForward={goForward}
                     onGoBack={goBack}
@@ -208,12 +207,12 @@ const Search: React.FC<Props> = ({ combos, count, page, bannedCombos, error, fea
         )}
 
         <div className="container sm:flex flex-row">
-          {combos.length > 0 ? (
+          {showPagination ? (
             <div className="w-full">
               <ComboResults results={combos} sort={sort} hideVariants={!groupBy} />
               <SearchPagination
                 currentPage={pageNumber}
-                totalPages={totalPages}
+                hasNextPage={hasNextPage}
                 aria-hidden="true"
                 onGoForward={goForward}
                 onGoBack={goBack}
@@ -292,7 +291,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           props: {
             combos: [],
             bannedCombos: bannedCombos,
-            count: 0,
             page: context.query.page || 1,
           },
         };
@@ -312,7 +310,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         combos: backendCombos,
         featured,
-        count: results.count,
         page: context.query.page || 1,
       },
     };
@@ -330,7 +327,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         combos: [],
-        count: 0,
         page: context.query.page || 1,
         error: error_message,
       },

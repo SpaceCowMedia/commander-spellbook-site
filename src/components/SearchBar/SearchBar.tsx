@@ -80,11 +80,11 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
       handleCountUp(variantCount);
     } else if (!variantCount) {
       variantsApi
-        .variantsList({ limit: 1, q: 'legal:commander' })
+        .variantsList({ limit: 1, q: 'legal:commander', count: true })
         .then((response) => {
           CookieService.set('variantCount', response.count, 'hours');
-          setVariantCount(response.count);
-          handleCountUp(response.count);
+          setVariantCount(response.count!);
+          handleCountUp(response.count!);
         })
         .catch((_error) => {
           setVariantCount(initialCount);

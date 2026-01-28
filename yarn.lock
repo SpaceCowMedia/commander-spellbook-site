@@ -944,10 +944,10 @@
   resolved "https://registry.npmjs.org/@scryfall/api-types/-/api-types-1.0.0-alpha.4.tgz"
   integrity sha512-uxoJPA5r0va3xo1h5Su+0J8ptG1BS7+Uw+67sV7NTBIhR7Ly9cYrRv0un4Q3Z/h+D8jjTWNwablUbDG6zULcVA==
 
-"@space-cow-media/spellbook-client@^4.9.13":
-  version "4.9.13"
-  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-4.9.13.tgz#96392580dc07634bf9cc90922aad3cf6a544e08a"
-  integrity sha512-8ccyv9QgmMPO1U9KtY5cNeiLxOmAEfJFCrzp3gLJ0sGNB023LkCSMps5VQpHTBCTubAXNo6VoEbrmiYmME0cFg==
+"@space-cow-media/spellbook-client@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-5.0.0.tgz#55788cdd89a1eeaf995714eebb1e197f02a60bde"
+  integrity sha512-/Xpygxyg8Va1gaoTHN2kJNxjghQ2hMhybda8fJYIRmRWBzqzZLre/muLUUBcAcAvqDOKt4y0evp2392rDXhn6A==
 
 "@standard-schema/spec@^1.0.0":
   version "1.1.0"

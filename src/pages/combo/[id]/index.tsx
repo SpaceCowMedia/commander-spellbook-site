@@ -78,7 +78,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       q: `-sid:"${combo.id}"`,
     });
     setVariants(variants.results);
-    setVariantCount(variants.count);
     setVariantsLoading(false);
   };
 

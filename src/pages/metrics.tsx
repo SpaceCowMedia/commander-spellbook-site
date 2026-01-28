@@ -1,4 +1,4 @@
-import { IdentityEnum, VariantsApi } from '@space-cow-media/spellbook-client';
+import { ColorEnum, VariantsApi } from '@space-cow-media/spellbook-client';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import ManaSymbol from 'components/layout/ManaSymbol/ManaSymbol';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
@@ -15,7 +15,7 @@ type Count = {
 type Props = {
   numberOfCombos: Count;
   numberOfVariants: Count;
-  numberOfVariantsPerColorIdentity: Record<IdentityEnum, Count>;
+  numberOfVariantsPerColorIdentity: Record<ColorEnum, Count>;
   numberOfVariantsPerSupportedFormat: Record<string, Count>;
   numberOfVariantsPerCardCount: Record<string, Count>;
 };
@@ -95,17 +95,19 @@ export const getStaticProps: GetStaticProps = async () => {
       await variantsApi.variantsList({
         limit: 1,
         groupByCombo: true,
+        count: true,
       })
-    ).count;
+    ).count!;
     const numberOfTotalVariants = (
       await variantsApi.variantsList({
         limit: 1,
         groupByCombo: false,
+        count: true,
       })
-    ).count;
+    ).count!;
     const numberOfVariantsPerColorIdentity = Object.fromEntries(
       await Promise.all(
-        Object.values(IdentityEnum).map(async (identity) => [
+        Object.values(ColorEnum).map(async (identity) => [
           identity,
           {
             count: (
@@ -113,8 +115,9 @@ export const getStaticProps: GetStaticProps = async () => {
                 limit: 1,
                 groupByCombo: false,
                 q: `identity=${identity}`,
+                count: true,
               })
-            ).count,
+            ).count!,
           },
         ]),
       ),
@@ -129,8 +132,9 @@ export const getStaticProps: GetStaticProps = async () => {
                 limit: 1,
                 groupByCombo: false,
                 q: `format:${value}`,
+                count: true,
               })
-            ).count,
+            ).count!,
           },
         ]),
       ),
@@ -146,8 +150,9 @@ export const getStaticProps: GetStaticProps = async () => {
                 limit: 1,
                 groupByCombo: false,
                 q: count.endsWith('+') ? `card>=${count.substring(0, count.length - 1)}` : `card=${count}`,
+                count: true,
               })
-            ).count,
+            ).count!,
           },
         ]),
       ),

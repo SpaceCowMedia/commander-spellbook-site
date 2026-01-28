@@ -3,12 +3,12 @@ import styles from './searchPagination.module.scss';
 
 type PaginationProps = {
   currentPage: number;
-  totalPages: number;
+  hasNextPage: boolean;
   onGoBack: () => void;
   onGoForward: () => void;
 };
 
-const SearchPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onGoBack, onGoForward }) => {
+const SearchPagination: React.FC<PaginationProps> = ({ currentPage, hasNextPage, onGoBack, onGoForward }) => {
   return (
     <div className="px-4 mt-3 flex items-center sm:px-1">
       <div className="flex-1 flex justify-between">
@@ -33,7 +33,7 @@ const SearchPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
         </button>
 
         <button
-          className={`forward-button ${styles.navButton} ${currentPage >= totalPages ? 'invisible' : ''}`}
+          className={`forward-button ${styles.navButton} ${!hasNextPage ? 'invisible' : ''}`}
           onClick={onGoForward}
         >
           Next <span className="sr-only">78 combos</span>
