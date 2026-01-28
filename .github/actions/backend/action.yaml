@@ -131,12 +131,12 @@ runs:
         )
         import time
         task = generate_variants_task.enqueue()
-        while not task.is_finished():
+        while not task.is_finished:
           time.sleep(1)
           task.refresh()
         Variant.objects.update(status=Variant.Status.OK)
         task = export_variants_task.enqueue()
-        while not task.is_finished():
+        while not task.is_finished:
           time.sleep(1)
           task.refresh()
         EOF
