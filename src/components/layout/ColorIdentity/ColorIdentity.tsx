@@ -1,9 +1,9 @@
 import React from 'react';
 import ManaSymbol from '../ManaSymbol/ManaSymbol';
-import { IdentityEnum } from '@space-cow-media/spellbook-client';
+import { ColorEnum } from '@space-cow-media/spellbook-client';
 
 type Props = {
-  identity: IdentityEnum;
+  identity: ColorEnum;
   size?: 'medium' | 'small';
 };
 
