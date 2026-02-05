@@ -235,7 +235,11 @@ export default Search;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
-  let query = queryParameterAsString(context.query.q) ?? '';
+  let query =
+    queryParameterAsString(context.query.q)
+      ?.replaceAll(/[“”″❞〝〞ˮ]/gu, '"')
+      ?.replaceAll(/[ʻʼ‘’❛❜ʹʻʼʾˈ՚′＇ꞌ]/gu, "'") ?? '';
+  console.log('Search query:', query);
   let featured: string | null = null;
   const featuredMatch = query.match(/^is:featured(?:-(\d+))?$/);
   if (featuredMatch) {
