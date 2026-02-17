@@ -24,7 +24,7 @@
     "@fortawesome/react-fontawesome": "^3.2.0",
     "@space-cow-media/spellbook-client": "^5.0.0",
     "canvas": "^3.2.0",
-    "cookies-next": "^6.0.0",
+    "cookies-next": "^6.1.1",
     "debounce": "^2.2.0",
     "markdown-to-jsx": "^9.7.3",
     "next": "^15.5.7",
