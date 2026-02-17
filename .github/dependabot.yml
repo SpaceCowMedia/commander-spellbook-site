@@ -13,6 +13,10 @@ updates:
     commit-message:
       prefix: chore
     registries: "*"
+    groups:
+      react:
+        patterns:
+         - react*
   - package-ecosystem: docker
     directory: /
     schedule:
