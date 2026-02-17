@@ -16,7 +16,9 @@ updates:
     groups:
       react:
         patterns:
-         - react*
+         - react
+         - react-dom
+         - @types/react
   - package-ecosystem: docker
     directory: /
     schedule:
