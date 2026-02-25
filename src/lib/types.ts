@@ -5,16 +5,17 @@ import {
   VariantUpdateSuggestion,
 } from '@space-cow-media/spellbook-client';
 
-export type ComboPrerequisites = {
+export interface ComboPrerequisites {
   /* Zone either H, B, C, G, L, E or multiple of them */
   zones: string[];
   /* Additional description of the prerequisite */
   description: string;
-};
+}
 
-export type ComboSubmissionErrorType = {
-  [key: string]: (ComboSubmissionErrorType | string)[];
-} & { statusCode: number; detail?: string };
+export type ComboSubmissionErrorType = Record<string, (ComboSubmissionErrorType | string)[]> & {
+  statusCode: number;
+  detail?: string;
+};
 
 export type ComboSubmission = Omit<VariantSuggestion, 'created'> & {
   created: string;
@@ -64,10 +65,10 @@ export function getTypes(card: CardInVariant | TemplateInVariant): string {
   return 'card' in card ? card.card.typeLine : '';
 }
 
-export type LegalityFormat = {
+export interface LegalityFormat {
   value: string;
   label: string;
-};
+}
 
 export const LEGALITY_FORMATS: LegalityFormat[] = [
   {

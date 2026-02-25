@@ -3,12 +3,12 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { GA_TRACKING_ID } from 'lib/googleAnalytics';
 
-type Props = {
+interface Props {
   children?: React.ReactNode;
   title: string;
   description: string;
   imageUrl?: string;
-};
+}
 
 const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl }) => {
   const router = useRouter();

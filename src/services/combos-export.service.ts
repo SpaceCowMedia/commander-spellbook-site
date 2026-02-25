@@ -7,7 +7,7 @@ const CSV_SEPARATOR = ';';
 function getIdentity(combo: Variant): string {
   let identity = '';
 
-  for (let color of combo.identity.split('')) {
+  for (const color of combo.identity.split('')) {
     identity += '{' + color + '}';
   }
 
@@ -29,14 +29,14 @@ function exportToText(combos: Variant[]): string {
     lines.push(LINE_BREAK);
 
     lines.push('Cards Required:');
-    for (let comboCard of combo.uses) {
+    for (const comboCard of combo.uses) {
       lines.push(`- ${comboCard.card.name}`);
     }
     lines.push(LINE_BREAK);
 
     lines.push('Prerequisites:');
     const prerequisites = getPrerequisiteList(combo);
-    for (let prereq of prerequisites) {
+    for (const prereq of prerequisites) {
       lines.push(`- ${prereq.description}`);
     }
     lines.push(LINE_BREAK);
@@ -50,7 +50,7 @@ function exportToText(combos: Variant[]): string {
     lines.push(LINE_BREAK);
 
     lines.push('Results:');
-    for (let result of combo.produces) {
+    for (const result of combo.produces) {
       lines.push(`- ${result.feature.name}`);
     }
   }

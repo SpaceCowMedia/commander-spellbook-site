@@ -7,7 +7,7 @@ import styles from './combo.module.scss';
 import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
 import { GetServerSideProps } from 'next';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
 import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
@@ -30,10 +30,10 @@ import { DEFAULT_ORDERING, IS_LOCK } from 'lib/constants';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
-type Props = {
+interface Props {
   combo?: Variant;
   alternatives?: Variant[];
-};
+}
 
 const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
@@ -46,8 +46,10 @@ function booleanToIcon(value: boolean) {
 const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
-  const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
-  const templateReplacements = new Map<number, Promise<ScryfallResultsPage>[]>();
+  const variantCount = (combo?.variantCount ?? 1) - 1;
+  const [templateReplacements, setTemplateReplacements] = useState<
+    ReadonlyMap<number, readonly Promise<ScryfallResultsPage>[]>
+  >(new Map<number, Promise<ScryfallResultsPage>[]>());
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
 
@@ -55,7 +57,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     let cache = templateReplacements.get(template.id);
     if (!cache) {
       cache = [];
-      templateReplacements.set(template.id, cache);
     }
     for (const cachedPage of cache) {
       const r = await cachedPage;
@@ -64,7 +65,8 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       }
     }
     const newPage = ScryfallService.templateReplacements(template, page);
-    cache.push(newPage);
+    cache = cache.concat(newPage);
+    setTemplateReplacements((prev) => new Map(prev).set(template.id, cache));
     return newPage;
   }
 
@@ -80,12 +82,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     setVariants(variants.results);
     setVariantsLoading(false);
   };
-
-  useEffect(() => {
-    setVariants([]);
-    setVariantsLoading(false);
-    setVariantCount((combo?.variantCount ?? 1) - 1);
-  }, [combo]);
 
   if ((combo?.variantCount ?? 0) > 1 && combo && variants.length == 0 && !variantsLoading) {
     loadVariants(combo);
@@ -134,7 +130,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     if (numberOfDecks !== undefined && numberOfDecks !== null) {
       metaData.push(`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`);
     }
-    let showBracketGuidelinesLink = false;
+    const showBracketGuidelinesLink = false;
     // if (combo.bracketTag) {
     //   let bracketMessage = "This combo's bracket tag is classified as ";
     //   switch (combo.bracketTag) {

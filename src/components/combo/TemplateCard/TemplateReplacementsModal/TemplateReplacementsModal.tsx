@@ -10,11 +10,11 @@ import Card from 'scryfall-client/dist/models/card';
 import ScryfallService from 'services/scryfall.service';
 import Loader from 'components/layout/Loader/Loader';
 
-type Props = {
+interface Props {
   template: TemplateInVariant;
   textTrigger?: (_count?: number) => React.ReactNode;
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 const TemplateReplacementsModal: React.FC<Props> = ({
   template,

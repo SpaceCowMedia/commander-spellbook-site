@@ -7,14 +7,14 @@ import React from 'react';
 import { Variant } from '@space-cow-media/spellbook-client';
 import { useCookies } from 'react-cookie';
 
-type Props = {
+interface Props {
   cards: string[];
   edhrecLink?: string;
   comboId: string;
   tcgPlayerPrice: string;
   cardKingdomPrice: string;
   combo: Variant;
-};
+}
 
 const ComboSidebarLinks: React.FC<Props> = ({
   cards,

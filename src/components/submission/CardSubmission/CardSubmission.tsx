@@ -16,13 +16,13 @@ const ZONE_OPTIONS = [
   { value: 'C', label: 'Command Zone' },
 ];
 
-type Props = {
+interface Props {
   card?: CardUsedInVariantSuggestionRequest;
   template?: TemplateRequiredInVariantSuggestionRequest;
   onChange: (_card: CardUsedInVariantSuggestionRequest | TemplateRequiredInVariantSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
-};
+}
 const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) => {
   if (card && template) {
     throw new Error('CardSubmission cannot have both a card and a template');

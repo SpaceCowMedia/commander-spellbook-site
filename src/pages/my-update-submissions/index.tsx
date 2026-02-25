@@ -20,12 +20,12 @@ import Link from 'next/link';
 
 const PAGE_SIZE = 20;
 
-type Props = {
+interface Props {
   submissions: UpdateSubmission[];
   count: number;
   page: number;
   error?: string;
-};
+}
 
 const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error }: Props) => {
   const router = useRouter();

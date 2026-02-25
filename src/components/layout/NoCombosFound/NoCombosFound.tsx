@@ -5,11 +5,11 @@ import ComboResults from 'components/search/ComboResults/ComboResults';
 import { Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 
-type Props = {
+interface Props {
   single?: boolean;
   alternatives?: Variant[];
   criteria?: string;
-};
+}
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);

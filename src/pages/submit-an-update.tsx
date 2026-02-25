@@ -6,9 +6,9 @@ import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
 
-type Props = {
+interface Props {
   comboId?: string;
-};
+}
 
 const SubmitAnUpdate: React.FC<Props> = ({ comboId }) => {
   return (

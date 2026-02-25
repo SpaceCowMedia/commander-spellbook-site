@@ -1,10 +1,10 @@
 import { Variant } from '@space-cow-media/spellbook-client';
 import { NextPageContext } from 'next';
 
-type SitemapCache = {
+interface SitemapCache {
   sitemap?: string;
   lastUpdated?: number;
-};
+}
 
 const cardsCache: SitemapCache = {};
 

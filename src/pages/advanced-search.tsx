@@ -15,12 +15,12 @@ import { SpellbookIcon } from '../components/layout/Icon/Icon';
 import { LEGALITY_FORMATS } from 'lib/types';
 import normalizeStringInput from 'lib/normalizeStringInput';
 
-type TagOption = {
+interface TagOption {
   name: string;
   label: string;
   labelIcon?: SpellbookIcon;
   description?: string;
-};
+}
 
 const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
   {
@@ -400,7 +400,7 @@ interface SelectedTag extends TagOption {
   selected?: boolean;
 }
 
-type Data = {
+interface Data {
   cards: InputData[];
   templates: InputData[];
   cardAmounts: InputData[];
@@ -420,7 +420,7 @@ type Data = {
   format: InputData[];
   bracket: InputData[];
   validationError: string;
-};
+}
 
 const AdvancedSearch: React.FC = () => {
   const colorAutocompletes = COLOR_AUTOCOMPLETES.map((color) => ({

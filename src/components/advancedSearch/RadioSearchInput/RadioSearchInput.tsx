@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
-type Props = {
+interface Props {
   checkedValue: string;
-  options: Array<{ value: string; label: string }>;
+  options: { value: string; label: string }[];
   formName: string;
   label: string;
   labelIcon?: SpellbookIcon;
   description?: string;
   onChange?: (_value: string) => void;
-};
+}
 
 const RadioSearchInput: React.FC<Props> = ({
   checkedValue,
@@ -24,7 +24,9 @@ const RadioSearchInput: React.FC<Props> = ({
 
   const handleChange = (value: string) => {
     setLocalValue(value);
-    onChange && onChange(value);
+    if (onChange) {
+      onChange(value);
+    }
   };
 
   return (

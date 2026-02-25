@@ -9,9 +9,9 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
-type Props = {
+interface Props {
   variant?: Variant;
-};
+}
 
 const SubmitACombo: React.FC<Props> = ({ variant }) => {
   return (

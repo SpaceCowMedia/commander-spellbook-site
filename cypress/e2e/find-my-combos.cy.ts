@@ -1,5 +1,5 @@
 describe('Find My Combos', () => {
-  let testUrl = 'https://archidekt.com/decks/18979119/test';
+  const testUrl = 'https://archidekt.com/decks/18979119/test';
 
   it('can find a combo using url parameter', () => {
     cy.visit('/find-my-combos/?deckUrl=' + testUrl);

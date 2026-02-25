@@ -7,11 +7,11 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import SyntaxMarkdown from '../components/layout/SyntaxMarkdown/SyntaxMarkdown';
 import Icon, { SpellbookIcon } from '../components/layout/Icon/Icon';
 
-type SectionType = {
+interface SectionType {
   id: string;
   text: string;
   icon: SpellbookIcon;
-};
+}
 
 const DATA = {
   sections: [

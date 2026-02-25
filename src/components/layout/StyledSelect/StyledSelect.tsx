@@ -1,9 +1,12 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import styles from './styledSelect.module.scss';
 
-export type Option = { value: string; label: string };
+export interface Option {
+  value: string;
+  label: string;
+}
 
-type Props = {
+interface Props {
   selectBackgroundClassName?: string;
   selectTextClassName?: string;
   label: string;
@@ -12,7 +15,7 @@ type Props = {
   options: Option[];
   onChange?: (_value: string) => void;
   disabled?: boolean;
-};
+}
 
 const StyledSelect: React.FC<Props> = ({
   label,
@@ -28,7 +31,9 @@ const StyledSelect: React.FC<Props> = ({
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setLocalValue(event.target.value);
-    onChange && onChange(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
   };
 
   useEffect(() => {

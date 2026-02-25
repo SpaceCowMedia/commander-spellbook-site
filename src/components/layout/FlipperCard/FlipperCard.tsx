@@ -1,12 +1,12 @@
 import styles from './flipperCard.module.scss';
 import React, { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   flipped: boolean;
   front: ReactNode;
   back: ReactNode;
   className?: string;
-};
+}
 
 const FlipperCard: React.FC<Props> = ({ flipped, front, back, className }) => {
   return (

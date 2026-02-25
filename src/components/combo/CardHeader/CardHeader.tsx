@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './cardHeader.module.scss';
 
-type Props = {
+interface Props {
   title?: string;
   subtitle?: string;
   cardsArt?: string[];
-};
+}
 
 const CardHeader: React.FC<Props> = ({ title = '', subtitle = '', cardsArt = [] }) => {
   return (

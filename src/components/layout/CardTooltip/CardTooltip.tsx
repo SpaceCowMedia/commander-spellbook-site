@@ -7,16 +7,16 @@ import { Card } from '@space-cow-media/spellbook-client';
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
 const TOOLTIP_RIGHT_SHIFT_PX = 30;
 
-type Props = {
+interface Props {
   card?: Card;
   children?: React.ReactNode;
-};
+}
 
-type CardImage = {
+interface CardImage {
   url: string;
   isRequested: boolean;
   isLoaded: boolean;
-};
+}
 
 const CardTooltip: React.FC<Props> = ({ card, children }) => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ const CardTooltip: React.FC<Props> = ({ card, children }) => {
     }
   };
 
-  const handleMouseMove = (e: any) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current) {
       return;
     }

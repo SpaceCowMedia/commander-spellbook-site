@@ -5,12 +5,12 @@ import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
-type Props = {
+interface Props {
   cards: CardInVariant[];
   templates: TemplateInVariant[];
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
   className?: string;
-};
+}
 
 const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacements, className }) => {
   return (

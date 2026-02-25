@@ -2,11 +2,11 @@ import Link from 'next/link';
 import React from 'react';
 import { Url } from 'url';
 
-type Props = {
+interface Props {
   query?: string;
   children?: React.ReactNode;
   className?: string;
-};
+}
 
 const RandomButton: React.FC<Props> = ({ query, children, className }) => {
   const link: Partial<Url> = { pathname: '/random' };

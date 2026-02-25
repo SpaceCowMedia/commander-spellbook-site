@@ -7,9 +7,9 @@ import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
 
-type Props = {
+interface Props {
   submission: VariantUpdateSuggestion;
-};
+}
 
 const EditUpdateSubmission: React.FC<Props> = ({ submission }) => {
   return (

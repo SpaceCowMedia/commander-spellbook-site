@@ -142,7 +142,7 @@ input, textarea, select, option, .input, .inputControl {
 }
 
 .spinner {
-  /*mask: url("~assets/svgs/circle-notch-solid.svg") no-repeat center;*/
+  /*mask: url("../assets/svgs/circle-notch-solid.svg") no-repeat center;*/
 
   @apply animate-spin;
 }

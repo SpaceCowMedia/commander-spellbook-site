@@ -5,10 +5,10 @@ import styles from './pageWrapper.module.scss';
 import AnalyticsCookieBanner from '../AnalyticsCookieBanner/AnalyticsCookieBanner';
 import { useRouter } from 'next/router';
 
-type Props = {
+interface Props {
   children: React.ReactNode;
   noMarginFooter?: boolean;
-};
+}
 
 const PageWrapper: React.FC<Props> = ({ children, noMarginFooter }: Props) => {
   const router = useRouter();

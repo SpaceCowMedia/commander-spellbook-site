@@ -31,7 +31,12 @@ export default defineConfig(
       'react/no-deprecated': 'warn' as const,
       'react/no-direct-mutation-state': 'error' as const,
       'react/no-unescaped-entities': 'off' as const,
+      'react/react-in-jsx-scope': 'off' as const,
       'react-hooks/exhaustive-deps': 'off' as const,
+      'react-hooks/set-state-in-effect': 'off' as const,
+      'react-hooks/refs': 'off' as const,
+      '@typescript-eslint/no-empty-function': 'off' as const,
+      '@typescript-eslint/no-non-null-assertion': 'off' as const,
       '@next/next/no-img-element': 'off' as const,
       'prettier/prettier': [
         'error',
@@ -42,12 +47,11 @@ export default defineConfig(
           singleQuote: true as boolean,
         },
       ],
-      'no-unused-vars': [
+      '@typescript-eslint/no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '^_' as string,
           varsIgnorePattern: '^_' as string,
-          caughtErrorsIgnorePattern: '^_' as string,
         },
       ],
       curly: ['error', 'all'] as const,

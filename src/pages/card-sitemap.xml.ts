@@ -2,10 +2,10 @@ import { CardDetail, CardsApi } from '@space-cow-media/spellbook-client';
 import { NextPageContext } from 'next';
 import { apiConfiguration } from 'services/api.service';
 
-type SitemapCache = {
+interface SitemapCache {
   sitemap?: string;
   lastUpdated?: number;
-};
+}
 
 const cardsCache: SitemapCache = {};
 

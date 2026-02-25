@@ -22,32 +22,32 @@
 }
 
 .menuIcon {
-  mask: url("~assets/svgs/bars-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/bars-solid.svg") no-repeat center;
   @apply mr-0;
 }
 
 .advancedSearchIcon {
-  mask: url("~assets/svgs/columns-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/columns-solid.svg") no-repeat center;
 }
 
 .syntaxGuideIcon {
-  mask: url("~assets/svgs/question-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/question-solid.svg") no-repeat center;
 }
 
 .profileIcon {
-  mask: url("~assets/svgs/user-circle-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/user-circle-solid.svg") no-repeat center;
 }
 
 .randomIcon {
-  mask: url("~assets/svgs/random-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/random-solid.svg") no-repeat center;
 }
 
 .discordIcon {
-  mask: url("~assets/svgs/discord.svg") no-repeat center;
+  mask: url("../../assets/svgs/discord.svg") no-repeat center;
 }
 
 .searchInputIcon {
-  mask: url("~assets/svgs/search-solid.svg") no-repeat center;
+  mask: url("../../assets/svgs/search-solid.svg") no-repeat center;
   @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
 }
 

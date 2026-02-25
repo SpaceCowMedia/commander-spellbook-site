@@ -4,14 +4,14 @@ import ArtCircle, { ArtCircleProps } from '../ArtCircle/ArtCircle';
 import SearchSnippet from './SearchSnippet/SearchSnippet';
 import Icon, { SpellbookIcon } from '../Icon/Icon';
 
-type Props = {
+interface Props {
   heading: string;
   headingCardName: ArtCircleProps['cardName'];
   snippets: { search: string; description: string }[];
   children: React.ReactNode;
   icon: SpellbookIcon;
   id?: string;
-};
+}
 
 const SearchGuide: React.FC<Props> = ({ heading, headingCardName, snippets, children, icon }) => {
   const id = heading.toLowerCase().split(' / ')[0].replace(/\s/gi, '-');

@@ -1,5 +1,5 @@
 import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
-import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
+import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverPath from 'lib/serverPath';
@@ -17,10 +17,10 @@ const headerHeight = iWidth + lineOffset;
 const footerHeight = (width * 9) / 100;
 const padding = leftOffset;
 
-async function headerCanvas(identityArray: any[], isLock: boolean) {
+async function headerCanvas(identityArray: string[], isLock: boolean) {
   // Mana pips background
-  let canvas1 = createCanvas(width, headerHeight);
-  let ctx = canvas1.getContext('2d');
+  const canvas1 = createCanvas(width, headerHeight);
+  const ctx = canvas1.getContext('2d');
   ctx.fillStyle = '#111111';
   ctx.fillRect(border, border, canvas1.width - border * 2, canvas1.height - border * 2);
   if (isLock) {
@@ -32,25 +32,25 @@ async function headerCanvas(identityArray: any[], isLock: boolean) {
     ctx.drawImage(lockImg, lockX, lockY, lockSize, lockSize);
   }
   // Mana pips
-  let startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
-  for (let [index, letter] of identityArray.entries()) {
-    let position = index * (iWidth + manaOffset) + startManaPos;
+  const startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
+  for (const [index, letter] of identityArray.entries()) {
+    const position = index * (iWidth + manaOffset) + startManaPos;
     // The local mana symbols svg files come from scryfall and have been modified to have a width and height of 100.
     // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0
-    let img = await loadImage(serverPath(`public/images/scryfall/identity/${letter.toUpperCase()}.svg`));
+    const img = await loadImage(serverPath(`public/images/scryfall/identity/${letter.toUpperCase()}.svg`));
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
   return canvas1;
 }
 
-function cardsUsedCanvas(cards: string | any[]) {
+function cardsUsedCanvas(cards: Card[]) {
   // Cards Used
-  let canvas2 = createCanvas(width, cards.length * lineOffset + border);
-  let ctx = canvas2.getContext('2d');
+  const canvas2 = createCanvas(width, cards.length * lineOffset + border);
+  const ctx = canvas2.getContext('2d');
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px ${fontFamily}`;
   let nextLine = lineOffset;
-  for (let card of cards) {
+  for (const card of cards) {
     ctx.fillText(card.name, leftOffset, nextLine);
     nextLine = nextLine + lineOffset;
   }
@@ -61,12 +61,12 @@ function preReqCanvas(prereqCount: number, templateCount: number) {
   const lines = (prereqCount > 0 ? 1 : 0) + (templateCount > 0 ? 1 : 0);
   if (lines === 0) {
     // No prerequisites
-    let canvasEmpty = createCanvas(width, border);
+    const canvasEmpty = createCanvas(width, border);
     return canvasEmpty;
   }
   // more pre-reqs
-  let canvas3 = createCanvas(width, lineOffset * lines + border * 2);
-  let ctx = canvas3.getContext('2d');
+  const canvas3 = createCanvas(width, lineOffset * lines + border * 2);
+  const ctx = canvas3.getContext('2d');
   ctx.fillStyle = '#6B7280';
   ctx.font = `${fontSize - 2}px ${fontFamily}`;
   ctx.fillText(
@@ -79,9 +79,9 @@ function preReqCanvas(prereqCount: number, templateCount: number) {
 
 function separatorCanvas() {
   // Separator line between card names and abilities
-  let canvas4 = createCanvas(width, border);
-  let ctx = canvas4.getContext('2d');
-  let nextLine = 0;
+  const canvas4 = createCanvas(width, border);
+  const ctx = canvas4.getContext('2d');
+  const nextLine = 0;
   ctx.strokeStyle = '#6B7280';
   ctx.lineWidth = border / 2;
   ctx.beginPath();
@@ -91,11 +91,11 @@ function separatorCanvas() {
   return canvas4;
 }
 
-function comboOutcomesCanvas(produces: any[]) {
+function comboOutcomesCanvas(produces: FeatureProducedByVariant[]) {
   // Combo Outcomes
-  let canvasHeight = produces.length * lineOffset + border;
-  let canvas5 = createCanvas(width, canvasHeight);
-  let ctx = canvas5.getContext('2d');
+  const canvasHeight = produces.length * lineOffset + border;
+  const canvas5 = createCanvas(width, canvasHeight);
+  const ctx = canvas5.getContext('2d');
   ctx.fillStyle = '#222';
   ctx.font = `${fontSize}px ${fontFamily}`;
   let nextLine = lineOffset;
@@ -108,11 +108,11 @@ function comboOutcomesCanvas(produces: any[]) {
 
 async function footerCanvas() {
   // Commander Spellbook at the bottom
-  let canvas6 = createCanvas(width, footerHeight);
-  let ctx = canvas6.getContext('2d');
+  const canvas6 = createCanvas(width, footerHeight);
+  const ctx = canvas6.getContext('2d');
   ctx.fillStyle = '#333';
   ctx.fillRect(border, border, width - border * 2, footerHeight - border * 2);
-  let text = 'Commander Spellbook';
+  const text = 'Commander Spellbook';
   const gear = await loadImage(serverPath('public/images/gear.svg'));
   ctx.fillStyle = '#866da8';
   ctx.font = `bold ${fontSize}px ${fontFamily}`;
@@ -120,7 +120,7 @@ async function footerCanvas() {
   const totalWidth = iWidth + textSize.width + padding;
   const startX = (canvas6.width - totalWidth) / 2;
   const startY = (canvas6.height - iWidth) / 2;
-  let nextLine = (canvas6.height - fontSize) / 2 + fontSize - border;
+  const nextLine = (canvas6.height - fontSize) / 2 + fontSize - border;
   ctx.drawImage(gear, startX, startY, iWidth, iWidth);
   ctx.fillText(text, startX + iWidth + padding, nextLine);
   return canvas6;
@@ -155,14 +155,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const isLock = combo.produces.some((produces) => produces.feature.name.toLowerCase() === 'lock');
 
   try {
-    let header_c = await headerCanvas(identityArray, isLock);
-    let cardsUsed_c = cardsUsedCanvas(cards);
-    let prereq_c = preReqCanvas(prereqCount, templateCount);
-    let separator_c = separatorCanvas();
-    let produces_c = comboOutcomesCanvas(produces);
-    let footer_c = await footerCanvas();
+    const header_c = await headerCanvas(identityArray, isLock);
+    const cardsUsed_c = cardsUsedCanvas(cards);
+    const prereq_c = preReqCanvas(prereqCount, templateCount);
+    const separator_c = separatorCanvas();
+    const produces_c = comboOutcomesCanvas(produces);
+    const footer_c = await footerCanvas();
 
-    let calcHeight =
+    const calcHeight =
       header_c.height + cardsUsed_c.height + prereq_c.height + separator_c.height + produces_c.height + footer_c.height;
     const canvas = createCanvas(width, calcHeight);
     const ctx = canvas.getContext('2d');

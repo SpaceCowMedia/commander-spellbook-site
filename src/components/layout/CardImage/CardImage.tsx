@@ -7,9 +7,9 @@ import CardLink from '../../layout/CardLink/CardLink';
 import isFoolsDay from 'lib/foolsDay';
 import { Card } from '@space-cow-media/spellbook-client';
 
-type Props = {
+interface Props {
   card: Card;
-};
+}
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
@@ -26,7 +26,7 @@ const CardImage: React.FC<Props> = ({ card }: Props) => {
     setBackFacing((prev) => !prev);
   };
 
-  const clickFlip = (e: any) => {
+  const clickFlip = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.blur();
     flip();
   };

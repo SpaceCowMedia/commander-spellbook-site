@@ -115,7 +115,7 @@ const FindMyCombos: React.FC = () => {
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
-  const handleFindMyCombosError = async (err: any) => {
+  const handleFindMyCombosError = async (err: unknown) => {
     const error = err as ResponseError;
     const body = JSON.parse(await error.response.text());
     const errorMessages: string[] = [];
@@ -155,7 +155,7 @@ const FindMyCombos: React.FC = () => {
       setCurrentlyParsedDeck(decklist);
       setDecklistErrors([]);
       return decklist;
-    } catch (err: any) {
+    } catch (err) {
       await handleFindMyCombosError(err);
       return new Decklist({ commanders: [], main: [] });
     }
@@ -213,7 +213,7 @@ const FindMyCombos: React.FC = () => {
       } // Adding a page limit to prevent infinite loops
 
       setResults(newResults);
-    } catch (error: any) {
+    } catch (error) {
       await handleFindMyCombosError(error);
       setResults(DEFAULT_RESULTS);
     }
@@ -284,7 +284,7 @@ const FindMyCombos: React.FC = () => {
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
       lookupCombos(decklist);
-    } catch (err: any) {
+    } catch (err) {
       const error = err as ResponseError;
       const body: InvalidUrlResponse = JSON.parse(await error.response.text());
       setDeckUrlHint(body.detail);

@@ -11,15 +11,15 @@ import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi } from '@space-cow-media/spellbook-client';
 import { GetStaticProps } from 'next';
 
-type FeaturedTab = {
+interface FeaturedTab {
   id: number;
   title: string;
-};
+}
 
-type Props = {
+interface Props {
   comboOfTheDay?: string;
   featuredTabs: FeaturedTab[];
-};
+}
 
 const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
   const router = useRouter();

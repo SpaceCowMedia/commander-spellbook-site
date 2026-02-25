@@ -10,13 +10,12 @@ export const expirationDurations = {
 };
 
 export function get<T = string>(path: string, options?: OptionsType): T | undefined {
-  // @ts-ignore
   const result = getCookie(path, { path: '/', ...options });
 
   return result as T;
 }
 
-export function set(key: string, value: any, age?: keyof typeof expirationDurations, options?: OptionsType) {
+export function set(key: string, value: unknown, age?: keyof typeof expirationDurations, options?: OptionsType) {
   const maxAge = age ? expirationDurations[age] : undefined;
 
   setCookie(key, value, {

@@ -1,5 +1,5 @@
-/** @type {import('next').NextConfig} */
-const { PHASE_DEVELOPMENT_SERVER, PHASE_TEST } = require('next/constants');
+import type { NextConfig } from 'next';
+import { PHASE_DEVELOPMENT_SERVER, PHASE_TEST } from 'next/constants';
 
 const dev = process.env.BUILD_TYPE === 'dev' ? 'dev-' : '';
 
@@ -23,7 +23,7 @@ const OPEN_CORS_HEADERS = [
   },
 ];
 
-module.exports = (phase, { _defaultConfig }) => {
+const nextConfig: (phase: string) => NextConfig = (phase) => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
   const isTest = phase === PHASE_TEST || 'CI' in process.env;
   return {
@@ -38,14 +38,6 @@ module.exports = (phase, { _defaultConfig }) => {
     },
     serverRuntimeConfig: {
       PROJECT_ROOT: __dirname,
-    },
-    webpack(webpackConfig) {
-      return {
-        ...webpackConfig,
-        optimization: {
-          minimize: false, // SSG for combo pages fails to accept routes after the first if the code is minified - only went built (not dev server)
-        },
-      };
     },
     async headers() {
       return [
@@ -74,3 +66,5 @@ module.exports = (phase, { _defaultConfig }) => {
     },
   };
 };
+
+export default nextConfig;

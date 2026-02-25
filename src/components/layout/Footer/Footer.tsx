@@ -3,11 +3,11 @@ import Link from 'next/link';
 import styles from './footer.module.scss';
 import Image from 'next/image';
 
-type Props = {
+interface Props {
   className?: string;
   noMargin?: boolean;
   comboOfTheDay?: string;
-};
+}
 
 const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
   return (

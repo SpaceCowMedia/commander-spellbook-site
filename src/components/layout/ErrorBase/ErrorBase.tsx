@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './errorBase.module.scss';
 import Link from 'next/link';
 
-type Props = {
+interface Props {
   containerClassName?: string;
   mainMessage: string;
   subMessage?: string;
-};
+}
 
 const ErrorBase: React.FC<Props> = ({ containerClassName, mainMessage, subMessage }) => {
   return (

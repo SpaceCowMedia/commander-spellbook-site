@@ -3,9 +3,9 @@ import CopyComboLinkButton from '../CopyComboLinkButton/CopyComboLinkButton';
 import ShareNetwork from '../ShareNetwork/ShareNetwork';
 import React from 'react';
 
-type Props = {
+interface Props {
   comboId: string;
-};
+}
 
 const ShareComboButtons: React.FC<Props> = ({ comboId }) => {
   const comboLink = `https://commanderspellbook.com/combo/${comboId}`;

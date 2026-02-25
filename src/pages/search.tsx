@@ -15,13 +15,13 @@ import { queryParameterAsString } from 'lib/queryParameters';
 
 const PAGE_SIZE = 50;
 
-type Props = {
+interface Props {
   combos: Variant[];
   bannedCombos?: Variant[];
   page: number;
   error?: string;
   featured?: string;
-};
+}
 
 const SORT_OPTIONS: Option[] = [
   { value: 'popularity', label: 'Popularity' },
@@ -233,6 +233,10 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
 
 export default Search;
 
+interface ErrorWithResponse extends Error {
+  response: Response;
+}
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
   let query =
@@ -255,7 +259,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       featured = '';
     }
   }
-  let isQueryMissingFormat = !doesQuerySpecifyFormat(query);
+  const isQueryMissingFormat = !doesQuerySpecifyFormat(query);
   const variant = queryParameterAsString(context.query.variant);
   if (isQueryMissingFormat && !variant) {
     query = `${query} legal:commander`;
@@ -317,10 +321,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         page: context.query.page || 1,
       },
     };
-  } catch (error: any) {
-    let e = error as { q?: string } | Response;
-    if ('response' in error) {
-      e = (await error.response.json()) as { q?: string };
+  } catch (error) {
+    let e = error as { q?: string } | ErrorWithResponse;
+    if ('response' in e) {
+      e = (await e.response.json()) as { q?: string };
     }
     e = e as { q?: string };
     const error_message = e.q

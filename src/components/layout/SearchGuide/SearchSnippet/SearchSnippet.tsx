@@ -2,10 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import styles from './searchSnippet.module.scss';
 
-type Props = {
+interface Props {
   search: string;
   description: string;
-};
+}
 
 const SearchSnippet: React.FC<Props> = ({ search, description }: Props) => {
   const link = `/search/?q=${search}`;

@@ -6,7 +6,7 @@ import { addPeriod } from '../../../lib/addPeriod';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
-type Props = {
+interface Props {
   title: string;
   cardsInCombo?: CardInVariant[];
   templatesInCombo?: TemplateInVariant[];
@@ -17,7 +17,7 @@ type Props = {
   className?: string;
   appendPeriod?: boolean;
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 const ComboList: React.FC<Props> = ({
   title,

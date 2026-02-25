@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 
-type Props = {
+interface Props {
   list?: (ComboSubmissionErrorType | string)[];
   children?: React.ReactNode;
-};
+}
 
 function camelCaseToWords(s: string) {
   const result = s.replace(/([A-Z])/g, ' $1');

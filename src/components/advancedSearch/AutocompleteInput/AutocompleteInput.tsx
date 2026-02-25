@@ -13,15 +13,15 @@ const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 200;
 const BLUR_CLOSE_DELAY = 900;
 
-export type AutoCompleteOption = {
+export interface AutoCompleteOption {
   value: string;
   label: string;
   alias?: RegExp;
   normalizedValue: string;
   normalizedLabel: string;
-};
+}
 
-type Props = {
+interface Props {
   value: string;
   inputClassName?: string;
   autocompleteOptions?: AutoCompleteOption[];
@@ -35,7 +35,7 @@ type Props = {
   useValueForInput?: boolean;
   onChange?: (_value: string) => void;
   maxLength?: number;
-};
+}
 
 const AutocompleteInput: React.FC<Props> = ({
   value,
@@ -57,7 +57,7 @@ const AutocompleteInput: React.FC<Props> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState<string>(value);
   const [debouncedLocalValue] = useDebounce(localValue, AUTOCOMPLETE_DELAY);
-  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<Array<AutoCompleteOption>>([]);
+  const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<AutoCompleteOption[]>([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -78,114 +78,6 @@ const AutocompleteInput: React.FC<Props> = ({
           total > 1 ? 'es' : ''
         } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
   }
-
-  const lookupAutoComplete = async () => {
-    if (!active) {
-      return;
-    }
-    if (!localValue) {
-      return handleClose();
-    }
-    waitForAutocomplete();
-  };
-
-  const handleClose = () => {
-    if (resultsRef.current) {
-      resultsRef.current.scrollTop = 0;
-    }
-
-    setArrowCounter(-1);
-    setMatchingAutoCompleteOptions([]);
-  };
-
-  const handleChange = (value: string) => {
-    setLocalValue(value);
-    onChange && onChange(value);
-  };
-
-  useEffect(() => {
-    if (firstRender) {
-      setFirstRender(false);
-      return;
-    }
-    if (!debouncedLocalValue || !active) {
-      return;
-    }
-    lookupAutoComplete();
-  }, [debouncedLocalValue, active, autocompleteOptions]);
-
-  const handleBlur = () => {
-    if (!active) {
-      return;
-    }
-    setTimeout(() => {
-      handleClose();
-    }, BLUR_CLOSE_DELAY);
-  };
-
-  const handleAutocompleteItemHover = (index: number) => {
-    setArrowCounter(index);
-  };
-
-  const handleSelect = (selection: AutoCompleteOption) => {
-    const value = useValueForInput ? selection.value : selection.label;
-    setLocalValue(value);
-    onChange && onChange(value);
-    setFirstRender(true);
-    handleClose();
-  };
-
-  const scrollToSelection = () => {
-    if (!resultsRef.current) {
-      return;
-    }
-    const nodes = resultsRef.current.querySelectorAll('li');
-    const li = nodes[arrowCounter];
-    if (!li) {
-      return;
-    }
-    resultsRef.current.scrollTop = li.offsetTop - 50;
-  };
-
-  const handleArrowDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (arrowCounter + 1 < total) {
-      setArrowCounter(arrowCounter + 1);
-    }
-    scrollToSelection();
-  };
-  const handleArrowUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (arrowCounter >= 0) {
-      setArrowCounter(arrowCounter - 1);
-    }
-    scrollToSelection();
-  };
-
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) {
-      return;
-    }
-    e.preventDefault();
-    handleSelect(selection);
-  };
-
-  const handleTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) {
-      return;
-    }
-    e.preventDefault();
-    handleSelect(selection);
-  };
-
-  const handleClick = (item: AutoCompleteOption) => {
-    handleSelect(item);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
 
   const configuration = apiConfiguration();
   const templatesApi = new TemplatesApi(configuration);
@@ -324,6 +216,118 @@ const AutocompleteInput: React.FC<Props> = ({
     const totalOptions = await findAllMatches(localValue, autocompleteOptions);
     const matchingOptions = findBestMatches(totalOptions, localValue);
     setMatchingAutoCompleteOptions(matchingOptions);
+  };
+
+  const lookupAutoComplete = async () => {
+    if (!active) {
+      return;
+    }
+    if (!localValue) {
+      return handleClose();
+    }
+    waitForAutocomplete();
+  };
+
+  const handleClose = () => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollTop = 0;
+    }
+
+    setArrowCounter(-1);
+    setMatchingAutoCompleteOptions([]);
+  };
+
+  const handleChange = (value: string) => {
+    setLocalValue(value);
+    if (onChange) {
+      onChange(value);
+    }
+  };
+
+  useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
+    if (!debouncedLocalValue || !active) {
+      return;
+    }
+    lookupAutoComplete();
+  }, [debouncedLocalValue, active, autocompleteOptions]);
+
+  const handleBlur = () => {
+    if (!active) {
+      return;
+    }
+    setTimeout(() => {
+      handleClose();
+    }, BLUR_CLOSE_DELAY);
+  };
+
+  const handleAutocompleteItemHover = (index: number) => {
+    setArrowCounter(index);
+  };
+
+  const handleSelect = (selection: AutoCompleteOption) => {
+    const value = useValueForInput ? selection.value : selection.label;
+    setLocalValue(value);
+    if (onChange) {
+      onChange(value);
+    }
+    setFirstRender(true);
+    handleClose();
+  };
+
+  const scrollToSelection = () => {
+    if (!resultsRef.current) {
+      return;
+    }
+    const nodes = resultsRef.current.querySelectorAll('li');
+    const li = nodes[arrowCounter];
+    if (!li) {
+      return;
+    }
+    resultsRef.current.scrollTop = li.offsetTop - 50;
+  };
+
+  const handleArrowDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (arrowCounter + 1 < total) {
+      setArrowCounter(arrowCounter + 1);
+    }
+    scrollToSelection();
+  };
+  const handleArrowUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (arrowCounter >= 0) {
+      setArrowCounter(arrowCounter - 1);
+    }
+    scrollToSelection();
+  };
+
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const selection = matchingAutoCompleteOptions[arrowCounter];
+    if (!selection) {
+      return;
+    }
+    e.preventDefault();
+    handleSelect(selection);
+  };
+
+  const handleTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const selection = matchingAutoCompleteOptions[arrowCounter];
+    if (!selection) {
+      return;
+    }
+    e.preventDefault();
+    handleSelect(selection);
+  };
+
+  const handleClick = (item: AutoCompleteOption) => {
+    handleSelect(item);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {

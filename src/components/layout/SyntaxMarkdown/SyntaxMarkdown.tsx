@@ -1,12 +1,12 @@
 import Markdown from 'markdown-to-jsx';
 import Alert from '../Alert/Alert';
-import React from 'react';
+import React, { AnchorHTMLAttributes } from 'react';
 
-type Props = {
+interface Props {
   children: string;
-};
+}
 
-const ALERT_TYPE_MAP: Record<string, any> = {
+const ALERT_TYPE_MAP: Record<string, { type: string; icon: string; title: string }> = {
   NOTE: {
     type: 'info',
     icon: 'circleInfo',
@@ -87,7 +87,7 @@ const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
             },
           },
           a: {
-            component: (props) => (
+            component: (props: AnchorHTMLAttributes<HTMLAnchorElement>) => (
               <a
                 href={props.href}
                 target={props.href?.startsWith('http') ? '_blank' : '_self'}

@@ -7,13 +7,13 @@ import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacem
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
-type Props = {
+interface Props {
   text: string;
   cardsInCombo?: CardInVariant[];
   includeCardLinks?: boolean;
   templatesInCombo?: TemplateInVariant[];
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 function replaceAlli(text: string, searchValue: string, replaceValue: string): string {
   const positions = [];
@@ -124,7 +124,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             value: Scryfall.getSymbolUrl(manaSymbol),
             manaSymbol,
           };
-        } catch (_e) {
+        } catch {
           console.log('Error getting mana symbol', manaSymbol);
           return {
             nodeType: 'text',

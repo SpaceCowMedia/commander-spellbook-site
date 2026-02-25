@@ -3,9 +3,9 @@ import { useState } from 'react';
 import Modal from 'components/ui/Modal/Modal';
 import { Variant } from '@space-cow-media/spellbook-client';
 
-type Props = {
+interface Props {
   combo: Variant;
-};
+}
 
 const Embed = ({ combo }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
