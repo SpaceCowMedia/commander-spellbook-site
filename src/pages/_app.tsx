@@ -1,4 +1,4 @@
-import '../assets/globals.scss';
+import '../assets/globals.css';
 import type { AppContext, AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
