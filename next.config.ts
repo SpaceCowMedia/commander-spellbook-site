@@ -36,9 +36,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => {
     images: {
       unoptimized: true,
     },
-    serverRuntimeConfig: {
-      PROJECT_ROOT: __dirname,
-    },
     async headers() {
       return [
         {

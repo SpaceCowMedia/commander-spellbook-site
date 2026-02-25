@@ -1,7 +1,6 @@
-import { GetServerSideProps } from 'next';
 import ErrorBase from '../components/layout/ErrorBase/ErrorBase';
 import styles from './404.module.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const NOT_FOUND_TEMPLATES = [
   [styles.barrenGlory, 'You were looking for glory, but found an empty world.'],
@@ -19,22 +18,22 @@ interface Props {
   message: string;
 }
 
-const NotFoundPage: React.FC<Props> = ({ template, message }) => {
+const NotFoundPage: React.FC<Props> = () => {
+  const [index, setIndex] = React.useState(0);
+
+  useEffect(() => {
+    setIndex(Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length));
+  }, []);
+
   return (
     <>
-      <ErrorBase mainMessage="Page Not Found" subMessage={message} containerClassName={template} />
+      <ErrorBase
+        mainMessage="Page Not Found"
+        subMessage={NOT_FOUND_TEMPLATES[index][1]}
+        containerClassName={NOT_FOUND_TEMPLATES[index][0]}
+      />
     </>
   );
 };
 
 export default NotFoundPage;
-
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
-  return {
-    props: {
-      template: NOT_FOUND_TEMPLATES[randomIndex][0],
-      message: NOT_FOUND_TEMPLATES[randomIndex][1],
-    },
-  };
-};
