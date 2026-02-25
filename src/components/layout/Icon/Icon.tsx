@@ -45,6 +45,7 @@ import {
   faCheckCircle,
   faLock,
   faPentagon,
+  faCircleQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -100,6 +101,7 @@ const SPELLBOOK_FA_ICONS = {
   halfStrokeCircle: faCircleHalfStroke,
   pencil: faPencil,
   question: faQuestion,
+  circleQuestion: faCircleQuestion,
   comments: faComments,
   trash: faTrashCan,
   template: faDiamond,

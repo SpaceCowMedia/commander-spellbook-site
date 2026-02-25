@@ -442,7 +442,7 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 > Single quotes are no longer supported in card search, since they can appear in card names.
 > Instead, use double quotes. For example, \`"Goblin King"\` instead of \`'Goblin King'\`.
 > Im the rare case where a card name contains double quotes, you can use the backslash character to escape them.
-> For example, \`card:"Henzie \\"Toolbox\\" Torre"\`.
+> For example, \`card:"Henzie \\\\"Toolbox\\\\" Torre"\`.
 
 ### \`card\` operators
 
@@ -990,6 +990,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | For any deck |
 | Searchable as bracket | **1** |
 | Criteria | Combos that don't fit the other categories |
+
 `;
 
 const SyntaxGuide: React.FC = () => {

@@ -33,9 +33,9 @@ const ALERT_TYPE_MAP: Record<string, any> = {
     title: 'Caution',
   },
   QUESTION: {
-    type: 'question',
-    icon: 'question',
-    title: 'More info',
+    type: 'important',
+    icon: 'circleQuestion',
+    title: 'More Info',
   },
 };
 
@@ -73,7 +73,7 @@ const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
           },
           table: {
             props: {
-              className: 'table-auto border-collapse',
+              className: 'table-auto border-collapse mb-4',
             },
           },
           th: {
@@ -96,6 +96,11 @@ const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
                 {props.children}
               </a>
             ),
+          },
+          hr: {
+            props: {
+              className: 'my-4 border-t border-gray-300',
+            },
           },
         },
       }}
