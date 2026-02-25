@@ -32,7 +32,6 @@ jobs:
         with:
           node-version: 23
           cache: yarn
-          registry-url: https://npm.pkg.github.com
 
       - name: Cache node modules 🗃
         id: cache-nodemodules
