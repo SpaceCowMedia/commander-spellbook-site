@@ -32,7 +32,13 @@ const ALERT_TYPE_MAP: Record<string, any> = {
     icon: 'circleXmark',
     title: 'Caution',
   },
+  QUESTION: {
+    type: 'question',
+    icon: 'question',
+    title: 'More info',
+  },
 };
+
 const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
   let processedChildren = '';
   let currentAlert = '';
@@ -64,6 +70,32 @@ const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
         overrides: {
           Alert: {
             component: Alert,
+          },
+          table: {
+            props: {
+              className: 'table-auto border-collapse',
+            },
+          },
+          th: {
+            props: {
+              className: 'border border-gray-300 px-4 py-2 text-left font-normal',
+            },
+          },
+          td: {
+            props: {
+              className: 'border border-gray-300 px-4 py-2',
+            },
+          },
+          a: {
+            component: (props) => (
+              <a
+                href={props.href}
+                target={props.href?.startsWith('http') ? '_blank' : '_self'}
+                rel="noopener noreferrer"
+              >
+                {props.children}
+              </a>
+            ),
           },
         },
       }}

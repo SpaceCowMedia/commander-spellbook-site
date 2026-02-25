@@ -17,6 +17,10 @@ html,
   src: url('./fonts/spellbook-font.ttf');
 }
 
+:target {
+  scroll-margin-top: 50px;
+}
+
 a {
   @apply underline text-link dark:text-primary;
 }

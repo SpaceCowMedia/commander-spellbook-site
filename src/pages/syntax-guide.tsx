@@ -105,6 +105,11 @@ const DATA = {
       text: 'Variants',
       icon: 'copy',
     },
+    {
+      id: 'bracket',
+      text: 'Brackets',
+      icon: 'bracket',
+    },
   ] as SectionType[],
   cardSnippets: [
     {
@@ -381,6 +386,21 @@ const DATA = {
     {
       search: 'variants>1',
       description: 'Combos that have more than one variant.',
+    },
+  ],
+  bracketSnippets: [
+    {
+      search: 'bracket<=3',
+      description: 'Combos that probably fit well in bracket 3 or lower.',
+    },
+    {
+      search: 'bracket:ruthless',
+      description: 'Combos automatically qualified in the Ruthless bracket tag, the most competitive in the format.',
+    },
+    {
+      search: 'b:exhibition',
+      description:
+        'Combos that are in the Exhibition bracket tag, which includes some of the most casual and janky combos in the format.',
     },
   ],
 };
@@ -828,7 +848,7 @@ For example, \`price<number\` searches for combos costing less than _number_ US 
 
 * \`usd\`/\`price\`/\`cardkingdom\`: [CardKingdom](https://www.cardkingdom.com/) prices in USD
 * \`tcgplayer\`: [TCGPlayer](https://www.tcgplayer.com/) prices in USD
-* \`eur\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic) prices in Euros
+* \`eur\`/\`mkm\`/\`cardmarket\`: [Cardmarket](https://www.cardmarket.com/en/Magic) prices in Euros
 
 For example, \`cardmarket>100\` searches for combos whose component cards cost more than 100€ in total on Cardmarket.
 
@@ -896,6 +916,77 @@ For example, \`variants>1\` searches for combos that have more than one variant.
 ### \`variants\` prefixes
 
 * \`-\` negates the search term
+`;
+
+const BRACKET_DESCRIPTION = `
+Combos are automatically categorized into brackets tags based on their characteristics, in order to help users find combos that fit their needs and preferences for Commander deck building.
+
+> [!QUESTION]
+> If you want to know more about the bracket system, check out [the related articles from Wizards of the Coast](https://magic.wizards.com/en/news/announcements?search=brackets).
+
+Given the qualitative, subjective nature of the bracket system, we refrained from classifying each combo rigidly into a single bracket, and instead we assigned a [_bracket tag_](#bracket-tags) 
+to each combo that provides a qualitative association to one ore more brackets, to be used as a search parameter and guideline for users, rather than a strict classification.
+
+### \`bracket\` operators
+
+* \`bracket:text\` or \`bracket=text\` searches for combos with the bracket tag _text_
+* \`bracket=number\` searches for combos with the bracket tag corresponding to bracket _number_
+* \`bracket>number\` searches for combos with a bracket tag corresponding to a bracket higher than _number_
+* \`bracket>=number\` searches for combos with a bracket tag corresponding to a bracket _number_ or higher
+* \`bracket<number\` searches for combos with a bracket tag corresponding to a bracket lower than _number_
+* \`bracket<=number\` searches for combos with a bracket tag corresponding to a bracket _number_ or lower
+
+### \`bracket\` keyword aliases
+
+* \`brackets\`
+
+### \`bracket\` prefixes
+
+* \`-\` negates the search term
+
+### Bracket Tags
+<br>
+#### Ruthless
+| Tag Name | Ruthless |
+| --- | --- |
+| Bracket | For competitive decks at brackets 4+ |
+| Searchable as bracket | **4** |
+| Criteria | Relevant two-card combo that is probably very fast or results in infinite turns or mass land denial or infinite control of opponents turns or contains four or more game changers |
+<br>
+#### Spicy
+| Tag Name | Spicy |
+| --- | --- |
+| Bracket | Probably 3 or 4, but hard to classify |
+| Searchable as bracket | **3** |
+| Criteria | Combos that could be ruthless but may require a third card or don't produce a relevant result, or stall the game in some way |
+<br>
+#### Powerful
+| Tag Name | Powerful |
+| --- | --- |
+| Bracket | For strong decks in bracket 3+ |
+| Searchable as bracket | **3** |
+| Criteria | Combos with a game changer or a slow but relevant two-card combo |
+<br>
+#### Oddball
+| Tag Name | Oddball |
+| --- | --- |
+| Bracket | Probably 2 or 3, but hard to classify |
+| Searchable as bracket | **2** |
+| Criteria | Combos that could be powerful but may require a third card or don't produce a relevant result |
+<br>
+#### Core
+| Tag Name | Core |
+| --- | --- |
+| Bracket | For unoptimized decks in bracket 2+ |
+| Searchable as bracket | **2** |
+| Criteria | Combos that contains an extra turn card but no extra turn result, or a two-card combo too fast for bracket 1 |
+<br>
+#### Exhibition
+| Tag Name | Exhibition |
+| --- | --- |
+| Bracket | For any deck |
+| Searchable as bracket | **1** |
+| Criteria | Combos that don't fit the other categories |
 `;
 
 const SyntaxGuide: React.FC = () => {
@@ -1073,6 +1164,15 @@ const SyntaxGuide: React.FC = () => {
             snippets={DATA.variantsSnippets}
           >
             <SyntaxMarkdown>{VARIANT_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Bracket"
+            icon="bracket"
+            headingCardName="Baron Von Count"
+            snippets={DATA.bracketSnippets}
+          >
+            <SyntaxMarkdown>{BRACKET_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
         </div>
       </div>

@@ -145,6 +145,10 @@ const CARD_ARTS = {
     uid: 'bf810ace-f866-457c-8671-a84c73b6f733',
     artist: 'Jung Park',
   },
+  'Baron Von Count': {
+    uid: 'e2f53d48-15ea-404f-880b-f786f55dfc7e',
+    artist: 'Jesper Ejsing',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {
