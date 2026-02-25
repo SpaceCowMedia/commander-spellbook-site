@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import styles from './analyticsCookieBanner.module.scss';
 
 const AnalyticsCookieBanner = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,10 +35,10 @@ const AnalyticsCookieBanner = () => {
         </p>
       </div>
       <div className="flex justify-center mt-4 lg:mt-0">
-        <button id="cookie-accept-button" className={`${styles.button} button`} onClick={handleAccept}>
+        <button id="cookie-accept-button" className="button" onClick={handleAccept}>
           Sure!
         </button>
-        <button id="cookie-deny-button" className={`${styles.button} button`} onClick={handleDeny}>
+        <button id="cookie-deny-button" className="button" onClick={handleDeny}>
           Nope
         </button>
       </div>

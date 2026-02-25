@@ -1,5 +1,6 @@
 .outerContainer {
   @apply mx-auto;
+
   a {
     @apply text-white no-underline;
   }
@@ -67,7 +68,7 @@
   @apply text-light;
 }
 
-.menuLink:hover .link-icon {
+.menuLink:hover .linkIcon {
   @apply bg-light;
 }
 
@@ -79,7 +80,7 @@
   @apply border-light text-light;
 }
 
-.mobileMenuButton:hover .link-icon {
+.mobileMenuButton:hover .linkIcon {
   @apply bg-light;
 }
 
@@ -96,8 +97,8 @@
   @apply mt-2;
 }
 
-@media (max-width: 1280px) {
-  .flex.flex-shrink.flex-row.items-center.desktop-menu a div {
+@media (width <= 1280px) {
+  .desktopMenu a div {
     display: none;
   }
 }

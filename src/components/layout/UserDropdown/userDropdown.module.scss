@@ -4,16 +4,19 @@
 
 .discordIcon {
   @apply bg-white h-4 w-4 my-1.5;
+
   mask: url("../../../assets/svgs/user-circle-solid.svg") no-repeat center;
 }
 
 .dropdown {
   @apply relative inline-block;
+
   cursor: pointer;
 }
 
 .dropdownContent {
   @apply hidden absolute bg-black shadow z-10 top-full right-0 w-full;
+
   min-width: 200px;
 }
 

@@ -26,19 +26,19 @@
     @apply text-white text-xl -mt-2;
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .headingTitle.comboTitle {
       @apply text-2xl;
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     .headingTitle.comboTitle {
       @apply text-3xl;
     }
   }
 
-  @media (min-width: 1280px) {
+  @media (width >= 1280px) {
     .headingTitle.comboTitle {
       @apply text-4xl;
     }

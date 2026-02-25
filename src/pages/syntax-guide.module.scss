@@ -22,11 +22,12 @@
   code {
     @apply pl-1 pr-1;
   }
+
   .description p {
     @apply mb-4;
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .searchGuide:nth-child(even) {
       .description {
         @apply order-last pr-0 pl-4;
@@ -45,6 +46,7 @@
       @apply border-0;
     }
   }
+
   blockquote {
     @apply border-l-4 border-gray-400 pl-4 mb-1;
   }

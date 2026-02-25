@@ -25,4 +25,6 @@
     "files.insertFinalNewline": false,
     "files.trimFinalNewlines": true,
     "files.eol": "\n",
+    "stylelint.packageManager": "yarn",
+    "stylelint.enable": true,
 }

@@ -112,22 +112,26 @@ input, textarea, select, option, .input, .inputControl {
 
 .home-button {
   @apply mx-0 mt-2 mb-0 flex-grow;
-  border: 2px solid rgba(255, 255, 255, 0.05);
+
+  border: 2px solid rgb(255 255 255 / 5%);
 }
 
 .home-button:hover {
   @apply bg-transparent text-dark;
-  background: rgba(255, 255, 255, 0.4);
+
+  background: rgb(255 255 255 / 40%);
   backdrop-filter: blur(5px); 
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .home-button {
     @apply ml-2;
   }
+
   .home-button:first-child {
     @apply ml-0;
   }
+
   .home-button:last-child {
     @apply mr-0;
   }
@@ -142,12 +146,12 @@ input, textarea, select, option, .input, .inputControl {
 }
 
 .spinner {
-  /*mask: url("../assets/svgs/circle-notch-solid.svg") no-repeat center;*/
+  /* mask: url("../assets/svgs/circle-notch-solid.svg") no-repeat center; */
 
   @apply animate-spin;
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .heading-title {
     @apply text-5xl my-4;
   }
@@ -158,8 +162,8 @@ input, textarea, select, option, .input, .inputControl {
     -45deg,
     #BE9800FF,
     #BE9800FF 20px,
-    #000000 20px,
-    #000000 40px
+    #000 20px,
+    #000 40px
   );
 }
 

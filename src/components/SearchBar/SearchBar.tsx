@@ -122,7 +122,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
         </div>
 
         {!onHomepage && (
-          <div className="flex flex-row-reverse md:flex-row items-center desktop-menu">
+          <div className="flex flex-row-reverse md:flex-row items-center desktopMenu">
             <button
               id="search-bar-menu-button"
               type="button"

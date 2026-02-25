@@ -1,0 +1,5 @@
+dist/
+.next/
+_next/
+src/assets/globals.css
+src/assets/globals.scss
