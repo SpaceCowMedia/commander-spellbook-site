@@ -21,8 +21,6 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       packages: read
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
