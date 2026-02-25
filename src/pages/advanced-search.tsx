@@ -368,6 +368,8 @@ const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
+const BRACKET_TAGS = ['Ruthless', 'Spicy', 'Powerful', 'Oddball', 'Core', 'Exhibition'];
+
 const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
   {
     operator: '<=',
@@ -386,6 +388,11 @@ const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
     label: 'Is probably suitable starting from bracket',
     placeholder: 'ex: 3',
     numeric: true,
+  },
+  {
+    operator: ':',
+    label: 'Bracket tag',
+    placeholder: `ex: ${BRACKET_TAGS.join(', ')}`,
   },
 ];
 
@@ -846,6 +853,12 @@ const AdvancedSearch: React.FC = () => {
             label="Bracket"
             labelIcon="bracket"
             operatorOptions={BRACKET_OPERATOR_OPTIONS}
+            autocompleteOptions={BRACKET_TAGS.map((tag) => ({
+              value: tag,
+              label: tag,
+              normalizedLabel: normalizeStringInput(tag),
+              normalizedValue: normalizeStringInput(tag),
+            }))}
           />
         </div>
 

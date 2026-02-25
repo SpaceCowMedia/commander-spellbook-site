@@ -927,6 +927,9 @@ Combos are automatically categorized into brackets tags based on their character
 Given the qualitative, subjective nature of the bracket system, we refrained from classifying each combo rigidly into a single bracket, and instead we assigned a [_bracket tag_](#bracket-tags) 
 to each combo that provides a qualitative association to one ore more brackets, to be used as a search parameter and guideline for users, rather than a strict classification.
 
+> [!NOTE]
+> In some cases a combo bracket tag can be manually overridden by our editors, if they feel the auto-assigned tag doesn't fit the combo well.
+
 ### \`bracket\` operators
 
 * \`bracket:text\` or \`bracket=text\` searches for combos with the bracket tag _text_
