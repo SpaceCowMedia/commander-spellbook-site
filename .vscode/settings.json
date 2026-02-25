@@ -25,4 +25,5 @@
     "files.insertFinalNewline": false,
     "files.trimFinalNewlines": true,
     "files.eol": "\n",
+    "eslint.useFlatConfig": true,
 }
