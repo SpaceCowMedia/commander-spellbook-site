@@ -948,42 +948,42 @@ to each combo that provides a qualitative association to one ore more brackets, 
 * \`-\` negates the search term
 
 ### Bracket Tags
-<br>
+
 #### Ruthless
 | Tag Name | Ruthless |
 | --- | --- |
 | Bracket | For competitive decks at brackets 4+ |
 | Searchable as bracket | **4** |
 | Criteria | Relevant two-card combo that is probably very fast or results in infinite turns or mass land denial or infinite control of opponents turns or contains four or more game changers |
-<br>
+
 #### Spicy
 | Tag Name | Spicy |
 | --- | --- |
 | Bracket | Probably 3 or 4, but hard to classify |
 | Searchable as bracket | **3** |
 | Criteria | Combos that could be ruthless but may require a third card or don't produce a relevant result, or stall the game in some way |
-<br>
+
 #### Powerful
 | Tag Name | Powerful |
 | --- | --- |
 | Bracket | For strong decks in bracket 3+ |
 | Searchable as bracket | **3** |
 | Criteria | Combos with a game changer or a slow but relevant two-card combo |
-<br>
+
 #### Oddball
 | Tag Name | Oddball |
 | --- | --- |
 | Bracket | Probably 2 or 3, but hard to classify |
 | Searchable as bracket | **2** |
 | Criteria | Combos that could be powerful but may require a third card or don't produce a relevant result |
-<br>
+
 #### Core
 | Tag Name | Core |
 | --- | --- |
 | Bracket | For unoptimized decks in bracket 2+ |
 | Searchable as bracket | **2** |
 | Criteria | Combos that contains an extra turn card but no extra turn result, or a two-card combo too fast for bracket 1 |
-<br>
+
 #### Exhibition
 | Tag Name | Exhibition |
 | --- | --- |
