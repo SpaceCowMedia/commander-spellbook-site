@@ -55,6 +55,7 @@ runs:
         Card.objects.all().delete()
         Template.objects.all().delete()
         Combo.objects.all().delete()
+        Feature.objects.all().delete()
         Variant.objects.all().delete()
         c1 = Card.objects.create(
           id=1,
