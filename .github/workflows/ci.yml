@@ -77,6 +77,7 @@ jobs:
     strategy:
       matrix:
         browser: [chrome, firefox, edge, electron]
+      fail-fast: false
     env:
       NODE_ENV: test
     steps:

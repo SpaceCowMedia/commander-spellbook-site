@@ -64,6 +64,7 @@ runs:
           oracle_id="6b8cf2a0-b045-4d91-9d91-c602d40c6237",
           type_line="Artifact",
           price_tcgplayer=4.99,
+          spoiler=True,
         )
         c2 = Card.objects.create(
           id=2,
