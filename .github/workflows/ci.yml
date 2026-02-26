@@ -31,15 +31,11 @@ jobs:
           node-version: 25
           cache: yarn
 
-      - name: Cache Site Data ⏬
-        uses: actions/cache@v5
-        with:
-          path: |
-            dist/
-          key: ${{ runner.os }}-download-data-${{ github.sha }}
-
       - name: Install Node Modules 📦
         run: yarn install --frozen-lockfile
+
+      - name: Build 🏗️
+        run: yarn run build
 
   lint:
     runs-on: ubuntu-22.04
