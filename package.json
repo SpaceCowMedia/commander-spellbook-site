@@ -10,6 +10,7 @@
     "tsc": "tsc",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
+    "cy:dev": "concurrently --kill-others \"yarn dev\" \"yarn cy:open\"",
     "prettier": "prettier --write .",
     "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run",
     "prepare": "husky"
@@ -59,6 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.55.0",
     "autoprefixer": "^10.4.23",
+    "concurrently": "^9.2.1",
     "cypress": "^14.4.0",
     "eslint": "^10.0.2",
     "eslint-config-next": "^15.5.5",
