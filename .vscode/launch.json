@@ -5,26 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Next.js: debug server-side",
-            "type": "node-terminal",
-            "request": "launch",
-            "command": "npm run dev -- --inspect"
-        },
-        {
-            "name": "Next.js: debug client-side",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}",
-            "sourceMaps": true,
-            "sourceMapPathOverrides": {
-                "webpack://_N_E/*": "${webRoot}/*"
-            },
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-        },
-        {
             "name": "Next.js: debug full stack",
             "type": "node",
             "request": "launch",
@@ -48,6 +28,26 @@
             ],
         },
         {
+            "name": "Next.js: debug server-side",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run dev -- --inspect"
+        },
+        {
+            "name": "Next.js: debug client-side",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack://_N_E/*": "${webRoot}/*"
+            },
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Open Cypress",
@@ -56,6 +56,25 @@
             "runtimeArgs": [
                 "cy:dev"
             ],
+            "env": {
+                "CI": "true",
+                "NODE_ENV": "development",
+            },
+            "autoAttachChildProcesses": true,
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug with Cypress",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "cy:debug",
+            ],
+            "env": {
+                "CI": "true",
+                "NODE_ENV": "development",
+            },
             "autoAttachChildProcesses": true,
         },
     ]

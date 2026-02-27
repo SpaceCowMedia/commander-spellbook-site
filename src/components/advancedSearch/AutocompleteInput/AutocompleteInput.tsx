@@ -24,7 +24,7 @@ export interface AutoCompleteOption {
 interface Props {
   value: string;
   inputClassName?: string;
-  autocompleteOptions?: AutoCompleteOption[];
+  autocompleteOptions?: readonly AutoCompleteOption[];
   cardAutocomplete?: boolean;
   resultAutocomplete?: boolean;
   templateAutocomplete?: boolean;
@@ -83,7 +83,10 @@ const AutocompleteInput: React.FC<Props> = ({
   const templatesApi = new TemplatesApi(configuration);
   const feturesApi = new FeaturesApi(configuration);
 
-  const findAllMatches = async (value: string, options?: AutoCompleteOption[]): Promise<AutoCompleteOption[]> => {
+  const findAllMatches = async (
+    value: string,
+    options?: readonly AutoCompleteOption[],
+  ): Promise<AutoCompleteOption[]> => {
     const normalizedValue = normalizeStringInput(value);
     if (!options) {
       options = [];

@@ -22,21 +22,21 @@ export type InputData = {
   error?: string;
 } & OperatorOptionBase;
 
-type MultiSearchInputValue = InputData[];
+type MultiSearchInputValue = readonly InputData[];
 
 interface Props {
   value: MultiSearchInputValue;
-  autocompleteOptions?: AutoCompleteOption[];
+  autocompleteOptions?: readonly AutoCompleteOption[];
   cardAutocomplete?: boolean;
   templateAutocomplete?: boolean;
   resultAutocomplete?: boolean;
-  selectOptions?: Option[];
+  selectOptions?: readonly Option[];
   useValueForAutocompleteInput?: boolean;
   label: string;
   labelIcon?: SpellbookIcon;
   pluralLabel?: string;
   defaultPlaceholder?: string;
-  operatorOptions: OperatorOption[];
+  operatorOptions: readonly OperatorOption[];
   onChange?: (_value: MultiSearchInputValue) => void;
 }
 

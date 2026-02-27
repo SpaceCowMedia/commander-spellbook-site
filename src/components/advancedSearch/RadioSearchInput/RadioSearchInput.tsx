@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
 interface Props {
   checkedValue: string;
-  options: { value: string; label: string }[];
+  options: readonly { value: string; label: string }[];
   formName: string;
   label: string;
   labelIcon?: SpellbookIcon;
@@ -20,42 +20,40 @@ const RadioSearchInput: React.FC<Props> = ({
   description,
   onChange,
 }) => {
-  const [localValue, setLocalValue] = useState<string>(checkedValue);
-
-  const handleChange = (value: string) => {
-    setLocalValue(value);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
     if (onChange) {
       onChange(value);
     }
   };
-
   return (
     <div>
-      <label className="font-semibold">
+      <span className="font-semibold">
         {labelIcon && <Icon name={labelIcon} />} {label}
-      </label>
+      </span>
       {description && <p className="text-sm text-gray-500">{description}</p>}
-      <fieldset className="flex flex-wrap gap-7">
+      <fieldset className="flex flex-wrap">
         <legend className="sr-only" aria-hidden="true">
           Choose settings for {label}
         </legend>
         {options.map((option, index) => (
-          <label
-            key={`${label}-radio-input-${index}`}
-            htmlFor={`${label}-radio-input-${index}`}
-            className="radio-wrapper sm:inline-flex items-center mt-3"
-          >
+          <div key={`${formName}-radio-option-${index}`} className="flex items-center mr-4">
             <input
-              id={`${label}-radio-input-${index}`}
+              id={`${formName}-radio-input-${index}`}
               type="radio"
               name={formName}
-              className="h-5 w-5"
-              checked={localValue === option.value}
+              className="h-5 w-5 mt-3 ml-2 mr-1"
+              defaultChecked={checkedValue === option.value}
               value={option.value}
-              onChange={() => handleChange(option.value)}
+              onChange={handleChange}
             />
-            <span className="ml-2">{option.label}</span>
-          </label>
+            <label
+              htmlFor={`${formName}-radio-input-${index}`}
+              className="radio-wrapper sm:inline-flex items-center mt-3 mr-4"
+            >
+              {option.label}
+            </label>
+          </div>
         ))}
       </fieldset>
     </div>

@@ -12,7 +12,7 @@ interface Props {
   label: string;
   id: string;
   value?: string;
-  options: Option[];
+  options: readonly Option[];
   onChange?: (_value: string) => void;
   disabled?: boolean;
 }

@@ -5,7 +5,6 @@ inputs:
   port:
     required: true
     description: "The port on which the backend service will be accessible"
-    default: "8000"
 
 runs:
   using: composite
