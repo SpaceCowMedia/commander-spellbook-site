@@ -15,10 +15,33 @@ runs:
         repository: "SpaceCowMedia/commander-spellbook-backend"
         ref: latest
         path: backend
-    - name: Build Backend 🏗
-      working-directory: ./backend
+    - name: Download Backend Docker Images 🐳
+      uses: actions/github-script@v8
+      with:
+        script: |
+          // Download release files from SpaceCowMedia/commander-spellbook-backend latest release
+          const { data: release } = await github.rest.repos.getLatestRelease({
+            owner: 'SpaceCowMedia',
+            repo: 'commander-spellbook-backend',
+          });
+          release.assets.forEach(asset => {
+            if (asset.name.endsWith('.tar')) {
+              console.log(`Downloading ${asset.name}...`);
+              const url = asset.browser_download_url;
+              const filePath = `./backend/docker-images/${asset.name}`;
+              const response = await fetch(url);
+              const buffer = await response.arrayBuffer();
+              require('fs').writeFileSync(filePath, Buffer.from(buffer));
+              console.log(`Downloaded ${asset.name} to ${filePath}`);
+            }
+          });
+    - name: Load Docker Images 🐳
       shell: bash
-      run: docker compose build
+      run: |
+        for image in ./backend/docker-images/*.tar; do
+          echo "Loading $image..."
+          docker load -i "$image"
+        done
     - name: Start Backend 🚀
       env:
         PORT: ${{ inputs.port }}
