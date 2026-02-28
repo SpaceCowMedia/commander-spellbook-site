@@ -29,17 +29,29 @@ runs:
           if (!await fs.promises.stat(path).catch(() => false)) {
             await fs.promises.mkdir(path, { recursive: true });
           }
+          const maxDownloadRetries = 3;
           for (const asset of release.assets) {
             if (asset.name.endsWith('.tar')) {
               console.log(`Downloading ${asset.name}...`);
               const url = asset.browser_download_url;
               const filePath = `./backend/docker-images/${asset.name}`;
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error(`Failed to download ${asset.name}: ${response.statusText}`);
+              for (let attempt = 1; attempt <= maxDownloadRetries; attempt++) {
+                try {
+                  const response = await fetch(url);
+                  if (!response.ok) {
+                    throw new Error(`Failed to download ${asset.name}: ${response.status} ${response.statusText}`);
+                  }
+                  const buffer = await response.arrayBuffer();
+                  await fs.promises.writeFile(filePath, Buffer.from(buffer));
+                  break;
+                } catch (error) {
+                  console.error(`Attempt ${attempt} to download ${asset.name} failed: ${error.message}`);
+                  if (attempt === maxDownloadRetries) {
+                    throw new Error(`Failed to download ${asset.name} after ${maxDownloadRetries} attempts`);
+                  }
+                  await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retrying
+                }
               }
-              const buffer = await response.arrayBuffer();
-              await fs.promises.writeFile(filePath, Buffer.from(buffer));
               console.log(`Downloaded ${asset.name} to ${filePath}`);
             }
           }
