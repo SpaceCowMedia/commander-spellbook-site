@@ -634,8 +634,8 @@ const AdvancedSearch: React.FC = () => {
 
   const query = getQuery();
 
-  const handleSubmit = (e: React.SubmitEvent) => {
-    e.preventDefault();
+  function handleSubmit(_: FormData) {
+    'use server';
 
     if (validationError) {
       return;
@@ -647,7 +647,7 @@ const AdvancedSearch: React.FC = () => {
         q: query,
       },
     });
-  };
+  }
 
   return (
     <>
@@ -664,7 +664,7 @@ const AdvancedSearch: React.FC = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form action={handleSubmit}>
         <div id="card-name-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cards}
