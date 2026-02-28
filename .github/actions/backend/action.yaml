@@ -58,6 +58,12 @@ runs:
       run: |
         docker compose config
         docker compose up -d
+    - name: Migrate Backend Database 🛠️
+      working-directory: ./backend
+      shell: bash
+      run: |
+        docker compose exec web python manage.py migrate --noinput
+        docker compose exec web python manage.py seed_website_properties
     - name: Wait for Backend to be ready ⏱️
       shell: bash
       run: |
