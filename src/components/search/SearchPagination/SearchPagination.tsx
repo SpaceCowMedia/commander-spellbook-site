@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './searchPagination.module.scss';
 
-type PaginationProps = {
+interface PaginationProps {
   currentPage: number;
   hasNextPage: boolean;
   onGoBack: () => void;
   onGoForward: () => void;
-};
+}
 
 const SearchPagination: React.FC<PaginationProps> = ({ currentPage, hasNextPage, onGoBack, onGoForward }) => {
   return (

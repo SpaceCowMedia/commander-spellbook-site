@@ -5,12 +5,12 @@ import StyledSelect, { Option } from '../../layout/StyledSelect/StyledSelect';
 import AutocompleteInput, { AutoCompleteOption } from '../AutocompleteInput/AutocompleteInput';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
-type OperatorOptionBase = {
+interface OperatorOptionBase {
   operator: string;
   numeric?: boolean;
   negate?: boolean;
   prefix?: string;
-};
+}
 
 export type OperatorOption = {
   label: string;
@@ -22,23 +22,23 @@ export type InputData = {
   error?: string;
 } & OperatorOptionBase;
 
-type MultiSearchInputValue = InputData[];
+type MultiSearchInputValue = readonly InputData[];
 
-type Props = {
+interface Props {
   value: MultiSearchInputValue;
-  autocompleteOptions?: Array<AutoCompleteOption>;
+  autocompleteOptions?: readonly AutoCompleteOption[];
   cardAutocomplete?: boolean;
   templateAutocomplete?: boolean;
   resultAutocomplete?: boolean;
-  selectOptions?: Array<Option>;
+  selectOptions?: readonly Option[];
   useValueForAutocompleteInput?: boolean;
   label: string;
   labelIcon?: SpellbookIcon;
   pluralLabel?: string;
   defaultPlaceholder?: string;
-  operatorOptions: Array<OperatorOption>;
+  operatorOptions: readonly OperatorOption[];
   onChange?: (_value: MultiSearchInputValue) => void;
-};
+}
 
 const MultiSearchInput: React.FC<Props> = ({
   value,
@@ -65,7 +65,9 @@ const MultiSearchInput: React.FC<Props> = ({
   const removeInput = (index: number) => {
     const newInputs = [...inputs.slice(0, index), ...inputs.slice(index + 1)];
     setInputs(newInputs);
-    onChange && onChange(newInputs);
+    if (onChange) {
+      onChange(newInputs);
+    }
   };
 
   const getInputId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-input-${index}`;
@@ -97,13 +99,17 @@ const MultiSearchInput: React.FC<Props> = ({
     newInputs[index].negate = negated === '' ? undefined : negated === 'true';
     newInputs[index].prefix = prefix;
     setInputs(newInputs);
-    onChange && onChange(newInputs);
+    if (onChange) {
+      onChange(newInputs);
+    }
   };
   const handleInputChange = (index: number, value: string) => {
     const newInputs = [...inputs];
     newInputs[index].value = value;
     setInputs(newInputs);
-    onChange && onChange(newInputs);
+    if (onChange) {
+      onChange(newInputs);
+    }
   };
 
   return (

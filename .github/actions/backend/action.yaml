@@ -5,7 +5,6 @@ inputs:
   port:
     required: true
     description: "The port on which the backend service will be accessible"
-    default: "8000"
 
 runs:
   using: composite
@@ -16,10 +15,53 @@ runs:
         repository: "SpaceCowMedia/commander-spellbook-backend"
         ref: latest
         path: backend
-    - name: Build Backend 🏗
-      working-directory: ./backend
+    - name: Download Backend Docker Images 🐳
+      uses: actions/github-script@v8
+      with:
+        script: |
+          // Download release files from SpaceCowMedia/commander-spellbook-backend latest release
+          const { data: release } = await github.rest.repos.getLatestRelease({
+            owner: 'SpaceCowMedia',
+            repo: 'commander-spellbook-backend',
+          });
+          const path = './backend/docker-images';
+          const fs = require('fs');
+          if (!await fs.promises.stat(path).catch(() => false)) {
+            await fs.promises.mkdir(path, { recursive: true });
+          }
+          const maxDownloadRetries = 3;
+          for (const asset of release.assets) {
+            if (asset.name.endsWith('.tar')) {
+              console.log(`Downloading ${asset.name}...`);
+              const url = asset.browser_download_url;
+              const filePath = `./backend/docker-images/${asset.name}`;
+              for (let attempt = 1; attempt <= maxDownloadRetries; attempt++) {
+                try {
+                  const response = await fetch(url);
+                  if (!response.ok) {
+                    throw new Error(`Failed to download ${asset.name}: ${response.status} ${response.statusText}`);
+                  }
+                  const buffer = await response.arrayBuffer();
+                  await fs.promises.writeFile(filePath, Buffer.from(buffer));
+                  break;
+                } catch (error) {
+                  console.error(`Attempt ${attempt} to download ${asset.name} failed: ${error.message}`);
+                  if (attempt === maxDownloadRetries) {
+                    throw new Error(`Failed to download ${asset.name} after ${maxDownloadRetries} attempts`);
+                  }
+                  await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retrying
+                }
+              }
+              console.log(`Downloaded ${asset.name} to ${filePath}`);
+            }
+          }
+    - name: Load Docker Images 🐳
       shell: bash
-      run: docker compose build
+      run: |
+        for image in ./backend/docker-images/*.tar; do
+          echo "Loading $image..."
+          docker load -i "$image"
+        done
     - name: Start Backend 🚀
       env:
         PORT: ${{ inputs.port }}
@@ -28,6 +70,12 @@ runs:
       run: |
         docker compose config
         docker compose up -d
+    - name: Migrate Backend Database 🛠️
+      working-directory: ./backend
+      shell: bash
+      run: |
+        docker compose exec web python manage.py migrate --noinput
+        docker compose exec web python manage.py seed_website_properties
     - name: Wait for Backend to be ready ⏱️
       shell: bash
       run: |
@@ -55,6 +103,7 @@ runs:
         Card.objects.all().delete()
         Template.objects.all().delete()
         Combo.objects.all().delete()
+        Feature.objects.all().delete()
         Variant.objects.all().delete()
         c1 = Card.objects.create(
           id=1,
@@ -64,6 +113,7 @@ runs:
           oracle_id="6b8cf2a0-b045-4d91-9d91-c602d40c6237",
           type_line="Artifact",
           price_tcgplayer=4.99,
+          spoiler=True,
         )
         c2 = Card.objects.create(
           id=2,

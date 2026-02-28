@@ -6,6 +6,11 @@ import styles from './ThemeSelector.module.scss';
 
 const ThemeSelector: React.FC = () => {
   const [cookies, setCookies] = useCookies(['theme']);
+
+  const updateTheme = (theme: string) => {
+    setCookies('theme', theme, { maxAge: 31536000 });
+  };
+
   useEffect(() => {
     if (!cookies.theme) {
       return updateTheme(SYSTEM_THEME);
@@ -13,10 +18,6 @@ const ThemeSelector: React.FC = () => {
       return applyTheme(cookies.theme);
     }
   }, [cookies.theme]);
-
-  const updateTheme = (theme: string) => {
-    setCookies('theme', theme, { maxAge: 31536000 });
-  };
 
   return (
     <button

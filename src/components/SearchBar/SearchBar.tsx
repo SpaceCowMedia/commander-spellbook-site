@@ -8,10 +8,10 @@ import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
 import CookieService from 'services/cookie.service';
 
-type Props = {
+interface Props {
   onHomepage?: boolean;
   className?: string;
-};
+}
 
 const countUpToString = (count: number) => {
   const countString = count.toString();
@@ -60,6 +60,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
     }
     if (countUpRef.current < target) {
       const increment = Math.max((target - initialCount) / 50, 1);
+      // eslint-disable-next-line react-hooks/purity
       countUpRef.current = Math.min(countUpRef.current + Math.floor((1 + Math.random()) * increment), target);
       inputRef.current.placeholder = `Search ${countUpToString(countUpRef.current)} EDH combos`;
       setTimeout(() => handleCountUp(target), 50);
@@ -121,7 +122,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
         </div>
 
         {!onHomepage && (
-          <div className="flex flex-row-reverse md:flex-row items-center desktop-menu">
+          <div className="flex flex-row-reverse md:flex-row items-center desktopMenu">
             <button
               id="search-bar-menu-button"
               type="button"

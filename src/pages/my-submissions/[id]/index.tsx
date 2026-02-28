@@ -7,9 +7,9 @@ import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spell
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 
-type Props = {
+interface Props {
   submission?: VariantSuggestion;
-};
+}
 
 const EditSubmission: React.FC<Props> = ({ submission }) => {
   return (

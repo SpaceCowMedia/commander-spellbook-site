@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
 import { FeatureProducedInVariantSuggestionRequest } from '@space-cow-media/spellbook-client';
 
-type Props = {
+interface Props {
   feature: FeatureProducedInVariantSuggestionRequest;
   onChange: (_feature: FeatureProducedInVariantSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
-};
+}
 
 const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index }) => {
   const [featureInput, setFeatureInput] = useState(feature.feature);

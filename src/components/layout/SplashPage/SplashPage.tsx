@@ -2,13 +2,13 @@ import React from 'react';
 import ArtCircle, { ArtCircleProps } from '../ArtCircle/ArtCircle';
 import styles from './splashPage.module.scss';
 
-type Props = {
+interface Props {
   title: string;
   flavor: string;
   artCircleCardName: ArtCircleProps['cardName'];
   pulse?: boolean;
   children?: React.ReactNode;
-};
+}
 
 const SplashPage: React.FC<Props> = ({ title, flavor, artCircleCardName, pulse = false, children }) => {
   return (

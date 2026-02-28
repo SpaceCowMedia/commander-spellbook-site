@@ -19,10 +19,10 @@ import { apiConfiguration } from 'services/api.service';
 import VariantIdSubmission from '../VariantIdSubmission/VariantIdSubmission';
 import { useDebounce } from 'use-debounce';
 
-type Props = {
+interface Props {
   submission?: VariantUpdateSuggestion;
   comboId?: string;
-};
+}
 
 const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
   const router = useRouter();

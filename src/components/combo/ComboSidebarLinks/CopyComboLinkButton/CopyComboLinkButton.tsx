@@ -3,11 +3,11 @@ import styles from './copyComboLinkButton.module.scss';
 import { Tooltip } from 'react-tooltip';
 import { event } from '../../../../lib/googleAnalytics';
 
-type Props = {
+interface Props {
   comboLink: string;
   children: React.ReactNode;
   className: string;
-};
+}
 
 const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);

@@ -15,12 +15,12 @@ import { ComboSubmission, variantSuggestionFromSubmission, variantSuggestionToSu
 
 const PAGE_SIZE = 20;
 
-type Props = {
+interface Props {
   submissions: ComboSubmission[];
   count: number;
   page: number;
   error?: string;
-};
+}
 
 const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Props) => {
   const router = useRouter();

@@ -113,11 +113,11 @@ const SPELLBOOK_FA_ICONS = {
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;
 
-type Props = {
+interface Props {
   name: SpellbookIcon;
   className?: string;
   onClick?: React.MouseEventHandler;
-};
+}
 
 const Icon: React.FC<Props> = ({ name, className, onClick }) => {
   if (name in SPELLBOOK_ICONS) {

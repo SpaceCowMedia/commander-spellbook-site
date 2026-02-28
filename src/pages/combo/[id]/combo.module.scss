@@ -29,16 +29,20 @@
     td, th {
       @apply border-2;
     }
+
     tr:first-child th {
       border-top: 0;
     }
+
     tr:last-child td {
       border-bottom: 0;
     }
+
     tr td:first-child,
     tr th:first-child {
       border-left: 0;
     }
+
     tr td:last-child,
     tr th:last-child {
       border-right: 0;

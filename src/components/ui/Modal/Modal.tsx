@@ -5,14 +5,14 @@ import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import Icon from 'components/layout/Icon/Icon';
 
-type Props = {
+interface Props {
   open?: boolean;
   children: React.ReactNode;
   onClose: () => void;
   footer?: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
   closeIcon?: boolean;
-};
+}
 
 const Modal: React.FC<Props> = ({ open, children, onClose, footer, size, closeIcon }) => {
   const [visible, setVisible] = useState(false);

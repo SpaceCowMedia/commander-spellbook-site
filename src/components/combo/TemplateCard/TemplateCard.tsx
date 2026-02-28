@@ -9,10 +9,10 @@ import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 import FlipperCard from 'components/layout/FlipperCard/FlipperCard';
 
-type Props = {
+interface Props {
   template: TemplateInVariant;
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 const TemplateCard: React.FC<Props> = ({
   template,

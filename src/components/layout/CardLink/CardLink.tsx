@@ -2,12 +2,12 @@ import React from 'react';
 import ExternalLink from '../ExternalLink/ExternalLink';
 import EDHRECService from '../../../services/edhrec.service';
 
-type Props = {
+interface Props {
   name: string;
   children?: React.ReactNode;
   className?: string;
   disableMobileSingleClickAsPreview?: boolean;
-};
+}
 
 const CardLink: React.FC<Props> = ({ name, children, className, disableMobileSingleClickAsPreview }: Props) => {
   let link = '';

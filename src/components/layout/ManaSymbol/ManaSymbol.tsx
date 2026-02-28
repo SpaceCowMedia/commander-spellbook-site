@@ -2,12 +2,12 @@ import React from 'react';
 import styles from './manaSymbol.module.scss';
 import scryfall from 'scryfall-client';
 
-type Props = {
+interface Props {
   symbol: string;
   size?: 'medium' | 'small';
   ariaHidden?: boolean;
   className?: string;
-};
+}
 
 const ManaSymbol: React.FC<Props> = ({ symbol, size = 'medium', ariaHidden, className }) => {
   const url = scryfall.getSymbolUrl(symbol);

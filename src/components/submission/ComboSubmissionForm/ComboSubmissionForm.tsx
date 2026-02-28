@@ -28,10 +28,10 @@ import {
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
 
-type Props = {
+interface Props {
   submission?: VariantSuggestion;
   variant?: Variant;
-};
+}
 
 const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const router = useRouter();

@@ -1,9 +1,9 @@
-import '../assets/globals.scss';
+import '../assets/globals.css';
 import type { AppContext, AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import NextNProgress from 'nextjs-progressbar';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -14,9 +14,9 @@ import Cookies from 'universal-cookie';
 
 config.autoAddCss = false;
 
-export default function App({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
+export default function App({ Component, pageProps, cookies }: AppProps & { cookies: string }) {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
+  const isClient = typeof window !== 'undefined';
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -27,10 +27,6 @@ export default function App({ Component, pageProps, cookies }: AppProps & { cook
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
     <>
@@ -46,7 +42,7 @@ export default function App({ Component, pageProps, cookies }: AppProps & { cook
           />
         )}
       </header>
-      <CookiesProvider cookies={typeof window !== 'undefined' ? undefined : new Cookies(cookies)}>
+      <CookiesProvider cookies={isClient ? undefined : new Cookies(cookies)}>
         <PageWrapper>
           <Component {...pageProps} />
         </PageWrapper>
@@ -55,6 +51,6 @@ export default function App({ Component, pageProps, cookies }: AppProps & { cook
   );
 }
 
-App.getInitialProps = async (context: AppContext): Promise<any> => {
+App.getInitialProps = async (context: AppContext): Promise<{ cookies?: string }> => {
   return { cookies: context.ctx.req?.headers?.cookie };
 };

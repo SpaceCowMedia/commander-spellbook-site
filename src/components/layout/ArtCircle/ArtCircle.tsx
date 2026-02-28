@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './artCircle.module.scss';
 
-export type ArtCircleProps = {
+export interface ArtCircleProps {
   title?: string;
   size?: number;
   cardName: keyof typeof CARD_ARTS;
   className?: string;
-};
+}
 
 const CARD_ARTS = {
   'Arcane Teachings': {

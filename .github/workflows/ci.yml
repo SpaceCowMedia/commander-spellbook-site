@@ -21,42 +21,21 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       packages: read
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
 
       - name: Setup Node ⬢
         uses: actions/setup-node@v6
-        with:
-          node-version: 23
+        with: &setup-node
+          node-version: 25
           cache: yarn
-          registry-url: https://npm.pkg.github.com
-
-      - name: Cache node modules 🗃
-        id: cache-nodemodules
-        uses: actions/cache@v5
-        with:
-          # npm packages are cached in node_modules
-          # npm also provides a local cache in .npm
-          # Cypress binary is stored in ~/.cache
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Cache Site Data ⏬
-        uses: actions/cache@v5
-        with:
-          path: |
-            dist/
-          key: ${{ runner.os }}-download-data-${{ github.sha }}
 
       - name: Install Node Modules 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
+
+      - name: Build 🏗️
+        run: yarn run build
 
   lint:
     runs-on: ubuntu-22.04
@@ -67,22 +46,9 @@ jobs:
 
       - name: Setup Node ⬢
         uses: actions/setup-node@v6
-        with:
-          node-version: 23
-          cache: yarn
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+        with: *setup-node
 
       - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Run lint 👀
@@ -97,22 +63,9 @@ jobs:
 
       - name: Setup Node ⬢
         uses: actions/setup-node@v6
-        with:
-          node-version: 23
-          cache: yarn
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+        with: *setup-node
 
       - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Run typescript 👀
@@ -124,6 +77,7 @@ jobs:
     strategy:
       matrix:
         browser: [chrome, firefox, edge, electron]
+      fail-fast: false
     env:
       NODE_ENV: test
     steps:
@@ -135,22 +89,9 @@ jobs:
 
       - name: Setup Node ⬢ # This needs to be done after checkout
         uses: actions/setup-node@v6
-        with:
-          node-version: 23
-          cache: yarn
-
-      - name: Restore node modules from cache 📦
-        id: cache-nodemodules
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache
-          key: ${{ runner.os }}-node-modules-build-${{ hashFiles('**/yarn.lock') }}
+        with: *setup-node
 
       - name: Install 📦
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Startup Backend Service 🖥️
@@ -163,7 +104,7 @@ jobs:
         uses: cypress-io/github-action@v7
         with:
           install-command: "true"
-          build: yarn run build
+          build: yarn build
           start: yarn start
           wait-on: "http://localhost:3000, http://localhost:8000"
           browser: ${{ matrix.browser }}

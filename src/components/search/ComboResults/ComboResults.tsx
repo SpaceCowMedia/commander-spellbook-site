@@ -10,14 +10,14 @@ import { countPrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
 
-type ResultProps = {
+interface ResultProps {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
   decklistMessage?: string;
   combo: Variant;
   sort?: string;
   newTab?: boolean;
   hideVariants?: boolean;
-};
+}
 
 export const ComboResult: React.FC<ResultProps> = ({
   combo,
@@ -168,15 +168,15 @@ export const ComboResult: React.FC<ResultProps> = ({
   );
 };
 
-type Props = {
+interface Props {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
   decklistMessage?: string;
   results: Variant[];
   sort?: string;
-  vendor?: Array<keyof VariantPrices>;
+  vendor?: (keyof VariantPrices)[];
   hideVariants?: boolean;
   localPageLimit?: number; // If passed in, will limit the number of results shown on the local page
-};
+}
 
 const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, decklistMessage, localPageLimit }) => {
   const ref = useRef<HTMLDivElement>(null);

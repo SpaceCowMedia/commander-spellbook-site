@@ -2,10 +2,10 @@ import React from 'react';
 import ManaSymbol from '../ManaSymbol/ManaSymbol';
 import { ColorEnum } from '@space-cow-media/spellbook-client';
 
-type Props = {
+interface Props {
   identity: ColorEnum;
   size?: 'medium' | 'small';
-};
+}
 
 const ColorIdentity: React.FC<Props> = ({ identity, size = 'medium' }) => {
   const colors = identity.toString().toUpperCase().split('');

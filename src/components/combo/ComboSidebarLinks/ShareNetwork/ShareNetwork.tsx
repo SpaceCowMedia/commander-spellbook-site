@@ -2,12 +2,12 @@ import Link from 'next/link';
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 
-type Props = {
+interface Props {
   className?: string;
   url: string;
   children?: React.ReactNode;
   network: string;
-};
+}
 
 const ShareNetwork: React.FC<Props> = ({ className, url, children, network }) => {
   const id = `share-combo-tooltip-${network}`;

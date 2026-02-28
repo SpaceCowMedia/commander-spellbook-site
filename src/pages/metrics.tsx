@@ -8,17 +8,17 @@ import React from 'react';
 import { apiConfiguration } from 'services/api.service';
 import styles from './metrics.module.scss';
 
-type Count = {
+interface Count {
   count: number;
-};
+}
 
-type Props = {
+interface Props {
   numberOfCombos: Count;
   numberOfVariants: Count;
   numberOfVariantsPerColorIdentity: Record<ColorEnum, Count>;
   numberOfVariantsPerSupportedFormat: Record<string, Count>;
   numberOfVariantsPerCardCount: Record<string, Count>;
-};
+}
 
 const Metrics: React.FC<Props> = (stats) => {
   return (

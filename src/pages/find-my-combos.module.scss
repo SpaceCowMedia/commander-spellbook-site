@@ -60,7 +60,7 @@
     @apply h-20;
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .decklistInput {
       @apply w-2/3;
     }

@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from './searchMessage.module.scss';
 
-type Props = {
+interface Props {
   errors: string;
   message: string;
   currentPage: number;
   totalPages: number;
   maxNumberOfCombosPerPage: number;
   totalResults: number;
-};
+}
 
 const SearchMessage: React.FC<Props> = ({
   errors,

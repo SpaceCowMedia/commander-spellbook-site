@@ -1,9 +1,9 @@
 import React from 'react';
 import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
 
-type Props = {
+interface Props {
   link: string;
-};
+}
 
 const EdhrecLink: React.FC<Props> = ({ link }) => {
   return (

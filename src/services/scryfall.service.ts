@@ -19,8 +19,8 @@ export function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   if ('image_uris' in card) {
     return [card.image_uris?.normal || ''];
   } else if ('card_faces' in card) {
-    let result = [];
-    for (let face of card.card_faces) {
+    const result = [];
+    for (const face of card.card_faces) {
       if ('image_uris' in face) {
         result.push(face.image_uris?.normal || '');
       }
@@ -30,12 +30,12 @@ export function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   return [''];
 }
 
-export type ScryfallResultsPage = {
+export interface ScryfallResultsPage {
   results: List<Card>;
   page: number;
   nextPage?: number;
   count?: number;
-};
+}
 
 export async function templateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
   if (template.scryfallQuery) {
@@ -71,7 +71,7 @@ export async function templateReplacements(template: Template, page: number): Pr
       results: response,
       page: page,
       nextPage: replacements.next !== null ? page + 1 : undefined,
-      count: replacements.count!,
+      count: replacements.count ?? undefined,
     };
   }
 }

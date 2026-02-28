@@ -26,7 +26,7 @@ function comaAndOrJoin(input: string[], joiner = 'and') {
 }
 
 function getCardState(card: CardInVariant | TemplateInVariant) {
-  const output: Array<{ zone: keyof typeof ZONE_MAP; state: string }> = [];
+  const output: { zone: keyof typeof ZONE_MAP; state: string }[] = [];
   if (card.battlefieldCardState) {
     output.push({ zone: 'B', state: card.battlefieldCardState });
   }
@@ -56,7 +56,7 @@ type Card = (CardInVariant | TemplateInVariant) & { name: string; type: string }
 // TODO: consider DFCs
 
 export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
-  const cardsAndTemplates: Array<Card> = (variant.uses as Array<CardInVariant | TemplateInVariant>)
+  const cardsAndTemplates: Card[] = (variant.uses as (CardInVariant | TemplateInVariant)[])
     .concat(variant.requires)
     .map((card) => ({ ...card, name: getName(card), type: getTypes(card) }));
 
@@ -89,7 +89,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   }, {});
 
   // Sort cards into groups by zone
-  let zoneGroups: Array<{ cards: Card[]; zones: string[]; cardState: string }> = [];
+  const zoneGroups: { cards: Card[]; zones: string[]; cardState: string }[] = [];
   for (const zoneKey of Object.keys(zonesToDescriptions).toSorted((a, b) =>
     a.length == b.length
       ? a

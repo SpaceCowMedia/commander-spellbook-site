@@ -26,12 +26,12 @@
     margin-left: 1em;
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     .comboResult {
       @apply m-2;
     }
 
-    .comboResult:nth-child(3n + 3), .comboResult:last {
+    .comboResult:nth-child(3n + 3), .comboResult:last-child {
       @apply mr-0;
     }
 

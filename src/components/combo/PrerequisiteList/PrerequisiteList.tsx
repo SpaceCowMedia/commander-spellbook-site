@@ -6,7 +6,7 @@ import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spe
 import React from 'react';
 import { ScryfallResultsPage } from 'services/scryfall.service';
 
-type Props = {
+interface Props {
   prerequisites: ComboPrerequisites[];
   className?: string;
   id?: string;
@@ -14,7 +14,7 @@ type Props = {
   cardsInCombo?: CardInVariant[];
   templatesInCombo?: TemplateInVariant[];
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 const PREREQ_ICON_MAP: Record<string, SpellbookIcon> = {
   B: 'battlefield',

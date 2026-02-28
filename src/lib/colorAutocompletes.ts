@@ -1,3 +1,5 @@
+import normalizeStringInput from './normalizeStringInput';
+
 const colorAutocomplete = [
   {
     value: 'colorless',
@@ -215,6 +217,11 @@ const colorAutocomplete = [
     value: 'artifice',
     label: 'Artifice {w}{u}{b}{r}',
   },
-];
+].map((color) => ({
+  value: color.value,
+  label: color.label,
+  normalizedValue: normalizeStringInput(color.value),
+  normalizedLabel: normalizeStringInput(color.label),
+}));
 
 export default colorAutocomplete;

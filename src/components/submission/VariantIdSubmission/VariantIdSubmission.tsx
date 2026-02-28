@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { VariantInVariantUpdateSuggestion } from '@space-cow-media/spellbook-client';
 
-type Props = {
+interface Props {
   variant: VariantInVariantUpdateSuggestion;
   onChange: (_variant: VariantInVariantUpdateSuggestion) => void;
   onDelete: () => void;
   index: number;
-};
+}
 const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   const [variantIdInput, setVariantIdInput] = useState(variant?.variant || '');
   const [issueInput, setIssueInput] = useState(variant?.issue || '');
@@ -19,7 +19,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
         // and use it as the variant ID
         value = url.pathname.split('/')[2];
       }
-    } catch (_e) {
+    } catch {
       // If the URL is invalid, we can just use the input as is
       // and let the API handle it
       // as a string

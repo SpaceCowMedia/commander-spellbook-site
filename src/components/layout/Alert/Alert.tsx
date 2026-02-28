@@ -2,12 +2,12 @@ import React from 'react';
 import Icon, { SpellbookIcon } from '../Icon/Icon';
 import styles from './Alert.module.scss';
 
-type Props = {
+interface Props {
   type: 'error' | 'warning' | 'info' | 'success' | 'important';
   icon: SpellbookIcon;
   children: React.ReactNode;
   title?: string;
-};
+}
 
 const Alert = ({ type, icon, children, title }: Props) => {
   return (

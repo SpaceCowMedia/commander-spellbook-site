@@ -5,9 +5,9 @@ import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service'
 import Loader from 'components/layout/Loader/Loader';
 import { useSwipeable } from 'react-swipeable';
 
-type Props = {
+interface Props {
   fetchResults: (_page: number) => Promise<ScryfallResultsPage>;
-};
+}
 
 const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [pageCount, setPageCount] = useState<number>(0);

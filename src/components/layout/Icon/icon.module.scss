@@ -1,39 +1,46 @@
 .icon {
-  font-family: 'Spellbook Icons' !important;
+  font-family: 'Spellbook Icons', sans-serif !important;
   @apply not-italic;
 }
+
 .exile {
-  &:before {
+  &::before {
     content: '\e900';
   }
 }
+
 .commandZone {
-  &:before {
+  &::before {
     content: '\e901';
   }
 }
+
 .hand {
-  &:before {
+  &::before {
     content: '\e902';
   }
 }
+
 .library {
-  &:before {
+  &::before {
     content: '\e903';
   }
 }
+
 .graveyard {
-  &:before {
+  &::before {
     content: '\e904';
   }
 }
+
 .battlefield {
-  &:before {
+  &::before {
     content: '\e905';
   }
 }
+
 .archidekt {
-  &:before {
+  &::before {
     content: '\e906';
   }
 }

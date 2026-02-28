@@ -254,6 +254,8 @@ describe('Advanced Search Page', () => {
 
     cy.get('#format-input-0-value').select('Vintage');
 
+    cy.get('#search-query span').should('contain.text', 'legal:vintage');
+
     cy.get('#advanced-search-submit-button').click();
 
     cy.url().should('include', `/search/?q=${encodeURIComponent('legal:vintage').replace(/%20/g, '+')}`);
@@ -262,7 +264,11 @@ describe('Advanced Search Page', () => {
   it('can search for previewed combos', () => {
     cy.visit('/advanced-search/');
 
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
     cy.get("#spoiler-tag input[type='radio'][value='true']").check();
+
+    cy.get('#search-query span').should('contain.text', 'is:spoiler');
 
     cy.get('#advanced-search-submit-button').click();
 
@@ -272,7 +278,11 @@ describe('Advanced Search Page', () => {
   it('can search for featured combos', () => {
     cy.visit('/advanced-search/');
 
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
     cy.get("#featured-tag input[type='radio'][value='true']").check();
+
+    cy.get('#search-query span').should('contain.text', 'is:featured');
 
     cy.get('#advanced-search-submit-button').click();
 

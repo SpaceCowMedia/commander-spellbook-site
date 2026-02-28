@@ -1,4 +1,4 @@
-export function queryParameterAsString(param: any): string | undefined {
+export function queryParameterAsString(param: unknown): string | undefined {
   if (typeof param === 'string') {
     return param;
   }

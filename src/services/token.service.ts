@@ -8,14 +8,14 @@ export function timeInSecondsToEpoch(): number {
   return Math.round(Date.now() / 1000);
 }
 
-export type DecodedJWTType = {
+export interface DecodedJWTType {
   user_id: number;
   username: string;
   email: string;
   orig_iat: string; // epoch time in seconds
   exp: number; // epoch time in seconds
   token_type?: string;
-};
+}
 
 function decodeJwt(jwt?: string): DecodedJWTType | null {
   if (!jwt) {
@@ -136,7 +136,7 @@ async function fetchNewToken(
       refresh: refreshToken,
       ...response,
     };
-  } catch (_err) {
+  } catch {
     CookieService.logout();
     return { access: '', refresh: '' };
   }

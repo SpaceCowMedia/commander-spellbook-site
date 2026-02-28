@@ -15,14 +15,14 @@ import { SpellbookIcon } from '../components/layout/Icon/Icon';
 import { LEGALITY_FORMATS } from 'lib/types';
 import normalizeStringInput from 'lib/normalizeStringInput';
 
-type TagOption = {
+interface TagOption {
   name: string;
   label: string;
   labelIcon?: SpellbookIcon;
   description?: string;
-};
+}
 
-const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Has card with name',
@@ -47,13 +47,13 @@ const CARD_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const CARD_AMOUNT_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_AMOUNT_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   { operator: '=', label: 'Contains exactly x cards (number)', numeric: true },
   { operator: '>=', label: 'Contains at least x cards (number)', numeric: true },
   { operator: '<', label: 'Contains less than x cards (number)', numeric: true },
 ];
 
-const CARD_TYPE_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_TYPE_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Contains the phrase',
@@ -97,7 +97,7 @@ const CARD_TYPE_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Contains the phrase',
@@ -126,7 +126,7 @@ const CARD_ORACLE_TEXT_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_KEYWORD_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Has the keyword',
@@ -146,7 +146,7 @@ const CARD_KEYWORD_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
+const CARD_MANA_VALUE_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: '=',
     label: 'Has a mana value of x (number)',
@@ -182,7 +182,7 @@ const CARD_MANA_VALUE_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const COLOR_IDENTITY_OPERATOR_OPTIONS: OperatorOption[] = [
+const COLOR_IDENTITY_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Is within the color identity',
@@ -206,7 +206,7 @@ const COLOR_IDENTITY_OPERATOR_OPTIONS: OperatorOption[] = [
   { operator: '=', label: 'Contains exactly x colors (number)', numeric: true },
 ];
 
-const COMBO_DATA_OPERATOR_OPTIONS: OperatorOption[] = [
+const COMBO_DATA_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Contains the phrase',
@@ -224,7 +224,7 @@ const COMBO_DATA_OPERATOR_OPTIONS: OperatorOption[] = [
   { operator: '=', label: 'Is not exactly', negate: true },
 ];
 
-const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
+const RESULTS_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Contains the phrase',
@@ -265,7 +265,7 @@ const RESULTS_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const TAGS_OPTIONS: TagOption[] = [
+const TAGS_OPTIONS: readonly TagOption[] = [
   {
     name: 'spoiler',
     label: 'Contains a spoiler/previewed card',
@@ -289,7 +289,7 @@ const TAGS_OPTIONS: TagOption[] = [
   },
 ];
 
-const COMMANDER_OPTIONS: OperatorOption[] = [
+const COMMANDER_OPTIONS: readonly OperatorOption[] = [
   {
     operator: ':',
     label: 'Requires a commander whose name contains the phrase',
@@ -314,13 +314,13 @@ const COMMANDER_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const POPULARITY_OPTIONS: OperatorOption[] = [
+const POPULARITY_OPTIONS: readonly OperatorOption[] = [
   { operator: '>=', label: 'In at least x decks (number)', numeric: true },
   { operator: '<', label: 'In less than x decks (number)', numeric: true },
   { operator: '=', label: 'In exactly x decks (number)', numeric: true },
 ];
 
-const PRICE_OPTIONS: OperatorOption[] = [
+const PRICE_OPTIONS: readonly OperatorOption[] = [
   {
     operator: '<=',
     label: 'Costs at most x',
@@ -341,7 +341,7 @@ const PRICE_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const PRICE_VENDORS = [
+const PRICE_VENDORS: readonly { value: string; label: string }[] = [
   {
     value: 'cardkingdom',
     label: 'Card Kingdom',
@@ -368,9 +368,9 @@ const LEGALITY_OPERATOR_OPTIONS: OperatorOption[] = [
   },
 ];
 
-const BRACKET_TAGS = ['Ruthless', 'Spicy', 'Powerful', 'Oddball', 'Core', 'Exhibition'];
+const BRACKET_TAGS: readonly string[] = ['Ruthless', 'Spicy', 'Powerful', 'Oddball', 'Core', 'Exhibition'];
 
-const BRACKET_OPERATOR_OPTIONS: OperatorOption[] = [
+const BRACKET_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   {
     operator: '<=',
     label: 'Could probably be included in bracket',
@@ -400,35 +400,29 @@ interface SelectedTag extends TagOption {
   selected?: boolean;
 }
 
-type Data = {
-  cards: InputData[];
-  templates: InputData[];
-  cardAmounts: InputData[];
-  cardTypes: InputData[];
-  oracleText: InputData[];
-  cardKeywords: InputData[];
-  manaValue: InputData[];
-  colorIdentity: InputData[];
-  prerequisites: InputData[];
-  steps: InputData[];
-  results: InputData[];
-  tags: SelectedTag[];
-  commanders: InputData[];
-  popularity: InputData[];
-  prices: InputData[];
+interface Data {
+  cards: readonly InputData[];
+  templates: readonly InputData[];
+  cardAmounts: readonly InputData[];
+  cardTypes: readonly InputData[];
+  oracleText: readonly InputData[];
+  cardKeywords: readonly InputData[];
+  manaValue: readonly InputData[];
+  colorIdentity: readonly InputData[];
+  prerequisites: readonly InputData[];
+  steps: readonly InputData[];
+  results: readonly InputData[];
+  tags: readonly SelectedTag[];
+  commanders: readonly InputData[];
+  popularity: readonly InputData[];
+  prices: readonly InputData[];
   vendor: string;
-  format: InputData[];
-  bracket: InputData[];
-  validationError: string;
-};
+  format: readonly InputData[];
+  bracket: readonly InputData[];
+  validationError: boolean;
+}
 
 const AdvancedSearch: React.FC = () => {
-  const colorAutocompletes = COLOR_AUTOCOMPLETES.map((color) => ({
-    value: color.value,
-    label: color.label,
-    normalizedValue: normalizeStringInput(color.value),
-    normalizedLabel: normalizeStringInput(color.label),
-  }));
   const router = useRouter();
   const [formState, setFormStateHook] = useState<Data>({
     cards: [{ ...CARD_OPERATOR_OPTIONS[0], value: '' }],
@@ -449,7 +443,7 @@ const AdvancedSearch: React.FC = () => {
     vendor: DEFAULT_VENDOR,
     format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: '' }],
     bracket: [{ ...BRACKET_OPERATOR_OPTIONS[0], value: '' }],
-    validationError: '',
+    validationError: false,
   });
 
   const {
@@ -474,29 +468,33 @@ const AdvancedSearch: React.FC = () => {
     validationError,
   } = formState;
 
-  const setFormState = (changes: Partial<typeof formState>) => {
+  function setFormState(changes: Partial<typeof formState>) {
     setFormStateHook({ ...formState, ...changes });
-  };
+  }
 
   const hasPriceInQuery = !!prices.find(({ value }) => !!value.trim());
 
   const validate = () => {
     let hasValidationError = false;
-
-    const newFormState = { ...formState };
+    let changed = false;
 
     function val(input: InputData) {
-      input.error = '';
+      let error = '';
 
       if ((input.numeric ?? false) && !Number.isInteger(Number(input.value))) {
-        input.error = 'Contains a non-integer. Use a full number instead.';
+        error = 'Contains a non-integer. Use a full number instead.';
       }
 
-      if (input.error) {
+      if (error) {
         hasValidationError = true;
       }
-    }
 
+      if (error != input.error) {
+        input.error = error;
+        changed = true;
+      }
+    }
+    const newFormState = { ...formState };
     newFormState.cards.forEach(val);
     newFormState.templates.forEach(val);
     newFormState.cardAmounts.forEach(val);
@@ -512,8 +510,13 @@ const AdvancedSearch: React.FC = () => {
     newFormState.popularity.forEach(val);
     newFormState.prices.forEach(val);
     newFormState.bracket.forEach(val);
-    setFormState(newFormState);
-    return hasValidationError;
+    if (hasValidationError != newFormState.validationError) {
+      changed = true;
+      newFormState.validationError = hasValidationError;
+    }
+    if (changed) {
+      setFormStateHook(newFormState);
+    }
   };
 
   useEffect(() => {
@@ -542,7 +545,7 @@ const AdvancedSearch: React.FC = () => {
   const getQuery = () => {
     let query = '';
 
-    function makeQueryFunction(key: string): Parameters<typeof Array.prototype.forEach>[0] {
+    function makeQueryFunction(key: string): (_input: InputData) => void {
       return (input: InputData) => {
         let value = input.value.trim();
         const negated = input.negate ?? false;
@@ -597,7 +600,7 @@ const AdvancedSearch: React.FC = () => {
       };
     }
 
-    function makeQueryFunctionForTags(): Parameters<typeof Array.prototype.forEach>[0] {
+    function makeQueryFunctionForTags(): (_tag: SelectedTag) => void {
       return (tag: SelectedTag) => {
         if (tag.selected === true) {
           query += ` is:${tag.name}`;
@@ -631,22 +634,20 @@ const AdvancedSearch: React.FC = () => {
 
   const query = getQuery();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  function handleSubmit(_: FormData) {
+    'use server';
 
-    if (validate()) {
-      return setFormState({
-        validationError: 'Check for errors in your search terms before submitting.',
-      });
+    if (validationError) {
+      return;
     }
 
     router.push({
       pathname: '/search/',
       query: {
-        q: `${query}`,
+        q: query,
       },
     });
-  };
+  }
 
   return (
     <>
@@ -663,7 +664,7 @@ const AdvancedSearch: React.FC = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form action={handleSubmit}>
         <div id="card-name-inputs" className={`${styles.container} container`}>
           <MultiSearchInput
             value={cards}
@@ -749,7 +750,7 @@ const AdvancedSearch: React.FC = () => {
             labelIcon="palette"
             pluralLabel="Color Identities"
             operatorOptions={COLOR_IDENTITY_OPERATOR_OPTIONS}
-            autocompleteOptions={colorAutocompletes}
+            autocompleteOptions={COLOR_AUTOCOMPLETES}
             defaultPlaceholder="ex: wug, temur, colorless, black"
             useValueForAutocompleteInput
           />
@@ -862,10 +863,10 @@ const AdvancedSearch: React.FC = () => {
           />
         </div>
 
-        {TAGS_OPTIONS.map((tagOption, i) => (
-          <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={i}>
+        {tags.map((tagOption, tagIndex) => (
+          <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={tagIndex}>
             <RadioSearchInput
-              checkedValue={tags.find((tag) => tag.name === tagOption.name)?.selected?.toString() ?? 'null'}
+              checkedValue={tagOption.selected?.toString() ?? 'null'}
               options={[
                 { value: 'true', label: 'Yes' },
                 { value: 'false', label: 'No' },
@@ -876,13 +877,15 @@ const AdvancedSearch: React.FC = () => {
               labelIcon={tagOption.labelIcon}
               description={tagOption.description}
               onChange={(tag) => {
-                const tagIndex = tags.findIndex((t) => t.name === tagOption.name);
-                const newTag = {
-                  ...tagOption,
-                  selected: tag === 'null' ? undefined : tag === 'true',
-                };
                 setFormState({
-                  tags: tagIndex === -1 ? tags.concat(newTag) : tags.map((t, i) => (i === tagIndex ? newTag : t)),
+                  tags: tags.map((t, i) =>
+                    i === tagIndex
+                      ? {
+                          ...t,
+                          selected: tag === 'null' ? undefined : tag === 'true',
+                        }
+                      : t,
+                  ),
                 });
               }}
             />
@@ -907,7 +910,7 @@ const AdvancedSearch: React.FC = () => {
           </div>
 
           <div id="advanced-search-validation-error" className="text-danger p-4">
-            {validationError}
+            {validationError && 'Check for errors in your search terms before submitting.'}
           </div>
         </div>
       </form>

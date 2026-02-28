@@ -1,6 +1,6 @@
 import ErrorBase from '../components/layout/ErrorBase/ErrorBase';
 import styles from './404.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const NOT_FOUND_TEMPLATES = [
   [styles.barrenGlory, 'You were looking for glory, but found an empty world.'],
@@ -13,19 +13,25 @@ const NOT_FOUND_TEMPLATES = [
   [styles.zhalfirinVoid, 'Must have phased out.'],
 ];
 
-const NotFoundPage: React.FC = () => {
-  const [notFoundClass, setNotFoundClass] = useState(NOT_FOUND_TEMPLATES[0][0]);
-  const [notFoundMessage, setNotFoundMessage] = useState(NOT_FOUND_TEMPLATES[0][1]);
+interface Props {
+  template: string;
+  message: string;
+}
+
+const NotFoundPage: React.FC<Props> = () => {
+  const [index, setIndex] = React.useState(0);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length);
-    setNotFoundClass(NOT_FOUND_TEMPLATES[randomIndex][0]);
-    setNotFoundMessage(NOT_FOUND_TEMPLATES[randomIndex][1]);
-  });
+    setIndex(Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length));
+  }, []);
 
   return (
     <>
-      <ErrorBase mainMessage="Page Not Found" subMessage={notFoundMessage} containerClassName={notFoundClass} />
+      <ErrorBase
+        mainMessage="Page Not Found"
+        subMessage={NOT_FOUND_TEMPLATES[index][1]}
+        containerClassName={NOT_FOUND_TEMPLATES[index][0]}
+      />
     </>
   );
 };

@@ -1,12 +1,13 @@
-import Document, { Html, Head, Main, NextScript, DocumentInitialProps } from 'next/document';
+import { NextApiRequest } from 'next';
+import Document, { Html, Head, Main, NextScript, DocumentInitialProps, DocumentContext } from 'next/document';
 
 type MyDocumentInitialProps = {
   documentClass: string;
 } & DocumentInitialProps;
 
 export default class MyDocument extends Document<MyDocumentInitialProps> {
-  static async getInitialProps(ctx: any) {
-    const documentClass = ctx.req?.cookies.theme || 'light';
+  static async getInitialProps(ctx: DocumentContext) {
+    const documentClass = (ctx.req as NextApiRequest)?.cookies.theme || 'light';
     const initialProps = await Document.getInitialProps(ctx);
     return {
       ...initialProps,

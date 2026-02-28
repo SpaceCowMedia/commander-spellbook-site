@@ -2,11 +2,11 @@ import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
 import { event } from '../../../../lib/googleAnalytics';
 import React from 'react';
 
-type Props = {
+interface Props {
   cards: string[];
   tcgPlayerPrice: string;
   cardKingdomPrice: string;
-};
+}
 
 const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPrice }) => {
   const cardsWithQuantities = cards.map((card) => `1 ${card}`);

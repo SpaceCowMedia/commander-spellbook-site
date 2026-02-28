@@ -7,9 +7,9 @@ import Modal from 'components/ui/Modal/Modal';
 import { apiConfiguration } from 'services/api.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 
-type Props = {
+interface Props {
   submission: VariantSuggestion;
-};
+}
 
 const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -75,7 +75,7 @@ const ComboSubmissionItem: React.FC<Props> = ({ submission: initialSubmission })
     setModalOpen(true);
   };
 
-  let result = (
+  const result = (
     <div className={styles.itemContainer}>
       <div className={styles.info}>
         <h2 className={styles.title}>Combo Submission #{submission.id}</h2>
