@@ -24,7 +24,7 @@ runs:
             owner: 'SpaceCowMedia',
             repo: 'commander-spellbook-backend',
           });
-          release.assets.forEach(asset => {
+          for (const asset of release.assets) {
             if (asset.name.endsWith('.tar')) {
               console.log(`Downloading ${asset.name}...`);
               const url = asset.browser_download_url;
@@ -34,7 +34,7 @@ runs:
               require('fs').writeFileSync(filePath, Buffer.from(buffer));
               console.log(`Downloaded ${asset.name} to ${filePath}`);
             }
-          });
+          }
     - name: Load Docker Images 🐳
       shell: bash
       run: |
