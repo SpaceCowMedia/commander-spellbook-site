@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { VariantInVariantUpdateSuggestion } from '@space-cow-media/spellbook-client';
+import { VariantInVariantUpdateSuggestionRequest } from '@space-cow-media/spellbook-client';
 
 interface Props {
-  variant: VariantInVariantUpdateSuggestion;
-  onChange: (_variant: VariantInVariantUpdateSuggestion) => void;
+  variant: VariantInVariantUpdateSuggestionRequest;
+  onChange: (_variant: VariantInVariantUpdateSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
 }
+
 const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   const [variantIdInput, setVariantIdInput] = useState(variant?.variant || '');
   const [issueInput, setIssueInput] = useState(variant?.issue || '');

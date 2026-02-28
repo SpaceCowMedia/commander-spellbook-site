@@ -34,9 +34,15 @@ interface Props {
 }
 
 const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
+  const backupKey = submission ? `submission-${submission.id}` : variant ? `variant-${variant.id}` : '';
   const router = useRouter();
+  const [suggestionRequestBackup, setSuggestionRequestBackup] = useState<
+    Record<string, VariantSuggestionRequest> | undefined
+  >(undefined);
+  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantSuggestionRequest | undefined>(undefined, 2000);
   const [cards, setCards] = useState<CardUsedInVariantSuggestionRequest[]>(
-    submission?.uses ??
+    () =>
+      submission?.uses ??
       variant?.uses.map<CardUsedInVariantSuggestionRequest>((c) => ({
         card: c.card.name,
         quantity: c.quantity,
@@ -50,7 +56,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       [],
   );
   const [templates, setTemplates] = useState<TemplateRequiredInVariantSuggestionRequest[]>(
-    submission?.requires ??
+    () =>
+      submission?.requires ??
       variant?.requires.map<TemplateRequiredInVariantSuggestionRequest>((t) => ({
         template: t.template.name,
         scryfallQuery: t.template.scryfallQuery,
@@ -65,29 +72,29 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       [],
   );
   const [features, setFeatures] = useState<FeatureProducedInVariantSuggestionRequest[]>(
-    submission?.produces ??
+    () =>
+      submission?.produces ??
       variant?.produces.map<FeatureProducedInVariantSuggestionRequest>((f) => ({
         feature: f.feature.name,
       })) ??
       [],
   );
   const [steps, setSteps] = useState<string[]>(
-    submission?.description.split('\n') ?? variant?.description.split('\n') ?? [],
+    () => submission?.description.split('\n') ?? variant?.description.split('\n') ?? [],
   );
   const [easyPrerequisites, setEasyPrerequisites] = useState(
-    submission?.easyPrerequisites ?? variant?.easyPrerequisites ?? '',
+    () => submission?.easyPrerequisites ?? variant?.easyPrerequisites ?? '',
   );
   const [notablePrerequisites, setNotablePrerequisites] = useState(
-    submission?.notablePrerequisites ?? variant?.notablePrerequisites ?? '',
+    () => submission?.notablePrerequisites ?? variant?.notablePrerequisites ?? '',
   );
-  const [comment, setComment] = useState(submission?.comment ?? variant?.notes ?? '');
-  const [variantOf, setVariantOf] = useState(submission?.variantOf ?? variant?.id);
-  const [spoiler, setSpoiler] = useState(submission?.spoiler ?? variant?.spoiler ?? false);
-  const [manaCost, setManaCost] = useState(submission?.manaNeeded ?? variant?.manaNeeded ?? '');
+  const [comment, setComment] = useState(() => submission?.comment ?? variant?.notes ?? '');
+  const [variantOf, setVariantOf] = useState(() => submission?.variantOf ?? variant?.id);
+  const [spoiler, setSpoiler] = useState(() => submission?.spoiler ?? variant?.spoiler ?? false);
+  const [manaCost, setManaCost] = useState(() => submission?.manaNeeded ?? variant?.manaNeeded ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
-  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantSuggestionRequest | undefined>(undefined, 2000);
 
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -114,6 +121,40 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
   });
+
+  useEffect(() => {
+    if (suggestionRequestBackup !== undefined) {
+      return;
+    }
+    const backup: Record<string, VariantSuggestionRequest> = JSON.parse(
+      localStorage.getItem('suggestionRequestBackup') || '{}',
+    );
+    setSuggestionRequestBackup(backup);
+    if (backup[backupKey]) {
+      console.log(suggestionRequestBackup);
+      const shouldRestore = window.confirm(
+        'We found an unsent combo submission in your browser. Would you like to restore it?',
+      );
+      console.log(suggestionRequestBackup);
+      if (shouldRestore) {
+        const backupRequest = backup[backupKey];
+        setCards(backupRequest.uses);
+        setTemplates(backupRequest.requires);
+        setFeatures(backupRequest.produces);
+        setSteps(backupRequest.description.split('\n'));
+        setEasyPrerequisites(backupRequest.easyPrerequisites || '');
+        setNotablePrerequisites(backupRequest.notablePrerequisites || '');
+        setComment(backupRequest.comment || '');
+        setVariantOf(backupRequest.variantOf ?? undefined);
+        setManaCost(backupRequest.manaNeeded || '');
+        setSpoiler(backupRequest.spoiler || false);
+        setSuggestionRequest(backupRequest);
+      } else {
+        const { [backupKey]: _, ...rest } = backup;
+        setSuggestionRequestBackup(rest);
+      }
+    }
+  }, []);
 
   const configuration = apiConfiguration();
   const variantSuggestionsApi = new VariantSuggestionsApi(configuration);
@@ -143,6 +184,28 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         error.response.json().then(setErrorObj);
       });
   }, [suggestionRequest]);
+
+  useEffect(() => {
+    if (suggestionRequestBackup === undefined) {
+      return;
+    }
+    if (suggestionRequest) {
+      setSuggestionRequestBackup({
+        ...suggestionRequestBackup,
+        [backupKey]: suggestionRequest,
+      });
+    } else if (suggestionRequestBackup) {
+      const { [backupKey]: _, ...rest } = suggestionRequestBackup;
+      setSuggestionRequestBackup(rest);
+    }
+  }, [suggestionRequest]);
+
+  useEffect(() => {
+    if (suggestionRequestBackup === undefined) {
+      return;
+    }
+    localStorage.setItem('suggestionRequestBackup', JSON.stringify(suggestionRequestBackup));
+  }, [suggestionRequestBackup]);
 
   useEffect(() => {
     if (submitting || success) {
@@ -285,12 +348,30 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       }
       setSubmitting(false);
       setSuccess(true);
+      setSuggestionRequest(undefined);
+      setSuggestionRequest.flush();
     } catch (err) {
       setSuccess(false);
       setSubmitting(false);
       const error = err as ResponseError;
-      const errorJson = await error.response.json();
-      setErrorObj(errorJson);
+      if (error.response.status === 400 && error.response.headers.get('Content-Type')?.includes('application/json')) {
+        const errorJson = await error.response.json();
+        setErrorObj(errorJson);
+      } else if ([401, 403].includes(error.response.status)) {
+        setErrorObj({
+          statusCode: error.response.status,
+          detail:
+            'You are not authorized to submit combos. Please log in and try again. You can login on a different tab and come back to this page.' +
+            (suggestionRequestBackup && suggestionRequestBackup[backupKey]
+              ? ' Your current progress has been saved, so you can restore it after logging in if this tab gets closed.'
+              : ''),
+        } as ComboSubmissionErrorType);
+      } else {
+        setErrorObj({
+          statusCode: error.response.status,
+          detail: 'An unexpected error happened. Please try again later.',
+        } as ComboSubmissionErrorType);
+      }
     }
   };
 

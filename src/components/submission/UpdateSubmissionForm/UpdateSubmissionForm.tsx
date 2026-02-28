@@ -10,7 +10,7 @@ import Link from 'next/link';
 import {
   KindEnum,
   ResponseError,
-  VariantInVariantUpdateSuggestion,
+  VariantInVariantUpdateSuggestionRequest,
   VariantUpdateSuggestion,
   VariantUpdateSuggestionRequest,
   VariantUpdateSuggestionsApi,
@@ -25,21 +25,25 @@ interface Props {
 }
 
 const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
+  const backupKey = submission ? `submission-${submission.id}` : comboId ? `combo-${comboId}` : '';
   const router = useRouter();
-  const [variants, setVariants] = useState<VariantInVariantUpdateSuggestion[]>(
-    (submission?.variants ?? []).concat(comboId ? [{ variant: comboId, issue: '' }] : []),
-  );
-  const [kind, setKind] = useState<KindEnum>(submission?.kind ?? KindEnum.Nw);
-  const [comment, setComment] = useState(submission?.comment ?? '');
-  const [issue, setIssue] = useState(submission?.issue ?? '');
-  const [solution, setSolution] = useState(submission?.solution ?? '');
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
+  const [suggestionRequestBackup, setSuggestionRequestBackup] = useState<
+    Record<string, VariantUpdateSuggestionRequest> | undefined
+  >(undefined);
   const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantUpdateSuggestionRequest | undefined>(
     undefined,
     2000,
   );
+  const [variants, setVariants] = useState<VariantInVariantUpdateSuggestionRequest[]>(() =>
+    (submission?.variants ?? []).concat(comboId ? [{ variant: comboId, issue: '' }] : []),
+  );
+  const [kind, setKind] = useState<KindEnum>(() => submission?.kind ?? KindEnum.Nw);
+  const [comment, setComment] = useState(() => submission?.comment ?? '');
+  const [issue, setIssue] = useState(() => submission?.issue ?? '');
+  const [solution, setSolution] = useState(() => submission?.solution ?? '');
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
 
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -54,6 +58,33 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
   });
+
+  useEffect(() => {
+    if (suggestionRequestBackup !== undefined) {
+      return;
+    }
+    const backup: Record<string, VariantUpdateSuggestionRequest> = JSON.parse(
+      localStorage.getItem('updateSuggestionBackup') || '{}',
+    );
+    setSuggestionRequestBackup(backup);
+    if (backup[backupKey]) {
+      const shouldRestore = window.confirm(
+        'We found an unsent update suggestion in your browser. Would you like to restore it?',
+      );
+      if (shouldRestore) {
+        const backupRequest = backup[backupKey];
+        setVariants(backupRequest.variants ?? []);
+        setKind(backupRequest.kind);
+        setComment(backupRequest.comment ?? '');
+        setIssue(backupRequest.issue);
+        setSolution(backupRequest.solution ?? '');
+        setSuggestionRequest(backupRequest);
+      } else {
+        const { [backupKey]: _, ...rest } = backup;
+        setSuggestionRequestBackup(rest);
+      }
+    }
+  }, []);
 
   const configuration = apiConfiguration();
   const updateSuggestionsApi = new VariantUpdateSuggestionsApi(configuration);
@@ -84,6 +115,28 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
   }, [suggestionRequest]);
 
   useEffect(() => {
+    if (suggestionRequestBackup === undefined) {
+      return;
+    }
+    if (suggestionRequest) {
+      setSuggestionRequestBackup({
+        ...suggestionRequestBackup,
+        [backupKey]: suggestionRequest,
+      });
+    } else if (suggestionRequestBackup) {
+      const { [backupKey]: _, ...rest } = suggestionRequestBackup;
+      setSuggestionRequestBackup(rest);
+    }
+  }, [suggestionRequest]);
+
+  useEffect(() => {
+    if (suggestionRequestBackup === undefined) {
+      return;
+    }
+    localStorage.setItem('updateSuggestionBackup', JSON.stringify(suggestionRequestBackup));
+  }, [suggestionRequestBackup]);
+
+  useEffect(() => {
     if (submitting || success) {
       if (suggestionRequest) {
         setSuggestionRequest(undefined);
@@ -112,7 +165,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     ]);
   };
 
-  const handleVariantChange = (variant: VariantInVariantUpdateSuggestion, index: number) => {
+  const handleVariantChange = (variant: VariantInVariantUpdateSuggestionRequest, index: number) => {
     setVariants([...variants.slice(0, index), variant, ...variants.slice(index + 1)]);
   };
 
@@ -149,12 +202,26 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
       }
       setSubmitting(false);
       setSuccess(true);
+      setSuggestionRequest(undefined);
+      setSuggestionRequest.flush();
     } catch (err) {
       setSuccess(false);
       setSubmitting(false);
       const error = err as ResponseError;
-      const errorJson = await error.response.json();
-      setErrorObj(errorJson);
+      if (error.response.status === 400 && error.response.headers.get('Content-Type')?.includes('application/json')) {
+        const errorJson = await error.response.json();
+        setErrorObj(errorJson);
+      } else if ([401, 403].includes(error.response.status)) {
+        setErrorObj({
+          statusCode: error.response.status,
+          detail: 'You need to be logged in to submit an update suggestion.',
+        } as ComboSubmissionErrorType);
+      } else {
+        setErrorObj({
+          statusCode: error.response.status,
+          detail: 'An unexpected error occurred. Please try again later.',
+        } as ComboSubmissionErrorType);
+      }
     }
   };
 
