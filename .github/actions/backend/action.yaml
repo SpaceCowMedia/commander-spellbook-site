@@ -24,14 +24,22 @@ runs:
             owner: 'SpaceCowMedia',
             repo: 'commander-spellbook-backend',
           });
+          const path = './backend/docker-images';
+          const fs = require('fs');
+          if (!await fs.promises.stat(path).catch(() => false)) {
+            await fs.promises.mkdir(path, { recursive: true });
+          }
           for (const asset of release.assets) {
             if (asset.name.endsWith('.tar')) {
               console.log(`Downloading ${asset.name}...`);
               const url = asset.browser_download_url;
               const filePath = `./backend/docker-images/${asset.name}`;
               const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`Failed to download ${asset.name}: ${response.statusText}`);
+              }
               const buffer = await response.arrayBuffer();
-              require('fs').writeFileSync(filePath, Buffer.from(buffer));
+              await fs.promises.writeFile(filePath, Buffer.from(buffer));
               console.log(`Downloaded ${asset.name} to ${filePath}`);
             }
           }
