@@ -264,7 +264,6 @@ describe('Advanced Search Page', () => {
   it('can search for previewed combos', () => {
     cy.visit('/advanced-search/');
 
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(500);
     cy.get("#spoiler-tag input[type='radio'][value='true']").check();
 
@@ -278,7 +277,6 @@ describe('Advanced Search Page', () => {
   it('can search for featured combos', () => {
     cy.visit('/advanced-search/');
 
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(500);
     cy.get("#featured-tag input[type='radio'][value='true']").check();
 

@@ -54,6 +54,7 @@ export default defineConfig(
           varsIgnorePattern: '^_' as string,
         },
       ],
+      'cypress/no-unnecessary-waiting': 'off' as const,
       curly: ['error', 'all'] as const,
     },
   },
