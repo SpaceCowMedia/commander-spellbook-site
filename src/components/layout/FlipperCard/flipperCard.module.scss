@@ -28,3 +28,7 @@
 .flipContainer.flipped .front {
   transform: rotateY(180deg);
 }
+
+.flipContainer.rotated .front {
+  transform: rotate(90deg);
+}

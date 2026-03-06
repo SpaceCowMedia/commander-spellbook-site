@@ -3,6 +3,8 @@
   flex-direction: column; /* Center items vertically within the column */
   justify-content: center; /* Center items vertically */
   align-items: center; /* Center items horizontally */
+  position: relative;
+  z-index: 0;
 }
 
 .flipperButton {
@@ -30,4 +32,12 @@
   to {
     opacity: 100;
   }
+}
+
+.canRotate {
+  z-index: 5;
+}
+
+.rotated {
+  z-index: 10;
 }

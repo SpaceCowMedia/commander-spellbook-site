@@ -31,7 +31,8 @@
       @apply m-2;
     }
 
-    .comboResult:nth-child(3n + 3), .comboResult:last-child {
+    .comboResult:nth-child(3n + 3),
+    .comboResult:last-child {
       @apply mr-0;
     }
 
@@ -39,5 +40,4 @@
       @apply ml-0;
     }
   }
-
 }

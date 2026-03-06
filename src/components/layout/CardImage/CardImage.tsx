@@ -16,19 +16,31 @@ function isLoaded(e: HTMLImageElement) {
 }
 
 const CardImage: React.FC<Props> = ({ card }: Props) => {
+  const hasBack = card.imageUriBackNormal != null;
+  const canRotate = !hasBack && card.typeLine.includes('//');
   const frontImageRef = useRef<HTMLImageElement>(null);
   const [frontLoaded, setFrontLoaded] = useState(false);
   const backImageRef = useRef<HTMLImageElement>(null);
   const [backFacing, setBackFacing] = useState(true);
+  const [rotated, setRotated] = useState(false);
   const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
 
   const flip = () => {
     setBackFacing((prev) => !prev);
   };
 
+  const rotate = () => {
+    setRotated((prev) => !prev);
+  };
+
   const clickFlip = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.blur();
     flip();
+  };
+
+  const clickRotate = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.blur();
+    rotate();
   };
 
   useEffect(() => {
@@ -44,11 +56,12 @@ const CardImage: React.FC<Props> = ({ card }: Props) => {
   }, [readyToFlipToFront, frontLoaded]);
 
   return (
-    <div className={`${styles.centerContainer}`}>
+    <div className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''}`}>
       <FlipperCard
         flipped={backFacing}
+        rotated={rotated}
         back={
-          card.imageUriBackNormal != null ? (
+          hasBack ? (
             <CardLink className="relative" name={card.name} disableMobileSingleClickAsPreview={true}>
               <img
                 className="rounded-xl"
@@ -79,11 +92,11 @@ const CardImage: React.FC<Props> = ({ card }: Props) => {
           </CardLink>
         }
       />
-      {readyToFlipToFront && card.imageUriBackNormal != null && (
+      {readyToFlipToFront && (hasBack || canRotate) && (
         <button
           id={`flip-${card.name}`}
           className={`cardImage_${card.name} md:flex ${styles.flipperButton}`}
-          onClick={(e) => clickFlip(e)}
+          onClick={hasBack ? (e) => clickFlip(e) : (e) => clickRotate(e)}
           title="Flip card"
         >
           <svg

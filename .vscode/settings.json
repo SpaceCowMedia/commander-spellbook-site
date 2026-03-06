@@ -1,12 +1,12 @@
 {
     "workbench.colorCustomizations": {
-        "statusBar.background": "#007fff",
+        "statusBar.background": "#1a8cff",
         "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#3399ff",
-        "statusBarItem.remoteBackground": "#007fff",
+        "statusBarItem.hoverBackground": "#4da6ff",
+        "statusBarItem.remoteBackground": "#1a8cff",
         "statusBarItem.remoteForeground": "#e7e7e7"
     },
-    "peacock.color": "#007fff",
+    "peacock.color": "#1a8cff",
     "eslint.format.enable": true,
     "eslint.validate": [
         "javascript",
@@ -27,4 +27,16 @@
     "files.eol": "\n",
     "stylelint.packageManager": "yarn",
     "stylelint.enable": true,
+    "stylelint.snippet": [
+        "css",
+        "postcss",
+        "tailwindcss",
+        "scss"
+    ],
+    "stylelint.validate": [
+        "css",
+        "postcss",
+        "tailwindcss",
+        "scss"
+    ],
 }

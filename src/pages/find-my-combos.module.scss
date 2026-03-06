@@ -48,10 +48,10 @@
   }
 
   .decklistHint::before {
-    content: "";
+    content: '';
     height: 90px;
     width: 20px;
-    background-image: url("../assets/svgs/combo-finder-arrow-hint.svg");
+    background-image: url('../assets/svgs/combo-finder-arrow-hint.svg');
 
     @apply block bg-center bg-no-repeat bg-contain;
   }

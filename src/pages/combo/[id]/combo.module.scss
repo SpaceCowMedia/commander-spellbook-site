@@ -15,9 +15,10 @@
 }
 
 .legalityTable {
-  @apply border-collapse w-full text-center mt-20 border-black ;
+  @apply border-collapse w-full text-center mt-20 border-black;
 
-  th:last-child,td:last-child {    
+  th:last-child,
+  td:last-child {
     @apply text-left pl-2;
   }
 
@@ -26,7 +27,8 @@
   }
 
   tbody {
-    td, th {
+    td,
+    th {
       @apply border-2;
     }
 
