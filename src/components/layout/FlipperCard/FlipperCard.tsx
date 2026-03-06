@@ -2,8 +2,8 @@ import styles from './flipperCard.module.scss';
 import React, { ReactNode } from 'react';
 
 interface Props {
-  flipped: boolean;
-  rotated: boolean;
+  flipped?: boolean;
+  rotated?: boolean;
   front: ReactNode;
   back: ReactNode;
   className?: string;
