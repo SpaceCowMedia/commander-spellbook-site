@@ -6,6 +6,7 @@ import SearchGuide from '../components/layout/SearchGuide/SearchGuide';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import SyntaxMarkdown from '../components/layout/SyntaxMarkdown/SyntaxMarkdown';
 import Icon, { SpellbookIcon } from '../components/layout/Icon/Icon';
+import { BracketTagEnum } from '@space-cow-media/spellbook-client';
 
 interface SectionType {
   id: string;
@@ -955,6 +956,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | For competitive decks at brackets 4+ |
 | Searchable as bracket | **4** |
 | Criteria | Relevant two-card combo that is probably very fast or results in infinite turns or mass land denial or infinite control of opponents turns or contains four or more game changers |
+| Short code | \`${BracketTagEnum.R}\` |
 
 #### Spicy
 | Tag Name | Spicy |
@@ -962,6 +964,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | Probably 3 or 4, but hard to classify |
 | Searchable as bracket | **3** |
 | Criteria | Combos that could be ruthless but may require a third card or don't produce a relevant result, or stall the game in some way |
+| Short code | \`${BracketTagEnum.S}\` |
 
 #### Powerful
 | Tag Name | Powerful |
@@ -969,6 +972,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | For strong decks in bracket 3+ |
 | Searchable as bracket | **3** |
 | Criteria | Combos with a game changer or a slow but relevant two-card combo |
+| Short code | \`${BracketTagEnum.P}\` |
 
 #### Oddball
 | Tag Name | Oddball |
@@ -976,6 +980,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | Probably 2 or 3, but hard to classify |
 | Searchable as bracket | **2** |
 | Criteria | Combos that could be powerful but may require a third card or don't produce a relevant result |
+| Short code | \`${BracketTagEnum.O}\` |
 
 #### Core
 | Tag Name | Core |
@@ -983,6 +988,7 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | For unoptimized decks in bracket 2+ |
 | Searchable as bracket | **2** |
 | Criteria | Combos that contains an extra turn card but no extra turn result, or a two-card combo too fast for bracket 1 |
+| Short code | \`${BracketTagEnum.C}\` |
 
 #### Exhibition
 | Tag Name | Exhibition |
@@ -990,6 +996,15 @@ to each combo that provides a qualitative association to one ore more brackets, 
 | Bracket | For any deck |
 | Searchable as bracket | **1** |
 | Criteria | Combos that don't fit the other categories |
+| Short code | \`${BracketTagEnum.E}\` |
+
+#### Banned
+| Tag Name | Banned |
+| --- | --- |
+| Bracket | Not legal in Commander |
+| Searchable as bracket | None |
+| Criteria | Combos that are not legal in Commander, usually because they contain a banned card |
+| Short code | \`${BracketTagEnum.B}\` |
 
 `;
 
