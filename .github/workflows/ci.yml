@@ -133,7 +133,7 @@ jobs:
           outputs: type=docker,dest=/tmp/spellbook-client.tar
 
       - name: Upload image artifact 📦
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: spellbook-client
           path: /tmp/spellbook-client.tar
@@ -191,7 +191,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download image artifact 📦
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spellbook-client
           path: /tmp
