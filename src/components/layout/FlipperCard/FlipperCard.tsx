@@ -1,9 +1,10 @@
+import { LayoutRotationEnum } from '@space-cow-media/spellbook-client';
 import styles from './flipperCard.module.scss';
 import React, { ReactNode } from 'react';
 
 interface Props {
   flipped?: boolean;
-  rotated?: boolean;
+  rotated?: LayoutRotationEnum;
   front: ReactNode;
   back: ReactNode;
   className?: string;
@@ -12,7 +13,7 @@ interface Props {
 const FlipperCard: React.FC<Props> = ({ flipped, rotated, front, back, className }) => {
   return (
     <div
-      className={`${styles.flipContainer} ${(flipped && styles.flipped) || ''} ${rotated && styles.rotated} ${className || ''}`}
+      className={`${styles.flipContainer} ${(flipped && styles.flipped) || ''} ${(rotated && styles[rotated]) || ''} ${className || ''}`}
     >
       <div className={styles.flipper}>
         <div className={styles.front}>{front}</div>

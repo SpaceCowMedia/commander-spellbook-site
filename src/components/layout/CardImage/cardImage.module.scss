@@ -7,13 +7,18 @@
   z-index: 0;
 }
 
-.flipperButton {
-  @apply inline-block py-2 px-2 bg-white bg-opacity-60 text-link border-2 border-primary rounded-full no-underline;
-
+.buttonsContainer {
   position: absolute;
   right: 30px;
   top: 30%;
   animation: fade-in 350ms;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flipperButton {
+  @apply py-2 px-2 bg-white bg-opacity-60 text-link border-2 border-primary rounded-full no-underline;
 }
 
 .flipperButton svg {

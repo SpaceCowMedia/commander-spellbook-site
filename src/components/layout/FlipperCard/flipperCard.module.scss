@@ -21,14 +21,34 @@
   @apply absolute;
 }
 
+.flipContainer.clockwise .front {
+  transform: rotate(90deg);
+}
+
+.flipContainer.counterclockwise .front {
+  transform: rotate(-90deg);
+}
+
+.flipContainer.flip .front {
+  transform: rotate(180deg);
+}
+
+.flipContainer.clockwise .back {
+  transform: rotate3d(-1, 1, 0, -180deg);
+}
+
+.flipContainer.counterclockwise .back {
+  transform: rotate3d(1, 1, 0, -180deg);
+}
+
+.flipContainer.flip .back {
+  transform: rotateX(180deg);
+}
+
 .flipContainer.flipped .back {
   transform: rotateY(0deg);
 }
 
 .flipContainer.flipped .front {
   transform: rotateY(180deg);
-}
-
-.flipContainer.rotated .front {
-  transform: rotate(90deg);
 }
