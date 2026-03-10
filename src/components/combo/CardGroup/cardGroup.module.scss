@@ -7,7 +7,9 @@
 }
 
 @for $i from 1 through 4 {
-  .cardImages .cardImgWrapper:nth-child(4n + #{$i}):hover ~ .cardImgWrapper:nth-child(4n + #{$i}) {
+  .cardImages
+    .cardImgWrapper:nth-child(4n + #{$i}):hover
+    ~ .cardImgWrapper:nth-child(4n + #{$i}) {
     @apply md:top-[310px];
   }
 }

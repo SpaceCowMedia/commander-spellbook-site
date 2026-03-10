@@ -5,3 +5,14 @@ frontend/public/api
 frontend/out
 .next/
 external-data/
+.git/
+.github/
+.vscode/
+node_modules/
+*.log
+*.lock
+*.tsbuildinfo
+*.ts
+*.tsx
+*.js
+*.jsx

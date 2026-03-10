@@ -34,11 +34,17 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
   const hasNextPage = pageNumber < totalPages;
 
   const goForward = () => {
-    router.push({ pathname: '/my-update-submissions', query: { page: pageNumber + 1 } });
+    router.push({
+      pathname: '/my-update-submissions',
+      query: { page: pageNumber + 1 },
+    });
   };
 
   const goBack = () => {
-    router.push({ pathname: '/my-update-submissions', query: { page: pageNumber - 1 } });
+    router.push({
+      pathname: '/my-update-submissions',
+      query: { page: pageNumber - 1 },
+    });
   };
 
   return (
@@ -103,7 +109,10 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
 export default MyUpdateSubmissions;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userId = await CookieService.get<Promise<string>>('csbUserId', { req: context.req, res: context.res });
+  const userId = await CookieService.get<Promise<string>>('csbUserId', {
+    req: context.req,
+    res: context.res,
+  });
   const csbJwt = await TokenService.getTokenFromServerContext(context);
   if (!userId || !csbJwt) {
     return {

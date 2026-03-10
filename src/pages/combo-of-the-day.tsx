@@ -34,7 +34,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
   const propertiesApi = new PropertiesApi(configuration);
   try {
-    const comboOfTheDayData = await propertiesApi.propertiesRetrieve({ key: 'combo_of_the_day' });
+    const comboOfTheDayData = await propertiesApi.propertiesRetrieve({
+      key: 'combo_of_the_day',
+    });
     if (comboOfTheDayData.value) {
       return {
         redirect: {

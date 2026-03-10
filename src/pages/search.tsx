@@ -80,27 +80,45 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
   const pageNumber = Number(page) || 1;
 
   const goForward = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, page: pageNumber + 1 } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, page: pageNumber + 1 },
+    });
   };
 
   const goBack = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, page: pageNumber - 1 } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, page: pageNumber - 1 },
+    });
   };
 
   const handleSortChange = (value: string) => {
-    router.push({ pathname: '/search/', query: { ...router.query, sort: value, page: '1' } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, sort: value, page: '1' },
+    });
   };
 
   const handleOrderChange = (value: string) => {
-    router.push({ pathname: '/search/', query: { ...router.query, order: value, page: '1' } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, order: value, page: '1' },
+    });
   };
 
   const handleGroupByComboChange = (value: string) => {
-    router.push({ pathname: '/search/', query: { ...router.query, groupByCombo: value, page: '1' } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, groupByCombo: value, page: '1' },
+    });
   };
 
   const handleClearVariant = () => {
-    router.push({ pathname: '/search/', query: { ...router.query, variant: undefined, page: '1' } });
+    router.push({
+      pathname: '/search/',
+      query: { ...router.query, variant: undefined, page: '1' },
+    });
   };
 
   const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';

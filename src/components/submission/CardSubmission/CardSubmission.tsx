@@ -119,7 +119,11 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           options={ZONE_OPTIONS}
           onChange={handleZoneChange}
           value={cardOrTemplate.zoneLocations.map(
-            (zone) => ZONE_OPTIONS.find((z) => z.value === zone) || { value: 'N/A', label: 'N/A' },
+            (zone) =>
+              ZONE_OPTIONS.find((z) => z.value === zone) || {
+                value: 'N/A',
+                label: 'N/A',
+              },
           )}
           className="inputControl"
           styles={{
@@ -158,7 +162,12 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           <input
             className="border border-gray-250 rounded p-1"
             value={cardOrTemplate.graveyardCardState}
-            onChange={(e) => onChange({ ...cardOrTemplate, graveyardCardState: e.target.value })}
+            onChange={(e) =>
+              onChange({
+                ...cardOrTemplate,
+                graveyardCardState: e.target.value,
+              })
+            }
             placeholder="Graveyard state (ex: Entered the graveyard this turn)"
           />
         </div>
@@ -182,7 +191,12 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           <input
             className="border border-gray-250 rounded p-1"
             value={cardOrTemplate.battlefieldCardState}
-            onChange={(e) => onChange({ ...cardOrTemplate, battlefieldCardState: e.target.value })}
+            onChange={(e) =>
+              onChange({
+                ...cardOrTemplate,
+                battlefieldCardState: e.target.value,
+              })
+            }
             placeholder="Battlefield state (ex: Untapped)"
           />
         </div>
@@ -208,7 +222,12 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           className="mr-2 cursor-pointer"
           id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
           checked={cardOrTemplate.mustBeCommander}
-          onChange={() => onChange({ ...cardOrTemplate, mustBeCommander: !cardOrTemplate.mustBeCommander })}
+          onChange={() =>
+            onChange({
+              ...cardOrTemplate,
+              mustBeCommander: !cardOrTemplate.mustBeCommander,
+            })
+          }
           type="checkbox"
         />
         <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>

@@ -51,7 +51,10 @@ function getCardState(card: CardInVariant | TemplateInVariant) {
   );
 }
 
-type Card = (CardInVariant | TemplateInVariant) & { name: string; type: string };
+type Card = (CardInVariant | TemplateInVariant) & {
+  name: string;
+  type: string;
+};
 
 // TODO: consider DFCs
 
@@ -183,7 +186,10 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   }
 
   if (variant.manaNeeded) {
-    output.push({ zones: ['mana'], description: `${variant.manaNeeded} available` });
+    output.push({
+      zones: ['mana'],
+      description: `${variant.manaNeeded} available`,
+    });
   }
 
   return output;

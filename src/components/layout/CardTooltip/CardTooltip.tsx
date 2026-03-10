@@ -31,8 +31,20 @@ const CardTooltip: React.FC<Props> = ({ card, children }) => {
     setCards(
       card && card.imageUriFrontNormal
         ? [
-            { url: card.imageUriFrontNormal, isRequested: false, isLoaded: false },
-            ...(card.imageUriBackNormal ? [{ url: card.imageUriBackNormal, isRequested: false, isLoaded: false }] : []),
+            {
+              url: card.imageUriFrontNormal,
+              isRequested: false,
+              isLoaded: false,
+            },
+            ...(card.imageUriBackNormal
+              ? [
+                  {
+                    url: card.imageUriBackNormal,
+                    isRequested: false,
+                    isLoaded: false,
+                  },
+                ]
+              : []),
           ]
         : [],
     );

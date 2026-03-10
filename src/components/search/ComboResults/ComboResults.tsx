@@ -151,7 +151,8 @@ export const ComboResult: React.FC<ResultProps> = ({
         {!hideVariants && combo.variantCount > 1 && (
           <div className={styles.variantBanner}>
             <span className="pl-3 pr-3">
-              + {combo.variantCount - 1} variant{combo.variantCount > 2 ? 's' : ''}
+              + {combo.variantCount - 1} variant
+              {combo.variantCount > 2 ? 's' : ''}
             </span>
           </div>
         )}

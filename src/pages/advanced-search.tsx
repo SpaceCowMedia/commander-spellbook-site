@@ -49,8 +49,16 @@ const CARD_OPERATOR_OPTIONS: readonly OperatorOption[] = [
 
 const CARD_AMOUNT_OPERATOR_OPTIONS: readonly OperatorOption[] = [
   { operator: '=', label: 'Contains exactly x cards (number)', numeric: true },
-  { operator: '>=', label: 'Contains at least x cards (number)', numeric: true },
-  { operator: '<', label: 'Contains less than x cards (number)', numeric: true },
+  {
+    operator: '>=',
+    label: 'Contains at least x cards (number)',
+    numeric: true,
+  },
+  {
+    operator: '<',
+    label: 'Contains less than x cards (number)',
+    numeric: true,
+  },
 ];
 
 const CARD_TYPE_OPERATOR_OPTIONS: readonly OperatorOption[] = [
@@ -201,8 +209,16 @@ const COLOR_IDENTITY_OPERATOR_OPTIONS: readonly OperatorOption[] = [
     negate: true,
     label: 'Is not exactly the color identity',
   },
-  { operator: '>=', label: 'Contains at least x colors (number)', numeric: true },
-  { operator: '<', label: 'Contains less than x colors (number)', numeric: true },
+  {
+    operator: '>=',
+    label: 'Contains at least x colors (number)',
+    numeric: true,
+  },
+  {
+    operator: '<',
+    label: 'Contains less than x colors (number)',
+    numeric: true,
+  },
   { operator: '=', label: 'Contains exactly x colors (number)', numeric: true },
 ];
 

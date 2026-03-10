@@ -98,7 +98,9 @@ const AutocompleteInput: React.FC<Props> = ({
       }
       if (cardAutocomplete) {
         try {
-          const cards: string[] = await scryfall.autocomplete(value, { include_extras: false });
+          const cards: string[] = await scryfall.autocomplete(value, {
+            include_extras: false,
+          });
           options = options.concat(
             cards.map((card) => ({
               value: card,
@@ -114,7 +116,10 @@ const AutocompleteInput: React.FC<Props> = ({
       if (templateAutocomplete) {
         try {
           const templates = await templatesApi.templatesList({ q: value });
-          const features = await feturesApi.featuresList({ q: value, status: [FeaturesListStatusEnum.Pu] });
+          const features = await feturesApi.featuresList({
+            q: value,
+            status: [FeaturesListStatusEnum.Pu],
+          });
           options = options.concat(
             templates.results.map((template) => ({
               value: template.name,

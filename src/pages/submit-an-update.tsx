@@ -25,7 +25,10 @@ const SubmitAnUpdate: React.FC<Props> = ({ comboId }) => {
 export default SubmitAnUpdate;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const csbUsername = CookieService.get('csbUsername', { req: context.req, res: context.res });
+  const csbUsername = CookieService.get('csbUsername', {
+    req: context.req,
+    res: context.res,
+  });
   const csbJwt = await TokenService.getTokenFromServerContext(context);
   if (!csbUsername || !csbJwt) {
     return {

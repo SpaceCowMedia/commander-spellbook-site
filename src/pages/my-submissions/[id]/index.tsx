@@ -26,7 +26,10 @@ const EditSubmission: React.FC<Props> = ({ submission }) => {
 export default EditSubmission;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const csbUsername = await CookieService.get<Promise<string>>('csbUsername', { req: context.req, res: context.res });
+  const csbUsername = await CookieService.get<Promise<string>>('csbUsername', {
+    req: context.req,
+    res: context.res,
+  });
   const csbJwt = await TokenService.getTokenFromServerContext(context);
   const submissionIdRaw = context.params?.id;
   if (!csbUsername || !csbJwt) {
@@ -56,7 +59,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   const configuration = apiConfiguration(context);
   const submissionsApi = new VariantSuggestionsApi(configuration);
-  const submission = await submissionsApi.variantSuggestionsRetrieve({ id: submissionId });
+  const submission = await submissionsApi.variantSuggestionsRetrieve({
+    id: submissionId,
+  });
   // Create a new object without the 'created' property
   const { created: _, ...submissionWithoutCreated } = submission;
   return {

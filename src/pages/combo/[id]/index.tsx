@@ -362,7 +362,10 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               decklistMessage=""
               deck={{
                 commanders: [],
-                main: combo.uses.map((card) => ({ card: card.card.name, quantity: card.quantity })),
+                main: combo.uses.map((card) => ({
+                  card: card.card.name,
+                  quantity: card.quantity,
+                })),
               }}
             />
           )}
@@ -422,7 +425,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const variantAliasesApi = new VariantAliasesApi(configuration);
   try {
     // 2. Check if it's an alias and reroute if it's found
-    const alias = await variantAliasesApi.variantAliasesRetrieve({ id: params.id });
+    const alias = await variantAliasesApi.variantAliasesRetrieve({
+      id: params.id,
+    });
     if (alias.variant) {
       return {
         redirect: {

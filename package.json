@@ -6,7 +6,7 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . && stylelint '**/*.{css,scss,vue}'",
+    "lint": "eslint . && stylelint '**/*.{css,scss,vue}' && prettier --check .",
     "tsc": "tsc",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
@@ -18,7 +18,7 @@
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
-    "*.{css,scss,vue}": "stylelint"
+    "*.{css,scss,vue}": ["stylelint", "prettier --check"]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

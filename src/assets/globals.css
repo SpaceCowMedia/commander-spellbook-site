@@ -72,7 +72,12 @@ a {
   @apply m-4 inline-block py-3 px-4 bg-transparent text-link border-2 border-primary rounded-sm no-underline dark:text-primary;
 }
 
-input, textarea, select, option, .input, .inputControl {
+input,
+textarea,
+select,
+option,
+.input,
+.inputControl {
   @apply border-dark bg-white dark:bg-dark dark:text-light;
 }
 
@@ -120,7 +125,7 @@ input, textarea, select, option, .input, .inputControl {
   @apply bg-transparent text-dark;
 
   background: rgb(255 255 255 / 40%);
-  backdrop-filter: blur(5px); 
+  backdrop-filter: blur(5px);
 }
 
 @media (width >= 768px) {
@@ -160,8 +165,8 @@ input, textarea, select, option, .input, .inputControl {
 .bg-wip {
   background: repeating-linear-gradient(
     -45deg,
-    #BE9800FF,
-    #BE9800FF 20px,
+    #be9800ff,
+    #be9800ff 20px,
     #000 20px,
     #000 40px
   );
@@ -180,11 +185,11 @@ input, textarea, select, option, .input, .inputControl {
   @apply w-0 h-0 border border-dark z-10 absolute m-2;
 }
 
-.tooltip[x-placement^="top"] {
+.tooltip[x-placement^='top'] {
   @apply mb-2;
 }
 
-.tooltip[x-placement^="top"] .tooltip-arrow {
+.tooltip[x-placement^='top'] .tooltip-arrow {
   border-width: 0.25rem 0.25rem 0;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -193,11 +198,11 @@ input, textarea, select, option, .input, .inputControl {
   @apply my-0 -bottom-1;
 }
 
-.tooltip[x-placement^="bottom"] {
+.tooltip[x-placement^='bottom'] {
   @apply mt-2;
 }
 
-.tooltip[x-placement^="bottom"] .tooltip-arrow {
+.tooltip[x-placement^='bottom'] .tooltip-arrow {
   border-width: 0 0.25rem 0.25rem;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -206,11 +211,11 @@ input, textarea, select, option, .input, .inputControl {
   @apply my-0 -top-1;
 }
 
-.tooltip[x-placement^="right"] {
+.tooltip[x-placement^='right'] {
   @apply ml-2;
 }
 
-.tooltip[x-placement^="right"] .tooltip-arrow {
+.tooltip[x-placement^='right'] .tooltip-arrow {
   border-width: 0.25rem 0.25rem 0.25rem 0;
   border-left-color: transparent !important;
   border-top-color: transparent !important;
@@ -219,11 +224,11 @@ input, textarea, select, option, .input, .inputControl {
   @apply mx-0 -left-1;
 }
 
-.tooltip[x-placement^="left"] {
+.tooltip[x-placement^='left'] {
   @apply mr-2;
 }
 
-.tooltip[x-placement^="left"] .tooltip-arrow {
+.tooltip[x-placement^='left'] .tooltip-arrow {
   border-width: 0.25rem 0 0.25rem 0.25rem;
   border-top-color: transparent !important;
   border-right-color: transparent !important;

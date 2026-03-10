@@ -28,7 +28,10 @@ const SubmitACombo: React.FC<Props> = ({ variant }) => {
 export default SubmitACombo;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const csbUsername = CookieService.get('csbUsername', { req: context.req, res: context.res });
+  const csbUsername = CookieService.get('csbUsername', {
+    req: context.req,
+    res: context.res,
+  });
   const csbJwt = await TokenService.getTokenFromServerContext(context);
   const variantOf = queryParameterAsString(context.query.variantOf);
   let variant: Variant | undefined;

@@ -102,9 +102,15 @@ async function getTokenFromServerContext(serverContext?: GetServerSidePropsConte
 function setToken({ access, refresh }: TokenObtainPair, serverContext?: GetServerSidePropsContext) {
   const jwt = access;
 
-  CookieService.set('csbJwt', jwt, 'day', { req: serverContext?.req, res: serverContext?.res });
+  CookieService.set('csbJwt', jwt, 'day', {
+    req: serverContext?.req,
+    res: serverContext?.res,
+  });
   if (refresh) {
-    CookieService.set('csbRefresh', refresh, 'day', { req: serverContext?.req, res: serverContext?.res });
+    CookieService.set('csbRefresh', refresh, 'day', {
+      req: serverContext?.req,
+      res: serverContext?.res,
+    });
   }
 
   return jwt;
@@ -116,7 +122,10 @@ async function fetchNewToken(
 ): Promise<TokenObtainPair> {
   const refreshToken = providedRefreshToken
     ? providedRefreshToken
-    : CookieService.get('csbRefresh', { req: serverContext?.req, res: serverContext?.res }) || null;
+    : CookieService.get('csbRefresh', {
+        req: serverContext?.req,
+        res: serverContext?.res,
+      }) || null;
 
   if (!refreshToken) {
     CookieService.logout();
