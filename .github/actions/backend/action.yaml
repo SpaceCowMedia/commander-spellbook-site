@@ -136,10 +136,12 @@ runs:
         f1 = Feature.objects.create(
           id=1,
           name="Infinite mill",
+          status=Feature.Status.STANDALONE,
         )
         f2 = Feature.objects.create(
           id=2,
           name="Infinite mana",
+          status=Feature.Status.STANDALONE,
         )
         combo1 = Combo.objects.create(
           id=1,
