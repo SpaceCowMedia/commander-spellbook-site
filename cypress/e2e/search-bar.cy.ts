@@ -11,9 +11,9 @@ describe('Search Bar', () => {
   it('can enter a query', () => {
     cy.visit('/syntax-guide/');
     cy.wait(500); // Wait for the search bar to be fully interactive
-    cy.get('input[name=q]').type('mesmeric result:infinite{enter}');
+    cy.get('input[name=q]').type('monolith result:infinite{enter}');
 
-    cy.url().should('include', `/search/?q=${encodeURIComponent('mesmeric result:infinite')}`);
+    cy.url().should('include', `/search/?q=${encodeURIComponent('monolith result:infinite')}`);
   });
 
   it('does not search when query is empty', () => {
