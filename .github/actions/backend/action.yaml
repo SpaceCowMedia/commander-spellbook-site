@@ -192,3 +192,5 @@ runs:
           time.sleep(1)
           task.refresh()
         EOF
+        # HTTP dump of /variants
+        curl -s 'http://localhost:${{ inputs.port }}/variants/?format=json'
