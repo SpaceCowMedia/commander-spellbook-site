@@ -193,4 +193,4 @@ runs:
           task.refresh()
         EOF
         # HTTP dump of /variants
-        curl -s 'http://localhost:${{ inputs.port }}/variants/?format=json' | jq '.'
+        curl -s 'http://localhost:${{ inputs.port }}/variants/?format=json&count=true' | jq '.'
