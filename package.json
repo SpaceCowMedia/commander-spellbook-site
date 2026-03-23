@@ -28,7 +28,7 @@
     "canvas": "^3.2.1",
     "cookies-next": "^6.1.1",
     "debounce": "^2.2.0",
-    "markdown-to-jsx": "^9.7.3",
+    "markdown-to-jsx": "^9.7.13",
     "next": "^16.1.6",
     "nextjs-progressbar": "^0.0.16",
     "pluralize": "^8.0.0",
