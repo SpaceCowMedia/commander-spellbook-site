@@ -5,6 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import cypress from 'eslint-plugin-cypress';
 import prettier from 'eslint-plugin-prettier/recommended';
 import prettierConfig from 'eslint-config-prettier/flat';
+import nextPlugin from '@next/eslint-plugin-next';
 import globals from 'globals';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
@@ -14,6 +15,7 @@ export default defineConfig(
   tseslint.configs.stylistic,
   reactHooks.configs.flat.recommended,
   react.configs.flat.recommended,
+  nextPlugin.configs.recommended,
   cypress.configs.recommended,
   prettier,
   prettierConfig,

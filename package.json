@@ -18,7 +18,10 @@
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint",
-    "*.{css,scss,vue}": ["stylelint", "prettier --check"]
+    "*.{css,scss,vue}": [
+      "stylelint",
+      "prettier --check"
+    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
@@ -51,6 +54,7 @@
     "@commitlint/config-conventional": "^20.3.0",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^10.0.1",
+    "@next/eslint-plugin-next": "^16.2.1",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/gtag.js": "^0.0.20",
     "@types/node": "^25.3.3",
@@ -64,11 +68,11 @@
     "concurrently": "^9.2.1",
     "cypress": "^15.11.0",
     "eslint": "^10.0.2",
-    "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-check-file": "^3.3.1",
     "eslint-plugin-cypress": "^6.2.0",
     "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
