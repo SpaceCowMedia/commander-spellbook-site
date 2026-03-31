@@ -28,7 +28,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.3.0",
     "@space-cow-media/spellbook-client": "^5.3.6",
-    "canvas": "^3.2.1",
+    "canvas": "^3.2.3",
     "cookies-next": "^6.1.1",
     "debounce": "^2.2.0",
     "markdown-to-jsx": "^9.7.13",
