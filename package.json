@@ -52,7 +52,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.4.3",
     "@commitlint/config-conventional": "^20.3.0",
-    "@eslint/compat": "^2.0.2",
+    "@eslint/compat": "^2.0.3",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.1",
     "@scryfall/api-types": "^1.0.0-alpha.4",
