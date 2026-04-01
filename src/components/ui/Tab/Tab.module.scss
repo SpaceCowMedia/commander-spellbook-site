@@ -1,0 +1,41 @@
+.tabContainer {
+  width: 100%;
+}
+
+.tabHeaders {
+  display: flex;
+  width: 100%;
+}
+
+.bottomBorder {
+  height: 4px;
+  width: 100%;
+  background: rgb(148 148 148 27%);
+}
+
+.tabHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  transition: background-color 0.25s ease;
+  padding: 0;
+
+  &:hover {
+    background-color: rgb(162 162 162 9%);
+  }
+}
+
+.activeTabHeader {
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  border: none;
+
+  .bottomBorder {
+    background: linear-gradient(135deg, #c18aff, #ff9595);
+  }
+}
+
+
