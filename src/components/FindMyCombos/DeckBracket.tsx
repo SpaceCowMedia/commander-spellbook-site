@@ -32,7 +32,7 @@ const DeckBracket = ({results}: Props) => {
     powerLevelFactors.push(`Having mass land denial cards pushes you into bracket 4+. You have ${results.massLandDenialCards.length}.`)
   }
   if (results.twoCardCombos.length > 2) {
-    powerLevelFactors.push(`Having 2 two card combos pushes you into bracket 3+. You have ${results.twoCardCombos.length}.`)
+    powerLevelFactors.push(`Having two card combos pushes you into bracket 3+. You have ${results.twoCardCombos.length}.`)
   }
 
 
@@ -41,7 +41,7 @@ const DeckBracket = ({results}: Props) => {
       <br/>
       <h1 className="heading-subtitle">Commander Bracket Info</h1>
       <h1 className="heading-subtitle"><b>Our Estimate:</b> {BRACKET_NAME_MAP[results.bracketTag]} (Bracket {BRACKET_RANGE_MAP[results.bracketTag]})</h1>
-      <ul className="list-disc mt-3 mb-12 flex justify-center">
+      <ul className="list-disc mt-3 mb-12 flex flex-col items-center">
         {powerLevelFactors.map((factor, index) => (
           <li key={index}>{factor}</li>
         ))}

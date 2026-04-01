@@ -10,7 +10,7 @@
 .bottomBorder {
   height: 4px;
   width: 100%;
-  background: rgb(148 148 148 27%);
+  background: rgb(148 148 148 / 27%);
 }
 
 .tabHeader {
@@ -23,7 +23,7 @@
   padding: 0;
 
   &:hover {
-    background-color: rgb(162 162 162 9%);
+    background-color: rgb(162 162 162 / 9%);
   }
 }
 
@@ -37,5 +37,3 @@
     background: linear-gradient(135deg, #c18aff, #ff9595);
   }
 }
-
-
