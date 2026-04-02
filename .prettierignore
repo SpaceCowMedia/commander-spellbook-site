@@ -12,8 +12,4 @@ node_modules/
 *.log
 *.lock
 *.tsbuildinfo
-*.ts
-*.tsx
-*.js
-*.jsx
 package.json

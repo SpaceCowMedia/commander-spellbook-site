@@ -1,5 +1,5 @@
 import styles from './Tab.module.scss';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
 interface TabType {
   title: React.ReactNode;
@@ -12,7 +12,7 @@ interface Props {
   onTabChange?: (index: number) => void;
 }
 
-const Tab = ({ tabs, activeTabIndex, onTabChange } : Props) => {
+const Tab = ({ tabs, activeTabIndex, onTabChange }: Props) => {
   const [localTabIndex, setLocalTabIndex] = useState(activeTabIndex ?? 0);
 
   useEffect(() => {
@@ -38,15 +38,13 @@ const Tab = ({ tabs, activeTabIndex, onTabChange } : Props) => {
             onClick={() => handleTabClick(index)}
           >
             <div className="p-3">{tab.title}</div>
-            <div className={styles.bottomBorder}/>
+            <div className={styles.bottomBorder} />
           </button>
         ))}
       </div>
-      <div>
-        {tabs[localTabIndex]?.content}
-      </div>
+      <div>{tabs[localTabIndex]?.content}</div>
     </div>
   );
-}
+};
 
 export default Tab;

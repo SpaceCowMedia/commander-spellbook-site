@@ -57,7 +57,9 @@ const CardImage: React.FC<Props> = ({ card, className }: Props) => {
   }, [readyToFlipToFront, frontLoaded]);
 
   return (
-    <div className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''} ${className}`}>
+    <div
+      className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''} ${className}`}
+    >
       <FlipperCard
         flipped={backFacing}
         rotated={rotated && card.layoutRotationFront != null ? card.layoutRotationFront : undefined}

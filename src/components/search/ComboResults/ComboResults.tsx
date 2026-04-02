@@ -4,7 +4,7 @@ import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
-import {ClassifiedVariant, Deck, Variant, VariantPrices} from '@space-cow-media/spellbook-client';
+import { ClassifiedVariant, Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { useRef, useState } from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';

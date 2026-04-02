@@ -1,19 +1,17 @@
-import styles from "pages/find-my-combos.module.scss";
-import ComboResults from "components/search/ComboResults/ComboResults";
-import React from "react";
-import {Decklist, ResultType} from "pages/find-my-combos";
-import pluralize from "pluralize";
-
+import styles from 'pages/find-my-combos.module.scss';
+import ComboResults from 'components/search/ComboResults/ComboResults';
+import React from 'react';
+import { Decklist, ResultType } from 'pages/find-my-combos';
+import pluralize from 'pluralize';
 
 interface Props {
   lookupInProgress: boolean;
-  currentlyParsedDeck?: Decklist
-  results: ResultType
-  format: string
+  currentlyParsedDeck?: Decklist;
+  results: ResultType;
+  format: string;
 }
 
-const DeckCombos = ({lookupInProgress, currentlyParsedDeck, results, format}: Props) => {
-
+const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: Props) => {
   const numOfCombos = results.included.length;
   const combosInDeckHeadingText = !numOfCombos
     ? 'No combos found' + (format ? ' in the selected format' : '')
@@ -41,7 +39,7 @@ const DeckCombos = ({lookupInProgress, currentlyParsedDeck, results, format}: Pr
       {!lookupInProgress && currentlyParsedDeck && (
         <section id="combos-in-deck-section">
           <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-          <ComboResults results={results.included} hideVariants={true} localPageLimit={100}/>
+          <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />
         </section>
       )}
 
@@ -93,8 +91,8 @@ const DeckCombos = ({lookupInProgress, currentlyParsedDeck, results, format}: Pr
             Commander and Additional Colors
           </h2>
           <p>
-            List of combos where your decklist is missing 1 combo piece, but requires changing your commander and
-            adding a color.
+            List of combos where your decklist is missing 1 combo piece, but requires changing your commander and adding
+            a color.
           </p>
           <ComboResults
             results={results.almostIncludedByAddingColorsAndChangingCommanders}
@@ -105,7 +103,7 @@ const DeckCombos = ({lookupInProgress, currentlyParsedDeck, results, format}: Pr
         </section>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default DeckCombos;

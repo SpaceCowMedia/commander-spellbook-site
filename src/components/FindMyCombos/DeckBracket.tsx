@@ -1,105 +1,188 @@
-import {EstimateBracketResult, Card, Variant, ClassifiedVariant} from "@space-cow-media/spellbook-client";
-import React from "react";
-import CardImage from "components/layout/CardImage/CardImage";
-import styles from "./DeckBracket.module.scss";
-import ComboResults from "components/search/ComboResults/ComboResults";
-import {BRACKET_NAME_MAP, BRACKET_RANGE_MAP} from "lib/brackets";
+import { EstimateBracketResult, Card, Variant, ClassifiedVariant } from '@space-cow-media/spellbook-client';
+import React from 'react';
+import CardImage from 'components/layout/CardImage/CardImage';
+import styles from './DeckBracket.module.scss';
+import ComboResults from 'components/search/ComboResults/ComboResults';
+import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
+import Icon from 'components/layout/Icon/Icon';
 
 interface Props {
-  results?: EstimateBracketResult
+  results?: EstimateBracketResult;
 }
 
-
-
-const DeckBracket = ({results}: Props) => {
-  if (!results) { return (
-    <div>
-      <br/>
-      <h1 className="heading-subtitle">Loading...</h1>
-    </div>
-  )
+const DeckBracket = ({ results }: Props) => {
+  if (!results) {
+    return (
+      <div>
+        <br />
+        <h1 className="heading-subtitle">Loading...</h1>
+      </div>
+    );
   }
-  const powerLevelFactors: string[] = []
+  const powerLevelFactors: string[] = [];
+  if (results.bannedCards.length > 0) {
+    powerLevelFactors.push(
+      `Having banned cards lies outside the bracket classification and thus your deck's bracket is undefined. You have ${results.bannedCards.length} banned cards.`,
+    );
+  }
   if (results.gameChangerCards.length > 3) {
-    powerLevelFactors.push(`Having more than 3 game changer cards pushes you into bracket 4+. You have ${results.gameChangerCards.length}.`)
+    powerLevelFactors.push(
+      `Having more than 3 game changer cards pushes your deck into bracket 4+. You have ${results.gameChangerCards.length}.`,
+    );
   } else if (results.gameChangerCards.length > 0) {
-    powerLevelFactors.push(`Having between 1 and 3 game changer cards pushes you into bracket 3+. You have ${results.gameChangerCards.length}.`)
+    powerLevelFactors.push(
+      `Having between 1 and 3 game changer cards pushes your deck into bracket 3+. You have ${results.gameChangerCards.length}.`,
+    );
   }
-  if (results.extraTurnCards.length > 2) {
-    powerLevelFactors.push(`Having extra turn cards pushes you into bracket 3+. You have ${results.extraTurnCards.length}.`)
+  if (results.extraTurnCards.length >= 2) {
+    powerLevelFactors.push(
+      `Having two or more extra turn cards pushes your deck into bracket 4+. You have ${results.extraTurnCards.length}.`,
+    );
+  } else if (results.extraTurnCards.length > 0) {
+    powerLevelFactors.push('Having one extra turn card pushes your deck into bracket 2+.');
   }
-  if (results.massLandDenialCards.length > 2) {
-    powerLevelFactors.push(`Having mass land denial cards pushes you into bracket 4+. You have ${results.massLandDenialCards.length}.`)
+  if (results.extraTurnsCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having extra turn combos pushes your deck into bracket 4+. You have ${results.extraTurnsCombos.length} combos.`,
+    );
   }
-  if (results.twoCardCombos.length > 2) {
-    powerLevelFactors.push(`Having two card combos pushes you into bracket 3+. You have ${results.twoCardCombos.length}.`)
+  if (results.massLandDenialCards.length > 0) {
+    powerLevelFactors.push(
+      `Having mass land denial cards pushes your deck into bracket 4+. You have ${results.massLandDenialCards.length}.`,
+    );
   }
-
+  if (results.massLandDenialCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having mass land denial combos pushes your deck into bracket 4+. You have ${results.massLandDenialCombos.length}.`,
+    );
+  }
+  if (results.controlAllOpponentsCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having combos that make you control all opponents pushes your deck into bracket 4+. You have ${results.controlAllOpponentsCombos.length}.`,
+    );
+  }
+  const fastGameWinningTwoCardCombos = results.twoCardCombos.filter(
+    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && combo.relevant,
+  );
+  let other = results.twoCardCombos.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.relevant);
+  const fastGameWinningCombos = other.filter((combo) => combo.speed >= 4 && combo.relevant);
+  other = other.filter((combo) => combo.speed < 4 || !combo.relevant);
+  const fastPowerfulTwoCardCombos = other.filter((combo) => combo.definitelyTwoCard && combo.borderlineRelevant);
+  other = other.filter((combo) => !combo.definitelyTwoCard || !combo.borderlineRelevant);
+  const normalGameWinningTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 3 && combo.definitelyTwoCard && combo.relevant,
+  );
+  other = other.filter((combo) => combo.speed < 3 || !combo.definitelyTwoCard || !combo.relevant);
+  const normalPowerfulTwoCardCombos = other.filter((combo) => combo.speed >= 3 && combo.borderlineRelevant);
+  other = other.filter((combo) => combo.speed < 3 || !combo.borderlineRelevant);
+  const slowGameWinningTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 2 && combo.definitelyTwoCard && combo.relevant,
+  );
+  if (fastGameWinningTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having fast, game-winning, two card combos pushes your deck into bracket 4+. You have ${fastGameWinningTwoCardCombos.length}.`,
+    );
+  }
+  if (fastGameWinningCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having fast, game-winning combos involving few cards pushes your deck into brackets 3 or 4+. You have ${fastGameWinningCombos.length}.`,
+    );
+  }
+  if (fastPowerfulTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having fast, powerful, two card combos pushes your deck into brackets 3 or 4+. You have ${fastPowerfulTwoCardCombos.length}.`,
+    );
+  }
+  if (normalGameWinningTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having game-winning combos involving few cards pushes your deck into bracket 3+. You have ${normalGameWinningTwoCardCombos.length}.`,
+    );
+  }
+  if (normalPowerfulTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having powerful, two card combos pushes your deck into brackets 2 or 3+. You have ${normalPowerfulTwoCardCombos.length}.`,
+    );
+  }
+  if (slowGameWinningTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having late game, game-winning, two card combos pushes your deck into bracket 2+. You have ${slowGameWinningTwoCardCombos.length}.`,
+    );
+  }
 
   return (
-    <div>
-      <br/>
+    <div className={styles.container}>
+      <br />
       <h1 className="heading-subtitle">Commander Bracket Info</h1>
-      <h1 className="heading-subtitle"><b>Our Estimate:</b> {BRACKET_NAME_MAP[results.bracketTag]} (Bracket {BRACKET_RANGE_MAP[results.bracketTag]})</h1>
-      <ul className="list-disc mt-3 mb-12 flex flex-col items-center">
+      <h1 className="heading-subtitle">
+        <b>Our Estimate:</b> {BRACKET_NAME_MAP[results.bracketTag]} (Bracket {BRACKET_RANGE_MAP[results.bracketTag]})
+      </h1>
+      <ul className="mt-3 mb-12 flex flex-col items-left gap-2 border border-dark rounded-lg bg-pink-400/10 p-4">
         {powerLevelFactors.map((factor, index) => (
-          <li key={index}>{factor}</li>
+          <li key={index}>
+            <Icon name="greaterThan" /> {factor}
+          </li>
         ))}
       </ul>
 
-      <CardList title="Banned Cards" cards={results.bannedCards}/>
-      <CardList title="Game Changers" cards={results.gameChangerCards}/>
+      <CardList title="Banned Cards" cards={results.bannedCards} />
+      <CardList title="Game Changers" cards={results.gameChangerCards} />
       <CardList title="Mass Land Denial Cards" cards={results.massLandDenialCards} />
       <CardList title="Extra Turn Cards" cards={results.extraTurnCards} />
 
-      <ComboList title="Two Card Combos" combos={results.twoCardCombos}/>
+      <ComboList title="Fast, Game-Winning, Two Card Combos" combos={fastGameWinningTwoCardCombos} />
+      <ComboList title="Fast, Game-Winning Combos Involving Few Cards" combos={fastGameWinningCombos} />
+      <ComboList title="Fast, Powerful, Two Card Combos" combos={fastPowerfulTwoCardCombos} />
+      <ComboList title="Game-Winning Combos Involving Few Cards" combos={normalGameWinningTwoCardCombos} />
+      <ComboList title="Powerful, Two Card Combos" combos={normalPowerfulTwoCardCombos} />
+      <ComboList title="Late Game, Game-Winning, Two Card Combos" combos={slowGameWinningTwoCardCombos} />
       <ComboList title="Controll All Opponents Combos" combos={results.controlAllOpponentsCombos} />
       <ComboList title="Control Some Opponents Combos" combos={results.controlSomeOpponentsCombos} />
       <ComboList title="Extra Turn Combos" combos={results.extraTurnsCombos} />
       <ComboList title="Lock Combos" combos={results.lockCombos} />
       <ComboList title="Mass Land Denial Combos" combos={results.massLandDenialCombos} />
       <ComboList title="Skip Turn Combos" combos={results.skipTurnsCombos} />
-
-
-
     </div>
-  )
-}
+  );
+};
 
 interface CardListProps {
-  title: React.ReactNode
-  cards: Card[]
+  title: React.ReactNode;
+  cards: Card[];
 }
-const CardList = ({title, cards}: CardListProps) => {
+const CardList = ({ title, cards }: CardListProps) => {
   if (!cards.length) {
     return null;
   }
   return (
     <>
-      <h2 className="heading-subtitle">{title} ({cards.length})</h2>
+      <h2 className="heading-subtitle mt-4 mb-2">
+        {title} ({cards.length})
+      </h2>
       <div className="flex justify-center w-full mb-8 flex-wrap gap-4">
         {cards.map((card) => (
-          <CardImage className={styles.card} card={card} key={card.id}/>
+          <CardImage className={styles.card} card={card} key={card.id} />
         ))}
       </div>
     </>
-  )
-}
+  );
+};
 
 interface ComboListProps {
-  title: React.ReactNode
-  combos: ClassifiedVariant[] | Variant[]
+  title: React.ReactNode;
+  combos: ClassifiedVariant[] | Variant[];
 }
-const ComboList = ({title, combos}: ComboListProps) => {
+const ComboList = ({ title, combos }: ComboListProps) => {
   if (!combos.length) {
     return null;
   }
   return (
     <>
-      <h2 className="heading-subtitle">{title} ({combos.length})</h2>
+      <h2 className="heading-subtitle mt-4 mb-2">
+        {title} ({combos.length})
+      </h2>
       <ComboResults results={combos} hideVariants={true} />
     </>
-  )
-}
+  );
+};
 
 export default DeckBracket;

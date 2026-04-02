@@ -17,7 +17,7 @@ import {
   DeckFromJSON,
   ResponseError,
   EstimateBracketApi,
-  EstimateBracketResult
+  EstimateBracketResult,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
@@ -28,11 +28,11 @@ import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
 import Modal from 'components/ui/Modal/Modal';
-import Tab from "components/ui/Tab/Tab.";
-import DeckCombos from "components/FindMyCombos/DeckCombos";
-import DeckBracket from "components/FindMyCombos/DeckBracket";
-import Loader from "components/layout/Loader/Loader";
-import {BRACKET_RANGE_MAP} from "lib/brackets";
+import Tab from 'components/ui/Tab/Tab.';
+import DeckCombos from 'components/FindMyCombos/DeckCombos';
+import DeckBracket from 'components/FindMyCombos/DeckBracket';
+import Loader from 'components/layout/Loader/Loader';
+import { BRACKET_RANGE_MAP } from 'lib/brackets';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -161,7 +161,7 @@ const FindMyCombos: React.FC = () => {
     offset?: number,
   ): Promise<void> => {
     setLookupInProgress(true);
-    setBracketInfo(undefined)
+    setBracketInfo(undefined);
 
     if (decklist.isEmpty()) {
       setLookupInProgress(false);
@@ -214,7 +214,7 @@ const FindMyCombos: React.FC = () => {
     }
 
     setLookupInProgress(false);
-    lookupBracket(decklist)
+    lookupBracket(decklist);
   };
 
   const lookupBracket = async (decklist: Decklist): Promise<void> => {
@@ -227,7 +227,7 @@ const FindMyCombos: React.FC = () => {
       console.error('Failed to fetch bracket info', error);
       setBracketInfo(undefined);
     }
-  }
+  };
 
   const clearDecklist = () => {
     setCurrentlyParsedDeck(undefined);
@@ -519,24 +519,31 @@ const FindMyCombos: React.FC = () => {
             />
           </div>
         </section>
-        <Tab
-          tabs={[
-            {
-              title: "Combos",
-              content:
-                <DeckCombos
-                  lookupInProgress={lookupInProgress}
-                  results={results}
-                  format={format}
-                  currentlyParsedDeck={currentlyParsedDeck}
-                />
-            },
-            {
-              title: <>Bracket Info&nbsp;{bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader/>}</>,
-              content: <DeckBracket results={bracketInfo}/>
-            }
-          ]}
-        />
+        {currentlyParsedDeck && (
+          <Tab
+            tabs={[
+              {
+                title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
+                content: (
+                  <DeckCombos
+                    lookupInProgress={lookupInProgress}
+                    results={results}
+                    format={format}
+                    currentlyParsedDeck={currentlyParsedDeck}
+                  />
+                ),
+              },
+              {
+                title: (
+                  <>
+                    Bracket Info&nbsp;{bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader />}
+                  </>
+                ),
+                content: <DeckBracket results={bracketInfo} />,
+              },
+            ]}
+          />
+        )}
       </div>
     </>
   );
