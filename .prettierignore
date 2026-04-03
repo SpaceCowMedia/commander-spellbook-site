@@ -12,4 +12,6 @@ node_modules/
 *.log
 *.lock
 *.tsbuildinfo
+*.yaml
+*.d.ts
 package.json

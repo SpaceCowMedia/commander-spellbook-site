@@ -1,17 +1,23 @@
-import styles from 'pages/find-my-combos.module.scss';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import React from 'react';
 import { Decklist, ResultType } from 'pages/find-my-combos';
 import pluralize from 'pluralize';
 
 interface Props {
-  lookupInProgress: boolean;
   currentlyParsedDeck?: Decklist;
-  results: ResultType;
+  results: ResultType | undefined;
   format: string;
 }
 
-const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: Props) => {
+const DeckCombos = ({ results, format, currentlyParsedDeck }: Props) => {
+  if (!results) {
+    return (
+      <div>
+        <br />
+        <h1 className="heading-subtitle">Loading Combos...</h1>
+      </div>
+    );
+  }
   const numOfCombos = results.included.length;
   const combosInDeckHeadingText = !numOfCombos
     ? 'No combos found' + (format ? ' in the selected format' : '')
@@ -29,21 +35,13 @@ const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: 
   )} Found With Additional Color Requirements`;
 
   return (
-    <div id="decklist-app" className={styles.decklistApp}>
-      {lookupInProgress && (
-        <section>
-          <h2 className="heading-subtitle">Loading Combos...</h2>
-        </section>
-      )}
+    <div className="py-4">
+      <section id="combos-in-deck-section">
+        <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
+        <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />
+      </section>
 
-      {!lookupInProgress && currentlyParsedDeck && (
-        <section id="combos-in-deck-section">
-          <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-          <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />
-        </section>
-      )}
-
-      {!lookupInProgress && !!results.almostIncluded.length && (
+      {!!results.almostIncluded.length && (
         <section id="potential-combos-in-deck-section">
           <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
           <p>List of combos where your decklist is missing 1 combo piece.</p>
@@ -56,7 +54,7 @@ const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: 
         </section>
       )}
 
-      {!lookupInProgress && !!results.almostIncludedByAddingColors.length && (
+      {!!results.almostIncludedByAddingColors.length && (
         <section id="potential-combos-outside-color-identity-section">
           <h2 className="heading-subtitle">{potentialCombosInAdditionalColorsHeadingText}</h2>
           <p>
@@ -70,7 +68,7 @@ const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: 
           />
         </section>
       )}
-      {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length && (
+      {!!results.almostIncludedByChangingCommanders.length && (
         <section id="potential-combos-outside-commander-section">
           <h2 className="heading-subtitle">
             {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
@@ -84,7 +82,7 @@ const DeckCombos = ({ lookupInProgress, currentlyParsedDeck, results, format }: 
           />
         </section>
       )}
-      {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length && (
+      {!!results.almostIncludedByAddingColorsAndChangingCommanders.length && (
         <section id="potential-combos-outside-color-identity-and-commander-section">
           <h2 className="heading-subtitle">
             {results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different

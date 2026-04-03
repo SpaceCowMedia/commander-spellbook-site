@@ -36,16 +36,6 @@ import { BRACKET_RANGE_MAP } from 'lib/brackets';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
-const DEFAULT_RESULTS = {
-  identity: '',
-  included: [],
-  includedByChangingCommanders: [],
-  almostIncluded: [],
-  almostIncludedByChangingCommanders: [],
-  almostIncludedByAddingColors: [],
-  almostIncludedByAddingColorsAndChangingCommanders: [],
-};
-
 export class Decklist {
   deck: Deck;
 
@@ -100,7 +90,7 @@ const FindMyCombos: React.FC = () => {
   const [format, setFormat] = useState<string>('commander');
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
-  const [results, setResults] = useState<ResultType>(DEFAULT_RESULTS);
+  const [results, setResults] = useState<ResultType>();
   const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
 
   const configuration = apiConfiguration();
@@ -161,7 +151,6 @@ const FindMyCombos: React.FC = () => {
     offset?: number,
   ): Promise<void> => {
     setLookupInProgress(true);
-    setBracketInfo(undefined);
 
     if (decklist.isEmpty()) {
       setLookupInProgress(false);
@@ -210,11 +199,10 @@ const FindMyCombos: React.FC = () => {
       setResults(newResults);
     } catch (error) {
       await handleFindMyCombosError(error);
-      setResults(DEFAULT_RESULTS);
+      setResults(undefined);
     }
 
     setLookupInProgress(false);
-    lookupBracket(decklist);
   };
 
   const lookupBracket = async (decklist: Decklist): Promise<void> => {
@@ -236,11 +224,17 @@ const FindMyCombos: React.FC = () => {
     setDeckUrl('');
     setDeckUrlHint('');
     setDecklistErrors([]);
-    setResults(DEFAULT_RESULTS);
+    setResults(undefined);
+    setBracketInfo(undefined);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     if (router.query.deckUrl) {
       router.push({ pathname: '/find-my-combos/', query: {} });
     }
+  };
+
+  const analyzeDeck = (decklist: Decklist) => {
+    lookupCombos(decklist);
+    lookupBracket(decklist);
   };
 
   useEffect(() => {
@@ -251,7 +245,7 @@ const FindMyCombos: React.FC = () => {
     if (router.query.decklist || router.query.commanders) {
       const decklist = (router.query.decklist as string) || '';
       const commanderList = (router.query.commanders as string) || '';
-      parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist));
+      parseDecklist(decklist, commanderList).then(analyzeDeck);
       return;
     }
 
@@ -266,7 +260,7 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
-      lookupCombos(decklist);
+      analyzeDeck(decklist);
     } catch (e) {
       console.error('Failed to load saved decklist from local storage', e);
       clearDecklist();
@@ -291,7 +285,7 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
-      lookupCombos(decklist);
+      analyzeDeck(decklist);
     } catch (err) {
       const error = err as ResponseError;
       const body: InvalidUrlResponse = JSON.parse(await error.response.text());
@@ -315,7 +309,7 @@ const FindMyCombos: React.FC = () => {
 
   useEffect(() => {
     if (currentlyParsedDeck) {
-      lookupCombos(currentlyParsedDeck);
+      analyzeDeck(currentlyParsedDeck);
     }
   }, [format]);
 
@@ -332,7 +326,7 @@ const FindMyCombos: React.FC = () => {
   };
 
   const handleExportCombosToText = () => {
-    if (results.included.length === 0) {
+    if (results === undefined || results.included.length === 0) {
       return;
     }
 
@@ -341,7 +335,7 @@ const FindMyCombos: React.FC = () => {
   };
 
   const handleExportCombosToCsv = () => {
-    if (results.included.length === 0) {
+    if (results === undefined || results.included.length === 0) {
       return;
     }
 
@@ -404,7 +398,7 @@ const FindMyCombos: React.FC = () => {
                     <button
                       id="parse-decklist-input"
                       className={`${styles.clearDecklistInput} button`}
-                      onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
+                      onClick={() => parseDecklist(decklist, commanderList).then(analyzeDeck)}
                     >
                       Find New Combos!
                     </button>
@@ -418,7 +412,7 @@ const FindMyCombos: React.FC = () => {
                     </button>
                   </div>
 
-                  {results.included.length > 0 && (
+                  {decklistErrors.length === 0 && results && results.included.length > 0 && (
                     <>
                       <Modal open={exportModalOpen} onClose={() => setExportModalOpen(false)} closeIcon={true}>
                         <h2>Select a file format to export combos</h2>
@@ -524,14 +518,7 @@ const FindMyCombos: React.FC = () => {
             tabs={[
               {
                 title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
-                content: (
-                  <DeckCombos
-                    lookupInProgress={lookupInProgress}
-                    results={results}
-                    format={format}
-                    currentlyParsedDeck={currentlyParsedDeck}
-                  />
-                ),
+                content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
               },
               {
                 title: (

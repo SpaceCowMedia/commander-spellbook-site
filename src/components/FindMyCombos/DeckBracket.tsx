@@ -15,58 +15,87 @@ const DeckBracket = ({ results }: Props) => {
     return (
       <div>
         <br />
-        <h1 className="heading-subtitle">Loading...</h1>
+        <h1 className="heading-subtitle">Loading Bracket Estimate...</h1>
       </div>
     );
   }
   const powerLevelFactors: string[] = [];
-  if (results.bannedCards.length > 0) {
+  const bannedCards = results.cards.filter((card) => card.banned).map((card) => card.card);
+  const gameChangerCards = results.cards.filter((card) => card.gameChanger).map((card) => card.card);
+  const extraTurnCards = results.cards.filter((card) => card.extraTurn).map((card) => card.card);
+  const massLandDenialCards = results.cards.filter((card) => card.massLandDenial).map((card) => card.card);
+  const extraTurnsCombos = results.combos.filter((combo) => combo.extraTurn).map((combo) => combo.combo);
+  const massLandDenialCombos = results.combos.filter((combo) => combo.massLandDenial).map((combo) => combo.combo);
+  const controlAllOpponentsCombos = results.combos
+    .filter((combo) => combo.controlAllOpponents)
+    .map((combo) => combo.combo);
+  const lockCombos = results.combos.filter((combo) => combo.lock).map((combo) => combo.combo);
+  const skipTurnsCombos = results.combos.filter((combo) => combo.skipTurns).map((combo) => combo.combo);
+  const controlSomeOpponentsCombos = results.combos
+    .filter((combo) => combo.controlSomeOpponents)
+    .map((combo) => combo.combo);
+  if (bannedCards.length > 0) {
     powerLevelFactors.push(
-      `Having banned cards lies outside the bracket classification and thus your deck's bracket is undefined. You have ${results.bannedCards.length} banned cards.`,
+      `Having banned cards lies outside the bracket classification and thus your deck's bracket is undefined. You have ${bannedCards.length} banned cards.`,
     );
   }
-  if (results.gameChangerCards.length > 3) {
+  if (gameChangerCards.length > 3) {
     powerLevelFactors.push(
-      `Having more than 3 game changer cards pushes your deck into bracket 4+. You have ${results.gameChangerCards.length}.`,
+      `Having more than 3 game changer cards pushes your deck into bracket 4+. You have ${gameChangerCards.length}.`,
     );
-  } else if (results.gameChangerCards.length > 0) {
+  } else if (gameChangerCards.length > 0) {
     powerLevelFactors.push(
-      `Having between 1 and 3 game changer cards pushes your deck into bracket 3+. You have ${results.gameChangerCards.length}.`,
+      `Having between 1 and 3 game changer cards pushes your deck into bracket 3+. You have ${gameChangerCards.length}.`,
     );
   }
-  if (results.extraTurnCards.length >= 2) {
+  if (extraTurnCards.length >= 2) {
     powerLevelFactors.push(
-      `Having two or more extra turn cards pushes your deck into bracket 4+. You have ${results.extraTurnCards.length}.`,
+      `Having two or more extra turn cards pushes your deck into bracket 4+. You have ${extraTurnCards.length}.`,
     );
-  } else if (results.extraTurnCards.length > 0) {
+  } else if (extraTurnCards.length > 0) {
     powerLevelFactors.push('Having one extra turn card pushes your deck into bracket 2+.');
   }
-  if (results.extraTurnsCombos.length > 0) {
+  if (extraTurnsCombos.length > 0) {
     powerLevelFactors.push(
-      `Having extra turn combos pushes your deck into bracket 4+. You have ${results.extraTurnsCombos.length} combos.`,
+      `Having extra turn combos pushes your deck into bracket 4+. You have ${extraTurnsCombos.length} combos.`,
     );
   }
-  if (results.massLandDenialCards.length > 0) {
+  if (massLandDenialCards.length > 0) {
     powerLevelFactors.push(
-      `Having mass land denial cards pushes your deck into bracket 4+. You have ${results.massLandDenialCards.length}.`,
+      `Having mass land denial cards pushes your deck into bracket 4+. You have ${massLandDenialCards.length}.`,
     );
   }
-  if (results.massLandDenialCombos.length > 0) {
+  if (massLandDenialCombos.length > 0) {
     powerLevelFactors.push(
-      `Having mass land denial combos pushes your deck into bracket 4+. You have ${results.massLandDenialCombos.length}.`,
+      `Having mass land denial combos pushes your deck into bracket 4+. You have ${massLandDenialCombos.length}.`,
     );
   }
-  if (results.controlAllOpponentsCombos.length > 0) {
+  if (controlAllOpponentsCombos.length > 0) {
     powerLevelFactors.push(
-      `Having combos that make you control all opponents pushes your deck into bracket 4+. You have ${results.controlAllOpponentsCombos.length}.`,
+      `Having combos that make you control all opponents pushes your deck into bracket 4+. You have ${controlAllOpponentsCombos.length}.`,
+    );
+  } else if (controlSomeOpponentsCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having combos that make you control some opponents pushes your deck into bracket 3/4+. You have ${controlSomeOpponentsCombos.length}.`,
     );
   }
-  const fastGameWinningTwoCardCombos = results.twoCardCombos.filter(
+  if (lockCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having combos locking your opponents from taking relevant game actions pushes your deck into bracket 3/4+. You have ${lockCombos.length}.`,
+    );
+  }
+  if (skipTurnsCombos.length > 0) {
+    powerLevelFactors.push(
+      `Having combos that allow you to skip many turns pushes your deck into bracket 3/4+. You have ${skipTurnsCombos.length}.`,
+    );
+  }
+  let other = results.combos.filter((combo) => combo.arguablyTwoCard);
+  const fastGameWinningTwoCardCombos = other.filter(
     (combo) => combo.speed >= 4 && combo.definitelyTwoCard && combo.relevant,
   );
-  let other = results.twoCardCombos.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.relevant);
+  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.relevant);
   const fastGameWinningCombos = other.filter((combo) => combo.speed >= 4 && combo.relevant);
-  other = other.filter((combo) => combo.speed < 4 || !combo.relevant);
+  other = other.filter((combo) => combo.speed < 4 || !combo.relevant || !combo.arguablyTwoCard);
   const fastPowerfulTwoCardCombos = other.filter((combo) => combo.definitelyTwoCard && combo.borderlineRelevant);
   other = other.filter((combo) => !combo.definitelyTwoCard || !combo.borderlineRelevant);
   const normalGameWinningTwoCardCombos = other.filter(
@@ -110,7 +139,7 @@ const DeckBracket = ({ results }: Props) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="py-4">
       <br />
       <h1 className="heading-subtitle">Commander Bracket Info</h1>
       <h1 className="heading-subtitle">
@@ -124,10 +153,10 @@ const DeckBracket = ({ results }: Props) => {
         ))}
       </ul>
 
-      <CardList title="Banned Cards" cards={results.bannedCards} />
-      <CardList title="Game Changers" cards={results.gameChangerCards} />
-      <CardList title="Mass Land Denial Cards" cards={results.massLandDenialCards} />
-      <CardList title="Extra Turn Cards" cards={results.extraTurnCards} />
+      <CardList title="Banned Cards" cards={bannedCards} />
+      <CardList title="Game Changers" cards={gameChangerCards} />
+      <CardList title="Mass Land Denial Cards" cards={massLandDenialCards} />
+      <CardList title="Extra Turn Cards" cards={extraTurnCards} />
 
       <ComboList title="Fast, Game-Winning, Two Card Combos" combos={fastGameWinningTwoCardCombos} />
       <ComboList title="Fast, Game-Winning Combos Involving Few Cards" combos={fastGameWinningCombos} />
@@ -135,12 +164,12 @@ const DeckBracket = ({ results }: Props) => {
       <ComboList title="Game-Winning Combos Involving Few Cards" combos={normalGameWinningTwoCardCombos} />
       <ComboList title="Powerful, Two Card Combos" combos={normalPowerfulTwoCardCombos} />
       <ComboList title="Late Game, Game-Winning, Two Card Combos" combos={slowGameWinningTwoCardCombos} />
-      <ComboList title="Controll All Opponents Combos" combos={results.controlAllOpponentsCombos} />
-      <ComboList title="Control Some Opponents Combos" combos={results.controlSomeOpponentsCombos} />
-      <ComboList title="Extra Turn Combos" combos={results.extraTurnsCombos} />
-      <ComboList title="Lock Combos" combos={results.lockCombos} />
-      <ComboList title="Mass Land Denial Combos" combos={results.massLandDenialCombos} />
-      <ComboList title="Skip Turn Combos" combos={results.skipTurnsCombos} />
+      <ComboList title="Controll All Opponents Combos" combos={controlAllOpponentsCombos} />
+      <ComboList title="Control Some Opponents Combos" combos={controlSomeOpponentsCombos} />
+      <ComboList title="Extra Turn Combos" combos={extraTurnsCombos} />
+      <ComboList title="Lock Combos" combos={lockCombos} />
+      <ComboList title="Mass Land Denial Combos" combos={massLandDenialCombos} />
+      <ComboList title="Skip Turn Combos" combos={skipTurnsCombos} />
     </div>
   );
 };
