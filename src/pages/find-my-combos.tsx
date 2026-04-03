@@ -398,7 +398,10 @@ const FindMyCombos: React.FC = () => {
                     <button
                       id="parse-decklist-input"
                       className={`${styles.clearDecklistInput} button`}
-                      onClick={() => parseDecklist(decklist, commanderList).then(analyzeDeck)}
+                      onClick={() => {
+                        window.history.replaceState(null, '', '/find-my-combos/');
+                        parseDecklist(decklist, commanderList).then(analyzeDeck);
+                      }}
                     >
                       Find New Combos!
                     </button>

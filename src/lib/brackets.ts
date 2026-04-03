@@ -10,11 +10,11 @@ export const BRACKET_NAME_MAP = {
 
 export const BRACKET_RANGE_MAP = {
   R: '4+',
-  S: '3-4',
-  P: '3',
-  O: '2-3',
-  C: '2',
-  E: '1',
+  S: '3-4+',
+  P: '3+',
+  O: '2-3+',
+  C: '2+',
+  E: '1+',
   B: 'N/A',
 };
 

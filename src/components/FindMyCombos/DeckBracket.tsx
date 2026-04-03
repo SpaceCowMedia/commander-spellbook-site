@@ -151,6 +151,7 @@ const DeckBracket = ({ results }: Props) => {
             <Icon name="greaterThan" /> {factor}
           </li>
         ))}
+        {powerLevelFactors.length === 0 && <li>No factors pushing your deck into a specific bracket were found.</li>}
       </ul>
 
       <CardList title="Banned Cards" cards={bannedCards} />
