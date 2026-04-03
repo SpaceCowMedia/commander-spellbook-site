@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import pluralize from 'pluralize';
 import styles from './find-my-combos.module.scss';
 import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
-import ComboResults from '../components/search/ComboResults/ComboResults';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { isValidHttpUrl } from '../lib/url-check';
 import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
@@ -17,6 +16,8 @@ import {
   DeckToJSON,
   DeckFromJSON,
   ResponseError,
+  EstimateBracketApi,
+  EstimateBracketResult,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
@@ -27,20 +28,15 @@ import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
 import Modal from 'components/ui/Modal/Modal';
+import Tab from 'components/ui/Tab/Tab.';
+import DeckCombos from 'components/FindMyCombos/DeckCombos';
+import DeckBracket from 'components/FindMyCombos/DeckBracket';
+import Loader from 'components/layout/Loader/Loader';
+import { BRACKET_RANGE_MAP } from 'lib/brackets';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
-const DEFAULT_RESULTS = {
-  identity: '',
-  included: [],
-  includedByChangingCommanders: [],
-  almostIncluded: [],
-  almostIncludedByChangingCommanders: [],
-  almostIncludedByAddingColors: [],
-  almostIncludedByAddingColorsAndChangingCommanders: [],
-};
-
-class Decklist {
+export class Decklist {
   deck: Deck;
 
   constructor(deck: Deck) {
@@ -71,6 +67,16 @@ class Decklist {
   }
 }
 
+export interface ResultType {
+  identity: string;
+  included: Variant[];
+  includedByChangingCommanders: Variant[];
+  almostIncluded: Variant[];
+  almostIncludedByChangingCommanders: Variant[];
+  almostIncludedByAddingColors: Variant[];
+  almostIncludedByAddingColorsAndChangingCommanders: Variant[];
+}
+
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
   const [exportModalOpen, setExportModalOpen] = useState(false);
@@ -84,34 +90,12 @@ const FindMyCombos: React.FC = () => {
   const [format, setFormat] = useState<string>('commander');
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
-  const [results, setResults] = useState<{
-    identity: string;
-    included: Variant[];
-    includedByChangingCommanders: Variant[];
-    almostIncluded: Variant[];
-    almostIncludedByChangingCommanders: Variant[];
-    almostIncludedByAddingColors: Variant[];
-    almostIncludedByAddingColorsAndChangingCommanders: Variant[];
-  }>(DEFAULT_RESULTS);
-
-  const numOfCombos = results.included.length;
-  const combosInDeckHeadingText = !numOfCombos
-    ? 'No combos found' + (format ? ' in the selected format' : '')
-    : `${numOfCombos} ${pluralize('Combo', numOfCombos)} Found`;
-
-  const numPotentialCombos = results.almostIncluded.length;
-  const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
-    'Combo',
-    numPotentialCombos,
-  )} Found`;
-
-  const potentialCombosInAdditionalColorsHeadingText = `${results.almostIncludedByAddingColors.length} Potential ${pluralize(
-    'Combo',
-    results.almostIncludedByAddingColors.length,
-  )} Found With Additional Color Requirements`;
+  const [results, setResults] = useState<ResultType>();
+  const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
 
   const configuration = apiConfiguration();
   const findMyCombosApi = new FindMyCombosApi(configuration);
+  const estimateBracketApi = new EstimateBracketApi(configuration);
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
@@ -215,10 +199,22 @@ const FindMyCombos: React.FC = () => {
       setResults(newResults);
     } catch (error) {
       await handleFindMyCombosError(error);
-      setResults(DEFAULT_RESULTS);
+      setResults(undefined);
     }
 
     setLookupInProgress(false);
+  };
+
+  const lookupBracket = async (decklist: Decklist): Promise<void> => {
+    try {
+      const bracketInfo = await estimateBracketApi.estimateBracketCreate({
+        deckRequest: decklist.deck,
+      });
+      setBracketInfo(bracketInfo);
+    } catch (error) {
+      console.error('Failed to fetch bracket info', error);
+      setBracketInfo(undefined);
+    }
   };
 
   const clearDecklist = () => {
@@ -228,11 +224,17 @@ const FindMyCombos: React.FC = () => {
     setDeckUrl('');
     setDeckUrlHint('');
     setDecklistErrors([]);
-    setResults(DEFAULT_RESULTS);
+    setResults(undefined);
+    setBracketInfo(undefined);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     if (router.query.deckUrl) {
       router.push({ pathname: '/find-my-combos/', query: {} });
     }
+  };
+
+  const analyzeDeck = (decklist: Decklist) => {
+    lookupCombos(decklist);
+    lookupBracket(decklist);
   };
 
   useEffect(() => {
@@ -243,7 +245,7 @@ const FindMyCombos: React.FC = () => {
     if (router.query.decklist || router.query.commanders) {
       const decklist = (router.query.decklist as string) || '';
       const commanderList = (router.query.commanders as string) || '';
-      parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist));
+      parseDecklist(decklist, commanderList).then(analyzeDeck);
       return;
     }
 
@@ -258,7 +260,7 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
-      lookupCombos(decklist);
+      analyzeDeck(decklist);
     } catch (e) {
       console.error('Failed to load saved decklist from local storage', e);
       clearDecklist();
@@ -283,7 +285,7 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
-      lookupCombos(decklist);
+      analyzeDeck(decklist);
     } catch (err) {
       const error = err as ResponseError;
       const body: InvalidUrlResponse = JSON.parse(await error.response.text());
@@ -307,7 +309,7 @@ const FindMyCombos: React.FC = () => {
 
   useEffect(() => {
     if (currentlyParsedDeck) {
-      lookupCombos(currentlyParsedDeck);
+      analyzeDeck(currentlyParsedDeck);
     }
   }, [format]);
 
@@ -324,7 +326,7 @@ const FindMyCombos: React.FC = () => {
   };
 
   const handleExportCombosToText = () => {
-    if (results.included.length === 0) {
+    if (results === undefined || results.included.length === 0) {
       return;
     }
 
@@ -333,7 +335,7 @@ const FindMyCombos: React.FC = () => {
   };
 
   const handleExportCombosToCsv = () => {
-    if (results.included.length === 0) {
+    if (results === undefined || results.included.length === 0) {
       return;
     }
 
@@ -396,7 +398,10 @@ const FindMyCombos: React.FC = () => {
                     <button
                       id="parse-decklist-input"
                       className={`${styles.clearDecklistInput} button`}
-                      onClick={() => parseDecklist(decklist, commanderList).then((decklist) => lookupCombos(decklist))}
+                      onClick={() => {
+                        window.history.replaceState(null, '', '/find-my-combos/');
+                        parseDecklist(decklist, commanderList).then(analyzeDeck);
+                      }}
                     >
                       Find New Combos!
                     </button>
@@ -410,7 +415,7 @@ const FindMyCombos: React.FC = () => {
                     </button>
                   </div>
 
-                  {results.included.length > 0 && (
+                  {decklistErrors.length === 0 && results && results.included.length > 0 && (
                     <>
                       <Modal open={exportModalOpen} onClose={() => setExportModalOpen(false)} closeIcon={true}>
                         <h2>Select a file format to export combos</h2>
@@ -511,81 +516,24 @@ const FindMyCombos: React.FC = () => {
             />
           </div>
         </section>
-
-        <div id="decklist-app" className={styles.decklistApp}>
-          {lookupInProgress && (
-            <section>
-              <h2 className="heading-subtitle">Loading Combos...</h2>
-            </section>
-          )}
-
-          {!lookupInProgress && currentlyParsedDeck && (
-            <section id="combos-in-deck-section">
-              <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
-              <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />
-            </section>
-          )}
-
-          {!lookupInProgress && !!results.almostIncluded.length && (
-            <section id="potential-combos-in-deck-section">
-              <h2 className="heading-subtitle">{potentialCombosInDeckHeadingText}</h2>
-              <p>List of combos where your decklist is missing 1 combo piece.</p>
-              <ComboResults
-                results={results.almostIncluded}
-                deck={currentlyParsedDeck?.deck}
-                hideVariants={true}
-                localPageLimit={100}
-              />
-            </section>
-          )}
-
-          {!lookupInProgress && !!results.almostIncludedByAddingColors.length && (
-            <section id="potential-combos-outside-color-identity-section">
-              <h2 className="heading-subtitle">{potentialCombosInAdditionalColorsHeadingText}</h2>
-              <p>
-                List of combos where your decklist is missing 1 combo piece, but requires at least one additional color.
-              </p>
-              <ComboResults
-                results={results.almostIncludedByAddingColors}
-                deck={currentlyParsedDeck?.deck}
-                hideVariants={true}
-                localPageLimit={100}
-              />
-            </section>
-          )}
-          {!lookupInProgress && !!results.almostIncludedByChangingCommanders.length && (
-            <section id="potential-combos-outside-commander-section">
-              <h2 className="heading-subtitle">
-                {results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander
-              </h2>
-              <p>List of combos where your decklist is missing 1 combo piece, but requires changing your commander.</p>
-              <ComboResults
-                results={results.almostIncludedByChangingCommanders}
-                deck={currentlyParsedDeck?.deck}
-                hideVariants={true}
-                localPageLimit={100}
-              />
-            </section>
-          )}
-          {!lookupInProgress && !!results.almostIncludedByAddingColorsAndChangingCommanders.length && (
-            <section id="potential-combos-outside-color-identity-and-commander-section">
-              <h2 className="heading-subtitle">
-                {results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different
-                Commander and Additional Colors
-              </h2>
-              <p>
-                List of combos where your decklist is missing 1 combo piece, but requires changing your commander and
-                adding a color.
-              </p>
-              <ComboResults
-                results={results.almostIncludedByAddingColorsAndChangingCommanders}
-                deck={currentlyParsedDeck?.deck}
-                hideVariants={true}
-                localPageLimit={100}
-              />
-            </section>
-          )}
-        </div>
+        {currentlyParsedDeck && (
+          <Tab
+            tabs={[
+              {
+                title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
+                content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
+              },
+              {
+                title: (
+                  <>
+                    Bracket Info&nbsp;{bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader />}
+                  </>
+                ),
+                content: <DeckBracket results={bracketInfo} />,
+              },
+            ]}
+          />
+        )}
       </div>
     </>
   );

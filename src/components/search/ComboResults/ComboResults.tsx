@@ -4,7 +4,7 @@ import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import pluralize from 'pluralize';
-import { Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
+import { ClassifiedVariant, Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { useRef, useState } from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
@@ -172,7 +172,7 @@ export const ComboResult: React.FC<ResultProps> = ({
 interface Props {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
   decklistMessage?: string;
-  results: Variant[];
+  results: Variant[] | ClassifiedVariant[];
   sort?: string;
   vendor?: (keyof VariantPrices)[];
   hideVariants?: boolean;
@@ -204,10 +204,10 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
     <div ref={ref} className={styles.comboResultsWrapper}>
       {localResults.map((combo) => (
         <ComboResult
-          combo={combo}
+          combo={'combo' in combo ? combo.combo : combo}
           decklist={decklist}
           sort={sort}
-          key={combo.id}
+          key={'combo' in combo ? combo.combo.id : combo.id}
           hideVariants={hideVariants}
           decklistMessage={decklistMessage}
         />

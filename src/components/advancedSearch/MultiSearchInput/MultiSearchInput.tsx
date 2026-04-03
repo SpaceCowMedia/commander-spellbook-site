@@ -2,9 +2,7 @@ import pluralize from 'pluralize';
 import React, { useState } from 'react';
 import styles from './multiSearchInput.module.scss';
 import StyledSelect, { Option } from '../../layout/StyledSelect/StyledSelect';
-import AutocompleteInput, {
-  AutoCompleteOption,
-} from '../AutocompleteInput/AutocompleteInput';
+import AutocompleteInput, { AutoCompleteOption } from '../AutocompleteInput/AutocompleteInput';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 
 interface OperatorOptionBase {
@@ -62,11 +60,7 @@ const MultiSearchInput: React.FC<Props> = ({
   const inputLabel = pluralLabel || pluralize(label, value.length);
 
   const addInput = (index: number) =>
-    setInputs([
-      ...inputs.slice(0, index + 1),
-      { ...operatorOptions[0], value: '' },
-      ...inputs.slice(index + 1),
-    ]);
+    setInputs([...inputs.slice(0, index + 1), { ...operatorOptions[0], value: '' }, ...inputs.slice(index + 1)]);
 
   const removeInput = (index: number) => {
     const newInputs = [...inputs.slice(0, index), ...inputs.slice(index + 1)];
@@ -76,11 +70,9 @@ const MultiSearchInput: React.FC<Props> = ({
     }
   };
 
-  const getInputId = (index: number) =>
-    `${label.toLowerCase().replace(/\s/g, '-')}-input-${index}`;
+  const getInputId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-input-${index}`;
 
-  const getSelectId = (index: number) =>
-    `${label.toLowerCase().replace(/\s/g, '-')}-select-${index}`;
+  const getSelectId = (index: number) => `${label.toLowerCase().replace(/\s/g, '-')}-select-${index}`;
 
   const getPlaceHolder = (input: InputData) => {
     const option = operatorOptions.find(
@@ -126,10 +118,7 @@ const MultiSearchInput: React.FC<Props> = ({
         {labelIcon && <Icon name={labelIcon} />} {inputLabel}
       </label>
       {inputs.map((input, index) => (
-        <div
-          key={`${label}-input-${index}`}
-          className={`my-2 input-wrapper-${index}`}
-        >
+        <div key={`${label}-input-${index}`} className={`my-2 input-wrapper-${index}`}>
           <div className="sm:flex">
             <StyledSelect
               label={`Modifier for ${label}`}
@@ -183,9 +172,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   <button
                     type="button"
                     className={`minus-button ${styles.inputButton} ${
-                      input.error
-                        ? 'bg-danger border-danger'
-                        : 'bg-dark border-dark'
+                      input.error ? 'bg-danger border-danger' : 'bg-dark border-dark'
                     } minus-button-${index}`}
                     onClick={() => removeInput(index)}
                   >
@@ -199,9 +186,7 @@ const MultiSearchInput: React.FC<Props> = ({
                 <button
                   type="button"
                   className={`plus-button ${styles.inputButton} ${
-                    input.error
-                      ? 'bg-danger border-danger'
-                      : 'bg-dark border-dark'
+                    input.error ? 'bg-danger border-danger' : 'bg-dark border-dark'
                   } plus-button-${index}`}
                   onClick={() => addInput(index)}
                 >
@@ -215,11 +200,7 @@ const MultiSearchInput: React.FC<Props> = ({
             </div>
           </div>
           {input.error && (
-            <div
-              className={`input-error text-danger w-full py-2 px-4 text-center rounded-b-sm`}
-            >
-              {input.error}
-            </div>
+            <div className={`input-error text-danger w-full py-2 px-4 text-center rounded-b-sm`}>{input.error}</div>
           )}
         </div>
       ))}
