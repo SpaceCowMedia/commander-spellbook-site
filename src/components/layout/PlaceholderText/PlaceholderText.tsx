@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './placeholderText.module.scss';
 
 interface Props {
@@ -7,9 +7,14 @@ interface Props {
 }
 
 const PlaceholderText: React.FC<Props> = ({ maxLength = 90, minLength = 10 }) => {
-  const [length, _] = React.useState(() => Math.floor(Math.random() * maxLength) + minLength);
+  const [length, setLength] = useState(0);
 
   const style = { width: `${length}%` };
+
+  useEffect(() => {
+    const randomLength = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+    setLength(randomLength);
+  }, [maxLength, minLength]);
 
   return (
     <span className={styles.placeholderText}>
