@@ -26,8 +26,10 @@ const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
             <Link href="/random/">Random Combo</Link>
             <Link href="/find-my-combos/">Find My Combos</Link>
             <Link href="/search/?q=is:featured">Featured Combos</Link>
-            <Link href="/metrics/">Metrics</Link>
             <Link href={comboOfTheDay ? `/combo/${comboOfTheDay}` : '/combo-of-the-day/'}>Combo of the Day</Link>
+            <Link href="/search/?sort=created&order=desc">Most Recent Combos</Link>
+            <Link href="/search/?sort=popularity&order=desc">Most Popular Combos</Link>
+            <Link href="/search/?q=banned:commander">Commander Banned Combos</Link>
           </div>
           <div className={styles.linkCollection}>
             <h3 className={styles.header}>Commander Spellbook</h3>
@@ -37,6 +39,7 @@ const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
             <Link href="/style-guide/">Combo Style Guide</Link>
             <Link href="/privacy-policy/">Privacy Policy</Link>
             <Link href="/login/?final=">Login</Link>
+            <Link href="/metrics/">Metrics</Link>
           </div>
           <div className={styles.linkCollection}>
             <h3 className={styles.header}>Community</h3>
