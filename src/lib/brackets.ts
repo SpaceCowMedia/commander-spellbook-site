@@ -1,3 +1,5 @@
+import { EstimateBracketResult } from '@space-cow-media/spellbook-client';
+
 export const BRACKET_NAME_MAP = {
   R: 'Ruthless',
   S: 'Spicy',
@@ -37,3 +39,58 @@ export const BRACKET_CRITERIA_MAP = {
   E: "Combos that don't fit the other categories",
   B: 'Combos that are not legal in any bracket',
 };
+
+export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
+  const bannedCards = bracketEstimate.cards.filter((card) => card.banned).map((card) => card.card);
+  const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger).map((card) => card.card);
+  const extraTurnCards = bracketEstimate.cards.filter((card) => card.extraTurn).map((card) => card.card);
+  const massLandDenialCards = bracketEstimate.cards.filter((card) => card.massLandDenial).map((card) => card.card);
+  const extraTurnsCombos = bracketEstimate.combos.filter((combo) => combo.extraTurn).map((combo) => combo.combo);
+  const massLandDenialCombos = bracketEstimate.combos
+    .filter((combo) => combo.massLandDenial)
+    .map((combo) => combo.combo);
+  const controlAllOpponentsCombos = bracketEstimate.combos
+    .filter((combo) => combo.controlAllOpponents)
+    .map((combo) => combo.combo);
+  const lockCombos = bracketEstimate.combos.filter((combo) => combo.lock).map((combo) => combo.combo);
+  const skipTurnsCombos = bracketEstimate.combos.filter((combo) => combo.skipTurns).map((combo) => combo.combo);
+  const controlSomeOpponentsCombos = bracketEstimate.combos
+    .filter((combo) => combo.controlSomeOpponents)
+    .map((combo) => combo.combo);
+  let other = bracketEstimate.combos.filter((combo) => combo.arguablyTwoCard);
+  const fastGameWinningTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && combo.relevant,
+  );
+  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.relevant);
+  const fastGameWinningCombos = other.filter((combo) => combo.speed >= 4 && combo.relevant);
+  other = other.filter((combo) => combo.speed < 4 || !combo.relevant || !combo.arguablyTwoCard);
+  const fastPowerfulTwoCardCombos = other.filter((combo) => combo.definitelyTwoCard && combo.borderlineRelevant);
+  other = other.filter((combo) => !combo.definitelyTwoCard || !combo.borderlineRelevant);
+  const normalGameWinningTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 3 && combo.definitelyTwoCard && combo.relevant,
+  );
+  other = other.filter((combo) => combo.speed < 3 || !combo.definitelyTwoCard || !combo.relevant);
+  const normalPowerfulTwoCardCombos = other.filter((combo) => combo.speed >= 3 && combo.borderlineRelevant);
+  other = other.filter((combo) => combo.speed < 3 || !combo.borderlineRelevant);
+  const slowGameWinningTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 2 && combo.definitelyTwoCard && combo.relevant,
+  );
+  return {
+    bannedCards,
+    gameChangerCards,
+    extraTurnCards,
+    massLandDenialCards,
+    extraTurnsCombos,
+    massLandDenialCombos,
+    controlAllOpponentsCombos,
+    controlSomeOpponentsCombos,
+    lockCombos,
+    skipTurnsCombos,
+    fastGameWinningTwoCardCombos,
+    fastGameWinningCombos,
+    fastPowerfulTwoCardCombos,
+    normalGameWinningTwoCardCombos,
+    normalPowerfulTwoCardCombos,
+    slowGameWinningTwoCardCombos,
+  };
+}
