@@ -30,7 +30,6 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
   }
   const configuration = apiConfiguration();
   const suggestionsApi = new VariantUpdateSuggestionsApi(configuration);
-  const combosText = submission.variants.map((v) => v.variant).join(', ');
   const statusAsText =
     submission.status == SuggestionStatusEnum.A
       ? 'Accepted'
@@ -99,7 +98,16 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
         {submission.variants.length > 0 && (
           <div className={styles.combos}>
             <h3 className={styles.subtitle}>Combos</h3>
-            <p>{combosText}</p>
+            <p>
+              {submission.variants.map((variant, index) => (
+                <>
+                  <a key={index} href={`/combo/${variant.variant}`} target="_blank">
+                    {variant.variant}
+                  </a>
+                  {index < submission.variants.length - 1 && <span>, </span>}
+                </>
+              ))}
+            </p>
           </div>
         )}
         <div className={styles.issue}>
