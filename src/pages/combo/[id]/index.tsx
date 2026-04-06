@@ -13,6 +13,7 @@ import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
+  CardInDeckRequest,
   EstimateBracketApi,
   EstimateBracketResult,
   FindMyCombosApi,
@@ -51,7 +52,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variants, setVariants] = useState<Variant[]>();
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
   const [templateReplacements, setTemplateReplacements] = useState<
-    ReadonlyMap<number, readonly Promise<ScryfallResultsPage>[]>
+    Map<number, readonly Promise<ScryfallResultsPage>[]>
   >(new Map<number, Promise<ScryfallResultsPage>[]>());
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
@@ -71,7 +72,8 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     }
     const newPage = ScryfallService.templateReplacements(template, page);
     cache = cache.concat(newPage);
-    setTemplateReplacements((prev) => new Map(prev).set(template.id, cache));
+    templateReplacements.set(template.id, cache);
+    setTemplateReplacements(templateReplacements);
     return newPage;
   }
 
@@ -96,24 +98,28 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const loadBracketEstimate = async (combo: Variant) => {
     setBracketEstimate(undefined);
     try {
+      const templateCommanders: CardInDeckRequest[] = [];
+      const templates: CardInDeckRequest[] = [];
+      for (const template of combo.requires) {
+        const page = await fetchResultsPage(template.template, 0);
+        if (template.mustBeCommander) {
+          templateCommanders.push({ card: page.results[0].name, quantity: template.quantity });
+        } else {
+          templates.push({ card: page.results[0].name, quantity: template.quantity });
+        }
+      }
       const estimate = await bracketApi.estimateBracketCreate({
         deckRequest: {
-          commanders: combo.uses
-            .filter((use) => use.mustBeCommander)
-            .map((use) => ({ card: use.card.name, quantity: use.quantity }))
-            .concat(
-              combo.requires
-                .filter((require) => require.mustBeCommander)
-                .map((require) => ({ card: require.template.name, quantity: require.quantity })),
-            ),
-          main: combo.uses
-            .filter((use) => !use.mustBeCommander)
-            .map((use) => ({ card: use.card.name, quantity: use.quantity }))
-            .concat(
-              combo.requires
-                .filter((require) => !require.mustBeCommander)
-                .map((require) => ({ card: require.template.name, quantity: require.quantity })),
-            ),
+          commanders: templateCommanders.concat(
+            combo.uses
+              .filter((use) => use.mustBeCommander)
+              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
+          ),
+          main: templates.concat(
+            combo.uses
+              .filter((use) => !use.mustBeCommander)
+              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
+          ),
         },
       });
       setBracketEstimate(estimate);
