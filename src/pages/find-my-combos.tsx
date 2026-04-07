@@ -516,24 +516,28 @@ const FindMyCombos: React.FC = () => {
             />
           </div>
         </section>
-        {currentlyParsedDeck && (
-          <Tab
-            tabs={[
-              {
-                title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
-                content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
-              },
-              {
-                title: (
-                  <>
-                    Bracket Info&nbsp;{bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader />}
-                  </>
-                ),
-                content: <DeckBracket results={bracketInfo} />,
-              },
-            ]}
-          />
-        )}
+        {currentlyParsedDeck &&
+          (format === 'commander' ? (
+            <Tab
+              tabs={[
+                {
+                  title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
+                  content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
+                },
+                {
+                  title: (
+                    <>
+                      Bracket Info&nbsp;
+                      {bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader />}
+                    </>
+                  ),
+                  content: <DeckBracket results={bracketInfo} />,
+                },
+              ]}
+            />
+          ) : (
+            <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />
+          ))}
       </div>
     </>
   );
