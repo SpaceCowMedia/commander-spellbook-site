@@ -21,7 +21,7 @@ updates:
         patterns:
          - react
          - react-dom
-         - @types/react
+         - "@types/react"
     cooldown:
       # Supply chain attack defense - don't use packages published within 1 day
       default-days: 1
