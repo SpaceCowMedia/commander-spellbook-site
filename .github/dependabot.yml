@@ -6,6 +6,8 @@ updates:
       interval: weekly
     commit-message:
       prefix: chore
+    cooldown:
+      default-days: 1
   - package-ecosystem: npm
     directory: /
     schedule:
@@ -19,13 +21,17 @@ updates:
          - react
          - react-dom
          - @types/react
+    cooldown:
+      default-days: 1
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
     commit-message:
       prefix: chore
-
+    cooldown:
+      default-days: 1
+      
 registries:
   npm-github:
     type: npm-registry
