@@ -7,6 +7,7 @@ updates:
     commit-message:
       prefix: chore
     cooldown:
+      # Supply chain attack defense - don't use packages published within 1 day
       default-days: 1
   - package-ecosystem: npm
     directory: /
@@ -22,6 +23,7 @@ updates:
          - react-dom
          - @types/react
     cooldown:
+      # Supply chain attack defense - don't use packages published within 1 day
       default-days: 1
   - package-ecosystem: docker
     directory: /
@@ -30,6 +32,7 @@ updates:
     commit-message:
       prefix: chore
     cooldown:
+      # Supply chain attack defense - don't use packages published within 1 day
       default-days: 1
       
 registries:
