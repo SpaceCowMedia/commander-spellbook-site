@@ -26,7 +26,7 @@ updates:
       # Supply chain attack defense - don't use packages published within 1 day
       default-days: 1
       exclude:
-        - @space-cow-media/spellbook-client
+        - "@space-cow-media/spellbook-client"
   - package-ecosystem: docker
     directory: /
     schedule:
