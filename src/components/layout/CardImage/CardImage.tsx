@@ -9,13 +9,14 @@ import { Card, LayoutRotationEnum } from '@space-cow-media/spellbook-client';
 
 interface Props {
   card: Card;
+  className?: string;
 }
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card }: Props) => {
+const CardImage: React.FC<Props> = ({ card, className }: Props) => {
   const hasBack = card.imageUriBackNormal != null;
   const canRotate = card.layoutRotationFront != null;
   const frontImageRef = useRef<HTMLImageElement>(null);
@@ -56,7 +57,9 @@ const CardImage: React.FC<Props> = ({ card }: Props) => {
   }, [readyToFlipToFront, frontLoaded]);
 
   return (
-    <div className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''}`}>
+    <div
+      className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''} ${className}`}
+    >
       <FlipperCard
         flipped={backFacing}
         rotated={rotated && card.layoutRotationFront != null ? card.layoutRotationFront : undefined}

@@ -7,12 +7,15 @@ import styles from './combo.module.scss';
 import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
 import { GetServerSideProps } from 'next';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
 import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
+  CardInDeckRequest,
+  EstimateBracketApi,
+  EstimateBracketResult,
   FindMyCombosApi,
   ResponseError,
   Template,
@@ -29,6 +32,8 @@ import Icon from 'components/layout/Icon/Icon';
 import { DEFAULT_ORDERING, IS_LOCK } from 'lib/constants';
 import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
+import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
+import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
 
 interface Props {
   combo?: Variant;
@@ -44,14 +49,15 @@ function booleanToIcon(value: boolean) {
 }
 
 const Combo: React.FC<Props> = ({ combo, alternatives }) => {
-  const [variants, setVariants] = useState<Variant[]>([]);
-  const [variantsLoading, setVariantsLoading] = useState(false);
-  const variantCount = (combo?.variantCount ?? 1) - 1;
+  const [variants, setVariants] = useState<Variant[]>();
+  const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
   const [templateReplacements, setTemplateReplacements] = useState<
-    ReadonlyMap<number, readonly Promise<ScryfallResultsPage>[]>
+    Map<number, readonly Promise<ScryfallResultsPage>[]>
   >(new Map<number, Promise<ScryfallResultsPage>[]>());
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
+  const bracketApi = new EstimateBracketApi(configuration);
+  const [bracketEstimate, setBracketEstimate] = useState<EstimateBracketResult>();
 
   async function fetchResultsPage(template: Template, page: number): Promise<ScryfallResultsPage> {
     let cache = templateReplacements.get(template.id);
@@ -66,26 +72,71 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     }
     const newPage = ScryfallService.templateReplacements(template, page);
     cache = cache.concat(newPage);
-    setTemplateReplacements((prev) => new Map(prev).set(template.id, cache));
+    templateReplacements.set(template.id, cache);
+    setTemplateReplacements(templateReplacements);
     return newPage;
   }
 
   const loadVariants = async (combo: Variant) => {
-    setVariantsLoading(true);
-    const variants = await variantsApi.variantsList({
-      groupByCombo: false,
-      variant: combo.id,
-      limit: MAX_VARIANTS_COUNT,
-      ordering: DEFAULT_ORDERING,
-      q: `-sid:"${combo.id}"`,
-    });
-    setVariants(variants.results);
-    setVariantsLoading(false);
+    setVariants(undefined);
+    try {
+      const variants = await variantsApi.variantsList({
+        groupByCombo: false,
+        variant: combo.id,
+        limit: MAX_VARIANTS_COUNT,
+        ordering: DEFAULT_ORDERING,
+        q: `-sid:"${combo.id}"`,
+        count: true,
+      });
+      setVariantCount(variants.count || variantCount);
+      setVariants(variants.results);
+    } catch (err) {
+      console.error('Error fetching variants', err);
+    }
   };
 
-  if ((combo?.variantCount ?? 0) > 1 && combo && variants.length == 0 && !variantsLoading) {
-    loadVariants(combo);
-  }
+  const loadBracketEstimate = async (combo: Variant) => {
+    setBracketEstimate(undefined);
+    try {
+      const templateCommanders: CardInDeckRequest[] = [];
+      const templates: CardInDeckRequest[] = [];
+      for (const template of combo.requires) {
+        const page = await fetchResultsPage(template.template, 0);
+        if (template.mustBeCommander) {
+          templateCommanders.push({ card: page.results[0].name, quantity: template.quantity });
+        } else {
+          templates.push({ card: page.results[0].name, quantity: template.quantity });
+        }
+      }
+      const estimate = await bracketApi.estimateBracketCreate({
+        deckRequest: {
+          commanders: templateCommanders.concat(
+            combo.uses
+              .filter((use) => use.mustBeCommander)
+              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
+          ),
+          main: templates.concat(
+            combo.uses
+              .filter((use) => !use.mustBeCommander)
+              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
+          ),
+        },
+      });
+      setBracketEstimate(estimate);
+    } catch (err) {
+      console.error('Error fetching bracket estimate', err);
+    }
+  };
+
+  useEffect(() => {
+    if (combo && combo.variantCount > 1) {
+      loadVariants(combo);
+    }
+    if (combo) {
+      loadBracketEstimate(combo);
+    }
+  }, [combo]);
+
   if (combo) {
     const cardArts = combo.uses.map((card) => card.card.imageUriFrontArtCrop).filter((uri) => uri != null);
     const cardNamesWithQuantities = combo.uses.map((card) =>
@@ -130,33 +181,10 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     if (numberOfDecks !== undefined && numberOfDecks !== null) {
       metaData.push(`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`);
     }
-    const showBracketGuidelinesLink = false;
-    // if (combo.bracketTag) {
-    //   let bracketMessage = "This combo's bracket tag is classified as ";
-    //   switch (combo.bracketTag) {
-    //     case BracketTagEnum.C:
-    //       bracketMessage += '"casual", as it can probably be included in any deck, fitting bracket 1 guidelines.';
-    //       break;
-    //     case BracketTagEnum.Pa:
-    //       bracketMessage +=
-    //         '"precon appropriate", and can probably be included in any preconstructed deck, fitting bracket 2 guidelines.';
-    //       break;
-    //     case BracketTagEnum.O:
-    //       bracketMessage += '"oddball", as it might not fit perfectly within any precon or deck meant to be bracket 2.';
-    //       break;
-    //     case BracketTagEnum.P:
-    //       bracketMessage += '"powerful", as it can probably be included in decks meant to be bracket 3 or higher.';
-    //       break;
-    //     case BracketTagEnum.S:
-    //       bracketMessage += '"spicy", as it might not fit perfectly withy any deck meant to be bracket 3.';
-    //       break;
-    //     case BracketTagEnum.R:
-    //       bracketMessage += '"ruthless", as it can probably be included only in decks meant to be bracket 4 or higher.';
-    //       break;
-    //   }
-    //   metaData.push(bracketMessage);
-    //   showBracketGuidelinesLink = true;
-    // }
+
+    const otherCombosInterferingBracketEstimate =
+      bracketEstimate && combo.bracketTag !== bracketEstimate.bracketTag && bracketEstimate.combos.length > 1;
+
     return (
       <>
         <SpellbookHead
@@ -234,14 +262,38 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
             />
 
             {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}
-            {showBracketGuidelinesLink && (
-              <div className="flex justify-center">
-                <ExternalLink
-                  href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta"
-                  className="text-center"
-                >
-                  Learn more about the Commander format bracket system
-                </ExternalLink>
+            {!!combo.bracketTag && (
+              <div>
+                <h2 className="font-bold text-xl mb-2">Bracket Tag</h2>
+                <p>
+                  This combo has been estimated to be{' '}
+                  <span className={styles.bracketTag}>{BRACKET_NAME_MAP[combo.bracketTag]}</span> (Bracket{' '}
+                  <span className={styles.bracketTag}>{BRACKET_RANGE_MAP[combo.bracketTag]}</span>).
+                  {otherCombosInterferingBracketEstimate && (
+                    <>
+                      <br />
+                      However, this combo includes other combos which raise the bracket estimate to{' '}
+                      <span className={styles.bracketTag}>
+                        {BRACKET_NAME_MAP[bracketEstimate.bracketTag]}
+                      </span> (Bracket{' '}
+                      <span className={styles.bracketTag}>{BRACKET_RANGE_MAP[bracketEstimate.bracketTag]}</span>). Those
+                      combos are:{' '}
+                      <ComboResults
+                        results={bracketEstimate.combos.filter((c) => c.combo.id != combo.id)}
+                        hideVariants={true}
+                      />
+                    </>
+                  )}
+                </p>
+                <BracketInfo bracketEstimate={bracketEstimate} singleCombo={!otherCombosInterferingBracketEstimate} />
+                <div className="flex justify-center">
+                  <ExternalLink
+                    href="https://magic.wizards.com/en/news/announcements?search=%22commander+brackets%22"
+                    className="text-center"
+                  >
+                    Learn more about the Commander format bracket system
+                  </ExternalLink>
+                </div>
               </div>
             )}
           </div>
@@ -342,19 +394,19 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
                   title="Variants of this combo"
                   id="combo-variants"
                   iterations={
-                    variantsLoading
+                    variants === undefined
                       ? []
                       : [
                           `Below you find ${variants.length == variantCount ? `all ${variants.length}` : `${variants.length} out of ${variantCount} total`} variants of this combo, with the alternative cards highlighted.`,
                         ]
                   }
                 />
-                {variantsLoading && <Loader />}
-                {variants.length == 0 && !variantsLoading && <p>No other variants found</p>}
+                {variants === undefined && <Loader />}
+                {variants && variants.length == 0 && <p>No other variants found</p>}
               </>
             )}
           </div>
-          {variants.length > 0 && !variantsLoading && (
+          {variants && variants.length > 0 && (
             <ComboResults
               results={variants}
               sort="popularity"
@@ -369,7 +421,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               }}
             />
           )}
-          {variants.length > 0 && !variantsLoading && (
+          {variants && variants.length > 0 && (
             <div className="flex justify-center">
               <Link href={`/search?variant=${combo.id}&groupByCombo=false`} className="button">
                 Show all {combo.variantCount} variants

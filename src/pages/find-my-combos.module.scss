@@ -39,10 +39,6 @@
     @apply border-2 border-dark w-1/3 text-center py-2 -mt-4;
   }
 
-  .decklistApp {
-    @apply py-4;
-  }
-
   .decklistHint {
     @apply flex relative text-center items-center justify-center flex-col -my-10 mb-8;
   }

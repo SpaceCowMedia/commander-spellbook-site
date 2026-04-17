@@ -3,7 +3,6 @@ import eslint from '@eslint/js';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import cypress from 'eslint-plugin-cypress';
-import prettier from 'eslint-plugin-prettier/recommended';
 import prettierConfig from 'eslint-config-prettier/flat';
 import nextPlugin from '@next/eslint-plugin-next';
 import globals from 'globals';
@@ -12,12 +11,10 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.strict,
-  tseslint.configs.stylistic,
   reactHooks.configs.flat.recommended,
   react.configs.flat.recommended,
   nextPlugin.configs.recommended,
   cypress.configs.recommended,
-  prettier,
   prettierConfig,
   {
     languageOptions: {
@@ -40,15 +37,6 @@ export default defineConfig(
       '@typescript-eslint/no-empty-function': 'off' as const,
       '@typescript-eslint/no-non-null-assertion': 'off' as const,
       '@next/next/no-img-element': 'off' as const,
-      'prettier/prettier': [
-        'error',
-        {
-          trailingComma: 'all' as const,
-          eslintIntegration: true as boolean,
-          printWidth: 120 as number,
-          singleQuote: true as boolean,
-        },
-      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

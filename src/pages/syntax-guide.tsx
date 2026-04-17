@@ -923,7 +923,7 @@ const BRACKET_DESCRIPTION = `
 Combos are automatically categorized into brackets tags based on their characteristics, in order to help users find combos that fit their needs and preferences for Commander deck building.
 
 > [!QUESTION]
-> If you want to know more about the bracket system, check out [the related articles from Wizards of the Coast](https://magic.wizards.com/en/news/announcements?search=brackets).
+> If you want to know more about the bracket system, check out [the related articles from Wizards of the Coast](https://magic.wizards.com/en/news/announcements?search=%22commander+brackets%22).
 
 Given the qualitative, subjective nature of the bracket system, we refrained from classifying each combo rigidly into a single bracket, and instead we assigned a [_bracket tag_](#bracket-tags) 
 to each combo that provides a qualitative association to one ore more brackets, to be used as a search parameter and guideline for users, rather than a strict classification.

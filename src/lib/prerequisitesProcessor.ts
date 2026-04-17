@@ -177,11 +177,13 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   if (variant.easyPrerequisites) {
     variant.easyPrerequisites
       .split(/\.\s+/gi)
+      .filter((s) => s.trim().length > 0)
       .forEach((prereq) => output.push({ zones: ['easy'], description: prereq }));
   }
   if (variant.notablePrerequisites) {
     variant.notablePrerequisites
       .split(/\.\s+/gi)
+      .filter((s) => s.trim().length > 0)
       .forEach((prereq) => output.push({ zones: ['notable'], description: prereq }));
   }
 
