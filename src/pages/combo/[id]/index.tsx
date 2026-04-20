@@ -129,6 +129,9 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   };
 
   useEffect(() => {
+    setVariants(undefined);
+    setVariantCount((combo?.variantCount ?? 1) - 1);
+    setBracketEstimate(undefined);
     if (combo && combo.variantCount > 1) {
       loadVariants(combo);
     }
