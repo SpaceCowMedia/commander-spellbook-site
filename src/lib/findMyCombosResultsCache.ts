@@ -17,6 +17,7 @@ export type ResultsCache = {
   format: string;
   results: ResultType;
   bracketInfo: EstimateBracketResult | undefined;
+  scrollY: number;
 };
 
 export const readResultsCache = (): ResultsCache | null => {

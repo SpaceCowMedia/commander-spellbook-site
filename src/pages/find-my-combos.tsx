@@ -198,6 +198,7 @@ const FindMyCombos: React.FC = () => {
         deckJson: JSON.stringify(DeckToJSON(decklist.deck)),
         format,
         results: newResults,
+        scrollY: 0,
       });
     } catch (error) {
       await handleFindMyCombosError(error);
@@ -261,8 +262,25 @@ const FindMyCombos: React.FC = () => {
     setBracketInfo(cache.bracketInfo);
     setFormat(cache.format);
     setAnalyzedFormat(cache.format);
+    const targetScrollY = cache.scrollY;
+    requestAnimationFrame(() => {
+      window.scrollTo(0, targetScrollY);
+    });
     return true;
   };
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      if (!readResultsCache()) {
+        return;
+      }
+      mergeResultsCache({ scrollY: window.scrollY });
+    };
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+    };
+  }, [router.events]);
 
   useEffect(() => {
     if (!router.isReady) {

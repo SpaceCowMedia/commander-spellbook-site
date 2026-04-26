@@ -32,10 +32,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => {
     reactStrictMode: true,
     trailingSlash: true,
     productionBrowserSourceMaps: true,
-    experimental: {
-      // Restore scroll position on browser back/forward across all Pages Router routes.
-      scrollRestoration: true,
-    },
     assetPrefix: !isDev && !isTest ? `https://${dev}cdn.commanderspellbook.com` : undefined,
     images: {
       unoptimized: true,
