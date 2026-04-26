@@ -2,6 +2,9 @@ import { EstimateBracketResult, Variant } from '@space-cow-media/spellbook-clien
 
 const SESSION_STORAGE_RESULTS_KEY = 'commander-spellbook-combo-finder-results';
 
+// sessionStorage access is best-effort: every call below swallows errors so that
+// quota limits, private-mode restrictions, or malformed entries can't break the page.
+
 export interface ResultType {
   identity: string;
   included: Variant[];
@@ -29,6 +32,7 @@ export const readResultsCache = (): ResultsCache | null => {
     const parsed: ResultsCache = JSON.parse(raw);
     return parsed;
   } catch {
+    /* see file header */
     return null;
   }
 };
@@ -38,7 +42,7 @@ export const mergeResultsCache = (patch: Partial<ResultsCache>): void => {
     const existing = readResultsCache();
     sessionStorage.setItem(SESSION_STORAGE_RESULTS_KEY, JSON.stringify({ ...existing, ...patch }));
   } catch {
-    // sessionStorage is best-effort; if it fails (quota, private mode) the page still works.
+    /* see file header */
   }
 };
 
@@ -46,6 +50,6 @@ export const clearResultsCache = (): void => {
   try {
     sessionStorage.removeItem(SESSION_STORAGE_RESULTS_KEY);
   } catch {
-    // ignore
+    /* see file header */
   }
 };
