@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import pluralize from 'pluralize';
 import styles from './find-my-combos.module.scss';
 import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
@@ -12,7 +12,6 @@ import {
   Deck,
   FindMyCombosApi,
   InvalidUrlResponse,
-  Variant,
   DeckToJSON,
   DeckFromJSON,
   ResponseError,
@@ -24,6 +23,7 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { LEGALITY_FORMATS } from 'lib/types';
 import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
 import { DEFAULT_ORDERING } from 'lib/constants';
+import { ResultType, clearResultsCache, mergeResultsCache, readResultsCache } from 'lib/findMyCombosResultsCache';
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
@@ -67,16 +67,6 @@ export class Decklist {
   }
 }
 
-export interface ResultType {
-  identity: string;
-  included: Variant[];
-  includedByChangingCommanders: Variant[];
-  almostIncluded: Variant[];
-  almostIncludedByChangingCommanders: Variant[];
-  almostIncludedByAddingColors: Variant[];
-  almostIncludedByAddingColorsAndChangingCommanders: Variant[];
-}
-
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
   const [exportModalOpen, setExportModalOpen] = useState(false);
@@ -88,10 +78,17 @@ const FindMyCombos: React.FC = () => {
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
   const [format, setFormat] = useState<string>('commander');
+  // Tracks the format filter the currently-loaded `results` were computed for.
+  // The format-change effect re-analyzes only when these diverge, which prevents
+  // hydration (which sets `format` from cache) from triggering a redundant fetch.
+  const [analyzedFormat, setAnalyzedFormat] = useState<string>('commander');
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
   const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
+  // When restoring from cache, hold the target scroll position until `results` commits.
+  // useLayoutEffect below applies it before paint so we never scroll into a still-empty page.
+  const pendingScrollY = useRef<number | null>(null);
 
   const configuration = apiConfiguration();
   const findMyCombosApi = new FindMyCombosApi(configuration);
@@ -197,6 +194,13 @@ const FindMyCombos: React.FC = () => {
       } // Adding a page limit to prevent infinite loops
 
       setResults(newResults);
+      setAnalyzedFormat(format);
+      mergeResultsCache({
+        deckJson: JSON.stringify(DeckToJSON(decklist.deck)),
+        format,
+        results: newResults,
+        scrollY: 0,
+      });
     } catch (error) {
       await handleFindMyCombosError(error);
       setResults(undefined);
@@ -211,6 +215,10 @@ const FindMyCombos: React.FC = () => {
         deckRequest: decklist.deck,
       });
       setBracketInfo(bracketInfo);
+      mergeResultsCache({
+        deckJson: JSON.stringify(DeckToJSON(decklist.deck)),
+        bracketInfo,
+      });
     } catch (error) {
       console.error('Failed to fetch bracket info', error);
       setBracketInfo(undefined);
@@ -227,6 +235,7 @@ const FindMyCombos: React.FC = () => {
     setResults(undefined);
     setBracketInfo(undefined);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    clearResultsCache();
     if (router.query.deckUrl) {
       router.push({ pathname: '/find-my-combos/', query: {} });
     }
@@ -237,6 +246,50 @@ const FindMyCombos: React.FC = () => {
     lookupBracket(decklist);
   };
 
+  const tryHydrateFromCache = (decklist: Decklist): boolean => {
+    if (decklist.isEmpty()) {
+      return false;
+    }
+    const cache = readResultsCache();
+    if (!cache) {
+      return false;
+    }
+    const deckJson = JSON.stringify(DeckToJSON(decklist.deck));
+    if (cache.deckJson !== deckJson) {
+      clearResultsCache();
+      return false;
+    }
+    pendingScrollY.current = cache.scrollY;
+    setResults(cache.results);
+    setBracketInfo(cache.bracketInfo);
+    setFormat(cache.format);
+    setAnalyzedFormat(cache.format);
+    return true;
+  };
+
+  // Persist the scroll position after navigating to a combo detail page
+  useLayoutEffect(() => {
+    if (pendingScrollY.current === null || !results) {
+      return;
+    }
+    const target = pendingScrollY.current;
+    pendingScrollY.current = null;
+    window.scrollTo(0, target);
+  }, [results]);
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      if (!readResultsCache()) {
+        return;
+      }
+      mergeResultsCache({ scrollY: window.scrollY });
+    };
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+    };
+  }, [router.events]);
+
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -245,7 +298,12 @@ const FindMyCombos: React.FC = () => {
     if (router.query.decklist || router.query.commanders) {
       const decklist = (router.query.decklist as string) || '';
       const commanderList = (router.query.commanders as string) || '';
-      parseDecklist(decklist, commanderList).then(analyzeDeck);
+      parseDecklist(decklist, commanderList).then((parsed) => {
+        if (tryHydrateFromCache(parsed)) {
+          return;
+        }
+        analyzeDeck(parsed);
+      });
       return;
     }
 
@@ -260,6 +318,9 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
+      if (tryHydrateFromCache(decklist)) {
+        return;
+      }
       analyzeDeck(decklist);
     } catch (e) {
       console.error('Failed to load saved decklist from local storage', e);
@@ -308,10 +369,14 @@ const FindMyCombos: React.FC = () => {
   }, [deckUrl, urlQueryParam]);
 
   useEffect(() => {
-    if (currentlyParsedDeck) {
-      analyzeDeck(currentlyParsedDeck);
+    if (!currentlyParsedDeck) {
+      return;
     }
-  }, [format]);
+    if (format === analyzedFormat) {
+      return;
+    }
+    analyzeDeck(currentlyParsedDeck);
+  }, [format, analyzedFormat, currentlyParsedDeck]);
 
   const getNormalizedFileName = () => {
     const commandersNormalized = currentlyParsedDeck

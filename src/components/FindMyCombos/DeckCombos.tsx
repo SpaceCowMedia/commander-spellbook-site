@@ -1,6 +1,7 @@
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import React from 'react';
-import { Decklist, ResultType } from 'pages/find-my-combos';
+import { Decklist } from 'pages/find-my-combos';
+import { ResultType } from 'lib/findMyCombosResultsCache';
 import pluralize from 'pluralize';
 
 interface Props {
