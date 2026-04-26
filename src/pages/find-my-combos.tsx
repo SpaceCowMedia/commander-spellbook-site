@@ -1,11 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import pluralize from "pluralize";
-import styles from "./find-my-combos.module.scss";
-import ArtCircle from "../components/layout/ArtCircle/ArtCircle";
-import SpellbookHead from "../components/SpellbookHead/SpellbookHead";
-import { isValidHttpUrl } from "../lib/url-check";
-import ErrorMessage from "components/submission/ErrorMessage/ErrorMessage";
-import { useRouter } from "next/router";
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import pluralize from 'pluralize';
+import styles from './find-my-combos.module.scss';
+import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import { isValidHttpUrl } from '../lib/url-check';
+import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
+import { useRouter } from 'next/router';
 import {
   CardListFromTextApi,
   CardListFromUrlApi,
@@ -17,30 +17,24 @@ import {
   ResponseError,
   EstimateBracketApi,
   EstimateBracketResult,
-} from "@space-cow-media/spellbook-client";
-import { apiConfiguration } from "services/api.service";
-import { queryParameterAsString } from "lib/queryParameters";
-import { LEGALITY_FORMATS } from "lib/types";
-import StyledSelect from "components/layout/StyledSelect/StyledSelect";
-import { DEFAULT_ORDERING } from "lib/constants";
-import {
-  ResultType,
-  clearResultsCache,
-  mergeResultsCache,
-  readResultsCache,
-} from "lib/findMyCombosResultsCache";
-import CombosExportService from "services/combos-export.service";
-import DownloadFileService from "services/download-file.service";
-import normalizeStringInput from "lib/normalizeStringInput";
-import Modal from "components/ui/Modal/Modal";
-import Tab from "components/ui/Tab/Tab.";
-import DeckCombos from "components/FindMyCombos/DeckCombos";
-import DeckBracket from "components/FindMyCombos/DeckBracket";
-import Loader from "components/layout/Loader/Loader";
-import { BRACKET_RANGE_MAP } from "lib/brackets";
+} from '@space-cow-media/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
+import { queryParameterAsString } from 'lib/queryParameters';
+import { LEGALITY_FORMATS } from 'lib/types';
+import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
+import { DEFAULT_ORDERING } from 'lib/constants';
+import { ResultType, clearResultsCache, mergeResultsCache, readResultsCache } from 'lib/findMyCombosResultsCache';
+import CombosExportService from 'services/combos-export.service';
+import DownloadFileService from 'services/download-file.service';
+import normalizeStringInput from 'lib/normalizeStringInput';
+import Modal from 'components/ui/Modal/Modal';
+import Tab from 'components/ui/Tab/Tab.';
+import DeckCombos from 'components/FindMyCombos/DeckCombos';
+import DeckBracket from 'components/FindMyCombos/DeckBracket';
+import Loader from 'components/layout/Loader/Loader';
+import { BRACKET_RANGE_MAP } from 'lib/brackets';
 
-const LOCAL_STORAGE_DECK_STORAGE_KEY =
-  "commander-spellbook-combo-finder-last-decklist";
+const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
 export class Decklist {
   deck: Deck;
@@ -50,15 +44,11 @@ export class Decklist {
   }
 
   commanderListString(): string {
-    return this.deck.commanders
-      .map((card) => `${card.quantity} ${card.card}`)
-      .join("\n");
+    return this.deck.commanders.map((card) => `${card.quantity} ${card.card}`).join('\n');
   }
 
   mainListString(): string {
-    return this.deck.main
-      .map((card) => `${card.quantity} ${card.card}`)
-      .join("\n");
+    return this.deck.main.map((card) => `${card.quantity} ${card.card}`).join('\n');
   }
 
   toString(): string {
@@ -80,20 +70,20 @@ export class Decklist {
 const FindMyCombos: React.FC = () => {
   const router = useRouter();
   const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [decklist, setDecklist] = useState<string>("");
-  const [commanderList, setCommanderList] = useState<string>("");
+  const [decklist, setDecklist] = useState<string>('');
+  const [commanderList, setCommanderList] = useState<string>('');
   const [decklistErrors, setDecklistErrors] = useState<string[]>([]);
-  const [deckUrl, setDeckUrl] = useState<string>("");
-  const [deckUrlError, setDeckUrlHint] = useState<string>("");
+  const [deckUrl, setDeckUrl] = useState<string>('');
+  const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
-  const [format, setFormat] = useState<string>("commander");
+  const [format, setFormat] = useState<string>('commander');
   // Tracks the format filter the currently-loaded `results` were computed for.
   // The format-change effect re-analyzes only when these diverge, which prevents
   // hydration (which sets `format` from cache) from triggering a redundant fetch.
-  const [analyzedFormat, setAnalyzedFormat] = useState<string>("commander");
+  const [analyzedFormat, setAnalyzedFormat] = useState<string>('commander');
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
-  const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize("card", numberOfCardsInDeck)}`;
+  const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
   const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
   // When restoring from cache, hold the target scroll position until `results` commits.
@@ -112,7 +102,7 @@ const FindMyCombos: React.FC = () => {
     const errorMessages: string[] = [];
     if (Array.isArray(body.main)) {
       body.main.forEach((message: string) => {
-        if (typeof message === "string") {
+        if (typeof message === 'string') {
           errorMessages.push(message);
         }
       });
@@ -128,17 +118,14 @@ const FindMyCombos: React.FC = () => {
     setDecklistErrors(errorMessages);
   };
 
-  const parseDecklist = async (
-    decklistRaw: string,
-    commanderListRaw?: string,
-  ): Promise<Decklist> => {
+  const parseDecklist = async (decklistRaw: string, commanderListRaw?: string): Promise<Decklist> => {
     if (commanderListRaw) {
       decklistRaw = `${decklistRaw}\n// Commanders\n${commanderListRaw}`;
     }
     setDecklist(decklistRaw);
-    setCommanderList(commanderListRaw || "");
+    setCommanderList(commanderListRaw || '');
     setCurrentlyParsedDeck(undefined);
-    setDeckUrl("");
+    setDeckUrl('');
     try {
       const deck = await cardListFromTextApi.cardListFromTextCreate({
         body: decklistRaw,
@@ -167,10 +154,7 @@ const FindMyCombos: React.FC = () => {
       return;
     }
 
-    localStorage.setItem(
-      LOCAL_STORAGE_DECK_STORAGE_KEY,
-      JSON.stringify(DeckToJSON(decklist.deck)),
-    );
+    localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
 
     try {
       const combos = await findMyCombosApi.findMyCombosCreate({
@@ -182,27 +166,20 @@ const FindMyCombos: React.FC = () => {
 
       const newResults = {
         identity: combos.results.identity,
-        included: (forwardedResults?.included || []).concat(
-          combos.results.included,
+        included: (forwardedResults?.included || []).concat(combos.results.included),
+        includedByChangingCommanders: (forwardedResults?.includedByChangingCommanders || []).concat(
+          combos.results.includedByChangingCommanders,
         ),
-        includedByChangingCommanders: (
-          forwardedResults?.includedByChangingCommanders || []
-        ).concat(combos.results.includedByChangingCommanders),
-        almostIncluded: (forwardedResults?.almostIncluded || []).concat(
-          combos.results.almostIncluded,
+        almostIncluded: (forwardedResults?.almostIncluded || []).concat(combos.results.almostIncluded),
+        almostIncludedByChangingCommanders: (forwardedResults?.almostIncludedByChangingCommanders || []).concat(
+          combos.results.almostIncludedByChangingCommanders,
         ),
-        almostIncludedByChangingCommanders: (
-          forwardedResults?.almostIncludedByChangingCommanders || []
-        ).concat(combos.results.almostIncludedByChangingCommanders),
-        almostIncludedByAddingColors: (
-          forwardedResults?.almostIncludedByAddingColors || []
-        ).concat(combos.results.almostIncludedByAddingColors),
+        almostIncludedByAddingColors: (forwardedResults?.almostIncludedByAddingColors || []).concat(
+          combos.results.almostIncludedByAddingColors,
+        ),
         almostIncludedByAddingColorsAndChangingCommanders: (
-          forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders ||
-          []
-        ).concat(
-          combos.results.almostIncludedByAddingColorsAndChangingCommanders,
-        ),
+          forwardedResults?.almostIncludedByAddingColorsAndChangingCommanders || []
+        ).concat(combos.results.almostIncludedByAddingColorsAndChangingCommanders),
       };
 
       const resultCount =
@@ -243,24 +220,24 @@ const FindMyCombos: React.FC = () => {
         bracketInfo,
       });
     } catch (error) {
-      console.error("Failed to fetch bracket info", error);
+      console.error('Failed to fetch bracket info', error);
       setBracketInfo(undefined);
     }
   };
 
   const clearDecklist = () => {
     setCurrentlyParsedDeck(undefined);
-    setDecklist("");
-    setCommanderList("");
-    setDeckUrl("");
-    setDeckUrlHint("");
+    setDecklist('');
+    setCommanderList('');
+    setDeckUrl('');
+    setDeckUrlHint('');
     setDecklistErrors([]);
     setResults(undefined);
     setBracketInfo(undefined);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     clearResultsCache();
     if (router.query.deckUrl) {
-      router.push({ pathname: "/find-my-combos/", query: {} });
+      router.push({ pathname: '/find-my-combos/', query: {} });
     }
   };
 
@@ -307,9 +284,9 @@ const FindMyCombos: React.FC = () => {
       }
       mergeResultsCache({ scrollY: window.scrollY });
     };
-    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on('routeChangeStart', handleRouteChangeStart);
     return () => {
-      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off('routeChangeStart', handleRouteChangeStart);
     };
   }, [router.events]);
 
@@ -319,8 +296,8 @@ const FindMyCombos: React.FC = () => {
     }
 
     if (router.query.decklist || router.query.commanders) {
-      const decklist = (router.query.decklist as string) || "";
-      const commanderList = (router.query.commanders as string) || "";
+      const decklist = (router.query.decklist as string) || '';
+      const commanderList = (router.query.commanders as string) || '';
       parseDecklist(decklist, commanderList).then((parsed) => {
         if (tryHydrateFromCache(parsed)) {
           return;
@@ -330,9 +307,7 @@ const FindMyCombos: React.FC = () => {
       return;
     }
 
-    const savedDeckString = localStorage.getItem(
-      LOCAL_STORAGE_DECK_STORAGE_KEY,
-    );
+    const savedDeckString = localStorage.getItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
     if (!savedDeckString) {
       return;
     }
@@ -348,7 +323,7 @@ const FindMyCombos: React.FC = () => {
       }
       analyzeDeck(decklist);
     } catch (e) {
-      console.error("Failed to load saved decklist from local storage", e);
+      console.error('Failed to load saved decklist from local storage', e);
       clearDecklist();
     }
   }, [router.isReady]);
@@ -359,14 +334,14 @@ const FindMyCombos: React.FC = () => {
 
   const handleUrlInput = async () => {
     if (!isValidHttpUrl(deckUrl)) {
-      setDeckUrlHint("You must paste a valid URL.");
+      setDeckUrlHint('You must paste a valid URL.');
       return;
     }
     try {
       const deck = await cardListFromUrlApi.cardListFromUrlRetrieve({
         url: deckUrl,
       });
-      setDeckUrlHint("");
+      setDeckUrlHint('');
       const decklist = new Decklist(deck);
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
@@ -379,7 +354,7 @@ const FindMyCombos: React.FC = () => {
     }
   };
 
-  const urlQueryParam = queryParameterAsString(router.query.deckUrl) ?? "";
+  const urlQueryParam = queryParameterAsString(router.query.deckUrl) ?? '';
 
   useEffect(() => {
     if (router.query.deckUrl != undefined) {
@@ -388,7 +363,7 @@ const FindMyCombos: React.FC = () => {
   }, [router.query.deckUrl]);
 
   useEffect(() => {
-    if (deckUrl === urlQueryParam && urlQueryParam != "") {
+    if (deckUrl === urlQueryParam && urlQueryParam != '') {
       handleUrlInput();
     }
   }, [deckUrl, urlQueryParam]);
@@ -407,12 +382,12 @@ const FindMyCombos: React.FC = () => {
     const commandersNormalized = currentlyParsedDeck
       ? currentlyParsedDeck.deck.commanders
           .map((c) => normalizeStringInput(c.card))
-          .join("+")
+          .join('+')
           .trim()
-          .replace(/\s+/g, "_")
+          .replace(/\s+/g, '_')
           .substring(0, 50)
-      : "";
-    return `${commandersNormalized ? `${commandersNormalized}_` : ""}decklist_combos`;
+      : '';
+    return `${commandersNormalized ? `${commandersNormalized}_` : ''}decklist_combos`;
   };
 
   const handleExportCombosToText = () => {
@@ -421,10 +396,7 @@ const FindMyCombos: React.FC = () => {
     }
 
     const combosExport = CombosExportService.exportToText(results.included);
-    DownloadFileService.downloadTextFile(
-      `${getNormalizedFileName()}.txt`,
-      combosExport,
-    );
+    DownloadFileService.downloadTextFile(`${getNormalizedFileName()}.txt`, combosExport);
   };
 
   const handleExportCombosToCsv = () => {
@@ -433,10 +405,7 @@ const FindMyCombos: React.FC = () => {
     }
 
     const combosExport = CombosExportService.exportToCsv(results.included);
-    DownloadFileService.downloadTextFile(
-      `${getNormalizedFileName()}.csv`,
-      combosExport,
-    );
+    DownloadFileService.downloadTextFile(`${getNormalizedFileName()}.csv`, combosExport);
   };
 
   return (
@@ -452,8 +421,7 @@ const FindMyCombos: React.FC = () => {
           Uncover combos in your deck, and discover potential combos.
         </h2>
         <label htmlFor="decklist-input" className="sr-only">
-          Copy and paste your decklist into the text box to discover the combos
-          in your deck.
+          Copy and paste your decklist into the text box to discover the combos in your deck.
         </label>
         <section>
           <label>Commanders:</label>
@@ -496,14 +464,8 @@ const FindMyCombos: React.FC = () => {
                       id="parse-decklist-input"
                       className={`${styles.clearDecklistInput} button`}
                       onClick={() => {
-                        window.history.replaceState(
-                          null,
-                          "",
-                          "/find-my-combos/",
-                        );
-                        parseDecklist(decklist, commanderList).then(
-                          analyzeDeck,
-                        );
+                        window.history.replaceState(null, '', '/find-my-combos/');
+                        parseDecklist(decklist, commanderList).then(analyzeDeck);
                       }}
                     >
                       Find New Combos!
@@ -518,45 +480,39 @@ const FindMyCombos: React.FC = () => {
                     </button>
                   </div>
 
-                  {decklistErrors.length === 0 &&
-                    results &&
-                    results.included.length > 0 && (
-                      <>
-                        <Modal
-                          open={exportModalOpen}
-                          onClose={() => setExportModalOpen(false)}
-                          closeIcon={true}
-                        >
-                          <h2>Select a file format to export combos</h2>
-                          <div className="flex flex-row gap-y-2">
-                            <button
-                              id="download-combos-txt-btn"
-                              type="button"
-                              className={`${styles.exportCombosInput} button`}
-                              onClick={handleExportCombosToText}
-                            >
-                              TXT
-                            </button>
-                            <button
-                              id="download-combos-csv-btn"
-                              type="button"
-                              className={`${styles.exportCombosInput} button`}
-                              onClick={handleExportCombosToCsv}
-                            >
-                              CSV
-                            </button>
-                          </div>
-                        </Modal>
-                        <button
-                          id="download-combos-file-btn"
-                          type="button"
-                          className={`${styles.exportCombosInput} button`}
-                          onClick={() => setExportModalOpen(true)}
-                        >
-                          Export Combos To File
-                        </button>
-                      </>
-                    )}
+                  {decklistErrors.length === 0 && results && results.included.length > 0 && (
+                    <>
+                      <Modal open={exportModalOpen} onClose={() => setExportModalOpen(false)} closeIcon={true}>
+                        <h2>Select a file format to export combos</h2>
+                        <div className="flex flex-row gap-y-2">
+                          <button
+                            id="download-combos-txt-btn"
+                            type="button"
+                            className={`${styles.exportCombosInput} button`}
+                            onClick={handleExportCombosToText}
+                          >
+                            TXT
+                          </button>
+                          <button
+                            id="download-combos-csv-btn"
+                            type="button"
+                            className={`${styles.exportCombosInput} button`}
+                            onClick={handleExportCombosToCsv}
+                          >
+                            CSV
+                          </button>
+                        </div>
+                      </Modal>
+                      <button
+                        id="download-combos-file-btn"
+                        type="button"
+                        className={`${styles.exportCombosInput} button`}
+                        onClick={() => setExportModalOpen(true)}
+                      >
+                        Export Combos To File
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
               {decklistErrors.map((error) => (
@@ -566,11 +522,7 @@ const FindMyCombos: React.FC = () => {
           )}
 
           {!decklist && (
-            <div
-              id="decklist-hint"
-              className={`${styles.decklistHint} heading-subtitle`}
-              aria-hidden="true"
-            >
+            <div id="decklist-hint" className={`${styles.decklistHint} heading-subtitle`} aria-hidden="true">
               Paste your decklist
             </div>
           )}
@@ -586,16 +538,12 @@ const FindMyCombos: React.FC = () => {
                 placeholder="Supported deckbuilding sites: Archidekt, Moxfield, Deckstats.net, TappedOut.net."
                 onChange={(e) => setDeckUrl(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     handleUrlInput();
                   }
                 }}
               />
-              <div
-                id="decklist-url-hint"
-                className={`${styles.decklistHint} heading-subtitle`}
-                aria-hidden="true"
-              >
+              <div id="decklist-url-hint" className={`${styles.decklistHint} heading-subtitle`} aria-hidden="true">
                 Paste your decklist url
               </div>
               {!!deckUrl && (
@@ -604,7 +552,7 @@ const FindMyCombos: React.FC = () => {
                   className={`${styles.clearDecklistInput} button`}
                   onClick={() =>
                     router.push({
-                      pathname: "/find-my-combos/",
+                      pathname: '/find-my-combos/',
                       query: { deckUrl },
                     })
                   }
@@ -634,28 +582,18 @@ const FindMyCombos: React.FC = () => {
           </div>
         </section>
         {currentlyParsedDeck &&
-          (format === "commander" ? (
+          (format === 'commander' ? (
             <Tab
               tabs={[
                 {
                   title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
-                  content: (
-                    <DeckCombos
-                      results={results}
-                      format={format}
-                      currentlyParsedDeck={currentlyParsedDeck}
-                    />
-                  ),
+                  content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
                 },
                 {
                   title: (
                     <>
                       Bracket Info&nbsp;
-                      {bracketInfo ? (
-                        `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})`
-                      ) : (
-                        <Loader />
-                      )}
+                      {bracketInfo ? `(Est. ${BRACKET_RANGE_MAP[bracketInfo.bracketTag]})` : <Loader />}
                     </>
                   ),
                   content: <DeckBracket results={bracketInfo} />,
@@ -663,11 +601,7 @@ const FindMyCombos: React.FC = () => {
               ]}
             />
           ) : (
-            <DeckCombos
-              results={results}
-              format={format}
-              currentlyParsedDeck={currentlyParsedDeck}
-            />
+            <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />
           ))}
       </div>
     </>
