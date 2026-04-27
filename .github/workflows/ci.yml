@@ -101,7 +101,7 @@ jobs:
           port: "8000"
 
       - name: Cypress run 🧪
-        uses: cypress-io/github-action@v7
+        uses: cypress-io/github-action@v7.1.9
         with:
           install-command: "true"
           build: yarn build
