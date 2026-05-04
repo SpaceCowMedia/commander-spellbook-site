@@ -57,7 +57,7 @@
     "@next/eslint-plugin-next": "^16.2.1",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@types/gtag.js": "^0.0.20",
-    "@types/node": "^25.3.3",
+    "@types/node": "^25.6.0",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
