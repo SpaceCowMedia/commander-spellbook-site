@@ -1,7 +1,7 @@
 import Dimmer from 'components/ui/Dimmer/Dimmer';
 import styles from './Modal.module.scss';
+import cn from 'lib/cn';
 import React, { useEffect, useRef, useState } from 'react';
-import classNames from 'classnames';
 import ReactDOM from 'react-dom';
 import Icon from 'components/layout/Icon/Icon';
 
@@ -36,9 +36,9 @@ const Modal: React.FC<Props> = ({ open, children, onClose, footer, size, closeIc
     <>
       {isOpen &&
         ReactDOM.createPortal(
-          <div className={classNames(styles.outerModalContainer, visible && styles.visible)}>
+          <div className={cn(styles.outerModalContainer, visible && styles.visible)}>
             <Dimmer dark onClick={() => onClose()} />
-            <div className={classNames(styles.modal, visible && styles.inPosition, size && styles[size])}>
+            <div className={cn(styles.modal, visible && styles.inPosition, size && styles[size])}>
               {closeIcon && (
                 <div className={styles.closeIcon} onClick={() => onClose()}>
                   <Icon name="close" />

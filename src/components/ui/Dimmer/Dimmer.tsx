@@ -1,6 +1,6 @@
 import styles from './Dimmer.module.scss';
 import Loader from 'components/layout/Loader/Loader';
-import classNames from 'classnames';
+import cn from 'lib/cn';
 import React from 'react';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 const Dimmer: React.FC<Props> = ({ loading, dark, onClick }) => {
   return (
-    <div onClick={onClick} className={classNames(styles.dimmer, dark && styles.dark)}>
+    <div onClick={onClick} className={cn(styles.dimmer, dark && styles.dark)}>
       {loading && <Loader />}
     </div>
   );

@@ -49,7 +49,7 @@ import {
   faAngleRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
+import cn from 'lib/cn';
 import React from 'react';
 
 const SPELLBOOK_ICONS = {
@@ -125,7 +125,7 @@ const Icon: React.FC<Props> = ({ name, className, onClick }) => {
   if (name in SPELLBOOK_ICONS) {
     return (
       <i
-        className={classNames(styles.icon, SPELLBOOK_ICONS[name as keyof typeof SPELLBOOK_ICONS], className)}
+        className={cn(styles.icon, SPELLBOOK_ICONS[name as keyof typeof SPELLBOOK_ICONS], className)}
         onClick={onClick}
       />
     );
@@ -133,7 +133,7 @@ const Icon: React.FC<Props> = ({ name, className, onClick }) => {
   if (name in SPELLBOOK_FA_ICONS) {
     return (
       <FontAwesomeIcon
-        className={classNames(styles.icon, className)}
+        className={cn(styles.icon, className)}
         icon={SPELLBOOK_FA_ICONS[name as keyof typeof SPELLBOOK_FA_ICONS]}
         onClick={onClick}
       />
