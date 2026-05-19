@@ -1,5 +1,11 @@
 export const GA_TRACKING_ID = 'G-357BGWEVLV';
 
+declare global {
+  interface Window {
+    gtag?: (command: 'config' | 'event', targetIdOrAction: string, config?: Record<string, string | undefined>) => void;
+  }
+}
+
 export const pageview = (url: string) => {
   const gdprIsAccepted = localStorage.getItem('GDPR:accepted') === 'true';
   if (!gdprIsAccepted) {
