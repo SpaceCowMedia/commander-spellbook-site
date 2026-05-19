@@ -1,4 +1,4 @@
-import { EstimateBracketResult } from '@space-cow-media/spellbook-client';
+import { ClassifiedVariant, EstimateBracketResult } from '@space-cow-media/spellbook-client';
 
 export const BRACKET_NAME_MAP = {
   R: 'Ruthless',
@@ -40,6 +40,14 @@ export const BRACKET_CRITERIA_MAP = {
   B: 'Combos that are not legal in any bracket',
 };
 
+function isComboGameWinning(combo: ClassifiedVariant) {
+  return combo.relevant && !combo.combo.produces.some((result) => result.feature.name === 'Draw the game');
+}
+
+function isComboGameEnding(combo: ClassifiedVariant) {
+  return combo.relevant;
+}
+
 export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
   const bannedCards = bracketEstimate.cards.filter((card) => card.banned).map((card) => card.card);
   const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger).map((card) => card.card);
@@ -59,21 +67,34 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
     .map((combo) => combo.combo);
   let other = bracketEstimate.combos.filter((combo) => combo.arguablyTwoCard);
   const fastGameWinningTwoCardCombos = other.filter(
-    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && combo.relevant,
+    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && isComboGameWinning(combo),
   );
-  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.relevant);
-  const fastGameWinningCombos = other.filter((combo) => combo.speed >= 4 && combo.relevant);
-  other = other.filter((combo) => combo.speed < 4 || !combo.relevant || !combo.arguablyTwoCard);
+  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !isComboGameWinning(combo));
+  const fastGameEndingTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && isComboGameEnding(combo),
+  );
+  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !isComboGameEnding(combo));
+  const fastGameWinningCombos = other.filter((combo) => combo.speed >= 4 && isComboGameWinning(combo));
+  other = other.filter((combo) => combo.speed < 4 || !isComboGameWinning(combo));
+  const fastGameEndingCombos = other.filter((combo) => combo.speed >= 4 && isComboGameEnding(combo));
+  other = other.filter((combo) => combo.speed < 4 || !isComboGameEnding(combo));
   const fastPowerfulTwoCardCombos = other.filter((combo) => combo.definitelyTwoCard && combo.borderlineRelevant);
   other = other.filter((combo) => !combo.definitelyTwoCard || !combo.borderlineRelevant);
   const normalGameWinningTwoCardCombos = other.filter(
-    (combo) => combo.speed >= 3 && combo.definitelyTwoCard && combo.relevant,
+    (combo) => combo.speed >= 3 && combo.definitelyTwoCard && isComboGameWinning(combo),
   );
-  other = other.filter((combo) => combo.speed < 3 || !combo.definitelyTwoCard || !combo.relevant);
+  other = other.filter((combo) => combo.speed < 3 || !combo.definitelyTwoCard || !isComboGameWinning(combo));
+  const normalGameEndingTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 3 && combo.definitelyTwoCard && isComboGameEnding(combo),
+  );
+  other = other.filter((combo) => combo.speed < 3 || !combo.definitelyTwoCard || !isComboGameEnding(combo));
   const normalPowerfulTwoCardCombos = other.filter((combo) => combo.speed >= 3 && combo.borderlineRelevant);
   other = other.filter((combo) => combo.speed < 3 || !combo.borderlineRelevant);
   const slowGameWinningTwoCardCombos = other.filter(
-    (combo) => combo.speed >= 2 && combo.definitelyTwoCard && combo.relevant,
+    (combo) => combo.speed >= 2 && combo.definitelyTwoCard && isComboGameWinning(combo),
+  );
+  const slowGameEndingTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 2 && combo.definitelyTwoCard && isComboGameEnding(combo),
   );
   return {
     bannedCards,
@@ -87,10 +108,14 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
     lockCombos,
     skipTurnsCombos,
     fastGameWinningTwoCardCombos,
+    fastGameEndingTwoCardCombos,
     fastGameWinningCombos,
+    fastGameEndingCombos,
     fastPowerfulTwoCardCombos,
     normalGameWinningTwoCardCombos,
+    normalGameEndingTwoCardCombos,
     normalPowerfulTwoCardCombos,
     slowGameWinningTwoCardCombos,
+    slowGameEndingTwoCardCombos,
   };
 }

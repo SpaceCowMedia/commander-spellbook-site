@@ -112,11 +112,25 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
         : `Having fast, game-winning, two card combos pushes this card list into bracket 4+. You have ${info.fastGameWinningTwoCardCombos.length}.`,
     );
   }
+  if (info.fastGameEndingTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      singleCombo
+        ? 'Being a fast, game-ending, two card combo pushes this combo into bracket 3+.'
+        : `Having fast, game-ending, two card combos pushes this card list into bracket 3+. You have ${info.fastGameEndingTwoCardCombos.length}.`,
+    );
+  }
   if (info.fastGameWinningCombos.length > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Being a fast, game-winning combo pushes this combo into brackets 3 or 4+.'
         : `Having fast, game-winning combos involving few cards pushes this card list into brackets 3 or 4+. You have ${info.fastGameWinningCombos.length}.`,
+    );
+  }
+  if (info.fastGameEndingCombos.length > 0) {
+    powerLevelFactors.push(
+      singleCombo
+        ? 'Being a fast, game-ending combo pushes this combo into bracket 3+.'
+        : `Having fast, game-ending combos involving few cards pushes this card list into bracket 3+. You have ${info.fastGameEndingCombos.length}.`,
     );
   }
   if (info.fastPowerfulTwoCardCombos.length > 0) {
@@ -133,6 +147,13 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
         : `Having game-winning combos involving few cards pushes this card list into bracket 3+. You have ${info.normalGameWinningTwoCardCombos.length}.`,
     );
   }
+  if (info.normalGameEndingTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      singleCombo
+        ? 'Being a normal, game-ending, two card combo pushes this combo into bracket 2+.'
+        : `Having game-ending combos involving few cards pushes this card list into bracket 2+. You have ${info.normalGameEndingTwoCardCombos.length}.`,
+    );
+  }
   if (info.normalPowerfulTwoCardCombos.length > 0) {
     powerLevelFactors.push(
       singleCombo
@@ -145,6 +166,13 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
       singleCombo
         ? 'Being a slow, game-winning, two card combo pushes this combo into bracket 2+.'
         : `Having late game, game-winning, two card combos pushes this card list into bracket 2+. You have ${info.slowGameWinningTwoCardCombos.length}.`,
+    );
+  }
+  if (info.slowGameEndingTwoCardCombos.length > 0) {
+    powerLevelFactors.push(
+      singleCombo
+        ? 'Being a slow, game-ending, two card combo pushes this combo into bracket 2+.'
+        : `Having late game, game-ending, two card combos pushes this card list into bracket 2+. You have ${info.slowGameEndingTwoCardCombos.length}.`,
     );
   }
 
