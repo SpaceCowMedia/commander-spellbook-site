@@ -30,7 +30,7 @@
     "@space-cow-media/spellbook-client": "^5.4.7",
     "canvas": "^3.2.3",
     "cookies-next": "^6.1.1",
-    "debounce": "^2.2.0",
+    "debounce": "^3.0.0",
     "markdown-to-jsx": "^9.7.15",
     "next": "^16.2.3",
     "nextjs-progressbar": "^0.0.16",
