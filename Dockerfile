@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM node:26-alpine AS base
+RUN npm install --global yarn@1.22.22
 
 # Install dependencies only when needed
 FROM base AS deps
