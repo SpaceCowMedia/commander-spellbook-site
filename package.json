@@ -59,7 +59,7 @@
     "@types/gtag.js": "^0.0.20",
     "@types/node": "^25.6.0",
     "@types/pluralize": "^0.0.33",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
