@@ -2669,12 +2669,12 @@ eslint-plugin-check-file@^3.3.1:
     is-glob "^4.0.3"
     micromatch "^4.0.8"
 
-eslint-plugin-cypress@^6.2.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-6.2.1.tgz#a607cffe9967b941c1368bc4d0ce79e35d15f40f"
-  integrity sha512-pbjvNE2GKG3hlerT3SIQcRnsMfzFnpAyg0V17D+Gm/a18cxBOVLUxWWANAs7LzykdTPn+SKgzczhF0+IODFs7w==
+eslint-plugin-cypress@^6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-6.4.1.tgz#2aa64e5a2dcc56b8b916fdf8398a81b31a61c462"
+  integrity sha512-8mnfR3q0Lr41Fu9SYZGeZ5nbSBgtS44+bbtSs7k0KvfoQ2pPmK43IvaTP6FGTfwBTN6S7w027CpqjrLAd65AYA==
   dependencies:
-    globals "^17.3.0"
+    globals "^17.6.0"
 
 eslint-plugin-react-hooks@^7.1.1:
   version "7.1.1"
@@ -3229,10 +3229,10 @@ globals@^11.1.0:
   resolved "https://registry.npmjs.org/globals/-/globals-11.12.0.tgz"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-globals@^17.3.0:
-  version "17.3.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-17.3.0.tgz#8b96544c2fa91afada02747cc9731c002a96f3b9"
-  integrity sha512-yMqGUQVVCkD4tqjOJf3TnrvaaHDMYp4VlUSObbkIiuCPe/ofdMBFIAcBbCSRFWOnos6qRiTVStDwqPLUclaxIw==
+globals@^17.6.0:
+  version "17.6.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-17.6.0.tgz#0f0be018d5cca8690e6375ead1f65c4bb96191fc"
+  integrity sha512-sepffkT8stwnIYbsMBpoCHJuJM5l98FUF2AnE07hfvE0m/qp3R586hw4jF4uadbhvg1ooIdzuu7CsfD2jzCaNA==
 
 globalthis@^1.0.4:
   version "1.0.4"
