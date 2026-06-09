@@ -32,7 +32,7 @@
     "cookies-next": "^6.1.1",
     "debounce": "^3.0.0",
     "markdown-to-jsx": "^9.7.15",
-    "next": "^16.2.3",
+    "next": "^16.2.7",
     "nextjs-progressbar": "^0.0.16",
     "pluralize": "^8.0.0",
     "react": "^19.2.7",
