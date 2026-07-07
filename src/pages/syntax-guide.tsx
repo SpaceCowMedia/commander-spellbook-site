@@ -442,12 +442,12 @@ Writing \`"words with spaces"\` in this way is equivalent to writing \`card:"wor
 > [!WARNING]
 > Single quotes are no longer supported in card search, since they can appear in card names.
 > Instead, use double quotes. For example, \`"Goblin King"\` instead of \`'Goblin King'\`.
-> Im the rare case where a card name contains double quotes, you can use the backslash character to escape them.
+> In the rare case where a card name contains double quotes, you can use the backslash character to escape them.
 > For example, \`card:"Henzie \\\\"Toolbox\\\\" Torre"\`.
 
 ### \`card\` operators
 
-* \`card:text\` searches for combos containing a card whose'name contains _text_
+* \`card:text\` searches for combos containing a card whose name contains _text_
 * \`card=text\` searches for combos containing a card named exactly _text_
 * \`card<number\` searches for combos with less than _number_ cards
 * \`card<=number\` searches for combos with less than or equal _number_ cards
@@ -777,7 +777,7 @@ Other tags are applied automatically, so their support is complete and always up
 
 * \`winning\`/\`win\`/\`gamewinning\`: means that the variant wins the game
 * \`lock\`: means that the variant locks your opponents out of taking some actions
-* \`mld\`/\`masslanddestruction\`/\`masslanddenial\`/\`masslanddenial\`: means that the variant destroys or otherwise disables all lands or almost all lands
+* \`mld\`/\`masslanddestruction\`/\`masslanddenial\`: means that the variant destroys or otherwise disables all lands or almost all lands
 
 The support for other manual tags will be added in the future.
 
@@ -926,7 +926,7 @@ Combos are automatically categorized into brackets tags based on their character
 > If you want to know more about the bracket system, check out [the related articles from Wizards of the Coast](https://magic.wizards.com/en/news/announcements?search=%22commander+brackets%22).
 
 Given the qualitative, subjective nature of the bracket system, we refrained from classifying each combo rigidly into a single bracket, and instead we assigned a [_bracket tag_](#bracket-tags) 
-to each combo that provides a qualitative association to one ore more brackets, to be used as a search parameter and guideline for users, rather than a strict classification.
+to each combo that provides a qualitative association to one or more brackets, to be used as a search parameter and guideline for users, rather than a strict classification.
 
 > [!NOTE]
 > In some cases a combo bracket tag can be manually overridden by our editors, if they feel the auto-assigned tag doesn't fit the combo well.
