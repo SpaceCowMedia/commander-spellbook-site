@@ -26,7 +26,7 @@ const ComboSidebarLinks: React.FC<Props> = ({
 }) => {
   const [cookies, _setCookies] = useCookies(['csbIsStaff']);
   return (
-    <div className="mt-4 mb-4 w-full rounded overflow-hidden">
+    <div className="mt-4 mb-4 w-full rounded-sm overflow-hidden">
       <BuyComboButtons cards={cards} tcgPlayerPrice={tcgPlayerPrice} cardKingdomPrice={cardKingdomPrice} />
       <div className="mt-1">
         {!!edhrecLink && <EdhrecLink link={edhrecLink} />}

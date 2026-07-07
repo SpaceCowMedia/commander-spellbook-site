@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .header {
   animation-name: color;
   animation-duration: 2s;
@@ -5,7 +7,7 @@
   @apply relative bg-primary w-full justify-center overflow-hidden;
 
   .cardWrapper {
-    @apply h-full flex-grow object-cover;
+    @apply h-full grow object-cover;
   }
 
   .mask,
@@ -46,15 +48,15 @@
 
   @keyframes color {
     0% {
-      @apply bg-dark;
+      background-color: var(--color-dark);
     }
 
     50% {
-      @apply bg-primary;
+      background-color: var(--color-primary);
     }
 
     100% {
-      @apply bg-dark;
+      background-color: var(--color-dark);
     }
   }
 }

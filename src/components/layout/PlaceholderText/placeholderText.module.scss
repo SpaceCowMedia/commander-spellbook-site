@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .placedholderText {
   @apply inline-block w-full;
 }
@@ -8,19 +10,19 @@
   animation-name: color;
   animation-duration: 2s;
   animation-iteration-count: infinite;
-  @apply bg-light rounded inline-block;
+  @apply bg-light rounded-sm inline-block;
 }
 
 @keyframes color {
   0% {
-    @apply bg-gray-300;
+    background-color: var(--color-gray-300);
   }
 
   50% {
-    @apply bg-gray-400;
+    background-color: var(--color-gray-400);
   }
 
   100% {
-    @apply bg-gray-300;
+    background-color: var(--color-gray-300);
   }
 }

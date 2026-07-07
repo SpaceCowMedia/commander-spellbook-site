@@ -27,9 +27,9 @@ const SearchGuide: React.FC<Props> = ({ heading, headingCardName, snippets, chil
         </div>
 
         <div className="flex-none md:flex w-full">
-          <div className={`${styles.description} w-full md:w-1/2 flex-grow pl-4 pr-4 md:pl-0`}>{children}</div>
+          <div className={`${styles.description} w-full md:w-1/2 grow pl-4 pr-4 md:pl-0`}>{children}</div>
 
-          <div className={`${styles.searchSnippets} w-full md:w-1/2 flex-grow pl-4 pr-4 md:pr-4`}>
+          <div className={`${styles.searchSnippets} w-full md:w-1/2 grow pl-4 pr-4 md:pr-4`}>
             {snippets.map((snippet, i) => (
               <SearchSnippet key={i} search={snippet.search} description={snippet.description} />
             ))}

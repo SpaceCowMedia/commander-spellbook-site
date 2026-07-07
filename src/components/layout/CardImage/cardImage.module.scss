@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .centerContainer {
   display: flex;
   flex-direction: column; /* Center items vertically within the column */
@@ -18,7 +20,7 @@
 }
 
 .flipperButton {
-  @apply py-2 px-2 bg-white bg-opacity-60 text-link border-2 border-primary rounded-full no-underline;
+  @apply py-2 px-2 bg-white/60 text-link border-2 border-primary rounded-full no-underline;
 }
 
 .flipperButton svg {

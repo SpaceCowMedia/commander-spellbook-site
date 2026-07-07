@@ -1,5 +1,7 @@
+@reference "../../../assets/globals.css";
+
 .item {
-  @apply w-full rounded border-2 border-gray-500 dark:border-gray-600;
+  @apply w-full rounded-sm border-2 border-gray-500 dark:border-gray-600;
 }
 
 .itemContainer {

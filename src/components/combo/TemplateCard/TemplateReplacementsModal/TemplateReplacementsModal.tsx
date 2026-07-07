@@ -59,7 +59,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({
     <>
       {!textTrigger && (
         <button
-          className="button !p-0 !px-2 !text-white font-bold text-lg z-10 w-min whitespace-nowrap h-8 text-[14px]"
+          className="button p-0! px-2! text-white! font-bold text-lg z-10 w-min whitespace-nowrap h-8 text-[14px]"
           onClick={() => setIsOpen(true)}
         >
           View {!!count && count + ' '}Cards

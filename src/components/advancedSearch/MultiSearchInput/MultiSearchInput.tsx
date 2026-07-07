@@ -136,12 +136,12 @@ const MultiSearchInput: React.FC<Props> = ({
                   (option.prefix ?? ''),
                 label: option.label,
               }))}
-              selectTextClassName="sm:w-1/2 flex-grow bg-transparent"
+              selectTextClassName="sm:w-1/2 grow bg-transparent"
               selectBackgroundClassName={`${
                 input.error ? 'border-danger' : 'border-dark'
-              } border border-b-0 sm:border-b sm:border-r-0 sm:w-1/2 flex-grow`}
+              } border border-b-0 sm:border-b sm:border-r-0 sm:w-1/2 grow`}
             />
-            <div className="w-full flex-grow flex flex-col sm:flex-row">
+            <div className="w-full grow flex flex-col sm:flex-row">
               {!selectOptions && (
                 <AutocompleteInput
                   value={input.value}
@@ -164,7 +164,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   id={getInputId(index) + '-value'}
                   options={selectOptions}
                   onChange={(value) => handleInputChange(index, value)}
-                  selectBackgroundClassName="flex-grow border-dark border"
+                  selectBackgroundClassName="grow border-dark border"
                 />
               )}
               <div className="flex">

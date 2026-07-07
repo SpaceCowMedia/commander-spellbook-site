@@ -98,14 +98,14 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
     <div className={`${styles.outerContainer} ${className}`}>
       <form onSubmit={handleSubmit} className={styles.mainSearchInputContainer}>
         {!onHomepage && (
-          <Link href="/" className="block mr-2 flex-shrink py-1">
+          <Link href="/" className="block mr-2 shrink py-1">
             <div className="mr-1">
               <img src="/images/gear.svg" alt="Go to home page" className="w-8 inline-block" />
             </div>
           </Link>
         )}
 
-        <div className="flex flex-grow items-center">
+        <div className="flex grow items-center">
           {!onHomepage && <button className={styles.searchInputIcon} type="submit" />}
           <label htmlFor="search-bar-input" className="sr-only text-white" aria-hidden="true">
             Combo Search

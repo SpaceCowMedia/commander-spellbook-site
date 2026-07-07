@@ -1,5 +1,7 @@
+@reference "../../../assets/globals.css";
+
 .autocompleteContainer {
-  @apply relative flex-grow;
+  @apply relative grow;
 }
 
 .autocompleteResults {

@@ -577,7 +577,7 @@ const FindMyCombos: React.FC = () => {
               options={LEGALITY_FORMATS}
               value={format}
               onChange={setFormat}
-              selectBackgroundClassName="flex-grow border-dark border"
+              selectBackgroundClassName="grow border-dark border"
             />
           </div>
         </section>
