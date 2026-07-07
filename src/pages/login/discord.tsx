@@ -59,7 +59,7 @@ const Login: React.FC = () => {
         <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
         <h1 className="heading-title">Logging in...</h1>
         <p className="text-center">You will be redirected automatically once the login is complete.</p>
-        {error && <p className="bg-red-100 p-3 rounded border border-red-200">{error}</p>}
+        {error && <p className="bg-red-100 p-3 rounded-sm border border-red-200">{error}</p>}
       </div>
     </>
   );

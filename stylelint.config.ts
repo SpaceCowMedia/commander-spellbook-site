@@ -18,7 +18,7 @@ export default {
     'scss/at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['tailwind'],
+        ignoreAtRules: ['tailwind', 'reference'],
       },
     ],
   },

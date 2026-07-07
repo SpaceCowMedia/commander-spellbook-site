@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .footer {
   @apply w-full bg-dark p-10 relative;
 }
@@ -7,7 +9,7 @@
 }
 
 .linkCollection {
-  @apply flex flex-grow flex-col mb-4;
+  @apply flex grow flex-col mb-4;
 }
 
 .linkCollection:first-child {

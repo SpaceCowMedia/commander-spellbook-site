@@ -42,7 +42,7 @@ const PrerequisiteList: React.FC<Props> = ({
   const notablePrerequisites = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'notable'));
   const manaNeeded = prerequisites.filter((prereq) => prereq.zones.find((z) => z == 'mana'));
   return (
-    <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
+    <div id={id} className={`md:flex-1 my-4 w-full rounded-sm overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
         <h2 className="font-bold text-xl mb-2">Initial Card State</h2>
         <ol className="list-inside">

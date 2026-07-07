@@ -35,7 +35,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   };
 
   return (
-    <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
+    <div className="border border-gray-250 rounded-sm  flex-col p-5 shadow-lg mb-5 relative">
       <label className="font-bold">Combo:</label>
       <input
         id={`variant-id-${index}`}
@@ -43,7 +43,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
         value={variantIdInput}
         onChange={(e) => handleIdInputChange(e.target.value)}
         placeholder="Variant ID"
-        className="w-full border border-gray-300 rounded p-2 mb-2"
+        className="w-full border border-gray-300 rounded-sm p-2 mb-2"
       />
       <button
         className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
@@ -59,7 +59,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
         value={issueInput}
         onChange={(e) => handleIssueInputChange(e.target.value)}
         placeholder="Describe the issue"
-        className="w-full border border-gray-300 rounded p-2 mb-2"
+        className="w-full border border-gray-300 rounded-sm p-2 mb-2"
       />
     </div>
   );

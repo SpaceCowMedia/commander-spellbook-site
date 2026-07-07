@@ -29,7 +29,7 @@ const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPr
     <div className="lg:flex">
       <ExternalLink
         id="tcg-buy-this-combo"
-        className={`button w-full flex-shrink ${tcgPlayerOutOfStock ? 'disabled' : ''}`}
+        className={`button w-full shrink ${tcgPlayerOutOfStock ? 'disabled' : ''}`}
         disabled={tcgPlayerOutOfStock}
         onClick={() => handleClick('TCGPlayer')}
         href={tcgPlayerLink}
@@ -54,7 +54,7 @@ const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPr
       <span className="mx-1" />
       <ExternalLink
         id="ck-buy-this-combo"
-        className={`button w-full flex-shrink ${cardKingdomOutOfStock ? 'disabled' : ''}`}
+        className={`button w-full shrink ${cardKingdomOutOfStock ? 'disabled' : ''}`}
         disabled={cardKingdomOutOfStock}
         onClick={() => handleClick('Card Kingdom')}
         href={cardKingdomLink}

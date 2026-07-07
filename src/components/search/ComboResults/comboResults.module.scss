@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .comboResultsWrapper {
   @apply flex flex-wrap justify-center;
 
@@ -6,7 +8,7 @@
   }
 
   .comboResult {
-    @apply max-w-lg mx-0 my-2 rounded border-2 border-dark flex-grow flex flex-col content-center;
+    @apply max-w-lg mx-0 my-2 rounded-sm border-2 border-dark grow flex flex-col content-center;
   }
 
   .comboResultSection {

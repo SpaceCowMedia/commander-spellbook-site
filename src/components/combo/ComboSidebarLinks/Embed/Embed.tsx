@@ -64,7 +64,7 @@ const Embed = ({ combo }: Props) => {
         <div>
           <p>Embed the following code in your website for a combo preview:</p>
 
-          <div className="bg-gray-800 text-pink-700 w-full p-5 font-mono text-left break-words">{embedCode}</div>
+          <div className="bg-gray-800 text-pink-700 w-full p-5 font-mono text-left wrap-break-word">{embedCode}</div>
         </div>
       </Modal>
     </>

@@ -91,7 +91,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
 
   return (
     <div className="w-full h-full flex justify-center items-center select-none" {...handlers}>
-      <div className="h-full flex justify-center items-center flex-grow">
+      <div className="h-full flex justify-center items-center grow">
         <Icon
           name="chevronLeft"
           onClick={(e) => {
@@ -115,7 +115,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
           />
         </a>
       </div>
-      <div className="h-full flex justify-center items-center flex-grow">
+      <div className="h-full flex justify-center items-center grow">
         <Icon
           name="chevronRight"
           onClick={(e) => {

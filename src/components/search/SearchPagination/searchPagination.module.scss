@@ -1,3 +1,5 @@
+@reference "../../../assets/globals.css";
+
 .navButton {
   @apply relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-dark dark:text-light;
 }

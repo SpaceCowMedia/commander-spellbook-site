@@ -18,7 +18,7 @@ const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index
   };
 
   return (
-    <div className="border border-gray-250 rounded  flex-col p-5 shadow-lg mb-5 relative">
+    <div className="border border-gray-250 rounded-sm  flex-col p-5 shadow-lg mb-5 relative">
       <label className="font-bold">Feature Name:</label>
       <AutocompleteInput
         value={featureInput}

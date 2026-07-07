@@ -39,7 +39,7 @@ const ComboList: React.FC<Props> = ({
   }, []);
 
   return (
-    <div id={id} className={`md:flex-1 my-4 w-full rounded overflow-hidden ${className}`}>
+    <div id={id} className={`md:flex-1 my-4 w-full rounded-sm overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
         <h2 className={styles.comboListTitle}>{title}</h2>
         <ol className={`${styles.comboList} ${showNumbers && 'list-decimal'}`}>

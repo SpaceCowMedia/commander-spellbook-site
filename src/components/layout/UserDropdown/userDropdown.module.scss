@@ -1,5 +1,7 @@
+@reference "../../../assets/globals.css";
+
 .userDropdownButton {
-  @apply flex flex-row items-center px-2 rounded bg-indigo-600 text-white ml-2 mr-2;
+  @apply flex flex-row items-center px-2 rounded-sm bg-indigo-600 text-white ml-2 mr-2;
 }
 
 .discordIcon {
@@ -15,7 +17,7 @@
 }
 
 .dropdownContent {
-  @apply hidden absolute bg-black shadow z-10 top-full right-0 w-full;
+  @apply hidden absolute bg-black shadow-sm z-10 top-full right-0 w-full;
 
   min-width: 200px;
 }

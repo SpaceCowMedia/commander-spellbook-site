@@ -31,7 +31,7 @@ const ErrorMessage: React.FC<Props> = ({ list, children }) => {
   getErrorMessageList(stringList, list || []);
 
   return (
-    <div className="p-2 bg-red-100 border border-red-400 rounded text-red-900 my-2">
+    <div className="p-2 bg-red-100 border border-red-400 rounded-sm text-red-900 my-2">
       {list && (
         <ul className="list-disc list-inside">
           {stringList.map((line, index) => (

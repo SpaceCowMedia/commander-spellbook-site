@@ -208,7 +208,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
                   Clear Variant Filter
                 </button>
               )}
-              <div className="flex-grow min-h-2" />
+              <div className="grow min-h-2" />
               {showPagination && (
                 <>
                   <SearchPagination

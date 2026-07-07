@@ -1026,7 +1026,7 @@ const SyntaxGuide: React.FC = () => {
           <div className="container pb-6">
             <div className="flex flex-col md:flex-row md:flex-wrap">
               {DATA.sections.map((section) => (
-                <Link key={section.id} href={`#${section.id}`} className="button flex-grow text-center md:w-1/4">
+                <Link key={section.id} href={`#${section.id}`} className="button grow text-center md:w-1/4">
                   <div>
                     <Icon name={section.icon} /> {section.text}
                   </div>

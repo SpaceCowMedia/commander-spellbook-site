@@ -58,7 +58,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
   };
 
   return (
-    <div className="border border-gray-250 rounded flex-col p-5 shadow-lg mb-5 relative space-y-2">
+    <div className="border border-gray-250 rounded-sm flex-col p-5 shadow-lg mb-5 relative space-y-2">
       {template && (
         <>
           <label className="font-bold">Template Name:</label>
@@ -77,7 +77,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           <div>
             <label className="font-bold">Scryfall query (optional):</label>
             <input
-              className="border border-gray-250 rounded p-1 w-full"
+              className="border border-gray-250 rounded-sm p-1 w-full"
               value={(cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || ''}
               onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
               placeholder="(ex: t:creature)"
@@ -148,7 +148,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         <div>
           <label className="font-bold">Exile State (optional):</label>
           <input
-            className="border border-gray-250 rounded p-1"
+            className="border border-gray-250 rounded-sm p-1"
             value={cardOrTemplate.exileCardState}
             onChange={(e) => onChange({ ...cardOrTemplate, exileCardState: e.target.value })}
             placeholder="Exile state (ex: Exiled by...)"
@@ -160,7 +160,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         <div>
           <label className="font-bold">Graveyard State (optional):</label>
           <input
-            className="border border-gray-250 rounded p-1"
+            className="border border-gray-250 rounded-sm p-1"
             value={cardOrTemplate.graveyardCardState}
             onChange={(e) =>
               onChange({
@@ -177,7 +177,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         <div>
           <label className="font-bold">Library State (optional):</label>
           <input
-            className="border border-gray-250 rounded p-1"
+            className="border border-gray-250 rounded-sm p-1"
             value={cardOrTemplate.libraryCardState}
             onChange={(e) => onChange({ ...cardOrTemplate, libraryCardState: e.target.value })}
             placeholder="Library state (ex: On the top of your library)"
@@ -189,7 +189,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         <div>
           <label className="font-bold">Battlefield State (optional):</label>
           <input
-            className="border border-gray-250 rounded p-1"
+            className="border border-gray-250 rounded-sm p-1"
             value={cardOrTemplate.battlefieldCardState}
             onChange={(e) =>
               onChange({

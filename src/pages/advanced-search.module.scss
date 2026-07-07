@@ -1,3 +1,5 @@
+@reference "../assets/globals.css";
+
 .container {
   @apply pt-6 mb-6;
 }
@@ -7,7 +9,7 @@
 }
 
 .searchQuery {
-  @apply w-full font-mono border border-gray-200 bg-gray-200 rounded-r-sm text-left p-4 truncate dark:bg-gray-800 dark:border-gray-800;
+  @apply w-full font-mono border border-gray-200 bg-gray-200 rounded-r-xs text-left p-4 truncate dark:bg-gray-800 dark:border-gray-800;
 
   .suggestion {
     @apply text-gray-600 dark:text-gray-400;
@@ -15,5 +17,5 @@
 }
 
 .submitButton {
-  @apply border border-link text-link p-4 rounded-l-sm hover:bg-link hover:text-white dark:border-primary dark:text-primary;
+  @apply border border-link text-link p-4 rounded-l-xs hover:bg-link hover:text-white dark:border-primary dark:text-primary;
 }

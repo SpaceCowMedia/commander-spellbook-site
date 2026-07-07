@@ -88,13 +88,10 @@ export const ComboResult: React.FC<ResultProps> = ({
         <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
           {isLock && <Icon name="lock" />}
         </div>
-        <div
-          className={`flex items-center flex-grow flex-col bg-${stateBasedColor} text-white`}
-          title={stateBasedTooltip}
-        >
+        <div className={`flex items-center grow flex-col bg-${stateBasedColor} text-white`} title={stateBasedTooltip}>
           <ColorIdentity identity={combo.identity} size="small" />
         </div>
-        <div className={`flex-grow  ${styles.comboResultSection}`}>
+        <div className={`grow  ${styles.comboResultSection}`}>
           <div className="py-1">
             <span className="sr-only">Cards in combo:</span>
             {combo.uses.map(({ card, quantity }) => (
@@ -135,7 +132,7 @@ export const ComboResult: React.FC<ResultProps> = ({
             )}
           </div>
         </div>
-        <div className="flex-grow">
+        <div className="grow">
           <span className="sr-only">Results in combo:</span>
           {combo.produces
             .filter((result) => result.feature.name.toLowerCase() != 'lock')
@@ -146,8 +143,8 @@ export const ComboResult: React.FC<ResultProps> = ({
             ))}
         </div>
       </div>
-      <div className="flex items-center flex-grow flex-col">
-        <div className="flex-grow" />
+      <div className="flex items-center grow flex-col">
+        <div className="grow" />
         {!hideVariants && combo.variantCount > 1 && (
           <div className={styles.variantBanner}>
             <span className="pl-3 pr-3">
@@ -158,7 +155,7 @@ export const ComboResult: React.FC<ResultProps> = ({
         )}
         {sortStatMessage(combo) && (
           <div
-            className={`sort-footer w-full py-1 text-center flex-shrink bg-${stateBasedColor} text-${stateBasedColorInverse}`}
+            className={`sort-footer w-full py-1 text-center shrink bg-${stateBasedColor} text-${stateBasedColorInverse}`}
             title={stateBasedTooltip}
           >
             {sortStatMessage(combo)}

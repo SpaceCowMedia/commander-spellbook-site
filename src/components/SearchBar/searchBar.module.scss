@@ -1,3 +1,5 @@
+@reference "../../assets/globals.css";
+
 .outerContainer {
   @apply mx-auto;
 
@@ -15,7 +17,7 @@
 }
 
 .mainSearchInput:focus {
-  @apply outline-none bg-white text-dark;
+  @apply outline-hidden bg-white text-dark;
 }
 
 .linkIcon {
@@ -73,7 +75,7 @@
 }
 
 .mobileMenuButton {
-  @apply flex flex-row flex-grow items-center w-1/3 rounded py-1 px-2 border border-light mx-2 md:hidden;
+  @apply flex flex-row grow items-center w-1/3 rounded-sm py-1 px-2 border border-light mx-2 md:hidden;
 }
 
 .mobileMenuButton:hover {
