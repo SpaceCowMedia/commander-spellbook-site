@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <SpellbookHead title="Logging in." description="Discord logging in." />
+      <SpellbookHead title="Logging in." description="Logging in..." />
       <div className={`static-page ${styles.reportErrorContainer}`}>
         <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
         <h1 className="heading-title">Logging in...</h1>

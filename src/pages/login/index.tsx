@@ -44,9 +44,9 @@ const Login: React.FC = () => {
           <Link
             role="button"
             className="button"
-            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/login/discord/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/discord/?${router.query.final ? `final=${router.query.final}` : ''}`}
+            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/auth/login/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/complete/?${router.query.final ? `final=${router.query.final}` : ''}`}
           >
-            Login with Discord
+            Login
           </Link>
         </div>
       </div>
