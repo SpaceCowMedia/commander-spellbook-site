@@ -39,7 +39,7 @@ const Login: React.FC = () => {
                 CookieService.set('csbIsStaff', 'true', 'month');
               }
               if (router.query.final) {
-                router.push(`/${router.query.final}`);
+                router.push(`${router.query.final}`);
               } else {
                 router.push('/');
               }
