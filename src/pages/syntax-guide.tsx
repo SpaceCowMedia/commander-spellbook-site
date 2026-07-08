@@ -874,7 +874,10 @@ On the other hand, \`banned:format\` searches for combos not legal in _format_
 * \`pauper_commander_main\` (only commons)
 * \`oathbreaker\`
 * \`predh\`
+* \`standard_brawl\`
 * \`brawl\`
+* \`competitive_brawl\`
+* \`alchemy\`
 * \`vintage\`
 * \`legacy\`
 * \`modern\`

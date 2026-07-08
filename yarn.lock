@@ -1194,10 +1194,10 @@
   resolved "https://registry.npmjs.org/@sindresorhus/merge-streams/-/merge-streams-4.0.0.tgz"
   integrity sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==
 
-"@space-cow-media/spellbook-client@^5.4.10":
-  version "5.4.10"
-  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-5.4.10.tgz#de292fda2320c3e3888660a9822b51a7958e9c7c"
-  integrity sha512-B2XY8MFjR/4lLb64Zzd6YBtoHLr/Ddzb9YDjByYGDh1/zGEUJRMQaKyYgQihNkMtxTFTj8o9kNEtoSvkC8JyzQ==
+"@space-cow-media/spellbook-client@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@space-cow-media/spellbook-client/-/spellbook-client-5.5.0.tgz#ea72b6784c64f96b0d16ed0d2ef210469a2e2517"
+  integrity sha512-uI5tgHD7Fx/pfplGGhnySzDwl6rXLVyZsxG79KIOOtsKYegHZyMDj+JZ8mzoR9daULRwfoNnIPfWrtKoffxxQw==
 
 "@standard-schema/spec@^1.1.0":
   version "1.1.0"

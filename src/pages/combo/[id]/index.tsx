@@ -354,8 +354,20 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
                   <td>PreDH</td>
                 </tr>
                 <tr>
+                  <td>{booleanToIcon(combo.legalities.alchemy)}</td>
+                  <td>Alchemy</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.standardBrawl)}</td>
+                  <td>Standard Brawl</td>
+                </tr>
+                <tr>
                   <td>{booleanToIcon(combo.legalities.brawl)}</td>
                   <td>Brawl</td>
+                </tr>
+                <tr>
+                  <td>{booleanToIcon(combo.legalities.competitiveBrawl)}</td>
+                  <td>Competitive Brawl</td>
                 </tr>
                 <tr>
                   <td>{booleanToIcon(combo.legalities.standard)}</td>

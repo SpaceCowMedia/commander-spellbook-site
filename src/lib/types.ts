@@ -96,8 +96,20 @@ export const LEGALITY_FORMATS: LegalityFormat[] = [
     label: 'Pre-EDH/Commander',
   },
   {
+    value: 'standard_brawl',
+    label: 'Standard Brawl',
+  },
+  {
     value: 'brawl',
-    label: 'Brawl',
+    label: 'Brawl / Historic Brawl',
+  },
+  {
+    value: 'competitive_brawl',
+    label: 'Competitive Brawl',
+  },
+  {
+    value: 'alchemy',
+    label: 'Alchemy',
   },
   {
     value: 'vintage',
