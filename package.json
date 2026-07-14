@@ -54,7 +54,7 @@
     "@commitlint/config-conventional": "^20.3.0",
     "@eslint/compat": "^2.0.5",
     "@eslint/js": "^10.0.1",
-    "@next/eslint-plugin-next": "^16.2.9",
+    "@next/eslint-plugin-next": "^16.2.10",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@tailwindcss/postcss": "^4.3.2",
     "@types/gtag.js": "^0.0.20",
