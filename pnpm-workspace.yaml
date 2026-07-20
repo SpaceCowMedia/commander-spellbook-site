@@ -1,0 +1,13 @@
+# Supply chain attack defense - don't use packages published within 1 day
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@space-cow-media/spellbook-client"
+
+# Stops a dep bypassing minimumReleaseAge via a git/tarball source
+blockExoticSubdeps: true
+
+allowBuilds:
+  "@parcel/watcher": true
+  canvas: true
+  cypress: true
+  sharp: true

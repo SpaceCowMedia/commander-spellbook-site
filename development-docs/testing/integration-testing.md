@@ -10,11 +10,11 @@ Unlike unit tests, we really only want to test broad strokes behavior. The most 
 
 - Run the app
   ```
-  npm run dev
+  pnpm dev
   ```
 - Run the tests
   ```
-  npm run cy:run
+  pnpm cy:run
   ```
 
 ## Videos/Screenshots
@@ -22,5 +22,5 @@ Unlike unit tests, we really only want to test broad strokes behavior. The most 
 By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:
 
 ```
-npm run cy:run -- --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
+pnpm cy:run --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
 ```

@@ -13,9 +13,10 @@ cypress
 *.sh
 
 # Artifacts that will be built during image creation.
-# This should contain all files created during `npm run build`.
+# This should contain all files created during `pnpm build`.
 build
 node_modules
+.pnpm-store
 .git
 .next
 _next

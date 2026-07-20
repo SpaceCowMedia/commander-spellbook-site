@@ -27,7 +27,7 @@
     "files.insertFinalNewline": false,
     "files.trimFinalNewlines": true,
     "files.eol": "\n",
-    "stylelint.packageManager": "yarn",
+    "stylelint.packageManager": "pnpm",
     "stylelint.enable": true,
     "stylelint.snippet": [
         "css",

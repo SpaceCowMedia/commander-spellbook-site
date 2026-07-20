@@ -2,6 +2,10 @@
   "name": "spellbook-client-next",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "pnpm": ">=10.16.0"
+  },
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -10,10 +14,10 @@
     "tsc": "tsc",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "cy:debug": "concurrently --kill-others \"yarn dev\" \"yarn cy:open\"",
-    "cy:dev": "yarn build && concurrently --kill-others \"yarn start\" \"yarn cy:open\"",
+    "cy:debug": "concurrently --kill-others \"pnpm dev\" \"pnpm cy:open\"",
+    "cy:dev": "pnpm build && concurrently --kill-others \"pnpm start\" \"pnpm cy:open\"",
     "prettier": "prettier --write .",
-    "test:integration": "yarn start & wait-on http://localhost:3000 && yarn run cy:run",
+    "test:integration": "pnpm start & wait-on http://localhost:3000 && pnpm run cy:run",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -47,6 +51,7 @@
     "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
     "sharp": "^0.34.5",
+    "universal-cookie": "^8.0.1",
     "use-debounce": "^10.1.1"
   },
   "devDependencies": {
@@ -73,6 +78,7 @@
     "eslint-plugin-cypress": "^6.4.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.6.0",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "lint-staged": "^17.0.8",

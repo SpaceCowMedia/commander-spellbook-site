@@ -10,14 +10,14 @@ See the [Getting Started instructions](../README.md#getting-started) for details
 
 ```bash
 # serve with hot reload at localhost:3000
-yarn dev
+pnpm dev
 ```
 
 If you want to see how the app will behave in production, build and run it:
 
 ```bash
 # build for production (this will take a while)
-yarn build
+pnpm build
 # runs the site in prod mode using the generated pages from the build-frontend step
-yarn start
+pnpm start
 ```

@@ -31,7 +31,7 @@
             "name": "Next.js: debug server-side",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npm run dev -- --inspect"
+            "command": "pnpm dev --inspect"
         },
         {
             "name": "Next.js: debug client-side",
@@ -52,7 +52,7 @@
             "request": "launch",
             "name": "Open Cypress",
             "cwd": "${workspaceFolder}",
-            "runtimeExecutable": "yarn",
+            "runtimeExecutable": "pnpm",
             "runtimeArgs": [
                 "cy:dev"
             ],
@@ -67,7 +67,7 @@
             "request": "launch",
             "name": "Debug with Cypress",
             "cwd": "${workspaceFolder}",
-            "runtimeExecutable": "yarn",
+            "runtimeExecutable": "pnpm",
             "runtimeArgs": [
                 "cy:debug",
             ],
