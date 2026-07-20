@@ -51,7 +51,7 @@
     "remark-rehype": "^11.1.2",
     "scryfall-client": "^0.24.8",
     "sharp": "^0.34.5",
-    "universal-cookie": "^8.0.1",
+    "universal-cookie": "^8.1.2",
     "use-debounce": "^10.1.1"
   },
   "devDependencies": {
