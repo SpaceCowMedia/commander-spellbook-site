@@ -7,3 +7,7 @@
 .comboList {
   @apply list-inside;
 }
+
+.comboListEmpty {
+  @apply italic opacity-70;
+}

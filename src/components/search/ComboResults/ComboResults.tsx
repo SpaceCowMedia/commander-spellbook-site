@@ -3,6 +3,7 @@ import Link from 'next/link';
 import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
 import { ClassifiedVariant, Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { useRef, useState } from 'react';
@@ -100,16 +101,18 @@ export const ComboResult: React.FC<ResultProps> = ({
                   {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
                     decklistMessage != undefined ? (
                       <strong className="text-blue-800">
-                        {card.name}
+                        <CardName name={card.name} />
                         {decklistMessage ? ` (${decklistMessage})` : ''}
                       </strong>
                     ) : (
-                      <strong className="text-red-800">{card.name} (not in deck)</strong>
+                      <strong className="text-red-800">
+                        <CardName name={card.name} /> (not in deck)
+                      </strong>
                     )
                   ) : (
                     <span>
                       {quantity > 1 ? `${quantity} ` : ''}
-                      {card.name}
+                      <CardName name={card.name} />
                     </span>
                   )}
                 </div>

@@ -16,6 +16,9 @@ interface Props {
   id?: string;
   className?: string;
   appendPeriod?: boolean;
+  /* Shown when there is nothing to list. Without it an empty list is treated as still loading
+     and renders the shimmering placeholders instead. */
+  emptyText?: string;
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
@@ -29,6 +32,7 @@ const ComboList: React.FC<Props> = ({
   id,
   className,
   appendPeriod,
+  emptyText,
   fetchTemplateReplacements,
 }) => {
   iterations = iterations.filter((item) => item.trim() !== '');
@@ -42,27 +46,31 @@ const ComboList: React.FC<Props> = ({
     <div id={id} className={`md:flex-1 my-4 w-full rounded-sm overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
         <h2 className={styles.comboListTitle}>{title}</h2>
-        <ol className={`${styles.comboList} ${showNumbers && 'list-decimal'}`}>
-          {iterations
-            .map((item) => (appendPeriod ? addPeriod(item) : item))
-            .map((text, index) => (
-              <li key={`${title}-${index}`}>
-                <TextWithMagicSymbol
-                  text={text}
-                  cardsInCombo={cardsInCombo}
-                  includeCardLinks={includeCardLinks}
-                  templatesInCombo={templatesInCombo}
-                  fetchTemplateReplacements={fetchTemplateReplacements}
-                />
-              </li>
-            ))}
-          {iterations.length === 0 &&
-            Array.from(Array(numberOfPlaceHolderItems).keys()).map((index) => (
-              <li key={index}>
-                <PlaceholderText maxLength={50} />
-              </li>
-            ))}
-        </ol>
+        {iterations.length === 0 && emptyText ? (
+          <p className={styles.comboListEmpty}>{emptyText}</p>
+        ) : (
+          <ol className={`${styles.comboList} ${showNumbers && 'list-decimal'}`}>
+            {iterations
+              .map((item) => (appendPeriod ? addPeriod(item) : item))
+              .map((text, index) => (
+                <li key={`${title}-${index}`}>
+                  <TextWithMagicSymbol
+                    text={text}
+                    cardsInCombo={cardsInCombo}
+                    includeCardLinks={includeCardLinks}
+                    templatesInCombo={templatesInCombo}
+                    fetchTemplateReplacements={fetchTemplateReplacements}
+                  />
+                </li>
+              ))}
+            {iterations.length === 0 &&
+              Array.from(Array(numberOfPlaceHolderItems).keys()).map((index) => (
+                <li key={index}>
+                  <PlaceholderText maxLength={50} />
+                </li>
+              ))}
+          </ol>
+        )}
       </div>
     </div>
   );

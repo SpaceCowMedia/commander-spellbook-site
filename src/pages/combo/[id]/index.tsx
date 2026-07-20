@@ -1,5 +1,5 @@
 import pluralize from 'pluralize';
-import CardHeader from '../../../components/combo/CardHeader/CardHeader';
+import CardHeader, { comboTitleToText } from '../../../components/combo/CardHeader/CardHeader';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
 import ComboList from '../../../components/combo/ComboList/ComboList';
@@ -39,8 +39,6 @@ interface Props {
   combo?: Variant;
   alternatives?: Variant[];
 }
-
-const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
 const MAX_VARIANTS_COUNT = 50;
 
@@ -145,25 +143,15 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     const cardNamesWithQuantities = combo.uses.map((card) =>
       card.quantity > 1 ? `${card.quantity} ${card.card.name}` : card.card.name,
     );
-    const title = combo.uses.length === 0 ? 'No specific cards' : cardNamesWithQuantities.slice(0, 3).join(' | ');
-    const titleCount = combo.uses.slice(0, 3).reduce((a, b) => a + b.quantity, 0);
     const templateNamesWithQuantities = combo.requires.map((template) =>
       template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
     );
-    const totalCount =
-      combo.uses.reduce((a, b) => a + b.quantity, 0) + combo.requires.reduce((a, b) => a + b.quantity, 0);
-    const subtitle =
-      totalCount === titleCount
-        ? ''
-        : totalCount === titleCount + 1
-          ? `(and ${NUMBERS[1]} other card)`
-          : `(and ${NUMBERS[totalCount - titleCount]} other cards)`;
     const numberOfDecks = combo.popularity;
     const metaData = [];
 
     const identity = combo.identity;
     const prerequisites = getPrerequisiteList(combo);
-    const steps = combo.description?.split('\n');
+    const steps = combo.description?.split('\n') ?? [];
     const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
     const isLock = combo.produces.some((feature) => feature.feature.name.toLowerCase() === 'lock');
     const results = combo.produces
@@ -191,12 +179,12 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     return (
       <>
         <SpellbookHead
-          title={`${title} ${subtitle}`}
+          title={comboTitleToText(combo.uses, combo.requires)}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
           // Image URL must be absolute to properly work on Reddit, even though the specification says it can be relative
           imageUrl={`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image`}
         />
-        <CardHeader cardsArt={cardArts} title={title} subtitle={subtitle} />
+        <CardHeader cardsArt={cardArts} cards={combo.uses} templates={combo.requires} />
         <CardGroup
           key={combo.id}
           cards={combo.uses}
@@ -218,6 +206,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               iterations={cardNamesWithQuantities.concat(templateNamesWithQuantities)}
+              emptyText="This combo doesn't require any specific cards."
               fetchTemplateReplacements={fetchResultsPage}
             />
 
@@ -229,18 +218,17 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               fetchTemplateReplacements={fetchResultsPage}
             />
 
-            {steps != null && (
-              <ComboList
-                title="Steps"
-                id="combo-steps"
-                iterations={steps}
-                cardsInCombo={combo.uses}
-                templatesInCombo={combo.requires}
-                showNumbers
-                appendPeriod
-                fetchTemplateReplacements={fetchResultsPage}
-              />
-            )}
+            <ComboList
+              title="Steps"
+              id="combo-steps"
+              iterations={steps}
+              cardsInCombo={combo.uses}
+              templatesInCombo={combo.requires}
+              showNumbers
+              appendPeriod
+              emptyText="This combo doesn't have any steps."
+              fetchTemplateReplacements={fetchResultsPage}
+            />
 
             {notes != null && notes.length > 0 && (
               <ComboList
@@ -261,6 +249,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               appendPeriod
+              emptyText="This combo doesn't produce notable results."
               fetchTemplateReplacements={fetchResultsPage}
             />
 

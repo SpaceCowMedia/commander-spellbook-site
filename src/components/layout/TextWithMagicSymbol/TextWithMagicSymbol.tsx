@@ -3,6 +3,7 @@ import styles from './textWithMagicSymbol.module.scss';
 import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
+import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
@@ -157,9 +158,11 @@ const TextWithMagicSymbol: React.FC<Props> = ({
           {item.nodeType === 'card' && item.card && (
             <CardTooltip card={item.card.card}>
               {includeCardLinks ? (
-                <CardLink name={item.card.card.name}>{item.value}</CardLink>
+                <CardLink name={item.card.card.name}>
+                  <CardName name={item.value} />
+                </CardLink>
               ) : (
-                <span>{item.value}</span>
+                <CardName name={item.value} />
               )}
             </CardTooltip>
           )}
@@ -175,7 +178,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             />
           )}
           {item.nodeType !== 'card' && item.nodeType !== 'image' && item.nodeType !== 'template' && (
-            <span>{item.value}</span>
+            <CardName name={item.value} />
           )}
         </span>
       ))}

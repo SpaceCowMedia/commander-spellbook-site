@@ -1,0 +1,11 @@
+@reference "../../../assets/globals.css";
+
+img.alchemySymbol {
+  /* match the font-size of the text around it */
+  height: 1em;
+
+  /* adjust the position so it fits more naturally with the text around it */
+  margin-top: -0.2em;
+  margin-right: 0.1em;
+  @apply inline;
+}
