@@ -316,6 +316,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Commands
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frontend-app" class="md-nav__link">
     <span class="md-ellipsis">
       Frontend App
@@ -574,6 +583,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Commands
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frontend-app" class="md-nav__link">
     <span class="md-ellipsis">
       Frontend App
@@ -622,9 +640,96 @@
 <h1 id="development-docs">Development Docs</h1>
 <p>This documentation is rendered as a website on <a href="https://edhrec.github.io/commander-spellbook-site/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
 <h2 id="getting-started">Getting Started</h2>
-<p>Once you have installed node, you can install the project's dependencies:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
+<p>This project uses <a href="https://pnpm.io/">pnpm</a> (v10.16.0 or newer) as its package manager. The exact version we build with is pinned in the <code>packageManager</code> field of <code>package.json</code>.</p>
+<p>Once you have installed node, install pnpm globally:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>pnpm
 </code></pre></div>
+<p>On Node 24 and older you can instead use <a href="https://nodejs.org/api/corepack.html">Corepack</a>, which reads the pinned version straight from <code>package.json</code> (Corepack is no longer bundled with Node 25+):</p>
+<div class="highlight"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pnpm
+</code></pre></div>
+<p>Then install the project's dependencies:</p>
+<div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>install
+</code></pre></div>
+<h2 id="common-commands">Common Commands</h2>
+<p>If you are coming from <code>npm</code> or <code>yarn</code>, most commands map over directly. Note that <code>pnpm &lt;script&gt;</code> works for any script in <code>package.json</code>, so <code>pnpm run dev</code> and <code>pnpm dev</code> are equivalent.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install all dependencies</td>
+<td><code>pnpm install</code></td>
+</tr>
+<tr>
+<td>Install exactly from the lockfile</td>
+<td><code>pnpm install --frozen-lockfile</code></td>
+</tr>
+<tr>
+<td>Run the dev server</td>
+<td><code>pnpm dev</code></td>
+</tr>
+<tr>
+<td>Build for production</td>
+<td><code>pnpm build</code></td>
+</tr>
+<tr>
+<td>Run the production build</td>
+<td><code>pnpm start</code></td>
+</tr>
+<tr>
+<td>Lint (eslint + stylelint + prettier)</td>
+<td><code>pnpm lint</code></td>
+</tr>
+<tr>
+<td>Auto-format</td>
+<td><code>pnpm prettier</code></td>
+</tr>
+<tr>
+<td>Type-check</td>
+<td><code>pnpm tsc --noEmit</code></td>
+</tr>
+<tr>
+<td>Open Cypress</td>
+<td><code>pnpm cy:open</code></td>
+</tr>
+<tr>
+<td>Run Cypress headlessly</td>
+<td><code>pnpm cy:run</code></td>
+</tr>
+<tr>
+<td>Add a runtime dependency</td>
+<td><code>pnpm add &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Add a dev dependency</td>
+<td><code>pnpm add -D &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Remove a dependency</td>
+<td><code>pnpm remove &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Update deps (respecting semver)</td>
+<td><code>pnpm update</code></td>
+</tr>
+<tr>
+<td>See why a package is installed</td>
+<td><code>pnpm why &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>List outdated packages</td>
+<td><code>pnpm outdated</code></td>
+</tr>
+<tr>
+<td>Run a one-off binary</td>
+<td><code>pnpm dlx &lt;pkg&gt;</code> (like <code>npx</code>)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="frontend-app">Frontend App</h2>
 <ul>
 <li><a href="frontend/installation-and-setup.html">Installation and setup</a></li>
@@ -659,7 +764,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">December 17, 2025 12:19:19</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">July 20, 2026 16:59:51</span>
   </span>
 
     
@@ -679,12 +784,13 @@
   <span class="md-source-file__fact">
     <span class="md-icon" title="Contributors">
       
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg>
       
     </span>
     <nav>
       
-        <a href="mailto:blade@crookedneighbor.com">Blade Barringer</a>
+        <a href="mailto:blade@crookedneighbor.com">Blade Barringer</a>, 
+        <a href="mailto:44567586+ldeluigi@users.noreply.github.com">ldeluigi</a>
     </nav>
   </span>
 
@@ -701,7 +807,7 @@
   
     <div class="md-source-date">
       <small>
-          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a></span>
+          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a> (28.89%), <a href='mailto:44567586+ldeluigi@users.noreply.github.com'>ldeluigi</a> (71.11%)</span>
       </small>
     </div>
   

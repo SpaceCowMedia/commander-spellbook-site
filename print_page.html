@@ -714,9 +714,96 @@
         <section class="print-page" id="index"><h1 id="index-development-docs">Development Docs</h1>
 <p>This documentation is rendered as a website on <a href="https://edhrec.github.io/commander-spellbook-site/">GitHub Pages</a>. Any change to markdown files will be deployed after it gets merged into the <code>main</code> branch.</p>
 <h2 id="index-getting-started">Getting Started</h2>
-<p>Once you have installed node, you can install the project's dependencies:</p>
-<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
+<p>This project uses <a href="https://pnpm.io/">pnpm</a> (v10.16.0 or newer) as its package manager. The exact version we build with is pinned in the <code>packageManager</code> field of <code>package.json</code>.</p>
+<p>Once you have installed node, install pnpm globally:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>pnpm
 </code></pre></div>
+<p>On Node 24 and older you can instead use <a href="https://nodejs.org/api/corepack.html">Corepack</a>, which reads the pinned version straight from <code>package.json</code> (Corepack is no longer bundled with Node 25+):</p>
+<div class="highlight"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>pnpm
+</code></pre></div>
+<p>Then install the project's dependencies:</p>
+<div class="highlight"><pre><span></span><code>pnpm<span class="w"> </span>install
+</code></pre></div>
+<h2 id="index-common-commands">Common Commands</h2>
+<p>If you are coming from <code>npm</code> or <code>yarn</code>, most commands map over directly. Note that <code>pnpm &lt;script&gt;</code> works for any script in <code>package.json</code>, so <code>pnpm run dev</code> and <code>pnpm dev</code> are equivalent.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install all dependencies</td>
+<td><code>pnpm install</code></td>
+</tr>
+<tr>
+<td>Install exactly from the lockfile</td>
+<td><code>pnpm install --frozen-lockfile</code></td>
+</tr>
+<tr>
+<td>Run the dev server</td>
+<td><code>pnpm dev</code></td>
+</tr>
+<tr>
+<td>Build for production</td>
+<td><code>pnpm build</code></td>
+</tr>
+<tr>
+<td>Run the production build</td>
+<td><code>pnpm start</code></td>
+</tr>
+<tr>
+<td>Lint (eslint + stylelint + prettier)</td>
+<td><code>pnpm lint</code></td>
+</tr>
+<tr>
+<td>Auto-format</td>
+<td><code>pnpm prettier</code></td>
+</tr>
+<tr>
+<td>Type-check</td>
+<td><code>pnpm tsc --noEmit</code></td>
+</tr>
+<tr>
+<td>Open Cypress</td>
+<td><code>pnpm cy:open</code></td>
+</tr>
+<tr>
+<td>Run Cypress headlessly</td>
+<td><code>pnpm cy:run</code></td>
+</tr>
+<tr>
+<td>Add a runtime dependency</td>
+<td><code>pnpm add &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Add a dev dependency</td>
+<td><code>pnpm add -D &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Remove a dependency</td>
+<td><code>pnpm remove &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>Update deps (respecting semver)</td>
+<td><code>pnpm update</code></td>
+</tr>
+<tr>
+<td>See why a package is installed</td>
+<td><code>pnpm why &lt;pkg&gt;</code></td>
+</tr>
+<tr>
+<td>List outdated packages</td>
+<td><code>pnpm outdated</code></td>
+</tr>
+<tr>
+<td>Run a one-off binary</td>
+<td><code>pnpm dlx &lt;pkg&gt;</code> (like <code>npx</code>)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="index-frontend-app">Frontend App</h2>
 <ul>
 <li><a href="#frontend-installation-and-setup">Installation and setup</a></li>
@@ -738,13 +825,13 @@
 <p>See the <a href="#index-getting-started">Getting Started instructions</a> for details about installing node.</p>
 <h2 id="frontend-installation-and-setup-build-setup">Build Setup</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># serve with hot reload at localhost:3000</span>
-yarn<span class="w"> </span>dev
+pnpm<span class="w"> </span>dev
 </code></pre></div>
 <p>If you want to see how the app will behave in production, build and run it:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># build for production (this will take a while)</span>
-yarn<span class="w"> </span>build
+pnpm<span class="w"> </span>build
 <span class="c1"># runs the site in prod mode using the generated pages from the build-frontend step</span>
-yarn<span class="w"> </span>start
+pnpm<span class="w"> </span>start
 </code></pre></div></section><section class="print-page" id="frontend-pages"><h1 id="frontend-pages-pages">Pages</h1>
 <p>Create a <code>React</code> component in the pages directory, where the name of the file is the path a user will navigate to in the url.</p>
 <p>In general, try to keep page logic simple. Pull any complex logic out into a component in the <code>components</code> directory in a folder with the same name as the route.</p></section><section class="print-page" id="frontend-components"><h1 id="frontend-components-components">Components</h1>
@@ -759,15 +846,15 @@ yarn<span class="w"> </span>start
 <h2 id="testing-integration-testing-how-to-run-the-tests">How to Run the Tests</h2>
 <ul>
 <li>Run the app<br />
-  <div class="highlight"><pre><span></span><code>npm run dev
+  <div class="highlight"><pre><span></span><code>pnpm dev
 </code></pre></div></li>
 <li>Run the tests<br />
-  <div class="highlight"><pre><span></span><code>npm run cy:run
+  <div class="highlight"><pre><span></span><code>pnpm cy:run
 </code></pre></div></li>
 </ul>
 <h2 id="testing-integration-testing-videosscreenshots">Videos/Screenshots</h2>
 <p>By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:</p>
-<div class="highlight"><pre><span></span><code>npm run cy:run -- --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
+<div class="highlight"><pre><span></span><code>pnpm cy:run --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
 </code></pre></div></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
 
 
