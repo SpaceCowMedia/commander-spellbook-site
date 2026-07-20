@@ -142,8 +142,8 @@ importers:
         specifier: ^10.1.8
         version: 10.1.8(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1))
       eslint-plugin-check-file:
-        specifier: ^3.3.1
-        version: 3.3.1(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1))
+        specifier: ^3.3.2
+        version: 3.3.2(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1))
       eslint-plugin-cypress:
         specifier: ^6.4.1
         version: 6.4.1(@typescript-eslint/parser@8.60.1(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1))
@@ -1766,8 +1766,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-check-file@3.3.1:
-    resolution: {integrity: sha512-b7fDkp8Y0T9vloTYSrkMnb5Cqpk1bc6+jDQdgKIhzdwb47NmLAvMFYo3SzHOPF8u4SEsOVhmrNSbo6Sp633syg==}
+  eslint-plugin-check-file@3.3.2:
+    resolution: {integrity: sha512-X0yVi4vbV7pSxu00oAJiE8wcwAvIoU2YQKrkvRRLq+88i/cZNooOgAgjk2gOS03lKMsFMVusJLlqHNuAwduX2g==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=9.0.0'
@@ -2943,8 +2943,8 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  picomatch@2.3.1:
-    resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
+  picomatch@2.3.2:
+    resolution: {integrity: sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==}
     engines: {node: '>=8.6'}
 
   picomatch@4.0.4:
@@ -5451,7 +5451,7 @@ snapshots:
     dependencies:
       eslint: 10.4.0(jiti@2.7.0)(supports-color@8.1.1)
 
-  eslint-plugin-check-file@3.3.1(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1)):
+  eslint-plugin-check-file@3.3.2(eslint@10.4.0(jiti@2.7.0)(supports-color@8.1.1)):
     dependencies:
       eslint: 10.4.0(jiti@2.7.0)(supports-color@8.1.1)
       is-glob: 4.0.3
@@ -6644,7 +6644,7 @@ snapshots:
   micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
-      picomatch: 2.3.1
+      picomatch: 2.3.2
 
   mime-db@1.52.0: {}
 
@@ -6845,7 +6845,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@2.3.1: {}
+  picomatch@2.3.2: {}
 
   picomatch@4.0.4: {}
 
