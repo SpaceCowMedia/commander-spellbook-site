@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
-    "@commitlint/config-conventional": "^20.3.0",
+    "@commitlint/config-conventional": "^21.2.0",
     "@eslint/compat": "^2.0.5",
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.10",
