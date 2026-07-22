@@ -13,11 +13,11 @@
 }
 
 .mainSearchInput {
-  @apply w-full h-full appearance-none block py-2 bg-transparent leading-tight;
+  @apply w-full h-full appearance-none block py-2 leading-tight bg-white text-gray-500;
 }
 
 .mainSearchInput:focus {
-  @apply outline-hidden bg-white text-dark;
+  @apply outline-hidden bg-white text-gray-800;
 }
 
 .linkIcon {

@@ -9,6 +9,7 @@ const TOOLTIP_RIGHT_SHIFT_PX = 30;
 
 interface Props {
   card?: Card;
+  images?: string[];
   children?: React.ReactNode;
 }
 
@@ -18,7 +19,7 @@ interface CardImage {
   isLoaded: boolean;
 }
 
-const CardTooltip: React.FC<Props> = ({ card, children }) => {
+const CardTooltip: React.FC<Props> = ({ card, images, children }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [hasHovered, setHasHovered] = useState(false);
@@ -28,27 +29,20 @@ const CardTooltip: React.FC<Props> = ({ card, children }) => {
 
   useEffect(() => {
     setIsMounted(true);
+    const imageUrls =
+      images && images.length > 0
+        ? images
+        : card && card.imageUriFrontNormal
+          ? [card.imageUriFrontNormal, ...(card.imageUriBackNormal ? [card.imageUriBackNormal] : [])]
+          : [];
     setCards(
-      card && card.imageUriFrontNormal
-        ? [
-            {
-              url: card.imageUriFrontNormal,
-              isRequested: false,
-              isLoaded: false,
-            },
-            ...(card.imageUriBackNormal
-              ? [
-                  {
-                    url: card.imageUriBackNormal,
-                    isRequested: false,
-                    isLoaded: false,
-                  },
-                ]
-              : []),
-          ]
-        : [],
+      imageUrls.map((url) => ({
+        url,
+        isRequested: false,
+        isLoaded: false,
+      })),
     );
-  }, [card]);
+  }, [card, images]);
 
   const getCards = () => {
     return deviceIsMobile() ? cards.slice(0, 1) : cards;

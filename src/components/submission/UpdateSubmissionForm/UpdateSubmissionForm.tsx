@@ -18,6 +18,12 @@ import {
 import { apiConfiguration } from 'services/api.service';
 import VariantIdSubmission from '../VariantIdSubmission/VariantIdSubmission';
 import { useDebounce } from 'use-debounce';
+import Icon from '../../layout/Icon/Icon';
+import SectionHeading from '../SectionHeading/SectionHeading';
+import { httpErrorMessage } from '../../../lib/httpErrors';
+
+const VALIDATION_INTERVAL_MS = 5000;
+const VALIDATION_MAX_RETRIES = 3;
 
 interface Props {
   submission?: VariantUpdateSuggestion;
@@ -32,7 +38,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
   >(undefined);
   const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantUpdateSuggestionRequest | undefined>(
     undefined,
-    2000,
+    VALIDATION_INTERVAL_MS,
   );
   const [variants, setVariants] = useState<VariantInVariantUpdateSuggestionRequest[]>(() =>
     (submission?.variants ?? []).concat(comboId ? [{ variant: comboId, issue: '' }] : []),
@@ -93,25 +99,57 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     if (!suggestionRequest) {
       return;
     }
-    let validationRequest: Promise<VariantUpdateSuggestion>;
-    if (submission) {
-      validationRequest = updateSuggestionsApi.variantUpdateSuggestionsValidateUpdate({
-        id: submission.id,
-        variantUpdateSuggestionRequest: suggestionRequest,
-      });
-    } else {
-      validationRequest = updateSuggestionsApi.variantUpdateSuggestionsValidateCreate({
-        variantUpdateSuggestionRequest: suggestionRequest,
-      });
-    }
-    validationRequest
-      .then(() => {
-        setErrorObj(undefined);
-      })
-      .catch((err) => {
-        const error = err as ResponseError;
-        error.response.json().then(setErrorObj);
-      });
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let attempts = 0;
+
+    const runValidation = () => {
+      attempts += 1;
+      const validationRequest = submission
+        ? updateSuggestionsApi.variantUpdateSuggestionsValidateUpdate({
+            id: submission.id,
+            variantUpdateSuggestionRequest: suggestionRequest,
+          })
+        : updateSuggestionsApi.variantUpdateSuggestionsValidateCreate({
+            variantUpdateSuggestionRequest: suggestionRequest,
+          });
+      validationRequest
+        .then(() => {
+          if (!cancelled) {
+            setErrorObj(undefined);
+          }
+        })
+        .catch((err) => {
+          if (cancelled || !(err instanceof ResponseError)) {
+            return;
+          }
+          if (err.response.status === 429) {
+            if (attempts < VALIDATION_MAX_RETRIES) {
+              retryTimer = setTimeout(runValidation, VALIDATION_INTERVAL_MS);
+            } else {
+              setErrorObj({
+                statusCode: 429,
+                detail:
+                  'We could not validate your submission because too many requests were made in a short time. Please wait a moment and edit any field to try again.',
+              } as ComboSubmissionErrorType);
+            }
+            return;
+          }
+          err.response.json().then((errorJson) => {
+            if (!cancelled) {
+              setErrorObj(errorJson);
+            }
+          });
+        });
+    };
+    runValidation();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+      }
+    };
   }, [suggestionRequest]);
 
   useEffect(() => {
@@ -207,19 +245,24 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     } catch (err) {
       setSuccess(false);
       setSubmitting(false);
-      const error = err as ResponseError;
-      if (error.response.status === 400 && error.response.headers.get('Content-Type')?.includes('application/json')) {
-        const errorJson = await error.response.json();
-        setErrorObj(errorJson);
-      } else if ([401, 403].includes(error.response.status)) {
+      if (!(err instanceof ResponseError)) {
         setErrorObj({
-          statusCode: error.response.status,
+          detail: 'Could not reach the server. Please check your connection and try again.',
+        } as ComboSubmissionErrorType);
+        return;
+      }
+      const status = err.response.status;
+      if (status === 400 && err.response.headers.get('Content-Type')?.includes('application/json')) {
+        setErrorObj(await err.response.json());
+      } else if (status === 401 || status === 403) {
+        setErrorObj({
+          statusCode: status,
           detail: 'You need to be logged in to submit an update suggestion.',
         } as ComboSubmissionErrorType);
       } else {
         setErrorObj({
-          statusCode: error.response.status,
-          detail: 'An unexpected error occurred. Please try again later.',
+          statusCode: status,
+          detail: httpErrorMessage(status),
         } as ComboSubmissionErrorType);
       }
     }
@@ -246,7 +289,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     <div className="static-page">
       <ArtCircle cardName="Arcane Teachings" className="m-auto md:block hidden" />
       <h1 className="heading-title">{submission ? 'Update Combo Update Submission' : 'Submit an Update'}</h1>
-      <p className="heading-subtitle mb-6">
+      <p className="heading-subtitle mb-10">
         Before {submission && 're-'}submitting an update, please read through our{' '}
         <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
@@ -254,14 +297,10 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
       {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
       {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
 
-      <h2 className="heading-subtitle flex justify-start">Update Kind</h2>
-      <ErrorMessage list={errorObj?.kind} />
-      <div className="flex flex-col">
-        <select
-          className="select w-full p-4 border-gray-300 border"
-          value={kind}
-          onChange={(e) => setKind(e.target.value as KindEnum)}
-        >
+      <section className="submission-section">
+        <SectionHeading icon="tags" title="Update Kind" />
+        <ErrorMessage list={errorObj?.kind} />
+        <select className="field-input" value={kind} onChange={(e) => setKind(e.target.value as KindEnum)}>
           <option value={KindEnum.Nw}>Combo{variants.length != 1 ? 's' : ''} Not Working</option>
           <option value={KindEnum.Ii}>Incorrect Information</option>
           <option value={KindEnum.Se}>Spelling/Grammar Error</option>
@@ -270,55 +309,63 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
           <option value={KindEnum.Bc}>Bracket Classification</option>
           <option value={KindEnum.O}>Other</option>
         </select>
-      </div>
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start mt-6">List of the combos displaying the issue(s)</h2>
-      <ErrorMessage list={errorObj?.variants} />
-      <div className="flex flex-col">
-        {variants.map((variant, index) => (
-          <VariantIdSubmission
-            variant={variant}
-            onDelete={() => handleDeleteVariant(index)}
-            onChange={(variant) => handleVariantChange(variant, index)}
-            index={index}
-            key={`${index}-${keyId}`}
-          />
-        ))}
-      </div>
-      <button className="button" onClick={handleAddVariant}>
-        Add Combo
-      </button>
+      <section className="submission-section">
+        <SectionHeading icon="hashtag" title="Combos displaying the issue(s)" count={variants.length} />
+        <ErrorMessage list={errorObj?.variants} />
+        <div className="flex flex-col">
+          {variants.map((variant, index) => (
+            <VariantIdSubmission
+              variant={variant}
+              onDelete={() => handleDeleteVariant(index)}
+              onChange={(variant) => handleVariantChange(variant, index)}
+              index={index}
+              key={`${index}-${keyId}`}
+            />
+          ))}
+        </div>
+        <button className="add-button" onClick={handleAddVariant}>
+          <Icon name="plus" /> Add Combo
+        </button>
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Describe the problem</h2>
-      <ErrorMessage list={errorObj?.issue} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="e.g. The combo doesn't work because..."
-        value={issue}
-        onChange={(e) => setIssue(e.target.value)}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="circleExclamation" title="Describe the problem" />
+        <ErrorMessage list={errorObj?.issue} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="e.g. The combo doesn't work because..."
+          value={issue}
+          onChange={(e) => setIssue(e.target.value)}
+        />
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Propose a possible solution (optional)</h2>
-      <ErrorMessage list={errorObj?.solution} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="e.g. You can fix the combo by..."
-        value={solution}
-        onChange={(e) => setSolution(e.target.value)}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="lightbulb" title="Propose a possible solution (optional)" />
+        <ErrorMessage list={errorObj?.solution} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="e.g. You can fix the combo by..."
+          value={solution}
+          onChange={(e) => setSolution(e.target.value)}
+        />
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
-      <ErrorMessage list={errorObj?.comment} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="Notes useful for editors that review your submission"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        maxLength={1024}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="comments" title="Comments (optional)" />
+        <ErrorMessage list={errorObj?.comment} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="Notes useful for editors that review your submission"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          maxLength={1024}
+        />
+      </section>
 
-      <div className="flex justify-center">
-        <button disabled={submitting} className="button" onClick={handleSubmit}>
+      <div className="flex justify-center pt-2">
+        <button disabled={submitting} className="submit-button" onClick={handleSubmit}>
           {submitting ? <Loader /> : submission ? 'Re-submit Update' : 'Submit Update'}
         </button>
       </div>

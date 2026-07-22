@@ -7,38 +7,17 @@
     @apply no-underline text-dark dark:text-light;
   }
 
-  .comboResult {
-    @apply max-w-lg mx-0 my-2 rounded-sm border-2 border-dark grow flex flex-col content-center;
-  }
-
-  .comboResultSection {
-    @apply border-b-2 border-light dark:border-dark;
-  }
-
-  .prerequisites span {
-    @apply text-gray-500 dark:text-gray-400;
-  }
-
-  .variantBanner {
-    @apply w-full bg-pink-300 text-right dark:bg-link;
-  }
-
-  .cardName {
-    text-indent: -1em;
-    margin-left: 1em;
-  }
-
   @media (width >= 768px) {
-    .comboResult {
+    > a {
       @apply m-2;
     }
 
-    .comboResult:nth-child(3n + 3),
-    .comboResult:last-child {
+    > a:nth-child(3n + 3),
+    > a:last-child {
       @apply mr-0;
     }
 
-    .comboResult:nth-child(3n + 1) {
+    > a:nth-child(3n + 1) {
       @apply ml-0;
     }
   }

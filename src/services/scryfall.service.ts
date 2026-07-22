@@ -37,6 +37,16 @@ export interface ScryfallResultsPage {
   count?: number;
 }
 
+export async function scryfallQueryReplacements(scryfallQuery: string, page: number): Promise<ScryfallResultsPage> {
+  const response = await scryfall.search(`(${scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
+  return {
+    results: response,
+    page: page,
+    nextPage: response.has_more ? page + 1 : undefined,
+    count: response.total_cards,
+  };
+}
+
 export async function templateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
   if (template.scryfallQuery) {
     const response = await scryfall.search(`(${template.scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
@@ -78,6 +88,7 @@ export async function templateReplacements(template: Template, page: number): Pr
 
 const ScryfallService = {
   getScryfallImage,
+  scryfallQueryReplacements,
   templateReplacements,
 };
 

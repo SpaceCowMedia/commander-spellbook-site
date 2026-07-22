@@ -1,11 +1,20 @@
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 import {
+  Card,
   CardUsedInVariantSuggestionRequest,
+  TemplateInVariant,
   TemplateRequiredInVariantSuggestionRequest,
   ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
+import scryfall from 'scryfall-client';
+import { getScryfallImage, scryfallQueryReplacements } from '../../../services/scryfall.service';
+import { useDebounce } from 'use-debounce';
+import TemplateCard from '../../combo/TemplateCard/TemplateCard';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import CardImage from '../../layout/CardImage/CardImage';
+import Icon from '../../layout/Icon/Icon';
 
 const ZONE_OPTIONS = [
   { value: 'H', label: 'Hand' },
@@ -15,6 +24,27 @@ const ZONE_OPTIONS = [
   { value: 'E', label: 'Exile' },
   { value: 'C', label: 'Command Zone' },
 ];
+
+function buildPreviewCard(name: string, frontImage: string, backImage?: string): Card {
+  return {
+    id: 0,
+    name,
+    oracleId: null,
+    spoiler: false,
+    typeLine: '',
+    layoutRotationFront: null,
+    imageUriFrontSmall: null,
+    imageUriFrontNormal: frontImage,
+    imageUriFrontLarge: null,
+    imageUriFrontPng: null,
+    imageUriFrontArtCrop: null,
+    imageUriBackSmall: null,
+    imageUriBackNormal: backImage ?? null,
+    imageUriBackLarge: null,
+    imageUriBackPng: null,
+    imageUriBackArtCrop: null,
+  };
+}
 
 interface Props {
   card?: CardUsedInVariantSuggestionRequest;
@@ -34,6 +64,94 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
 
   const [nameInput, setNameInput] = useState(card?.card || '');
   const [templateInput, setTemplateInput] = useState(template?.template || '');
+  const [previewCard, setPreviewCard] = useState<Card | undefined>(undefined);
+  const [selectedCardName, setSelectedCardName] = useState(card?.card || '');
+
+  const scryfallQuery = (cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || '';
+  const [debouncedQuery] = useDebounce(scryfallQuery, 500);
+  const [queryError, setQueryError] = useState<string | null>(null);
+  const [queryValid, setQueryValid] = useState(false);
+
+  const templateForPreview: TemplateInVariant | undefined = template && {
+    template: {
+      id: 0,
+      name: template.template || '',
+      scryfallQuery: debouncedQuery.trim() || null,
+      scryfallApi: null,
+    },
+    zoneLocations: template.zoneLocations,
+    battlefieldCardState: template.battlefieldCardState || '',
+    exileCardState: template.exileCardState || '',
+    libraryCardState: template.libraryCardState || '',
+    graveyardCardState: template.graveyardCardState || '',
+    mustBeCommander: template.mustBeCommander || false,
+    quantity: template.quantity || 1,
+  };
+
+  useEffect(() => {
+    if (!card) {
+      return;
+    }
+    const name = selectedCardName.trim();
+    if (!name) {
+      setPreviewCard(undefined);
+      return;
+    }
+    let cancelled = false;
+    scryfall
+      .getCardNamed(name, { kind: 'exact' })
+      .then((fetchedCard) => {
+        if (cancelled) {
+          return;
+        }
+        const [front, back] = getScryfallImage(fetchedCard);
+        setPreviewCard(front ? buildPreviewCard(name, front, back) : undefined);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPreviewCard(undefined);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCardName, card]);
+
+  useEffect(() => {
+    if (!template) {
+      return;
+    }
+    const query = debouncedQuery.trim();
+    if (!query) {
+      setQueryError(null);
+      setQueryValid(false);
+      return;
+    }
+    let cancelled = false;
+    scryfallQueryReplacements(query, 0)
+      .then((page) => {
+        if (cancelled) {
+          return;
+        }
+        if ((page.count ?? page.results.length) > 0) {
+          setQueryValid(true);
+          setQueryError(null);
+        } else {
+          setQueryValid(false);
+          setQueryError('This Scryfall query does not match any card.');
+        }
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+        setQueryValid(false);
+        setQueryError(error?.details || error?.message || 'Invalid Scryfall query.');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedQuery, template]);
 
   const handleZoneChange = (zoneLocations: MultiValue<{ value: string; label: string }>) => {
     const newZoneList = zoneLocations.map((zone) => ZoneLocationsEnum[zone.value as keyof typeof ZoneLocationsEnum]);
@@ -55,64 +173,91 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
   const handleCardInputChange = (value: string) => {
     setNameInput(value);
     onChange({ ...cardOrTemplate, card: value });
+    if (value !== selectedCardName) {
+      setSelectedCardName('');
+    }
+  };
+
+  const handleCardSelect = (value: string) => {
+    setSelectedCardName(value);
   };
 
   return (
-    <div className="border border-gray-250 rounded-sm flex-col p-5 shadow-lg mb-5 relative space-y-2">
+    <div className="submission-panel space-y-3">
       {template && (
         <>
-          <label className="font-bold">Template Name:</label>
-          <AutocompleteInput
-            value={templateInput}
-            onChange={handleTemplateInputChange}
-            label="Template Name"
-            inputClassName="border-dark"
-            templateAutocomplete={true}
-            inputId={index.toString()}
-            placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
-            // hasError={!!input.error}
-            useValueForInput
-            maxLength={256}
-          />
-          <div>
-            <label className="font-bold">Scryfall query (optional):</label>
+          <div className="field-group">
+            <label className="field-label">Template Name</label>
+            <AutocompleteInput
+              value={templateInput}
+              onChange={handleTemplateInputChange}
+              label="Template Name"
+              inputClassName="border-dark"
+              templateAutocomplete={true}
+              inputId={index.toString()}
+              placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
+              // hasError={!!input.error}
+              useValueForInput
+              maxLength={256}
+            />
+          </div>
+          <div className="field-group">
+            <label className="field-label">Scryfall query (optional)</label>
             <input
-              className="border border-gray-250 rounded-sm p-1 w-full"
-              value={(cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || ''}
+              className="field-input"
+              value={scryfallQuery}
               onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
               placeholder="(ex: t:creature)"
             />
           </div>
+          {scryfallQuery.trim() && queryError && <ErrorMessage>{queryError}</ErrorMessage>}
+          {scryfallQuery.trim() && queryValid && !queryError && templateForPreview && (
+            <div className="flex justify-center pt-2">
+              <div className="w-64 max-w-full">
+                <TemplateCard
+                  key={debouncedQuery.trim()}
+                  template={templateForPreview}
+                  fetchTemplateReplacements={(_t, page) => scryfallQueryReplacements(debouncedQuery.trim(), page)}
+                />
+              </div>
+            </div>
+          )}
         </>
       )}
 
       {card && (
         <>
-          <label className="font-bold">Card Name:</label>
-          <AutocompleteInput
-            value={nameInput}
-            onChange={handleCardInputChange}
-            label="Card Name"
-            inputClassName="border-dark"
-            cardAutocomplete={true}
-            inputId={index.toString()}
-            placeholder="Search for a card..."
-            // hasError={!!input.error}
-            useValueForInput
-            maxLength={256}
-          />
+          <div className="field-group">
+            <label className="field-label">Card Name</label>
+            <AutocompleteInput
+              value={nameInput}
+              onChange={handleCardInputChange}
+              onSelect={handleCardSelect}
+              label="Card Name"
+              inputClassName="border-dark"
+              cardAutocomplete={true}
+              inputId={index.toString()}
+              placeholder="Search for a card..."
+              // hasError={!!input.error}
+              useValueForInput
+              maxLength={256}
+            />
+          </div>
+          {previewCard && (
+            <div className="flex justify-center pt-2">
+              <div className="w-64 max-w-full">
+                <CardImage card={previewCard} />
+              </div>
+            </div>
+          )}
         </>
       )}
 
-      <button
-        className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
-        onClick={onDelete}
-        title="Remove card from combo"
-      >
-        x
+      <button className="submission-remove" onClick={onDelete} title="Remove card from combo">
+        <Icon name="cross" />
       </button>
-      <div>
-        <label className="font-bold">Zone(s):</label>
+      <div className="field-group">
+        <label className="field-label">Zone(s)</label>
         <Select
           placeholder="Select one or more zones that the card must be in..."
           isMulti
@@ -145,10 +290,10 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       </div>
 
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.E) && (
-        <div>
-          <label className="font-bold">Exile State (optional):</label>
+        <div className="field-group">
+          <label className="field-label">Exile State (optional)</label>
           <input
-            className="border border-gray-250 rounded-sm p-1"
+            className="field-input"
             value={cardOrTemplate.exileCardState}
             onChange={(e) => onChange({ ...cardOrTemplate, exileCardState: e.target.value })}
             placeholder="Exile state (ex: Exiled by...)"
@@ -157,10 +302,10 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       )}
 
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.G) && (
-        <div>
-          <label className="font-bold">Graveyard State (optional):</label>
+        <div className="field-group">
+          <label className="field-label">Graveyard State (optional)</label>
           <input
-            className="border border-gray-250 rounded-sm p-1"
+            className="field-input"
             value={cardOrTemplate.graveyardCardState}
             onChange={(e) =>
               onChange({
@@ -174,10 +319,10 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       )}
 
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.L) && (
-        <div>
-          <label className="font-bold">Library State (optional):</label>
+        <div className="field-group">
+          <label className="field-label">Library State (optional)</label>
           <input
-            className="border border-gray-250 rounded-sm p-1"
+            className="field-input"
             value={cardOrTemplate.libraryCardState}
             onChange={(e) => onChange({ ...cardOrTemplate, libraryCardState: e.target.value })}
             placeholder="Library state (ex: On the top of your library)"
@@ -186,10 +331,10 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       )}
 
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.B) && (
-        <div>
-          <label className="font-bold">Battlefield State (optional):</label>
+        <div className="field-group">
+          <label className="field-label">Battlefield State (optional)</label>
           <input
-            className="border border-gray-250 rounded-sm p-1"
+            className="field-input"
             value={cardOrTemplate.battlefieldCardState}
             onChange={(e) =>
               onChange({
@@ -202,35 +347,38 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         </div>
       )}
 
-      <div className="mt-8">
-        <label className="cursor-pointer select-none mr-2" htmlFor={`quantity-input-${template ? 't' : 'c'}-${index}`}>
-          Quantity:
-        </label>
-        <input
-          className="mr-2 cursor-pointer border rounded-md"
-          type="number"
-          defaultValue="1"
-          id={`quantity-input-${template ? 't' : 'c'}-${index}`}
-          min="1"
-          max="10"
-          onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) })}
-        />
-      </div>
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+        <div className="flex items-center gap-2">
+          <label className="cursor-pointer select-none font-bold" htmlFor={`quantity-input-${template ? 't' : 'c'}-${index}`}>
+            Quantity
+          </label>
+          <input
+            className="w-16 cursor-pointer rounded-lg border border-gray-300 px-2 py-1 text-center dark:border-gray-600"
+            type="number"
+            defaultValue="1"
+            id={`quantity-input-${template ? 't' : 'c'}-${index}`}
+            min="1"
+            max="10"
+            onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) })}
+          />
+        </div>
 
-      <div className="mt-2">
-        <input
-          className="mr-2 cursor-pointer"
-          id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
-          checked={cardOrTemplate.mustBeCommander}
-          onChange={() =>
-            onChange({
-              ...cardOrTemplate,
-              mustBeCommander: !cardOrTemplate.mustBeCommander,
-            })
-          }
-          type="checkbox"
-        />
-        <label className="cursor-pointer select-none" htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}>
+        <label
+          className="flex cursor-pointer select-none items-center gap-2 font-bold"
+          htmlFor={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
+        >
+          <input
+            className="h-4 w-4 cursor-pointer accent-primary"
+            id={`commander-checkbox-${template ? 't' : 'c'}-${index}`}
+            checked={cardOrTemplate.mustBeCommander}
+            onChange={() =>
+              onChange({
+                ...cardOrTemplate,
+                mustBeCommander: !cardOrTemplate.mustBeCommander,
+              })
+            }
+            type="checkbox"
+          />
           Must be commander?
         </label>
       </div>

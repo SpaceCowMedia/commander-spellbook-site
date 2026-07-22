@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
+import Icon from '../../layout/Icon/Icon';
 import { FeatureProducedInVariantSuggestionRequest } from '@space-cow-media/spellbook-client';
 
 interface Props {
@@ -18,8 +19,8 @@ const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index
   };
 
   return (
-    <div className="border border-gray-250 rounded-sm  flex-col p-5 shadow-lg mb-5 relative">
-      <label className="font-bold">Feature Name:</label>
+    <div className="submission-panel">
+      <label className="field-label">Feature Name</label>
       <AutocompleteInput
         value={featureInput}
         onChange={handleFeatureInputChange}
@@ -32,12 +33,8 @@ const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index
         useValueForInput
         maxLength={256}
       />
-      <button
-        className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
-        onClick={onDelete}
-        title="Remove step from combo"
-      >
-        x
+      <button className="submission-remove" onClick={onDelete} title="Remove feature from combo">
+        <Icon name="cross" />
       </button>
     </div>
   );

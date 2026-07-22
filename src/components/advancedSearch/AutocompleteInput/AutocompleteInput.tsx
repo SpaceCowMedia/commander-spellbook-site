@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styles from './autocompleteInput.module.scss';
 import { useState } from 'react';
 import normalizeStringInput from '../../../lib/normalizeStringInput';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Loader from '../../layout/Loader/Loader';
+import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import { apiConfiguration } from 'services/api.service';
 import { FeaturesApi, FeaturesListStatusEnum, TemplatesApi } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
@@ -12,6 +13,10 @@ import { useDebounce } from 'use-debounce';
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
 const AUTOCOMPLETE_DELAY = 200;
 const BLUR_CLOSE_DELAY = 900;
+
+function cardImageUrl(name: string): string {
+  return `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}`;
+}
 
 export interface AutoCompleteOption {
   value: string;
@@ -34,6 +39,7 @@ interface Props {
   hasError?: boolean;
   useValueForInput?: boolean;
   onChange?: (_value: string) => void;
+  onSelect?: (_value: string) => void;
   maxLength?: number;
 }
 
@@ -50,6 +56,7 @@ const AutocompleteInput: React.FC<Props> = ({
   placeholder,
   hasError,
   onChange,
+  onSelect,
   maxLength,
 }) => {
   const [firstRender, setFirstRender] = useState<boolean>(true);
@@ -70,6 +77,16 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
+  const cardImageUrlsByValue = useMemo(
+    () =>
+      cardAutocomplete
+        ? matchingAutoCompleteOptions.reduce<Record<string, string[]>>((acc, item) => {
+            acc[item.value] = [cardImageUrl(item.value)];
+            return acc;
+          }, {})
+        : {},
+    [cardAutocomplete, matchingAutoCompleteOptions],
+  );
   let screenReaderSelectionText = '';
   if (total !== 0 && value) {
     screenReaderSelectionText = option
@@ -282,6 +299,9 @@ const AutocompleteInput: React.FC<Props> = ({
     if (onChange) {
       onChange(value);
     }
+    if (onSelect) {
+      onSelect(value);
+    }
     setFirstRender(true);
     handleClose();
   };
@@ -388,7 +408,13 @@ const AutocompleteInput: React.FC<Props> = ({
               onClick={() => handleClick(item)}
               onMouseOver={() => handleAutocompleteItemHover(index)}
             >
-              <TextWithMagicSymbol text={item.label} />
+              {cardAutocomplete ? (
+                <CardTooltip images={cardImageUrlsByValue[item.value]}>
+                  <TextWithMagicSymbol text={item.label} />
+                </CardTooltip>
+              ) : (
+                <TextWithMagicSymbol text={item.label} />
+              )}
             </li>
           ))}
         </ul>

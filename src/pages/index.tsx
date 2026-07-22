@@ -92,7 +92,7 @@ const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
                     <Link
                       key={tab.id}
                       href={`/search/?q=is:featured-${tab.id}`}
-                      className={`previwed-combos-button dark home-button button md:m-1`}
+                      className="dark home-button button md:m-1"
                     >
                       {tab.title}
                     </Link>

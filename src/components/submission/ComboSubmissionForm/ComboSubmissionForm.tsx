@@ -7,6 +7,7 @@ import FeatureSubmission from '../Feature Submission/FeatureSubmission';
 import Loader from '../../layout/Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import { httpErrorMessage } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { confirmAlert } from 'react-confirm-alert';
@@ -23,10 +24,17 @@ import {
   VariantSuggestion,
   VariantSuggestionRequest,
   VariantSuggestionsApi,
+  VariantsApi,
   ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
+import Icon from '../../layout/Icon/Icon';
+import SectionHeading from '../SectionHeading/SectionHeading';
+import ComboResult from '../../search/ComboResult/ComboResult';
+
+const VALIDATION_INTERVAL_MS = 3000;
+const VALIDATION_MAX_RETRIES = 3;
 
 interface Props {
   submission?: VariantSuggestion;
@@ -39,7 +47,10 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [suggestionRequestBackup, setSuggestionRequestBackup] = useState<
     Record<string, VariantSuggestionRequest> | undefined
   >(undefined);
-  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantSuggestionRequest | undefined>(undefined, 2000);
+  const [suggestionRequest, setSuggestionRequest] = useDebounce<VariantSuggestionRequest | undefined>(
+    undefined,
+    VALIDATION_INTERVAL_MS,
+  );
   const [cards, setCards] = useState<CardUsedInVariantSuggestionRequest[]>(
     () =>
       submission?.uses ??
@@ -95,6 +106,33 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
+  const [variantOfPreview, setVariantOfPreview] = useState<Variant | undefined>(undefined);
+  const [debouncedVariantOf] = useDebounce(variantOf, 500);
+
+  useEffect(() => {
+    const id = debouncedVariantOf?.trim();
+    if (!id) {
+      setVariantOfPreview(undefined);
+      return;
+    }
+    let cancelled = false;
+    const variantsApi = new VariantsApi(apiConfiguration());
+    variantsApi
+      .variantsRetrieve({ id })
+      .then((result) => {
+        if (!cancelled) {
+          setVariantOfPreview(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setVariantOfPreview(undefined);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedVariantOf]);
 
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -164,25 +202,57 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     if (!suggestionRequest) {
       return;
     }
-    let validationRequest: Promise<VariantSuggestion>;
-    if (submission?.id) {
-      validationRequest = variantSuggestionsApi.variantSuggestionsValidateUpdate({
-        id: submission.id,
-        variantSuggestionRequest: suggestionRequest,
-      });
-    } else {
-      validationRequest = variantSuggestionsApi.variantSuggestionsValidateCreate({
-        variantSuggestionRequest: suggestionRequest,
-      });
-    }
-    validationRequest
-      .then(() => {
-        setErrorObj(undefined);
-      })
-      .catch((err) => {
-        const error = err as ResponseError;
-        error.response.json().then(setErrorObj);
-      });
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let attempts = 0;
+
+    const runValidation = () => {
+      attempts += 1;
+      const validationRequest = submission?.id
+        ? variantSuggestionsApi.variantSuggestionsValidateUpdate({
+            id: submission.id,
+            variantSuggestionRequest: suggestionRequest,
+          })
+        : variantSuggestionsApi.variantSuggestionsValidateCreate({
+            variantSuggestionRequest: suggestionRequest,
+          });
+      validationRequest
+        .then(() => {
+          if (!cancelled) {
+            setErrorObj(undefined);
+          }
+        })
+        .catch((err) => {
+          if (cancelled || !(err instanceof ResponseError)) {
+            return;
+          }
+          if (err.response.status === 429) {
+            if (attempts < VALIDATION_MAX_RETRIES) {
+              retryTimer = setTimeout(runValidation, VALIDATION_INTERVAL_MS);
+            } else {
+              setErrorObj({
+                statusCode: 429,
+                detail:
+                  'We could not validate your submission because too many requests were made in a short time. Please wait a moment and edit any field to try again.',
+              } as ComboSubmissionErrorType);
+            }
+            return;
+          }
+          err.response.json().then((errorJson) => {
+            if (!cancelled) {
+              setErrorObj(errorJson);
+            }
+          });
+        });
+    };
+    runValidation();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+      }
+    };
   }, [suggestionRequest]);
 
   useEffect(() => {
@@ -353,13 +423,18 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     } catch (err) {
       setSuccess(false);
       setSubmitting(false);
-      const error = err as ResponseError;
-      if (error.response.status === 400 && error.response.headers.get('Content-Type')?.includes('application/json')) {
-        const errorJson = await error.response.json();
-        setErrorObj(errorJson);
-      } else if ([401, 403].includes(error.response.status)) {
+      if (!(err instanceof ResponseError)) {
         setErrorObj({
-          statusCode: error.response.status,
+          detail: 'Could not reach the server. Please check your connection and try again.',
+        } as ComboSubmissionErrorType);
+        return;
+      }
+      const status = err.response.status;
+      if (status === 400 && err.response.headers.get('Content-Type')?.includes('application/json')) {
+        setErrorObj(await err.response.json());
+      } else if (status === 401 || status === 403) {
+        setErrorObj({
+          statusCode: status,
           detail:
             'You are not authorized to submit combos. Please log in and try again. You can login on a different tab and come back to this page.' +
             (suggestionRequestBackup && suggestionRequestBackup[backupKey]
@@ -368,8 +443,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         } as ComboSubmissionErrorType);
       } else {
         setErrorObj({
-          statusCode: error.response.status,
-          detail: 'An unexpected error happened. Please try again later.',
+          statusCode: status,
+          detail: httpErrorMessage(status),
         } as ComboSubmissionErrorType);
       }
     }
@@ -440,13 +515,30 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     } catch (err) {
       setSuccess(false);
       setSubmitting(false);
-      const error = err as ResponseError;
-      const errorBody = await error.response.text();
-      const errorJson = JSON.parse(errorBody);
-      const cardErrors = Object.keys(errorJson.main).map(parseInt);
-      cardErrors.sort((a, b) => a - b);
-      errorJson.uses = cardErrors.map((index) => errorJson.main[index.toString()]);
-      setErrorObj(errorJson);
+      if (!(err instanceof ResponseError)) {
+        setErrorObj({
+          detail: 'Could not reach the server. Please check your connection and try again.',
+        } as ComboSubmissionErrorType);
+        return;
+      }
+      const status = err.response.status;
+      let errorJson: (ComboSubmissionErrorType & { main?: Record<string, ComboSubmissionErrorType> }) | undefined;
+      try {
+        errorJson = JSON.parse(await err.response.text());
+      } catch {
+        errorJson = undefined;
+      }
+      if (status === 400 && errorJson?.main) {
+        const cardErrors = Object.keys(errorJson.main).map(Number);
+        cardErrors.sort((a, b) => a - b);
+        errorJson.uses = cardErrors.map((index) => errorJson!.main![index.toString()]);
+        setErrorObj(errorJson);
+      } else {
+        setErrorObj({
+          statusCode: status,
+          detail: httpErrorMessage(status),
+        } as ComboSubmissionErrorType);
+      }
     }
   };
 
@@ -471,7 +563,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     <div className="static-page">
       <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
       <h1 className="heading-title">{submission?.id ? 'Update Combo Submission' : 'Submit a Combo'}</h1>
-      <p className="heading-subtitle mb-20">
+      <p className="heading-subtitle mb-10">
         Before {submission?.id && 're-'}submitting a combo, please read through our{' '}
         <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">FAQs</ExternalLink>
       </p>
@@ -479,114 +571,139 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       {errorObj?.detail && <ErrorMessage>{errorObj.detail}</ErrorMessage>}
       {errorObj?.nonFieldErrors && <ErrorMessage list={errorObj.nonFieldErrors} />}
 
-      <h2 className="heading-subtitle flex justify-start">Specific cards used in this combo ({cards.length})</h2>
-      <ErrorMessage list={errorObj?.uses} />
-      <div className="flex flex-col">
-        {cards.map((card, index) => (
-          <CardSubmission
-            card={card}
-            onDelete={() => handleDeleteCard(index)}
-            onChange={(card) => handleCardChange(card as CardUsedInVariantSuggestionRequest, index)}
-            index={index}
-            key={`${index}-${keyId}`}
-          />
-        ))}
-      </div>
-      <button className="button" onClick={handleAddCard}>
-        Add Card
-      </button>
-
-      <h2 className="heading-subtitle flex justify-start">Generic cards this combo requires ({templates.length})</h2>
-      <ErrorMessage list={errorObj?.requires} />
-      <div className="flex flex-col">
-        {templates.map((card, index) => (
-          <CardSubmission
-            template={card}
-            onDelete={() => handleDeleteTemplate(index)}
-            onChange={(template) => handleTemplateChange(template as TemplateRequiredInVariantSuggestionRequest, index)}
-            index={index}
-            key={`${index}-${keyId}`}
-          />
-        ))}
-      </div>
-      <button className="button" onClick={handleAddTemplate}>
-        Add Template
-      </button>
-
-      <h2 className="heading-subtitle flex justify-start">Mana required (optional)</h2>
-      <ErrorMessage list={errorObj?.manaNeeded} />
-      <div className="flex flex-row gap-1 flex-wrap">
-        <input
-          className="textarea flex-1 p-4 border-gray-300 border mb-3"
-          maxLength={51}
-          placeholder="e.g. {2}{U}{U}"
-          value={manaCost}
-          onChange={(e) => setManaCost(e.target.value)}
-        />
-        <div className="bg-gray-200 h-14 flex-1 flex items-center p-3 whitespace-nowrap min-w-max dark:bg-gray-800">
-          Preview: <TextWithMagicSymbol text={manaCost} />
+      <section className="submission-section">
+        <SectionHeading icon="listCheck" title="Specific cards used in this combo" count={cards.length} />
+        <p className="submission-hint">The exact cards this combo requires to work.</p>
+        <ErrorMessage list={errorObj?.uses} />
+        <div className="flex flex-col">
+          {cards.map((card, index) => (
+            <CardSubmission
+              card={card}
+              onDelete={() => handleDeleteCard(index)}
+              onChange={(card) => handleCardChange(card as CardUsedInVariantSuggestionRequest, index)}
+              index={index}
+              key={`${index}-${keyId}`}
+            />
+          ))}
         </div>
-      </div>
+        <button className="add-button" onClick={handleAddCard}>
+          <Icon name="plus" /> Add Card
+        </button>
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Easily achievable prerequisites (optional)</h2>
-      <ErrorMessage list={errorObj?.easyPrerequisites} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="e.g. It must be your opponent's turn"
-        value={easyPrerequisites}
-        onChange={(e) => setEasyPrerequisites(e.target.value)}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="template" title="Generic cards this combo requires" count={templates.length} />
+        <p className="submission-hint">
+          Interchangeable pieces described by a template (e.g. “A creature with haste”) or a Scryfall query.
+        </p>
+        <ErrorMessage list={errorObj?.requires} />
+        <div className="flex flex-col">
+          {templates.map((card, index) => (
+            <CardSubmission
+              template={card}
+              onDelete={() => handleDeleteTemplate(index)}
+              onChange={(template) =>
+                handleTemplateChange(template as TemplateRequiredInVariantSuggestionRequest, index)
+              }
+              index={index}
+              key={`${index}-${keyId}`}
+            />
+          ))}
+        </div>
+        <button className="add-button" onClick={handleAddTemplate}>
+          <Icon name="plus" /> Add Template
+        </button>
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Notable prerequisites (optional)</h2>
-      <ErrorMessage list={errorObj?.notablePrerequisites} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="e.g. You need a way to make an opponent lose life"
-        value={notablePrerequisites}
-        onChange={(e) => setNotablePrerequisites(e.target.value)}
-      />
-
-      <h2 className="heading-subtitle flex justify-start">Steps to execute combo ({steps.length})</h2>
-      <ErrorMessage list={errorObj?.description} />
-      {steps.map((step, index) => (
-        <div className="flex items-center relative" key={`${index}-${keyId}`}>
-          <span className="mr-2">{index + 1}.</span>
+      <section className="submission-section">
+        <SectionHeading icon="coins" title="Mana required (optional)" />
+        <ErrorMessage list={errorObj?.manaNeeded} />
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
-            className="textarea w-full p-4 border-gray-300 border mb-3"
-            placeholder="e.g. Cast Splinter Twin on Deceiver Exarch"
-            value={step}
-            onChange={(e) => setSteps([...steps.slice(0, index), e.target.value, ...steps.slice(index + 1)])}
+            className="field-input flex-1"
+            maxLength={51}
+            placeholder="e.g. {2}{U}{U}"
+            value={manaCost}
+            onChange={(e) => setManaCost(e.target.value)}
           />
-
-          <button
-            className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
-            onClick={() => handleDeleteStep(index)}
-            title="Remove step from combo"
-          >
-            x
-          </button>
+          <div className="flex flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-700 dark:bg-white/5">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Preview:</span>
+            <TextWithMagicSymbol text={manaCost} />
+          </div>
         </div>
-      ))}
-      <button className="button" onClick={() => setSteps([...steps, ''])}>
-        Add Step
-      </button>
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Results of this combo ({features.length})</h2>
-      <ErrorMessage list={errorObj?.produces} />
-      <div className="flex flex-col">
-        {features.map((feature, index) => (
-          <FeatureSubmission
-            feature={feature}
-            onChange={(f) => handleFeatureChange(f, index)}
-            onDelete={() => handleDeleteFeature(index)}
-            index={index}
-            key={`${index}-${keyId}`}
-          />
-        ))}
-      </div>
-      <button className="button" onClick={handleAddFeature}>
-        Add Feature
-      </button>
+      <section className="submission-section">
+        <SectionHeading icon="check" title="Easily achievable prerequisites (optional)" />
+        <ErrorMessage list={errorObj?.easyPrerequisites} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="e.g. It must be your opponent's turn"
+          value={easyPrerequisites}
+          onChange={(e) => setEasyPrerequisites(e.target.value)}
+        />
+      </section>
+
+      <section className="submission-section">
+        <SectionHeading icon="circleExclamation" title="Notable prerequisites (optional)" />
+        <ErrorMessage list={errorObj?.notablePrerequisites} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="e.g. You need a way to make an opponent lose life"
+          value={notablePrerequisites}
+          onChange={(e) => setNotablePrerequisites(e.target.value)}
+        />
+      </section>
+
+      <section className="submission-section">
+        <SectionHeading icon="listOl" title="Steps to execute combo" count={steps.length} />
+        <ErrorMessage list={errorObj?.description} />
+        <div className="flex flex-col gap-3">
+          {steps.map((step, index) => (
+            <div className="flex items-center gap-3" key={`${index}-${keyId}`}>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-link text-sm font-bold text-white dark:bg-primary dark:text-dark">
+                {index + 1}
+              </span>
+              <input
+                className="field-input"
+                placeholder="e.g. Cast Splinter Twin on Deceiver Exarch"
+                value={step}
+                onChange={(e) => setSteps([...steps.slice(0, index), e.target.value, ...steps.slice(index + 1)])}
+              />
+              <button
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-danger text-white transition-transform hover:scale-110"
+                onClick={() => handleDeleteStep(index)}
+                title="Remove step from combo"
+              >
+                <Icon name="cross" />
+              </button>
+            </div>
+          ))}
+        </div>
+        <button className="add-button mt-3" onClick={() => setSteps([...steps, ''])}>
+          <Icon name="plus" /> Add Step
+        </button>
+      </section>
+
+      <section className="submission-section">
+        <SectionHeading icon="lightbulb" title="Results of this combo" count={features.length} />
+        <p className="submission-hint">What the combo produces (e.g. “Infinite mana”, “Win the game”).</p>
+        <ErrorMessage list={errorObj?.produces} />
+        <div className="flex flex-col">
+          {features.map((feature, index) => (
+            <FeatureSubmission
+              feature={feature}
+              onChange={(f) => handleFeatureChange(f, index)}
+              onDelete={() => handleDeleteFeature(index)}
+              index={index}
+              key={`${index}-${keyId}`}
+            />
+          ))}
+        </div>
+        <button className="add-button" onClick={handleAddFeature}>
+          <Icon name="plus" /> Add Feature
+        </button>
+      </section>
 
       {cards.length > 5 && (
         <Alert type="warning" icon="triangleExclamation" title="Warning">
@@ -605,34 +722,47 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         </Alert>
       )}
 
-      <h2 className="heading-subtitle flex justify-start">Variant of (optional)</h2>
-      <ErrorMessage list={errorObj?.variantOf} />
-      <input
-        type="text"
-        placeholder='ID of the combo this is a variant of (e.g. "1234-4567")'
-        className="textarea w-full p-4 border-gray-300 border mb-3"
-        value={variantOf || ''}
-        onChange={(e) => setVariantOf(e.target.value || undefined)}
-        maxLength={128}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="copy" title="Variant of (optional)" />
+        <ErrorMessage list={errorObj?.variantOf} />
+        <input
+          type="text"
+          placeholder='ID of the combo this is a variant of (e.g. "1234-4567")'
+          className="field-input"
+          value={variantOf || ''}
+          onChange={(e) => setVariantOf(e.target.value || undefined)}
+          maxLength={128}
+        />
+        {variantOfPreview && (
+          <div className="flex justify-center pt-3">
+            <ComboResult combo={variantOfPreview} hideVariants newTab />
+          </div>
+        )}
+      </section>
 
-      <h2 className="heading-subtitle flex justify-start">Comments (optional)</h2>
-      <ErrorMessage list={errorObj?.comment} />
-      <textarea
-        className="textarea w-full p-4 border-gray-300 border"
-        placeholder="Notes useful for editors that review your submission"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        maxLength={1024}
-      />
+      <section className="submission-section">
+        <SectionHeading icon="comments" title="Comments (optional)" />
+        <ErrorMessage list={errorObj?.comment} />
+        <textarea
+          className="field-input min-h-24 resize-y"
+          placeholder="Notes useful for editors that review your submission"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          maxLength={1024}
+        />
+        <label className="mt-4 flex w-fit cursor-pointer select-none items-center gap-2 font-bold">
+          <input
+            type="checkbox"
+            className="h-4 w-4 cursor-pointer accent-primary"
+            checked={spoiler}
+            onChange={() => setSpoiler(!spoiler)}
+          />
+          Mark this combo as spoiler
+        </label>
+      </section>
 
-      <div className="flex items-center">
-        <input type="checkbox" className="mr-2" checked={spoiler} onChange={() => setSpoiler(!spoiler)} />
-        <label>Mark this combo as spoiler</label>
-      </div>
-
-      <div className="flex justify-center">
-        <button disabled={submitting} className="button" onClick={handleSubmit}>
+      <div className="flex justify-center pt-2">
+        <button disabled={submitting} className="submit-button" onClick={handleSubmit}>
           {submitting ? <Loader /> : submission?.id ? 'Re-submit Combo' : 'Submit Combo'}
         </button>
       </div>

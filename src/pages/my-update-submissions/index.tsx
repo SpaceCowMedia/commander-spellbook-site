@@ -15,6 +15,7 @@ import {
   variantUpdateSuggestionToSubmission,
 } from 'lib/types';
 import UpdateSubmissionItem from 'components/submission/UpdateSubmissionItem/UpdateSubmissionItem';
+import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
 import SplashPage from 'components/layout/SplashPage/SplashPage';
 import Link from 'next/link';
 
@@ -50,57 +51,56 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
   return (
     <>
       <SpellbookHead title="Commander Spellbook: Update Submissions" description="View your update submissions." />
-      <div>
-        {error && <p className={styles.error}>{error}</p>}
-        <div className="container sm:flex flex-col">
-          {submissions.length === 0 ? (
-            <SplashPage
-              pulse={false}
-              title="No Update Submissions Found"
-              flavor="No, it's not quite as simple as 'point and boom,' but if you must summarize.\n\n- Daretti"
-              artCircleCardName="Frantic Search"
-            >
-              <div className={`${styles.noCombosFoundButtons} opacity-100`}>
-                <h2 className="heading-subtitle">You don't have any update submission to see yet.</h2>
-                <div>
-                  <Link href="/submit-an-update">
-                    <button className="button">Submit one</button>
-                  </Link>
-                </div>
+      <div className="container flex flex-col py-6">
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        {submissions.length === 0 ? (
+          <SplashPage
+            pulse={false}
+            title="No Update Submissions Found"
+            flavor="No, it's not quite as simple as 'point and boom,' but if you must summarize.\n\n- Daretti"
+            artCircleCardName="Frantic Search"
+          >
+            <div className="opacity-100">
+              <h2 className="heading-subtitle">You don't have any update submission to see yet.</h2>
+              <div>
+                <Link href="/submit-an-update">
+                  <button className="button">Submit one</button>
+                </Link>
               </div>
-            </SplashPage>
-          ) : (
-            <>
-              <h2 className="heading-subtitle w-full mt-10">
-                You have submitted {count} update{count !== 1 ? 's' : ''}.
-              </h2>
-              <div className="w-full">
-                <SearchPagination
-                  currentPage={pageNumber}
-                  hasNextPage={hasNextPage}
-                  aria-hidden="true"
-                  onGoForward={goForward}
-                  onGoBack={goBack}
-                />
-                <ul className={styles.suggestionsWrapper}>
-                  {submissions.map((suggestion) => (
-                    <UpdateSubmissionItem
-                      key={suggestion.id}
-                      submission={variantUpdateSuggestionFromSubmission(suggestion)}
-                    />
-                  ))}
-                </ul>
-                <SearchPagination
-                  currentPage={pageNumber}
-                  hasNextPage={hasNextPage}
-                  aria-hidden="true"
-                  onGoForward={goForward}
-                  onGoBack={goBack}
-                />
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+          </SplashPage>
+        ) : (
+          <>
+            <h1 className="heading-title mb-2">My Update Submissions</h1>
+            <p className="heading-subtitle mb-8">
+              You have submitted {count} update{count !== 1 ? 's' : ''}.
+            </p>
+            <div className="w-full space-y-6">
+              <SearchPagination
+                currentPage={pageNumber}
+                hasNextPage={hasNextPage}
+                aria-hidden="true"
+                onGoForward={goForward}
+                onGoBack={goBack}
+              />
+              <ul className={styles.suggestionsWrapper}>
+                {submissions.map((suggestion) => (
+                  <UpdateSubmissionItem
+                    key={suggestion.id}
+                    submission={variantUpdateSuggestionFromSubmission(suggestion)}
+                  />
+                ))}
+              </ul>
+              <SearchPagination
+                currentPage={pageNumber}
+                hasNextPage={hasNextPage}
+                aria-hidden="true"
+                onGoForward={goForward}
+                onGoBack={goBack}
+              />
+            </div>
+          </>
+        )}
       </div>
     </>
   );

@@ -1,5 +1,9 @@
-import { useState } from 'react';
-import { VariantInVariantUpdateSuggestionRequest } from '@space-cow-media/spellbook-client';
+import { useEffect, useState } from 'react';
+import Icon from '../../layout/Icon/Icon';
+import ComboResult from '../../search/ComboResult/ComboResult';
+import { Variant, VariantInVariantUpdateSuggestionRequest, VariantsApi } from '@space-cow-media/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
+import { useDebounce } from 'use-debounce';
 
 interface Props {
   variant: VariantInVariantUpdateSuggestionRequest;
@@ -11,6 +15,33 @@ interface Props {
 const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   const [variantIdInput, setVariantIdInput] = useState(variant?.variant || '');
   const [issueInput, setIssueInput] = useState(variant?.issue || '');
+  const [previewCombo, setPreviewCombo] = useState<Variant | undefined>(undefined);
+  const [debouncedId] = useDebounce(variantIdInput, 500);
+
+  useEffect(() => {
+    const id = debouncedId.trim();
+    if (!id) {
+      setPreviewCombo(undefined);
+      return;
+    }
+    let cancelled = false;
+    const variantsApi = new VariantsApi(apiConfiguration());
+    variantsApi
+      .variantsRetrieve({ id })
+      .then((result) => {
+        if (!cancelled) {
+          setPreviewCombo(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPreviewCombo(undefined);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedId]);
 
   const handleIdInputChange = (value: string) => {
     try {
@@ -35,32 +66,37 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
   };
 
   return (
-    <div className="border border-gray-250 rounded-sm  flex-col p-5 shadow-lg mb-5 relative">
-      <label className="font-bold">Combo:</label>
-      <input
-        id={`variant-id-${index}`}
-        type="text"
-        value={variantIdInput}
-        onChange={(e) => handleIdInputChange(e.target.value)}
-        placeholder="Variant ID"
-        className="w-full border border-gray-300 rounded-sm p-2 mb-2"
-      />
-      <button
-        className="w-6 h-6 rounded-full flex justify-center text-white bg-red-900 font-bold absolute -right-2 -top-2 hover:scale-125 transform transition-all duration-200 ease-in-out"
-        onClick={onDelete}
-        title="Remove card from combo"
-      >
-        x
+    <div className="submission-panel space-y-3">
+      <div className="field-group">
+        <label className="field-label">Combo</label>
+        <input
+          id={`variant-id-${index}`}
+          type="text"
+          value={variantIdInput}
+          onChange={(e) => handleIdInputChange(e.target.value)}
+          placeholder="Variant ID"
+          className="field-input"
+        />
+        {previewCombo && (
+          <div className="flex justify-center pt-3">
+            <ComboResult combo={previewCombo} hideVariants newTab />
+          </div>
+        )}
+      </div>
+      <button className="submission-remove" onClick={onDelete} title="Remove combo from submission">
+        <Icon name="cross" />
       </button>
-      <label className="font-bold">Variant specific issue:</label>
-      <input
-        id={`variant-issue-${index}`}
-        type="text"
-        value={issueInput}
-        onChange={(e) => handleIssueInputChange(e.target.value)}
-        placeholder="Describe the issue"
-        className="w-full border border-gray-300 rounded-sm p-2 mb-2"
-      />
+      <div className="field-group">
+        <label className="field-label">Variant specific issue</label>
+        <input
+          id={`variant-issue-${index}`}
+          type="text"
+          value={issueInput}
+          onChange={(e) => handleIssueInputChange(e.target.value)}
+          placeholder="Describe the issue"
+          className="field-input"
+        />
+      </div>
     </div>
   );
 };

@@ -4,13 +4,13 @@ import {
   VariantUpdateSuggestion,
   VariantUpdateSuggestionsApi,
 } from '@space-cow-media/spellbook-client';
-import styles from './updateSubmissionItem.module.scss';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
 import Modal from 'components/ui/Modal/Modal';
 import { apiConfiguration } from 'services/api.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import StatusBadge from 'components/submission/StatusBadge/StatusBadge';
 
 interface Props {
   submission: VariantUpdateSuggestion;
@@ -30,18 +30,6 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
   }
   const configuration = apiConfiguration();
   const suggestionsApi = new VariantUpdateSuggestionsApi(configuration);
-  const statusAsText =
-    submission.status == SuggestionStatusEnum.A
-      ? 'Accepted'
-      : submission.status == SuggestionStatusEnum.N
-        ? 'New'
-        : submission.status == SuggestionStatusEnum.Ad
-          ? 'Awaiting Discussion'
-          : submission.status == SuggestionStatusEnum.R
-            ? 'Rejected'
-            : submission.status == SuggestionStatusEnum.Pa
-              ? 'Pending Approval'
-              : 'Unknown';
   const kindAsText =
     submission.kind == KindEnum.Nw
       ? 'Not Working'
@@ -88,91 +76,80 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
     setModalOpen(true);
   };
 
-  const result = (
-    <div className={styles.itemContainer}>
-      <div className={styles.info}>
-        <h2 className={styles.title}>Update Submission #{submission.id}</h2>
-        <div className={styles.kind}>
-          <h3 className={styles.subtitle}>Kind: {kindAsText}</h3>
+  const issuePreview = submission.issue.substring(0, 100) + (submission.issue.length > 128 ? '...' : '');
+
+  return (
+    <li className="submission-card">
+      <div className="min-w-0 flex-1 space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <h2 className="submission-card-title">Update Submission #{submission.id}</h2>
+          <StatusBadge status={submission.status} />
+        </div>
+        <div>
+          <div className="submission-field-label">Kind</div>
+          {kindAsText}
         </div>
         {submission.variants.length > 0 && (
-          <div className={styles.combos}>
-            <h3 className={styles.subtitle}>Combos</h3>
+          <div>
+            <div className="submission-field-label">Combos</div>
             <p>
               {submission.variants.map((variant, index) => (
-                <>
-                  <Link key={index} href={`/combo/${variant.variant}`}>
+                <React.Fragment key={index}>
+                  <Link href={`/combo/${variant.variant}`} target="_blank" rel="noopener noreferrer">
                     {variant.variant}
                   </Link>
                   {index < submission.variants.length - 1 && <span>, </span>}
-                </>
+                </React.Fragment>
               ))}
             </p>
           </div>
         )}
-        <div className={styles.issue}>
-          <h3 className={styles.subtitle}>Issue</h3>
-          <TextWithMagicSymbol
-            text={submission.issue.substring(0, 100) + (submission.issue.length > 128 ? '...' : '')}
-          />
+        <div>
+          <div className="submission-field-label">Issue</div>
+          <TextWithMagicSymbol text={issuePreview} />
         </div>
-        <div className={styles.extra}>
-          <h3 className={styles.subtitle}>Created: {createdAt}</h3>
-        </div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">Created {createdAt}</div>
       </div>
-      <div className={styles.icons}>
-        <div className={styles.status} title={statusAsText}>
-          {submission.status == SuggestionStatusEnum.A ? (
-            <Icon name="checkDouble" />
-          ) : submission.status == SuggestionStatusEnum.Pa ? (
-            <Icon name="check" />
-          ) : submission.status == SuggestionStatusEnum.R ? (
-            <Icon name="cross" />
-          ) : submission.status == SuggestionStatusEnum.N ? (
-            <Link href={`/my-update-submissions/${submission.id}`} key={submission.id}>
-              <Icon name="pencil" />
-            </Link>
-          ) : submission.status == SuggestionStatusEnum.Ad ? (
-            <Icon name="comments" />
-          ) : (
-            <Icon name="question" />
-          )}
+      {submission.status == SuggestionStatusEnum.N && (
+        <div className="flex shrink-0 gap-2">
+          <Link
+            href={`/my-update-submissions/${submission.id}`}
+            className="icon-button border-2 border-primary text-link hover:bg-primary hover:text-white dark:text-primary"
+            title="Edit this submission"
+          >
+            <Icon name="pencil" />
+          </Link>
+          <button className="icon-button bg-danger text-white" title="Delete this submission" onClick={handleModalOpen}>
+            <Icon name="trash" />
+          </button>
+          <Modal
+            onClose={() => setModalOpen(false)}
+            open={modalOpen}
+            footer={
+              <>
+                <button onClick={() => setModalOpen(false)} className="button">
+                  Cancel
+                </button>
+                <button onClick={handleDelete} className="button">
+                  Delete
+                </button>
+              </>
+            }
+          >
+            <h2 className="text-xl">Are you sure you want to delete this submission?</h2>
+            <p>
+              Submission #{submission.id}
+              <br />
+              {issuePreview}
+              <br />
+              <br />
+              This action cannot be undone.
+            </p>
+          </Modal>
         </div>
-        {submission.status == SuggestionStatusEnum.N && (
-          <>
-            <button className={styles.action} title="Delete this submission" onClick={handleModalOpen}>
-              <Icon name="trash" />
-            </button>
-            <Modal
-              onClose={() => setModalOpen(false)}
-              open={modalOpen}
-              footer={
-                <>
-                  <button onClick={() => setModalOpen(false)} className="button">
-                    Cancel
-                  </button>
-                  <button onClick={handleDelete} className="button">
-                    Delete
-                  </button>
-                </>
-              }
-            >
-              <h2 className="text-xl">Are you sure you want to delete this submission?</h2>
-              <p>
-                Submission #{submission.id}
-                <br />
-                {submission.issue.substring(0, 100) + (submission.issue.length > 128 ? '...' : '')}
-                <br />
-                <br />
-                This action cannot be undone.
-              </p>
-            </Modal>
-          </>
-        )}
-      </div>
-    </div>
+      )}
+    </li>
   );
-  return <li className={styles.item}>{result}</li>;
 };
 
 export default UpdateSubmissionItem;

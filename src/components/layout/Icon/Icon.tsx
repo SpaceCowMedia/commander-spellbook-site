@@ -47,6 +47,7 @@ import {
   faPentagon,
   faCircleQuestion,
   faAngleRight,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'lib/cn';
@@ -111,6 +112,7 @@ const SPELLBOOK_FA_ICONS = {
   lock: faLock,
   pentagon: faPentagon,
   greaterThan: faAngleRight,
+  plus: faPlus,
 };
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;
