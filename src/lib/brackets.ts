@@ -48,11 +48,17 @@ function isComboGameEnding(combo: ClassifiedVariant) {
   return combo.relevant;
 }
 
+function totalQuantity(entries: { quantity: number }[]) {
+  return entries.reduce((total, entry) => total + entry.quantity, 0);
+}
+
 export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
-  const bannedCards = bracketEstimate.cards.filter((card) => card.banned).map((card) => card.card);
-  const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger).map((card) => card.card);
-  const extraTurnCards = bracketEstimate.cards.filter((card) => card.extraTurn).map((card) => card.card);
-  const massLandDenialCards = bracketEstimate.cards.filter((card) => card.massLandDenial).map((card) => card.card);
+  const bannedCards = bracketEstimate.cards.filter((card) => card.banned);
+  const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger);
+  const extraTurnCards = bracketEstimate.cards.filter((card) => card.extraTurn);
+  const massLandDenialCards = bracketEstimate.cards.filter((card) => card.massLandDenial);
+  const extraTurnTemplates = bracketEstimate.templates.filter((template) => template.extraTurn);
+  const massLandDenialTemplates = bracketEstimate.templates.filter((template) => template.massLandDenial);
   const extraTurnsCombos = bracketEstimate.combos.filter((combo) => combo.extraTurn).map((combo) => combo.combo);
   const massLandDenialCombos = bracketEstimate.combos
     .filter((combo) => combo.massLandDenial)
@@ -78,8 +84,10 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
   other = other.filter((combo) => combo.speed < 4 || !isComboGameWinning(combo));
   const fastGameEndingCombos = other.filter((combo) => combo.speed >= 4 && isComboGameEnding(combo));
   other = other.filter((combo) => combo.speed < 4 || !isComboGameEnding(combo));
-  const fastPowerfulTwoCardCombos = other.filter((combo) => combo.definitelyTwoCard && combo.borderlineRelevant);
-  other = other.filter((combo) => !combo.definitelyTwoCard || !combo.borderlineRelevant);
+  const fastPowerfulTwoCardCombos = other.filter(
+    (combo) => combo.speed >= 4 && combo.definitelyTwoCard && combo.borderlineRelevant,
+  );
+  other = other.filter((combo) => combo.speed < 4 || !combo.definitelyTwoCard || !combo.borderlineRelevant);
   const normalGameWinningTwoCardCombos = other.filter(
     (combo) => combo.speed >= 3 && combo.definitelyTwoCard && isComboGameWinning(combo),
   );
@@ -93,14 +101,21 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
   const slowGameWinningTwoCardCombos = other.filter(
     (combo) => combo.speed >= 2 && combo.definitelyTwoCard && isComboGameWinning(combo),
   );
+  other = other.filter((combo) => combo.speed < 2 || !combo.definitelyTwoCard || !isComboGameWinning(combo));
   const slowGameEndingTwoCardCombos = other.filter(
     (combo) => combo.speed >= 2 && combo.definitelyTwoCard && isComboGameEnding(combo),
   );
   return {
-    bannedCards,
-    gameChangerCards,
-    extraTurnCards,
-    massLandDenialCards,
+    bannedCards: bannedCards.map((card) => card.card),
+    gameChangerCards: gameChangerCards.map((card) => card.card),
+    extraTurnCards: extraTurnCards.map((card) => card.card),
+    massLandDenialCards: massLandDenialCards.map((card) => card.card),
+    bannedCardCount: totalQuantity(bannedCards),
+    gameChangerCardCount: totalQuantity(gameChangerCards),
+    extraTurnCardCount: totalQuantity(extraTurnCards),
+    massLandDenialCardCount: totalQuantity(massLandDenialCards),
+    extraTurnTemplateCount: totalQuantity(extraTurnTemplates),
+    massLandDenialTemplateCount: totalQuantity(massLandDenialTemplates),
     extraTurnsCombos,
     massLandDenialCombos,
     controlAllOpponentsCombos,

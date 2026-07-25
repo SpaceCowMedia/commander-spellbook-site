@@ -23,33 +23,34 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
   const info = computeBracketInfo(bracketEstimate);
 
   const powerLevelFactors: string[] = [];
-  if (info.bannedCards.length > 0) {
+  if (info.bannedCardCount > 0) {
     powerLevelFactors.push(
       singleCombo
-        ? `This combo contains ${info.bannedCards.length} banned card${info.bannedCards.length > 1 ? 's' : ''}`
-        : `Having banned cards lies outside the bracket classification and thus this card list's bracket is undefined. You have ${info.bannedCards.length} banned cards.`,
+        ? `This combo contains ${info.bannedCardCount} banned card${info.bannedCardCount > 1 ? 's' : ''}`
+        : `Having banned cards lies outside the bracket classification and thus this card list's bracket is undefined. You have ${info.bannedCardCount} banned cards.`,
     );
   }
-  if (info.gameChangerCards.length > 3) {
+  if (info.gameChangerCardCount > 3) {
     powerLevelFactors.push(
       singleCombo
-        ? `Having more than 3 game changer cards pushes this combo into bracket 4+. This combo has ${info.gameChangerCards.length}.`
-        : `Having more than 3 game changer cards pushes this card list into bracket 4+. You have ${info.gameChangerCards.length}.`,
+        ? `Having more than 3 game changer cards pushes this combo into bracket 4+. This combo has ${info.gameChangerCardCount}.`
+        : `Having more than 3 game changer cards pushes this card list into bracket 4+. You have ${info.gameChangerCardCount}.`,
     );
-  } else if (info.gameChangerCards.length > 0) {
+  } else if (info.gameChangerCardCount > 0) {
     powerLevelFactors.push(
       singleCombo
-        ? `Having between 1 and 3 game changer cards pushes this combo into bracket 3+. This combo has ${info.gameChangerCards.length}.`
-        : `Having between 1 and 3 game changer cards pushes this card list into bracket 3+. You have ${info.gameChangerCards.length}.`,
+        ? `Having between 1 and 3 game changer cards pushes this combo into bracket 3+. This combo has ${info.gameChangerCardCount}.`
+        : `Having between 1 and 3 game changer cards pushes this card list into bracket 3+. You have ${info.gameChangerCardCount}.`,
     );
   }
-  if (info.extraTurnCards.length >= 2) {
+  if (info.extraTurnCardCount >= 2 || info.extraTurnTemplateCount >= 2) {
+    const extraTurnCount = Math.max(info.extraTurnCardCount, info.extraTurnTemplateCount);
     powerLevelFactors.push(
       singleCombo
-        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${info.extraTurnCards.length}.`
-        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${info.extraTurnCards.length}.`,
+        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${extraTurnCount}.`
+        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${extraTurnCount}.`,
     );
-  } else if (info.extraTurnCards.length > 0) {
+  } else if (info.extraTurnCardCount > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Having one extra turn card pushes this combo into bracket 2+.'
@@ -64,11 +65,12 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
     );
   }
 
-  if (info.massLandDenialCards.length > 0) {
+  const massLandDenialPieceCount = info.massLandDenialCardCount + info.massLandDenialTemplateCount;
+  if (massLandDenialPieceCount > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Having mass land denial cards pushes this combo into bracket 4+.'
-        : `Having mass land denial cards pushes this card list into bracket 4+. You have ${info.massLandDenialCards.length}.`,
+        : `Having mass land denial cards pushes this card list into bracket 4+. You have ${massLandDenialPieceCount}.`,
     );
   }
   if (info.massLandDenialCombos.length > 0) {

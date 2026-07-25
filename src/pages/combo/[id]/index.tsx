@@ -96,28 +96,15 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const loadBracketEstimate = async (combo: Variant) => {
     setBracketEstimate(undefined);
     try {
-      const templateCommanders: CardInDeckRequest[] = [];
       const templates: CardInDeckRequest[] = [];
       for (const template of combo.requires) {
         const page = await fetchResultsPage(template.template, 0);
-        if (template.mustBeCommander) {
-          templateCommanders.push({ card: page.results[0].name, quantity: template.quantity });
-        } else {
-          templates.push({ card: page.results[0].name, quantity: template.quantity });
-        }
+        templates.push({ card: page.results[0].name, quantity: template.quantity });
       }
       const estimate = await bracketApi.estimateBracketCreate({
+        unknownCommanders: true,
         deckRequest: {
-          commanders: templateCommanders.concat(
-            combo.uses
-              .filter((use) => use.mustBeCommander)
-              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
-          ),
-          main: templates.concat(
-            combo.uses
-              .filter((use) => !use.mustBeCommander)
-              .map((use) => ({ card: use.card.name, quantity: use.quantity })),
-          ),
+          main: templates.concat(combo.uses.map((use) => ({ card: use.card.name, quantity: use.quantity }))),
         },
       });
       setBracketEstimate(estimate);
