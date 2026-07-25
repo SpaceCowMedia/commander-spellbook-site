@@ -65,6 +65,21 @@ export function getTypes(card: CardInVariant | TemplateInVariant): string {
   return 'card' in card ? card.card.typeLine : '';
 }
 
+/* `CardInVariant.usedFace` is a 1-based face index, so the back of a double-faced card is face 2.
+   Split cards and adventures are multi-faced too, but their faces all live on the front image. */
+export const BACK_FACE_INDEX = 2;
+export const FACE_SEPARATOR = ' // ';
+
+/* Which face a tooltip should lead with when `text` is the prose that mentions `card`. Naming a
+   single face wins over `usedFace`; the full "front // back" name defers to it. */
+export function getFaceMentionedBy(card: CardInVariant, text: string): number | null {
+  if (card.card.faces <= 1) {
+    return card.usedFace;
+  }
+  const mentioned = card.card.name.split(FACE_SEPARATOR).indexOf(text.trim());
+  return mentioned < 0 ? card.usedFace : mentioned + 1;
+}
+
 export interface LegalityFormat {
   value: string;
   label: string;

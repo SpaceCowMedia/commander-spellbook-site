@@ -6,9 +6,11 @@ import weatheredCardBack from 'assets/images/weathered-card-back.png';
 import CardLink from '../../layout/CardLink/CardLink';
 import isFoolsDay from 'lib/foolsDay';
 import { Card, LayoutRotationEnum } from '@space-cow-media/spellbook-client';
+import { BACK_FACE_INDEX } from 'lib/types';
 
 interface Props {
   card: Card;
+  usedFace?: number | null;
   className?: string;
 }
 
@@ -16,8 +18,9 @@ function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card, className }: Props) => {
+const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
   const hasBack = card.imageUriBackNormal != null;
+  const showsUsedBackFace = hasBack && usedFace === BACK_FACE_INDEX;
   const canRotate = card.layoutRotationFront != null;
   const frontImageRef = useRef<HTMLImageElement>(null);
   const [frontLoaded, setFrontLoaded] = useState(false);
@@ -51,7 +54,13 @@ const CardImage: React.FC<Props> = ({ card, className }: Props) => {
   }, [frontImageRef.current]);
 
   useEffect(() => {
-    if (backFacing && backImageRef.current !== null && isLoaded(backImageRef.current) && readyToFlipToFront) {
+    if (
+      backFacing &&
+      !showsUsedBackFace &&
+      backImageRef.current !== null &&
+      isLoaded(backImageRef.current) &&
+      readyToFlipToFront
+    ) {
       flip(); // reveal moment
     }
   }, [readyToFlipToFront, frontLoaded]);

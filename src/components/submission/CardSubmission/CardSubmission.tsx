@@ -31,6 +31,7 @@ function buildPreviewCard(name: string, frontImage: string, backImage?: string):
     name,
     oracleId: null,
     spoiler: false,
+    faces: backImage ? 2 : 1,
     typeLine: '',
     layoutRotationFront: null,
     imageUriFrontSmall: null,

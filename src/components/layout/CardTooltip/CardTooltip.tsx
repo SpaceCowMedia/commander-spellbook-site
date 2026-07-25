@@ -3,23 +3,40 @@ import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 import { Card } from '@space-cow-media/spellbook-client';
+import { BACK_FACE_INDEX } from 'lib/types';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
 const TOOLTIP_RIGHT_SHIFT_PX = 30;
 
 interface Props {
   card?: Card;
+  faceToShow?: number | null;
   images?: string[];
   children?: React.ReactNode;
 }
 
 interface CardImage {
   url: string;
+  alt: string;
   isRequested: boolean;
   isLoaded: boolean;
 }
 
-const CardTooltip: React.FC<Props> = ({ card, images, children }) => {
+function getFaceImages(card: Card, faceToShow?: number | null): { url: string; alt: string }[] {
+  if (!card.imageUriFrontNormal) {
+    return [];
+  }
+  const faces = [{ url: card.imageUriFrontNormal, alt: 'Front Image' }];
+  if (card.imageUriBackNormal) {
+    faces.push({ url: card.imageUriBackNormal, alt: 'Back Image' });
+    if (faceToShow === BACK_FACE_INDEX) {
+      faces.reverse();
+    }
+  }
+  return faces;
+}
+
+const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, children }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [hasHovered, setHasHovered] = useState(false);
@@ -29,20 +46,20 @@ const CardTooltip: React.FC<Props> = ({ card, images, children }) => {
 
   useEffect(() => {
     setIsMounted(true);
-    const imageUrls =
+    const faceImages =
       images && images.length > 0
-        ? images
-        : card && card.imageUriFrontNormal
-          ? [card.imageUriFrontNormal, ...(card.imageUriBackNormal ? [card.imageUriBackNormal] : [])]
+        ? images.map((url, index) => ({ url, alt: index === 0 ? 'Front Image' : 'Back Image' }))
+        : card
+          ? getFaceImages(card, faceToShow)
           : [];
     setCards(
-      imageUrls.map((url) => ({
-        url,
+      faceImages.map((face) => ({
+        ...face,
         isRequested: false,
         isLoaded: false,
       })),
     );
-  }, [card, images]);
+  }, [card, faceToShow, images]);
 
   const getCards = () => {
     return deviceIsMobile() ? cards.slice(0, 1) : cards;
@@ -177,7 +194,7 @@ const CardTooltip: React.FC<Props> = ({ card, images, children }) => {
                 <img
                   key={index}
                   src={card.url}
-                  alt={index === 0 ? 'Front Image' : 'Back Image'}
+                  alt={card.alt}
                   className={styles.cardImage}
                   /* set flag after image loading is complete */
                   onLoad={() => onImageLoaded(index, true)}

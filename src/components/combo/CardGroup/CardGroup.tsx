@@ -25,7 +25,7 @@ const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacement
             {'template' in card && (
               <TemplateCard template={card} fetchTemplateReplacements={fetchTemplateReplacements} />
             )}
-            {'card' in card && <CardImage card={card.card} />}
+            {'card' in card && <CardImage card={card.card} usedFace={card.usedFace} />}
           </div>
         ))}
     </div>

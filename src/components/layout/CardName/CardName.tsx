@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './cardName.module.scss';
+import { FACE_SEPARATOR } from 'lib/types';
 
 interface Props {
   name: string;
@@ -10,7 +11,6 @@ interface Props {
    The prefix is kept in the underlying name (links, titles, exports) and only swapped for the
    alchemy symbol when rendered. Each face of a double-faced card carries its own prefix. */
 const ALCHEMY_PREFIX = 'A-';
-const FACE_SEPARATOR = ' // ';
 
 const AlchemySymbol: React.FC = () => (
   <>

@@ -7,6 +7,7 @@ import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
+import { FACE_SEPARATOR, getFaceMentionedBy } from 'lib/types';
 
 interface Props {
   text: string;
@@ -45,13 +46,14 @@ const TextWithMagicSymbol: React.FC<Props> = ({
   let matchableValuesString = '';
 
   const cardNames = cardsInCombo.map((card) => card.card.name);
-  const cardShortNames = cardNames.reduce((list, name) => {
+  const cardShortNames = cardsInCombo.reduce((list, { card }) => {
+    const name = card.name;
     if (name.match(/^[^,]+,/)) {
       list.push(name.split(',')[0]);
     } else if (name.match(/^[^\s]+\s(the|of)\s/i)) {
       list.push(name.split(/\s(the|of)/i)[0]);
-    } else if (name.includes(' // ')) {
-      list.push(...name.split(' // '));
+    } else if (card.faces > 1) {
+      list.push(...name.split(FACE_SEPARATOR));
     } else if (name.match(/^the\s/i)) {
       const restOfName = name.split(/^the\s/i)[1];
 
@@ -156,7 +158,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             </span>
           )}
           {item.nodeType === 'card' && item.card && (
-            <CardTooltip card={item.card.card}>
+            <CardTooltip card={item.card.card} faceToShow={getFaceMentionedBy(item.card, item.value)}>
               {includeCardLinks ? (
                 <CardLink name={item.card.card.name}>
                   <CardName name={item.value} />
