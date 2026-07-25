@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
 import Icon from '../../layout/Icon/Icon';
 import { FeatureProducedInVariantSuggestionRequest } from '@space-cow-media/spellbook-client';
+import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
+import { ComboSubmissionErrorType } from '../../../lib/types';
 
 interface Props {
   feature: FeatureProducedInVariantSuggestionRequest;
   onChange: (_feature: FeatureProducedInVariantSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
+  errors?: ComboSubmissionErrorType;
 }
 
-const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index }) => {
+const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index, errors }) => {
   const [featureInput, setFeatureInput] = useState(feature.feature);
 
   const handleFeatureInputChange = (value: string) => {
@@ -20,7 +23,9 @@ const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index
 
   return (
     <div className="submission-panel">
+      <ErrorMessage list={unhandledErrors(errors, ['feature'])} />
       <label className="field-label">Feature Name</label>
+      <ErrorMessage list={errors?.feature} />
       <AutocompleteInput
         value={featureInput}
         onChange={handleFeatureInputChange}

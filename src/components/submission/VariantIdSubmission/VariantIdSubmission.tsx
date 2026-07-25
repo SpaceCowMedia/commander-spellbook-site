@@ -4,15 +4,18 @@ import ComboResult from '../../search/ComboResult/ComboResult';
 import { Variant, VariantInVariantUpdateSuggestionRequest, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
+import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
+import { ComboSubmissionErrorType } from '../../../lib/types';
 
 interface Props {
   variant: VariantInVariantUpdateSuggestionRequest;
   onChange: (_variant: VariantInVariantUpdateSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
+  errors?: ComboSubmissionErrorType;
 }
 
-const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
+const VariantIdSubmission = ({ variant, onChange, index, onDelete, errors }: Props) => {
   const [variantIdInput, setVariantIdInput] = useState(variant?.variant || '');
   const [issueInput, setIssueInput] = useState(variant?.issue || '');
   const [previewCombo, setPreviewCombo] = useState<Variant | undefined>(undefined);
@@ -67,8 +70,10 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
 
   return (
     <div className="submission-panel space-y-3">
+      <ErrorMessage list={unhandledErrors(errors, ['variant', 'issue'])} />
       <div className="field-group">
         <label className="field-label">Combo</label>
+        <ErrorMessage list={errors?.variant} />
         <input
           id={`variant-id-${index}`}
           type="text"
@@ -88,6 +93,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete }: Props) => {
       </button>
       <div className="field-group">
         <label className="field-label">Variant specific issue</label>
+        <ErrorMessage list={errors?.issue} />
         <input
           id={`variant-issue-${index}`}
           type="text"

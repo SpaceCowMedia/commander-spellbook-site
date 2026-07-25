@@ -12,9 +12,10 @@ import scryfall from 'scryfall-client';
 import { getScryfallImage, scryfallQueryReplacements } from '../../../services/scryfall.service';
 import { useDebounce } from 'use-debounce';
 import TemplateCard from '../../combo/TemplateCard/TemplateCard';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
 import CardImage from '../../layout/CardImage/CardImage';
 import Icon from '../../layout/Icon/Icon';
+import { ComboSubmissionErrorType } from '../../../lib/types';
 
 const ZONE_OPTIONS = [
   { value: 'H', label: 'Hand' },
@@ -47,14 +48,22 @@ function buildPreviewCard(name: string, frontImage: string, backImage?: string):
   };
 }
 
+const ZONE_STATE_FIELDS: Record<string, string> = {
+  [ZoneLocationsEnum.B]: 'battlefieldCardState',
+  [ZoneLocationsEnum.E]: 'exileCardState',
+  [ZoneLocationsEnum.G]: 'graveyardCardState',
+  [ZoneLocationsEnum.L]: 'libraryCardState',
+};
+
 interface Props {
   card?: CardUsedInVariantSuggestionRequest;
   template?: TemplateRequiredInVariantSuggestionRequest;
   onChange: (_card: CardUsedInVariantSuggestionRequest | TemplateRequiredInVariantSuggestionRequest) => void;
   onDelete: () => void;
   index: number;
+  errors?: ComboSubmissionErrorType;
 }
-const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) => {
+const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: Props) => {
   if (card && template) {
     throw new Error('CardSubmission cannot have both a card and a template');
   }
@@ -154,6 +163,16 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
     };
   }, [debouncedQuery, template]);
 
+  const otherErrors = unhandledErrors(errors, [
+    'card',
+    'template',
+    'scryfallQuery',
+    'zoneLocations',
+    'quantity',
+    'mustBeCommander',
+    ...cardOrTemplate.zoneLocations.map((zone) => ZONE_STATE_FIELDS[zone]).filter(Boolean),
+  ]);
+
   const handleZoneChange = (zoneLocations: MultiValue<{ value: string; label: string }>) => {
     const newZoneList = zoneLocations.map((zone) => ZoneLocationsEnum[zone.value as keyof typeof ZoneLocationsEnum]);
     onChange({
@@ -185,10 +204,12 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
 
   return (
     <div className="submission-panel space-y-3">
+      <ErrorMessage list={otherErrors} />
       {template && (
         <>
           <div className="field-group">
             <label className="field-label">Template Name</label>
+            <ErrorMessage list={errors?.template} />
             <AutocompleteInput
               value={templateInput}
               onChange={handleTemplateInputChange}
@@ -204,6 +225,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
           </div>
           <div className="field-group">
             <label className="field-label">Scryfall query (optional)</label>
+            <ErrorMessage list={errors?.scryfallQuery} />
             <input
               className="field-input"
               value={scryfallQuery}
@@ -230,6 +252,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         <>
           <div className="field-group">
             <label className="field-label">Card Name</label>
+            <ErrorMessage list={errors?.card} />
             <AutocompleteInput
               value={nameInput}
               onChange={handleCardInputChange}
@@ -259,6 +282,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       </button>
       <div className="field-group">
         <label className="field-label">Zone(s)</label>
+        <ErrorMessage list={errors?.zoneLocations} />
         <Select
           placeholder="Select one or more zones that the card must be in..."
           isMulti
@@ -293,6 +317,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.E) && (
         <div className="field-group">
           <label className="field-label">Exile State (optional)</label>
+          <ErrorMessage list={errors?.exileCardState} />
           <input
             className="field-input"
             value={cardOrTemplate.exileCardState}
@@ -305,6 +330,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.G) && (
         <div className="field-group">
           <label className="field-label">Graveyard State (optional)</label>
+          <ErrorMessage list={errors?.graveyardCardState} />
           <input
             className="field-input"
             value={cardOrTemplate.graveyardCardState}
@@ -322,6 +348,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.L) && (
         <div className="field-group">
           <label className="field-label">Library State (optional)</label>
+          <ErrorMessage list={errors?.libraryCardState} />
           <input
             className="field-input"
             value={cardOrTemplate.libraryCardState}
@@ -334,6 +361,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
       {cardOrTemplate.zoneLocations.includes(ZoneLocationsEnum.B) && (
         <div className="field-group">
           <label className="field-label">Battlefield State (optional)</label>
+          <ErrorMessage list={errors?.battlefieldCardState} />
           <input
             className="field-input"
             value={cardOrTemplate.battlefieldCardState}
@@ -348,6 +376,8 @@ const CardSubmission = ({ card, template, onChange, index, onDelete }: Props) =>
         </div>
       )}
 
+      <ErrorMessage list={errors?.quantity} />
+      <ErrorMessage list={errors?.mustBeCommander} />
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
         <div className="flex items-center gap-2">
           <label

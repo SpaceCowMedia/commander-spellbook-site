@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ArtCircle from '../../layout/ArtCircle/ArtCircle';
 import { useRouter } from 'next/router';
 import Loader from '../../layout/Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -313,7 +313,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
 
       <section className="submission-section">
         <SectionHeading icon="hashtag" title="Combos displaying the issue(s)" count={variants.length} />
-        <ErrorMessage list={errorObj?.variants} />
+        <ErrorMessage list={listLevelErrors(errorObj?.variants)} />
         <div className="flex flex-col">
           {variants.map((variant, index) => (
             <VariantIdSubmission
@@ -321,6 +321,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
               onDelete={() => handleDeleteVariant(index)}
               onChange={(variant) => handleVariantChange(variant, index)}
               index={index}
+              errors={itemErrors(errorObj?.variants, index)}
               key={`${index}-${keyId}`}
             />
           ))}

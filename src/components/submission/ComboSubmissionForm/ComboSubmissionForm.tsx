@@ -5,7 +5,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import { useRouter } from 'next/router';
 import FeatureSubmission from '../Feature Submission/FeatureSubmission';
 import Loader from '../../layout/Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import { httpErrorMessage } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
@@ -529,9 +529,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         errorJson = undefined;
       }
       if (status === 400 && errorJson?.main) {
-        const cardErrors = Object.keys(errorJson.main).map(Number);
-        cardErrors.sort((a, b) => a - b);
-        errorJson.uses = cardErrors.map((index) => errorJson!.main![index.toString()]);
+        // The keys of `main` are the indexes of the cards, so errors stay aligned with the card they belong to
+        errorJson.uses = cards.map((_, index) => errorJson!.main![index.toString()] ?? {});
         setErrorObj(errorJson);
       } else {
         setErrorObj({
@@ -574,7 +573,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       <section className="submission-section">
         <SectionHeading icon="listCheck" title="Specific cards used in this combo" count={cards.length} />
         <p className="submission-hint">The exact cards this combo requires to work.</p>
-        <ErrorMessage list={errorObj?.uses} />
+        <ErrorMessage list={listLevelErrors(errorObj?.uses)} />
         <div className="flex flex-col">
           {cards.map((card, index) => (
             <CardSubmission
@@ -582,6 +581,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               onDelete={() => handleDeleteCard(index)}
               onChange={(card) => handleCardChange(card as CardUsedInVariantSuggestionRequest, index)}
               index={index}
+              errors={itemErrors(errorObj?.uses, index)}
               key={`${index}-${keyId}`}
             />
           ))}
@@ -596,7 +596,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         <p className="submission-hint">
           Interchangeable pieces described by a template (e.g. “A creature with haste”) or a Scryfall query.
         </p>
-        <ErrorMessage list={errorObj?.requires} />
+        <ErrorMessage list={listLevelErrors(errorObj?.requires)} />
         <div className="flex flex-col">
           {templates.map((card, index) => (
             <CardSubmission
@@ -606,6 +606,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
                 handleTemplateChange(template as TemplateRequiredInVariantSuggestionRequest, index)
               }
               index={index}
+              errors={itemErrors(errorObj?.requires, index)}
               key={`${index}-${keyId}`}
             />
           ))}
@@ -688,7 +689,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       <section className="submission-section">
         <SectionHeading icon="lightbulb" title="Results of this combo" count={features.length} />
         <p className="submission-hint">What the combo produces (e.g. “Infinite mana”, “Win the game”).</p>
-        <ErrorMessage list={errorObj?.produces} />
+        <ErrorMessage list={listLevelErrors(errorObj?.produces)} />
         <div className="flex flex-col">
           {features.map((feature, index) => (
             <FeatureSubmission
@@ -696,6 +697,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               onChange={(f) => handleFeatureChange(f, index)}
               onDelete={() => handleDeleteFeature(index)}
               index={index}
+              errors={itemErrors(errorObj?.produces, index)}
               key={`${index}-${keyId}`}
             />
           ))}
