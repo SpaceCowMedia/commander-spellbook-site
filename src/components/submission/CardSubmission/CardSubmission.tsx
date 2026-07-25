@@ -16,6 +16,7 @@ import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
 import CardImage from '../../layout/CardImage/CardImage';
 import Icon from '../../layout/Icon/Icon';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
 
 const ZONE_OPTIONS = [
   { value: 'H', label: 'Hand' },
@@ -232,6 +233,7 @@ const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: P
               onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
               placeholder="(ex: t:creature)"
             />
+            <ScryfallQueryHelp />
           </div>
           {scryfallQuery.trim() && queryError && <ErrorMessage>{queryError}</ErrorMessage>}
           {scryfallQuery.trim() && queryValid && !queryError && templateForPreview && (
