@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 import {
   Card,
+  CardsApi,
   CardUsedInVariantSuggestionRequest,
+  FeatureStatusEnum,
   TemplateInVariant,
   TemplateRequiredInVariantSuggestionRequest,
+  TemplatesApi,
   ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
@@ -17,6 +20,10 @@ import CardImage from '../../layout/CardImage/CardImage';
 import Icon from '../../layout/Icon/Icon';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
+import Alert from '../../layout/Alert/Alert';
+import { apiConfiguration } from 'services/api.service';
+
+const CARD_GROUPS_SEARCH_LIMIT = 20;
 
 const ZONE_OPTIONS = [
   { value: 'H', label: 'Hand' },
@@ -49,12 +56,27 @@ function buildPreviewCard(name: string, frontImage: string, backImage?: string):
   };
 }
 
+// Card names of multi faced cards are stored as "Front Face // Back Face", while users usually type the front face only
+function frontFaceName(name: string) {
+  return name.split('//')[0].trim().toLowerCase();
+}
+
+function isSubmittedTemplate(name: string, submittedTemplateNames?: string[]) {
+  return !!submittedTemplateNames?.some((submitted) => submitted.trim().toLowerCase() === name.trim().toLowerCase());
+}
+
 const ZONE_STATE_FIELDS: Record<string, string> = {
   [ZoneLocationsEnum.B]: 'battlefieldCardState',
   [ZoneLocationsEnum.E]: 'exileCardState',
   [ZoneLocationsEnum.G]: 'graveyardCardState',
   [ZoneLocationsEnum.L]: 'libraryCardState',
 };
+
+// Both public features and templates are generic cards a specific card can be replaced with
+export interface CardGroup {
+  key: string;
+  name: string;
+}
 
 interface Props {
   card?: CardUsedInVariantSuggestionRequest;
@@ -63,8 +85,19 @@ interface Props {
   onDelete: () => void;
   index: number;
   errors?: ComboSubmissionErrorType;
+  onReplaceWithTemplate?: (_cardGroup: CardGroup) => void;
+  submittedTemplateNames?: string[];
 }
-const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: Props) => {
+const CardSubmission = ({
+  card,
+  template,
+  onChange,
+  index,
+  onDelete,
+  errors,
+  onReplaceWithTemplate,
+  submittedTemplateNames,
+}: Props) => {
   if (card && template) {
     throw new Error('CardSubmission cannot have both a card and a template');
   }
@@ -74,6 +107,8 @@ const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: P
   }
 
   const [nameInput, setNameInput] = useState(card?.card || '');
+  const [debouncedName] = useDebounce(nameInput, 500);
+  const [cardGroups, setCardGroups] = useState<{ cardName: string; groups: CardGroup[] } | undefined>(undefined);
   const [templateInput, setTemplateInput] = useState(template?.template || '');
   const [previewCard, setPreviewCard] = useState<Card | undefined>(undefined);
   const [selectedCardName, setSelectedCardName] = useState(card?.card || '');
@@ -127,6 +162,66 @@ const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: P
       cancelled = true;
     };
   }, [selectedCardName, card]);
+
+  useEffect(() => {
+    if (!card || !onReplaceWithTemplate) {
+      return;
+    }
+    const name = debouncedName.trim();
+    if (!name) {
+      setCardGroups(undefined);
+      return;
+    }
+    let cancelled = false;
+    const configuration = apiConfiguration();
+    const cardsApi = new CardsApi(configuration);
+    const templatesApi = new TemplatesApi(configuration);
+
+    const lookupCardGroups = async () => {
+      const cardsPage = await cardsApi.cardsList({ q: frontFaceName(name), limit: CARD_GROUPS_SEARCH_LIMIT });
+      const matchingCard = cardsPage.results.find((result) => frontFaceName(result.name) === frontFaceName(name));
+      if (!matchingCard) {
+        return undefined;
+      }
+      const templatesPage = await templatesApi
+        .templatesList({ replacements: [matchingCard.id], limit: CARD_GROUPS_SEARCH_LIMIT })
+        .catch(() => undefined);
+      const groups = matchingCard.features
+        .filter((feature) => feature.feature.status === FeatureStatusEnum.Pu)
+        .map<CardGroup>((feature) => ({
+          key: `feature-${feature.id}`,
+          name: feature.feature.name,
+        }))
+        .concat(
+          (templatesPage?.results ?? []).map<CardGroup>((matchingTemplate) => ({
+            key: `template-${matchingTemplate.id}`,
+            name: matchingTemplate.name,
+          })),
+        );
+      return {
+        cardName: matchingCard.name,
+        groups: groups.filter(
+          (group, position, all) =>
+            all.findIndex((other) => other.name.toLowerCase() === group.name.toLowerCase()) === position,
+        ),
+      };
+    };
+
+    lookupCardGroups()
+      .then((result) => {
+        if (!cancelled) {
+          setCardGroups(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCardGroups(undefined);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedName, card]);
 
   useEffect(() => {
     if (!template) {
@@ -275,6 +370,39 @@ const CardSubmission = ({ card, template, onChange, index, onDelete, errors }: P
                 <CardImage card={previewCard} />
               </div>
             </div>
+          )}
+          {onReplaceWithTemplate && cardGroups && cardGroups.groups.length > 0 && (
+            <Alert type="info" icon="template" title="This card is part of a generic card replacement list">
+              <p>
+                {cardGroups.cardName} is part of{' '}
+                {cardGroups.groups.length > 1
+                  ? 'these generic card replacement lists'
+                  : 'a generic card replacement list'}
+                . If your combo works with any card of the list, submitting the list instead of the specific card makes
+                the combo cover all of them. Do you want to submit this combo with{' '}
+                {cardGroups.groups.length > 1 ? 'one of these' : 'it'} instead?
+              </p>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {cardGroups.groups.map((cardGroup) => {
+                  const alreadySubmitted = isSubmittedTemplate(cardGroup.name, submittedTemplateNames);
+                  return (
+                    <button
+                      key={cardGroup.key}
+                      className="flex items-center gap-2 rounded-lg border border-primary/50 px-3 py-1 text-sm font-bold text-link transition-colors hover:bg-primary/10 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400 disabled:hover:bg-transparent dark:text-primary dark:disabled:border-gray-600 dark:disabled:text-gray-500"
+                      onClick={() => onReplaceWithTemplate(cardGroup)}
+                      disabled={alreadySubmitted}
+                      title={
+                        alreadySubmitted
+                          ? 'This generic card is already part of this combo'
+                          : 'Replace this card with the generic card replacement list'
+                      }
+                    >
+                      <Icon name={alreadySubmitted ? 'check' : 'template'} /> {cardGroup.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </Alert>
           )}
         </>
       )}

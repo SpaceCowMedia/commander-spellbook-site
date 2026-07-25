@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ArtCircle from '../../layout/ArtCircle/ArtCircle';
-import CardSubmission from '../CardSubmission/CardSubmission';
+import CardSubmission, { CardGroup } from '../CardSubmission/CardSubmission';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import { useRouter } from 'next/router';
 import FeatureSubmission from '../Feature Submission/FeatureSubmission';
@@ -362,6 +362,25 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const handleFeatureChange = (feature: FeatureProducedInVariantSuggestionRequest, index: number) => {
     setFeatures([...features.slice(0, index), feature, ...features.slice(index + 1)]);
   };
+  const handleReplaceCardWithTemplate = (index: number, cardGroup: CardGroup) => {
+    const card = cards[index];
+    setCards([...cards.slice(0, index), ...cards.slice(index + 1)]);
+    setTemplates([
+      ...templates,
+      {
+        template: cardGroup.name,
+        quantity: card.quantity,
+        zoneLocations: card.zoneLocations,
+        battlefieldCardState: card.battlefieldCardState,
+        exileCardState: card.exileCardState,
+        graveyardCardState: card.graveyardCardState,
+        libraryCardState: card.libraryCardState,
+        mustBeCommander: card.mustBeCommander,
+      },
+    ]);
+    setKeyId(keyId + 1);
+  };
+
   const handleDeleteCard = (index: number) => {
     setCards([...cards.slice(0, index), ...cards.slice(index + 1)]);
     setKeyId(keyId + 1);
@@ -580,6 +599,8 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               card={card}
               onDelete={() => handleDeleteCard(index)}
               onChange={(card) => handleCardChange(card as CardUsedInVariantSuggestionRequest, index)}
+              onReplaceWithTemplate={(cardGroup) => handleReplaceCardWithTemplate(index, cardGroup)}
+              submittedTemplateNames={templates.map((template) => template.template)}
               index={index}
               errors={itemErrors(errorObj?.uses, index)}
               key={`${index}-${keyId}`}
