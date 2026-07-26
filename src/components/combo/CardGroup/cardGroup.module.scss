@@ -1,11 +1,22 @@
 @reference "../../../assets/globals.css";
 
 .cardImages {
-  @apply relative flex-wrap md:-mt-20 mb-4;
+  @apply relative w-full max-w-5xl mx-auto mt-4 mb-4;
+
+  /* mobile: horizontal snap scroller; 14% + 72% + 14% lets the first and last card center */
+  @apply flex-nowrap overflow-x-auto overscroll-x-contain snap-x snap-mandatory px-[14%];
+  @apply md:flex-wrap md:overflow-visible md:px-4 md:-mt-20;
+
+  scrollbar-width: none;
+}
+
+.cardImages::-webkit-scrollbar {
+  display: none;
 }
 
 .cardImages .cardImgWrapper {
-  @apply relative w-1/2 md:w-1/4 p-1 shrink rounded-xl top-0 transition-all duration-500 ease-in-out;
+  @apply relative w-[72%] shrink-0 snap-center px-2 rounded-xl top-0;
+  @apply md:w-1/4 md:shrink md:p-1 md:transition-all md:duration-500 md:ease-in-out;
 }
 
 @for $i from 1 through 4 {
@@ -24,4 +35,20 @@
 
 .cardImages .cardImgWrapper:nth-child(4n) {
   @apply md:pr-0 md:pl-2;
+}
+
+.dots {
+  @apply flex md:hidden justify-center items-center gap-2 -mt-2 mb-4;
+}
+
+.dot {
+  @apply w-2 h-2 rounded-full bg-dark/25 dark:bg-light/25 transition-colors;
+}
+
+.activeDot {
+  @apply w-2.5 h-2.5 bg-link dark:bg-primary;
+}
+
+.counter {
+  @apply text-sm text-gray-500 dark:text-gray-400;
 }
