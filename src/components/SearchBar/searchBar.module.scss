@@ -13,11 +13,46 @@
 }
 
 .mainSearchInput {
-  @apply w-full h-full appearance-none block py-2 leading-tight bg-white text-gray-500;
+  @apply w-full h-full appearance-none block py-2 leading-tight;
 }
 
-.mainSearchInput:focus {
-  @apply outline-hidden bg-white text-gray-800;
+/* typed text only ever has to contrast with the background, so it stays put
+   across states; the placeholder is what shifts on focus */
+.homepageInput {
+  @apply bg-white text-gray-800;
+}
+
+.homepageInput::placeholder {
+  @apply text-gray-500;
+}
+
+.homepageInput:focus::placeholder {
+  @apply text-gray-400;
+}
+
+.homepageInput:focus {
+  @apply outline-hidden bg-white;
+}
+
+/* the nav bar behind this input is `bg-dark`, so blend into it until focused */
+.navInput {
+  @apply bg-dark text-gray-100;
+}
+
+.navInput::placeholder {
+  @apply text-gray-400;
+}
+
+/* focused: light theme lifts the field to white, dark theme keeps the nav bar's
+   own color with a hint of the brand color mixed in */
+.navInput:focus {
+  @apply outline-hidden bg-white text-gray-800 placeholder:text-gray-400;
+  @apply dark:bg-[color-mix(in_oklab,var(--color-primary)_15%,var(--color-dark))] dark:text-gray-100 dark:placeholder:text-gray-100;
+}
+
+/* the icon overlays the input, so it has to contrast with the focused background */
+.mainSearchInputContainer:has(.navInput:focus) .searchInputIcon {
+  @apply bg-gray-800 dark:bg-light;
 }
 
 .linkIcon {
