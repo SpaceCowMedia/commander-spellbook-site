@@ -8,6 +8,12 @@
   flex-direction: row;
 }
 
+.tapCatcher {
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+}
+
 .cardTooltip img {
   height: 340px;
   width: 244px;

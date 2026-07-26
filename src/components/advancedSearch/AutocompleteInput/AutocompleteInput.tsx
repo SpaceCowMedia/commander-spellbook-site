@@ -409,7 +409,7 @@ const AutocompleteInput: React.FC<Props> = ({
               onMouseOver={() => handleAutocompleteItemHover(index)}
             >
               {cardAutocomplete ? (
-                <CardTooltip images={cardImageUrlsByValue[item.value]}>
+                <CardTooltip images={cardImageUrlsByValue[item.value]} disableTapPreview>
                   <TextWithMagicSymbol text={item.label} />
                 </CardTooltip>
               ) : (

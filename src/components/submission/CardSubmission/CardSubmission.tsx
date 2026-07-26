@@ -519,11 +519,11 @@ const CardSubmission = ({
           <input
             className="w-16 cursor-pointer rounded-lg border border-gray-300 px-2 py-1 text-center dark:border-gray-600"
             type="number"
-            defaultValue="1"
+            value={cardOrTemplate.quantity ?? 1}
             id={`quantity-input-${template ? 't' : 'c'}-${index}`}
             min="1"
             max="10"
-            onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) })}
+            onChange={(e) => onChange({ ...cardOrTemplate, quantity: parseInt(e.target.value) || 1 })}
           />
         </div>
 
