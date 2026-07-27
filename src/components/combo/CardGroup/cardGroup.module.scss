@@ -4,7 +4,7 @@
   @apply relative w-full max-w-5xl mx-auto mt-4 mb-4;
 
   /* mobile: horizontal snap scroller; 14% + 72% + 14% lets the first and last card center */
-  @apply flex-nowrap overflow-x-auto overscroll-x-contain snap-x snap-mandatory px-[14%];
+  @apply flex-nowrap overflow-x-auto overflow-y-hidden overscroll-x-contain snap-x snap-mandatory px-[14%];
   @apply md:flex-wrap md:overflow-visible md:px-4 md:-mt-20;
 
   scrollbar-width: none;
@@ -15,7 +15,9 @@
 }
 
 .cardImages .cardImgWrapper {
-  @apply relative w-[72%] shrink-0 snap-center px-2 rounded-xl top-0;
+  /* `py` absorbs what overhangs a card (e.g. the template card's modal button
+     sits at -bottom-1) so `overflow-y: hidden` above has nothing to clip */
+  @apply relative w-[72%] shrink-0 snap-center p-2 rounded-xl top-0;
   @apply md:w-1/4 md:shrink md:p-1 md:transition-all md:duration-500 md:ease-in-out;
 }
 
