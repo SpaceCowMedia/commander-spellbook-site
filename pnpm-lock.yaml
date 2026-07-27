@@ -19,7 +19,7 @@ importers:
         version: 7.3.1
       '@fortawesome/react-fontawesome':
         specifier: ^3.4.0
-        version: 3.4.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.7)
+        version: 3.4.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
       '@space-cow-media/spellbook-client':
         specifier: ^5.7.5
         version: 5.7.5
@@ -28,40 +28,40 @@ importers:
         version: 3.2.3
       cookies-next:
         specifier: ^6.1.1
-        version: 6.1.1(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7)
+        version: 6.1.1(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0))(react@19.2.8)
       markdown-to-jsx:
         specifier: ^9.7.15
-        version: 9.7.15(react@19.2.7)
+        version: 9.7.15(react@19.2.8)
       next:
         specifier: ^16.2.10
-        version: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+        version: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0)
       nextjs-progressbar:
         specifier: ^0.0.16
-        version: 0.0.16(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7)
+        version: 0.0.16(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0))(react@19.2.8)
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
       react:
-        specifier: ^19.2.7
-        version: 19.2.7
+        specifier: ^19.2.8
+        version: 19.2.8
       react-confirm-alert:
         specifier: ^3.0.6
-        version: 3.0.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 3.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-cookie:
         specifier: ^8.1.2
-        version: 8.1.2(@types/react@19.2.17)(react@19.2.7)
+        version: 8.1.2(@types/react@19.2.17)(react@19.2.8)
       react-dom:
-        specifier: ^19.2.7
-        version: 19.2.7(react@19.2.7)
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
       react-select:
         specifier: ^5.10.2
-        version: 5.10.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@8.1.1)
+        version: 5.10.2(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(supports-color@8.1.1)
       react-swipeable:
         specifier: ^7.0.2
-        version: 7.0.2(react@19.2.7)
+        version: 7.0.2(react@19.2.8)
       react-tooltip:
         specifier: ^6.0.3
-        version: 6.0.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 6.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       scryfall-client:
         specifier: ^0.24.8
         version: 0.24.8
@@ -73,7 +73,7 @@ importers:
         version: 8.1.2
       use-debounce:
         specifier: ^10.1.1
-        version: 10.1.1(react@19.2.7)
+        version: 10.1.1(react@19.2.8)
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.0.2
@@ -3027,10 +3027,10 @@ packages:
     peerDependencies:
       react: '>= 16.3.0'
 
-  react-dom@19.2.7:
-    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
+  react-dom@19.2.8:
+    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
-      react: ^19.2.7
+      react: ^19.2.8
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -3058,8 +3058,8 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
-  react@19.2.7:
-    resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+  react@19.2.8:
+    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
     engines: {node: '>=0.10.0'}
 
   readable-stream@3.6.2:
@@ -4021,17 +4021,17 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.13.3(@types/react@19.2.17)(react@19.2.7)(supports-color@8.1.1)':
+  '@emotion/react@11.13.3(@types/react@19.2.17)(react@19.2.8)(supports-color@8.1.1)':
     dependencies:
       '@babel/runtime': 7.25.6
       '@emotion/babel-plugin': 11.12.0(supports-color@8.1.1)
       '@emotion/cache': 11.13.1
       '@emotion/serialize': 1.3.1
-      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@19.2.7)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@19.2.8)
       '@emotion/utils': 1.4.0
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
       '@types/react': 19.2.17
     transitivePeerDependencies:
@@ -4049,9 +4049,9 @@ snapshots:
 
   '@emotion/unitless@0.10.0': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(react@19.2.7)':
+  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(react@19.2.8)':
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
 
   '@emotion/utils@1.4.0': {}
 
@@ -4118,10 +4118,10 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 7.3.1
 
-  '@fortawesome/react-fontawesome@3.4.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.7)':
+  '@fortawesome/react-fontawesome@3.4.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 7.3.1
-      react: 19.2.7
+      react: 19.2.8
 
   '@hapi/address@5.1.1':
     dependencies:
@@ -5105,11 +5105,11 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cookies-next@6.1.1(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7):
+  cookies-next@6.1.1(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0))(react@19.2.8):
     dependencies:
       cookie: 1.0.2
-      next: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
-      react: 19.2.7
+      next: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0)
+      react: 19.2.8
 
   core-util-is@1.0.2: {}
 
@@ -6211,9 +6211,9 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  markdown-to-jsx@9.7.15(react@19.2.7):
+  markdown-to-jsx@9.7.15(react@19.2.8):
     optionalDependencies:
-      react: 19.2.7
+      react: 19.2.8
 
   math-intrinsics@1.1.0: {}
 
@@ -6270,16 +6270,16 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0):
+  next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0):
     dependencies:
       '@next/env': 16.2.10
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.43
       caniuse-lite: 1.0.30001806
       postcss: 8.4.31
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      styled-jsx: 5.1.6(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      styled-jsx: 5.1.6(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react@19.2.8)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.10
       '@next/swc-darwin-x64': 16.2.10
@@ -6295,13 +6295,13 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-progressbar@0.0.16(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react@19.2.7):
+  nextjs-progressbar@0.0.16(next@16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0))(react@19.2.8):
     dependencies:
       '@types/nprogress': 0.2.3
-      next: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
+      next: 16.2.10(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.101.0)
       nprogress: 0.2.0
       prop-types: 15.8.1
-      react: 19.2.7
+      react: 19.2.8
 
   node-abi@3.74.0:
     dependencies:
@@ -6537,65 +6537,65 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-confirm-alert@3.0.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-confirm-alert@3.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
-  react-cookie@8.1.2(@types/react@19.2.17)(react@19.2.7):
+  react-cookie@8.1.2(@types/react@19.2.17)(react@19.2.8):
     dependencies:
       '@types/hoist-non-react-statics': 3.3.7(@types/react@19.2.17)
       hoist-non-react-statics: 3.3.2
-      react: 19.2.7
+      react: 19.2.8
       universal-cookie: 8.1.2
     transitivePeerDependencies:
       - '@types/react'
 
-  react-dom@19.2.7(react@19.2.7):
+  react-dom@19.2.8(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
       scheduler: 0.27.0
 
   react-is@16.13.1: {}
 
-  react-select@5.10.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@8.1.1):
+  react-select@5.10.2(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(supports-color@8.1.1):
     dependencies:
       '@babel/runtime': 7.25.6
       '@emotion/cache': 11.13.1
-      '@emotion/react': 11.13.3(@types/react@19.2.17)(react@19.2.7)(supports-color@8.1.1)
+      '@emotion/react': 11.13.3(@types/react@19.2.17)(react@19.2.8)(supports-color@8.1.1)
       '@floating-ui/dom': 1.7.6
       '@types/react-transition-group': 4.4.11
       memoize-one: 6.0.0
       prop-types: 15.8.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      use-isomorphic-layout-effect: 1.2.0(@types/react@19.2.17)(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      react-transition-group: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      use-isomorphic-layout-effect: 1.2.0(@types/react@19.2.17)(react@19.2.8)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
 
-  react-swipeable@7.0.2(react@19.2.7):
+  react-swipeable@7.0.2(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
 
-  react-tooltip@6.0.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-tooltip@6.0.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@floating-ui/dom': 1.7.6
       clsx: 2.1.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
-  react-transition-group@4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-transition-group@4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@babel/runtime': 7.25.6
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
-  react@19.2.7: {}
+  react@19.2.8: {}
 
   readable-stream@3.6.2:
     dependencies:
@@ -6963,10 +6963,10 @@ snapshots:
 
   strip-json-comments@2.0.1: {}
 
-  styled-jsx@5.1.6(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react@19.2.7):
+  styled-jsx@5.1.6(@babel/core@7.29.0(supports-color@8.1.1))(babel-plugin-macros@3.1.0)(react@19.2.8):
     dependencies:
       client-only: 0.0.1
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       babel-plugin-macros: 3.1.0
@@ -7237,13 +7237,13 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-debounce@10.1.1(react@19.2.7):
+  use-debounce@10.1.1(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
 
-  use-isomorphic-layout-effect@1.2.0(@types/react@19.2.17)(react@19.2.7):
+  use-isomorphic-layout-effect@1.2.0(@types/react@19.2.17)(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
       '@types/react': 19.2.17
 
