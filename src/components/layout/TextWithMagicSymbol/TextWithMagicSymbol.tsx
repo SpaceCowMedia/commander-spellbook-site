@@ -7,7 +7,7 @@ import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
-import { FACE_SEPARATOR, getFaceMentionedBy } from 'lib/types';
+import { getFaceMentionedBy, getFaceNames, getName, getShortNames, getTemplateNameSummary } from 'lib/types';
 
 interface Props {
   text: string;
@@ -17,7 +17,15 @@ interface Props {
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
-function replaceAlli(text: string, searchValue: string, replaceValue: string): string {
+const WORD_CHARACTER = /[\p{L}\p{N}]/u;
+
+function isWholeWordMatch(text: string, start: number, length: number): boolean {
+  const before = text[start - 1];
+  const after = text[start + length];
+  return !(before && WORD_CHARACTER.test(before)) && !(after && WORD_CHARACTER.test(after));
+}
+
+function replaceAlli(text: string, searchValue: string, replaceValue: string, wholeWord = false): string {
   const positions = [];
   let shift = 0;
   const delta = replaceValue.length - searchValue.length;
@@ -25,7 +33,9 @@ function replaceAlli(text: string, searchValue: string, replaceValue: string): s
   const lowerSearchValue = searchValue.toLowerCase();
   let pos = lowerText.indexOf(lowerSearchValue);
   while (pos !== -1) {
-    positions.push(pos);
+    if (!wholeWord || isWholeWordMatch(lowerText, pos, lowerSearchValue.length)) {
+      positions.push(pos);
+    }
     pos = lowerText.indexOf(lowerSearchValue, pos + searchValue.length);
   }
   positions.forEach((i) => {
@@ -45,24 +55,19 @@ const TextWithMagicSymbol: React.FC<Props> = ({
 }) => {
   let matchableValuesString = '';
 
-  const cardNames = cardsInCombo.map((card) => card.card.name);
-  const cardShortNames = cardsInCombo.reduce((list, { card }) => {
-    const name = card.name;
-    if (name.match(/^[^,]+,/)) {
-      list.push(name.split(',')[0]);
-    } else if (name.match(/^[^\s]+\s(the|of)\s/i)) {
-      list.push(name.split(/\s(the|of)/i)[0]);
-    } else if (card.faces > 1) {
-      list.push(...name.split(FACE_SEPARATOR));
-    } else if (name.match(/^the\s/i)) {
-      const restOfName = name.split(/^the\s/i)[1];
+  const cardNames = cardsInCombo.map(getName);
+  const cardShortNames = cardsInCombo
+    .reduce((list, { card }) => {
+      const faceNames = getFaceNames(card.name);
+      if (card.faces > 1) {
+        list.push(...faceNames);
+      }
+      faceNames.forEach((faceName) => list.push(...getShortNames(faceName)));
 
-      list.push(restOfName);
-      list.push(restOfName.split(' ')[0]);
-    }
-
-    return list;
-  }, [] as string[]);
+      return list;
+    }, [] as string[])
+    .filter((name, i, list) => name && list.indexOf(name) === i)
+    .sort((a, b) => b.length - a.length);
 
   if (cardNames.length) {
     matchableValuesString = `${cardNames.join('|')}|`;
@@ -71,14 +76,23 @@ const TextWithMagicSymbol: React.FC<Props> = ({
     }
   }
 
+  const templateMentions = [
+    ...templatesInCombo.map((template) => ({ template, name: getName(template), wholeWord: false })),
+    ...templatesInCombo.flatMap((template) => {
+      const summary = getTemplateNameSummary(getName(template));
+      return summary ? [{ template, name: summary, wholeWord: true }] : [];
+    }),
+  ];
+  const tokenWidth = String(templateMentions.length).length;
+  const templateTokens = templateMentions.map((_, i) => `template${String(i).padStart(tokenWidth, '0')}`);
+
   let filteredText = text;
-  if (templatesInCombo.length) {
-    templatesInCombo.forEach((template) => {
-      filteredText = replaceAlli(filteredText, template.template.name, `template${template.template.id}`);
+  if (templateMentions.length) {
+    templateMentions.forEach((mention, i) => {
+      filteredText = replaceAlli(filteredText, mention.name, templateTokens[i], mention.wholeWord);
     });
-    matchableValuesString += templatesInCombo.map((template) => `template${template.template.id}`).join('|') + '|';
+    matchableValuesString += templateTokens.join('|') + '|';
   }
-  const templateNames = templatesInCombo?.map((template) => `template${template.template.id}`) || [];
 
   matchableValuesString = `(${matchableValuesString}:mana[^:]+:|{[^}]+})`;
 
@@ -91,11 +105,11 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       if (cardNames.includes(value.trim())) {
         return {
           nodeType: 'card',
-          card: cardsInCombo.find((card) => card.card.name === value.trim()),
+          card: cardsInCombo.find((card) => getName(card) === value.trim()),
           value,
         };
       } else if (cardShortNames.includes(value.trim())) {
-        const card = cardsInCombo.find((card) => card.card.name.includes(value.trim()));
+        const card = cardsInCombo.find((card) => getName(card).includes(value.trim()));
 
         if (card) {
           return {
@@ -105,13 +119,12 @@ const TextWithMagicSymbol: React.FC<Props> = ({
           };
         }
       }
-      if (templateNames.includes(value.trim())) {
+      const templateIndex = templateTokens.indexOf(value.trim());
+      if (templateIndex !== -1) {
         return {
           nodeType: 'template',
-          template: templatesInCombo.find(
-            (template) => template.template.id === Number(value.trim().replace('template', '')),
-          ),
-          value,
+          template: templateMentions[templateIndex].template,
+          value: templateMentions[templateIndex].name,
         };
       }
       const manaMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
@@ -173,7 +186,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
               template={item.template}
               textTrigger={(_) => (
                 <span className={`cursor-pointer ${includeCardLinks ? 'text-link dark:text-primary' : ''}`}>
-                  <TextWithMagicSymbol text={item.template!.template.name} />
+                  <TextWithMagicSymbol text={item.value} />
                 </span>
               )}
               fetchTemplateReplacements={fetchTemplateReplacements}

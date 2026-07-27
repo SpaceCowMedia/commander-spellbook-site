@@ -58,7 +58,8 @@ export function getName(card: CardInVariant | TemplateInVariant): string {
 }
 
 export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
-  return 'card' in card ? card.card.name.split(', ')[0] : card.template.name;
+  const name = getName(card);
+  return 'card' in card ? name.split(', ')[0] : name;
 }
 
 export function getTypes(card: CardInVariant | TemplateInVariant): string {
@@ -70,14 +71,56 @@ export function getTypes(card: CardInVariant | TemplateInVariant): string {
 export const BACK_FACE_INDEX = 2;
 export const FACE_SEPARATOR = ' // ';
 
+export function getFaceNames(name: string): string[] {
+  return name.split(FACE_SEPARATOR);
+}
+
+/* The informal ways prose refers to a card or to one of its faces, e.g. "Sorin, Ravenous Neonate"
+   as "Sorin" or "The Gitrog Monster" as "Gitrog". */
+export function getShortNames(name: string): string[] {
+  if (name.match(/^[^,]+,/)) {
+    return [name.split(',')[0]];
+  }
+  if (name.match(/^[^\s]+\s(the|of)\s/i)) {
+    return [name.split(/\s(the|of)/i)[0]];
+  }
+  if (name.match(/^the\s/i)) {
+    const restOfName = name.split(/^the\s/i)[1];
+    return [restOfName, restOfName.split(' ')[0]];
+  }
+  return [];
+}
+
+/* Templates named "<summary>: <details>" are often mentioned by their summary only. A colon inside
+   quotes belongs to a quoted ability, not to a summary. */
+export function getTemplateNameSummary(name: string): string | undefined {
+  let insideQuotes = false;
+  for (let i = 0; i < name.length; i++) {
+    if (name[i] === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (name[i] === ':' && !insideQuotes) {
+      return name.substring(0, i).trim() || undefined;
+    }
+  }
+  return undefined;
+}
+
 /* Which face a tooltip should lead with when `text` is the prose that mentions `card`. Naming a
-   single face wins over `usedFace`; the full "front // back" name defers to it. */
+   single face, by its full or short name, wins over `usedFace`; the full "front // back" name and
+   a short name shared by both faces defer to it. */
 export function getFaceMentionedBy(card: CardInVariant, text: string): number | null {
   if (card.card.faces <= 1) {
     return card.usedFace;
   }
-  const mentioned = card.card.name.split(FACE_SEPARATOR).indexOf(text.trim());
-  return mentioned < 0 ? card.usedFace : mentioned + 1;
+  const faceNames = getFaceNames(card.card.name);
+  const mentioned = faceNames.indexOf(text.trim());
+  if (mentioned >= 0) {
+    return mentioned + 1;
+  }
+  const shortNameMatches = faceNames.flatMap((faceName, i) =>
+    getShortNames(faceName).includes(text.trim()) ? [i + 1] : [],
+  );
+  return shortNameMatches.length === 1 ? shortNameMatches[0] : card.usedFace;
 }
 
 export interface LegalityFormat {

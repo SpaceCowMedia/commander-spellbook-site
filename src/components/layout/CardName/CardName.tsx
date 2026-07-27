@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './cardName.module.scss';
-import { FACE_SEPARATOR } from 'lib/types';
+import { FACE_SEPARATOR, getFaceNames } from 'lib/types';
 
 interface Props {
   name: string;
@@ -20,7 +20,7 @@ const AlchemySymbol: React.FC = () => (
 );
 
 const CardName: React.FC<Props> = ({ name, className }) => {
-  const faces = name.split(FACE_SEPARATOR);
+  const faces = getFaceNames(name);
 
   if (!faces.some((face) => face.startsWith(ALCHEMY_PREFIX))) {
     return <span className={className}>{name}</span>;
