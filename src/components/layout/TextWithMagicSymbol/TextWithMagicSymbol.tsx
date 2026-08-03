@@ -19,6 +19,11 @@ interface Props {
 
 const WORD_CHARACTER = /[\p{L}\p{N}]/u;
 
+/* Punctuation right after a mana symbol must not be pushed to the next line on its own:
+   an <img> is a line break opportunity, so the punctuation is moved inside the symbol's
+   non-wrapping container instead of starting the following text node. */
+const PUNCTUATION_AFTER_SYMBOL = /^[.,;:!?)\]}'"’”»…]+/;
+
 function isWholeWordMatch(text: string, start: number, length: number): boolean {
   const before = text[start - 1];
   const after = text[start + length];
@@ -98,7 +103,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
 
   const matchableValuesRegex = new RegExp(matchableValuesString, 'g');
 
-  const items = filteredText
+  const parsedItems = filteredText
     .split(matchableValuesRegex)
     .filter((val) => val)
     .map((value) => {
@@ -155,12 +160,27 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       };
     });
 
+  const symbolTrailingText = new Map<(typeof parsedItems)[number], string>();
+  parsedItems.forEach((item, i) => {
+    const next = parsedItems[i + 1];
+    if (item.nodeType !== 'image' || !next || next.nodeType !== 'text') {
+      return;
+    }
+    const punctuation = next.value.match(PUNCTUATION_AFTER_SYMBOL);
+    if (punctuation) {
+      symbolTrailingText.set(item, punctuation[0]);
+      next.value = next.value.slice(punctuation[0].length);
+    }
+  });
+
+  const items = parsedItems.filter((item) => item.nodeType !== 'text' || item.value);
+
   return (
     <span>
       {items.map((item, i) => (
         <span key={i} className={styles[`${item.nodeType}Container`]}>
           {item.nodeType === 'image' && (
-            <span>
+            <span className={styles.noWrap}>
               <span className="sr-only">({`{${item.manaSymbol}}`} magic symbol) &nbsp;</span>
               <img
                 aria-hidden="true"
@@ -168,6 +188,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
                 src={item.value}
                 alt={`Magic Symbol (${item.manaSymbol})`}
               />
+              {symbolTrailingText.get(item)}
             </span>
           )}
           {item.nodeType === 'card' && item.card && (

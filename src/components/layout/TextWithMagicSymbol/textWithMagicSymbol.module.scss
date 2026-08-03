@@ -12,3 +12,7 @@ img.magicSymbol {
 .imageContainer + .imageContainer {
   @apply ml-1;
 }
+
+.noWrap {
+  @apply whitespace-nowrap;
+}
