@@ -7,7 +7,7 @@ import FeatureSubmission from '../Feature Submission/FeatureSubmission';
 import Loader from '../../layout/Loader/Loader';
 import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
-import { httpErrorMessage } from '../../../lib/httpErrors';
+import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { confirmAlert } from 'react-confirm-alert';
@@ -227,13 +227,17 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
             return;
           }
           if (err.response.status === 429) {
+            const waitSeconds = retryAfterSeconds(err.response, VALIDATION_INTERVAL_MS / 1000);
             if (attempts < VALIDATION_MAX_RETRIES) {
-              retryTimer = setTimeout(runValidation, VALIDATION_INTERVAL_MS);
+              retryTimer = setTimeout(runValidation, waitSeconds * 1000);
+              setErrorObj({
+                statusCode: 429,
+                detail: `Too many requests were made in a short time. Validation will run again automatically in ${formatDuration(waitSeconds)}.`,
+              } as ComboSubmissionErrorType);
             } else {
               setErrorObj({
                 statusCode: 429,
-                detail:
-                  'We could not validate your submission because too many requests were made in a short time. Please wait a moment and edit any field to try again.',
+                detail: `We could not validate your submission because too many requests were made in a short time. Please wait ${formatDuration(waitSeconds)} and edit any field to try again.`,
               } as ComboSubmissionErrorType);
             }
             return;
@@ -463,7 +467,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       } else {
         setErrorObj({
           statusCode: status,
-          detail: httpErrorMessage(status),
+          detail: httpErrorMessage(status, retryAfterSeconds(err.response, VALIDATION_INTERVAL_MS / 1000)),
         } as ComboSubmissionErrorType);
       }
     }
@@ -554,7 +558,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       } else {
         setErrorObj({
           statusCode: status,
-          detail: httpErrorMessage(status),
+          detail: httpErrorMessage(status, retryAfterSeconds(err.response, VALIDATION_INTERVAL_MS / 1000)),
         } as ComboSubmissionErrorType);
       }
     }

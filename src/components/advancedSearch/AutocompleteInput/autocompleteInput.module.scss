@@ -12,6 +12,10 @@
   @apply text-left p-2 cursor-pointer;
 }
 
+.autocompleteNotice {
+  @apply p-2 text-left text-sm bg-white border border-light absolute w-full z-10 dark:bg-dark;
+}
+
 .autocompleteResult.isActive {
   @apply bg-link text-white;
 }

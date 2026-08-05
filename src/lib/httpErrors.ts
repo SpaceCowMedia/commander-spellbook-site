@@ -1,4 +1,42 @@
-export function httpErrorMessage(status: number): string {
+const DEFAULT_RETRY_AFTER_SECONDS = 60;
+
+export function retryAfterSeconds(response?: Response, fallback: number = DEFAULT_RETRY_AFTER_SECONDS): number {
+  const header = response?.headers?.get('Retry-After');
+  if (!header) {
+    return fallback;
+  }
+  const delta = Number(header);
+  if (Number.isFinite(delta)) {
+    return Math.max(0, Math.ceil(delta));
+  }
+  const date = Date.parse(header);
+  if (!Number.isNaN(date)) {
+    return Math.max(0, Math.ceil((date - Date.now()) / 1000));
+  }
+  return fallback;
+}
+
+export function rateLimitRetryAfterSeconds(err: unknown, fallback?: number): number | undefined {
+  const response = (err as { response?: Response } | undefined)?.response;
+  const status = response?.status ?? (err as { status?: number } | undefined)?.status;
+  if (status !== 429) {
+    return undefined;
+  }
+  return retryAfterSeconds(response, fallback);
+}
+
+export function formatDuration(seconds: number): string {
+  if (seconds <= 0) {
+    return 'a moment';
+  }
+  if (seconds < 60) {
+    return `${seconds} second${seconds === 1 ? '' : 's'}`;
+  }
+  const minutes = Math.ceil(seconds / 60);
+  return `${minutes} minute${minutes === 1 ? '' : 's'}`;
+}
+
+export function httpErrorMessage(status: number, retryAfter?: number): string {
   switch (status) {
     case 400:
       return 'Some of the information provided is invalid. Please review the highlighted fields and try again.';
@@ -16,7 +54,7 @@ export function httpErrorMessage(status: number): string {
     case 422:
       return 'Some of the information provided could not be processed. Please review your submission.';
     case 429:
-      return 'You are submitting too quickly. Please wait a few seconds and try again.';
+      return `You are submitting too quickly. Please wait ${formatDuration(retryAfter ?? 0)} and try again.`;
     case 500:
       return 'An unexpected server error happened. Please try again later.';
     case 502:

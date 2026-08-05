@@ -9,10 +9,12 @@ import { apiConfiguration } from 'services/api.service';
 import { FeaturesApi, FeaturesListStatusEnum, TemplatesApi } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import { useDebounce } from 'use-debounce';
+import { formatDuration, rateLimitRetryAfterSeconds } from '../../../lib/httpErrors';
 
 const MAX_NUMBER_OF_MATCHING_RESULTS = 20;
-const AUTOCOMPLETE_DELAY = 200;
+const AUTOCOMPLETE_DELAY = 500;
 const BLUR_CLOSE_DELAY = 900;
+const RATE_LIMIT_FALLBACK_SECONDS = 30;
 
 function cardImageUrl(name: string): string {
   return `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}`;
@@ -67,6 +69,9 @@ const AutocompleteInput: React.FC<Props> = ({
   const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<AutoCompleteOption[]>([]);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
   const [loading, setLoading] = useState<boolean>(false);
+  const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
+  const [rateLimitSecondsLeft, setRateLimitSecondsLeft] = useState<number>(0);
+  const [rateLimitVisible, setRateLimitVisible] = useState<boolean>(false);
 
   const active =
     (autocompleteOptions && autocompleteOptions.length > 0) ||
@@ -100,6 +105,16 @@ const AutocompleteInput: React.FC<Props> = ({
   const templatesApi = new TemplatesApi(configuration);
   const feturesApi = new FeaturesApi(configuration);
 
+  const handleLookupError = (e: unknown) => {
+    const retryAfter = rateLimitRetryAfterSeconds(e, RATE_LIMIT_FALLBACK_SECONDS);
+    if (retryAfter !== undefined) {
+      setRateLimitedUntil(Date.now() + retryAfter * 1000);
+      setRateLimitVisible(true);
+      return;
+    }
+    console.error(e);
+  };
+
   const findAllMatches = async (
     value: string,
     options?: readonly AutoCompleteOption[],
@@ -127,7 +142,7 @@ const AutocompleteInput: React.FC<Props> = ({
             })),
           );
         } catch (e) {
-          console.error(e);
+          handleLookupError(e);
         }
       }
       if (templateAutocomplete) {
@@ -152,7 +167,7 @@ const AutocompleteInput: React.FC<Props> = ({
             })),
           );
         } catch (e) {
-          console.error(e);
+          handleLookupError(e);
         }
       }
       if (resultAutocomplete) {
@@ -170,7 +185,7 @@ const AutocompleteInput: React.FC<Props> = ({
             })),
           );
         } catch (e) {
-          console.error(e);
+          handleLookupError(e);
         }
       }
       if (!inMemory) {
@@ -244,7 +259,7 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const lookupAutoComplete = async () => {
-    if (!active) {
+    if (!active || rateLimitedUntil !== null) {
       return;
     }
     if (!localValue) {
@@ -260,14 +275,37 @@ const AutocompleteInput: React.FC<Props> = ({
 
     setArrowCounter(-1);
     setMatchingAutoCompleteOptions([]);
+    setRateLimitVisible(false);
   };
 
   const handleChange = (value: string) => {
     setLocalValue(value);
+    if (rateLimitedUntil !== null) {
+      setRateLimitVisible(true);
+    }
     if (onChange) {
       onChange(value);
     }
   };
+
+  useEffect(() => {
+    if (rateLimitedUntil === null) {
+      setRateLimitSecondsLeft(0);
+      setRateLimitVisible(false);
+      return;
+    }
+    const tick = () => {
+      const secondsLeft = Math.ceil((rateLimitedUntil - Date.now()) / 1000);
+      if (secondsLeft <= 0) {
+        setRateLimitedUntil(null);
+      } else {
+        setRateLimitSecondsLeft(secondsLeft);
+      }
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [rateLimitedUntil]);
 
   useEffect(() => {
     if (firstRender) {
@@ -278,7 +316,7 @@ const AutocompleteInput: React.FC<Props> = ({
       return;
     }
     lookupAutoComplete();
-  }, [debouncedLocalValue, active, autocompleteOptions]);
+  }, [debouncedLocalValue, active, autocompleteOptions, rateLimitedUntil]);
 
   const handleBlur = () => {
     if (!active) {
@@ -399,7 +437,12 @@ const AutocompleteInput: React.FC<Props> = ({
       <div role="status" aria-live="polite" className={`sr-only`}>
         {screenReaderSelectionText}
       </div>
-      {total > 0 && (
+      {rateLimitVisible && rateLimitSecondsLeft > 0 && (
+        <div role="status" aria-live="polite" className={styles.autocompleteNotice}>
+          Too many suggestion requests. Please wait {formatDuration(rateLimitSecondsLeft)} before typing again.
+        </div>
+      )}
+      {!rateLimitVisible && total > 0 && (
         <ul ref={resultsRef} className={styles.autocompleteResults}>
           {matchingAutoCompleteOptions.map((item, index) => (
             <li
