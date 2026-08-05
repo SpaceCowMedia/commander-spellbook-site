@@ -33,7 +33,7 @@ const UserDropdown: React.FC = () => {
   }
 
   return (
-    <div tabIndex={0} className={styles.dropdown}>
+    <div id="user-dropdown" tabIndex={0} className={styles.dropdown}>
       <div className={styles.userDropdownButton}>
         <div className={styles.discordIcon} aria-hidden="true" />
         <span className="ml-2 hidden md:flex">{username}</span>
