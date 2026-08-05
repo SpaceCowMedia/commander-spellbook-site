@@ -5,6 +5,15 @@ inputs:
   port:
     required: true
     description: "The port on which the backend service will be accessible"
+  username:
+    required: true
+    description: "The username of the account the integration tests log in with"
+  email:
+    required: true
+    description: "The email of the account the integration tests log in with"
+  password:
+    required: true
+    description: "The password of the account the integration tests log in with"
 
 runs:
   using: composite
@@ -194,3 +203,27 @@ runs:
         EOF
         # HTTP dump of /variants
         curl -s 'http://localhost:${{ inputs.port }}/variants/?format=json&count=true' | jq '.'
+    - name: Create the Account of the Test User 👤
+      working-directory: ./backend
+      shell: bash
+      env:
+        TEST_USERNAME: ${{ inputs.username }}
+        TEST_EMAIL: ${{ inputs.email }}
+        TEST_PASSWORD: ${{ inputs.password }}
+      run: |
+        docker compose exec -T \
+          -e TEST_USERNAME -e TEST_EMAIL -e TEST_PASSWORD \
+          web python manage.py shell <<'EOF'
+        import os
+        from django.contrib.auth import get_user_model
+        # Grants the permissions that a user logging in through Discord would get.
+        from backend.login.discord import set_default_permissions
+        User = get_user_model()
+        User.objects.filter(username=os.environ['TEST_USERNAME']).delete()
+        user = User.objects.create_user(
+          username=os.environ['TEST_USERNAME'],
+          email=os.environ['TEST_EMAIL'],
+          password=os.environ['TEST_PASSWORD'],
+        )
+        set_default_permissions(user, True)
+        EOF

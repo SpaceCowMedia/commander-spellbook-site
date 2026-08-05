@@ -1,10 +1,10 @@
 describe('Home Page', () => {
-  it('can enter a query', () => {
+  it('searches from the search bar', () => {
     cy.visit('/');
 
     cy.get('input[name=q]').type('monolith result:infinite{enter}');
 
-    cy.url().should('include', '/search');
+    cy.url().should('include', `/search/?q=${encodeURIComponent('monolith result:infinite')}`);
   });
 
   it('can load a random combo', () => {

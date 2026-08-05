@@ -1,24 +1,21 @@
 describe('Find My Combos', () => {
-  const testUrl = 'https://archidekt.com/decks/18979119/test';
-
-  it('can find a combo using url parameter', () => {
-    cy.visit('/find-my-combos/?deckUrl=' + testUrl);
-
-    cy.url().should('include', testUrl);
-
-    cy.get('#decklist-input').should('have.length', 1);
-    cy.get('#commander-input').should('have.length', 1);
+  beforeEach(() => {
+    cy.visit('/find-my-combos/');
+    cy.get('#decklist-input').type('1 Basalt Monolith\n1 Mesmeric Orb');
   });
 
-  it('can clear the url and data', () => {
-    cy.visit('/find-my-combos/?deckUrl=' + testUrl);
-    cy.url().should('include', testUrl);
+  it('finds the combos of a decklist', () => {
+    cy.get('#parse-decklist-input').click();
 
+    cy.get('#decklist-card-count').should('contain', '2 cards');
+    cy.get('#combos-in-deck-section').should('contain', '1 Combo Found').and('contain', 'Basalt Monolith');
+  });
+
+  it('can clear the decklist', () => {
     cy.get('#clear-decklist-input').click();
 
     cy.get('#decklist-input').should('be.empty');
     cy.get('#commander-input').should('be.empty');
-    cy.url().should('not.contain', testUrl);
   });
 });
 
