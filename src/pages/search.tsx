@@ -132,7 +132,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
     (variant ? `, which are all variants of the combo with ID "${variant}"` : '');
 
   const hasNextPage = combos.length === PAGE_SIZE;
-  const showPagination = page > 0 || hasNextPage;
+  const hasResults = combos.length > 0;
   return (
     <>
       <SpellbookHead
@@ -164,7 +164,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
           </>
         )}
 
-        {combos.length > 0 && (
+        {hasResults && (
           <div className="border-b border-light">
             <div className="container sm:flex flex-row items-center justify-center">
               <div className="mr-2 sm:mt-0 mt-2" aria-hidden="true">
@@ -209,23 +209,19 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
                 </button>
               )}
               <div className="grow min-h-2" />
-              {showPagination && (
-                <>
-                  <SearchPagination
-                    currentPage={pageNumber}
-                    hasNextPage={hasNextPage}
-                    aria-hidden="true"
-                    onGoForward={goForward}
-                    onGoBack={goBack}
-                  />
-                </>
-              )}
+              <SearchPagination
+                currentPage={pageNumber}
+                hasNextPage={hasNextPage}
+                aria-hidden="true"
+                onGoForward={goForward}
+                onGoBack={goBack}
+              />
             </div>
           </div>
         )}
 
         <div className="container sm:flex flex-row">
-          {showPagination ? (
+          {hasResults ? (
             <div className="w-full">
               <ComboResults results={combos} sort={sort} hideVariants={!groupBy} />
               <SearchPagination

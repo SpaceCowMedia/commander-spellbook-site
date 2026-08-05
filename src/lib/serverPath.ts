@@ -1,7 +1,14 @@
 import path from 'path';
 
-const serverPath = (staticFilePath: string) => {
-  return path.join(process.cwd(), staticFilePath);
+// Statically scoped to `public` so that the build does not trace the whole project.
+const publicDirectory = path.join(process.cwd(), 'public');
+
+const serverPath = (publicFilePath: string) => {
+  const filePath = path.join(publicDirectory, publicFilePath);
+  if (filePath !== publicDirectory && !filePath.startsWith(publicDirectory + path.sep)) {
+    throw new Error(`"${publicFilePath}" resolves outside of the public directory`);
+  }
+  return filePath;
 };
 
 export default serverPath;

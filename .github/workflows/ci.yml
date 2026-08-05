@@ -88,7 +88,9 @@ jobs:
         browser: [chrome, firefox, edge, electron]
       fail-fast: false
     env:
-      NODE_ENV: test
+      # Discord is not reachable from CI, so the tests log in with a plain account instead.
+      CYPRESS_username: cypress
+      CYPRESS_password: cypress-password
     steps:
       - name: Setup Docker Buildx 🐳
         uses: docker/setup-buildx-action@v4
@@ -111,13 +113,16 @@ jobs:
         timeout-minutes: 15
         with:
           port: "8000"
+          username: ${{ env.CYPRESS_username }}
+          email: cypress@commanderspellbook.com
+          password: ${{ env.CYPRESS_password }}
 
       - name: Cypress run 🧪
         uses: cypress-io/github-action@v7
         with:
           install-command: "true"
-          build: pnpm build
-          start: pnpm start
+          build: pnpm build:test
+          start: pnpm start:test
           wait-on: "http://localhost:3000, http://localhost:8000"
           browser: ${{ matrix.browser }}
 

@@ -40,6 +40,8 @@ If you are coming from `npm` or `yarn`, most commands map over directly. Note th
 | Type-check                           | `pnpm tsc --noEmit`              |
 | Open Cypress                         | `pnpm cy:open`                   |
 | Run Cypress headlessly               | `pnpm cy:run`                    |
+| Build, serve and open Cypress        | `pnpm cy:dev`                    |
+| Build, serve and run Cypress         | `pnpm test:integration`          |
 | Add a runtime dependency             | `pnpm add <pkg>`                 |
 | Add a dev dependency                 | `pnpm add -D <pkg>`              |
 | Remove a dependency                  | `pnpm remove <pkg>`              |
