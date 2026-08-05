@@ -775,6 +775,14 @@
 <td><code>pnpm cy:run</code></td>
 </tr>
 <tr>
+<td>Build, serve and open Cypress</td>
+<td><code>pnpm cy:dev</code></td>
+</tr>
+<tr>
+<td>Build, serve and run Cypress</td>
+<td><code>pnpm test:integration</code></td>
+</tr>
+<tr>
 <td>Add a runtime dependency</td>
 <td><code>pnpm add &lt;pkg&gt;</code></td>
 </tr>
@@ -842,16 +850,38 @@ pnpm<span class="w"> </span>start
                         <section class="print-page" id="testing-integration-testing"><h1 id="testing-integration-testing-integration-testing">Integration Testing</h1>
 <p>Our integration tests use <a href="https://www.cypress.io/">Cypress</a> as our test runner.</p>
 <h2 id="testing-integration-testing-what-to-test">What to test</h2>
-<p>Unlike unit tests, we really only want to test broad strokes behavior. The most common usages of the app, to ensure the functionality of the app remains unbroken.</p>
+<p>Unlike unit tests, we really only want to test broad strokes behavior. The most common usages of the app, to ensure the functionality of the app remains unbroken. One spec per page or feature, and as few tests as possible in each of them.</p>
+<h2 id="testing-integration-testing-the-backend-the-tests-run-against">The backend the tests run against</h2>
+<p>The tests run against a local backend with a known, tiny dataset: <code>/combo/1-2/</code> is the <code>Basalt Monolith</code> + <code>Mesmeric Orb</code> combo, <code>/combo/1-3/</code> is <code>Basalt Monolith</code> + <code>Forsaken Monument</code>, and nothing else exists. CI creates it from <a href="https://github.com/SpaceCowMedia/commander-spellbook-backend">commander-spellbook-backend</a> with <code>.github/actions/backend</code>, which starts the backend with <code>docker compose</code>, seeds those combos, and creates the account the tests log in with.</p>
+<p>To reproduce that locally, clone the backend, run <code>PORT=8000 docker compose up -d</code> in it, then run the seeding and account steps of <code>.github/actions/backend/action.yaml</code>. <code>pnpm build:test</code> and <code>pnpm start:test</code> build and serve the app with <code>NODE_ENV=test</code>, which points it at <code>http://127.0.0.1:8000</code> through <code>.env.test</code>.</p>
+<p>Note that <code>pnpm build</code> only points assets at the CDN when <code>BUILD_TYPE</code> is set, which happens solely in the <code>Dockerfile</code> used for deployments. Local builds therefore serve their own assets and can be tested as-is.</p>
 <h2 id="testing-integration-testing-how-to-run-the-tests">How to Run the Tests</h2>
-<ul>
-<li>Run the app<br />
-  <div class="highlight"><pre><span></span><code>pnpm dev
-</code></pre></div></li>
-<li>Run the tests<br />
-  <div class="highlight"><pre><span></span><code>pnpm cy:run
-</code></pre></div></li>
-</ul>
+<p>One command builds the app, serves it, waits for it to answer on <code>http://localhost:3000</code> and then starts the test runner:</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open the Cypress UI against a test build</td>
+<td><code>pnpm cy:dev</code></td>
+</tr>
+<tr>
+<td>Run the whole suite headlessly against a build</td>
+<td><code>pnpm test:integration</code></td>
+</tr>
+<tr>
+<td>Open the Cypress UI against the dev server</td>
+<td><code>pnpm cy:debug</code></td>
+</tr>
+</tbody>
+</table>
+<p>If you already have the app running, you can start the runner on its own with <code>pnpm cy:open</code> or <code>pnpm cy:run</code>.</p>
+<h2 id="testing-integration-testing-logging-in">Logging in</h2>
+<p>Discord, the only login the app offers, is not reachable from CI, so <code>cy.login()</code> asks the backend for a token with the username and password of the test account and stores the same cookies the login page would. Everything it needs is in <code>cypress.config.ts</code> (<code>apiUrl</code>, <code>username</code>, <code>password</code>) and every value can be overridden with a <code>CYPRESS_</code> prefixed environment variable, which is how the workflow passes the credentials it created the account with.</p>
 <h2 id="testing-integration-testing-videosscreenshots">Videos/Screenshots</h2>
 <p>By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:</p>
 <div class="highlight"><pre><span></span><code>pnpm cy:run --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
