@@ -4,7 +4,8 @@ describe('Search', () => {
 
     cy.get('.card-name').should('contain', 'Basalt Monolith');
 
-    cy.get('a[href*="/combo/"]').first().click();
+    // Clicking the card names of a result shows the card instead of opening the combo.
+    cy.get('a[href*="/combo/"]').first().find('.result').click();
 
     cy.url().should('include', '/combo/');
     cy.get('#combo-cards').should('contain', 'Basalt Monolith');
