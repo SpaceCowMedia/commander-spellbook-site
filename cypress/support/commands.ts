@@ -18,7 +18,8 @@ Cypress.Commands.add('login', () => {
     username,
     password: Cypress.env('password'),
   }).then(({ body }) => {
-    const { user_id: userId } = JSON.parse(atob(body.access.split('.')[1]));
+    const payload = body.access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const { user_id: userId } = JSON.parse(atob(payload));
 
     cy.setCookie('csbJwt', body.access);
     cy.setCookie('csbRefresh', body.refresh);
