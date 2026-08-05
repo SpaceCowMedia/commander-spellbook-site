@@ -84,8 +84,8 @@
                 "cy:dev"
             ],
             "env": {
-                "CI": "true",
-                "NODE_ENV": "development",
+                // VS Code sets this on its own processes, and Cypress cannot start with it inherited.
+                "ELECTRON_RUN_AS_NODE": null,
             },
             "autoAttachChildProcesses": true,
         },
@@ -99,8 +99,8 @@
                 "cy:debug",
             ],
             "env": {
-                "CI": "true",
-                "NODE_ENV": "development",
+                // VS Code sets this on its own processes, and Cypress cannot start with it inherited.
+                "ELECTRON_RUN_AS_NODE": null,
             },
             "autoAttachChildProcesses": true,
         },

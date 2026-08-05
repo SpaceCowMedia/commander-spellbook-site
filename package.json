@@ -14,10 +14,10 @@
     "tsc": "tsc",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "cy:debug": "concurrently --kill-others \"pnpm dev\" \"pnpm cy:open\"",
-    "cy:dev": "pnpm build && concurrently --kill-others \"pnpm start\" \"pnpm cy:open\"",
+    "cy:debug": "concurrently --kill-others -n next,cypress -s command-cypress \"pnpm dev\" \"wait-on http://localhost:3000 && pnpm cy:open\"",
+    "cy:dev": "pnpm build && concurrently --kill-others -n next,cypress -s command-cypress \"pnpm start\" \"wait-on http://localhost:3000 && pnpm cy:open\"",
     "prettier": "prettier --write .",
-    "test:integration": "pnpm start & wait-on http://localhost:3000 && pnpm run cy:run",
+    "test:integration": "pnpm build && concurrently --kill-others -n next,cypress -s command-cypress \"pnpm start\" \"wait-on http://localhost:3000 && pnpm cy:run\"",
     "prepare": "husky"
   },
   "lint-staged": {

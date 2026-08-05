@@ -1,7 +1,11 @@
 import type { NextConfig } from 'next';
-import { PHASE_DEVELOPMENT_SERVER, PHASE_TEST } from 'next/constants';
 
-const dev = process.env.BUILD_TYPE === 'dev' ? 'dev-' : '';
+// Deployment builds always go through the Dockerfile, which sets BUILD_TYPE to
+// the target environment. Local and CI builds leave it unset, so they serve
+// their own assets instead of pointing at the CDN of a deployed environment.
+const buildType = process.env.BUILD_TYPE;
+const isDeployment = buildType === 'prod' || buildType === 'dev';
+const dev = buildType === 'dev' ? 'dev-' : '';
 
 const OPEN_CORS_HEADERS = [
   // Allow for specific domains to have access or * for all
@@ -23,45 +27,41 @@ const OPEN_CORS_HEADERS = [
   },
 ];
 
-const nextConfig: (phase: string) => NextConfig = (phase) => {
-  const isDev = phase === PHASE_DEVELOPMENT_SERVER;
-  const isTest = phase === PHASE_TEST || 'CI' in process.env;
-  return {
-    output: !isDev && !isTest ? 'standalone' : undefined,
-    staticPageGenerationTimeout: 120,
-    reactStrictMode: true,
-    trailingSlash: true,
-    productionBrowserSourceMaps: true,
-    assetPrefix: !isDev && !isTest ? `https://${dev}cdn.commanderspellbook.com` : undefined,
-    images: {
-      unoptimized: true,
-    },
-    async headers() {
-      return [
-        {
-          source: '/embed.js',
-          headers: OPEN_CORS_HEADERS,
-        },
-      ];
-    },
-    sassOptions: {
-      silenceDeprecations: ['legacy-js-api'],
-    },
-    async redirects() {
-      return [
-        {
-          source: '/ads.txt',
-          destination: 'https://adstxt.mediavine.com/sites/commander-spellbook/ads.txt',
-          permanent: false,
-        },
-        {
-          source: '/how-to-submit-a-combo',
-          destination: '/submit-a-combo',
-          permanent: true,
-        },
-      ];
-    },
-  };
+const nextConfig: NextConfig = {
+  output: isDeployment ? 'standalone' : undefined,
+  staticPageGenerationTimeout: 120,
+  reactStrictMode: true,
+  trailingSlash: true,
+  productionBrowserSourceMaps: true,
+  assetPrefix: isDeployment ? `https://${dev}cdn.commanderspellbook.com` : undefined,
+  images: {
+    unoptimized: true,
+  },
+  async headers() {
+    return [
+      {
+        source: '/embed.js',
+        headers: OPEN_CORS_HEADERS,
+      },
+    ];
+  },
+  sassOptions: {
+    silenceDeprecations: ['legacy-js-api'],
+  },
+  async redirects() {
+    return [
+      {
+        source: '/ads.txt',
+        destination: 'https://adstxt.mediavine.com/sites/commander-spellbook/ads.txt',
+        permanent: false,
+      },
+      {
+        source: '/how-to-submit-a-combo',
+        destination: '/submit-a-combo',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

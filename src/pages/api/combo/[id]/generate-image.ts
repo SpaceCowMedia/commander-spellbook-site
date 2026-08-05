@@ -25,7 +25,7 @@ async function headerCanvas(identityArray: string[], isLock: boolean) {
   ctx.fillRect(border, border, canvas1.width - border * 2, canvas1.height - border * 2);
   if (isLock) {
     // Draw lock icon if the combo is a lock
-    const lockImg = await loadImage(serverPath('public/images/lock.svg'));
+    const lockImg = await loadImage(serverPath('images/lock.svg'));
     const lockSize = iWidth;
     const lockX = border + padding;
     const lockY = (canvas1.height - lockSize) / 2;
@@ -37,7 +37,7 @@ async function headerCanvas(identityArray: string[], isLock: boolean) {
     const position = index * (iWidth + manaOffset) + startManaPos;
     // The local mana symbols svg files come from scryfall and have been modified to have a width and height of 100.
     // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0
-    const img = await loadImage(serverPath(`public/images/scryfall/identity/${letter.toUpperCase()}.svg`));
+    const img = await loadImage(serverPath(`images/scryfall/identity/${letter.toUpperCase()}.svg`));
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
   return canvas1;
@@ -113,7 +113,7 @@ async function footerCanvas() {
   ctx.fillStyle = '#333';
   ctx.fillRect(border, border, width - border * 2, footerHeight - border * 2);
   const text = 'Commander Spellbook';
-  const gear = await loadImage(serverPath('public/images/gear.svg'));
+  const gear = await loadImage(serverPath('images/gear.svg'));
   ctx.fillStyle = '#866da8';
   ctx.font = `bold ${fontSize}px ${fontFamily}`;
   const textSize = ctx.measureText(text);

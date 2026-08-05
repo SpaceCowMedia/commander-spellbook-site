@@ -1,7 +1,8 @@
 import path from 'path';
 
-const serverPath = (staticFilePath: string) => {
-  return path.join(process.cwd(), staticFilePath);
+// Statically scoped to `public` so that the build does not trace the whole project.
+const serverPath = (publicFilePath: string) => {
+  return path.join(process.cwd(), 'public', publicFilePath);
 };
 
 export default serverPath;
