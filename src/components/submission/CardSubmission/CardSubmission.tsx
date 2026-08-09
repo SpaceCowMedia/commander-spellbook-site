@@ -19,6 +19,7 @@ import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
 import CardImage from '../../layout/CardImage/CardImage';
 import Icon from '../../layout/Icon/Icon';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import normalizeQuotes from '../../../lib/normalizeQuotes';
 import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
 import Alert from '../../layout/Alert/Alert';
 import { apiConfiguration } from 'services/api.service';
@@ -325,7 +326,7 @@ const CardSubmission = ({
             <input
               className="field-input"
               value={scryfallQuery}
-              onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: e.target.value })}
+              onChange={(e) => onChange({ ...cardOrTemplate, scryfallQuery: normalizeQuotes(e.target.value) })}
               placeholder="(ex: t:creature)"
             />
             <ScryfallQueryHelp />
@@ -451,7 +452,7 @@ const CardSubmission = ({
           <input
             className="field-input"
             value={cardOrTemplate.exileCardState}
-            onChange={(e) => onChange({ ...cardOrTemplate, exileCardState: e.target.value })}
+            onChange={(e) => onChange({ ...cardOrTemplate, exileCardState: normalizeQuotes(e.target.value) })}
             placeholder="Exile state (ex: Exiled by...)"
           />
         </div>
@@ -467,7 +468,7 @@ const CardSubmission = ({
             onChange={(e) =>
               onChange({
                 ...cardOrTemplate,
-                graveyardCardState: e.target.value,
+                graveyardCardState: normalizeQuotes(e.target.value),
               })
             }
             placeholder="Graveyard state (ex: Entered the graveyard this turn)"
@@ -482,7 +483,7 @@ const CardSubmission = ({
           <input
             className="field-input"
             value={cardOrTemplate.libraryCardState}
-            onChange={(e) => onChange({ ...cardOrTemplate, libraryCardState: e.target.value })}
+            onChange={(e) => onChange({ ...cardOrTemplate, libraryCardState: normalizeQuotes(e.target.value) })}
             placeholder="Library state (ex: On the top of your library)"
           />
         </div>
@@ -498,7 +499,7 @@ const CardSubmission = ({
             onChange={(e) =>
               onChange({
                 ...cardOrTemplate,
-                battlefieldCardState: e.target.value,
+                battlefieldCardState: normalizeQuotes(e.target.value),
               })
             }
             placeholder="Battlefield state (ex: Untapped)"

@@ -27,6 +27,7 @@ import { ResultType, clearResultsCache, mergeResultsCache, readResultsCache } fr
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
+import normalizeQuotes from 'lib/normalizeQuotes';
 import Modal from 'components/ui/Modal/Modal';
 import Tab from 'components/ui/Tab/Tab.';
 import DeckCombos from 'components/FindMyCombos/DeckCombos';
@@ -329,7 +330,7 @@ const FindMyCombos: React.FC = () => {
   }, [router.isReady]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDecklist(e.target.value);
+    setDecklist(normalizeQuotes(e.target.value));
   };
 
   const handleUrlInput = async () => {
@@ -430,7 +431,7 @@ const FindMyCombos: React.FC = () => {
             className={`${styles.decklistInput} ${styles.commanderInput}`}
             value={commanderList}
             placeholder={`ex: Ezuri, Claw of Progress`}
-            onChange={(e) => setCommanderList(e.target.value)}
+            onChange={(e) => setCommanderList(normalizeQuotes(e.target.value))}
           />
           <textarea
             id="decklist-input"
@@ -536,7 +537,7 @@ const FindMyCombos: React.FC = () => {
                 type="text"
                 value={deckUrl}
                 placeholder="Supported deckbuilding sites: Archidekt, Moxfield, Deckstats.net, TappedOut.net."
-                onChange={(e) => setDeckUrl(e.target.value)}
+                onChange={(e) => setDeckUrl(normalizeQuotes(e.target.value))}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleUrlInput();

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Loader from '../../layout/Loader/Loader';
 import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import normalizeQuotes from '../../../lib/normalizeQuotes';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Link from 'next/link';
@@ -342,7 +343,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
           className="field-input min-h-24 resize-y"
           placeholder="e.g. The combo doesn't work because..."
           value={issue}
-          onChange={(e) => setIssue(e.target.value)}
+          onChange={(e) => setIssue(normalizeQuotes(e.target.value))}
         />
       </section>
 
@@ -353,7 +354,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
           className="field-input min-h-24 resize-y"
           placeholder="e.g. You can fix the combo by..."
           value={solution}
-          onChange={(e) => setSolution(e.target.value)}
+          onChange={(e) => setSolution(normalizeQuotes(e.target.value))}
         />
       </section>
 
@@ -364,7 +365,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
           className="field-input min-h-24 resize-y"
           placeholder="Notes useful for editors that review your submission"
           value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          onChange={(e) => setComment(normalizeQuotes(e.target.value))}
           maxLength={1024}
         />
       </section>

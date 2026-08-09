@@ -13,6 +13,7 @@ import { ExplainQueryApi, PropertiesApi, Variant, VariantsApi } from '@space-cow
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import rewriteRenamedResults from 'lib/renamedResults';
+import normalizeQuotes from 'lib/normalizeQuotes';
 
 const PAGE_SIZE = 50;
 
@@ -286,10 +287,9 @@ interface ErrorWithResponse extends Error {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
-  let query =
-    queryParameterAsString(context.query.q)
-      ?.replaceAll(/[“”″❞〝〞ˮ]/gu, '"')
-      ?.replaceAll(/[ʻʼ‘’❛❜ʹʻʼʾˈ՚′＇ꞌ]/gu, "'") ?? '';
+  // Inputs are already sanitized as they are typed, but a query can also arrive from an old link or
+  // from outside the site, so the same folding is applied here.
+  let query = normalizeQuotes(queryParameterAsString(context.query.q) ?? '');
   console.log('Search query:', query);
 
   // Renamed results are resolved before anything else, so an old link lands on the current query

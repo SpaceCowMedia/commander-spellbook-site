@@ -7,6 +7,7 @@ import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
 import CookieService from 'services/cookie.service';
+import normalizeQuotes from 'lib/normalizeQuotes';
 
 interface Props {
   onHomepage?: boolean;
@@ -117,7 +118,7 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             value={inputValue}
             name="q"
             ref={inputRef}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => setInputValue(normalizeQuotes(e.target.value))}
             placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
             id="search-bar-input"
             type="text"

@@ -6,6 +6,7 @@ import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
 import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import normalizeQuotes from '../../../lib/normalizeQuotes';
 
 interface Props {
   variant: VariantInVariantUpdateSuggestionRequest;
@@ -46,7 +47,8 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete, errors }: Pro
     };
   }, [debouncedId]);
 
-  const handleIdInputChange = (value: string) => {
+  const handleIdInputChange = (rawValue: string) => {
+    let value = normalizeQuotes(rawValue);
     try {
       const url = new URL(value);
       if (url.protocol == window.location.protocol && url.hostname === window.location.hostname) {
@@ -63,7 +65,8 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete, errors }: Pro
     onChange({ ...variant, variant: value });
   };
 
-  const handleIssueInputChange = (value: string) => {
+  const handleIssueInputChange = (rawValue: string) => {
+    const value = normalizeQuotes(rawValue);
     setIssueInput(value);
     onChange({ ...variant, issue: value });
   };

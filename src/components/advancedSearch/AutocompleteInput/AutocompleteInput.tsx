@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import styles from './autocompleteInput.module.scss';
 import { useState } from 'react';
 import normalizeStringInput from '../../../lib/normalizeStringInput';
+import normalizeQuotes from '../../../lib/normalizeQuotes';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Loader from '../../layout/Loader/Loader';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
@@ -278,7 +279,8 @@ const AutocompleteInput: React.FC<Props> = ({
     setRateLimitVisible(false);
   };
 
-  const handleChange = (value: string) => {
+  const handleChange = (rawValue: string) => {
+    const value = normalizeQuotes(rawValue);
     setLocalValue(value);
     if (rateLimitedUntil !== null) {
       setRateLimitVisible(true);

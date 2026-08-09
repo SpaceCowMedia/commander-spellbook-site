@@ -7,6 +7,7 @@ import FeatureSubmission from '../Feature Submission/FeatureSubmission';
 import Loader from '../../layout/Loader/Loader';
 import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
+import normalizeQuotes from '../../../lib/normalizeQuotes';
 import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
@@ -650,7 +651,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
             maxLength={51}
             placeholder="e.g. {2}{U}{U}"
             value={manaCost}
-            onChange={(e) => setManaCost(e.target.value)}
+            onChange={(e) => setManaCost(normalizeQuotes(e.target.value))}
           />
           <div className="flex flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-700 dark:bg-white/5">
             <span className="text-sm text-gray-500 dark:text-gray-400">Preview:</span>
@@ -666,7 +667,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           className="field-input min-h-24 resize-y"
           placeholder="e.g. It must be your opponent's turn"
           value={easyPrerequisites}
-          onChange={(e) => setEasyPrerequisites(e.target.value)}
+          onChange={(e) => setEasyPrerequisites(normalizeQuotes(e.target.value))}
         />
       </section>
 
@@ -677,7 +678,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           className="field-input min-h-24 resize-y"
           placeholder="e.g. You need a way to make an opponent lose life"
           value={notablePrerequisites}
-          onChange={(e) => setNotablePrerequisites(e.target.value)}
+          onChange={(e) => setNotablePrerequisites(normalizeQuotes(e.target.value))}
         />
       </section>
 
@@ -694,7 +695,9 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
                 className="field-input"
                 placeholder="e.g. Cast Splinter Twin on Deceiver Exarch"
                 value={step}
-                onChange={(e) => setSteps([...steps.slice(0, index), e.target.value, ...steps.slice(index + 1)])}
+                onChange={(e) =>
+                  setSteps([...steps.slice(0, index), normalizeQuotes(e.target.value), ...steps.slice(index + 1)])
+                }
               />
               <button
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-danger text-white transition-transform hover:scale-110"
@@ -757,7 +760,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           placeholder='ID of the combo this is a variant of (e.g. "1234-4567")'
           className="field-input"
           value={variantOf || ''}
-          onChange={(e) => setVariantOf(e.target.value || undefined)}
+          onChange={(e) => setVariantOf(normalizeQuotes(e.target.value) || undefined)}
           maxLength={128}
         />
         {variantOfPreview && (
@@ -774,7 +777,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           className="field-input min-h-24 resize-y"
           placeholder="Notes useful for editors that review your submission"
           value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          onChange={(e) => setComment(normalizeQuotes(e.target.value))}
           maxLength={1024}
         />
         <label className="mt-4 flex w-fit cursor-pointer select-none items-center gap-2 font-bold">
