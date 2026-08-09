@@ -9,9 +9,10 @@ import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
-import { PropertiesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
+import { ExplainQueryApi, PropertiesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
+import rewriteRenamedResults from 'lib/renamedResults';
 
 const PAGE_SIZE = 50;
 
@@ -21,6 +22,7 @@ interface Props {
   page: number;
   error?: string;
   featured?: string;
+  explanation?: string | null;
 }
 
 const SORT_OPTIONS: Option[] = [
@@ -61,11 +63,35 @@ const AUTO_SORT_MAP: Record<string, '-'> = {
   variant_count: '-',
 };
 
+// The keywords that constrain the format a combo is playable in. They only accept the `:` operator.
+const LEGALITY_KEYWORDS = ['legal', 'banned', 'format'];
+
+// A value in double quotes can contain anything, including something that reads like a legality
+// term, so quoted spans are blanked out before looking for one. Escaped quotes stay inside a value.
+const QUOTED_VALUE = /"(?:\\.|[^"\\])*"/g;
+
+// Keywords are case insensitive, and a term can only start at the beginning of the query or after
+// whitespace, a parenthesis, a boolean operator alias or the `-` negation prefix. Anchoring the
+// match that way avoids mistaking the tail of another term, such as `oracle:illegal:`, for one.
+const LEGALITY_TERM = new RegExp(String.raw`(?:^|[\s()&|-])(?:${LEGALITY_KEYWORDS.join('|')}):`, 'i');
+
 const doesQuerySpecifyFormat = (query: string): boolean => {
-  return query.includes('legal:') || query.includes('banned:') || query.includes('format:');
+  return LEGALITY_TERM.test(query.replaceAll(QUOTED_VALUE, '""'));
 };
 
-const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }) => {
+// The explanation endpoint rejects invalid queries the same way the search endpoint does, so a
+// failure here always comes with an error message from the search itself: fall back to null and
+// let the page describe the query on its own.
+const explainQuery = async (explainQueryApi: ExplainQueryApi, query: string): Promise<string | null> => {
+  try {
+    const explanation = await explainQueryApi.explainQueryRetrieve({ q: query });
+    return explanation.explanation;
+  } catch {
+    return null;
+  }
+};
+
+const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, explanation }) => {
   const router = useRouter();
 
   const sort = queryParameterAsString(router.query.sort) || DEFAULT_SORT;
@@ -121,15 +147,22 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured }
     });
   };
 
-  const legalityMessage = doesQuerySpecifyFormat(query) ? '' : ' (legal:commander has been applied by default)';
+  // The explanation is fetched for the query that actually ran, so it mentions the default legality
+  // filter on its own. Only the fallback below has to spell it out, and never when listing the
+  // variants of a combo, which skips the filter entirely.
+  const legalityMessage =
+    doesQuerySpecifyFormat(query) || variant ? '' : ' (legal:commander has been applied by default)';
 
   const singleCardQuery = /^card="([^"]+)"$/.exec(query);
 
-  const searchMessage =
+  const queryDescription =
+    explanation ||
     (singleCardQuery
-      ? `Showing combos with the card "${singleCardQuery[1]}"${legalityMessage}`
-      : `Showing results for query "${query}"${legalityMessage}`) +
-    (variant ? `, which are all variants of the combo with ID "${variant}"` : '');
+      ? `Showing combos with the card "${singleCardQuery[1]}".${legalityMessage}`
+      : `Showing results for query "${query}".${legalityMessage}`);
+
+  const searchMessage =
+    queryDescription + (variant ? ` Only variants of the combo with ID "${variant}" are shown.` : '');
 
   const hasNextPage = combos.length === PAGE_SIZE;
   const hasResults = combos.length > 0;
@@ -258,6 +291,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ?.replaceAll(/[“”″❞〝〞ˮ]/gu, '"')
       ?.replaceAll(/[ʻʼ‘’❛❜ʹʻʼʾˈ՚′＇ꞌ]/gu, "'") ?? '';
   console.log('Search query:', query);
+
+  // Renamed results are resolved before anything else, so an old link lands on the current query
+  // rather than on an empty result set. Redirecting instead of rewriting silently keeps the new
+  // name visible in the URL and in the search bar, ready to be edited.
+  const queryWithRenamedResults = rewriteRenamedResults(query);
+  if (queryWithRenamedResults !== query) {
+    const parameters = new URLSearchParams({ q: queryWithRenamedResults });
+    for (const [key, value] of Object.entries(context.query)) {
+      if (key === 'q' || value === undefined) {
+        continue;
+      }
+      for (const entry of Array.isArray(value) ? value : [value]) {
+        parameters.append(key, entry);
+      }
+    }
+    return {
+      redirect: {
+        destination: `/search/?${parameters}`,
+        permanent: false,
+      },
+    };
+  }
+
   let featured: string | null = null;
   const featuredMatch = query.match(/^is:featured(?:-(\d+))?$/);
   if (featuredMatch) {
@@ -276,7 +332,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isQueryMissingFormat = !doesQuerySpecifyFormat(query);
   const variant = queryParameterAsString(context.query.variant);
   if (isQueryMissingFormat && !variant) {
-    query = `${query} legal:commander`;
+    // `AND` binds more tightly than `OR`, so the default filter has to be applied to the query as a
+    // whole: appending it bare would turn `a OR b` into `a OR (b AND legal:commander)`.
+    query = query.trim() ? `(${query}) legal:commander` : 'legal:commander';
   }
   const order = queryParameterAsString(context.query.order) || DEFAULT_ORDER;
   const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
@@ -285,6 +343,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `,${DEFAULT_ORDERING}`;
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
   const variantsApi = new VariantsApi(configuration);
+  const explanationPromise = explainQuery(new ExplainQueryApi(configuration), query);
   try {
     const results = await variantsApi.variantsList({
       q: query,
@@ -314,6 +373,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             combos: [],
             bannedCombos: bannedCombos,
             page: context.query.page || 1,
+            explanation: await explanationPromise,
           },
         };
       }
@@ -333,6 +393,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         combos: backendCombos,
         featured,
         page: context.query.page || 1,
+        explanation: await explanationPromise,
       },
     };
   } catch (error) {

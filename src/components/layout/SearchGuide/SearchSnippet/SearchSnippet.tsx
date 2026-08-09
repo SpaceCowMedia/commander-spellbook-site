@@ -8,7 +8,7 @@ interface Props {
 }
 
 const SearchSnippet: React.FC<Props> = ({ search, description }: Props) => {
-  const link = `/search/?q=${search}`;
+  const link = `/search/?q=${encodeURIComponent(search)}`;
 
   return (
     <Link href={link} className={styles.link}>

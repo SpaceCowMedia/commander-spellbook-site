@@ -71,7 +71,10 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   };
 
   useEffect(() => {
-    setInputValue(getQueryFromRouter(router));
+    const queryFromRouter = getQueryFromRouter(router);
+    if (queryFromRouter) {
+      setInputValue(queryFromRouter);
+    }
   }, [router.query.q]);
 
   useEffect(() => {

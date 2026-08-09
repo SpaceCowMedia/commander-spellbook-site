@@ -149,6 +149,10 @@ const CARD_ARTS = {
     uid: 'e2f53d48-15ea-404f-880b-f786f55dfc7e',
     artist: 'Jesper Ejsing',
   },
+  'Split Decision': {
+    uid: '83ed7ebe-48be-4e6e-a293-b81484f85142',
+    artist: 'Robbie Trevino',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {

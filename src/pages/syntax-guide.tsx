@@ -111,6 +111,11 @@ const DATA = {
       text: 'Brackets',
       icon: 'bracket',
     },
+    {
+      id: 'boolean-operators',
+      text: 'Boolean Operators',
+      icon: 'code',
+    },
   ] as SectionType[],
   cardSnippets: [
     {
@@ -283,8 +288,8 @@ const DATA = {
       description: 'Combos that include the word "permanent" in one of the steps.',
     },
     {
-      search: 'steps:"mill target opponent"',
-      description: 'Combos that include the phrase "mill target opponent" in one of the steps.',
+      search: 'steps:"target opponent"',
+      description: 'Combos that include the phrase "target opponent" in one of the steps.',
     },
     {
       search: 'steps>6',
@@ -297,8 +302,8 @@ const DATA = {
       description: 'The combo for Basalt Monolith and Mesmeric Orb.',
     },
     {
-      search: '-sid:4131-4684 card="Basalt Monolith" card="Mesmeric Orb"',
-      description: 'Combos that contain the cards Basalt Monolith and Mesmeric Orb except for combo 4131-4684.',
+      search: '-sid:4131-4684 card="Basalt Monolith"',
+      description: 'Combos that contain the card Basalt Monolith, except for combo 4131-4684.',
     },
   ],
   tagSnippets: [
@@ -329,8 +334,8 @@ const DATA = {
   ],
   commanderSnippets: [
     {
-      search: 'commander:codie',
-      description: 'Combos that require Codie, Vociferous Codex to be your commander.',
+      search: 'commander:derevi',
+      description: 'Combos that require Derevi, Empyrial Tactician to be your commander.',
     },
   ],
   popularitySnippets: [
@@ -356,17 +361,6 @@ const DATA = {
       search: 'cardmarket<=100',
       description:
         'Combos where the entire price of the combo is less than or equal to €100.00 according to Cardmarket.',
-    },
-  ],
-  previewedSnippets: [
-    {
-      search: 'exclude:previewed',
-      description: 'Exclude any combos that contain cards that are not legal in Commander (yet).',
-    },
-    {
-      search: 'is:spoiled',
-      description:
-        'Combos that contain at least one card that is not yet legal in Commander. (may have no results, if there are no newly previewed cards)',
     },
   ],
   legalitySnippets: [
@@ -404,6 +398,33 @@ const DATA = {
         'Combos that are in the Exhibition bracket tag, which includes some of the most casual and janky combos in the format.',
     },
   ],
+  booleanOperatorSnippets: [
+    {
+      search: 'kiki OR splinter',
+      description:
+        'Combos that contain a card with the word kiki in the name, a card with the word splinter in the name, or both.',
+    },
+    {
+      search: 'keyword:cascade | keyword:storm',
+      description: 'Combos that contain a card with either the cascade or the storm keyword.',
+    },
+    {
+      search: 'type:instant && result:"Infinite turns"',
+      description: 'Combos that contain an instant and result in infinite turns.',
+    },
+    {
+      search: '(result:"Infinite turns" OR result:"Infinite mana") AND cards<=2',
+      description: 'Two-card combos that result in either infinite turns or infinite mana.',
+    },
+    {
+      search: 'cards<=2 -(is:mld OR is:lock)',
+      description: 'Two-card combos that neither destroy all lands nor lock your opponents out.',
+    },
+    {
+      search: '(ci:temur OR ci:jeskai) AND (result:"Infinite mana" OR result:"Infinite turns")',
+      description: 'Combos within the Temur or Jeskai color identity that result in infinite mana or infinite turns.',
+    },
+  ],
 };
 
 const INTRODUCTION = `
@@ -418,6 +439,9 @@ No matter what parameter is used, capitalization will be disregarded, so a searc
 > You can prefix a \`all-\` or \`@\` to some search terms to require that all related entities (cards, templates or results) match the search term.
 > For example, \`all-cards:dragon\` or \`@card:dragon\` will only return combos where all cards contain the word "dragon" in the name.
 > You can negate it with \`-all-cards:dragon\` or \`-@card:dragon\` to exclude all combos where all cards contain the word "dragon" in the name.
+
+Search terms are combined with \`AND\` by default, but they can also be combined with \`OR\` and grouped with parentheses.
+See [Boolean Operators](#boolean-operators) for the details.
 `;
 
 const CARDS_DESCRIPTION = `
@@ -1011,6 +1035,56 @@ to each combo that provides a qualitative association to one or more brackets, t
 
 `;
 
+const BOOLEAN_OPERATORS_DESCRIPTION = `
+Every search term described in this guide can be combined with the others using the boolean operators \`AND\` and \`OR\`,
+and grouped with parentheses, so you can describe exactly which combos you are looking for.
+For example, \`kiki OR splinter\` searches for combos that contain a card with the word "kiki" in the name,
+a card with the word "splinter" in the name, or both.
+
+Writing two terms one after the other combines them with \`AND\`, so \`ci:temur cards<=2\` and \`ci:temur AND cards<=2\` are the same search.
+
+> [!NOTE]
+> Like the rest of the syntax, boolean operators are case insensitive: \`AND\`, \`and\` and \`And\` all behave the same way, and so do \`OR\`, \`or\` and \`Or\`.
+
+### Boolean operators
+
+* \`AND\` matches combos that satisfy both terms
+* \`OR\` matches combos that satisfy either term, or both
+* \`(\` and \`)\` group several terms so that they count as a single term
+
+### Boolean operator aliases
+
+* \`AND\` can be written as \`&&\` or \`&\`, or omitted entirely: \`type:instant && result:"Infinite turns"\`
+* \`OR\` can be written as \`||\` or \`|\`: \`keyword:cascade | keyword:storm\`
+
+### Precedence
+
+\`AND\` binds more tightly than \`OR\`, so \`result:"Infinite turns" OR result:"Infinite mana" AND cards<=2\`
+searches for combos that result in infinite turns, plus the two-card combos that result in infinite mana.
+Use parentheses whenever you want the other grouping:
+\`(result:"Infinite turns" OR result:"Infinite mana") AND cards<=2\` searches for two-card combos that result in either.
+
+### Negation
+
+There is no \`NOT\` operator: negation is always the \`-\` prefix described in the introduction.
+To negate a whole expression rather than a single term, wrap it in parentheses and prefix the group with \`-\`.
+For example, \`cards<=2 -(is:mld OR is:lock)\` searches for two-card combos that neither destroy all lands nor lock your opponents out.
+
+> [!TIP]
+> Negating a group flips it inside out: \`-(kiki OR splinter)\` excludes every combo containing either card,
+> while \`-(kiki AND splinter)\` only excludes the combos containing both of them.
+
+### Nesting
+
+A group can contain other groups, with no limit to how deeply they are nested, so arbitrarily complex expressions are possible.
+For example, \`(ci:temur OR ci:jeskai) AND (cards<=2 OR (result:"Infinite mana" AND -is:mld))\` searches for combos
+within the Temur or Jeskai color identity that either use at most two cards, or result in infinite mana without destroying all lands.
+
+> [!WARNING]
+> A parenthesis always opens or closes a group, so it cannot appear unescaped inside a search term.
+> Card names containing parentheses must be quoted, as in \`card:"Erase (Not the Urza's Legacy One)"\`.
+`;
+
 const SyntaxGuide: React.FC = () => {
   return (
     <>
@@ -1195,6 +1269,15 @@ const SyntaxGuide: React.FC = () => {
             snippets={DATA.bracketSnippets}
           >
             <SyntaxMarkdown>{BRACKET_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Boolean Operators"
+            icon="code"
+            headingCardName="Split Decision"
+            snippets={DATA.booleanOperatorSnippets}
+          >
+            <SyntaxMarkdown>{BOOLEAN_OPERATORS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
         </div>
       </div>

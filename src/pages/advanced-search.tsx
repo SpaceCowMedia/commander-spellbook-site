@@ -14,6 +14,12 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { SpellbookIcon } from '../components/layout/Icon/Icon';
 import { LEGALITY_FORMATS } from 'lib/types';
 import normalizeStringInput from 'lib/normalizeStringInput';
+import { ExplainQueryApi } from '@space-cow-media/spellbook-client';
+import { apiConfiguration } from 'services/api.service';
+import { useDebounce } from 'use-debounce';
+import cn from 'lib/cn';
+
+const EXPLANATION_DELAY = 500;
 
 interface TagOption {
   name: string;
@@ -650,6 +656,37 @@ const AdvancedSearch: React.FC = () => {
 
   const query = getQuery();
 
+  const [debouncedQuery] = useDebounce(query, EXPLANATION_DELAY);
+  // Kept together with the query it describes, so an explanation is never presented as the meaning
+  // of a query the user has since edited.
+  const [explanation, setExplanation] = useState<{ query: string; text: string } | null>(null);
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setExplanation(null);
+      return;
+    }
+    let outdated = false;
+    const explainQueryApi = new ExplainQueryApi(apiConfiguration());
+    explainQueryApi
+      .explainQueryRetrieve({ q: debouncedQuery })
+      .then((result) => {
+        if (!outdated) {
+          setExplanation({ query: debouncedQuery, text: result.explanation });
+        }
+      })
+      .catch(() => {
+        // The form only builds valid queries, so this is a transient failure: record the attempt
+        // anyway, otherwise the pending message would linger forever.
+        if (!outdated) {
+          setExplanation({ query: debouncedQuery, text: '' });
+        }
+      });
+    return () => {
+      outdated = true;
+    };
+  }, [debouncedQuery]);
+
   function handleSubmit(_: FormData) {
     'use server';
 
@@ -924,6 +961,15 @@ const AdvancedSearch: React.FC = () => {
               )}
             </div>
           </div>
+
+          {query && (
+            <div
+              id="search-query-explanation"
+              className={cn(styles.searchQueryExplanation, explanation?.query !== query && styles.pending)}
+            >
+              {explanation ? explanation.text : 'Working out what this query means…'}
+            </div>
+          )}
 
           <div id="advanced-search-validation-error" className="text-danger p-4">
             {validationError && 'Check for errors in your search terms before submitting.'}

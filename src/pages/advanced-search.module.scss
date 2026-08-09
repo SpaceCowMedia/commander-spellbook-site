@@ -16,6 +16,14 @@
   }
 }
 
+.searchQueryExplanation {
+  @apply w-full text-left pt-2 px-1 text-sm text-gray-600 dark:text-gray-400;
+
+  &.pending {
+    @apply italic opacity-70;
+  }
+}
+
 .submitButton {
   @apply border border-link text-link p-4 rounded-l-xs hover:bg-link hover:text-white dark:border-primary dark:text-primary;
 }
