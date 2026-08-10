@@ -1,8 +1,8 @@
 import React from 'react';
-import { ComboSubmissionErrorType } from '../../../lib/types';
+import { ComboSubmissionErrorType, ErrorDetail } from '../../../lib/types';
 
 interface Props {
-  list?: (ComboSubmissionErrorType | string)[];
+  list?: ErrorDetail;
   children?: React.ReactNode;
 }
 
@@ -10,68 +10,103 @@ function camelCaseToWords(s: string) {
   const result = s.replace(/([A-Z])/g, ' $1');
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
-const getErrorMessageList = (agg: string[], input: (ComboSubmissionErrorType | string)[], label?: string) => {
-  for (const item of input) {
-    if (typeof item === 'string') {
-      agg.push(label ? `${label} - ${item}` : item);
-    } else {
-      for (const key in item) {
-        getErrorMessageList(agg, item[key], camelCaseToWords(key));
-      }
+
+// The errors of a list field are keyed by the index of the item they belong to
+function isItemKey(key: string) {
+  return /^\d+$/.test(key);
+}
+
+function labelFor(key: string) {
+  // `nonFieldErrors` holds the errors of the object itself, so it adds nothing to the label
+  if (key === 'nonFieldErrors') {
+    return undefined;
+  }
+  return isItemKey(key) ? `#${Number(key) + 1}` : camelCaseToWords(key);
+}
+
+const getErrorMessageList = (agg: string[], input?: ErrorDetail, label?: string) => {
+  if (input === undefined || input === null) {
+    return;
+  }
+  if (typeof input === 'string') {
+    agg.push(label ? `${label} - ${input}` : input);
+  } else if (Array.isArray(input)) {
+    for (const item of input) {
+      getErrorMessageList(agg, item, label);
+    }
+  } else {
+    for (const [key, value] of Object.entries(input)) {
+      const nestedLabel = [label, labelFor(key)].filter((part) => !!part).join(' ');
+      getErrorMessageList(agg, value, nestedLabel || undefined);
     }
   }
 };
 
-// Errors of a list field are returned as one entry per item, plus plain strings for the list itself
-export function listLevelErrors(list?: (ComboSubmissionErrorType | string)[]): string[] | undefined {
-  const strings = list?.filter((item): item is string => typeof item === 'string');
-  return strings && strings.length > 0 ? strings : undefined;
+// Everything that is not keyed by the index of an item belongs to the list itself
+export function listLevelErrors(errors?: ErrorDetail): ErrorDetail | undefined {
+  if (!errors || typeof errors === 'string') {
+    return errors || undefined;
+  }
+  if (Array.isArray(errors)) {
+    // Before DRF 3.18 the errors of the items were entries of this same list
+    const strings = errors.filter((item): item is string => typeof item === 'string');
+    return strings.length > 0 ? strings : undefined;
+  }
+  const listErrors = Object.entries(errors).filter(([key]) => !isItemKey(key));
+  return listErrors.length > 0 ? Object.fromEntries(listErrors) : undefined;
 }
 
-export function itemErrors(
-  list: (ComboSubmissionErrorType | string)[] | undefined,
-  index: number,
-): ComboSubmissionErrorType | undefined {
-  const item = list?.[index];
-  if (!item || typeof item === 'string' || Object.keys(item).length === 0) {
+export function itemErrors(errors: ErrorDetail | undefined, index: number): ComboSubmissionErrorType | undefined {
+  if (!errors || typeof errors === 'string') {
     return undefined;
   }
-  return item;
+  if (Array.isArray(errors)) {
+    // Before DRF 3.18 the items were entries of this same list, with an empty object for the valid
+    // ones, while plain messages belonged to the list itself
+    const item = errors[index];
+    return item && typeof item !== 'string' && !Array.isArray(item) && Object.keys(item).length > 0 ? item : undefined;
+  }
+  const item = errors[index.toString()];
+  if (!item) {
+    return undefined;
+  }
+  if (typeof item === 'string' || Array.isArray(item)) {
+    // Errors of an item that are not tied to any of its fields
+    return { nonFieldErrors: typeof item === 'string' ? [item] : item };
+  }
+  return Object.keys(item).length > 0 ? item : undefined;
 }
 
 // Errors of an item that are not displayed next to a specific field of that item
 export function unhandledErrors(
   errors: ComboSubmissionErrorType | undefined,
   handledFields: string[],
-): (ComboSubmissionErrorType | string)[] | undefined {
+): ErrorDetail | undefined {
   if (!errors) {
     return undefined;
   }
-  const result: (ComboSubmissionErrorType | string)[] = [];
+  const unhandled: Record<string, ErrorDetail> = {};
   for (const [key, value] of Object.entries(errors)) {
-    if (handledFields.includes(key) || !Array.isArray(value)) {
+    // `statusCode` is added by the client and holds no message
+    if (handledFields.includes(key) || key === 'statusCode' || value === undefined) {
       continue;
     }
-    if (key === 'nonFieldErrors') {
-      result.push(...value);
-    } else {
-      result.push({ [key]: value } as ComboSubmissionErrorType);
-    }
+    unhandled[key] = value as ErrorDetail;
   }
-  return result.length > 0 ? result : undefined;
+  return Object.keys(unhandled).length > 0 ? unhandled : undefined;
 }
 
 const ErrorMessage: React.FC<Props> = ({ list, children }) => {
-  if ((!list || list.length === 0) && !children) {
+  const stringList: string[] = [];
+  getErrorMessageList(stringList, list);
+
+  if (stringList.length === 0 && !children) {
     return null;
   }
 
-  const stringList: string[] = [];
-  getErrorMessageList(stringList, list || []);
-
   return (
     <div className="p-2 bg-red-100 border border-red-400 rounded-sm text-red-900 my-2">
-      {list && (
+      {stringList.length > 0 && (
         <ul className="list-disc list-inside">
           {stringList.map((line, index) => (
             <li key={index}>{line}</li>

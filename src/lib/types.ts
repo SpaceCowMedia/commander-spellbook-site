@@ -12,8 +12,17 @@ export interface ComboPrerequisites {
   description: string;
 }
 
-export type ComboSubmissionErrorType = Record<string, (ComboSubmissionErrorType | string)[]> & {
-  statusCode: number;
+/*
+ * A node of the error body of an HTTP 400 response: either a message, a list of nodes, or a map
+ * from field name to node. List fields map the index of the failing item to its errors instead,
+ * e.g. `{"uses": {"0": {"card": ["This field may not be blank."]}}}`, and use non numeric keys
+ * (`nonFieldErrors`) for the errors of the list itself.
+ */
+export type ErrorDetail = string | ErrorDetail[] | { [key: string]: ErrorDetail };
+
+export type ComboSubmissionErrorType = Record<string, ErrorDetail> & {
+  /* Set by the client, not part of the response body */
+  statusCode?: number;
   detail?: string;
 };
 

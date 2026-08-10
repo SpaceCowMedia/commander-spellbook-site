@@ -546,15 +546,16 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         return;
       }
       const status = err.response.status;
-      let errorJson: (ComboSubmissionErrorType & { main?: Record<string, ComboSubmissionErrorType> }) | undefined;
+      let errorJson: ComboSubmissionErrorType | undefined;
       try {
         errorJson = JSON.parse(await err.response.text());
       } catch {
         errorJson = undefined;
       }
       if (status === 400 && errorJson?.main) {
-        // The keys of `main` are the indexes of the cards, so errors stay aligned with the card they belong to
-        errorJson.uses = cards.map((_, index) => errorJson!.main![index.toString()] ?? {});
+        // The deck sent to find-my-combos has one card per submitted card, so the errors of `main`
+        // are already keyed by the index of the card they belong to, just like the ones of `uses`
+        errorJson.uses = errorJson.main;
         setErrorObj(errorJson);
       } else {
         setErrorObj({
