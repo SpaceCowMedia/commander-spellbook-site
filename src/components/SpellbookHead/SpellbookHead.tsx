@@ -8,9 +8,12 @@ interface Props {
   title: string;
   description: string;
   imageUrl?: string;
+  /* The path this page should be indexed under, given by pages that are reachable under more than
+     one URL: the query parameters that only hand state over between pages are left out of it. */
+  canonicalPath?: string;
 }
 
-const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl }) => {
+const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl, canonicalPath }) => {
   const router = useRouter();
   return (
     <Head>
@@ -41,9 +44,10 @@ const SpellbookHead: React.FC<Props> = ({ children, title, description, imageUrl
       <meta name="twitter:description" content={description} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
+      {canonicalPath && <link rel="canonical" href={`${process.env.NEXT_PUBLIC_CLIENT_URL ?? ''}${canonicalPath}`} />}
       <meta property="og:title" content={title} />
       <meta name="twitter:title" content={title} />
-      <meta property="og:url" content={router.asPath} />
+      <meta property="og:url" content={canonicalPath ?? router.asPath} />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={imageUrl || `${process.env.NEXT_PUBLIC_CLIENT_URL}/images/link-preview.png`} />
       {imageUrl && ['png', 'jpg', 'jpeg', 'gif', 'webp'].every((ext) => !imageUrl.endsWith(`.${ext}`)) && (

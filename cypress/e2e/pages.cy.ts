@@ -30,6 +30,17 @@ describe('Informational Pages', () => {
     cy.url().should('include', '/combo/');
     cy.get('#combo-cards').should('contain', 'Basalt Monolith');
   });
+
+  it('clears the search bar when asking for a random combo', () => {
+    cy.visit('/search/?q=monolith');
+    cy.get('input[name=q]').should('have.value', 'monolith');
+
+    cy.contains('nav a', 'Random').click();
+
+    cy.url().should('include', '/combo/');
+    cy.get('input[name=q]').should('have.value', '');
+    cy.url().should('not.include', 'q=');
+  });
 });
 
 export {};

@@ -285,6 +285,22 @@ interface ErrorWithResponse extends Error {
   response: Response;
 }
 
+// The backend describes a rejected query in the body of its error response. An error can also come
+// from in front of it though — a rate limiter or a proxy answering with an empty body — so a body
+// that is not the expected JSON leaves the generic message in place instead of throwing from here,
+// which would turn a busy backend into a crashed page.
+const readQueryError = async (error: unknown): Promise<string | string[] | undefined> => {
+  const thrown = error as { q?: string | string[] } | ErrorWithResponse | null;
+  if (thrown && 'response' in thrown) {
+    try {
+      return ((await thrown.response.json()) as { q?: string | string[] }).q;
+    } catch {
+      return undefined;
+    }
+  }
+  return thrown?.q;
+};
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const configuration = apiConfiguration(context);
   // Inputs are already sanitized as they are typed, but a query can also arrive from an old link or
@@ -313,6 +329,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+
+  // The query as the user asked for it, kept aside because `query` is rewritten below with the
+  // default legality filter before it reaches the API.
+  const requestedQuery = query;
 
   let featured: string | null = null;
   const featuredMatch = query.match(/^is:featured(?:-(\d+))?$/);
@@ -380,9 +400,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     if (backendCombos.length === 1 && (context.query.page || '1') === '1') {
+      // The only match is shown directly, but the query travels with it: the URL and the search bar
+      // keep describing the search that led here, ready to be shared or adjusted.
       return {
         redirect: {
-          destination: `/combo/${backendCombos[0].id}`,
+          destination: `/combo/${backendCombos[0].id}?${new URLSearchParams({ q: requestedQuery })}`,
           permanent: false,
         },
       };
@@ -397,16 +419,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    let e = error as { q?: string } | ErrorWithResponse;
-    if ('response' in e) {
-      e = (await e.response.json()) as { q?: string };
-    }
-    e = e as { q?: string };
-    const error_message = e.q
-      ? Array.isArray(e.q)
-        ? e.q.join('. ')
-        : e.q
-      : 'An error occurred while searching for combos.';
+    const q = await readQueryError(error);
+    const error_message = q ? (Array.isArray(q) ? q.join('. ') : q) : 'An error occurred while searching for combos.';
     return {
       props: {
         combos: [],

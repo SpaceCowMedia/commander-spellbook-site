@@ -36,9 +36,11 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     });
     if (combos.results.length > 0) {
       const randomCombo = combos.results[0];
+      // The combo was not searched for, so the destination declares an empty query: whatever the
+      // search bar was carrying before is cleared rather than left describing an unrelated search.
       return {
         redirect: {
-          destination: `/combo/${randomCombo.id}`,
+          destination: `/combo/${randomCombo.id}?q=`,
           basePath: true,
           permanent: false,
         },

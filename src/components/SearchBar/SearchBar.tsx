@@ -71,12 +71,23 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
     }
   };
 
+  // The bar shows the query the current page was reached with. A page that declares no query at all
+  // (a combo opened from a list of results, the syntax guide…) leaves whatever is typed alone, while
+  // an empty `q`, as the random combo redirect sets, clears it.
   useEffect(() => {
-    const queryFromRouter = getQueryFromRouter(router);
-    if (queryFromRouter) {
-      setInputValue(queryFromRouter);
+    if (router.query.q === undefined) {
+      return;
     }
-  }, [router.query.q]);
+    setInputValue(getQueryFromRouter(router));
+    // A combo page carries `q` only as a hand-off from the redirect that picked the combo: it is
+    // consumed here and then dropped from the address bar, so the search survives in the bar while
+    // the URL stays the plain combo link worth sharing.
+    if (router.pathname === '/combo/[id]') {
+      const query = { ...router.query };
+      delete query.q;
+      router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
+    }
+  }, [router.asPath]);
 
   useEffect(() => {
     const variantCountCookie = CookieService.get('variantCount');

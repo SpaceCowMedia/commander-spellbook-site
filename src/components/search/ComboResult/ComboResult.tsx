@@ -10,6 +10,8 @@ import React from 'react';
 import { countPrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
+import { useRouter } from 'next/router';
+import { queryParameterAsString } from 'lib/queryParameters';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -21,6 +23,15 @@ interface Props {
 }
 
 const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVariants, decklistMessage }) => {
+  const router = useRouter();
+
+  // A result opened from a search hands the query over to the combo page, the same way the redirect
+  // to a single match does: the search bar picks it up and drops it from the URL, so the search
+  // stays visible and ready to be resumed. Results listed anywhere else carry nothing.
+  const searchQuery = router.pathname === '/search' ? queryParameterAsString(router.query.q) : undefined;
+  const comboLink =
+    searchQuery === undefined ? `/combo/${combo.id}` : `/combo/${combo.id}?${new URLSearchParams({ q: searchQuery })}`;
+
   const sortStatMessage = (combo: Variant) => {
     if (!sort) {
       return '';
@@ -61,7 +72,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
 
   return (
     <Link
-      href={`/combo/${combo.id}`}
+      href={comboLink}
       key={combo.id}
       className={`${styles.comboResult} w-full md:w-1/4`}
       rel={newTab ? 'noopener noreferrer' : undefined}

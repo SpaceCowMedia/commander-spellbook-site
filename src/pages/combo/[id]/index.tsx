@@ -168,6 +168,9 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
         <SpellbookHead
           title={comboTitleToText(combo.uses, combo.requires)}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
+          // A search hands its query over through the URL before the search bar drops it, so the
+          // combo is indexed under its plain address rather than once per query that leads to it.
+          canonicalPath={`/combo/${combo.id}/`}
           // Image URL must be absolute to properly work on Reddit, even though the specification says it can be relative
           imageUrl={`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image`}
         />
