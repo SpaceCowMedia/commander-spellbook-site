@@ -8,7 +8,12 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'SpaceCowMedia/commander-spellbook-site'
+    # Patching or rebasing a Dependabot pull request makes the pusher the actor of the event, leaving
+    # the metadata action without a Dependabot update to read. The job is skipped rather than failed.
+    if: >-
+      github.actor == 'dependabot[bot]'
+      && github.event.pull_request.user.login == 'dependabot[bot]'
+      && github.repository == 'SpaceCowMedia/commander-spellbook-site'
     steps:
       - name: Dependabot metadata
         id: metadata
