@@ -66,7 +66,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.66.0",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.4",
     "cross-env": "^10.1.0",
     "cypress": "^15.20.0",
     "eslint": "^10.8.0",
