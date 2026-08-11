@@ -60,7 +60,7 @@
     "@next/eslint-plugin-next": "^16.2.10",
     "@scryfall/api-types": "^1.0.0-alpha.4",
     "@tailwindcss/postcss": "^4.3.3",
-    "@types/node": "^25.9.3",
+    "@types/node": "^26.2.0",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.3",
