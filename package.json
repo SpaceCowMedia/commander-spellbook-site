@@ -78,7 +78,7 @@
     "globals": "^17.9.0",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
-    "lint-staged": "^17.0.8",
+    "lint-staged": "^17.3.0",
     "postcss": "^8.5.23",
     "prettier": "^3.9.5",
     "sass": "^1.101.0",
