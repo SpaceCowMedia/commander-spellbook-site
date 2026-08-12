@@ -238,7 +238,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
                 ]}
               />
               {variant && (
-                <button onClick={handleClearVariant} className="">
+                <button onClick={handleClearVariant} className="cursor-pointer">
                   Clear Variant Filter
                 </button>
               )}

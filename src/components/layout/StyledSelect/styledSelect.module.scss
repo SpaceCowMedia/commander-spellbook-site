@@ -1,5 +1,5 @@
 @reference "../../../assets/globals.css";
 
 .operatorSelector {
-  @apply w-full h-10 pl-3 pr-6 appearance-none;
+  @apply w-full h-10 pl-3 pr-6 appearance-none cursor-pointer disabled:cursor-not-allowed;
 }
