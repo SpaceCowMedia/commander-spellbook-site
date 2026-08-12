@@ -1,8 +1,11 @@
 import type { Config } from 'stylelint';
 
 export default {
-  extends: ['stylelint-config-standard-scss', 'stylelint-config-prettier-scss'],
+  extends: ['stylelint-config-standard-scss'],
   rules: {
+    // The only rule stylelint-config-prettier-scss still disabled; its other 15 targeted
+    // scss/* rules that no longer exist. Prettier does not manage blank lines before at-rules.
+    'at-rule-empty-line-before': null,
     'selector-class-pattern': [
       '^(__)?[a-z][a-zA-Z0-9]+$',
       {
