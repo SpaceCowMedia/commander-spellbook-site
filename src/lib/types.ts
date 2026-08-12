@@ -1,4 +1,5 @@
 import {
+  Card,
   CardInVariant,
   TemplateInVariant,
   VariantSuggestion,
@@ -66,15 +67,6 @@ export function getName(card: CardInVariant | TemplateInVariant): string {
   return 'card' in card ? card.card.name : card.template.name;
 }
 
-export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
-  const name = getName(card);
-  return 'card' in card ? name.split(', ')[0] : name;
-}
-
-export function getTypes(card: CardInVariant | TemplateInVariant): string {
-  return 'card' in card ? card.card.typeLine : '';
-}
-
 /* `CardInVariant.usedFace` is a 1-based face index, so the back of a double-faced card is face 2.
    Split cards and adventures are multi-faced too, but their faces all live on the front image. */
 export const BACK_FACE_INDEX = 2;
@@ -98,6 +90,44 @@ export function getShortNames(name: string): string[] {
     return [restOfName, restOfName.split(' ')[0]];
   }
   return [];
+}
+
+/* The name of a single face, e.g. face 2 of "Delver of Secrets // Insectile Aberration" is
+   "Insectile Aberration". A card with one face, or a face index that names no face, keeps its
+   whole name. */
+export function getFaceName(card: Card, face?: number | null): string {
+  if (face == null || card.faces <= 1) {
+    return card.name;
+  }
+  return getFaceNames(card.name)[face - 1] ?? card.name;
+}
+
+/* How prose should name a card a combo only uses one face of. Templates have no faces. */
+export function getUsedFaceName(card: CardInVariant | TemplateInVariant): string {
+  return 'card' in card ? getFaceName(card.card, card.usedFace) : getName(card);
+}
+
+/* The type line of the face a combo uses, e.g. "Land" for the back of "Bala Ged Recovery //
+   Bala Ged Sanctuary". Type lines split per face with the same separator as names, but only when
+   there is one of them per face: some layouts describe every face in a single type line. */
+export function getUsedFaceTypes(card: CardInVariant | TemplateInVariant): string {
+  if (!('card' in card)) {
+    return '';
+  }
+  const typeLine = card.card.typeLine;
+  const faceTypes = typeLine.split(FACE_SEPARATOR);
+  if (card.usedFace == null || faceTypes.length !== card.card.faces) {
+    return typeLine;
+  }
+  return faceTypes[card.usedFace - 1] ?? typeLine;
+}
+
+/* Prose refers to a card by the part of its name before the comma, when that is unambiguous.
+   Only the face the combo uses is named, so "Jace, Vryn's Prodigy // Jace, Telepath Unbound"
+   used as its back face shortens from "Jace, Telepath Unbound". */
+export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
+  const name = getUsedFaceName(card);
+  return 'card' in card ? name.split(', ')[0] : name;
 }
 
 /* Templates named "<summary>: <details>" are often mentioned by their summary only. A colon inside

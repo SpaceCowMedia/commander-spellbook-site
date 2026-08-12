@@ -1,4 +1,4 @@
-import { ComboPrerequisites, getName, getNameBeforeComma, getTypes } from './types';
+import { ComboPrerequisites, getName, getNameBeforeComma, getUsedFaceName, getUsedFaceTypes } from './types';
 import { CardInVariant, TemplateInVariant, Variant } from '@space-cow-media/spellbook-client';
 
 const NONPERMANENT_TYPES = ['instant', 'sorcery'];
@@ -52,16 +52,22 @@ function getCardState(card: CardInVariant | TemplateInVariant) {
 }
 
 type Card = (CardInVariant | TemplateInVariant) & {
+  /* the whole "front // back" name, which identifies the entry */
   name: string;
+  /* the name of the face the combo uses, which is how the prerequisites refer to it */
+  faceName: string;
   type: string;
 };
 
-// TODO: consider DFCs
+/* Templates have no type line, so they are assumed to stay on the battlefield. */
+function isPermanent(card: Card): boolean {
+  return !NONPERMANENT_TYPES.some((type) => card.type.toLowerCase().includes(type));
+}
 
 export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   const cardsAndTemplates: Card[] = (variant.uses as (CardInVariant | TemplateInVariant)[])
     .concat(variant.requires)
-    .map((card) => ({ ...card, name: getName(card), type: getTypes(card) }));
+    .map((card) => ({ ...card, name: getName(card), faceName: getUsedFaceName(card), type: getUsedFaceTypes(card) }));
 
   // Count if any coma split card names exist more than once
   const cardNameCountMap = cardsAndTemplates.reduce((acc: Record<string, number>, card) => {
@@ -73,7 +79,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   // Map card names to coma split card names if they only exist once
   const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
     const split = getNameBeforeComma(card);
-    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.name;
+    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.faceName;
     return acc;
   }, {});
 
@@ -142,10 +148,8 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     const stateBit = zoneGroup.cardState ? ` (${zoneGroup.cardState})` : '';
     if (index === zoneGroups.length - 1 && zoneGroup.cards.length > 2) {
       const otherGroups = zoneGroups.slice(0, -1);
-      const otherGroupsHaveAPermanent = otherGroups.some((g) =>
-        g.cards.some((c) => !NONPERMANENT_TYPES.some((t) => c.type.toLowerCase().includes(t))),
-      );
-      const thisGroupIsOfPermanents = zoneGroup.cards.every((c) => !NONPERMANENT_TYPES.some((t) => c.type.includes(t)));
+      const otherGroupsHaveAPermanent = otherGroups.some((g) => g.cards.some(isPermanent));
+      const thisGroupIsOfPermanents = zoneGroup.cards.every(isPermanent);
       const description = `All${zoneGroups.length > 1 && (!thisGroupIsOfPermanents || otherGroupsHaveAPermanent) ? ' other' : ''} ${thisGroupIsOfPermanents ? 'permanents' : 'cards'} ${zonesToDescriptions[zoneGroup.zones.join('')]}${stateBit}.`;
       output.push({
         zones: zoneGroup.zones,
