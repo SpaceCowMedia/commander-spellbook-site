@@ -4,7 +4,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import NextNProgress from 'nextjs-progressbar';
+import ProgressBar from 'components/layout/ProgressBar/ProgressBar';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import PageWrapper from 'components/layout/PageWrapper/PageWrapper';
@@ -30,7 +30,7 @@ export default function App({ Component, pageProps, cookies }: AppProps & { cook
 
   return (
     <>
-      <NextNProgress options={{ showSpinner: false }} color={'#9161f3'} />
+      <ProgressBar color="#9161f3" />
       <header>
         {isClient && window.location.hostname === 'commanderspellbook.com' && (
           <Script
