@@ -6,7 +6,6 @@ import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/Error
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import normalizeQuotes from '../../../lib/normalizeQuotes';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import Link from 'next/link';
 import {
   KindEnum,

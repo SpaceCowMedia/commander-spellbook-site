@@ -64,6 +64,38 @@ describe('Combo Submission', () => {
     cy.contains('button', 'Delete').click();
     cy.contains('Mesmeric Orb + Forsaken Monument').should('not.exist');
   });
+
+  // These three cards contain both seeded combos, so the submission is checked against them.
+  it('warns before submitting a combo that includes combos already in the database', () => {
+    cy.login();
+    cy.deleteComboSuggestions();
+    cy.visit('/submit-a-combo/');
+
+    ['Basalt Monolith', 'Mesmeric Orb', 'Forsaken Monument'].forEach(addCard);
+
+    cy.contains('button', 'Add Step').click();
+    cy.get('input[placeholder^="e.g. Cast"]').type('Tap Mesmeric Orb.');
+
+    cy.contains('button', 'Add Feature').click();
+    cy.get('input[placeholder^="Search for a feature"]').type('Infinite mana');
+
+    cy.intercept('POST', '**/find-my-combos*').as('findMyCombos');
+    cy.intercept('POST', '**/variant-suggestions/').as('createSuggestion');
+
+    cy.get('.submit-button').click();
+    cy.wait('@findMyCombos');
+
+    cy.contains('appears to include').should('be.visible');
+    cy.contains('Included Combos').should('be.visible');
+
+    // Declining leaves the dialog closed and sends nothing to the server.
+    cy.contains('button', 'No').click();
+    cy.contains('appears to include').should('not.exist');
+    cy.get('@createSuggestion.all').should('have.length', 0);
+
+    // Declining has to leave the form usable, not stuck mid-submit.
+    cy.get('.submit-button').should('not.be.disabled');
+  });
 });
 
 export {};

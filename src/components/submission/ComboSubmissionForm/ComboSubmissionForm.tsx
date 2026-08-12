@@ -11,8 +11,7 @@ import normalizeQuotes from '../../../lib/normalizeQuotes';
 import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import Modal from 'components/ui/Modal/Modal';
 import Link from 'next/link';
 import {
   CardInDeckRequest,
@@ -108,6 +107,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
   const [variantOfPreview, setVariantOfPreview] = useState<Variant | undefined>(undefined);
+  const [includedCombos, setIncludedCombos] = useState<Variant[] | null>(null);
   const [debouncedVariantOf] = useDebounce(variantOf, 500);
 
   useEffect(() => {
@@ -491,48 +491,9 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       });
       const duplicates = result.results.included;
       if (duplicates.length > 0) {
-        confirmAlert({
-          message: `This combo appears to include ${duplicates.length} other combo${duplicates.length > 1 ? 's' : ''} already in the database.`,
-          childrenElement: function () {
-            return (
-              <div style={{ marginTop: '1rem', textAlign: 'justify' }}>
-                <h3 className="heading-subtitle">{duplicates.length > 6 ? 'Some ' : ''}Included Combos</h3>
-                {duplicates.slice(0, 6).map((combo) => (
-                  <div className="w-full text-center" key={combo.id}>
-                    <Link href={`/combo/${combo.id}`} key={combo.id} rel="noopener noreferrer" target="_blank">
-                      {combo.uses
-                        .map(({ card, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${card.name}`)
-                        .concat(
-                          combo.requires.map(
-                            ({ template, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${template.name}`,
-                          ),
-                        )
-                        .join(' + ')}
-                    </Link>
-                  </div>
-                ))}
-                <p style={{ marginTop: '1rem' }}>
-                  Please, make sure that your combo does not contain "payoff" cards and follows{' '}
-                  <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">
-                    our guidelines
-                  </ExternalLink>
-                  . We only accept combos in their simplest form, and without any unnecessary card.
-                </p>
-                <p>Would you like to submit it anyway?</p>
-              </div>
-            );
-          },
-          buttons: [
-            {
-              label: 'Yes',
-              onClick: confirmSubmit,
-            },
-            {
-              label: 'No',
-              onClick: () => {},
-            },
-          ],
-        });
+        // Hand the decision to the user; the modal resumes or abandons the submission.
+        setSubmitting(false);
+        setIncludedCombos(duplicates);
       } else {
         await confirmSubmit();
       }
@@ -805,6 +766,59 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           There were errors in your submission. Please fix the mistakes outlined above and resubmit.
         </ErrorMessage>
       )}
+
+      <Modal
+        open={includedCombos !== null}
+        onClose={() => setIncludedCombos(null)}
+        footer={
+          <div className="flex justify-center gap-4">
+            <button
+              className="button"
+              onClick={() => {
+                setIncludedCombos(null);
+                confirmSubmit();
+              }}
+            >
+              Yes
+            </button>
+            <button className="button" onClick={() => setIncludedCombos(null)}>
+              No
+            </button>
+          </div>
+        }
+      >
+        <p>
+          This combo appears to include {includedCombos?.length} other combo
+          {includedCombos && includedCombos.length > 1 ? 's' : ''} already in the database.
+        </p>
+        <div style={{ marginTop: '1rem', textAlign: 'justify' }}>
+          <h3 className="heading-subtitle">
+            {includedCombos && includedCombos.length > 6 ? 'Some ' : ''}Included Combos
+          </h3>
+          {includedCombos?.slice(0, 6).map((combo) => (
+            <div className="w-full text-center" key={combo.id}>
+              <Link href={`/combo/${combo.id}`} rel="noopener noreferrer" target="_blank">
+                {combo.uses
+                  .map(({ card, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${card.name}`)
+                  .concat(
+                    combo.requires.map(
+                      ({ template, quantity }) => `${quantity > 1 ? `${quantity}x ` : ''}${template.name}`,
+                    ),
+                  )
+                  .join(' + ')}
+              </Link>
+            </div>
+          ))}
+          <p style={{ marginTop: '1rem' }}>
+            Please, make sure that your combo does not contain "payoff" cards and follows{' '}
+            <ExternalLink href="https://discord.com/channels/673601282946236417/1267907655683280952">
+              our guidelines
+            </ExternalLink>
+            . We only accept combos in their simplest form, and without any unnecessary card.
+          </p>
+          <p>Would you like to submit it anyway?</p>
+        </div>
+      </Modal>
     </div>
   );
 };

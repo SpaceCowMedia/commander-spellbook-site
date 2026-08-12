@@ -1,7 +1,6 @@
 import React from 'react';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { GetServerSideProps } from 'next';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
