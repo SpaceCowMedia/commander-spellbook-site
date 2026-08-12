@@ -37,6 +37,17 @@ jobs:
       - name: Install Node Modules 📦
         run: pnpm install --frozen-lockfile
 
+      # Turbopack's filesystem cache (on by default since Next 16.3) lives in .next/cache.
+      # Containerised runners start clean, so it only pays off if restored explicitly.
+      - name: Cache Next build 💾
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-prod-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**', '*.ts', '*.mjs') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-prod-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-prod-
+
       - name: Build 🏗️
         run: pnpm run build
 
@@ -107,6 +118,17 @@ jobs:
 
       - name: Install 📦
         run: pnpm install --frozen-lockfile
+
+      # Keyed separately from the `build` job: that one compiles for production,
+      # this one for NODE_ENV=test, so they must not share a cache entry.
+      - name: Cache Next build 💾
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-test-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**', '*.ts', '*.mjs') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-test-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-test-
 
       - name: Startup Backend Service 🖥️
         uses: ./.github/actions/backend/
