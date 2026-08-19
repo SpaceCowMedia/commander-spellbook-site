@@ -1,14 +1,14 @@
 {
     "workbench.colorCustomizations": {
-        "statusBar.background": "#1a8cff",
-        "statusBar.foreground": "#e7e7e7",
-        "statusBarItem.hoverBackground": "#4da6ff",
-        "statusBarItem.remoteBackground": "#ffbfdf",
-        "statusBarItem.remoteForeground": "#e7e7e7",
-        "statusBar.debuggingBackground": "#1a8cff",
-        "statusBar.debuggingForeground": "#e7e7e7"
+      "statusBar.background": "#c18aff",
+      "statusBar.foreground": "#15202b",
+      "statusBarItem.hoverBackground": "#a657ff",
+      "statusBarItem.remoteBackground": "#ffeedf",
+      "statusBarItem.remoteForeground": "#15202b",
+      "statusBar.debuggingBackground": "#c18aff",
+      "statusBar.debuggingForeground": "#15202b"
     },
-    "peacock.color": "#1a8cff",
+    "peacock.color": "#c18aff",
     "eslint.format.enable": true,
     "eslint.validate": [
         "javascript",

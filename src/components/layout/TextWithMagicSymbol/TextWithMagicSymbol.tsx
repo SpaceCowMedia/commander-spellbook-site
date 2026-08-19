@@ -7,7 +7,14 @@ import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ScryfallResultsPage } from 'services/scryfall.service';
-import { getFaceMentionedBy, getFaceNames, getName, getShortNames, getTemplateNameSummary } from 'lib/types';
+import {
+  getFaceMentionedBy,
+  getFaceNames,
+  getFaceTypes,
+  getName,
+  getShortNames,
+  getTemplateNameSummary,
+} from 'lib/types';
 
 interface Props {
   text: string;
@@ -67,7 +74,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
       if (card.faces > 1) {
         list.push(...faceNames);
       }
-      faceNames.forEach((faceName) => list.push(...getShortNames(faceName)));
+      faceNames.forEach((faceName, index) => list.push(...getShortNames(faceName, getFaceTypes(card, index + 1))));
 
       return list;
     }, [] as string[])

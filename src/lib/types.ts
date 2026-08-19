@@ -76,10 +76,17 @@ export function getFaceNames(name: string): string[] {
   return name.split(FACE_SEPARATOR);
 }
 
+/* Only a legendary name is built as "<who>, <title>", so only there does the part before the comma
+   name the card on its own: a comma anywhere else separates words of one whole name, as in
+   "Fear, Fire, Foes!". */
+export function isLegendary(typeLine: string): boolean {
+  return typeLine.toLowerCase().includes('legendary');
+}
+
 /* The informal ways prose refers to a card or to one of its faces, e.g. "Sorin, Ravenous Neonate"
    as "Sorin" or "The Gitrog Monster" as "Gitrog". */
-export function getShortNames(name: string): string[] {
-  if (name.match(/^[^,]+,/)) {
+export function getShortNames(name: string, typeLine: string): string[] {
+  if (isLegendary(typeLine) && name.match(/^[^,]+,/)) {
     return [name.split(',')[0]];
   }
   if (name.match(/^[^\s]+\s(the|of)\s/i)) {
@@ -107,27 +114,53 @@ export function getUsedFaceName(card: CardInVariant | TemplateInVariant): string
   return 'card' in card ? getFaceName(card.card, card.usedFace) : getName(card);
 }
 
-/* The type line of the face a combo uses, e.g. "Land" for the back of "Bala Ged Recovery //
-   Bala Ged Sanctuary". Type lines split per face with the same separator as names, but only when
-   there is one of them per face: some layouts describe every face in a single type line. */
-export function getUsedFaceTypes(card: CardInVariant | TemplateInVariant): string {
-  if (!('card' in card)) {
-    return '';
+/* The type line of a single face, e.g. "Land" for the back of "Bala Ged Recovery // Bala Ged
+   Sanctuary". Type lines split per face with the same separator as names, but only when there is
+   one of them per face: some layouts describe every face in a single type line. */
+export function getFaceTypes(card: Card, face?: number | null): string {
+  const faceTypes = card.typeLine.split(FACE_SEPARATOR);
+  if (face == null || faceTypes.length !== card.faces) {
+    return card.typeLine;
   }
-  const typeLine = card.card.typeLine;
-  const faceTypes = typeLine.split(FACE_SEPARATOR);
-  if (card.usedFace == null || faceTypes.length !== card.card.faces) {
-    return typeLine;
-  }
-  return faceTypes[card.usedFace - 1] ?? typeLine;
+  return faceTypes[face - 1] ?? card.typeLine;
 }
 
-/* Prose refers to a card by the part of its name before the comma, when that is unambiguous.
-   Only the face the combo uses is named, so "Jace, Vryn's Prodigy // Jace, Telepath Unbound"
-   used as its back face shortens from "Jace, Telepath Unbound". */
+/* The type line of the face a combo uses. Templates have no type line. */
+export function getUsedFaceTypes(card: CardInVariant | TemplateInVariant): string {
+  return 'card' in card ? getFaceTypes(card.card, card.usedFace) : '';
+}
+
+/* A double-faced card is the only layout that keeps one face on the other side of the physical
+   card, which is why it is the only one with a back image: split cards and adventures print every
+   face on the front. Naming one of their faces therefore still names what sits on the table, while
+   one face of a double-faced card does not. */
+export function usesOneFaceOfDoubleFacedCard(card: CardInVariant | TemplateInVariant): boolean {
+  return 'card' in card && card.usedFace != null && card.card.faces > 1 && card.card.imageUriBackNormal != null;
+}
+
+/* How prose identifies the card an entry is about: the whole card when a combo narrows a
+   double-faced card down to one of its faces, and the face the combo uses otherwise. */
+export function getCardReference(card: CardInVariant | TemplateInVariant): string {
+  return usesOneFaceOfDoubleFacedCard(card) ? getName(card) : getUsedFaceName(card);
+}
+
+/* Prose refers to a legendary card by the part of its name before the comma, when that is
+   unambiguous. The comma that counts is the one in the name being shortened, which for a whole
+   double-faced card is the front's: "Jace, Vryn's Prodigy // Jace, Telepath Unbound" is "Jace",
+   while "Hanweir Battlements // Hanweir, the Writhing Township" has a non legendary front and
+   keeps its whole name. */
 export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
-  const name = getUsedFaceName(card);
-  return 'card' in card ? name.split(', ')[0] : name;
+  const name = getCardReference(card);
+  const typeLine =
+    'card' in card && usesOneFaceOfDoubleFacedCard(card) ? getFaceTypes(card.card, 1) : getUsedFaceTypes(card);
+  return isLegendary(typeLine) ? name.split(', ')[0] : name;
+}
+
+/* The art of the face a combo uses. Only a double-faced card has art of its own on the back. */
+export function getUsedFaceArtCrop(card: CardInVariant): string | null {
+  return card.usedFace === BACK_FACE_INDEX
+    ? (card.card.imageUriBackArtCrop ?? card.card.imageUriFrontArtCrop)
+    : card.card.imageUriFrontArtCrop;
 }
 
 /* Templates named "<summary>: <details>" are often mentioned by their summary only. A colon inside
@@ -157,7 +190,7 @@ export function getFaceMentionedBy(card: CardInVariant, text: string): number | 
     return mentioned + 1;
   }
   const shortNameMatches = faceNames.flatMap((faceName, i) =>
-    getShortNames(faceName).includes(text.trim()) ? [i + 1] : [],
+    getShortNames(faceName, getFaceTypes(card.card, i + 1)).includes(text.trim()) ? [i + 1] : [],
   );
   return shortNameMatches.length === 1 ? shortNameMatches[0] : card.usedFace;
 }

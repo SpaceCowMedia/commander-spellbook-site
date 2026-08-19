@@ -1,4 +1,12 @@
-import { ComboPrerequisites, getName, getNameBeforeComma, getUsedFaceName, getUsedFaceTypes } from './types';
+import {
+  ComboPrerequisites,
+  getCardReference,
+  getName,
+  getNameBeforeComma,
+  getUsedFaceName,
+  getUsedFaceTypes,
+  usesOneFaceOfDoubleFacedCard,
+} from './types';
 import { CardInVariant, TemplateInVariant, Variant } from '@space-cow-media/spellbook-client';
 
 const NONPERMANENT_TYPES = ['instant', 'sorcery'];
@@ -54,8 +62,10 @@ function getCardState(card: CardInVariant | TemplateInVariant) {
 type Card = (CardInVariant | TemplateInVariant) & {
   /* the whole "front // back" name, which identifies the entry */
   name: string;
-  /* the name of the face the combo uses, which is how the prerequisites refer to it */
-  faceName: string;
+  /* how the prerequisites refer to the card, before it is shortened */
+  reference: string;
+  /* the face of a double-faced card the combo uses, which its reference has to spell out */
+  usedFaceName?: string;
   type: string;
 };
 
@@ -67,7 +77,13 @@ function isPermanent(card: Card): boolean {
 export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   const cardsAndTemplates: Card[] = (variant.uses as (CardInVariant | TemplateInVariant)[])
     .concat(variant.requires)
-    .map((card) => ({ ...card, name: getName(card), faceName: getUsedFaceName(card), type: getUsedFaceTypes(card) }));
+    .map((card) => ({
+      ...card,
+      name: getName(card),
+      reference: getCardReference(card),
+      usedFaceName: usesOneFaceOfDoubleFacedCard(card) ? getUsedFaceName(card) : undefined,
+      type: getUsedFaceTypes(card),
+    }));
 
   // Count if any coma split card names exist more than once
   const cardNameCountMap = cardsAndTemplates.reduce((acc: Record<string, number>, card) => {
@@ -76,10 +92,11 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     return acc;
   }, {});
 
-  // Map card names to coma split card names if they only exist once
+  // Map card names to coma split card names if they only exist once, and spell out the used face
   const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
     const split = getNameBeforeComma(card);
-    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.faceName;
+    const reference = cardNameCountMap[split] === 1 ? split : card.reference;
+    acc[card.name] = card.usedFaceName ? `${reference} (as ${card.usedFaceName})` : reference;
     return acc;
   }, {});
 
