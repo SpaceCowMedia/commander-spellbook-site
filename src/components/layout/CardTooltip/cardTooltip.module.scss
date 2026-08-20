@@ -6,6 +6,9 @@
   z-index: 9000;
   display: none;
   flex-direction: row;
+
+  /* twice the VIEWPORT_MARGIN_PX the component positions the tooltip with */
+  max-width: calc(100vw - 20px);
 }
 
 .tapCatcher {
@@ -15,9 +18,13 @@
 }
 
 .cardTooltip img {
-  height: 340px;
   width: 244px;
-  min-width: 244px;
+
+  /* a row of faces too wide for the screen shrinks to fit instead of running off it */
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 244 / 340;
   border-radius: 11px;
   overflow: hidden;
 }
@@ -26,6 +33,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

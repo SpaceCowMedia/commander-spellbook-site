@@ -114,6 +114,13 @@ export function getUsedFaceName(card: CardInVariant | TemplateInVariant): string
   return 'card' in card ? getFaceName(card.card, card.usedFace) : getName(card);
 }
 
+/* How a list names a card: the whole card, followed by the face a combo narrows it down to. */
+export function getNameWithUsedFace(card: CardInVariant | TemplateInVariant): string {
+  const name = getName(card);
+  const faceName = getUsedFaceName(card);
+  return faceName === name ? name : `${name} as ${faceName}`;
+}
+
 /* The type line of a single face, e.g. "Land" for the back of "Bala Ged Recovery // Bala Ged
    Sanctuary". Type lines split per face with the same separator as names, but only when there is
    one of them per face: some layouts describe every face in a single type line. */
@@ -177,12 +184,16 @@ export function getTemplateNameSummary(name: string): string | undefined {
   return undefined;
 }
 
-/* Which face a tooltip should lead with when `text` is the prose that mentions `card`. Naming a
-   single face, by its full or short name, wins over `usedFace`; the full "front // back" name and
-   a short name shared by both faces defer to it. */
+/* Which face a tooltip should lead with when `text` is the prose that mentions `card`. The whole
+   "front // back" name names the whole card, so it leads with the front the way the card is
+   printed; naming a single face, by its full or short name, leads with that face; a short name
+   shared by both faces defers to `usedFace`. */
 export function getFaceMentionedBy(card: CardInVariant, text: string): number | null {
   if (card.card.faces <= 1) {
     return card.usedFace;
+  }
+  if (text.trim() === card.card.name) {
+    return null;
   }
   const faceNames = getFaceNames(card.card.name);
   const mentioned = faceNames.indexOf(text.trim());

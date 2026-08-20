@@ -74,13 +74,15 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
     );
   }, [card, faceToShow, images]);
 
-  const getCards = () => {
-    return deviceIsMobile() ? cards.slice(0, 1) : cards;
+  const allImagesGotRequested = (): boolean => {
+    return cards.every((card) => card.isRequested);
   };
 
-  const allImagesGotRequested = (): boolean => {
-    return getCards().every((card) => card.isRequested);
-  };
+  /* Every face is previewed side by side, and a screen too narrow to hold them at full size shrinks
+     the whole row rather than cutting it off. The tooltip can only be measured once it has been
+     shown, so until then its size is derived the same way the stylesheet constrains it. */
+  const previewScale = (): number =>
+    Math.min(1, (window.innerWidth - VIEWPORT_MARGIN_PX * 2) / (CARD_IMAGE_WIDTH_PX * Math.max(cards.length, 1)));
 
   const cardsToShow = allImagesGotRequested() ? cards.filter((card) => card.isLoaded).length : cards.length;
 
@@ -224,7 +226,7 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
 
     const cardBottomLimit = window.innerHeight - VIEWPORT_MARGIN_PX;
     // the div is still hidden the first time a tap opens it, so clientHeight is 0
-    const cardHeight = divRef.current.clientHeight || CARD_IMAGE_HEIGHT_PX;
+    const cardHeight = divRef.current.clientHeight || CARD_IMAGE_HEIGHT_PX * previewScale();
     const clampedTop = Math.min(preferredTop, cardBottomLimit - cardHeight);
 
     return Math.max(VIEWPORT_MARGIN_PX, clampedTop) + 'px';
@@ -244,7 +246,7 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
     if (deviceIsMobile()) {
       const cardRightLimit = window.innerWidth - VIEWPORT_MARGIN_PX;
       // the div is still hidden the first time a tap opens it, so clientWidth is 0
-      const cardWidth = divRef.current.clientWidth || CARD_IMAGE_WIDTH_PX * getCards().length;
+      const cardWidth = divRef.current.clientWidth || CARD_IMAGE_WIDTH_PX * cards.length * previewScale();
 
       const cardRightXIfShiftedRight = mouseX + cardWidth + TOOLTIP_RIGHT_SHIFT_PX;
 
@@ -286,10 +288,10 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
           left: getTooltipLeft(mousePosition.x),
         }}
       >
-        <div className="relative flex">
+        <div className="relative flex min-w-0">
           {!allImagesGotRequested() && (
             <div className={styles.cardBack}>
-              {getCards().map((_, i) => (
+              {cards.map((_, i) => (
                 <img key={i} src={cardBack.src} className={styles.cardImage} alt="Card Back" />
               ))}
             </div>
@@ -300,7 +302,7 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
             </div>
           )}
           {hasHovered &&
-            getCards()
+            cards
               .filter((card) => !allImagesGotRequested() || card.isLoaded)
               .map((card, index) => (
                 <img

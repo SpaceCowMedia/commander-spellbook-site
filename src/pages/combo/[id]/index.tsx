@@ -34,7 +34,7 @@ import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service'
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
-import { getUsedFaceArtCrop, getUsedFaceName } from 'lib/types';
+import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
 
 interface Props {
   combo?: Variant;
@@ -129,7 +129,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   if (combo) {
     const cardArts = combo.uses.map(getUsedFaceArtCrop).filter((uri) => uri != null);
     const cardNamesWithQuantities = combo.uses.map((card) =>
-      card.quantity > 1 ? `${card.quantity} ${getUsedFaceName(card)}` : getUsedFaceName(card),
+      card.quantity > 1 ? `${card.quantity} ${getNameWithUsedFace(card)}` : getNameWithUsedFace(card),
     );
     const templateNamesWithQuantities = combo.requires.map((template) =>
       template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,

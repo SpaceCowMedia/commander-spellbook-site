@@ -69,6 +69,11 @@ type Card = (CardInVariant | TemplateInVariant) & {
   type: string;
 };
 
+/* The clauses a zone group adds after its cards, e.g. "(as Petty Theft and tapped)". */
+function detailsBit(details: string[]): string {
+  return details.length ? ` (${comaAndOrJoin(details)})` : '';
+}
+
 /* Templates have no type line, so they are assumed to stay on the battlefield. */
 function isPermanent(card: Card): boolean {
   return !NONPERMANENT_TYPES.some((type) => card.type.toLowerCase().includes(type));
@@ -92,10 +97,16 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     return acc;
   }, {});
 
-  // Map card names to coma split card names if they only exist once, and spell out the used face
-  const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
+  // Map card names to coma split card names if they only exist once
+  const cardReferenceMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
     const split = getNameBeforeComma(card);
-    const reference = cardNameCountMap[split] === 1 ? split : card.reference;
+    acc[card.name] = cardNameCountMap[split] === 1 ? split : card.reference;
+    return acc;
+  }, {});
+
+  // Spell out the face a combo uses of a double-faced card
+  const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
+    const reference = cardReferenceMap[card.name];
     acc[card.name] = card.usedFaceName ? `${reference} (as ${card.usedFaceName})` : reference;
     return acc;
   }, {});
@@ -162,12 +173,16 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
       (card) => `${card.quantity > 1 ? `${card.quantity}x ` : ''}${cardNameMap[card.name]}`,
     );
     // If this is the last zone group, and it has more than 2 cards, swap card names for combinations string
-    const stateBit = zoneGroup.cardState ? ` (${zoneGroup.cardState})` : '';
+    const stateDetails = zoneGroup.cardState ? [zoneGroup.cardState] : [];
     if (index === zoneGroups.length - 1 && zoneGroup.cards.length > 2) {
       const otherGroups = zoneGroups.slice(0, -1);
       const otherGroupsHaveAPermanent = otherGroups.some((g) => g.cards.some(isPermanent));
       const thisGroupIsOfPermanents = zoneGroup.cards.every(isPermanent);
-      const description = `All${zoneGroups.length > 1 && (!thisGroupIsOfPermanents || otherGroupsHaveAPermanent) ? ' other' : ''} ${thisGroupIsOfPermanents ? 'permanents' : 'cards'} ${zonesToDescriptions[zoneGroup.zones.join('')]}${stateBit}.`;
+      // The collapsed wording names no card, so a card used as one of its faces has to say so here
+      const usedFaceDetails = zoneGroup.cards.flatMap((card) =>
+        card.usedFaceName ? [`${cardReferenceMap[card.name]} as ${card.usedFaceName}`] : [],
+      );
+      const description = `All${zoneGroups.length > 1 && (!thisGroupIsOfPermanents || otherGroupsHaveAPermanent) ? ' other' : ''} ${thisGroupIsOfPermanents ? 'permanents' : 'cards'} ${zonesToDescriptions[zoneGroup.zones.join('')]}${detailsBit(usedFaceDetails.concat(stateDetails))}.`;
       output.push({
         zones: zoneGroup.zones,
         description: description,
@@ -180,7 +195,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
           (cards.length < 3 ? cards.join(' and ') : cards.slice(0, -1).join(', ') + ' and ' + cards.slice(-1)) +
           ' ' +
           zonesToDescriptions[zoneGroup.zones.join('')] +
-          stateBit +
+          detailsBit(stateDetails) +
           '.',
       });
     }

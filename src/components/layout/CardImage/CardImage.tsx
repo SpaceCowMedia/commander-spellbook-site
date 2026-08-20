@@ -25,9 +25,9 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
   const frontImageRef = useRef<HTMLImageElement>(null);
   const [frontLoaded, setFrontLoaded] = useState(false);
   const backImageRef = useRef<HTMLImageElement>(null);
-  const [backFacing, setBackFacing] = useState(true);
+  const [backFacing, setBackFacing] = useState(!showsUsedBackFace);
   const [rotated, setRotated] = useState(false);
-  const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
+  const [readyToReveal, setReadyToReveal] = useState(false);
 
   const flip = () => {
     setBackFacing((prev) => !prev);
@@ -49,21 +49,16 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setReadyToFlipToFront(true);
+      setReadyToReveal(true);
     }, 350);
   }, [frontImageRef.current]);
 
   useEffect(() => {
-    if (
-      backFacing &&
-      !showsUsedBackFace &&
-      backImageRef.current !== null &&
-      isLoaded(backImageRef.current) &&
-      readyToFlipToFront
-    ) {
+    const shownImage = showsUsedBackFace ? frontImageRef.current : backImageRef.current;
+    if (backFacing !== showsUsedBackFace && shownImage !== null && isLoaded(shownImage) && readyToReveal) {
       flip(); // reveal moment
     }
-  }, [readyToFlipToFront, frontLoaded]);
+  }, [readyToReveal, frontLoaded]);
 
   return (
     <div
@@ -105,7 +100,7 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
         }
       />
       <div className={styles.buttonsContainer}>
-        {readyToFlipToFront && hasBack && (
+        {readyToReveal && hasBack && (
           <button className={`md:flex ${styles.flipperButton}`} onClick={clickFlip} title="Flip card">
             <svg
               height="30"
@@ -119,7 +114,7 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
             </svg>
           </button>
         )}
-        {readyToFlipToFront && canRotate && !backFacing && (
+        {readyToReveal && canRotate && !backFacing && (
           <button className={`md:flex ${styles.flipperButton}`} onClick={clickRotate} title="Rotate card">
             <svg
               height="30"
