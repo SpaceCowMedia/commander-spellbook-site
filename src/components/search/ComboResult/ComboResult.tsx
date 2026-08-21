@@ -7,7 +7,7 @@ import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
 import { Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
-import { countPrerequisites } from 'lib/prerequisitesProcessor';
+import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
 import { useRouter } from 'next/router';
@@ -62,7 +62,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
     return '';
   };
 
-  const prereqCount = countPrerequisites(combo);
+  const prereqCount = countNotablePrerequisites(combo);
 
   const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'wip';
   const stateBasedColorInverse = combo.status === 'OK' ? 'light' : combo.status === 'E' ? 'dark' : 'light';

@@ -2,6 +2,7 @@ import Icon from 'components/layout/Icon/Icon';
 import { useState } from 'react';
 import Modal from 'components/ui/Modal/Modal';
 import { Variant } from '@space-cow-media/spellbook-client';
+import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 
 interface Props {
   combo: Variant;
@@ -18,7 +19,7 @@ const Embed = ({ combo }: Props) => {
   query += `&produces=${encodeURIComponent(JSON.stringify(combo.produces.map((feature) => feature.feature.name)))}`;
   query += `&id=${combo.id}`;
   query += `&color=${combo.identity}`;
-  query += `&extraRequirementCount=${combo.notablePrerequisites ? combo.notablePrerequisites.split('.').filter((s) => s.trim().length).length : 0}`;
+  query += `&extraRequirementCount=${countNotablePrerequisites(combo)}`;
 
   // The empty iframe ensures that wordpress detects the embed
   const embedCode = imageMode

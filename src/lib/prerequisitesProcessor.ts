@@ -79,6 +79,11 @@ function isPermanent(card: Card): boolean {
   return !NONPERMANENT_TYPES.some((type) => card.type.toLowerCase().includes(type));
 }
 
+/* Prerequisites come as one blob of sentences, each of which is listed on its own. */
+function splitPrerequisites(prerequisites: string): string[] {
+  return prerequisites.split(/\.\s+/gi).filter((s) => s.trim().length > 0);
+}
+
 export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   const cardsAndTemplates: Card[] = (variant.uses as (CardInVariant | TemplateInVariant)[])
     .concat(variant.requires)
@@ -211,16 +216,14 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   }
 
   if (variant.easyPrerequisites) {
-    variant.easyPrerequisites
-      .split(/\.\s+/gi)
-      .filter((s) => s.trim().length > 0)
-      .forEach((prereq) => output.push({ zones: ['easy'], description: prereq }));
+    splitPrerequisites(variant.easyPrerequisites).forEach((prereq) =>
+      output.push({ zones: ['easy'], description: prereq }),
+    );
   }
   if (variant.notablePrerequisites) {
-    variant.notablePrerequisites
-      .split(/\.\s+/gi)
-      .filter((s) => s.trim().length > 0)
-      .forEach((prereq) => output.push({ zones: ['notable'], description: prereq }));
+    splitPrerequisites(variant.notablePrerequisites).forEach((prereq) =>
+      output.push({ zones: ['notable'], description: prereq }),
+    );
   }
 
   if (variant.manaNeeded) {
@@ -233,9 +236,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
   return output;
 };
 
-export function countPrerequisites(variant: Variant) {
-  return variant.notablePrerequisites
-    .split('.')
-    .concat(variant.easyPrerequisites.split('.'))
-    .filter((s) => s.trim().length).length;
+/* Easy prerequisites happen naturally in play, so counting them only makes a combo look harder than it is. */
+export function countNotablePrerequisites(variant: Variant) {
+  return variant.notablePrerequisites ? splitPrerequisites(variant.notablePrerequisites).length : 0;
 }

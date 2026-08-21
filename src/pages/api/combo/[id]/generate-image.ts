@@ -3,7 +3,7 @@ import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverPath from 'lib/serverPath';
-import { countPrerequisites } from 'lib/prerequisitesProcessor';
+import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 
 const width = 1080;
 const manaOffset = width / 25;
@@ -150,7 +150,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const identityArray = combo.identity.split('');
   const cards = combo.uses.map((item) => item.card);
   const templateCount = combo.requires.length;
-  const prereqCount = countPrerequisites(combo);
+  const prereqCount = countNotablePrerequisites(combo);
   const produces = combo.produces.filter((produces) => produces.feature.name.toLowerCase() !== 'lock');
   const isLock = combo.produces.some((produces) => produces.feature.name.toLowerCase() === 'lock');
 
