@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: spellbook-client
-          image: 083767677168.dkr.ecr.us-east-2.amazonaws.com/spellbook-client-prod-ecr:latest
+          image: 083767677168.dkr.ecr.us-east-2.amazonaws.com/spellbook-client-prod-ecr
           resources:
             requests:
               cpu: 256m

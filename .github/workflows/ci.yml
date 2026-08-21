@@ -301,20 +301,32 @@ jobs:
 
   rollout:
     runs-on: ubuntu-22.04
-    needs: [build, deploy]
+    needs: [build, deploy, release]
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
     concurrency:
       group: production
       cancel-in-progress: false
+    env:
+      # Every step below reads the namespace from here. The update and the wait naming
+      # different namespaces is what let a rollout that never happened report success.
+      NAMESPACE: spellbook-prod
+      DEPLOYMENT: deployment/spellbook-client
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v7
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: github-actions
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Config kube
         env:
@@ -324,9 +336,41 @@ jobs:
       - name: Install and configure kubectl
         uses: azure/setup-kubectl@v5
 
-      - name: Rollout pods
+      - name: Setup Kustomize 🛠
+        uses: imranismail/setup-kustomize@v3
+
+      - name: Run Kustomize to set image to the release 🛠
+        working-directory: .kubernetes/app/prod
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO_NAME }}
+          IMAGE_TAG: ${{ needs.release.outputs.version }}
+        run: |
+          # The manifests carry no tag, so without this the deploy would fall back to :latest.
+          if [ -z "$IMAGE_TAG" ]; then
+            echo "::error::No released version to deploy"
+            exit 1
+          fi
+
+          kustomize edit set image "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+          # `kustomize edit` records the override without checking it against the resources,
+          # so a name that matches nothing leaves the image untagged and silently deployable.
+          if ! kustomize build . | grep -q "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"; then
+            echo "::error::Image override did not match the manifests; refusing to deploy untagged"
+            exit 1
+          fi
+
+      - name: Apply Kubernetes manifests
         run: |
           export KUBECONFIG=kubeconfig.yaml
-          kubectl rollout restart deployment/spellbook-client -n spellbook-prod
 
-#          timeout 600 kubectl rollout status deployment/spellbook-client -n spellbook
+          # deploy.sh applies these manifests but the pipeline never did, so anything changed
+          # under .kubernetes/ only ever reached the cluster by hand. Apply the same directory
+          # deploy.sh does, so the two paths cannot drift.
+          kubectl apply -k .kubernetes/app/prod/
+
+      - name: Wait for the rollout to finish
+        run: |
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl rollout status "$DEPLOYMENT" -n "$NAMESPACE" --timeout=10m
