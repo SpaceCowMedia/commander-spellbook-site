@@ -29,6 +29,13 @@ const OPEN_CORS_HEADERS = [
 
 const nextConfig: NextConfig = {
   output: isDeployment ? 'standalone' : undefined,
+  // Tracing follows the CJS requires it can see and copies only those files, so it takes
+  // @swc/helpers' cjs/ and drops its esm/ — but the package is "type": "module", so Next's
+  // require hook resolves the ESM subpath at boot and the standalone server dies with
+  // MODULE_NOT_FOUND before it can serve anything.
+  outputFileTracingIncludes: {
+    '/**/*': ['./node_modules/.pnpm/@swc+helpers@*/node_modules/@swc/helpers/**/*'],
+  },
   staticPageGenerationTimeout: 120,
   reactStrictMode: true,
   trailingSlash: true,

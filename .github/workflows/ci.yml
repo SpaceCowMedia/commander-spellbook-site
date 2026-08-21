@@ -177,6 +177,58 @@ jobs:
           name: spellbook-client
           path: /tmp/spellbook-client.tar
 
+  # The Cypress job builds from source, so a Dockerfile that produces an image which cannot
+  # boot still passes it. Run the artifact the deploy actually ships instead, and probe the
+  # path the readiness probe uses, so the cluster is never the first thing to try it.
+  integration-test:
+    runs-on: ubuntu-22.04
+    needs: docker
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v7
+
+      - name: Setup Docker Buildx 🐳
+        uses: docker/setup-buildx-action@v4
+
+      - name: Download image artifact ⬇
+        uses: actions/download-artifact@v8
+        with:
+          name: spellbook-client
+          path: /tmp
+
+      - name: Load docker image 🐳
+        run: |
+          docker load --input /tmp/spellbook-client.tar
+          docker image ls -a
+
+      - name: Start the image 🧫
+        run: |
+          docker run -d --name spellbook-client \
+            -e BUILD_TYPE=prod \
+            -p 3000:3000 \
+            spellbook-client:latest
+
+      - name: Serve the readiness path 🧪
+        run: |
+          for _ in $(seq 1 60); do
+            if ! docker ps -q --filter name=spellbook-client --filter status=running | grep -q .; then
+              echo "::error::Container exited instead of serving"
+              exit 1
+            fi
+            if curl -fsS -o /dev/null http://localhost:3000/; then
+              echo "Image served / successfully"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::Image did not serve / within 120s"
+          exit 1
+
+      # Always, so the crash that failed the probe is in the log next to it.
+      - name: Container logs 📄
+        if: always()
+        run: docker logs spellbook-client
+
   release:
     runs-on: ubuntu-22.04
     needs:
@@ -185,6 +237,7 @@ jobs:
       - type-check
       - test
       - docker
+      - integration-test
     if: github.ref == 'refs/heads/main' && github.ref_type == 'branch' && github.repository == 'SpaceCowMedia/commander-spellbook-site'
     permissions:
       contents: write
