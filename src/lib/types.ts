@@ -1,13 +1,15 @@
 import {
   Card,
   CardInVariant,
+  LayoutRotationEnum,
   TemplateInVariant,
   VariantSuggestion,
   VariantUpdateSuggestion,
 } from '@space-cow-media/spellbook-client';
 
 export interface ComboPrerequisites {
-  /* Zone either H, B, C, G, L, E or multiple of them */
+  /* The zones a card starts in (H, B, C, G, L, E), or the one section the entry belongs to instead:
+     commander, easy, notable or mana */
   zones: string[];
   /* Additional description of the prerequisite */
   description: string;
@@ -69,6 +71,7 @@ export function getName(card: CardInVariant | TemplateInVariant): string {
 
 /* `CardInVariant.usedFace` is a 1-based face index, so the back of a double-faced card is face 2.
    Split cards and adventures are multi-faced too, but their faces all live on the front image. */
+export const FRONT_FACE_INDEX = 1;
 export const BACK_FACE_INDEX = 2;
 export const FACE_SEPARATOR = ' // ';
 
@@ -137,29 +140,63 @@ export function getUsedFaceTypes(card: CardInVariant | TemplateInVariant): strin
   return 'card' in card ? getFaceTypes(card.card, card.usedFace) : '';
 }
 
-/* A double-faced card is the only layout that keeps one face on the other side of the physical
-   card, which is why it is the only one with a back image: split cards and adventures print every
-   face on the front. Naming one of their faces therefore still names what sits on the table, while
-   one face of a double-faced card does not. */
-export function usesOneFaceOfDoubleFacedCard(card: CardInVariant | TemplateInVariant): boolean {
-  return 'card' in card && card.usedFace != null && card.card.faces > 1 && card.card.imageUriBackNormal != null;
+const BATTLEFIELD_ZONE = 'B';
+
+/* A card enters as its first face and has to be turned to become another one: a double-faced card
+   keeps its other faces on the back of the physical card, which is why it is the only layout with a
+   back image, and a flip card keeps them upside down. Split cards and adventures print every face
+   on the front instead, so naming one of their faces already names what sits on the table. */
+function usesFaceOfTurnableCard(card: CardInVariant | TemplateInVariant): card is CardInVariant {
+  return (
+    'card' in card &&
+    card.usedFace != null &&
+    card.card.faces > 1 &&
+    (card.card.imageUriBackNormal != null || card.card.layoutRotationFront === LayoutRotationEnum.Flip)
+  );
 }
 
-/* How prose identifies the card an entry is about: the whole card when a combo narrows a
-   double-faced card down to one of its faces, and the face the combo uses otherwise. */
+interface CardNaming {
+  /* how prose names the card */
+  name: string;
+  /* the type line of the named face, which decides how that name shortens */
+  typeLine: string;
+  /* the face a combo turns the card to, when it uses one the card does not enter as */
+  turnedFaceName?: string;
+}
+
+/* Only the battlefield holds a card turned to another face, so everywhere else the whole card,
+   front face up, is what is there. */
+function getCardNaming(card: CardInVariant | TemplateInVariant): CardNaming {
+  if (!usesFaceOfTurnableCard(card)) {
+    return { name: getUsedFaceName(card), typeLine: getUsedFaceTypes(card) };
+  }
+  const typeLine = getFaceTypes(card.card, FRONT_FACE_INDEX);
+  const usedFaceName = getUsedFaceName(card);
+  const isTurned =
+    card.usedFace !== FRONT_FACE_INDEX &&
+    card.zoneLocations.includes(BATTLEFIELD_ZONE) &&
+    usedFaceName !== getName(card);
+  return isTurned
+    ? { name: getFaceName(card.card, FRONT_FACE_INDEX), typeLine, turnedFaceName: usedFaceName }
+    : { name: getName(card), typeLine };
+}
+
+/* How prose identifies the card an entry is about. */
 export function getCardReference(card: CardInVariant | TemplateInVariant): string {
-  return usesOneFaceOfDoubleFacedCard(card) ? getName(card) : getUsedFaceName(card);
+  return getCardNaming(card).name;
+}
+
+/* The face naming the card leaves out, which prose has to spell out on top of it. */
+export function getTurnedFaceName(card: CardInVariant | TemplateInVariant): string | undefined {
+  return getCardNaming(card).turnedFaceName;
 }
 
 /* Prose refers to a legendary card by the part of its name before the comma, when that is
-   unambiguous. The comma that counts is the one in the name being shortened, which for a whole
-   double-faced card is the front's: "Jace, Vryn's Prodigy // Jace, Telepath Unbound" is "Jace",
-   while "Hanweir Battlements // Hanweir, the Writhing Township" has a non legendary front and
-   keeps its whole name. */
+   unambiguous: "Jace, Vryn's Prodigy // Jace, Telepath Unbound" is "Jace", while "Hanweir
+   Battlements // Hanweir, the Writhing Township" has a non legendary front and keeps its whole
+   name. */
 export function getNameBeforeComma(card: CardInVariant | TemplateInVariant): string {
-  const name = getCardReference(card);
-  const typeLine =
-    'card' in card && usesOneFaceOfDoubleFacedCard(card) ? getFaceTypes(card.card, 1) : getUsedFaceTypes(card);
+  const { name, typeLine } = getCardNaming(card);
   return isLegendary(typeLine) ? name.split(', ')[0] : name;
 }
 

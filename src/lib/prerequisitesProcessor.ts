@@ -3,9 +3,8 @@ import {
   getCardReference,
   getName,
   getNameBeforeComma,
-  getUsedFaceName,
+  getTurnedFaceName,
   getUsedFaceTypes,
-  usesOneFaceOfDoubleFacedCard,
 } from './types';
 import { CardInVariant, TemplateInVariant, Variant } from '@space-cow-media/spellbook-client';
 
@@ -64,12 +63,12 @@ type Card = (CardInVariant | TemplateInVariant) & {
   name: string;
   /* how the prerequisites refer to the card, before it is shortened */
   reference: string;
-  /* the face of a double-faced card the combo uses, which its reference has to spell out */
+  /* the face the card has to be turned to on the battlefield, which its reference has to spell out */
   usedFaceName?: string;
   type: string;
 };
 
-/* The clauses a zone group adds after its cards, e.g. "(as Petty Theft and tapped)". */
+/* The clauses a zone group adds after its cards, e.g. "(Sasaya as Sasaya's Essence and tapped)". */
 function detailsBit(details: string[]): string {
   return details.length ? ` (${comaAndOrJoin(details)})` : '';
 }
@@ -91,7 +90,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
       ...card,
       name: getName(card),
       reference: getCardReference(card),
-      usedFaceName: usesOneFaceOfDoubleFacedCard(card) ? getUsedFaceName(card) : undefined,
+      usedFaceName: getTurnedFaceName(card),
       type: getUsedFaceTypes(card),
     }));
 
@@ -109,7 +108,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     return acc;
   }, {});
 
-  // Spell out the face a combo uses of a double-faced card
+  // Spell out the face a card has to be turned to
   const cardNameMap = cardsAndTemplates.reduce((acc: Record<string, string>, card) => {
     const reference = cardReferenceMap[card.name];
     acc[card.name] = card.usedFaceName ? `${reference} (as ${card.usedFaceName})` : reference;
@@ -161,7 +160,7 @@ export const getPrerequisiteList = (variant: Variant): ComboPrerequisites[] => {
     const cardStateStrings = Object.keys(reverseCardStateMap).map(
       (stateKey) =>
         (zoneCards.length > 1 && reverseCardStateMap[stateKey].length < zoneCards.length
-          ? comaAndOrJoin(reverseCardStateMap[stateKey].map((card) => cardNameMap[card.name])) + ' '
+          ? comaAndOrJoin(reverseCardStateMap[stateKey].map((card) => cardReferenceMap[card.name])) + ' '
           : '') + stateKey,
     );
     const cardState = comaAndOrJoin(cardStateStrings);
