@@ -164,21 +164,21 @@ interface CardNaming {
   turnedFaceName?: string;
 }
 
-/* Only the battlefield holds a card turned to another face, so everywhere else the whole card,
-   front face up, is what is there. */
+/* A card on the battlefield is there as a single face, so an entry about it names the face it
+   enters as and spells out the one it has to be turned to. Everywhere else the whole card, which
+   is what is there, keeps its whole name. */
 function getCardNaming(card: CardInVariant | TemplateInVariant): CardNaming {
   if (!usesFaceOfTurnableCard(card)) {
     return { name: getUsedFaceName(card), typeLine: getUsedFaceTypes(card) };
   }
   const typeLine = getFaceTypes(card.card, FRONT_FACE_INDEX);
+  const frontFaceName = getFaceName(card.card, FRONT_FACE_INDEX);
   const usedFaceName = getUsedFaceName(card);
-  const isTurned =
-    card.usedFace !== FRONT_FACE_INDEX &&
-    card.zoneLocations.includes(BATTLEFIELD_ZONE) &&
-    usedFaceName !== getName(card);
-  return isTurned
-    ? { name: getFaceName(card.card, FRONT_FACE_INDEX), typeLine, turnedFaceName: usedFaceName }
-    : { name: getName(card), typeLine };
+  if (!card.zoneLocations.includes(BATTLEFIELD_ZONE) || frontFaceName === getName(card)) {
+    return { name: getName(card), typeLine };
+  }
+  const isTurned = usedFaceName !== frontFaceName && usedFaceName !== getName(card);
+  return isTurned ? { name: frontFaceName, typeLine, turnedFaceName: usedFaceName } : { name: frontFaceName, typeLine };
 }
 
 /* How prose identifies the card an entry is about. */
