@@ -34,7 +34,7 @@
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/react-fontawesome": "^3.5.0",
-    "@space-cow-media/spellbook-client": "^6.1.1",
+    "@space-cow-media/spellbook-client": "^6.2.6",
     "canvas": "^3.2.3",
     "cookies-next": "^6.1.1",
     "markdown-to-jsx": "^9.10.2",
