@@ -25,13 +25,13 @@ importers:
         version: 3.2.3
       cookies-next:
         specifier: ^6.1.1
-        version: 6.1.1(next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0))(react@19.2.8)
+        version: 6.1.1(next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1))(react@19.2.8)
       markdown-to-jsx:
         specifier: ^9.10.2
         version: 9.10.2(react@19.2.8)
       next:
         specifier: ^16.3.2
-        version: 16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0)
+        version: 16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1)
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -127,8 +127,8 @@ importers:
         specifier: ^3.9.6
         version: 3.9.6
       sass:
-        specifier: ^1.102.0
-        version: 1.102.0
+        specifier: ^1.103.1
+        version: 1.103.1
       stylelint:
         specifier: ^17.14.1
         version: 17.14.1(supports-color@8.1.1)(typescript@6.0.3)
@@ -2817,8 +2817,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.102.0:
-    resolution: {integrity: sha512-NSOyTnaQF7rTAEOtI2fwb386vL+akyiQLBZu8Na7hXCb+umJy0GAqlcMIaqACZ6Z1VgTBS4K9PG6B3IdjHGJsw==}
+  sass@1.103.1:
+    resolution: {integrity: sha512-9icZURbP51S6S0QGoyaeqk9uB06GNWxsFYWfH5RgpFgqK5FA8tJcM3AdVxrZEVJ7dz+L87nG95gBKf4VuaMHGw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -4556,10 +4556,10 @@ snapshots:
 
   cookie@1.0.2: {}
 
-  cookies-next@6.1.1(next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0))(react@19.2.8):
+  cookies-next@6.1.1(next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1))(react@19.2.8):
     dependencies:
       cookie: 1.0.2
-      next: 16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0)
+      next: 16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1)
       react: 19.2.8
 
   core-util-is@1.0.2: {}
@@ -5684,7 +5684,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0):
+  next@16.3.2(@babel/core@7.29.0(supports-color@8.1.1))(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1):
     dependencies:
       '@next/env': 16.3.2
       '@swc/helpers': 0.5.23
@@ -5703,7 +5703,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 16.3.2
       '@next/swc-win32-arm64-msvc': 16.3.2
       '@next/swc-win32-x64-msvc': 16.3.2
-      sass: 1.102.0
+      sass: 1.103.1
       sharp: 0.35.3(@types/node@26.2.0)
     transitivePeerDependencies:
       - '@babel/core'
@@ -6074,7 +6074,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.102.0:
+  sass@1.103.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
