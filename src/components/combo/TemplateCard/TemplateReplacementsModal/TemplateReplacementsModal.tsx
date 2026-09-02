@@ -4,13 +4,13 @@ import Dimmer from 'components/ui/Dimmer/Dimmer';
 import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { ClassifiedTemplate, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ReplacementCard } from 'services/scryfall.service';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 
 interface Props {
-  template: TemplateInVariant;
+  template: TemplateInVariant | ClassifiedTemplate;
   textTrigger?: (_count?: number) => React.ReactNode;
 }
 

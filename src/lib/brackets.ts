@@ -110,6 +110,8 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
     gameChangerCards: gameChangerCards.map((card) => card.card),
     extraTurnCards: extraTurnCards.map((card) => card.card),
     massLandDenialCards: massLandDenialCards.map((card) => card.card),
+    extraTurnTemplates,
+    massLandDenialTemplates,
     bannedCardCount: totalQuantity(bannedCards),
     gameChangerCardCount: totalQuantity(gameChangerCards),
     extraTurnCardCount: totalQuantity(extraTurnCards),

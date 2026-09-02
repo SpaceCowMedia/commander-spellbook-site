@@ -5,12 +5,12 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import React, { useEffect, useState } from 'react';
 import TemplateReplacementsModal from 'components/combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsWheel/ScryfallResultsWheel';
-import { TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { ClassifiedTemplate, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import FlipperCard from 'components/layout/FlipperCard/FlipperCard';
 
 interface Props {
-  template: TemplateInVariant;
+  template: TemplateInVariant | ClassifiedTemplate;
 }
 
 const TemplateCard: React.FC<Props> = ({ template }) => {
