@@ -335,11 +335,7 @@ const CardSubmission = ({
           {scryfallQuery.trim() && queryValid && !queryError && templateForPreview && (
             <div className="flex justify-center pt-2">
               <div className="w-64 max-w-full">
-                <TemplateCard
-                  key={debouncedQuery.trim()}
-                  template={templateForPreview}
-                  fetchTemplateReplacements={(_t, page) => scryfallQueryReplacements(debouncedQuery.trim(), page)}
-                />
+                <TemplateCard key={debouncedQuery.trim()} template={templateForPreview} />
               </div>
             </div>
           )}

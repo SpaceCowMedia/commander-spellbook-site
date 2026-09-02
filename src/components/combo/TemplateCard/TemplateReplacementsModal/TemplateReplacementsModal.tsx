@@ -4,22 +4,17 @@ import Dimmer from 'components/ui/Dimmer/Dimmer';
 import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ReplacementCard, ScryfallResultsPage } from 'services/scryfall.service';
+import { TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { ReplacementCard } from 'services/scryfall.service';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 
 interface Props {
   template: TemplateInVariant;
   textTrigger?: (_count?: number) => React.ReactNode;
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
-const TemplateReplacementsModal: React.FC<Props> = ({
-  template,
-  textTrigger,
-  fetchTemplateReplacements = cachedTemplateReplacements,
-}) => {
+const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) => {
   const title = template.template.scryfallQuery
     ? `Scryfall results for “${template.template.name}”`
     : `Replacement list for “${template.template.name}”`;
@@ -35,7 +30,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({
     }
     setLoading(true);
     try {
-      const page = await fetchTemplateReplacements(template.template, nextPage);
+      const page = await cachedTemplateReplacements(template.template, nextPage);
       setCount(page.count);
       setNextPage(page.nextPage);
       setResults(results.concat(page.results));

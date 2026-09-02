@@ -5,17 +5,15 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import React, { useEffect, useState } from 'react';
 import TemplateReplacementsModal from 'components/combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsWheel/ScryfallResultsWheel';
-import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ScryfallResultsPage } from 'services/scryfall.service';
+import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import FlipperCard from 'components/layout/FlipperCard/FlipperCard';
 
 interface Props {
   template: TemplateInVariant;
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
-const TemplateCard: React.FC<Props> = ({ template, fetchTemplateReplacements = cachedTemplateReplacements }) => {
+const TemplateCard: React.FC<Props> = ({ template }) => {
   const [backFacing, setBackFacing] = useState(true);
   const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
 
@@ -52,10 +50,10 @@ const TemplateCard: React.FC<Props> = ({ template, fetchTemplateReplacements = c
                 <TextWithMagicSymbol text={template.template.name} />
               </div>
               <div className="absolute top-8 flex flex-col justify-center w-full items-center z-10 h-3/4 hover:z-30">
-                <ScryfallResultsWheel fetchResults={(page) => fetchTemplateReplacements(template.template, page)} />
+                <ScryfallResultsWheel fetchResults={(page) => cachedTemplateReplacements(template.template, page)} />
               </div>
               <div className="absolute -bottom-1 flex flex-col justify-center w-full items-center">
-                <TemplateReplacementsModal template={template} fetchTemplateReplacements={fetchTemplateReplacements} />
+                <TemplateReplacementsModal template={template} />
               </div>
               <img
                 className="opacity-10"

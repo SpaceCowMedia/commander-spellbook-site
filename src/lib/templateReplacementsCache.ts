@@ -13,8 +13,6 @@ const MAX_ENTRIES = 32;
 
 interface StoredEntry {
   storedAt: number;
-  /* A template whose query has been edited must not serve the replacements of the old one. */
-  scryfallQuery: string | null;
   page: ScryfallResultsPage;
 }
 
@@ -22,7 +20,10 @@ interface StoredEntry {
    the same page at once share one request instead of racing each other to the cache. */
 const pendingPages = new Map<string, Promise<ScryfallResultsPage>>();
 
-const cacheKey = (template: Template, page: number): string => `${STORAGE_KEY_PREFIX}${template.id}:${page}`;
+/* The query is part of the key: a template whose query has been edited, or a draft one being
+   typed in the submission form, must never be served the replacements of the query it replaced. */
+const cacheKey = (template: Template, page: number): string =>
+  `${STORAGE_KEY_PREFIX}${template.id}:${template.scryfallQuery ?? ''}:${page}`;
 
 const storedKeys = (): string[] => {
   const keys: string[] = [];
@@ -43,7 +44,7 @@ const readEntry = (template: Template, page: number): ScryfallResultsPage | null
       return null;
     }
     const entry: StoredEntry = JSON.parse(raw);
-    if (Date.now() - entry.storedAt < TTL_MS && entry.scryfallQuery === template.scryfallQuery) {
+    if (Date.now() - entry.storedAt < TTL_MS) {
       return entry.page;
     }
     localStorage.removeItem(key);
@@ -79,7 +80,6 @@ const prune = (roomFor: number): void => {
 const writeEntry = (template: Template, page: number, result: ScryfallResultsPage): void => {
   const entry: StoredEntry = {
     storedAt: Date.now(),
-    scryfallQuery: template.scryfallQuery,
     page: result,
   };
   try {
