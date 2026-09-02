@@ -5,9 +5,8 @@ import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ScryfallResultsPage } from 'services/scryfall.service';
-import Card from 'scryfall-client/dist/models/card';
-import ScryfallService from 'services/scryfall.service';
+import { ReplacementCard, ScryfallResultsPage } from 'services/scryfall.service';
+import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 
 interface Props {
@@ -19,7 +18,7 @@ interface Props {
 const TemplateReplacementsModal: React.FC<Props> = ({
   template,
   textTrigger,
-  fetchTemplateReplacements = ScryfallService.templateReplacements,
+  fetchTemplateReplacements = cachedTemplateReplacements,
 }) => {
   const title = template.template.scryfallQuery
     ? `Scryfall results for “${template.template.name}”`
@@ -28,7 +27,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [count, setCount] = useState<number | undefined>(undefined);
   const [nextPage, setNextPage] = useState<number | undefined>(0);
-  const [results, setResults] = useState<Card[]>([]);
+  const [results, setResults] = useState<ReplacementCard[]>([]);
 
   const fetchNextResults = async () => {
     if (nextPage === undefined || loading) {
@@ -94,12 +93,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({
         <div className="flex flex-wrap gap-3 justify-center">
           {results.map((result) => (
             <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
-              <img
-                className="rounded-xl"
-                width="240"
-                src={ScryfallService.getScryfallImage(result)[0]}
-                alt={result.name}
-              />
+              <img className="rounded-xl" width="240" src={result.images[0]} alt={result.name} />
             </a>
           ))}
         </div>

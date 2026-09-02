@@ -2,19 +2,17 @@ import styles from './cardGroup.module.scss';
 import React, { useRef, useState } from 'react';
 import CardImage from '../../layout/CardImage/CardImage';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
-import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ScryfallResultsPage } from 'services/scryfall.service';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 interface Props {
   cards: CardInVariant[];
   templates: TemplateInVariant[];
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
   className?: string;
 }
 
 const MAX_DOTS = 8;
 
-const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacements, className }) => {
+const CardGroup: React.FC<Props> = ({ cards, templates, className }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -52,9 +50,7 @@ const CardGroup: React.FC<Props> = ({ cards, templates, fetchTemplateReplacement
       >
         {items.map((card, index) => (
           <div key={`oracle-card-image-${index}`} className={styles.cardImgWrapper}>
-            {'template' in card && (
-              <TemplateCard template={card} fetchTemplateReplacements={fetchTemplateReplacements} />
-            )}
+            {'template' in card && <TemplateCard template={card} />}
             {'card' in card && <CardImage card={card.card} usedFace={card.usedFace} />}
           </div>
         ))}

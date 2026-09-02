@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react';
 import TemplateReplacementsModal from 'components/combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
 import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsWheel/ScryfallResultsWheel';
 import { Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
+import { ScryfallResultsPage } from 'services/scryfall.service';
+import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import FlipperCard from 'components/layout/FlipperCard/FlipperCard';
 
 interface Props {
@@ -14,10 +15,7 @@ interface Props {
   fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
-const TemplateCard: React.FC<Props> = ({
-  template,
-  fetchTemplateReplacements = ScryfallService.templateReplacements,
-}) => {
+const TemplateCard: React.FC<Props> = ({ template, fetchTemplateReplacements = cachedTemplateReplacements }) => {
   const [backFacing, setBackFacing] = useState(true);
   const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
 

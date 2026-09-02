@@ -5,8 +5,8 @@ import CardTooltip from '../CardTooltip/CardTooltip';
 import CardLink from '../CardLink/CardLink';
 import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
-import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ScryfallResultsPage } from 'services/scryfall.service';
+import TemplateTooltip from '../TemplateTooltip/TemplateTooltip';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import {
   getFaceMentionedBy,
   getFaceNames,
@@ -21,7 +21,6 @@ interface Props {
   cardsInCombo?: CardInVariant[];
   includeCardLinks?: boolean;
   templatesInCombo?: TemplateInVariant[];
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
 const WORD_CHARACTER = /[\p{L}\p{N}]/u;
@@ -58,13 +57,7 @@ function replaceAlli(text: string, searchValue: string, replaceValue: string, wh
   return text;
 }
 
-const TextWithMagicSymbol: React.FC<Props> = ({
-  text,
-  cardsInCombo = [],
-  includeCardLinks,
-  templatesInCombo = [],
-  fetchTemplateReplacements,
-}) => {
+const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], includeCardLinks, templatesInCombo = [] }) => {
   let matchableValuesString = '';
 
   const cardNames = cardsInCombo.map(getName);
@@ -201,7 +194,7 @@ const TextWithMagicSymbol: React.FC<Props> = ({
           {item.nodeType === 'card' && item.card && (
             <CardTooltip card={item.card.card} faceToShow={getFaceMentionedBy(item.card, item.value)}>
               {includeCardLinks ? (
-                <CardLink name={item.card.card.name}>
+                <CardLink name={item.card.card.name} className="no-underline!">
                   <CardName name={item.value} />
                 </CardLink>
               ) : (
@@ -213,11 +206,12 @@ const TextWithMagicSymbol: React.FC<Props> = ({
             <TemplateReplacementsModal
               template={item.template}
               textTrigger={(_) => (
-                <span className={`cursor-pointer ${includeCardLinks ? 'text-link dark:text-primary' : ''}`}>
-                  <TextWithMagicSymbol text={item.value} />
-                </span>
+                <TemplateTooltip template={item.template!}>
+                  <span className={`cursor-pointer ${includeCardLinks ? 'text-link dark:text-primary' : ''}`}>
+                    <TextWithMagicSymbol text={item.value} />
+                  </span>
+                </TemplateTooltip>
               )}
-              fetchTemplateReplacements={fetchTemplateReplacements}
             />
           )}
           {item.nodeType !== 'card' && item.nodeType !== 'image' && item.nodeType !== 'template' && (

@@ -3,8 +3,14 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import React, { useEffect, useState } from 'react';
 import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ScryfallResultsPage } from 'services/scryfall.service';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
+import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
+
+/* An entry that says what it is: the card list marks each name as a card or as a template. */
+export interface ComboListItem {
+  text: string;
+  icon?: SpellbookIcon;
+}
 
 interface Props {
   title: string;
@@ -12,14 +18,13 @@ interface Props {
   templatesInCombo?: TemplateInVariant[];
   includeCardLinks?: boolean;
   showNumbers?: boolean;
-  iterations: string[];
+  iterations: (string | ComboListItem)[];
   id?: string;
   className?: string;
   appendPeriod?: boolean;
   /* Shown when there is nothing to list. Without it an empty list is treated as still loading
      and renders the shimmering placeholders instead. */
   emptyText?: string;
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
 const ComboList: React.FC<Props> = ({
@@ -33,9 +38,10 @@ const ComboList: React.FC<Props> = ({
   className,
   appendPeriod,
   emptyText,
-  fetchTemplateReplacements,
 }) => {
-  iterations = iterations.filter((item) => item.trim() !== '');
+  const items = iterations
+    .map((item) => (typeof item === 'string' ? { text: item } : item))
+    .filter((item) => item.text.trim() !== '');
   const [numberOfPlaceHolderItems, setNumberOfPlaceHolderItems] = useState(0);
 
   useEffect(() => {
@@ -46,24 +52,22 @@ const ComboList: React.FC<Props> = ({
     <div id={id} className={`md:flex-1 my-4 w-full rounded-sm overflow-hidden ${className}`}>
       <div className="pr-6 py-4">
         <h2 className={styles.comboListTitle}>{title}</h2>
-        {iterations.length === 0 && emptyText ? (
+        {items.length === 0 && emptyText ? (
           <p className={styles.comboListEmpty}>{emptyText}</p>
         ) : (
           <ol className={`${styles.comboList} ${showNumbers && 'list-decimal'}`}>
-            {iterations
-              .map((item) => (appendPeriod ? addPeriod(item) : item))
-              .map((text, index) => (
-                <li key={`${title}-${index}`}>
-                  <TextWithMagicSymbol
-                    text={text}
-                    cardsInCombo={cardsInCombo}
-                    includeCardLinks={includeCardLinks}
-                    templatesInCombo={templatesInCombo}
-                    fetchTemplateReplacements={fetchTemplateReplacements}
-                  />
-                </li>
-              ))}
-            {iterations.length === 0 &&
+            {items.map((item, index) => (
+              <li key={`${title}-${index}`} className={item.icon ? styles.iconItem : undefined}>
+                {item.icon && <Icon name={item.icon} className={styles.itemIcon} />}
+                <TextWithMagicSymbol
+                  text={appendPeriod ? addPeriod(item.text) : item.text}
+                  cardsInCombo={cardsInCombo}
+                  includeCardLinks={includeCardLinks}
+                  templatesInCombo={templatesInCombo}
+                />
+              </li>
+            ))}
+            {items.length === 0 &&
               Array.from(Array(numberOfPlaceHolderItems).keys()).map((index) => (
                 <li key={index}>
                   <PlaceholderText maxLength={50} />

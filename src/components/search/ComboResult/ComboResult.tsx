@@ -2,6 +2,7 @@ import styles from './comboResult.module.scss';
 import Link from 'next/link';
 import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
+import TemplateTooltip from '../../layout/TemplateTooltip/TemplateTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
@@ -12,6 +13,7 @@ import Icon from 'components/layout/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
 import { useRouter } from 'next/router';
 import { queryParameterAsString } from 'lib/queryParameters';
+import { getTemplateNameSummary } from 'lib/types';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -111,14 +113,22 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
                 </div>
               </CardTooltip>
             ))}
-            {combo.requires.length > 0 && (
-              <div className={`${styles.prerequisites} pl-3 pr-3`}>
-                <span>
-                  +{combo.requires.reduce((q, r) => q + r.quantity, 0)} other card
-                  {combo.requires.reduce((q, r) => q + r.quantity, 0) > 1 ? 's' : ''}
-                </span>
-              </div>
-            )}
+            {combo.requires.map((template) => (
+              <TemplateTooltip
+                template={template}
+                key={template.template.id}
+                caption="Open the combo to see all possible replacements"
+              >
+                <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
+                  <span>
+                    + {template.quantity > 1 ? `${template.quantity}x ` : ''}
+                    <TextWithMagicSymbol
+                      text={getTemplateNameSummary(template.template.name) ?? template.template.name}
+                    />
+                  </span>
+                </div>
+              </TemplateTooltip>
+            ))}
             {prereqCount > 0 && (
               <div className={`${styles.prerequisites} pl-3 pr-3`}>
                 <span>

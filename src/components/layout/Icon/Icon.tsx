@@ -48,6 +48,7 @@ import {
   faCircleQuestion,
   faAngleRight,
   faPlus,
+  faSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'lib/cn';
@@ -113,6 +114,12 @@ const SPELLBOOK_FA_ICONS = {
   pentagon: faPentagon,
   greaterThan: faAngleRight,
   plus: faPlus,
+  card: faSquare,
+};
+
+/* a square narrowed into the portrait shape of a Magic card */
+const SPELLBOOK_FA_ICON_CLASSES: Partial<Record<keyof typeof SPELLBOOK_FA_ICONS, string>> = {
+  card: styles.card,
 };
 
 export type SpellbookIcon = keyof typeof SPELLBOOK_ICONS | keyof typeof SPELLBOOK_FA_ICONS;
@@ -135,7 +142,7 @@ const Icon: React.FC<Props> = ({ name, className, onClick }) => {
   if (name in SPELLBOOK_FA_ICONS) {
     return (
       <FontAwesomeIcon
-        className={cn(styles.icon, className)}
+        className={cn(styles.icon, SPELLBOOK_FA_ICON_CLASSES[name as keyof typeof SPELLBOOK_FA_ICONS], className)}
         icon={SPELLBOOK_FA_ICONS[name as keyof typeof SPELLBOOK_FA_ICONS]}
         onClick={onClick}
       />

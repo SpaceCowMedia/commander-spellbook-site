@@ -2,9 +2,8 @@ import { ComboPrerequisites } from '../../../lib/types';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
 import { addPeriod } from '../../../lib/addPeriod';
-import { CardInVariant, Template, TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import React from 'react';
-import { ScryfallResultsPage } from 'services/scryfall.service';
 
 interface Props {
   prerequisites: ComboPrerequisites[];
@@ -13,7 +12,6 @@ interface Props {
   includeCardLinks?: boolean;
   cardsInCombo?: CardInVariant[];
   templatesInCombo?: TemplateInVariant[];
-  fetchTemplateReplacements?: (_template: Template, _page: number) => Promise<ScryfallResultsPage>;
 }
 
 const PREREQ_ICON_MAP: Record<string, SpellbookIcon> = {
@@ -33,7 +31,6 @@ const PrerequisiteList: React.FC<Props> = ({
   cardsInCombo,
   includeCardLinks,
   templatesInCombo,
-  fetchTemplateReplacements,
 }) => {
   const initialStatePrerequisites = prerequisites.filter(
     (prereq) => prereq.zones.filter((z) => PREREQ_ICON_MAP[z]).length > 0,
@@ -61,7 +58,6 @@ const PrerequisiteList: React.FC<Props> = ({
                 cardsInCombo={cardsInCombo}
                 includeCardLinks={includeCardLinks}
                 templatesInCombo={templatesInCombo}
-                fetchTemplateReplacements={fetchTemplateReplacements}
               />
             </li>
           ))}
@@ -78,7 +74,6 @@ const PrerequisiteList: React.FC<Props> = ({
                   cardsInCombo={cardsInCombo}
                   includeCardLinks={includeCardLinks}
                   templatesInCombo={templatesInCombo}
-                  fetchTemplateReplacements={fetchTemplateReplacements}
                 />
               </li>
             ))}
@@ -96,7 +91,6 @@ const PrerequisiteList: React.FC<Props> = ({
                   cardsInCombo={cardsInCombo}
                   includeCardLinks={includeCardLinks}
                   templatesInCombo={templatesInCombo}
-                  fetchTemplateReplacements={fetchTemplateReplacements}
                 />
               </li>
             ))}
@@ -114,7 +108,6 @@ const PrerequisiteList: React.FC<Props> = ({
                   cardsInCombo={cardsInCombo}
                   includeCardLinks={includeCardLinks}
                   templatesInCombo={templatesInCombo}
-                  fetchTemplateReplacements={fetchTemplateReplacements}
                 />
               </li>
             ))}

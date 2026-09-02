@@ -1,6 +1,6 @@
 @reference "../../../assets/globals.css";
 
-.cardTooltip {
+.hoverPreview {
   pointer-events: none;
   position: fixed;
   z-index: 9000;
@@ -17,7 +17,7 @@
   z-index: 8999;
 }
 
-.cardTooltip img {
+.hoverPreview img {
   width: 244px;
 
   /* a row of faces too wide for the screen shrinks to fit instead of running off it */

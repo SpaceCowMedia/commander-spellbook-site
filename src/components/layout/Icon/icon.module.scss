@@ -5,6 +5,10 @@
   @apply not-italic;
 }
 
+.card {
+  transform: scaleX(0.72);
+}
+
 .exile {
   &::before {
     content: '\e900';

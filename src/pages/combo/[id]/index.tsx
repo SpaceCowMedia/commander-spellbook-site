@@ -2,7 +2,7 @@ import pluralize from 'pluralize';
 import CardHeader, { comboTitleToText } from '../../../components/combo/CardHeader/CardHeader';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
-import ComboList from '../../../components/combo/ComboList/ComboList';
+import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
 import styles from './combo.module.scss';
 import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
 import { GetServerSideProps } from 'next';
@@ -18,7 +18,6 @@ import {
   EstimateBracketResult,
   FindMyCombosApi,
   ResponseError,
-  Template,
   Variant,
   VariantAliasesApi,
   VariantsApi,
@@ -30,7 +29,7 @@ import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
 import { DEFAULT_ORDERING, IS_LOCK } from 'lib/constants';
-import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
+import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
@@ -50,31 +49,10 @@ function booleanToIcon(value: boolean) {
 const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variants, setVariants] = useState<Variant[]>();
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
-  const [templateReplacements, setTemplateReplacements] = useState<
-    Map<number, readonly Promise<ScryfallResultsPage>[]>
-  >(new Map<number, Promise<ScryfallResultsPage>[]>());
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
   const bracketApi = new EstimateBracketApi(configuration);
   const [bracketEstimate, setBracketEstimate] = useState<EstimateBracketResult>();
-
-  async function fetchResultsPage(template: Template, page: number): Promise<ScryfallResultsPage> {
-    let cache = templateReplacements.get(template.id);
-    if (!cache) {
-      cache = [];
-    }
-    for (const cachedPage of cache) {
-      const r = await cachedPage;
-      if (r.page == page) {
-        return r;
-      }
-    }
-    const newPage = ScryfallService.templateReplacements(template, page);
-    cache = cache.concat(newPage);
-    templateReplacements.set(template.id, cache);
-    setTemplateReplacements(templateReplacements);
-    return newPage;
-  }
 
   const loadVariants = async (combo: Variant) => {
     setVariants(undefined);
@@ -99,7 +77,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     try {
       const templates: CardInDeckRequest[] = [];
       for (const template of combo.requires) {
-        const page = await fetchResultsPage(template.template, 0);
+        const page = await cachedTemplateReplacements(template.template, 0);
         templates.push({ card: page.results[0].name, quantity: template.quantity });
       }
       const estimate = await bracketApi.estimateBracketCreate({
@@ -128,12 +106,14 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
 
   if (combo) {
     const cardArts = combo.uses.map(getUsedFaceArtCrop).filter((uri) => uri != null);
-    const cardNamesWithQuantities = combo.uses.map((card) =>
-      card.quantity > 1 ? `${card.quantity} ${getNameWithUsedFace(card)}` : getNameWithUsedFace(card),
-    );
-    const templateNamesWithQuantities = combo.requires.map((template) =>
-      template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
-    );
+    const cardNamesWithQuantities: ComboListItem[] = combo.uses.map((card) => ({
+      text: card.quantity > 1 ? `${card.quantity} ${getNameWithUsedFace(card)}` : getNameWithUsedFace(card),
+      icon: 'card',
+    }));
+    const templateNamesWithQuantities: ComboListItem[] = combo.requires.map((template) => ({
+      text: template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
+      icon: 'template',
+    }));
     const numberOfDecks = combo.popularity;
     const metaData = [];
 
@@ -176,12 +156,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
           imageUrl={`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image`}
         />
         <CardHeader cardsArt={cardArts} cards={combo.uses} templates={combo.requires} />
-        <CardGroup
-          key={combo.id}
-          cards={combo.uses}
-          templates={combo.requires}
-          fetchTemplateReplacements={fetchResultsPage}
-        />
+        <CardGroup key={combo.id} cards={combo.uses} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
             <div className="md:hidden pt-4">
@@ -197,7 +172,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               templatesInCombo={combo.requires}
               iterations={cardNamesWithQuantities.concat(templateNamesWithQuantities)}
               emptyText="This combo doesn't require any specific cards."
-              fetchTemplateReplacements={fetchResultsPage}
             />
 
             <PrerequisiteList
@@ -205,7 +179,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               id="combo-prerequisites"
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
-              fetchTemplateReplacements={fetchResultsPage}
             />
 
             <ComboList
@@ -217,7 +190,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               showNumbers
               appendPeriod
               emptyText="This combo doesn't have any steps."
-              fetchTemplateReplacements={fetchResultsPage}
             />
 
             {notes != null && notes.length > 0 && (
@@ -228,7 +200,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
                 cardsInCombo={combo.uses}
                 templatesInCombo={combo.requires}
                 appendPeriod
-                fetchTemplateReplacements={fetchResultsPage}
               />
             )}
 
@@ -240,7 +211,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               templatesInCombo={combo.requires}
               appendPeriod
               emptyText="This combo doesn't produce notable results."
-              fetchTemplateReplacements={fetchResultsPage}
             />
 
             {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}

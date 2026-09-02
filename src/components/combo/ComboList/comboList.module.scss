@@ -8,6 +8,15 @@
   @apply list-inside;
 }
 
+/* The icon keeps to its own column, so a name that wraps stays lined up under itself. */
+.iconItem {
+  @apply flex items-start gap-2;
+}
+
+.itemIcon {
+  @apply mt-[0.3em] shrink-0 text-sm opacity-70;
+}
+
 .comboListEmpty {
   @apply italic opacity-70;
 }

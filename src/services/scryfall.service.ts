@@ -2,7 +2,6 @@ import { ScryfallCard } from '@scryfall/api-types';
 import { CardsApi, Template } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import Card from 'scryfall-client/dist/models/card';
-import List from 'scryfall-client/dist/models/list';
 import { apiConfiguration } from './api.service';
 
 const SCRYFALL_SEARCH_PAGE_SIZE = 175;
@@ -30,17 +29,33 @@ export function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   return [''];
 }
 
+/* Scryfall answers with class instances holding far more than a replacement list ever shows. Only
+   the plain data below is kept, so that a page of results can be stored and read back as JSON. */
+export interface ReplacementCard {
+  id: string;
+  name: string;
+  images: string[];
+}
+
 export interface ScryfallResultsPage {
-  results: List<Card>;
+  results: ReplacementCard[];
   page: number;
   nextPage?: number;
   count?: number;
 }
 
+function toReplacementCard(card: Card): ReplacementCard {
+  return {
+    id: card.id,
+    name: card.name,
+    images: getScryfallImage(card),
+  };
+}
+
 export async function scryfallQueryReplacements(scryfallQuery: string, page: number): Promise<ScryfallResultsPage> {
   const response = await scryfall.search(`(${scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
   return {
-    results: response,
+    results: response.map(toReplacementCard),
     page: page,
     nextPage: response.has_more ? page + 1 : undefined,
     count: response.total_cards,
@@ -49,13 +64,7 @@ export async function scryfallQueryReplacements(scryfallQuery: string, page: num
 
 export async function templateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
   if (template.scryfallQuery) {
-    const response = await scryfall.search(`(${template.scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
-    return {
-      results: response,
-      page: page,
-      nextPage: response.has_more ? page + 1 : undefined,
-      count: response.total_cards,
-    };
+    return scryfallQueryReplacements(template.scryfallQuery, page);
   } else {
     const configuration = apiConfiguration();
     const cardsApi = new CardsApi(configuration);
@@ -78,7 +87,7 @@ export async function templateReplacements(template: Template, page: number): Pr
       ),
     );
     return {
-      results: response,
+      results: response.map(toReplacementCard),
       page: page,
       nextPage: replacements.next !== null ? page + 1 : undefined,
       count: replacements.count ?? undefined,
