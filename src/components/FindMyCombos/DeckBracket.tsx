@@ -1,7 +1,7 @@
 import {
   EstimateBracketResult,
-  Card,
   Variant,
+  ClassifiedCard,
   ClassifiedVariant,
   ClassifiedTemplate,
 } from '@space-cow-media/spellbook-client';
@@ -9,7 +9,7 @@ import React from 'react';
 import CardImage from 'components/layout/CardImage/CardImage';
 import styles from './DeckBracket.module.scss';
 import ComboResults from 'components/search/ComboResults/ComboResults';
-import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP, computeBracketInfo } from 'lib/brackets';
+import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP, computeBracketInfo, totalQuantity } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
 
@@ -65,7 +65,7 @@ const DeckBracket = ({ results }: Props) => {
 
 interface CardListProps {
   title: React.ReactNode;
-  cards: Card[];
+  cards: ClassifiedCard[];
   templates?: ClassifiedTemplate[];
 }
 const CardList = ({ title, cards, templates = [] }: CardListProps) => {
@@ -75,21 +75,36 @@ const CardList = ({ title, cards, templates = [] }: CardListProps) => {
   return (
     <>
       <h2 className="heading-subtitle mt-4 mb-2">
-        {title} ({cards.length + templates.length})
+        {title} ({totalQuantity(cards) + totalQuantity(templates)})
       </h2>
       <div className="flex justify-center w-full mb-8 flex-wrap gap-4">
-        {cards.map((card) => (
-          <CardImage className={styles.card} card={card} key={card.id} />
+        {cards.map(({ card, quantity }) => (
+          <QuantityWrapper quantity={quantity} key={card.id}>
+            <CardImage className={styles.card} card={card} />
+          </QuantityWrapper>
         ))}
         {templates.map((template) => (
-          <div className={styles.card} key={`template-${template.template.id}`}>
-            <TemplateCard template={template} />
-          </div>
+          <QuantityWrapper quantity={template.quantity} key={`template-${template.template.id}`}>
+            <div className={styles.card}>
+              <TemplateCard template={template} />
+            </div>
+          </QuantityWrapper>
         ))}
       </div>
     </>
   );
 };
+
+interface QuantityWrapperProps {
+  quantity: number;
+  children: React.ReactNode;
+}
+const QuantityWrapper = ({ quantity, children }: QuantityWrapperProps) => (
+  <div className="relative">
+    {children}
+    {quantity > 1 && <span className={styles.quantityBadge}>{quantity}x</span>}
+  </div>
+);
 
 interface ComboListProps {
   title: React.ReactNode;

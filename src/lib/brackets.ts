@@ -48,7 +48,7 @@ function isComboGameEnding(combo: ClassifiedVariant) {
   return combo.relevant;
 }
 
-function totalQuantity(entries: { quantity: number }[]) {
+export function totalQuantity(entries: { quantity: number }[]) {
   return entries.reduce((total, entry) => total + entry.quantity, 0);
 }
 
@@ -57,8 +57,12 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
   const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger);
   const extraTurnCards = bracketEstimate.cards.filter((card) => card.extraTurn);
   const massLandDenialCards = bracketEstimate.cards.filter((card) => card.massLandDenial);
-  const extraTurnTemplates = bracketEstimate.templates.filter((template) => template.extraTurn);
-  const massLandDenialTemplates = bracketEstimate.templates.filter((template) => template.massLandDenial);
+  const extraTurnTemplates = extraTurnCards.length
+    ? []
+    : bracketEstimate.templates.filter((template) => template.extraTurn);
+  const massLandDenialTemplates = massLandDenialCards.length
+    ? []
+    : bracketEstimate.templates.filter((template) => template.massLandDenial);
   const extraTurnsCombos = bracketEstimate.combos.filter((combo) => combo.extraTurn).map((combo) => combo.combo);
   const massLandDenialCombos = bracketEstimate.combos
     .filter((combo) => combo.massLandDenial)
@@ -106,10 +110,10 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
     (combo) => combo.speed >= 2 && combo.definitelyTwoCard && isComboGameEnding(combo),
   );
   return {
-    bannedCards: bannedCards.map((card) => card.card),
-    gameChangerCards: gameChangerCards.map((card) => card.card),
-    extraTurnCards: extraTurnCards.map((card) => card.card),
-    massLandDenialCards: massLandDenialCards.map((card) => card.card),
+    bannedCards,
+    gameChangerCards,
+    extraTurnCards,
+    massLandDenialCards,
     extraTurnTemplates,
     massLandDenialTemplates,
     bannedCardCount: totalQuantity(bannedCards),

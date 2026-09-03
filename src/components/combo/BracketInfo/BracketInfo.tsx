@@ -43,14 +43,14 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
         : `Having between 1 and 3 game changer cards pushes this card list into bracket 3+. You have ${info.gameChangerCardCount}.`,
     );
   }
-  if (info.extraTurnCardCount >= 2 || info.extraTurnTemplateCount >= 2) {
-    const extraTurnCount = Math.max(info.extraTurnCardCount, info.extraTurnTemplateCount);
+  const extraTurnPieceCount = info.extraTurnCardCount + info.extraTurnTemplateCount;
+  if (extraTurnPieceCount >= 2) {
     powerLevelFactors.push(
       singleCombo
-        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${extraTurnCount}.`
-        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${extraTurnCount}.`,
+        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${extraTurnPieceCount}.`
+        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${extraTurnPieceCount}.`,
     );
-  } else if (info.extraTurnCardCount > 0) {
+  } else if (extraTurnPieceCount > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Having one extra turn card pushes this combo into bracket 2+.'

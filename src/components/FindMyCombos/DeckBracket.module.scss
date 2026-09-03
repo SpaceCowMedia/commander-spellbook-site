@@ -4,3 +4,7 @@
   height: 340px;
   width: 244px;
 }
+
+.quantityBadge {
+  @apply absolute top-2 left-2 z-20 px-2 py-0.5 rounded-full border border-light bg-dark/80 text-white text-sm font-bold;
+}
