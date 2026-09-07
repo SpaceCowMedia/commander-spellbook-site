@@ -96,6 +96,34 @@ describe('Combo Submission', () => {
     // Declining has to leave the form usable, not stuck mid-submit.
     cy.get('.submit-button').should('not.be.disabled');
   });
+
+  it('warns before submitting a combo that uses Omniscience', () => {
+    cy.login();
+    cy.deleteComboSuggestions();
+    cy.visit('/submit-a-combo/');
+
+    addCard('Omniscience');
+
+    // The warning shows up in the card's own panel while the form is being filled, before any submit attempt.
+    cy.get('.submission-panel').last().contains('might be denied because it uses Omniscience').should('be.visible');
+
+    cy.contains('button', 'Add Step').click();
+    cy.get('input[placeholder^="e.g. Cast"]').type('Cast every spell in your hand.');
+
+    cy.contains('button', 'Add Feature').click();
+    cy.get('input[placeholder^="Search for a feature"]').type('Infinite mana');
+
+    cy.intercept('POST', '**/find-my-combos*').as('findMyCombos');
+
+    // The warning comes before any request, so declining must leave the server untouched.
+    cy.get('.submit-button').click();
+    cy.contains('appears to contain Omniscience').should('be.visible');
+    cy.contains('button', 'No').click();
+    cy.contains('appears to contain Omniscience').should('not.exist');
+    cy.get('@findMyCombos.all').should('have.length', 0);
+
+    cy.get('.submit-button').should('not.be.disabled');
+  });
 });
 
 export {};

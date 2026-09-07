@@ -22,6 +22,7 @@ import { ComboSubmissionErrorType } from '../../../lib/types';
 import normalizeQuotes from '../../../lib/normalizeQuotes';
 import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
 import Alert from '../../layout/Alert/Alert';
+import isOmniscience from '../../../lib/isOmniscience';
 import { apiConfiguration } from 'services/api.service';
 
 const CARD_GROUPS_SEARCH_LIMIT = 20;
@@ -399,6 +400,15 @@ const CardSubmission = ({
                   );
                 })}
               </div>
+            </Alert>
+          )}
+          {isOmniscience(card.card) && (
+            <Alert type="warning" icon="triangleExclamation" title="This card is not accepted as a source of mana">
+              <p>
+                This combo might be denied because it uses Omniscience, a card that is not accepted in submissions when
+                used as an alternative to having infinite mana. It is still accepted when it matters for something else,
+                such as its mana cost or its mana value.
+              </p>
             </Alert>
           )}
         </>

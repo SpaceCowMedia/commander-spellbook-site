@@ -8,6 +8,7 @@ import Loader from '../../layout/Loader/Loader';
 import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import normalizeQuotes from '../../../lib/normalizeQuotes';
+import isOmniscience from '../../../lib/isOmniscience';
 import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
@@ -108,6 +109,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
   const [variantOfPreview, setVariantOfPreview] = useState<Variant | undefined>(undefined);
   const [includedCombos, setIncludedCombos] = useState<Variant[] | null>(null);
+  const [omniscienceWarning, setOmniscienceWarning] = useState(false);
   const [debouncedVariantOf] = useDebounce(variantOf, 500);
 
   useEffect(() => {
@@ -481,7 +483,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     };
   }
 
-  const handleSubmit = async () => {
+  const checkDuplicatesAndSubmit = async () => {
     setSubmitting(true);
     try {
       const result = await findMyCombosApi.findMyCombosCreate({
@@ -524,6 +526,16 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           detail: httpErrorMessage(status, retryAfterSeconds(err.response, VALIDATION_INTERVAL_MS / 1000)),
         } as ComboSubmissionErrorType);
       }
+    }
+  };
+
+  const usesOmniscience = cards.some((card) => isOmniscience(card.card));
+
+  const handleSubmit = async () => {
+    if (usesOmniscience) {
+      setOmniscienceWarning(true);
+    } else {
+      await checkDuplicatesAndSubmit();
     }
   };
 
@@ -766,6 +778,33 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
           There were errors in your submission. Please fix the mistakes outlined above and resubmit.
         </ErrorMessage>
       )}
+
+      <Modal
+        open={omniscienceWarning}
+        onClose={() => setOmniscienceWarning(false)}
+        footer={
+          <div className="flex justify-center gap-4">
+            <button
+              className="button"
+              onClick={() => {
+                setOmniscienceWarning(false);
+                checkDuplicatesAndSubmit();
+              }}
+            >
+              Yes
+            </button>
+            <button className="button" onClick={() => setOmniscienceWarning(false)}>
+              No
+            </button>
+          </div>
+        }
+      >
+        <p>
+          Your submission appears to contain Omniscience, a card that is not accepted in submissions when used as an
+          alternative to having infinite mana.
+        </p>
+        <p style={{ marginTop: '1rem' }}>Would you still like to submit anyway?</p>
+      </Modal>
 
       <Modal
         open={includedCombos !== null}
