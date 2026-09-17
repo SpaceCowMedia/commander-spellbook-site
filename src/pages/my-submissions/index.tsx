@@ -95,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!userId || !csbJwt) {
     return {
       redirect: {
-        destination: '/login?final=my-submissions',
+        destination: '/login?final=/my-submissions',
         permanent: false,
       },
     };

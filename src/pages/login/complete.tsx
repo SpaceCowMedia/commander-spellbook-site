@@ -8,6 +8,14 @@ import CookieService from '../../services/cookie.service';
 import { TokenApi, UsersApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 
+function finalDestination(final: string | string[] | undefined): string {
+  const path = (Array.isArray(final) ? final[0] : final)?.trim().replace(/^\/+/, '');
+  if (!path || /^[a-z][a-z0-9+.-]*:/i.test(path) || path.startsWith('\\')) {
+    return '/';
+  }
+  return `/${path}`;
+}
+
 const Login: React.FC = () => {
   const [error, setError] = useState('');
   const router = useRouter();
@@ -38,11 +46,7 @@ const Login: React.FC = () => {
               if (user.isStaff) {
                 CookieService.set('csbIsStaff', 'true', 'month');
               }
-              if (router.query.final) {
-                router.push(`${router.query.final}`);
-              } else {
-                router.push('/');
-              }
+              router.push(finalDestination(router.query.final));
             });
           }
         })
