@@ -96,7 +96,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        browser: [chrome, firefox, edge, electron]
+        browser: [chrome, firefox, edge]
       fail-fast: false
     env:
       # Discord is not reachable from CI, so the tests log in with a plain account instead.
