@@ -192,7 +192,11 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
             </span>
           )}
           {item.nodeType === 'card' && item.card && (
-            <CardTooltip card={item.card.card} faceToShow={getFaceMentionedBy(item.card, item.value)}>
+            <CardTooltip
+              card={item.card.card}
+              faceToShow={getFaceMentionedBy(item.card, item.value)}
+              suppressClick={includeCardLinks}
+            >
               {includeCardLinks ? (
                 <CardLink name={item.card.card.name} className="no-underline!">
                   <CardName name={item.value} />

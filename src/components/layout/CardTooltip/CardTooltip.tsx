@@ -14,6 +14,8 @@ interface Props {
   faceToShow?: number | null;
   images?: string[];
   disableTapPreview?: boolean;
+  /* For a trigger wrapping the card's own link, which the preview stands in for on desktop. */
+  suppressClick?: boolean;
   children?: React.ReactNode;
 }
 
@@ -38,7 +40,7 @@ function getFaceImages(card: Card, faceToShow?: number | null): { url: string; a
   return faces;
 }
 
-const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPreview, children }) => {
+const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPreview, suppressClick, children }) => {
   const [hasHovered, setHasHovered] = useState(false);
   const [cards, setCards] = useState<CardImage[]>([]);
   const [shown, setShown] = useState<'hovered' | 'tapped'>();
@@ -86,7 +88,7 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
     <HoverPreview
       previewCount={cardsToShow}
       tapPreviewEnabled={!disableTapPreview && cards.length > 0}
-      suppressClick
+      suppressClick={suppressClick}
       onFirstShow={() => setHasHovered(true)}
       onVisibleChange={(visible, tapped) => setShown(visible ? (tapped ? 'tapped' : 'hovered') : undefined)}
       onPreviewTap={fogged ? revealAllSpoilers : undefined}
