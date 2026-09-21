@@ -5,12 +5,16 @@
   width: 244px;
   max-width: 100%;
   aspect-ratio: 244 / 340;
+
+  /* Replacements are stacked on top of each other and crossfaded, so that the card being shown
+     changes without ever cutting to an empty frame. The parent qualifier wins over SpoilerFog's
+     positioning on the wrapper. */
+  > .card {
+    position: absolute;
+  }
 }
 
-/* Replacements are stacked on top of each other and crossfaded, so that the card being shown
-   changes without ever cutting to an empty frame. */
 .card {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
