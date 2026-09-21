@@ -124,6 +124,21 @@ describe('Combo Submission', () => {
 
     cy.get('.submit-button').should('not.be.disabled');
   });
+
+  it('warns about every card that lets you cast spells for free like Omniscience', () => {
+    cy.login();
+    cy.visit('/submit-a-combo/');
+
+    addCard('Omniscience');
+    addCard('Omnipresence');
+
+    cy.get('.submission-panel').last().contains('might be denied because it uses Omnipresence').should('be.visible');
+
+    cy.get('.submit-button').click();
+    cy.contains('appears to contain Omniscience and Omnipresence, cards that are not accepted').should('be.visible');
+    cy.contains('button', 'No').click();
+    cy.contains('appears to contain').should('not.exist');
+  });
 });
 
 export {};

@@ -8,7 +8,7 @@ import Loader from '../../layout/Loader/Loader';
 import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import normalizeQuotes from '../../../lib/normalizeQuotes';
-import isOmniscience from '../../../lib/isOmniscience';
+import freeCastingCardName from '../../../lib/freeCastingCardName';
 import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
@@ -109,7 +109,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
   const [variantOfPreview, setVariantOfPreview] = useState<Variant | undefined>(undefined);
   const [includedCombos, setIncludedCombos] = useState<Variant[] | null>(null);
-  const [omniscienceWarning, setOmniscienceWarning] = useState(false);
+  const [freeCastingWarning, setFreeCastingWarning] = useState(false);
   const [debouncedVariantOf] = useDebounce(variantOf, 500);
 
   useEffect(() => {
@@ -529,11 +529,13 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     }
   };
 
-  const usesOmniscience = cards.some((card) => isOmniscience(card.card));
+  const freeCastingCards = [
+    ...new Set(cards.map((card) => freeCastingCardName(card.card)).filter((name) => name !== undefined)),
+  ];
 
   const handleSubmit = async () => {
-    if (usesOmniscience) {
-      setOmniscienceWarning(true);
+    if (freeCastingCards.length > 0) {
+      setFreeCastingWarning(true);
     } else {
       await checkDuplicatesAndSubmit();
     }
@@ -780,28 +782,29 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       )}
 
       <Modal
-        open={omniscienceWarning}
-        onClose={() => setOmniscienceWarning(false)}
+        open={freeCastingWarning}
+        onClose={() => setFreeCastingWarning(false)}
         footer={
           <div className="flex justify-center gap-4">
             <button
               className="button"
               onClick={() => {
-                setOmniscienceWarning(false);
+                setFreeCastingWarning(false);
                 checkDuplicatesAndSubmit();
               }}
             >
               Yes
             </button>
-            <button className="button" onClick={() => setOmniscienceWarning(false)}>
+            <button className="button" onClick={() => setFreeCastingWarning(false)}>
               No
             </button>
           </div>
         }
       >
         <p>
-          Your submission appears to contain Omniscience, a card that is not accepted in submissions when used as an
-          alternative to having infinite mana.
+          Your submission appears to contain {freeCastingCards.join(' and ')},{' '}
+          {freeCastingCards.length === 1 ? 'a card that is' : 'cards that are'} not accepted in submissions when used as
+          an alternative to having infinite mana.
         </p>
         <p style={{ marginTop: '1rem' }}>Would you still like to submit anyway?</p>
       </Modal>

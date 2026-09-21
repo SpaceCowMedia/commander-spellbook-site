@@ -23,7 +23,7 @@ import normalizeStringInput from '../../../lib/normalizeStringInput';
 import { cachedTemplateReplacements } from '../../../lib/templateReplacementsCache';
 import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
 import Alert from '../../layout/Alert/Alert';
-import isOmniscience from '../../../lib/isOmniscience';
+import freeCastingCardName from '../../../lib/freeCastingCardName';
 import { apiConfiguration } from 'services/api.service';
 
 const CARD_GROUPS_SEARCH_LIMIT = 20;
@@ -106,6 +106,7 @@ const CardSubmission = ({
   const [templateInput, setTemplateInput] = useState(template?.template || '');
   const [previewCard, setPreviewCard] = useState<Card | undefined>(undefined);
   const [selectedCardName, setSelectedCardName] = useState(card?.card || '');
+  const freeCastingCard = freeCastingCardName(card?.card);
 
   const scryfallQuery = (cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || '';
   const [debouncedQuery] = useDebounce(scryfallQuery, 500);
@@ -407,12 +408,12 @@ const CardSubmission = ({
               </div>
             </Alert>
           )}
-          {isOmniscience(card.card) && (
+          {freeCastingCard && (
             <Alert type="warning" icon="triangleExclamation" title="This card is not accepted as a source of mana">
               <p>
-                This combo might be denied because it uses Omniscience, a card that is not accepted in submissions when
-                used as an alternative to having infinite mana. It is still accepted when it matters for something else,
-                such as its mana cost or its mana value.
+                This combo might be denied because it uses {freeCastingCard}, a card that is not accepted in submissions
+                when used as an alternative to having infinite mana. It is still accepted when it matters for something
+                else, such as its mana cost or its mana value.
               </p>
             </Alert>
           )}
