@@ -17,19 +17,16 @@ declare global {
 }
 
 Cypress.Commands.add('login', () => {
-  const username = Cypress.env('username');
+  cy.env(['apiUrl', 'username', 'password']).then(({ apiUrl, username, password }) => {
+    cy.request('POST', `${apiUrl}/token/`, { username, password }).then(({ body }) => {
+      const payload = body.access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const { user_id: userId } = JSON.parse(atob(payload));
 
-  cy.request('POST', `${Cypress.env('apiUrl')}/token/`, {
-    username,
-    password: Cypress.env('password'),
-  }).then(({ body }) => {
-    const payload = body.access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const { user_id: userId } = JSON.parse(atob(payload));
-
-    cy.setCookie('csbJwt', body.access);
-    cy.setCookie('csbRefresh', body.refresh);
-    cy.setCookie('csbUsername', username);
-    cy.setCookie('csbUserId', `${userId}`);
+      cy.setCookie('csbJwt', body.access);
+      cy.setCookie('csbRefresh', body.refresh);
+      cy.setCookie('csbUsername', username);
+      cy.setCookie('csbUserId', `${userId}`);
+    });
   });
 });
 
@@ -39,20 +36,22 @@ Cypress.Commands.add('deleteComboSuggestions', () => {
       return;
     }
     const headers = { Authorization: `Bearer ${jwt.value}` };
-    cy.request({
-      method: 'GET',
-      url: `${Cypress.env('apiUrl')}/variant-suggestions/?limit=100`,
-      headers,
-      failOnStatusCode: false,
-    }).then(({ body }) => {
-      for (const suggestion of body?.results ?? []) {
-        cy.request({
-          method: 'DELETE',
-          url: `${Cypress.env('apiUrl')}/variant-suggestions/${suggestion.id}/`,
-          headers,
-          failOnStatusCode: false,
-        });
-      }
+    cy.env(['apiUrl']).then(({ apiUrl }) => {
+      cy.request({
+        method: 'GET',
+        url: `${apiUrl}/variant-suggestions/?limit=100`,
+        headers,
+        failOnStatusCode: false,
+      }).then(({ body }) => {
+        for (const suggestion of body?.results ?? []) {
+          cy.request({
+            method: 'DELETE',
+            url: `${apiUrl}/variant-suggestions/${suggestion.id}/`,
+            headers,
+            failOnStatusCode: false,
+          });
+        }
+      });
     });
   });
 });

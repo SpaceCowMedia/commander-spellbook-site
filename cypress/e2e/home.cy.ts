@@ -28,7 +28,9 @@ describe('Home Page', () => {
     cy.login();
     cy.visit('/');
 
-    cy.get('#user-dropdown').should('contain', Cypress.env('username')).focus();
+    cy.env(['username']).then(({ username }) => {
+      cy.get('#user-dropdown').should('contain', username).focus();
+    });
     cy.contains('button', 'My Submissions').click();
 
     cy.url().should('include', '/my-submissions');
