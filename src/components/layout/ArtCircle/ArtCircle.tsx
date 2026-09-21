@@ -153,6 +153,22 @@ const CARD_ARTS = {
     uid: '83ed7ebe-48be-4e6e-a293-b81484f85142',
     artist: 'Robbie Trevino',
   },
+  Tarmogoyf: {
+    uid: '8be5ee47-8f8a-4e3c-b1a1-9ca0e1fdec7f',
+    artist: 'Lucas Graciano',
+  },
+  'Birds of Paradise': {
+    uid: '492c2f9a-51e7-4e0f-9899-23bf43ea988b',
+    artist: 'Kevin Sidharta',
+  },
+  'Oracle of Mul Daya': {
+    uid: 'ab19808f-a5b8-4dfd-800e-2064cd6538c8',
+    artist: 'Vance Kovacs',
+  },
+  "Oracle's Vault": {
+    uid: '0314bea5-4e04-4e74-9832-3e935eb90ee1',
+    artist: 'Jonas De Ro',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {

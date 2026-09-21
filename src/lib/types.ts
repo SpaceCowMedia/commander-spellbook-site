@@ -243,6 +243,21 @@ export function getFaceMentionedBy(card: CardInVariant, text: string): number | 
   return shortNameMatches.length === 1 ? shortNameMatches[0] : card.usedFace;
 }
 
+/* A card a template stands for, trimmed to what a replacement list shows, so that a page of them can
+   be stored and read back as JSON. */
+export interface ReplacementCard {
+  id: string;
+  name: string;
+  images: string[];
+}
+
+export interface ReplacementsPage {
+  results: ReplacementCard[];
+  page: number;
+  nextPage?: number;
+  count?: number;
+}
+
 export interface LegalityFormat {
   value: string;
   label: string;

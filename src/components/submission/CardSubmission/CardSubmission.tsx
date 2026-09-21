@@ -1,8 +1,9 @@
 import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 import {
   Card,
+  CardDetail,
   CardsApi,
   CardUsedInVariantSuggestionRequest,
   FeatureStatusEnum,
@@ -11,8 +12,6 @@ import {
   TemplatesApi,
   ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
-import scryfall from 'scryfall-client';
-import { getScryfallImage, scryfallQueryReplacements } from '../../../services/scryfall.service';
 import { useDebounce } from 'use-debounce';
 import TemplateCard from '../../combo/TemplateCard/TemplateCard';
 import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
@@ -20,6 +19,8 @@ import CardImage from '../../layout/CardImage/CardImage';
 import Icon from '../../layout/Icon/Icon';
 import { ComboSubmissionErrorType } from '../../../lib/types';
 import normalizeQuotes from '../../../lib/normalizeQuotes';
+import normalizeStringInput from '../../../lib/normalizeStringInput';
+import { cachedTemplateReplacements } from '../../../lib/templateReplacementsCache';
 import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
 import Alert from '../../layout/Alert/Alert';
 import isOmniscience from '../../../lib/isOmniscience';
@@ -36,31 +37,19 @@ const ZONE_OPTIONS = [
   { value: 'C', label: 'Command Zone' },
 ];
 
-function buildPreviewCard(name: string, frontImage: string, backImage?: string): Card {
-  return {
-    id: 0,
-    name,
-    oracleId: null,
-    spoiler: false,
-    faces: backImage ? 2 : 1,
-    typeLine: '',
-    layoutRotationFront: null,
-    imageUriFrontSmall: null,
-    imageUriFrontNormal: frontImage,
-    imageUriFrontLarge: null,
-    imageUriFrontPng: null,
-    imageUriFrontArtCrop: null,
-    imageUriBackSmall: null,
-    imageUriBackNormal: backImage ?? null,
-    imageUriBackLarge: null,
-    imageUriBackPng: null,
-    imageUriBackArtCrop: null,
-  };
-}
-
 // Card names of multi faced cards are stored as "Front Face // Back Face", while users usually type the front face only
 function frontFaceName(name: string) {
-  return name.split('//')[0].trim().toLowerCase();
+  return name.split('//')[0].trim();
+}
+
+function cardKey(name: string) {
+  return normalizeStringInput(frontFaceName(name));
+}
+
+async function findCardByName(name: string): Promise<CardDetail | undefined> {
+  const cardsApi = new CardsApi(apiConfiguration());
+  const cardsPage = await cardsApi.cardsList({ q: frontFaceName(name), limit: CARD_GROUPS_SEARCH_LIMIT });
+  return cardsPage.results.find((result) => cardKey(result.name) === cardKey(name));
 }
 
 function isSubmittedTemplate(name: string, submittedTemplateNames?: string[]) {
@@ -107,9 +96,12 @@ const CardSubmission = ({
   if (!cardOrTemplate) {
     throw new Error('CardSubmission must have either a card or a template');
   }
+  const isCard = !!card;
+  const isTemplate = !!template;
 
   const [nameInput, setNameInput] = useState(card?.card || '');
   const [debouncedName] = useDebounce(nameInput, 500);
+  const debouncedCardKey = cardKey(debouncedName);
   const [cardGroups, setCardGroups] = useState<{ cardName: string; groups: CardGroup[] } | undefined>(undefined);
   const [templateInput, setTemplateInput] = useState(template?.template || '');
   const [previewCard, setPreviewCard] = useState<Card | undefined>(undefined);
@@ -118,7 +110,22 @@ const CardSubmission = ({
   const scryfallQuery = (cardOrTemplate as TemplateRequiredInVariantSuggestionRequest).scryfallQuery || '';
   const [debouncedQuery] = useDebounce(scryfallQuery, 500);
   const [queryError, setQueryError] = useState<string | null>(null);
-  const [queryValid, setQueryValid] = useState(false);
+  const [validQuery, setValidQuery] = useState<string | null>(null);
+
+  // the preview and the card groups look up the same name, one right after the other
+  const cardLookups = useRef(new Map<string, Promise<CardDetail | undefined>>());
+  const lookupCard = (name: string) => {
+    const key = cardKey(name);
+    let lookup = cardLookups.current.get(key);
+    if (!lookup) {
+      lookup = findCardByName(name).catch((error) => {
+        cardLookups.current.delete(key);
+        throw error;
+      });
+      cardLookups.current.set(key, lookup);
+    }
+    return lookup;
+  };
 
   const templateForPreview: TemplateInVariant | undefined = template && {
     template: {
@@ -137,7 +144,7 @@ const CardSubmission = ({
   };
 
   useEffect(() => {
-    if (!card) {
+    if (!isCard) {
       return;
     }
     const name = selectedCardName.trim();
@@ -146,14 +153,11 @@ const CardSubmission = ({
       return;
     }
     let cancelled = false;
-    scryfall
-      .getCardNamed(name, { kind: 'exact' })
-      .then((fetchedCard) => {
-        if (cancelled) {
-          return;
+    lookupCard(name)
+      .then((foundCard) => {
+        if (!cancelled) {
+          setPreviewCard(foundCard?.imageUriFrontNormal ? foundCard : undefined);
         }
-        const [front, back] = getScryfallImage(fetchedCard);
-        setPreviewCard(front ? buildPreviewCard(name, front, back) : undefined);
       })
       .catch(() => {
         if (!cancelled) {
@@ -163,10 +167,10 @@ const CardSubmission = ({
     return () => {
       cancelled = true;
     };
-  }, [selectedCardName, card]);
+  }, [selectedCardName, isCard]);
 
   useEffect(() => {
-    if (!card || !onReplaceWithTemplate) {
+    if (!isCard || !onReplaceWithTemplate) {
       return;
     }
     const name = debouncedName.trim();
@@ -175,18 +179,19 @@ const CardSubmission = ({
       return;
     }
     let cancelled = false;
-    const configuration = apiConfiguration();
-    const cardsApi = new CardsApi(configuration);
-    const templatesApi = new TemplatesApi(configuration);
+    const templatesApi = new TemplatesApi(apiConfiguration());
 
     const lookupCardGroups = async () => {
-      const cardsPage = await cardsApi.cardsList({ q: frontFaceName(name), limit: CARD_GROUPS_SEARCH_LIMIT });
-      const matchingCard = cardsPage.results.find((result) => frontFaceName(result.name) === frontFaceName(name));
+      const matchingCard = await lookupCard(name);
       if (!matchingCard) {
         return undefined;
       }
       const templatesPage = await templatesApi
-        .templatesList({ replacements: [matchingCard.id], limit: CARD_GROUPS_SEARCH_LIMIT })
+        .templatesList({
+          // a card no editor has curated yet has no id, only its oracle id
+          matches: [matchingCard.oracleId ?? String(matchingCard.id)],
+          limit: CARD_GROUPS_SEARCH_LIMIT,
+        })
         .catch(() => undefined);
       const groups = matchingCard.features
         .filter((feature) => feature.feature.status === FeatureStatusEnum.Pu)
@@ -223,29 +228,29 @@ const CardSubmission = ({
     return () => {
       cancelled = true;
     };
-  }, [debouncedName, card]);
+  }, [debouncedCardKey, isCard]);
 
   useEffect(() => {
-    if (!template) {
+    if (!isTemplate) {
       return;
     }
     const query = debouncedQuery.trim();
     if (!query) {
       setQueryError(null);
-      setQueryValid(false);
+      setValidQuery(null);
       return;
     }
     let cancelled = false;
-    scryfallQueryReplacements(query, 0)
+    cachedTemplateReplacements({ id: 0, name: '', scryfallQuery: query, scryfallApi: null }, 0)
       .then((page) => {
         if (cancelled) {
           return;
         }
         if ((page.count ?? page.results.length) > 0) {
-          setQueryValid(true);
+          setValidQuery(query);
           setQueryError(null);
         } else {
-          setQueryValid(false);
+          setValidQuery(null);
           setQueryError('This Scryfall query does not match any card.');
         }
       })
@@ -253,13 +258,13 @@ const CardSubmission = ({
         if (cancelled) {
           return;
         }
-        setQueryValid(false);
+        setValidQuery(null);
         setQueryError(error?.details || error?.message || 'Invalid Scryfall query.');
       });
     return () => {
       cancelled = true;
     };
-  }, [debouncedQuery, template]);
+  }, [debouncedQuery, isTemplate]);
 
   const otherErrors = unhandledErrors(errors, [
     'card',
@@ -333,7 +338,7 @@ const CardSubmission = ({
             <ScryfallQueryHelp />
           </div>
           {scryfallQuery.trim() && queryError && <ErrorMessage>{queryError}</ErrorMessage>}
-          {scryfallQuery.trim() && queryValid && !queryError && templateForPreview && (
+          {scryfallQuery.trim() && validQuery === debouncedQuery.trim() && templateForPreview && (
             <div className="flex justify-center pt-2">
               <div className="w-64 max-w-full">
                 <TemplateCard key={debouncedQuery.trim()} template={templateForPreview} />

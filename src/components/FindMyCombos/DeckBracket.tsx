@@ -1,17 +1,10 @@
-import {
-  EstimateBracketResult,
-  Variant,
-  ClassifiedCard,
-  ClassifiedVariant,
-  ClassifiedTemplate,
-} from '@space-cow-media/spellbook-client';
+import { EstimateBracketResult, Variant, ClassifiedCard, ClassifiedVariant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 import CardImage from 'components/layout/CardImage/CardImage';
 import styles from './DeckBracket.module.scss';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP, computeBracketInfo, totalQuantity } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
-import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
 
 interface Props {
   results?: EstimateBracketResult;
@@ -40,12 +33,8 @@ const DeckBracket = ({ results }: Props) => {
 
       <CardList title="Banned Cards" cards={info.bannedCards} />
       <CardList title="Game Changers" cards={info.gameChangerCards} />
-      <CardList
-        title="Mass Land Denial Cards"
-        cards={info.massLandDenialCards}
-        templates={info.massLandDenialTemplates}
-      />
-      <CardList title="Extra Turn Cards" cards={info.extraTurnCards} templates={info.extraTurnTemplates} />
+      <CardList title="Mass Land Denial Cards" cards={info.massLandDenialCards} />
+      <CardList title="Extra Turn Cards" cards={info.extraTurnCards} />
 
       <ComboList title="Fast, Game-Winning, Two Card Combos" combos={info.fastGameWinningTwoCardCombos} />
       <ComboList title="Fast, Game-Winning Combos Involving Few Cards" combos={info.fastGameWinningCombos} />
@@ -66,28 +55,20 @@ const DeckBracket = ({ results }: Props) => {
 interface CardListProps {
   title: React.ReactNode;
   cards: ClassifiedCard[];
-  templates?: ClassifiedTemplate[];
 }
-const CardList = ({ title, cards, templates = [] }: CardListProps) => {
-  if (!cards.length && !templates.length) {
+const CardList = ({ title, cards }: CardListProps) => {
+  if (!cards.length) {
     return null;
   }
   return (
     <>
       <h2 className="heading-subtitle mt-4 mb-2">
-        {title} ({totalQuantity(cards) + totalQuantity(templates)})
+        {title} ({totalQuantity(cards)})
       </h2>
       <div className="flex justify-center w-full mb-8 flex-wrap gap-4">
         {cards.map(({ card, quantity }) => (
           <QuantityWrapper quantity={quantity} key={card.id}>
             <CardImage className={styles.card} card={card} />
-          </QuantityWrapper>
-        ))}
-        {templates.map((template) => (
-          <QuantityWrapper quantity={template.quantity} key={`template-${template.template.id}`}>
-            <div className={styles.card}>
-              <TemplateCard template={template} />
-            </div>
           </QuantityWrapper>
         ))}
       </div>

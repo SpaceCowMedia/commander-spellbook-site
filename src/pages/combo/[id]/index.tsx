@@ -78,7 +78,9 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       const templates: CardInDeckRequest[] = [];
       for (const template of combo.requires) {
         const page = await cachedTemplateReplacements(template.template, 0);
-        templates.push({ card: page.results[0].name, quantity: template.quantity });
+        if (page.results.length) {
+          templates.push({ card: page.results[0].name, quantity: template.quantity });
+        }
       }
       const estimate = await bracketApi.estimateBracketCreate({
         unknownCommanders: true,

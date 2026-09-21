@@ -1,20 +1,9 @@
 import { ScryfallCard } from '@scryfall/api-types';
-import { CardsApi, Template } from '@space-cow-media/spellbook-client';
 import scryfall from 'scryfall-client';
 import Card from 'scryfall-client/dist/models/card';
-import { apiConfiguration } from './api.service';
+import { ReplacementCard, ReplacementsPage } from 'lib/types';
 
-const SCRYFALL_SEARCH_PAGE_SIZE = 175;
-const SPELLBOOK_PAGE_SIZE = 50;
-const SCRYFALL_COLLECTION_PAGE_SIZE = 75;
-
-function getPageSize(template: Template): number {
-  return template.scryfallQuery
-    ? SCRYFALL_SEARCH_PAGE_SIZE
-    : Math.min(SPELLBOOK_PAGE_SIZE, SCRYFALL_COLLECTION_PAGE_SIZE);
-}
-
-export function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
+function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   if ('image_uris' in card) {
     return [card.image_uris?.normal || ''];
   } else if ('card_faces' in card) {
@@ -29,21 +18,6 @@ export function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   return [''];
 }
 
-/* Scryfall answers with class instances holding far more than a replacement list ever shows. Only
-   the plain data below is kept, so that a page of results can be stored and read back as JSON. */
-export interface ReplacementCard {
-  id: string;
-  name: string;
-  images: string[];
-}
-
-export interface ScryfallResultsPage {
-  results: ReplacementCard[];
-  page: number;
-  nextPage?: number;
-  count?: number;
-}
-
 function toReplacementCard(card: Card): ReplacementCard {
   return {
     id: card.id,
@@ -52,7 +26,9 @@ function toReplacementCard(card: Card): ReplacementCard {
   };
 }
 
-export async function scryfallQueryReplacements(scryfallQuery: string, page: number): Promise<ScryfallResultsPage> {
+/* Only a query still being typed in the submission form is searched on Scryfall: a saved template is
+   matched against the cards by the backend itself. */
+export async function scryfallQueryReplacements(scryfallQuery: string, page: number): Promise<ReplacementsPage> {
   const response = await scryfall.search(`(${scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
   return {
     results: response.map(toReplacementCard),
@@ -61,44 +37,3 @@ export async function scryfallQueryReplacements(scryfallQuery: string, page: num
     count: response.total_cards,
   };
 }
-
-export async function templateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
-  if (template.scryfallQuery) {
-    return scryfallQueryReplacements(template.scryfallQuery, page);
-  } else {
-    const configuration = apiConfiguration();
-    const cardsApi = new CardsApi(configuration);
-    const pageSize = getPageSize(template);
-    const replacements = await cardsApi.cardsList({
-      limit: pageSize,
-      replaces: [template.id],
-      offset: pageSize * page,
-      count: true,
-    });
-    const response = await scryfall.getCollection(
-      replacements.results.map((card) =>
-        card.oracleId
-          ? {
-              oracle_id: card.oracleId,
-            }
-          : {
-              name: card.name,
-            },
-      ),
-    );
-    return {
-      results: response.map(toReplacementCard),
-      page: page,
-      nextPage: replacements.next !== null ? page + 1 : undefined,
-      count: replacements.count ?? undefined,
-    };
-  }
-}
-
-const ScryfallService = {
-  getScryfallImage,
-  scryfallQueryReplacements,
-  templateReplacements,
-};
-
-export default ScryfallService;

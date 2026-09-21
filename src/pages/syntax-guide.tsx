@@ -42,9 +42,29 @@ const DATA = {
       icon: 'coins',
     },
     {
+      id: 'card-power',
+      text: 'Card Power / Toughness / Loyalty',
+      icon: 'fist',
+    },
+    {
       id: 'card-color',
       text: 'Card Color',
       icon: 'pentagon',
+    },
+    {
+      id: 'card-produced-mana',
+      text: 'Card Produced Mana',
+      icon: 'droplet',
+    },
+    {
+      id: 'card-oracle-tags',
+      text: 'Card Oracle Tags',
+      icon: 'tag',
+    },
+    {
+      id: 'card-oracle-id',
+      text: 'Card Oracle ID',
+      icon: 'hashtag',
     },
     {
       id: 'color-identity',
@@ -201,6 +221,24 @@ const DATA = {
       description: 'Combos where all cards have a mana value of 3 or less',
     },
   ],
+  cardCharacteristicSnippets: [
+    {
+      search: 'power>=4',
+      description: 'Combos that contain a card with a power of 4 or greater',
+    },
+    {
+      search: 'tou=0',
+      description: 'Combos that contain a card with a toughness of 0',
+    },
+    {
+      search: 'loyalty>=5',
+      description: 'Combos that contain a card with a starting loyalty of 5 or greater',
+    },
+    {
+      search: 'all-pow<=2',
+      description: 'Combos where all cards have a printed power of 2 or less',
+    },
+  ],
   cardColorSnippets: [
     {
       search: 'cardcolor:gw',
@@ -213,6 +251,40 @@ const DATA = {
     {
       search: '-cardcolor<=simic',
       description: "Combos that don't contain a card that is within the simic color combination",
+    },
+  ],
+  cardProducedManaSnippets: [
+    {
+      search: 'produces:g',
+      description: 'Combos that contain a card that can produce green mana',
+    },
+    {
+      search: 'produces=wu',
+      description: 'Combos that contain a card that produces exactly white and blue mana',
+    },
+    {
+      search: '-produces:b',
+      description: "Combos that don't contain a card that can produce black mana",
+    },
+  ],
+  cardOracleTagSnippets: [
+    {
+      search: 'otag:removal',
+      description: 'Combos that contain a card tagged as removal, or with any tag below removal',
+    },
+    {
+      search: 'function:manland',
+      description: 'Combos that contain a land that can become a creature',
+    },
+    {
+      search: '-otag:tutor',
+      description: "Combos that don't contain a card tagged as a tutor",
+    },
+  ],
+  cardOracleIdSnippets: [
+    {
+      search: 'oracleid:6ad8011d-3471-4369-9d68-b264cc027487',
+      description: 'Combos that contain Sol Ring',
     },
   ],
   colorIdentitySnippets: [
@@ -330,6 +402,14 @@ const DATA = {
     {
       search: 'is:mld',
       description: 'Combos that destroy or otherwise disable all lands or almost all lands.',
+    },
+    {
+      search: 'is:gamechanger',
+      description: 'Combos that contain a card from the official Game Changer list.',
+    },
+    {
+      search: '-is:tutor -is:extraturn',
+      description: 'Combos that neither contain a tutor nor give you extra turns.',
     },
   ],
   commanderSnippets: [
@@ -584,6 +664,35 @@ For example, \`cardmanavalue>10\` searches for combos that contain at least one 
 * \`-\` negates the search term
 `;
 
+const CARD_POWER_TOUGHNESS_LOYALTY_DESCRIPTION = `
+You can search for combos that contain cards with a specific power, toughness or starting loyalty.
+For example, \`cardpower>=4\` searches for combos that contain at least one card with a power of 4 or greater.
+
+> [!NOTE]
+> Only numbers are compared: a card printing \`*\` or \`X\` instead, such as [Tarmogoyf](https://scryfall.com/search?q=!%22Tarmogoyf%22), matches none of these searches.
+
+### \`cardpower\`, \`cardtoughness\` and \`cardloyalty\` operators
+
+* \`cardpower=number\` or \`cardpower:number\` searches for combos containing a card with a power of _number_
+* \`cardpower>number\` searches for combos containing a card with a power greater than _number_
+* \`cardpower>=number\` searches for combos containing a card with a power greater than or equal to _number_
+* \`cardpower<number\` searches for combos containing a card with a power less than _number_
+* \`cardpower<=number\` searches for combos containing a card with a power less than or equal to _number_
+
+\`cardtoughness\` and \`cardloyalty\` support the same operators, comparing the toughness and the starting loyalty of a card instead.
+
+### \`cardpower\`, \`cardtoughness\` and \`cardloyalty\` keyword aliases
+
+* \`power\` and \`pow\` for \`cardpower\`
+* \`toughness\` and \`tou\` for \`cardtoughness\`
+* \`loyalty\` and \`loy\` for \`cardloyalty\`
+
+### \`cardpower\`, \`cardtoughness\` and \`cardloyalty\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term, so a card without a number to compare fails it
+* \`-\` negates the search term
+`;
+
 const CARD_COLOR_DESCRIPTION = `
 You can search for combos that contain cards of specific colors. For example, \`cardcolor:gw\` searches for combos that contain at least one green and white card.
 
@@ -608,6 +717,78 @@ and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`pe
 * \`cardcolors\`
 
 ### \`cardcolor\` prefixes
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
+`;
+
+const CARD_PRODUCED_MANA_DESCRIPTION = `
+You can search for combos that contain cards that can produce mana of specific colors.
+For example, \`cardproduces:g\` searches for combos that contain at least one card that can produce green mana.
+
+The cardproduces parameter accepts the same colors as [cardcolor](#card-color): full color names (such as \`green\`), single character abbreviations (\`w\`, \`u\`, \`b\`, \`r\`, \`g\`),
+and many color combination nicknames (\`boros\`, \`sultai\`, \`fivecolor\`, \`penta\`, etc.).
+
+> [!NOTE]
+> Only the five colors are compared: colorless mana is not taken into account, and neither is the amount of mana a card produces.
+
+### \`cardproduces\` operators
+
+* \`cardproduces:text\` or \`cardproduces>=text\` searches for combos containing a card that can produce every color of _text_
+* \`cardproduces=text\` searches for combos containing a card that produces exactly the colors of _text_
+* \`cardproduces<=text\` searches for combos containing a card that produces no color outside of _text_, including cards that produce no colored mana at all
+
+### \`cardproduces\` keyword aliases
+
+* \`produces\`
+
+### \`cardproduces\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
+`;
+
+const CARD_ORACLE_TAGS_DESCRIPTION = `
+Scryfall [tags cards](https://scryfall.com/docs/tagger-tags) by what they do, and you can search for combos by the oracle tags of their cards.
+For example, \`cardoracletag:removal\` searches for combos that contain at least one card tagged as removal.
+
+> [!TIP]
+> A tag can be written in several ways: capitalization, spaces and hyphens are ignored, and so are the aliases of a tag.
+> For example, \`manland\`, \`man-land\` and \`creatureland\` all find the same tag.
+
+> [!NOTE]
+> Tags are organized in a hierarchy, and a tag also finds the cards tagged with any tag below it.
+> For example, \`otag:removal\` finds the cards of every tag below removal, even though no card is tagged as removal directly.
+
+### \`cardoracletag\` operators
+
+* \`cardoracletag:text\` searches for combos containing a card tagged as _text_, or with a tag below _text_
+
+### \`cardoracletag\` keyword aliases
+
+* \`oracletag\`
+* \`otag\`
+* \`function\`
+
+### \`cardoracletag\` prefixes
+
+* \`all-\` or \`@\` requires that all cards match the search term
+* \`-\` negates the search term
+`;
+
+const CARD_ORACLE_ID_DESCRIPTION = `
+Every card has a Scryfall Oracle ID, shared by all of its printings, that names it regardless of how its name is written.
+For example, \`cardoracleid:6ad8011d-3471-4369-9d68-b264cc027487\` searches for combos that contain Sol Ring.
+
+### \`cardoracleid\` operators
+
+* \`cardoracleid:id\` or \`cardoracleid=id\` searches for combos containing the card whose Scryfall Oracle ID is _id_
+
+### \`cardoracleid\` keyword aliases
+
+* \`oracleid\`
+
+### \`cardoracleid\` prefixes
+
 * \`all-\` or \`@\` requires that all cards match the search term
 * \`-\` negates the search term
 `;
@@ -796,6 +977,9 @@ Other tags are applied automatically, so their support is complete and always up
 * \`featured\`: the combo appears in the feature page, which usually displays combos using cards from a recent or upcoming set
 * \`reserved\`: the combo contains at least one card from the Reserved List
 * \`hulkline\`/\`meatandeggs\`: the combo is fetchable with [Protean Hulk](https://scryfall.com/search?q=!%22Protean%20Hulk%22)
+* \`gamechanger\`/\`game_changer\`: the combo contains at least one card from the official Game Changer list
+* \`tutor\`: the combo contains at least one card that can tutor for other cards
+* \`extraturn\`/\`extraturns\`: the combo gives you extra turns
 
 #### Manual tags
 
@@ -1156,12 +1340,48 @@ const SyntaxGuide: React.FC = () => {
           </SearchGuide>
 
           <SearchGuide
+            headingCardName="Tarmogoyf"
+            snippets={DATA.cardCharacteristicSnippets}
+            heading="Card Power / Toughness / Loyalty"
+            icon="fist"
+          >
+            <SyntaxMarkdown>{CARD_POWER_TOUGHNESS_LOYALTY_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
             heading="Card Color"
             snippets={DATA.cardColorSnippets}
             headingCardName="Chromatic Lantern"
             icon="pentagon"
           >
             <SyntaxMarkdown>{CARD_COLOR_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Card Produced Mana"
+            snippets={DATA.cardProducedManaSnippets}
+            headingCardName="Birds of Paradise"
+            icon="droplet"
+          >
+            <SyntaxMarkdown>{CARD_PRODUCED_MANA_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Card Oracle Tags"
+            snippets={DATA.cardOracleTagSnippets}
+            headingCardName="Oracle of Mul Daya"
+            icon="tag"
+          >
+            <SyntaxMarkdown>{CARD_ORACLE_TAGS_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide
+            heading="Card Oracle ID"
+            snippets={DATA.cardOracleIdSnippets}
+            headingCardName="Oracle's Vault"
+            icon="hashtag"
+          >
+            <SyntaxMarkdown>{CARD_ORACLE_ID_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide

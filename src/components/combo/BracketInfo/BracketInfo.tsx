@@ -43,14 +43,13 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
         : `Having between 1 and 3 game changer cards pushes this card list into bracket 3+. You have ${info.gameChangerCardCount}.`,
     );
   }
-  const extraTurnPieceCount = info.extraTurnCardCount + info.extraTurnTemplateCount;
-  if (extraTurnPieceCount >= 2) {
+  if (info.extraTurnCardCount >= 2) {
     powerLevelFactors.push(
       singleCombo
-        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${extraTurnPieceCount}.`
-        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${extraTurnPieceCount}.`,
+        ? `Having two or more extra turn cards pushes this combo into bracket 4+. This combo has ${info.extraTurnCardCount}.`
+        : `Having two or more extra turn cards pushes this card list into bracket 4+. You have ${info.extraTurnCardCount}.`,
     );
-  } else if (extraTurnPieceCount > 0) {
+  } else if (info.extraTurnCardCount > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Having one extra turn card pushes this combo into bracket 2+.'
@@ -65,12 +64,11 @@ const BracketInfo = ({ bracketEstimate, singleCombo = false }: Props) => {
     );
   }
 
-  const massLandDenialPieceCount = info.massLandDenialCardCount + info.massLandDenialTemplateCount;
-  if (massLandDenialPieceCount > 0) {
+  if (info.massLandDenialCardCount > 0) {
     powerLevelFactors.push(
       singleCombo
         ? 'Having mass land denial cards pushes this combo into bracket 4+.'
-        : `Having mass land denial cards pushes this card list into bracket 4+. You have ${massLandDenialPieceCount}.`,
+        : `Having mass land denial cards pushes this card list into bracket 4+. You have ${info.massLandDenialCardCount}.`,
     );
   }
   if (info.massLandDenialCombos.length > 0) {

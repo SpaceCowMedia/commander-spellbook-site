@@ -49,6 +49,9 @@ import {
   faAngleRight,
   faPlus,
   faSquare,
+  faHandFist,
+  faDroplet,
+  faTag,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'lib/cn';
@@ -115,6 +118,9 @@ const SPELLBOOK_FA_ICONS = {
   greaterThan: faAngleRight,
   plus: faPlus,
   card: faSquare,
+  fist: faHandFist,
+  droplet: faDroplet,
+  tag: faTag,
 };
 
 /* a square narrowed into the portrait shape of a Magic card */

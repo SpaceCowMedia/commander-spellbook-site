@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
 import edhrecService from 'services/edhrec.service';
-import { ScryfallResultsPage } from 'services/scryfall.service';
+import { ReplacementsPage } from 'lib/types';
 import Loader from 'components/layout/Loader/Loader';
 import { useSwipeable } from 'react-swipeable';
 
 interface Props {
-  fetchResults: (_page: number) => Promise<ScryfallResultsPage>;
+  fetchResults: (_page: number) => Promise<ReplacementsPage>;
 }
 
 const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [pageCount, setPageCount] = useState<number>(0);
   const [index, setIndex] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);
-  const [currentPage, setCurrentPage] = useState<ScryfallResultsPage | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState<ReplacementsPage | undefined>(undefined);
   const [pageSize, setPageSize] = useState(1);
   const [loading, setLoading] = useState(false);
 

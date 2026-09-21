@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import styles from './autocompleteInput.module.scss';
 import { useState } from 'react';
 import normalizeStringInput from '../../../lib/normalizeStringInput';
@@ -7,8 +7,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import Loader from '../../layout/Loader/Loader';
 import CardTooltip from '../../layout/CardTooltip/CardTooltip';
 import { apiConfiguration } from 'services/api.service';
-import { FeaturesApi, FeaturesListStatusEnum, TemplatesApi } from '@space-cow-media/spellbook-client';
-import scryfall from 'scryfall-client';
+import { CardsApi, FeaturesApi, FeaturesListStatusEnum, TemplatesApi } from '@space-cow-media/spellbook-client';
 import { useDebounce } from 'use-debounce';
 import { formatDuration, rateLimitRetryAfterSeconds } from '../../../lib/httpErrors';
 
@@ -17,16 +16,13 @@ const AUTOCOMPLETE_DELAY = 500;
 const BLUR_CLOSE_DELAY = 900;
 const RATE_LIMIT_FALLBACK_SECONDS = 30;
 
-function cardImageUrl(name: string): string {
-  return `https://api.scryfall.com/cards/named?format=image&version=normal&exact=${encodeURIComponent(name)}`;
-}
-
 export interface AutoCompleteOption {
   value: string;
   label: string;
   alias?: RegExp;
   normalizedValue: string;
   normalizedLabel: string;
+  images?: string[];
 }
 
 interface Props {
@@ -83,16 +79,6 @@ const AutocompleteInput: React.FC<Props> = ({
 
   const total = matchingAutoCompleteOptions.length;
   const option = matchingAutoCompleteOptions[arrowCounter];
-  const cardImageUrlsByValue = useMemo(
-    () =>
-      cardAutocomplete
-        ? matchingAutoCompleteOptions.reduce<Record<string, string[]>>((acc, item) => {
-            acc[item.value] = [cardImageUrl(item.value)];
-            return acc;
-          }, {})
-        : {},
-    [cardAutocomplete, matchingAutoCompleteOptions],
-  );
   let screenReaderSelectionText = '';
   if (total !== 0 && value) {
     screenReaderSelectionText = option
@@ -103,6 +89,7 @@ const AutocompleteInput: React.FC<Props> = ({
   }
 
   const configuration = apiConfiguration();
+  const cardsApi = new CardsApi(configuration);
   const templatesApi = new TemplatesApi(configuration);
   const feturesApi = new FeaturesApi(configuration);
 
@@ -131,15 +118,14 @@ const AutocompleteInput: React.FC<Props> = ({
       }
       if (cardAutocomplete) {
         try {
-          const cards: string[] = await scryfall.autocomplete(value, {
-            include_extras: false,
-          });
+          const cards = await cardsApi.cardsList({ q: value, limit: MAX_NUMBER_OF_MATCHING_RESULTS });
           options = options.concat(
-            cards.map((card) => ({
-              value: card,
-              label: card,
-              normalizedValue: normalizeStringInput(card),
-              normalizedLabel: normalizeStringInput(card),
+            cards.results.map((card) => ({
+              value: card.name,
+              label: card.name,
+              normalizedValue: normalizeStringInput(card.name),
+              normalizedLabel: normalizeStringInput(card.name),
+              images: [card.imageUriFrontNormal, card.imageUriBackNormal].filter((uri) => uri != null),
             })),
           );
         } catch (e) {
@@ -454,7 +440,7 @@ const AutocompleteInput: React.FC<Props> = ({
               onMouseOver={() => handleAutocompleteItemHover(index)}
             >
               {cardAutocomplete ? (
-                <CardTooltip images={cardImageUrlsByValue[item.value]} disableTapPreview>
+                <CardTooltip images={item.images} disableTapPreview>
                   <TextWithMagicSymbol text={item.label} />
                 </CardTooltip>
               ) : (

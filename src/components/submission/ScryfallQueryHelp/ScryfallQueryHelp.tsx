@@ -77,6 +77,14 @@ const ScryfallQueryHelp: React.FC = () => (
         <li>
           You can negate any expression by prepending a dash (<Token>-</Token>), like <Token>-t:creature</Token>.
         </li>
+        <li>
+          A regular expression must be at most 256 characters long, and may not repeat a group that repeats or chooses
+          within itself, since that can take exponential time to match.
+        </li>
+        <li>
+          An oracle regular expression is matched against each line of the oracle text, so{' '}
+          <Token>{'o:/^{T}: Add /'}</Token> finds the lines starting with a mana ability.
+        </li>
       </ul>
       <p>
         More info on the full syntax at{' '}

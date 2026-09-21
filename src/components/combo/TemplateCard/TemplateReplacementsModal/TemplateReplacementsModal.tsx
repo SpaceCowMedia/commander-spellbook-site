@@ -4,20 +4,18 @@ import Dimmer from 'components/ui/Dimmer/Dimmer';
 import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { ClassifiedTemplate, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ReplacementCard } from 'services/scryfall.service';
+import { TemplateInVariant } from '@space-cow-media/spellbook-client';
+import { ReplacementCard } from 'lib/types';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 
 interface Props {
-  template: TemplateInVariant | ClassifiedTemplate;
+  template: TemplateInVariant;
   textTrigger?: (_count?: number) => React.ReactNode;
 }
 
 const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) => {
-  const title = template.template.scryfallQuery
-    ? `Scryfall results for “${template.template.name}”`
-    : `Replacement list for “${template.template.name}”`;
+  const title = `Replacement list for “${template.template.name}”`;
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [count, setCount] = useState<number | undefined>(undefined);

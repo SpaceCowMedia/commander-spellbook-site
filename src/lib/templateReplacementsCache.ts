@@ -1,11 +1,16 @@
 import { Template } from '@space-cow-media/spellbook-client';
-import ScryfallService, { ScryfallResultsPage } from 'services/scryfall.service';
+import TemplateReplacementsService from 'services/template-replacements.service';
+import { ReplacementsPage } from 'lib/types';
 
 const STORAGE_KEY_PREFIX = 'commander-spellbook-template-replacements:';
+/* Bumped when pages change source or size, so older pages are never read back; they keep the
+   prefix, so pruning still clears them. */
+const STORAGE_KEY_VERSION = 'v7';
 const TTL_MS = 24 * 60 * 60 * 1000;
 /* A page of replacements trimmed to what a preview shows costs ~190 bytes a card, so even the
-   175 card page of a Scryfall query template stays around 32KB: this keeps the cache near 1MB of
-   the origin's storage at its very worst, well clear of the quota the rest of the site shares. */
+   175 card page of a Scryfall query drafted in the submission form stays around 32KB: this keeps
+   the cache near 1MB of the origin's storage at its very worst, well clear of the quota the rest of
+   the site shares. */
 const MAX_ENTRIES = 32;
 
 // localStorage access is best-effort: every call below swallows errors so that quota limits,
@@ -13,17 +18,17 @@ const MAX_ENTRIES = 32;
 
 interface StoredEntry {
   storedAt: number;
-  page: ScryfallResultsPage;
+  page: ReplacementsPage;
 }
 
 /* Requests still in flight, so that a tooltip, a wheel, a modal and the bracket estimate asking for
    the same page at once share one request instead of racing each other to the cache. */
-const pendingPages = new Map<string, Promise<ScryfallResultsPage>>();
+const pendingPages = new Map<string, Promise<ReplacementsPage>>();
 
 /* The query is part of the key: a template whose query has been edited, or a draft one being
    typed in the submission form, must never be served the replacements of the query it replaced. */
 const cacheKey = (template: Template, page: number): string =>
-  `${STORAGE_KEY_PREFIX}${template.id}:${template.scryfallQuery ?? ''}:${page}`;
+  `${STORAGE_KEY_PREFIX}${STORAGE_KEY_VERSION}:${template.id}:${template.scryfallQuery ?? ''}:${page}`;
 
 const storedKeys = (): string[] => {
   const keys: string[] = [];
@@ -36,7 +41,7 @@ const storedKeys = (): string[] => {
   return keys;
 };
 
-const readEntry = (template: Template, page: number): ScryfallResultsPage | null => {
+const readEntry = (template: Template, page: number): ReplacementsPage | null => {
   try {
     const key = cacheKey(template, page);
     const raw = localStorage.getItem(key);
@@ -77,7 +82,7 @@ const prune = (roomFor: number): void => {
     .forEach(({ key }) => localStorage.removeItem(key));
 };
 
-const writeEntry = (template: Template, page: number, result: ScryfallResultsPage): void => {
+const writeEntry = (template: Template, page: number, result: ReplacementsPage): void => {
   const entry: StoredEntry = {
     storedAt: Date.now(),
     page: result,
@@ -100,7 +105,7 @@ export function clearTemplateReplacementsCache(): void {
 }
 
 /* The replacements of a template, from memory, then from storage, then from the network. */
-export function cachedTemplateReplacements(template: Template, page: number): Promise<ScryfallResultsPage> {
+export function cachedTemplateReplacements(template: Template, page: number): Promise<ReplacementsPage> {
   const key = cacheKey(template, page);
   const pending = pendingPages.get(key);
   if (pending) {
@@ -111,7 +116,7 @@ export function cachedTemplateReplacements(template: Template, page: number): Pr
     if (stored) {
       return stored;
     }
-    const result = await ScryfallService.templateReplacements(template, page);
+    const result = await TemplateReplacementsService.templateReplacements(template, page);
     writeEntry(template, page, result);
     return result;
   })().catch((error) => {

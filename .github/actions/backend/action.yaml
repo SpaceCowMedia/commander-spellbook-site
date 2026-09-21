@@ -116,6 +116,7 @@ runs:
         Variant.objects.all().delete()
         c1 = Card.objects.create(
           id=1,
+          number=1,
           name="Basalt Monolith",
           identity="C",
           color="C",
@@ -126,6 +127,7 @@ runs:
         )
         c2 = Card.objects.create(
           id=2,
+          number=2,
           name="Mesmeric Orb",
           identity="C",
           color="C",
@@ -135,6 +137,7 @@ runs:
         )
         c3 = Card.objects.create(
           id=3,
+          number=3,
           name="Forsaken Monument",
           identity="C",
           color="C",

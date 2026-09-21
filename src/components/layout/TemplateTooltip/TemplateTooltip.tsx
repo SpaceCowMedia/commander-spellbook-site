@@ -6,7 +6,7 @@ import Loader from 'components/layout/Loader/Loader';
 import HoverPreview from 'components/layout/HoverPreview/HoverPreview';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import { TemplateInVariant } from '@space-cow-media/spellbook-client';
-import { ReplacementCard } from 'services/scryfall.service';
+import { ReplacementCard } from 'lib/types';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 
 const ROTATION_MS = 2000;

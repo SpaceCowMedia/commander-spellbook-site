@@ -12,13 +12,13 @@ const cardsCache: SitemapCache = {};
 async function getCards(): Promise<CardDetail[]> {
   const configuration = apiConfiguration();
   const cardsApi = new CardsApi(configuration);
-  const firstPage = await cardsApi.cardsList({ count: true });
+  const firstPage = await cardsApi.cardsList({ curated: true, count: true });
   const cards = firstPage.results;
   const pageSize = firstPage.results.length;
   const pageCount = Math.ceil(firstPage.count! / pageSize);
   const promises = [];
   for (let i = 1; i < pageCount; i++) {
-    promises.push(cardsApi.cardsList({ limit: pageSize, offset: i * pageSize }));
+    promises.push(cardsApi.cardsList({ curated: true, limit: pageSize, offset: i * pageSize }));
   }
   const restPages = await Promise.all(promises);
   restPages.forEach((page) => cards.push(...page.results));

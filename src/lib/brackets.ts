@@ -57,12 +57,6 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
   const gameChangerCards = bracketEstimate.cards.filter((card) => card.gameChanger);
   const extraTurnCards = bracketEstimate.cards.filter((card) => card.extraTurn);
   const massLandDenialCards = bracketEstimate.cards.filter((card) => card.massLandDenial);
-  const extraTurnTemplates = extraTurnCards.length
-    ? []
-    : bracketEstimate.templates.filter((template) => template.extraTurn);
-  const massLandDenialTemplates = massLandDenialCards.length
-    ? []
-    : bracketEstimate.templates.filter((template) => template.massLandDenial);
   const extraTurnsCombos = bracketEstimate.combos.filter((combo) => combo.extraTurn).map((combo) => combo.combo);
   const massLandDenialCombos = bracketEstimate.combos
     .filter((combo) => combo.massLandDenial)
@@ -114,14 +108,10 @@ export function computeBracketInfo(bracketEstimate: EstimateBracketResult) {
     gameChangerCards,
     extraTurnCards,
     massLandDenialCards,
-    extraTurnTemplates,
-    massLandDenialTemplates,
     bannedCardCount: totalQuantity(bannedCards),
     gameChangerCardCount: totalQuantity(gameChangerCards),
     extraTurnCardCount: totalQuantity(extraTurnCards),
     massLandDenialCardCount: totalQuantity(massLandDenialCards),
-    extraTurnTemplateCount: totalQuantity(extraTurnTemplates),
-    massLandDenialTemplateCount: totalQuantity(massLandDenialTemplates),
     extraTurnsCombos,
     massLandDenialCombos,
     controlAllOpponentsCombos,
