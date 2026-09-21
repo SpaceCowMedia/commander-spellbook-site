@@ -22,7 +22,7 @@ const imageUris = (card: SeededCard) => {
   return { small: uri, normal: uri, large: uri, png: uri, art_crop: uri, border_crop: uri };
 };
 
-const cardObject = (card: SeededCard) => ({
+const cardObject = (card: SeededCard, spoilers: string[]) => ({
   object: 'card',
   id: card.oracleId,
   oracle_id: card.oracleId,
@@ -30,18 +30,26 @@ const cardObject = (card: SeededCard) => ({
   layout: 'normal',
   type_line: card.typeLine,
   image_uris: imageUris(card),
+  // a card Scryfall is still previewing comes out after today
+  released_at: spoilers.includes(card.name) ? '2999-01-01' : '2000-01-01',
 });
 
-const list = (cards: SeededCard[]) => ({
+const list = (cards: SeededCard[], spoilers: string[]) => ({
   object: 'list',
   has_more: false,
   total_cards: cards.length,
-  data: cards.map(cardObject),
+  data: cards.map((card) => cardObject(card, spoilers)),
 });
 
+// Any query matches every seeded card, so a template query is never reported as invalid.
+export const stubScryfallSearch = (spoilers: string[] = []) => {
+  cy.intercept({ method: 'GET', url: `${SCRYFALL_API}/cards/search*` }, (req) =>
+    req.reply(list(SEEDED_CARDS, spoilers)),
+  );
+};
+
 export const stubScryfall = () => {
-  // Any query matches every seeded card, so a template query is never reported as invalid.
-  cy.intercept({ method: 'GET', url: `${SCRYFALL_API}/cards/search*` }, (req) => req.reply(list(SEEDED_CARDS)));
+  stubScryfallSearch();
 
   cy.intercept({ url: 'https://svgs.scryfall.io/**' }, (req) => req.reply(imageReply));
   cy.intercept({ url: 'https://cards.scryfall.io/**' }, (req) => req.reply(imageReply));

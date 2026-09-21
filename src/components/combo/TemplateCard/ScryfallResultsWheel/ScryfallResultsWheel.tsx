@@ -3,6 +3,7 @@ import Icon from 'components/layout/Icon/Icon';
 import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/types';
 import Loader from 'components/layout/Loader/Loader';
+import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import { useSwipeable } from 'react-swipeable';
 
 interface Props {
@@ -102,18 +103,20 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
         />
       </div>
       <div className="h-full flex justify-center items-center">
-        <a
-          className="h-full"
-          href={edhrecService.getCardUrl(current.name ?? '')}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            className="max-h-full rounded-xl bg-cover"
-            src={current.images[0]}
-            alt={`Template replacement: ${current.name}`}
-          />
-        </a>
+        <SpoilerFog key={current.id} name={current.name} spoiler={current.spoiler} className="h-full">
+          <a
+            className="h-full"
+            href={edhrecService.getCardUrl(current.name ?? '')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              className="max-h-full rounded-xl bg-cover"
+              src={current.images[0]}
+              alt={`Template replacement: ${current.name}`}
+            />
+          </a>
+        </SpoilerFog>
       </div>
       <div className="h-full flex justify-center items-center grow">
         <Icon

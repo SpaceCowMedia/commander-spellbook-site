@@ -5,7 +5,7 @@ import { ReplacementsPage } from 'lib/types';
 const STORAGE_KEY_PREFIX = 'commander-spellbook-template-replacements:';
 /* Bumped when pages change source or size, so older pages are never read back; they keep the
    prefix, so pruning still clears them. */
-const STORAGE_KEY_VERSION = 'v7';
+const STORAGE_KEY_VERSION = 'v8';
 const TTL_MS = 24 * 60 * 60 * 1000;
 /* A page of replacements trimmed to what a preview shows costs ~190 bytes a card, so even the
    175 card page of a Scryfall query drafted in the submission form stays around 32KB: this keeps

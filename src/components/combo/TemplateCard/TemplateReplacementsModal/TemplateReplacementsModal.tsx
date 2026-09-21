@@ -8,6 +8,7 @@ import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ReplacementCard } from 'lib/types';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
+import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 
 interface Props {
   template: TemplateInVariant;
@@ -85,9 +86,11 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) =
         )}
         <div className="flex flex-wrap gap-3 justify-center">
           {results.map((result) => (
-            <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer" key={result.id}>
-              <img className="rounded-xl" width="240" src={result.images[0]} alt={result.name} />
-            </a>
+            <SpoilerFog key={result.id} name={result.name} spoiler={result.spoiler}>
+              <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer">
+                <img className="rounded-xl" width="240" src={result.images[0]} alt={result.name} />
+              </a>
+            </SpoilerFog>
           ))}
         </div>
         <div className="flex justify-center w-full mt-3">

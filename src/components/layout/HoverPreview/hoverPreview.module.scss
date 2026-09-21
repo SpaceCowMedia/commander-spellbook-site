@@ -11,6 +11,10 @@
   max-width: calc(100vw - 20px);
 }
 
+.tappable {
+  pointer-events: auto;
+}
+
 .tapCatcher {
   position: fixed;
   inset: 0;

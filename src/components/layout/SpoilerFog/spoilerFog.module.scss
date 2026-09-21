@@ -1,0 +1,137 @@
+@reference "../../../assets/globals.css";
+
+$dissolve-duration: 0.9s;
+
+.spoilerFog {
+  position: relative;
+  display: flex;
+  overflow: clip;
+  border-radius: 0.75rem;
+}
+
+/* a block image leaves no gap below it for the fog to spill into */
+.spoilerFog img {
+  display: block;
+  transition: filter $dissolve-duration ease-out;
+}
+
+.fogged img {
+  filter: blur(12px) grayscale(1);
+}
+
+.fog {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: clip;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgb(156 163 175 / 92%), rgb(107 114 128 / 94%) 50%, rgb(75 85 99 / 96%));
+  transition:
+    opacity $dissolve-duration ease-out,
+    transform $dissolve-duration ease-out,
+    filter $dissolve-duration ease-out,
+    visibility 0s $dissolve-duration;
+}
+
+/* oversized, so that drifting never uncovers one of their edges */
+.fog::before,
+.fog::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  filter: blur(10px);
+  background:
+    radial-gradient(ellipse 18% 12% at 30% 35%, rgb(243 244 246 / 85%), transparent),
+    radial-gradient(ellipse 22% 14% at 65% 55%, rgb(209 213 219 / 75%), transparent),
+    radial-gradient(ellipse 16% 10% at 40% 72%, rgb(229 231 235 / 70%), transparent);
+  animation: fog-drift 14s ease-in-out infinite alternate;
+}
+
+.fog::after {
+  background:
+    radial-gradient(ellipse 20% 12% at 68% 32%, rgb(229 231 235 / 75%), transparent),
+    radial-gradient(ellipse 18% 14% at 28% 60%, rgb(107 114 128 / 80%), transparent),
+    radial-gradient(ellipse 24% 12% at 58% 80%, rgb(243 244 246 / 65%), transparent);
+  animation-duration: 20s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes fog-drift {
+  0% {
+    transform: translate(-12%, -6%) rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: translate(4%, 8%) rotate(8deg) scale(1.15);
+  }
+
+  100% {
+    transform: translate(12%, -4%) rotate(-6deg) scale(1);
+  }
+}
+
+.dissolved {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(1.25);
+  filter: blur(8px);
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+.veil:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: -3px;
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  padding: 0.35rem 0.9rem;
+  border-radius: 0.5rem;
+  background-color: rgb(34 34 34 / 85%);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.label:hover,
+.label:focus-visible {
+  background-color: rgb(34 34 34 / 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fog::before,
+  .fog::after {
+    animation: none;
+  }
+
+  .fog {
+    transition:
+      opacity 0.2s ease-out,
+      visibility 0s 0.2s;
+  }
+
+  .dissolved {
+    transform: none;
+    filter: none;
+  }
+
+  .spoilerFog img {
+    transition: none;
+  }
+}

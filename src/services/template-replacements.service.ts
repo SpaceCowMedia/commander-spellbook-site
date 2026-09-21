@@ -11,6 +11,7 @@ function toReplacementCard(card: CardDetail): ReplacementCard {
     id: card.oracleId ?? card.name,
     name: card.name,
     images: [card.imageUriFrontNormal, card.imageUriBackNormal].filter((uri) => uri != null),
+    spoiler: card.spoiler,
   };
 }
 

@@ -22,8 +22,21 @@ interface Props {
   /* Swallows the desktop click, for a trigger wrapping a link the preview stands in for. */
   suppressClick?: boolean;
   onFirstShow?: () => void;
-  onVisibleChange?: (_visible: boolean) => void;
+  onVisibleChange?: (_visible: boolean, _tapped: boolean) => void;
+  /* Lets a tapped preview answer a tap on itself, instead of closing like a tap anywhere else does. */
+  onPreviewTap?: () => void;
   children?: React.ReactNode;
+}
+
+function movedLikeAScroll(start: { x: number; y: number }, end: React.Touch): boolean {
+  return (
+    Math.abs(end.clientX - start.x) > TAP_MOVE_TOLERANCE_PX || Math.abs(end.clientY - start.y) > TAP_MOVE_TOLERANCE_PX
+  );
+}
+
+function tapStart(e: React.TouchEvent): { x: number; y: number } | null {
+  const touch = e.touches[0];
+  return e.touches.length > 1 || !touch ? null : { x: touch.clientX, y: touch.clientY };
 }
 
 const HoverPreview: React.FC<Props> = ({
@@ -33,10 +46,12 @@ const HoverPreview: React.FC<Props> = ({
   suppressClick,
   onFirstShow,
   onVisibleChange,
+  onPreviewTap,
   children,
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const previewTouchStartRef = useRef<{ x: number; y: number } | null>(null);
   const emulatedMouseSuppressedRef = useRef(false);
   const emulatedMouseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasShownRef = useRef(false);
@@ -46,14 +61,15 @@ const HoverPreview: React.FC<Props> = ({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const isVisible = currentlyHovered || tapPreviewOpen;
+  const previewTappable = tapPreviewOpen && onPreviewTap !== undefined;
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    onVisibleChange?.(isVisible);
-  }, [isVisible]);
+    onVisibleChange?.(isVisible, tapPreviewOpen);
+  }, [isVisible, tapPreviewOpen]);
 
   const noteShown = () => {
     if (hasShownRef.current) {
@@ -92,8 +108,7 @@ const HoverPreview: React.FC<Props> = ({
     // a hover left over from a mouse must never survive into a touch interaction
     setCurrentlyHovered(false);
 
-    const touch = e.touches[0];
-    touchStartRef.current = e.touches.length > 1 || !touch ? null : { x: touch.clientX, y: touch.clientY };
+    touchStartRef.current = tapStart(e);
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLSpanElement>) => {
@@ -107,14 +122,7 @@ const HoverPreview: React.FC<Props> = ({
     }
 
     const touch = e.changedTouches[0];
-    if (!touch) {
-      return;
-    }
-
-    const movedLikeAScroll =
-      Math.abs(touch.clientX - start.x) > TAP_MOVE_TOLERANCE_PX ||
-      Math.abs(touch.clientY - start.y) > TAP_MOVE_TOLERANCE_PX;
-    if (movedLikeAScroll) {
+    if (!touch || movedLikeAScroll(start, touch)) {
       return;
     }
 
@@ -142,6 +150,31 @@ const HoverPreview: React.FC<Props> = ({
     closeTapPreview();
   };
 
+  // the preview sits inside the trigger, which must not take a tap on the preview for its own
+  const handlePreviewTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    previewTouchStartRef.current = tapStart(e);
+  };
+
+  const handlePreviewTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const start = previewTouchStartRef.current;
+    previewTouchStartRef.current = null;
+    const touch = e.changedTouches[0];
+    if (!start || !touch || movedLikeAScroll(start, touch)) {
+      return;
+    }
+    // cancels the emulated click, so the tap never reaches a link around the trigger
+    e.preventDefault();
+    onPreviewTap?.();
+  };
+
+  const handlePreviewClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onPreviewTap?.();
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
     if (!divRef.current || tapPreviewOpen || emulatedMouseSuppressedRef.current) {
       return;
@@ -159,7 +192,11 @@ const HoverPreview: React.FC<Props> = ({
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
-  const handleMouseOut = () => {
+  const handleMouseOut = (e: React.MouseEvent<HTMLSpanElement>) => {
+    // crossing from one child of the trigger to another is not leaving it, and must not restart a countdown
+    if (e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) {
+      return;
+    }
     if (divRef.current) {
       setCurrentlyHovered(false);
     }
@@ -246,7 +283,10 @@ const HoverPreview: React.FC<Props> = ({
         )}
       <div
         ref={divRef}
-        className={styles.hoverPreview}
+        className={`${styles.hoverPreview} ${previewTappable ? styles.tappable : ''}`}
+        onTouchStart={previewTappable ? handlePreviewTouchStart : undefined}
+        onTouchEnd={previewTappable ? handlePreviewTouchEnd : undefined}
+        onClick={previewTappable ? handlePreviewClick : undefined}
         style={{
           display: isVisible ? VISIBLE_TOOLTIP_DISPLAY : 'none',
           top: getTooltipTop(mousePosition.y),

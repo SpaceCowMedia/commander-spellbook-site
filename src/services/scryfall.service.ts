@@ -23,6 +23,7 @@ function toReplacementCard(card: Card): ReplacementCard {
     id: card.id,
     name: card.name,
     images: getScryfallImage(card),
+    spoiler: Date.parse(card.released_at) > Date.now(),
   };
 }
 

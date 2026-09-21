@@ -249,6 +249,7 @@ export interface ReplacementCard {
   id: string;
   name: string;
   images: string[];
+  spoiler: boolean;
 }
 
 export interface ReplacementsPage {

@@ -34,6 +34,7 @@ import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
 import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
+import { SpoilerContext } from 'lib/spoilers';
 
 interface Props {
   combo?: Variant;
@@ -147,7 +148,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       bracketEstimate && combo.bracketTag !== bracketEstimate.bracketTag && bracketEstimate.combos.length > 1;
 
     return (
-      <>
+      <SpoilerContext value={combo.spoiler}>
         <SpellbookHead
           title={comboTitleToText(combo.uses, combo.requires)}
           description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
@@ -395,7 +396,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
             </div>
           )}
         </div>
-      </>
+      </SpoilerContext>
     );
   } else if (alternatives) {
     return (

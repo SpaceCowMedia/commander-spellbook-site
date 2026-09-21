@@ -9,6 +9,8 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import PageWrapper from 'components/layout/PageWrapper/PageWrapper';
 import Script from 'next/script';
+import { SpoilerContext, searchesForSpoilers } from 'lib/spoilers';
+import { queryParameterAsString } from 'lib/queryParameters';
 
 config.autoAddCss = false;
 
@@ -40,9 +42,11 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         )}
       </header>
-      <PageWrapper>
-        <Component {...pageProps} />
-      </PageWrapper>
+      <SpoilerContext value={searchesForSpoilers(queryParameterAsString(router.query.q))}>
+        <PageWrapper>
+          <Component {...pageProps} />
+        </PageWrapper>
+      </SpoilerContext>
     </>
   );
 }

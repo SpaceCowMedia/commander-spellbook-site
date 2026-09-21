@@ -4,10 +4,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import Loader from 'components/layout/Loader/Loader';
 import HoverPreview from 'components/layout/HoverPreview/HoverPreview';
+import PreviewCaption from 'components/layout/HoverPreview/PreviewCaption';
+import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
+import SpoilerCaption from 'components/layout/SpoilerFog/SpoilerCaption';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ReplacementCard } from 'lib/types';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
+import { useSpoilerFogged } from 'lib/spoilers';
 
 const ROTATION_MS = 2000;
 
@@ -32,6 +36,9 @@ const TemplateTooltip: React.FC<Props> = ({ template, caption, children }) => {
   const [failed, setFailed] = useState(false);
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const current = replacements[index] as ReplacementCard | undefined;
+  // the rotation waits on a fogged card until its countdown reveals it
+  const currentFogged = useSpoilerFogged(current) && loadedIds.has(current!.id);
 
   const loadReplacements = () => {
     if (requestedRef.current) {
@@ -58,7 +65,7 @@ const TemplateTooltip: React.FC<Props> = ({ template, caption, children }) => {
   }, [loadedIds]);
 
   useEffect(() => {
-    if (!visible || replacements.length < 2 || prefersReducedMotion()) {
+    if (!visible || currentFogged || replacements.length < 2 || prefersReducedMotion()) {
       return;
     }
     const rotation = setInterval(() => {
@@ -68,7 +75,7 @@ const TemplateTooltip: React.FC<Props> = ({ template, caption, children }) => {
       });
     }, ROTATION_MS);
     return () => clearInterval(rotation);
-  }, [visible, replacements]);
+  }, [visible, currentFogged, replacements]);
 
   /* Only the card being shown, the one it just replaced and the one coming next are mounted: a
      hover must not fire an image request for every one of a template's hundreds of replacements. */
@@ -100,29 +107,39 @@ const TemplateTooltip: React.FC<Props> = ({ template, caption, children }) => {
             const card = replacements[shownIndex];
             const isShowing = shownIndex === index && loadedIds.has(card.id);
             return (
-              <img
+              <SpoilerFog
                 key={card.id}
+                name={card.name}
+                spoiler={card.spoiler}
+                interactive={false}
                 className={`${styles.card} ${isShowing ? styles.currentCard : ''}`}
-                src={card.images[0]}
-                alt={`Template replacement: ${card.name}`}
-                onLoad={() => markLoaded(card.id)}
-              />
+              >
+                <img
+                  src={card.images[0]}
+                  alt={`Template replacement: ${card.name}`}
+                  onLoad={() => markLoaded(card.id)}
+                />
+              </SpoilerFog>
             );
           })}
-          <div className={styles.caption}>
-            {captionText}
-            {replacements.length > 1 && (
-              <div className={styles.progressTrack}>
-                {/* remounted on every turn, and when the preview opens, so the bar fills in step
-                    with the timer that is about to change the card */}
-                <div
-                  key={`${visible}-${index}`}
-                  className={styles.progress}
-                  style={{ animationDuration: `${ROTATION_MS}ms` }}
-                />
-              </div>
-            )}
-          </div>
+          {visible && currentFogged ? (
+            <SpoilerCaption />
+          ) : (
+            <PreviewCaption
+              text={captionText}
+              progress={
+                replacements.length > 1
+                  ? {
+                      durationMs: ROTATION_MS,
+                      // remounted on every turn, and when the preview opens, so the bar fills in step
+                      // with the timer that is about to change the card
+                      key: `${visible}-${index}`,
+                      className: styles.rotationProgress,
+                    }
+                  : undefined
+              }
+            />
+          )}
         </div>
       }
     >
