@@ -73,17 +73,18 @@ const ProgressBar: React.FC<Props> = ({ color }) => {
     };
   }, [router.events]);
 
-  if (progress === null) {
-    return null;
-  }
-
+  // The track stays mounted: a named element disappearing mid-transition would skip the whole view transition.
   return (
-    <div
-      id="progress-bar"
-      className={`${styles.progressBar} ${progress === 1 ? styles.done : ''}`}
-      style={{ transform: `scaleX(${progress})`, ['--progress-color' as string]: color }}
-    >
-      <span className={styles.peg} />
+    <div className={styles.track} style={{ viewTransitionName: 'progress-bar' }}>
+      {progress !== null && (
+        <div
+          id="progress-bar"
+          className={`${styles.progressBar} ${progress === 1 ? styles.done : ''}`}
+          style={{ transform: `scaleX(${progress})`, ['--progress-color' as string]: color }}
+        >
+          <span className={styles.peg} />
+        </div>
+      )}
     </div>
   );
 };

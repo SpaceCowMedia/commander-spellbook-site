@@ -1,0 +1,330 @@
+:root {
+  --page-exit-duration: 150ms;
+  --page-enter-duration: 300ms;
+  --page-turn-duration: 650ms;
+  --page-turn-easing: cubic-bezier(0.2, 0.3, 0.6, 0.9);
+  --page-turn-perspective: 160vw;
+  --search-dock-duration: 400ms;
+  --wheel-duration: 200ms;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+.pageTurnLight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The root is captured by every transition but never moves. */
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(.pageTurnLight) {
+  display: none;
+}
+
+::view-transition-group(root),
+::view-transition-group(site-header),
+::view-transition-group(progress-bar) {
+  animation: none;
+}
+
+::view-transition-group(site-header) {
+  z-index: 100;
+}
+
+::view-transition-group(progress-bar) {
+  z-index: 102;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(progress-bar) {
+  display: none;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(progress-bar) {
+  animation: none;
+}
+
+::view-transition-old(site-header):only-child {
+  display: block;
+  animation: var(--page-exit-duration) ease-in both vt-fade-out;
+}
+
+::view-transition-new(site-header):only-child {
+  animation: var(--page-enter-duration) ease-out both vt-fade-in;
+}
+
+::view-transition-old(.pageExit) {
+  animation: var(--page-exit-duration) ease-in both vt-fade-out;
+}
+
+::view-transition-new(.pageEnter) {
+  animation:
+    var(--page-enter-duration) ease-out 50ms both vt-fade-in,
+    var(--page-enter-duration) cubic-bezier(0.2, 0.7, 0.3, 1) both vt-rise;
+}
+
+::view-transition-group(.searchDock) {
+  z-index: 101;
+  animation-duration: var(--search-dock-duration);
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+::view-transition-image-pair(.searchDock) {
+  overflow: clip;
+  animation-name: dock-blur;
+}
+
+::view-transition-old(.searchDock),
+::view-transition-new(.searchDock) {
+  block-size: 100%;
+  object-fit: none;
+}
+
+::view-transition-old(.wheelToLeft) {
+  animation:
+    var(--wheel-duration) ease-in both vt-fade-out,
+    var(--wheel-duration) ease-in both vt-slide-to-left;
+}
+
+::view-transition-new(.wheelFromRight) {
+  animation:
+    var(--wheel-duration) ease-out both vt-fade-in,
+    var(--wheel-duration) ease-out both vt-slide-from-right;
+}
+
+::view-transition-old(.wheelToRight) {
+  animation:
+    var(--wheel-duration) ease-in both vt-fade-out,
+    var(--wheel-duration) ease-in both vt-slide-to-right;
+}
+
+::view-transition-new(.wheelFromLeft) {
+  animation:
+    var(--wheel-duration) ease-out both vt-fade-in,
+    var(--wheel-duration) ease-out both vt-slide-from-left;
+}
+
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition {
+  perspective: var(--page-turn-perspective);
+  perspective-origin: 100vw 20vh;
+}
+
+/* Result pages turn inside their own groups, which pass the viewport-wide perspective down to them. */
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnExit),
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnEnter),
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnLight) {
+  transform-style: preserve-3d;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-group(.pageTurnEnter),
+:root:active-view-transition-type(page-turn-back)::view-transition-group(.pageTurnExit) {
+  z-index: 1;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-group(.pageTurnExit),
+:root:active-view-transition-type(page-turn-back)::view-transition-group(.pageTurnEnter) {
+  z-index: 2;
+}
+
+/* The shading layer shares the turning page's box, keyframes and perspective, so its light stays on the page. */
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnLight) {
+  display: block;
+  z-index: 3;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-image-pair(.pageTurnExit),
+:root:active-view-transition-type(page-turn-back)::view-transition-image-pair(.pageTurnEnter),
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-image-pair(.pageTurnLight) {
+  overflow: clip;
+  transform-origin: left;
+  backface-visibility: hidden;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-image-pair(.pageTurnExit),
+:root:active-view-transition-type(page-turn-forward)::view-transition-image-pair(.pageTurnLight) {
+  animation:
+    var(--page-turn-duration) var(--page-turn-easing) both page-turn,
+    var(--page-turn-duration) ease-in-out both page-curl;
+}
+
+:root:active-view-transition-type(page-turn-back)::view-transition-image-pair(.pageTurnEnter),
+:root:active-view-transition-type(page-turn-back)::view-transition-image-pair(.pageTurnLight) {
+  animation:
+    var(--page-turn-duration) var(--page-turn-easing) reverse both page-turn,
+    var(--page-turn-duration) ease-in-out reverse both page-curl;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-old(.pageTurnExit),
+:root:active-view-transition-type(page-turn-back)::view-transition-new(.pageTurnEnter) {
+  animation: none;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-new(.pageTurnEnter) {
+  animation: var(--page-turn-duration) var(--page-turn-easing) both page-uncover;
+}
+
+:root:active-view-transition-type(page-turn-back)::view-transition-old(.pageTurnExit) {
+  animation: var(--page-turn-duration) var(--page-turn-easing) reverse both page-uncover;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-old(.pageTurnLight),
+:root:active-view-transition-type(page-turn-back)::view-transition-new(.pageTurnLight) {
+  inline-size: 300%;
+  block-size: 100%;
+  background-image: linear-gradient(
+    to right,
+    rgb(0 0 0 / 0%) 35%,
+    rgb(255 255 255 / 45%) 45%,
+    rgb(0 0 0 / 0%) 55%,
+    rgb(0 0 0 / 22%) 72%,
+    rgb(0 0 0 / 45%)
+  );
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-old(.pageTurnLight) {
+  animation: var(--page-turn-duration) linear both page-turn-light;
+}
+
+:root:active-view-transition-type(page-turn-back)::view-transition-new(.pageTurnLight) {
+  animation: var(--page-turn-duration) linear reverse both page-turn-light;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-new(.pageTurnLight),
+:root:active-view-transition-type(page-turn-back)::view-transition-old(.pageTurnLight) {
+  display: none;
+}
+
+/*
+ * Keep page-turn transform-only so it runs on the compositor; border-radius in the same keyframes would not.
+ * Seen from the viewport's right edge through a 160vw perspective, a page is edge-on before -70deg at any width.
+ */
+@keyframes page-turn {
+  from {
+    transform: rotateY(0deg) skewY(0deg);
+  }
+
+  to {
+    transform: rotateY(-70deg) skewY(3deg);
+  }
+}
+
+@keyframes page-curl {
+  50% {
+    border-radius: 0 6% 12% 0 / 0 40vh 60vh 0;
+  }
+
+  100% {
+    border-radius: 0 3% 6% 0 / 0 40vh 60vh 0;
+  }
+}
+
+@keyframes page-turn-light {
+  to {
+    translate: calc(-200% / 3);
+  }
+}
+
+@keyframes page-uncover {
+  from {
+    filter: brightness(0.55);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    translate: 0 12px;
+  }
+}
+
+@keyframes dock-blur {
+  50% {
+    filter: blur(2px);
+  }
+}
+
+@keyframes vt-slide-to-left {
+  to {
+    translate: -40px 0;
+  }
+}
+
+@keyframes vt-slide-from-right {
+  from {
+    translate: 40px 0;
+  }
+}
+
+@keyframes vt-slide-to-right {
+  to {
+    translate: 40px 0;
+  }
+}
+
+@keyframes vt-slide-from-left {
+  from {
+    translate: -40px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnLight) {
+    display: none;
+  }
+
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnExit) {
+    z-index: 2;
+  }
+
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnEnter) {
+    z-index: 1;
+  }
+
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-image-pair(.pageTurnExit),
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-image-pair(.pageTurnEnter),
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-new(.pageTurnEnter) {
+    animation: none;
+  }
+
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-old(.pageTurnExit) {
+    animation: 200ms ease both vt-fade-out;
+  }
+
+  ::view-transition-new(.pageEnter),
+  ::view-transition-new(.wheelFromLeft),
+  ::view-transition-new(.wheelFromRight) {
+    animation: 200ms ease-out both vt-fade-in;
+  }
+
+  ::view-transition-old(.wheelToLeft),
+  ::view-transition-old(.wheelToRight) {
+    animation: 150ms ease-in both vt-fade-out;
+  }
+
+  ::view-transition-group(.searchDock),
+  ::view-transition-image-pair(.searchDock) {
+    animation-name: none;
+  }
+}

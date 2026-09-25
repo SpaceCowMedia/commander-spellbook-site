@@ -1,4 +1,5 @@
 import '../assets/globals.css';
+import '../assets/view-transitions.css';
 import type { AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
@@ -13,6 +14,8 @@ import { SpoilerContext, searchesForSpoilers } from 'lib/spoilers';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { ApiErrorProps } from 'lib/apiErrorPage';
 import HttpErrorPage from 'components/layout/HttpErrorPage/HttpErrorPage';
+import NavigationTransitionTypes from 'components/layout/NavigationTransitionTypes/NavigationTransitionTypes';
+import { getTransitionKey, TransitionPage } from 'lib/viewTransitions';
 
 config.autoAddCss = false;
 
@@ -33,6 +36,7 @@ export default function App({ Component, pageProps }: AppProps<Partial<ApiErrorP
   return (
     <>
       <ProgressBar color="#9161f3" />
+      <NavigationTransitionTypes />
       <header>
         {isClient && window.location.hostname === 'commanderspellbook.com' && (
           <Script
@@ -45,7 +49,7 @@ export default function App({ Component, pageProps }: AppProps<Partial<ApiErrorP
         )}
       </header>
       <SpoilerContext value={searchesForSpoilers(queryParameterAsString(router.query.q))}>
-        <PageWrapper>
+        <PageWrapper transitionKey={getTransitionKey(Component as TransitionPage, router)}>
           {pageProps.apiError ? (
             <HttpErrorPage status={pageProps.apiError.status} retryAfter={pageProps.apiError.retryAfter} />
           ) : (

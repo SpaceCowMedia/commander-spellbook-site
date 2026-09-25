@@ -34,7 +34,12 @@
 }
 
 html {
-  @apply bg-white font-body dark:bg-black dark:text-white;
+  --page-background: var(--color-white);
+  @apply bg-(--page-background) font-body dark:text-white;
+
+  @variant dark {
+    --page-background: var(--color-black);
+  }
 }
 
 body,
