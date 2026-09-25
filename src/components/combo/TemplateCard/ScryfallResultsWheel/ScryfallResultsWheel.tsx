@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { addTransitionType, startTransition, useEffect, useState, ViewTransition } from 'react';
 import Icon from 'components/layout/Icon/Icon';
 import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/types';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import { useSwipeable } from 'react-swipeable';
+import { WHEEL_NEXT, WHEEL_PREVIOUS } from 'lib/viewTransitions';
+
+const CARD_ENTER = { [WHEEL_NEXT]: 'wheelFromRight', [WHEEL_PREVIOUS]: 'wheelFromLeft', default: 'none' };
+const CARD_EXIT = { [WHEEL_NEXT]: 'wheelToLeft', [WHEEL_PREVIOUS]: 'wheelToRight', default: 'none' };
 
 interface Props {
   fetchResults: (_page: number) => Promise<ReplacementsPage>;
@@ -18,6 +22,18 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [pageSize, setPageSize] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const show = (newIndex: number, newPageIndex: number, direction: string) => {
+    if (newPageIndex === pageIndex) {
+      startTransition(() => {
+        addTransitionType(direction);
+        setIndex(newIndex);
+      });
+    } else {
+      setIndex(newIndex);
+      setPageIndex(newPageIndex);
+    }
+  };
+
   const next = () => {
     let newIndex = index + 1;
     let newPageIndex = pageIndex;
@@ -28,10 +44,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
     if (newPageIndex >= pageCount) {
       newPageIndex = 0;
     }
-    setIndex(newIndex);
-    if (pageIndex !== newPageIndex) {
-      setPageIndex(newPageIndex);
-    }
+    show(newIndex, newPageIndex, WHEEL_NEXT);
   };
 
   const previous = () => {
@@ -44,10 +57,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
     if (newPageIndex < 0) {
       newPageIndex = pageCount - 1;
     }
-    setIndex(newIndex);
-    if (pageIndex !== newPageIndex) {
-      setPageIndex(newPageIndex);
-    }
+    show(newIndex, newPageIndex, WHEEL_PREVIOUS);
   };
 
   const handlers = useSwipeable({
@@ -103,20 +113,22 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
         />
       </div>
       <div className="h-full flex justify-center items-center">
-        <SpoilerFog key={current.id} name={current.name} spoiler={current.spoiler} className="h-full">
-          <a
-            className="h-full"
-            href={edhrecService.getCardUrl(current.name ?? '')}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              className="max-h-full rounded-xl bg-cover"
-              src={current.images[0]}
-              alt={`Template replacement: ${current.name}`}
-            />
-          </a>
-        </SpoilerFog>
+        <ViewTransition key={current.id} enter={CARD_ENTER} exit={CARD_EXIT} default="none">
+          <SpoilerFog name={current.name} spoiler={current.spoiler} className="h-full">
+            <a
+              className="h-full"
+              href={edhrecService.getCardUrl(current.name ?? '')}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                className="max-h-full rounded-xl bg-cover"
+                src={current.images[0]}
+                alt={`Template replacement: ${current.name}`}
+              />
+            </a>
+          </SpoilerFog>
+        </ViewTransition>
       </div>
       <div className="h-full flex justify-center items-center grow">
         <Icon

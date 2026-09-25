@@ -14,6 +14,14 @@ import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import rewriteRenamedResults from 'lib/renamedResults';
 import normalizeQuotes from 'lib/normalizeQuotes';
+import {
+  PAGE_TURN_BACK,
+  PAGE_TURN_FORWARD,
+  TransitionPage,
+  pushWithTransition,
+  queryTransitionKey,
+} from 'lib/viewTransitions';
+import PageTurn from 'components/layout/PageTurn/PageTurn';
 
 const PAGE_SIZE = 50;
 
@@ -92,7 +100,7 @@ const explainQuery = async (explainQueryApi: ExplainQueryApi, query: string): Pr
   }
 };
 
-const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, explanation }) => {
+const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, featured, explanation }: Props) => {
   const router = useRouter();
 
   const sort = queryParameterAsString(router.query.sort) || DEFAULT_SORT;
@@ -106,19 +114,25 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
 
   const pageNumber = Number(page) || 1;
 
-  const goForward = () => {
-    router.push({
-      pathname: '/search/',
-      query: { ...router.query, page: pageNumber + 1 },
-    });
-  };
+  const goForward = () =>
+    pushWithTransition(
+      router,
+      {
+        pathname: '/search/',
+        query: { ...router.query, page: pageNumber + 1 },
+      },
+      PAGE_TURN_FORWARD,
+    );
 
-  const goBack = () => {
-    router.push({
-      pathname: '/search/',
-      query: { ...router.query, page: pageNumber - 1 },
-    });
-  };
+  const goBack = () =>
+    pushWithTransition(
+      router,
+      {
+        pathname: '/search/',
+        query: { ...router.query, page: pageNumber - 1 },
+      },
+      PAGE_TURN_BACK,
+    );
 
   const handleSortChange = (value: string) => {
     router.push({
@@ -244,6 +258,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
               )}
               <div className="grow min-h-2" />
               <SearchPagination
+                id="top-pagination"
                 currentPage={pageNumber}
                 hasNextPage={hasNextPage}
                 aria-hidden="true"
@@ -257,8 +272,11 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
         <div className="container sm:flex flex-row">
           {hasResults ? (
             <div className="w-full">
-              <ComboResults results={combos} sort={sort} hideVariants={!groupBy} />
+              <PageTurn page={pageNumber}>
+                <ComboResults results={combos} sort={sort} hideVariants={!groupBy} />
+              </PageTurn>
               <SearchPagination
+                id="bottom-pagination"
                 currentPage={pageNumber}
                 hasNextPage={hasNextPage}
                 aria-hidden="true"
@@ -278,6 +296,8 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
     </>
   );
 };
+
+Search.transitionKey = queryTransitionKey('q', 'variant');
 
 export default Search;
 
