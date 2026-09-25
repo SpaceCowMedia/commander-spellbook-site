@@ -6,8 +6,10 @@ const APPLY_THEME_BEFORE_PAINT = `(function(){try{var m=document.cookie.match(/(
 
 export default class MyDocument extends Document {
   render() {
+    // An inline name keeps the root snapshot in every transition, where view-transitions.css holds it still.
+    // Without it, React drops the root in some transitions and lets the browser crossfade it in others.
     return (
-      <Html lang="en">
+      <Html lang="en" style={{ viewTransitionName: 'root' }}>
         <Head>
           <script dangerouslySetInnerHTML={{ __html: APPLY_THEME_BEFORE_PAINT }} />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin%20Sans&display=swap" />

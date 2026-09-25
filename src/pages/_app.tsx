@@ -1,4 +1,5 @@
 import '../assets/globals.css';
+import '../assets/view-transitions.css';
 import type { AppProps } from 'next/app';
 import 'react-tooltip/dist/react-tooltip.css';
 import { pageview } from '../lib/googleAnalytics';
@@ -11,6 +12,8 @@ import PageWrapper from 'components/layout/PageWrapper/PageWrapper';
 import Script from 'next/script';
 import { SpoilerContext, searchesForSpoilers } from 'lib/spoilers';
 import { queryParameterAsString } from 'lib/queryParameters';
+import NavigationTransitionTypes from 'components/layout/NavigationTransitionTypes/NavigationTransitionTypes';
+import { getTransitionKey, TransitionPage } from 'lib/viewTransitions';
 
 config.autoAddCss = false;
 
@@ -31,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <ProgressBar color="#9161f3" />
+      <NavigationTransitionTypes />
       <header>
         {isClient && window.location.hostname === 'commanderspellbook.com' && (
           <Script
@@ -43,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
         )}
       </header>
       <SpoilerContext value={searchesForSpoilers(queryParameterAsString(router.query.q))}>
-        <PageWrapper>
+        <PageWrapper transitionKey={getTransitionKey(Component as TransitionPage, router)}>
           <Component {...pageProps} />
         </PageWrapper>
       </SpoilerContext>
