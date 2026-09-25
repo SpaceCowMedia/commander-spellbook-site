@@ -1,4 +1,4 @@
-import React, { addTransitionType, startTransition, useEffect, useState, ViewTransition } from 'react';
+import React, { addTransitionType, startTransition, useEffect, useRef, useState, ViewTransition } from 'react';
 import Icon from 'components/layout/Icon/Icon';
 import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/types';
@@ -21,6 +21,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   const [currentPage, setCurrentPage] = useState<ReplacementsPage | undefined>(undefined);
   const [pageSize, setPageSize] = useState(1);
   const [loading, setLoading] = useState(false);
+  const preloaded = useRef<HTMLImageElement[]>([]);
 
   const show = (newIndex: number, newPageIndex: number, direction: string) => {
     if (newPageIndex === pageIndex) {
@@ -95,6 +96,13 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
       });
   }, [pageIndex]);
 
+  useEffect(() => {
+    // the cards a click away, kept loaded so they show at once
+    preloaded.current = [currentPage?.results[index - 1], currentPage?.results[index + 1]].flatMap((card) =>
+      card?.images[0] ? [Object.assign(new Image(), { src: card.images[0] })] : [],
+    );
+  }, [currentPage, index]);
+
   const current = currentPage?.results[index];
   if (loading || current === undefined) {
     return <Loader />;
@@ -122,7 +130,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
               rel="noopener noreferrer"
             >
               <img
-                className="max-h-full rounded-xl bg-cover"
+                className="h-full aspect-488/680 rounded-xl bg-cover"
                 src={current.images[0]}
                 alt={`Template replacement: ${current.name}`}
               />
