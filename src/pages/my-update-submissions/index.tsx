@@ -2,11 +2,13 @@ import React from 'react';
 import { VariantUpdateSuggestionsApi } from '@space-cow-media/spellbook-client';
 import { useRouter } from 'next/router';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
+import PageTurn from 'components/layout/PageTurn/PageTurn';
 import styles from './my-update-submissions.module.scss';
 import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
+import { PAGE_TURN_BACK, PAGE_TURN_FORWARD, pushWithTransition } from 'lib/viewTransitions';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
 import {
@@ -32,19 +34,15 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page }: Prop
   const pageNumber = Number(page) || 1;
   const hasNextPage = pageNumber < totalPages;
 
-  const goForward = () => {
-    router.push({
-      pathname: '/my-update-submissions',
-      query: { page: pageNumber + 1 },
-    });
-  };
+  const goForward = () =>
+    pushWithTransition(
+      router,
+      { pathname: '/my-update-submissions', query: { page: pageNumber + 1 } },
+      PAGE_TURN_FORWARD,
+    );
 
-  const goBack = () => {
-    router.push({
-      pathname: '/my-update-submissions',
-      query: { page: pageNumber - 1 },
-    });
-  };
+  const goBack = () =>
+    pushWithTransition(router, { pathname: '/my-update-submissions', query: { page: pageNumber - 1 } }, PAGE_TURN_BACK);
 
   return (
     <>
@@ -74,21 +72,25 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page }: Prop
             </p>
             <div className="w-full space-y-6">
               <SearchPagination
+                id="top-pagination"
                 currentPage={pageNumber}
                 hasNextPage={hasNextPage}
                 aria-hidden="true"
                 onGoForward={goForward}
                 onGoBack={goBack}
               />
-              <ul className={styles.suggestionsWrapper}>
-                {submissions.map((suggestion) => (
-                  <UpdateSubmissionItem
-                    key={suggestion.id}
-                    submission={variantUpdateSuggestionFromSubmission(suggestion)}
-                  />
-                ))}
-              </ul>
+              <PageTurn page={pageNumber}>
+                <ul className={styles.suggestionsWrapper}>
+                  {submissions.map((suggestion) => (
+                    <UpdateSubmissionItem
+                      key={suggestion.id}
+                      submission={variantUpdateSuggestionFromSubmission(suggestion)}
+                    />
+                  ))}
+                </ul>
+              </PageTurn>
               <SearchPagination
+                id="bottom-pagination"
                 currentPage={pageNumber}
                 hasNextPage={hasNextPage}
                 aria-hidden="true"
