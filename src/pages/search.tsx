@@ -15,13 +15,7 @@ import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import rewriteRenamedResults from 'lib/renamedResults';
 import normalizeQuotes from 'lib/normalizeQuotes';
-import {
-  PAGE_TURN_BACK,
-  PAGE_TURN_FORWARD,
-  TransitionPage,
-  pushWithTransition,
-  queryTransitionKey,
-} from 'lib/viewTransitions';
+import { TransitionPage, pageTurn, pushWithTransition, queryTransitionKey } from 'lib/viewTransitions';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
 
 const PAGE_SIZE = 50;
@@ -124,7 +118,7 @@ const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, feat
         pathname: '/search/',
         query: { ...router.query, page: pageNumber + 1 },
       },
-      PAGE_TURN_FORWARD,
+      pageTurn(pageNumber, pageNumber + 1),
     );
 
   const goBack = () =>
@@ -134,7 +128,7 @@ const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, feat
         pathname: '/search/',
         query: { ...router.query, page: pageNumber - 1 },
       },
-      PAGE_TURN_BACK,
+      pageTurn(pageNumber, pageNumber - 1),
     );
 
   const handleSortChange = (value: string) => {

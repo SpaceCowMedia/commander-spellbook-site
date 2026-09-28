@@ -70,21 +70,30 @@ describe('Search', () => {
     cy.get('input[name=q]').type('monolith{enter}');
     cy.url().should('include', '/search/');
 
+    // Odd pages slide to the next one, and even pages flip over to it.
     cy.get('.forward-button').first().click();
     cy.url().should('include', 'page=2');
-    expectTransitionType('page-turn-forward');
+    expectTransitionType('page-slide-forward');
+
+    cy.get('.forward-button').first().click();
+    cy.url().should('include', 'page=3');
+    expectTransitionType('page-flip-forward');
 
     cy.get('.back-button').first().click();
-    cy.url().should('include', 'page=1');
-    expectTransitionType('page-turn-back');
+    cy.url().should('include', 'page=2');
+    expectTransitionType('page-flip-back');
+
+    cy.go('back');
+    cy.url().should('include', 'page=3');
+    expectTransitionType('page-flip-forward');
 
     cy.go('back');
     cy.url().should('include', 'page=2');
-    expectTransitionType('page-turn-forward');
+    expectTransitionType('page-flip-back');
 
     cy.go('back');
     cy.url().should('not.include', 'page=');
-    expectTransitionType('page-turn-back');
+    expectTransitionType('page-slide-back');
 
     cy.go('back');
     cy.location('pathname').should('eq', '/');
