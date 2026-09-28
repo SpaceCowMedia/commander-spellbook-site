@@ -9,7 +9,7 @@ import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
-import { PAGE_TURN_BACK, PAGE_TURN_FORWARD, pushWithTransition } from 'lib/viewTransitions';
+import { pageTurn, pushWithTransition } from 'lib/viewTransitions';
 import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
@@ -30,10 +30,18 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page }: Props) => 
   const hasNextPage = pageNumber < totalPages;
 
   const goForward = () =>
-    pushWithTransition(router, { pathname: '/my-submissions', query: { page: pageNumber + 1 } }, PAGE_TURN_FORWARD);
+    pushWithTransition(
+      router,
+      { pathname: '/my-submissions', query: { page: pageNumber + 1 } },
+      pageTurn(pageNumber, pageNumber + 1),
+    );
 
   const goBack = () =>
-    pushWithTransition(router, { pathname: '/my-submissions', query: { page: pageNumber - 1 } }, PAGE_TURN_BACK);
+    pushWithTransition(
+      router,
+      { pathname: '/my-submissions', query: { page: pageNumber - 1 } },
+      pageTurn(pageNumber, pageNumber - 1),
+    );
 
   return (
     <>

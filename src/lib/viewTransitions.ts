@@ -2,8 +2,11 @@ import type { NextPage } from 'next';
 import type { NextRouter } from 'next/router';
 import { queryParameterAsString } from './queryParameters';
 
-export const PAGE_TURN_FORWARD = 'page-turn-forward';
-export const PAGE_TURN_BACK = 'page-turn-back';
+export const PAGE_SLIDE_FORWARD = 'page-slide-forward';
+export const PAGE_SLIDE_BACK = 'page-slide-back';
+export const PAGE_FLIP_FORWARD = 'page-flip-forward';
+export const PAGE_FLIP_BACK = 'page-flip-back';
+export const PAGE_TURNS = [PAGE_SLIDE_FORWARD, PAGE_SLIDE_BACK, PAGE_FLIP_FORWARD, PAGE_FLIP_BACK];
 export const NO_ANIMATION = 'no-animation';
 export const WHEEL_NEXT = 'wheel-next';
 export const WHEEL_PREVIOUS = 'wheel-previous';
@@ -30,6 +33,16 @@ export const queryTransitionKey =
   (router) =>
     [pathKey(router.asPath), ...params.map((param) => queryParameterAsString(router.query[param]) ?? '')].join('|');
 
+// Pages 1 and 2, 3 and 4, … are the two sides of a spread: a page slides to the other side of its spread and flips
+// over to the next spread.
+export function pageTurn(fromPage: number, toPage: number): string {
+  const slide = Math.min(fromPage, toPage) % 2 === 1;
+  if (toPage > fromPage) {
+    return slide ? PAGE_SLIDE_FORWARD : PAGE_FLIP_FORWARD;
+  }
+  return slide ? PAGE_SLIDE_BACK : PAGE_FLIP_BACK;
+}
+
 export function historyPageTurn(fromAs: string, toAs: string): string | undefined {
   const from = new URL(fromAs, 'http://localhost');
   const to = new URL(toAs, 'http://localhost');
@@ -42,7 +55,7 @@ export function historyPageTurn(fromAs: string, toAs: string): string | undefine
   if (pathKey(from.pathname) !== pathKey(to.pathname) || from.search !== to.search || fromPage === toPage) {
     return undefined;
   }
-  return toPage > fromPage ? PAGE_TURN_FORWARD : PAGE_TURN_BACK;
+  return pageTurn(fromPage, toPage);
 }
 
 interface PendingTransition {

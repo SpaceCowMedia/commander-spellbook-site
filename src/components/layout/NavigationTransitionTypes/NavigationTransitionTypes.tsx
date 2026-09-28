@@ -2,8 +2,7 @@ import React, { addTransitionType, startTransition, useEffect, useState } from '
 import Router from 'next/router';
 import {
   NO_ANIMATION,
-  PAGE_TURN_BACK,
-  PAGE_TURN_FORWARD,
+  PAGE_TURNS,
   bindPendingTransition,
   clearPendingTransition,
   expectHistoryTransition,
@@ -29,7 +28,7 @@ const NavigationTransitionTypes: React.FC = () => {
     // Runs synchronously right before Next renders the navigation, which then joins this transition's lane.
     const onBeforeHistoryChange = (as: string) => {
       const type = takePendingTransition(as);
-      if (type === PAGE_TURN_FORWARD || type === PAGE_TURN_BACK) {
+      if (type && PAGE_TURNS.includes(type)) {
         // Next scrolls to the top after rendering anyway; doing it first captures the old results where the new ones will be.
         window.scrollTo(0, 0);
       }

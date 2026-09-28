@@ -8,7 +8,7 @@ import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
-import { PAGE_TURN_BACK, PAGE_TURN_FORWARD, pushWithTransition } from 'lib/viewTransitions';
+import { pageTurn, pushWithTransition } from 'lib/viewTransitions';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
 import {
@@ -38,11 +38,15 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page }: Prop
     pushWithTransition(
       router,
       { pathname: '/my-update-submissions', query: { page: pageNumber + 1 } },
-      PAGE_TURN_FORWARD,
+      pageTurn(pageNumber, pageNumber + 1),
     );
 
   const goBack = () =>
-    pushWithTransition(router, { pathname: '/my-update-submissions', query: { page: pageNumber - 1 } }, PAGE_TURN_BACK);
+    pushWithTransition(
+      router,
+      { pathname: '/my-update-submissions', query: { page: pageNumber - 1 } },
+      pageTurn(pageNumber, pageNumber - 1),
+    );
 
   return (
     <>
