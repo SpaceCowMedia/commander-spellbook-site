@@ -1,6 +1,7 @@
 import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
 import { event } from '../../../../lib/googleAnalytics';
 import React from 'react';
+import SolRingPrice from '../../../layout/SolRingPrice/SolRingPrice';
 
 interface Props {
   cards: string[];
@@ -50,6 +51,7 @@ const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPr
           ></path>
         </svg>
         TCGplayer {tcgPlayerPriceLabel}
+        <SolRingPrice className="block text-sm" price={tcgPlayerPrice} store="tcgplayer" />
       </ExternalLink>
       <span className="mx-1" />
       <ExternalLink
@@ -71,6 +73,7 @@ const BuyComboButtons: React.FC<Props> = ({ cards, tcgPlayerPrice, cardKingdomPr
           </g>
         </svg>
         Card Kingdom {cardKingdomPriceLabel}
+        <SolRingPrice className="block text-sm" price={cardKingdomPrice} store="cardkingdom" />
       </ExternalLink>
     </div>
   );

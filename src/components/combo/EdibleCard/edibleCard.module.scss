@@ -1,0 +1,283 @@
+@use 'sass:list';
+@use 'sass:math';
+@use 'pieces';
+
+$piece-count: list.length(pieces.$bites);
+$card-width: 63;
+$card-height: 88;
+
+// the rounded-xl corners of a card about 240px wide
+$corner-radius: 3.15;
+
+// Masks reach past the card so its edges never fall on the blurry rim of a mask image.
+$bleed: 5;
+$view-box: '#{-$bleed} #{-$bleed} #{$card-width + 2 * $bleed} #{$card-height + 2 * $bleed}';
+
+@function card-mask($shape) {
+  @return url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='#{$view-box}' preserveAspectRatio='none'>#{$shape}</svg>");
+}
+
+@function piece-mask($path, $mirrored: false) {
+  $transform: '';
+  @if $mirrored {
+    $transform: " transform='matrix(-1 0 0 1 #{$card-width} 0)'";
+  }
+  @return card-mask("<path#{$transform} d='#{$path}'/>");
+}
+
+// Rounds the corners inside the mask: a border-radius clip would leave its anti-aliased rim unmasked.
+$whole-card: card-mask("<rect width='#{$card-width}' height='#{$card-height}' rx='#{$corner-radius}'/>");
+
+@function face-mask-layers($side) {
+  $layers: ($whole-card);
+  @for $i from 1 through $piece-count {
+    $layers: list.append($layers, var(--#{$side}-#{$i}), comma);
+  }
+  @return $layers;
+}
+
+@function face-mask-composite() {
+  $operators: (subtract);
+  @for $i from 1 through $piece-count {
+    $operators: list.append($operators, add, comma);
+  }
+  @return $operators;
+}
+
+.edible {
+  @for $i from 1 through $piece-count {
+    --front-#{$i}: none;
+    --back-#{$i}: none;
+  }
+}
+
+@each $kind, $paths in (bite: pieces.$bites, tear: pieces.$tears) {
+  .edible[data-kind='#{$kind}'] {
+    @for $i from 1 through $piece-count {
+      --piece-#{$i}: #{piece-mask(list.nth($paths, $i))};
+      --piece-#{$i}-mirrored: #{piece-mask(list.nth($paths, $i), true)};
+    }
+  }
+}
+
+@for $i from 1 through $piece-count {
+  .edible[data-pieces~='#{$i}'] {
+    --front-#{$i}: var(--piece-#{$i});
+    --back-#{$i}: var(--piece-#{$i}-mirrored);
+  }
+
+  .edible[data-mirrored][data-pieces~='#{$i}'] {
+    --front-#{$i}: var(--piece-#{$i}-mirrored);
+    --back-#{$i}: var(--piece-#{$i});
+  }
+}
+
+.edible[data-pieces] .face,
+.edible[data-pieces] .mirroredFace {
+  mask-size: math.percentage(math.div($card-width + 2 * $bleed, $card-width))
+    math.percentage(math.div($card-height + 2 * $bleed, $card-height));
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-composite: face-mask-composite();
+  border-radius: 0;
+}
+
+.edible[data-pieces] .face {
+  mask-image: face-mask-layers(front);
+}
+
+.edible[data-pieces] .mirroredFace {
+  mask-image: face-mask-layers(back);
+}
+
+.edible[data-chomp='odd'] {
+  animation: chomp-odd 400ms ease-out;
+}
+
+.edible[data-chomp='even'] {
+  animation: chomp-even 400ms ease-out;
+}
+
+@mixin shake($length: 100%, $visibility: null) {
+  $scale: math.div($length, 100%);
+
+  0%,
+  #{$length} {
+    transform: none;
+    visibility: $visibility;
+  }
+
+  #{15% * $scale} {
+    transform: translate(-4%, 1%) rotate(-4deg) scale(0.97);
+  }
+
+  #{35% * $scale} {
+    transform: translate(3%, -1%) rotate(3deg);
+  }
+
+  #{55% * $scale} {
+    transform: translate(-2%, 0) rotate(-2deg);
+  }
+
+  #{75% * $scale} {
+    transform: translate(1%, 0) rotate(1deg);
+  }
+}
+
+@keyframes chomp-odd {
+  @include shake;
+}
+
+@keyframes chomp-even {
+  @include shake;
+}
+
+// the scrap shakes like every other piece, then the card stays gone for a moment
+@keyframes last-chomp {
+  @include shake(45%, visible);
+
+  46%,
+  100% {
+    visibility: hidden;
+  }
+}
+
+.edible[data-eaten] {
+  visibility: hidden;
+  pointer-events: none;
+  animation: last-chomp 900ms ease-out;
+}
+
+// A bitten card comes back whole as a drop of liquid falling from above, splatting and settling.
+$drop-duration: 1100ms;
+
+.edible[data-restoring][data-kind='bite'] {
+  transform-origin: 50% 100%;
+  animation: drop $drop-duration;
+}
+
+.edible[data-restoring][data-kind='bite'] .face,
+.edible[data-restoring][data-kind='bite'] .mirroredFace {
+  animation: drop-shape $drop-duration;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-140%) scale(0.55, 1.35);
+    animation-timing-function: ease-in;
+  }
+
+  38% {
+    transform: scale(0.6, 1.3);
+    animation-timing-function: ease-out;
+  }
+
+  50% {
+    transform: scale(1.35, 0.6);
+  }
+
+  62% {
+    transform: scale(0.85, 1.15);
+  }
+
+  74% {
+    transform: scale(1.08, 0.93);
+  }
+
+  86% {
+    transform: scale(0.97, 1.03);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes drop-shape {
+  0%,
+  38% {
+    border-radius: 50% / 60% 60% 40% 40%;
+  }
+
+  52% {
+    border-radius: 45% / 35%;
+  }
+
+  80%,
+  100% {
+    border-radius: 0.75rem;
+  }
+}
+
+// The pieces come back in the reverse order they were torn off, each one snapping into place.
+$rewind-step: math.div(100%, $piece-count + 1);
+$rewind-duration: ($piece-count + 1) * 200ms;
+
+.edible[data-restoring][data-kind='tear'] {
+  animation:
+    rewind $rewind-duration step-end forwards,
+    rewind-snaps $rewind-duration ease-out;
+}
+
+@keyframes rewind {
+  @for $step from 1 through $piece-count {
+    $piece: $piece-count + 1 - $step;
+
+    #{$step * $rewind-step} {
+      --front-#{$piece}: none;
+      --back-#{$piece}: none;
+    }
+  }
+
+  100% {
+    @for $piece from 1 through $piece-count {
+      --front-#{$piece}: none;
+      --back-#{$piece}: none;
+    }
+  }
+}
+
+@keyframes rewind-snaps {
+  0% {
+    transform: scale(0.5) rotate(-12deg);
+  }
+
+  #{$rewind-step * 0.6} {
+    transform: none;
+  }
+
+  @for $step from 1 through $piece-count {
+    $tilt: 2deg;
+    @if $step % 2 == 0 {
+      $tilt: -2deg;
+    }
+
+    #{$step * $rewind-step - 1%} {
+      transform: none;
+    }
+
+    #{$step * $rewind-step} {
+      transform: scale(1.06) rotate($tilt);
+    }
+
+    #{$step * $rewind-step + $rewind-step * 0.5} {
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edible[data-chomp]:not([data-eaten], [data-restoring]) {
+    animation: none;
+  }
+
+  .edible[data-eaten][data-kind],
+  .edible[data-restoring][data-kind] {
+    animation-duration: 1ms;
+  }
+
+  .edible[data-restoring] .face,
+  .edible[data-restoring] .mirroredFace {
+    animation: none;
+  }
+}

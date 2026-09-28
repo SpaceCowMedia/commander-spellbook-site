@@ -34,6 +34,7 @@ import DeckCombos from 'components/FindMyCombos/DeckCombos';
 import DeckBracket from 'components/FindMyCombos/DeckBracket';
 import Loader from 'components/layout/Loader/Loader';
 import { BRACKET_RANGE_MAP } from 'lib/brackets';
+import useFoolsDay from 'lib/foolsDay';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -58,6 +59,11 @@ export class Decklist {
 
   isEmpty(): boolean {
     return !this.deck.main.length && !this.deck.commanders.length;
+  }
+
+  contains(cardName: string): boolean {
+    const name = cardName.toLowerCase();
+    return this.deck.main.concat(this.deck.commanders).some((card) => card.card.toLowerCase() === name);
   }
 
   countCards(): number {
@@ -87,6 +93,7 @@ const FindMyCombos: React.FC = () => {
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
   const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
+  const foolsDay = useFoolsDay();
   // When restoring from cache, hold the target scroll position until `results` commits.
   // useLayoutEffect below applies it before paint so we never scroll into a still-empty page.
   const pendingScrollY = useRef<number | null>(null);
@@ -457,6 +464,13 @@ const FindMyCombos: React.FC = () => {
                 >
                   {numberOfCardsText}
                 </span>
+              )}
+              {foolsDay && currentlyParsedDeck && !currentlyParsedDeck.isEmpty() && (
+                <p id="sol-ring-verdict" className="text-center italic">
+                  {currentlyParsedDeck.contains('Sol Ring')
+                    ? 'Sol Ring detected. Of course it was.'
+                    : 'No Sol Ring? A deck of rare courage and restraint. We salute you.'}
+                </p>
               )}
               {!lookupInProgress && (
                 <div className="flex flex-col gap-y-2 lg:flex-row">

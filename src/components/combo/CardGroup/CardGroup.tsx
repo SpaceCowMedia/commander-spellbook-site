@@ -50,8 +50,8 @@ const CardGroup: React.FC<Props> = ({ cards, templates, className }) => {
       >
         {items.map((card, index) => (
           <div key={`oracle-card-image-${index}`} className={styles.cardImgWrapper}>
-            {'template' in card && <TemplateCard template={card} />}
-            {'card' in card && <CardImage card={card.card} usedFace={card.usedFace} />}
+            {'template' in card && <TemplateCard template={card} edible />}
+            {'card' in card && <CardImage card={card.card} usedFace={card.usedFace} edible />}
           </div>
         ))}
       </div>

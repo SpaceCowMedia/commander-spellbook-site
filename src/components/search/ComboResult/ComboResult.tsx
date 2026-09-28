@@ -6,7 +6,7 @@ import TemplateTooltip from '../../layout/TemplateTooltip/TemplateTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
-import { Variant } from '@space-cow-media/spellbook-client';
+import { CardPrices, Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
@@ -14,6 +14,8 @@ import { IS_LOCK } from 'lib/constants';
 import { useRouter } from 'next/router';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
+import useFoolsDay, { bonusResult } from 'lib/foolsDay';
+import SolRingPrice from 'components/layout/SolRingPrice/SolRingPrice';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -34,6 +36,15 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
   const comboLink =
     searchQuery === undefined ? `/combo/${combo.id}` : `/combo/${combo.id}?${new URLSearchParams({ q: searchQuery })}`;
 
+  const foolsDay = useFoolsDay();
+  const priceStore: keyof CardPrices | undefined = !sort?.startsWith('price')
+    ? undefined
+    : sort.includes('cardkingdom')
+      ? 'cardkingdom'
+      : sort.includes('cardmarket')
+        ? 'cardmarket'
+        : 'tcgplayer';
+
   const sortStatMessage = (combo: Variant) => {
     if (!sort) {
       return '';
@@ -51,14 +62,8 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
       return `${numberOfDecks} ${deckString} (EDHREC)`;
     }
 
-    if (sort.startsWith('price')) {
-      if (sort.includes('cardkingdom')) {
-        return `$${combo.prices.cardkingdom}`;
-      }
-      if (sort.includes('cardmarket')) {
-        return `€${combo.prices.cardmarket}`;
-      }
-      return `$${combo.prices.tcgplayer}`;
+    if (priceStore) {
+      return `${priceStore === 'cardmarket' ? '€' : '$'}${combo.prices[priceStore]}`;
     }
 
     return '';
@@ -71,6 +76,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
   const stateBasedTooltip =
     combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
   const isLock = combo.produces.some((result) => result.feature.name.toLowerCase() === 'lock');
+  const results = combo.produces.filter((result) => result.feature.name.toLowerCase() != 'lock');
 
   return (
     <Link
@@ -140,13 +146,12 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
         </div>
         <div className="grow">
           <span className="sr-only">Results in combo:</span>
-          {combo.produces
-            .filter((result) => result.feature.name.toLowerCase() != 'lock')
-            .map((result) => (
-              <div key={result.feature.name} className={`result pl-3 pr-3`}>
-                <TextWithMagicSymbol text={result.feature.name} />
-              </div>
-            ))}
+          {results.map((result) => (
+            <div key={result.feature.name} className={`result pl-3 pr-3`}>
+              <TextWithMagicSymbol text={result.feature.name} />
+            </div>
+          ))}
+          {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
         </div>
       </div>
       <div className="flex items-center grow flex-col">
@@ -165,6 +170,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
             title={stateBasedTooltip}
           >
             {sortStatMessage(combo)}
+            {priceStore && <SolRingPrice className="ml-1" price={combo.prices[priceStore]} store={priceStore} />}
           </div>
         )}
       </div>

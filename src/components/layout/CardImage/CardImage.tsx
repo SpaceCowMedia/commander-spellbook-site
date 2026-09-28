@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import cardBack from 'assets/images/card-back.png';
 import weatheredCardBack from 'assets/images/weathered-card-back.png';
 import CardLink from '../../layout/CardLink/CardLink';
-import isFoolsDay from 'lib/foolsDay';
+import useFoolsDay from 'lib/foolsDay';
+import useEdibleCard from 'components/combo/EdibleCard/useEdibleCard';
 import { Card, LayoutRotationEnum } from '@space-cow-media/spellbook-client';
 import { BACK_FACE_INDEX } from 'lib/types';
 
@@ -12,13 +13,17 @@ interface Props {
   card: Card;
   usedFace?: number | null;
   className?: string;
+  edible?: boolean;
 }
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
+const CardImage: React.FC<Props> = ({ card, usedFace, className, edible }: Props) => {
+  const foolsDay = useFoolsDay();
+  const { rootProps, frontClassName, backClassName } = useEdibleCard(!!edible);
+  const plainCardBack = foolsDay ? weatheredCardBack.src : cardBack.src;
   const hasBack = card.imageUriBackNormal != null;
   const showsUsedBackFace = hasBack && usedFace === BACK_FACE_INDEX;
   const canRotate = card.layoutRotationFront != null;
@@ -62,7 +67,8 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
 
   return (
     <div
-      className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''} ${className}`}
+      {...rootProps}
+      className={`${styles.centerContainer} ${canRotate ? styles.canRotate : ''} ${rotated ? styles.rotated : ''} ${className} ${rootProps.className ?? ''}`}
     >
       <FlipperCard
         flipped={backFacing}
@@ -71,7 +77,7 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
           hasBack ? (
             <CardLink className="relative" name={card.name} disableMobileSingleClickAsPreview={true}>
               <img
-                className="rounded-xl"
+                className={`rounded-xl ${backClassName}`}
                 src={card.imageUriBackNormal!}
                 ref={backImageRef}
                 alt={`the back side of ${card.name}`}
@@ -79,8 +85,8 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
             </CardLink>
           ) : (
             <img
-              className="rounded-xl"
-              src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
+              className={`rounded-xl ${backClassName}`}
+              src={plainCardBack}
               ref={backImageRef}
               alt="the back of a classic MtG card"
             />
@@ -89,9 +95,9 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className }: Props) => {
         front={
           <CardLink className="relative" name={card.name} disableMobileSingleClickAsPreview={true}>
             <img
-              className="rounded-xl"
+              className={`rounded-xl ${frontClassName}`}
               ref={frontImageRef}
-              src={card.imageUriFrontNormal ?? (isFoolsDay() ? weatheredCardBack.src : cardBack.src)}
+              src={card.imageUriFrontNormal ?? plainCardBack}
               alt={`the front side of ${card.name}`}
               onLoad={() => setFrontLoaded(true)}
               onError={() => setFrontLoaded(false)}

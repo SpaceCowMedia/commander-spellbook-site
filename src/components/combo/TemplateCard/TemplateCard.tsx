@@ -1,5 +1,5 @@
 import cardBack from 'assets/images/card-back.png';
-import isFoolsDay from 'lib/foolsDay';
+import useFoolsDay from 'lib/foolsDay';
 import weatheredCardBack from 'assets/images/weathered-card-back.png';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import React, { useEffect, useState } from 'react';
@@ -8,12 +8,17 @@ import ScryfallResultsWheel from 'components/combo/TemplateCard/ScryfallResultsW
 import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import FlipperCard from 'components/layout/FlipperCard/FlipperCard';
+import useEdibleCard from 'components/combo/EdibleCard/useEdibleCard';
 
 interface Props {
   template: TemplateInVariant;
+  edible?: boolean;
 }
 
-const TemplateCard: React.FC<Props> = ({ template }) => {
+const TemplateCard: React.FC<Props> = ({ template, edible }) => {
+  const foolsDay = useFoolsDay();
+  const { rootProps, frontClassName, backClassName } = useEdibleCard(!!edible);
+  const plainCardBack = foolsDay ? weatheredCardBack.src : cardBack.src;
   const [backFacing, setBackFacing] = useState(true);
   const [readyToFlipToFront, setReadyToFlipToFront] = useState(false);
 
@@ -34,13 +39,13 @@ const TemplateCard: React.FC<Props> = ({ template }) => {
   }, [readyToFlipToFront]);
 
   return (
-    <div className="rounded-xl">
+    <div {...rootProps} className={`rounded-xl ${rootProps.className ?? ''}`}>
       <FlipperCard
         flipped={backFacing}
         front={
           <div className="relative">
             <div
-              className="rounded-xl"
+              className={`rounded-xl ${frontClassName}`}
               style={{
                 backgroundColor: '#404040',
                 textShadow: '1px 1px 5px black',
@@ -55,20 +60,12 @@ const TemplateCard: React.FC<Props> = ({ template }) => {
               <div className="absolute -bottom-1 flex flex-col justify-center w-full items-center">
                 <TemplateReplacementsModal template={template} />
               </div>
-              <img
-                className="opacity-10"
-                src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
-                alt="MTG Card Back"
-              />
+              <img className="opacity-10" src={plainCardBack} alt="MTG Card Back" />
             </div>
           </div>
         }
         back={
-          <img
-            className="rounded-xl"
-            src={isFoolsDay() ? weatheredCardBack.src : cardBack.src}
-            alt="the back of a classic MtG card"
-          />
+          <img className={`rounded-xl ${backClassName}`} src={plainCardBack} alt="the back of a classic MtG card" />
         }
       />
     </div>

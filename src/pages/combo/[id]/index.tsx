@@ -35,6 +35,7 @@ import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
 import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
 import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
 import { SpoilerContext } from 'lib/spoilers';
+import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
 
 interface Props {
   combo?: Variant;
@@ -54,6 +55,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const variantsApi = new VariantsApi(configuration);
   const bracketApi = new EstimateBracketApi(configuration);
   const [bracketEstimate, setBracketEstimate] = useState<EstimateBracketResult>();
+  const foolsDay = useFoolsDay();
 
   const loadVariants = async (combo: Variant) => {
     setVariants(undefined);
@@ -123,6 +125,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     const identity = combo.identity;
     const prerequisites = getPrerequisiteList(combo);
     const steps = combo.description?.split('\n') ?? [];
+    const stepCount = steps.filter((step) => step.trim() !== '').length;
     const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
     const isLock = combo.produces.some((feature) => feature.feature.name.toLowerCase() === 'lock');
     const results = combo.produces
@@ -187,7 +190,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
             <ComboList
               title="Steps"
               id="combo-steps"
-              iterations={steps}
+              iterations={foolsDay && stepCount > 0 ? [...steps, explanationStep(stepCount)] : steps}
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               showNumbers
@@ -209,7 +212,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
             <ComboList
               title="Results"
               id="combo-results"
-              iterations={results}
+              iterations={foolsDay && results.length > 0 ? [...results, bonusResult(combo.id)] : results}
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
               appendPeriod

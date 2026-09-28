@@ -3,6 +3,7 @@ import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import ManaSymbol from 'components/layout/ManaSymbol/ManaSymbol';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import { LEGALITY_FORMATS } from 'lib/types';
+import useFoolsDay from 'lib/foolsDay';
 import { GetStaticProps } from 'next';
 import React from 'react';
 import { apiConfiguration } from 'services/api.service';
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const Metrics: React.FC<Props> = (stats) => {
+  const foolsDay = useFoolsDay();
   return (
     <>
       <SpellbookHead title="Metrics" description="Commander Spellbook metrics" />
@@ -78,6 +80,30 @@ const Metrics: React.FC<Props> = (stats) => {
                 <td>{variants}</td>
               </tr>
             ))}
+            {foolsDay && (
+              <>
+                <tr>
+                  <th>Unofficial Stat</th>
+                  <th>Value</th>
+                </tr>
+                <tr>
+                  <td>Opponents who scooped to these variants</td>
+                  <td>{stats.numberOfVariants.count * 3}</td>
+                </tr>
+                <tr>
+                  <td>Combos that get better with Sol Ring</td>
+                  <td>{stats.numberOfCombos.count} (all of them)</td>
+                </tr>
+                <tr>
+                  <td>Decks that are &quot;a 7&quot;</td>
+                  <td>All of them</td>
+                </tr>
+                <tr>
+                  <td>Salt generated</td>
+                  <td>Infinite</td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
       </div>
