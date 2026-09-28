@@ -1,0 +1,45 @@
+@reference "../../../assets/globals.css";
+
+.control {
+  @apply flex flex-col gap-2;
+}
+
+.heading {
+  @apply text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400;
+}
+
+.note {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.login {
+  @apply flex flex-col items-start gap-3;
+}
+
+.actions {
+  @apply mt-1 flex items-center gap-3;
+}
+
+.voteButton {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-xl bg-link px-6 py-2 font-title text-lg font-semibold text-white no-underline shadow-md transition-all hover:bg-primary hover:text-dark disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-link disabled:hover:text-white dark:bg-primary dark:text-dark dark:hover:bg-secondary dark:disabled:hover:bg-primary;
+}
+
+.retractButton {
+  @apply cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 underline decoration-dotted underline-offset-4 transition-colors hover:text-danger disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-300;
+}
+
+.status {
+  @apply text-sm text-gray-700 dark:text-gray-200;
+}
+
+.hint {
+  @apply -mt-1 text-xs text-gray-500 dark:text-gray-400;
+}
+
+.error {
+  @apply rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger dark:text-secondary;
+}
+
+.queueLink {
+  @apply mt-1 self-start text-sm font-semibold;
+}

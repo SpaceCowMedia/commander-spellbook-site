@@ -16,6 +16,7 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
 import SolRingPrice from 'components/layout/SolRingPrice/SolRingPrice';
+import { formatSalt, MAX_SALT } from 'lib/salt';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -60,6 +61,14 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
       const deckString = pluralize('deck', numberOfDecks);
 
       return `${numberOfDecks} ${deckString} (EDHREC)`;
+    }
+
+    if (sort === 'salt') {
+      if (combo.salt === null) {
+        return 'Too few salt votes';
+      }
+
+      return `Salt ${formatSalt(combo.salt)} / ${MAX_SALT} (${combo.saltVoteCount} ${pluralize('vote', combo.saltVoteCount)})`;
     }
 
     if (priceStore) {

@@ -10,7 +10,7 @@ import { CardInVariant, TemplateInVariant, Variant } from '@space-cow-media/spel
 
 const NONPERMANENT_TYPES = ['instant', 'sorcery'];
 
-const ZONE_MAP = {
+export const ZONE_MAP = {
   H: 'in hand',
   B: 'on the battlefield',
   C: 'in the command zone',

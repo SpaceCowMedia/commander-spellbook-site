@@ -1,4 +1,3 @@
-import pluralize from 'pluralize';
 import CardHeader, { comboTitleToText } from '../../../components/combo/CardHeader/CardHeader';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
@@ -13,9 +12,6 @@ import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
 import EDHRECService from '../../../services/edhrec.service';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import {
-  CardInDeckRequest,
-  EstimateBracketApi,
-  EstimateBracketResult,
   FindMyCombosApi,
   ResponseError,
   Variant,
@@ -28,14 +24,11 @@ import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import Icon from 'components/layout/Icon/Icon';
-import { DEFAULT_ORDERING, IS_LOCK } from 'lib/constants';
-import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
-import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
-import BracketInfo from 'components/combo/BracketInfo/BracketInfo';
+import { DEFAULT_ORDERING } from 'lib/constants';
 import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
 import { SpoilerContext } from 'lib/spoilers';
 import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
+import ComboMeta from 'components/combo/ComboMeta/ComboMeta';
 
 interface Props {
   combo?: Variant;
@@ -53,8 +46,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variantCount, setVariantCount] = useState((combo?.variantCount ?? 1) - 1);
   const configuration = apiConfiguration();
   const variantsApi = new VariantsApi(configuration);
-  const bracketApi = new EstimateBracketApi(configuration);
-  const [bracketEstimate, setBracketEstimate] = useState<EstimateBracketResult>();
   const foolsDay = useFoolsDay();
 
   const loadVariants = async (combo: Variant) => {
@@ -75,37 +66,11 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
     }
   };
 
-  const loadBracketEstimate = async (combo: Variant) => {
-    setBracketEstimate(undefined);
-    try {
-      const templates: CardInDeckRequest[] = [];
-      for (const template of combo.requires) {
-        const page = await cachedTemplateReplacements(template.template, 0);
-        if (page.results.length) {
-          templates.push({ card: page.results[0].name, quantity: template.quantity });
-        }
-      }
-      const estimate = await bracketApi.estimateBracketCreate({
-        unknownCommanders: true,
-        deckRequest: {
-          main: templates.concat(combo.uses.map((use) => ({ card: use.card.name, quantity: use.quantity }))),
-        },
-      });
-      setBracketEstimate(estimate);
-    } catch (err) {
-      console.error('Error fetching bracket estimate', err);
-    }
-  };
-
   useEffect(() => {
     setVariants(undefined);
     setVariantCount((combo?.variantCount ?? 1) - 1);
-    setBracketEstimate(undefined);
     if (combo && combo.variantCount > 1) {
       loadVariants(combo);
-    }
-    if (combo) {
-      loadBracketEstimate(combo);
     }
   }, [combo]);
 
@@ -119,36 +84,15 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       text: template.quantity > 1 ? `${template.quantity}x ${template.template.name}` : template.template.name,
       icon: 'template',
     }));
-    const numberOfDecks = combo.popularity;
-    const metaData = [];
 
     const identity = combo.identity;
     const prerequisites = getPrerequisiteList(combo);
     const steps = combo.description?.split('\n') ?? [];
     const stepCount = steps.filter((step) => step.trim() !== '').length;
     const notes = combo.notes?.split('\n')?.filter((note) => note.length > 0);
-    const isLock = combo.produces.some((feature) => feature.feature.name.toLowerCase() === 'lock');
     const results = combo.produces
       .filter((feature) => feature.feature.name.toLowerCase() !== 'lock')
       .map((feature) => (feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name));
-
-    // metadata
-    if (isLock) {
-      metaData.push(IS_LOCK);
-    }
-    if (combo.status == 'E') {
-      metaData.push("This combo is an example of a variant and doesn't provide an explanation.");
-    } else if (combo.status == 'D') {
-      metaData.push('This combo is a draft and is only visible to editors.');
-    } else if (combo.status == 'NR') {
-      metaData.push('This combo needs to be reviewed and is only visible to editors.');
-    }
-    if (numberOfDecks !== undefined && numberOfDecks !== null) {
-      metaData.push(`In ${numberOfDecks} ${pluralize('deck', numberOfDecks)} according to EDHREC.`);
-    }
-
-    const otherCombosInterferingBracketEstimate =
-      bracketEstimate && combo.bracketTag !== bracketEstimate.bracketTag && bracketEstimate.combos.length > 1;
 
     return (
       <SpoilerContext value={combo.spoiler}>
@@ -219,41 +163,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               emptyText="This combo doesn't produce notable results."
             />
 
-            {metaData.length > 0 && <ComboList title="Metadata" id="combo-metadata" iterations={metaData} />}
-            {!!combo.bracketTag && (
-              <div>
-                <h2 className="font-bold text-xl mb-2">Bracket Tag</h2>
-                <p>
-                  This combo has been estimated to be{' '}
-                  <span className={styles.bracketTag}>{BRACKET_NAME_MAP[combo.bracketTag]}</span> (Bracket{' '}
-                  <span className={styles.bracketTag}>{BRACKET_RANGE_MAP[combo.bracketTag]}</span>).
-                  {otherCombosInterferingBracketEstimate && (
-                    <>
-                      <br />
-                      However, this combo includes other combos which raise the bracket estimate to{' '}
-                      <span className={styles.bracketTag}>
-                        {BRACKET_NAME_MAP[bracketEstimate.bracketTag]}
-                      </span> (Bracket{' '}
-                      <span className={styles.bracketTag}>{BRACKET_RANGE_MAP[bracketEstimate.bracketTag]}</span>). Those
-                      combos are:{' '}
-                      <ComboResults
-                        results={bracketEstimate.combos.filter((c) => c.combo.id != combo.id)}
-                        hideVariants={true}
-                      />
-                    </>
-                  )}
-                </p>
-                <BracketInfo bracketEstimate={bracketEstimate} singleCombo={!otherCombosInterferingBracketEstimate} />
-                <div className="flex justify-center">
-                  <ExternalLink
-                    href="https://magic.wizards.com/en/news/announcements?search=%22commander+brackets%22"
-                    className="text-center"
-                  >
-                    Learn more about the Commander format bracket system
-                  </ExternalLink>
-                </div>
-              </div>
-            )}
+            <ComboMeta key={combo.id} combo={combo} />
           </div>
 
           <aside className="w-full md:w-1/3 text-center">

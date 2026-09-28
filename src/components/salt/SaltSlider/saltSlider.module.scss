@@ -1,0 +1,256 @@
+@reference "../../../assets/globals.css";
+
+.slider {
+  --knob: 2.75rem;
+  --track: 0.75rem;
+  --glide: 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --tone: color-mix(in oklab, var(--color-secondary) calc(var(--value) * 25%), var(--color-primary));
+  --ink: color-mix(in oklab, var(--ink-hot) calc(var(--value) * 25%), var(--ink-cool));
+
+  @apply w-full select-none [--ink-cool:var(--color-link)] [--ink-hot:var(--color-danger)] [--rule-color:var(--color-gray-300)] [--track-color:var(--color-gray-200)] dark:[--ink-cool:var(--color-primary)] dark:[--ink-hot:var(--color-secondary)] dark:[--rule-color:var(--color-gray-600)] dark:[--track-color:var(--color-gray-700)];
+}
+
+.readout {
+  @apply flex h-12 items-end justify-center;
+}
+
+.prompt {
+  @apply pb-1 text-sm italic text-gray-500 dark:text-gray-400;
+}
+
+.reading {
+  @apply inline-flex items-baseline gap-2;
+
+  animation: pop var(--glide);
+}
+
+.score {
+  @apply font-title text-4xl leading-none font-bold;
+
+  color: var(--ink);
+}
+
+.tier {
+  @apply text-lg font-semibold text-gray-700 dark:text-gray-200;
+}
+
+.control {
+  @apply relative mt-2;
+
+  height: var(--knob);
+}
+
+.input {
+  @apply absolute inset-0 z-10 m-0 h-full w-full cursor-pointer appearance-none opacity-0 disabled:cursor-not-allowed;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: var(--knob);
+    height: var(--knob);
+  }
+
+  &::-moz-range-thumb {
+    width: var(--knob);
+    height: var(--knob);
+    border: 0;
+  }
+}
+
+.track {
+  @apply absolute top-1/2 rounded-full;
+
+  left: calc(var(--knob) / 2);
+  right: calc(var(--knob) / 2);
+  height: var(--track);
+  translate: 0 -50%;
+  background: var(--track-color);
+}
+
+.fill {
+  @apply absolute inset-0 overflow-hidden rounded-full;
+
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+
+  &::after {
+    @apply absolute inset-0 origin-right;
+
+    content: '';
+    background: var(--track-color);
+    transform: scaleX(calc(1 - var(--value) / 4));
+    transition: transform var(--glide);
+  }
+}
+
+.stop {
+  @apply absolute top-1/2 h-1.5 w-1.5 rounded-full bg-white/70 dark:bg-black/40;
+
+  left: calc(var(--stop) / 4 * 100%);
+  translate: -50% -50%;
+}
+
+.rail {
+  @apply pointer-events-none absolute inset-0;
+
+  transform: translateX(calc(var(--value) / 4 * 100%));
+  transition: transform var(--glide);
+}
+
+.knob {
+  @apply absolute top-1/2 left-0 flex items-center justify-center rounded-full border-4 border-white shadow-md dark:border-dark;
+
+  width: var(--knob);
+  height: var(--knob);
+  translate: -50% -50%;
+  background: var(--tone);
+  transition:
+    background-color var(--glide),
+    scale var(--glide),
+    opacity 200ms ease-out;
+}
+
+.input:focus-visible + .track .knob {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--tone) 50%, transparent);
+}
+
+.control:hover .knob {
+  scale: 1.08;
+}
+
+.unset .knob {
+  opacity: 0;
+  scale: 0.3;
+}
+
+.shaker {
+  @apply relative flex items-center justify-center;
+
+  rotate: -12deg;
+  animation: shake 600ms ease-in-out;
+}
+
+.shakerIcon {
+  @apply text-lg text-white;
+}
+
+.grain {
+  --angle: calc(-150deg + var(--grain) * 120deg / max(var(--grains) - 1, 1));
+  --distance: 1.7rem;
+  --x: calc(cos(var(--angle)) * var(--distance));
+  --y: calc(sin(var(--angle)) * var(--distance));
+
+  @apply absolute top-0 left-1/2 h-1 w-1 rounded-full bg-gray-400 dark:bg-gray-200;
+
+  opacity: 0;
+  animation: sprinkle 800ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  animation-delay: calc(var(--grain) * 25ms);
+
+  &:nth-child(3n) {
+    --distance: 2.2rem;
+  }
+
+  &:nth-child(3n + 1) {
+    --distance: 1.3rem;
+  }
+}
+
+.scale {
+  @apply relative mt-1 h-9;
+
+  margin-inline: calc(var(--knob) / 2);
+}
+
+.tick {
+  @apply absolute top-0 flex h-9 w-9 cursor-pointer flex-col items-center justify-end rounded-md text-sm font-bold text-gray-500 transition-colors hover:text-dark disabled:cursor-not-allowed dark:text-gray-400 dark:hover:text-light;
+
+  left: calc(var(--stop) / 4 * 100%);
+  translate: -50% 0;
+
+  &::before {
+    @apply mb-1 block h-2 w-0.5 rounded-full;
+
+    content: '';
+    background: var(--rule-color);
+    transition: background-color var(--glide);
+  }
+}
+
+.picked {
+  color: var(--ink);
+
+  &::before {
+    background: var(--tone);
+  }
+}
+
+.captions {
+  @apply flex justify-between text-xs text-gray-500 dark:text-gray-400;
+}
+
+.disabled {
+  @apply opacity-60;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.3rem) scale(0.6);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    rotate: -12deg;
+  }
+
+  20% {
+    rotate: -40deg;
+  }
+
+  45% {
+    rotate: 10deg;
+  }
+
+  70% {
+    rotate: -28deg;
+  }
+}
+
+@keyframes sprinkle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.5);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  55% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--x)), var(--y)) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--x)), calc(var(--y) + 1rem)) scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail,
+  .knob,
+  .fill::after,
+  .tick::before {
+    transition: none;
+  }
+
+  .reading,
+  .shaker {
+    animation: none;
+  }
+
+  .grain {
+    display: none;
+  }
+}
