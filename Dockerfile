@@ -35,7 +35,6 @@ RUN if [ "$BUILD_TYPE" != "prod" ]; then \
   echo "NEXT_PUBLIC_EDITOR_BACKEND_URL=https://$BUILD_TYPE-backend.commanderspellbook.com" >> .env.production; \
   fi
 
-RUN pnpm install --frozen-lockfile --offline
 RUN pnpm build
 
 # Production image, copy all the files and run next
