@@ -5,7 +5,7 @@ import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentit
 import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
 import styles from './combo.module.scss';
 import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
 import React, { useEffect, useState } from 'react';
 import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
@@ -418,7 +418,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
 
 export default Combo;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const { params } = context;
 
   if (!params || !params.id || typeof params.id !== 'string') {
@@ -503,4 +503,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     notFound: true,
   };
-};
+});

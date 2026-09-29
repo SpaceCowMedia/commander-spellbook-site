@@ -16,13 +16,16 @@ export function retryAfterSeconds(response?: Response, fallback: number = DEFAUL
   return fallback;
 }
 
-export function rateLimitRetryAfterSeconds(err: unknown, fallback?: number): number | undefined {
+export function httpErrorStatus(err: unknown): number | undefined {
   const response = (err as { response?: Response } | undefined)?.response;
-  const status = response?.status ?? (err as { status?: number } | undefined)?.status;
-  if (status !== 429) {
+  return response?.status ?? (err as { status?: number } | undefined)?.status;
+}
+
+export function rateLimitRetryAfterSeconds(err: unknown, fallback?: number): number | undefined {
+  if (httpErrorStatus(err) !== 429) {
     return undefined;
   }
-  return retryAfterSeconds(response, fallback);
+  return retryAfterSeconds((err as { response?: Response }).response, fallback);
 }
 
 export function formatDuration(seconds: number): string {
@@ -69,5 +72,29 @@ export function httpErrorMessage(status: number, retryAfter?: number): string {
         return 'There was a problem with your submission. Please try again.';
       }
       return 'An unexpected error happened. Please try again later.';
+  }
+}
+
+// The counterpart of `httpErrorMessage` for reading data rather than submitting it
+export function apiErrorMessage(status: number, retryAfter?: number): string {
+  switch (status) {
+    case 400:
+      return 'The request was not valid. The link you followed may be broken or out of date.';
+    case 401:
+      return 'Your session has expired. Please log in again.';
+    case 403:
+      return 'You do not have permission to access this.';
+    case 404:
+      return 'What you are looking for could not be found.';
+    case 408:
+    case 504:
+      return 'The server took too long to answer. Please try again in a few moments.';
+    case 429:
+      return `You are sending too many requests. Please wait ${formatDuration(retryAfter ?? 0)} and try again.`;
+    case 502:
+    case 503:
+      return 'The server is temporarily unavailable. Please try again in a few minutes.';
+    default:
+      return 'Something went wrong. Please try again in a few minutes.';
   }
 }

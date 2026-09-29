@@ -3,7 +3,7 @@ import { VariantUpdateSuggestionsApi } from '@space-cow-media/spellbook-client';
 import { useRouter } from 'next/router';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
 import styles from './my-update-submissions.module.scss';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
@@ -15,7 +15,6 @@ import {
   variantUpdateSuggestionToSubmission,
 } from 'lib/types';
 import UpdateSubmissionItem from 'components/submission/UpdateSubmissionItem/UpdateSubmissionItem';
-import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
 import SplashPage from 'components/layout/SplashPage/SplashPage';
 import Link from 'next/link';
 
@@ -25,10 +24,9 @@ interface Props {
   submissions: UpdateSubmission[];
   count: number;
   page: number;
-  error?: string;
 }
 
-const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error }: Props) => {
+const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page }: Props) => {
   const router = useRouter();
   const totalPages = Math.ceil(count / PAGE_SIZE);
   const pageNumber = Number(page) || 1;
@@ -52,7 +50,6 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
     <>
       <SpellbookHead title="Commander Spellbook: Update Submissions" description="View your update submissions." />
       <div className="container flex flex-col py-6">
-        {error && <ErrorMessage>{error}</ErrorMessage>}
         {submissions.length === 0 ? (
           <SplashPage
             pulse={false}
@@ -108,7 +105,7 @@ const MyUpdateSubmissions: React.FC<Props> = ({ submissions, count, page, error 
 
 export default MyUpdateSubmissions;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const userId = await CookieService.get<Promise<string>>('csbUserId', {
     req: context.req,
     res: context.res,
@@ -124,29 +121,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   const configuration = apiConfiguration(context);
   const suggestionsApi = new VariantUpdateSuggestionsApi(configuration);
-  try {
-    const results = await suggestionsApi.variantUpdateSuggestionsList({
-      suggestedBy: Number(userId),
-      limit: PAGE_SIZE,
-      offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
-      count: true,
-    });
+  const results = await suggestionsApi.variantUpdateSuggestionsList({
+    suggestedBy: Number(userId),
+    limit: PAGE_SIZE,
+    offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
+    count: true,
+  });
 
-    return {
-      props: {
-        submissions: results.results.map(variantUpdateSuggestionToSubmission),
-        count: results.count,
-        page: context.query.page || 1,
-      },
-    };
-  } catch {
-    return {
-      props: {
-        submissions: [],
-        count: 0,
-        page: context.query.page || 1,
-        error: 'An error occurred while fetching your submissions.',
-      },
-    };
-  }
-};
+  return {
+    props: {
+      submissions: results.results.map(variantUpdateSuggestionToSubmission),
+      count: results.count,
+      page: context.query.page || 1,
+    },
+  };
+});

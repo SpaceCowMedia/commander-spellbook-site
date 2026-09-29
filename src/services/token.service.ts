@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import CookieService from './cookie.service';
 import { getCookies } from 'cookies-next';
 import { apiConfiguration } from './api.service';
-import { TokenApi, TokenObtainPair } from '@space-cow-media/spellbook-client';
+import { ResponseError, TokenApi, TokenObtainPair } from '@space-cow-media/spellbook-client';
 
 export function timeInSecondsToEpoch(): number {
   return Math.round(Date.now() / 1000);
@@ -39,6 +39,19 @@ function decodeJwt(jwt?: string): DecodedJWTType | null {
   return JSON.parse(jsonPayload);
 }
 
+let pendingRefresh: Promise<string> | undefined;
+
+// Every request made while the access token is expiring needs a new one, so they all wait on the same
+// refresh instead of each sending its own, which would pile up requests just when the form is busiest.
+function refreshClientToken(): Promise<string> {
+  pendingRefresh ??= fetchNewToken(CookieService.get('csbRefresh'))
+    .then((result) => setToken(result))
+    .finally(() => {
+      pendingRefresh = undefined;
+    });
+  return pendingRefresh;
+}
+
 async function getToken(): Promise<string> {
   const refreshToken = CookieService.get('csbRefresh') || null;
   const jwt = CookieService.get('csbJwt') || null;
@@ -47,8 +60,7 @@ async function getToken(): Promise<string> {
     if (!refreshToken) {
       return '';
     } else {
-      const result = await fetchNewToken();
-      return setToken(result);
+      return refreshClientToken();
     }
   }
 
@@ -56,8 +68,7 @@ async function getToken(): Promise<string> {
   const expirationCutoff = timeInSecondsToEpoch() + 60; // within 60 seconds of expiration
 
   if (!decodedToken) {
-    const result = await fetchNewToken();
-    return setToken(result);
+    return refreshClientToken();
   }
 
   if (decodedToken.exp > expirationCutoff) {
@@ -65,8 +76,7 @@ async function getToken(): Promise<string> {
     return jwt;
   }
 
-  const result = await fetchNewToken();
-  return setToken(result);
+  return refreshClientToken();
 }
 
 async function getTokenFromServerContext(serverContext?: GetServerSidePropsContext): Promise<string> {
@@ -78,7 +88,7 @@ async function getTokenFromServerContext(serverContext?: GetServerSidePropsConte
     if (!refreshToken) {
       return Promise.resolve('');
     } else {
-      const r = await fetchNewToken(refreshToken);
+      const r = await fetchNewToken(refreshToken, serverContext);
       return setToken(r, serverContext);
     }
   }
@@ -87,7 +97,7 @@ async function getTokenFromServerContext(serverContext?: GetServerSidePropsConte
   const expirationCutoff = timeInSecondsToEpoch() + 60; // within 60 seconds of expiration
 
   if (!decodedToken) {
-    const result = await fetchNewToken(refreshToken);
+    const result = await fetchNewToken(refreshToken, serverContext);
     return setToken(result, serverContext);
   }
 
@@ -95,7 +105,7 @@ async function getTokenFromServerContext(serverContext?: GetServerSidePropsConte
     return jwt;
   }
 
-  const result = await fetchNewToken(refreshToken);
+  const result = await fetchNewToken(refreshToken, serverContext);
   return setToken(result, serverContext);
 }
 
@@ -116,19 +126,25 @@ function setToken({ access, refresh }: TokenObtainPair, serverContext?: GetServe
   return jwt;
 }
 
+// Only an expired or invalid refresh token ends the session. When the refresh is turned down for any
+// other reason (too many requests, a server error, no connection) the refresh token is still good, so
+// it is kept for the next attempt and the error reaches the caller, which can then report the actual
+// problem and retry, instead of failing every request from then on as if the user had logged out.
+function isRefreshTokenRejected(error: unknown): boolean {
+  return error instanceof ResponseError && (error.response.status === 400 || error.response.status === 401);
+}
+
 async function fetchNewToken(
-  providedRefreshToken?: string,
+  refreshToken: string | undefined,
   serverContext?: GetServerSidePropsContext,
 ): Promise<TokenObtainPair> {
-  const refreshToken = providedRefreshToken
-    ? providedRefreshToken
-    : CookieService.get('csbRefresh', {
-        req: serverContext?.req,
-        res: serverContext?.res,
-      }) || null;
+  const cookieOptions = {
+    req: serverContext?.req,
+    res: serverContext?.res,
+  };
 
   if (!refreshToken) {
-    CookieService.logout();
+    CookieService.logout(cookieOptions);
     return { access: '', refresh: '' };
   }
 
@@ -145,8 +161,11 @@ async function fetchNewToken(
       refresh: refreshToken,
       ...response,
     };
-  } catch {
-    CookieService.logout();
+  } catch (error) {
+    if (!isRefreshTokenRejected(error)) {
+      throw error;
+    }
+    CookieService.logout(cookieOptions);
     return { access: '', refresh: '' };
   }
 }

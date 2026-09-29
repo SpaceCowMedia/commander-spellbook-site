@@ -7,7 +7,8 @@ import SearchPagination from '../components/search/SearchPagination/SearchPagina
 import ComboResults from '../components/search/ComboResults/ComboResults';
 import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
+import { httpErrorStatus } from 'lib/httpErrors';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import { ExplainQueryApi, PropertiesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
@@ -285,10 +286,9 @@ interface ErrorWithResponse extends Error {
   response: Response;
 }
 
-// The backend describes a rejected query in the body of its error response. An error can also come
-// from in front of it though — a rate limiter or a proxy answering with an empty body — so a body
-// that is not the expected JSON leaves the generic message in place instead of throwing from here,
-// which would turn a busy backend into a crashed page.
+// The backend describes a rejected query in the body of its error response. A 400 can also come from
+// in front of it though — a proxy answering with an empty body — so a body that is not the expected
+// JSON leaves the generic message in place instead of throwing from here.
 const readQueryError = async (error: unknown): Promise<string | string[] | undefined> => {
   const thrown = error as { q?: string | string[] } | ErrorWithResponse | null;
   if (thrown && 'response' in thrown) {
@@ -301,7 +301,7 @@ const readQueryError = async (error: unknown): Promise<string | string[] | undef
   return thrown?.q;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const configuration = apiConfiguration(context);
   // Inputs are already sanitized as they are typed, but a query can also arrive from an old link or
   // from outside the site, so the same folding is applied here.
@@ -419,6 +419,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
+    // A rejected query is explained on the search page itself, any other failure gets its error page
+    if (httpErrorStatus(error) !== 400) {
+      throw error;
+    }
     const q = await readQueryError(error);
     const error_message = q ? (Array.isArray(q) ? q.join('. ') : q) : 'An error occurred while searching for combos.';
     return {
@@ -429,4 +433,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-};
+});

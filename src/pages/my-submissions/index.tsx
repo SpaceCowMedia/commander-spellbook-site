@@ -4,12 +4,11 @@ import { useRouter } from 'next/router';
 import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
 import styles from './my-submissions.module.scss';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
-import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
 import { ComboSubmission, variantSuggestionFromSubmission, variantSuggestionToSubmission } from 'lib/types';
@@ -20,10 +19,9 @@ interface Props {
   submissions: ComboSubmission[];
   count: number;
   page: number;
-  error?: string;
 }
 
-const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Props) => {
+const MySubmissions: React.FC<Props> = ({ submissions, count, page }: Props) => {
   const router = useRouter();
   const totalPages = Math.ceil(count / PAGE_SIZE);
   const pageNumber = Number(page) || 1;
@@ -47,7 +45,6 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
     <>
       <SpellbookHead title="Commander Spellbook: Combo Submissions" description="View your combo submissions." />
       <div className="container flex flex-col py-6">
-        {error && <ErrorMessage>{error}</ErrorMessage>}
         {submissions.length === 0 ? (
           <NoCombosFound />
         ) : (
@@ -86,7 +83,7 @@ const MySubmissions: React.FC<Props> = ({ submissions, count, page, error }: Pro
 
 export default MySubmissions;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const userId = await CookieService.get<Promise<string>>('csbUserId', {
     req: context.req,
     res: context.res,
@@ -102,29 +99,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   const configuration = apiConfiguration(context);
   const suggestionsApi = new VariantSuggestionsApi(configuration);
-  try {
-    const results = await suggestionsApi.variantSuggestionsList({
-      suggestedBy: Number(userId),
-      limit: PAGE_SIZE,
-      offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
-      count: true,
-    });
+  const results = await suggestionsApi.variantSuggestionsList({
+    suggestedBy: Number(userId),
+    limit: PAGE_SIZE,
+    offset: ((Number(queryParameterAsString(context.query.page)) || 1) - 1) * PAGE_SIZE,
+    count: true,
+  });
 
-    return {
-      props: {
-        submissions: results.results.map(variantSuggestionToSubmission),
-        count: results.count,
-        page: context.query.page || 1,
-      },
-    };
-  } catch {
-    return {
-      props: {
-        submissions: [],
-        count: 0,
-        page: context.query.page || 1,
-        error: 'An error occurred while fetching your submissions.',
-      },
-    };
-  }
-};
+  return {
+    props: {
+      submissions: results.results.map(variantSuggestionToSubmission),
+      count: results.count,
+      page: context.query.page || 1,
+    },
+  };
+});

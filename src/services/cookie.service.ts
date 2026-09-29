@@ -31,12 +31,12 @@ export function remove(key: string, options?: OptionsType) {
   deleteCookie(key, { path: '/', ...options });
 }
 
-export function logout() {
-  remove('csbRefresh');
-  remove('csbJwt');
-  remove('csbUsername');
-  remove('csbUserId');
-  remove('csbIsStaff');
+export function logout(options?: OptionsType) {
+  remove('csbRefresh', options);
+  remove('csbJwt', options);
+  remove('csbUsername', options);
+  remove('csbUserId', options);
+  remove('csbIsStaff', options);
 }
 
 const CookieService = {

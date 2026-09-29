@@ -11,10 +11,12 @@ import PageWrapper from 'components/layout/PageWrapper/PageWrapper';
 import Script from 'next/script';
 import { SpoilerContext, searchesForSpoilers } from 'lib/spoilers';
 import { queryParameterAsString } from 'lib/queryParameters';
+import { ApiErrorProps } from 'lib/apiErrorPage';
+import HttpErrorPage from 'components/layout/HttpErrorPage/HttpErrorPage';
 
 config.autoAddCss = false;
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps<Partial<ApiErrorProps>>) {
   const router = useRouter();
   const isClient = typeof window !== 'undefined';
 
@@ -44,7 +46,11 @@ export default function App({ Component, pageProps }: AppProps) {
       </header>
       <SpoilerContext value={searchesForSpoilers(queryParameterAsString(router.query.q))}>
         <PageWrapper>
-          <Component {...pageProps} />
+          {pageProps.apiError ? (
+            <HttpErrorPage status={pageProps.apiError.status} retryAfter={pageProps.apiError.retryAfter} />
+          ) : (
+            <Component {...pageProps} />
+          )}
         </PageWrapper>
       </SpoilerContext>
     </>

@@ -8,8 +8,9 @@ export function apiConfiguration(serverContext?: GetServerSidePropsContext) {
   if (serverContext && serverContext.req.headers['x-forwarded-for']) {
     if (typeof serverContext.req.headers['x-forwarded-for'] === 'string') {
       headers['x-forwarded-for'] = serverContext.req.headers['x-forwarded-for'];
+    } else {
+      headers['x-forwarded-for'] = serverContext.req.headers['x-forwarded-for'][0];
     }
-    headers['x-forwarded-for'] = serverContext.req.headers['x-forwarded-for'][0];
   }
   return new Configuration({
     basePath: process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL,

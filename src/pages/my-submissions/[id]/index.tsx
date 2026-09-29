@@ -1,6 +1,6 @@
 import React from 'react';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import { apiConfiguration } from 'services/api.service';
 import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
@@ -25,7 +25,7 @@ const EditSubmission: React.FC<Props> = ({ submission }) => {
 
 export default EditSubmission;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const csbUsername = await CookieService.get<Promise<string>>('csbUsername', {
     req: context.req,
     res: context.res,
@@ -69,4 +69,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       submission: submissionWithoutCreated,
     },
   };
-};
+});

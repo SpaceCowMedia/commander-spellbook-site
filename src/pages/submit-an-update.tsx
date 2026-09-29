@@ -1,6 +1,6 @@
 import React from 'react';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
@@ -23,7 +23,7 @@ const SubmitAnUpdate: React.FC<Props> = ({ comboId }) => {
 
 export default SubmitAnUpdate;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const csbUsername = CookieService.get('csbUsername', {
     req: context.req,
     res: context.res,
@@ -43,4 +43,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       comboId: typeof comboId === 'string' ? comboId : null,
     },
   };
-};
+});

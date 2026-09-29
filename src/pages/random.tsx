@@ -1,7 +1,7 @@
 import React from 'react';
 import SplashPage from '../components/layout/SplashPage/SplashPage';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { GetServerSidePropsContext } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@space-cow-media/spellbook-client';
 
@@ -24,36 +24,29 @@ const Random: React.FC = () => {
   );
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const configuration = apiConfiguration(context);
   const variantsApi = new VariantsApi(configuration);
-  try {
-    const combos = await variantsApi.variantsList({
-      limit: 1,
-      ordering: '?',
-      q: 'legal:commander',
-      groupByCombo: false,
-    });
-    if (combos.results.length > 0) {
-      const randomCombo = combos.results[0];
-      // The combo was not searched for, so the destination declares an empty query: whatever the
-      // search bar was carrying before is cleared rather than left describing an unrelated search.
-      return {
-        redirect: {
-          destination: `/combo/${randomCombo.id}?q=`,
-          basePath: true,
-          permanent: false,
-        },
-      };
-    }
+  const combos = await variantsApi.variantsList({
+    limit: 1,
+    ordering: '?',
+    q: 'legal:commander',
+    groupByCombo: false,
+  });
+  if (combos.results.length > 0) {
+    const randomCombo = combos.results[0];
+    // The combo was not searched for, so the destination declares an empty query: whatever the
+    // search bar was carrying before is cleared rather than left describing an unrelated search.
     return {
-      notFound: true,
-    };
-  } catch {
-    return {
-      notFound: true,
+      redirect: {
+        destination: `/combo/${randomCombo.id}?q=`,
+        permanent: false,
+      },
     };
   }
-};
+  return {
+    notFound: true,
+  };
+});
 
 export default Random;

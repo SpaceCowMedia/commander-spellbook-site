@@ -2,7 +2,7 @@ import React from 'react';
 import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import Link from 'next/link';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi, ResponseError } from '@space-cow-media/spellbook-client';
 
@@ -30,7 +30,7 @@ const MissingComboOfTheDay: React.FC = () => {
 
 export default MissingComboOfTheDay;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const configuration = apiConfiguration(context);
   const propertiesApi = new PropertiesApi(configuration);
   try {
@@ -53,4 +53,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {},
   };
-};
+});

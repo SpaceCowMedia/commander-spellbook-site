@@ -1,39 +1,8 @@
-import ErrorBase from '../components/layout/ErrorBase/ErrorBase';
-import styles from './404.module.scss';
-import React, { useEffect } from 'react';
+import HttpErrorPage from '../components/layout/HttpErrorPage/HttpErrorPage';
+import React from 'react';
 
-const NOT_FOUND_TEMPLATES = [
-  [styles.barrenGlory, 'You were looking for glory, but found an empty world.'],
-  [styles.curiosity, 'How curious...'],
-  [styles.lostInTheWoods, 'Must be lost in the woods.'],
-  [styles.oneWithNothing, 'You were looking for one thing. You found... nothing.'],
-  [styles.possibilityStorm, 'So many possibilities... just not on this page.'],
-  [styles.totallyLost, "Looks like you're totally lost..."],
-  [styles.unexpectedlyAbsent, 'It was unexpectedly absent.'],
-  [styles.zhalfirinVoid, 'Must have phased out.'],
-];
-
-interface Props {
-  template: string;
-  message: string;
-}
-
-const NotFoundPage: React.FC<Props> = () => {
-  const [index, setIndex] = React.useState(0);
-
-  useEffect(() => {
-    setIndex(Math.floor(Math.random() * NOT_FOUND_TEMPLATES.length));
-  }, []);
-
-  return (
-    <>
-      <ErrorBase
-        mainMessage="Page Not Found"
-        subMessage={NOT_FOUND_TEMPLATES[index][1]}
-        containerClassName={NOT_FOUND_TEMPLATES[index][0]}
-      />
-    </>
-  );
+const NotFoundPage: React.FC = () => {
+  return <HttpErrorPage status={404} />;
 };
 
 export default NotFoundPage;

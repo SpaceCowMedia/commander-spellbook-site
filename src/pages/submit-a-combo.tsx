@@ -1,6 +1,7 @@
 import React from 'react';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { GetServerSideProps } from 'next';
+import { withApiErrorPage } from 'lib/apiErrorPage';
+import { httpErrorStatus } from 'lib/httpErrors';
 import ComboSubmissionForm from '../components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
@@ -26,7 +27,7 @@ const SubmitACombo: React.FC<Props> = ({ variant }) => {
 
 export default SubmitACombo;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = withApiErrorPage(async (context) => {
   const csbUsername = CookieService.get('csbUsername', {
     req: context.req,
     res: context.res,
@@ -47,8 +48,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       const configuration = apiConfiguration(context);
       const variantsApi = new VariantsApi(configuration);
       variant = await variantsApi.variantsRetrieve({ id: variantOf });
-    } catch {
-      /* empty */
+    } catch (err) {
+      // An unknown combo just leaves the form blank
+      if (httpErrorStatus(err) !== 404) {
+        throw err;
+      }
     }
   }
   return {
@@ -56,4 +60,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       variant: variant || null,
     },
   };
-};
+});

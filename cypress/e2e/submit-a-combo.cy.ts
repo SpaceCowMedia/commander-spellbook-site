@@ -65,6 +65,48 @@ describe('Combo Submission', () => {
     cy.contains('Mesmeric Orb + Forsaken Monument').should('not.exist');
   });
 
+  // A long editing session outlives the access token, so submitting starts by refreshing it. The refresh
+  // being turned away for too many requests must not end the session: once the limit passes, it goes through.
+  it('keeps the user logged in when refreshing the session is rate limited', () => {
+    cy.login();
+    cy.deleteComboSuggestions();
+    cy.visit('/submit-a-combo/');
+
+    CARD_NAMES.forEach(addCard);
+
+    cy.contains('button', 'Add Step').click();
+    cy.get('input[placeholder^="e.g. Cast"]').type('Tap Mesmeric Orb.');
+
+    cy.contains('button', 'Add Feature').click();
+    cy.get('input[placeholder^="Search for a feature"]').type('Infinite mana');
+
+    // Every refresh is rate limited until the test lifts the limit, so it does not matter whether the
+    // submission or a validation in the background is the first to ask for one.
+    let rateLimited = true;
+    cy.intercept('POST', '**/token/refresh/', (req) => {
+      if (rateLimited) {
+        req.reply({ statusCode: 429, headers: { 'Retry-After': '1' } });
+      }
+    }).as('refresh');
+    cy.intercept('POST', '**/variant-suggestions/').as('createSuggestion');
+    cy.clearCookie('csbJwt');
+
+    cy.get('.submit-button').click();
+    cy.wait('@refresh').its('response.statusCode').should('eq', 429);
+    cy.contains(/too quickly|too many requests/i).should('be.visible');
+    cy.contains('not authorized').should('not.exist');
+    cy.getCookie('csbRefresh').should('exist');
+
+    cy.then(() => {
+      rateLimited = false;
+    });
+    cy.get('.submit-button').click();
+    cy.wait('@createSuggestion').its('response.statusCode').should('be.lessThan', 300);
+    cy.contains('Thanks for submitting a suggestion!');
+
+    cy.deleteComboSuggestions();
+  });
+
   // These three cards contain both seeded combos, so the submission is checked against them.
   it('warns before submitting a combo that includes combos already in the database', () => {
     cy.login();

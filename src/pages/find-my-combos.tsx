@@ -35,6 +35,7 @@ import DeckBracket from 'components/FindMyCombos/DeckBracket';
 import Loader from 'components/layout/Loader/Loader';
 import { BRACKET_RANGE_MAP } from 'lib/brackets';
 import useFoolsDay from 'lib/foolsDay';
+import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 
@@ -105,6 +106,12 @@ const FindMyCombos: React.FC = () => {
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
   const handleFindMyCombosError = async (err: unknown) => {
+    const status = httpErrorStatus(err);
+    // Only a rejected decklist comes with the reasons it was rejected
+    if (status !== 400) {
+      setDecklistErrors([apiErrorMessage(status ?? 500, rateLimitRetryAfterSeconds(err))]);
+      return;
+    }
     const error = err as ResponseError;
     const body = JSON.parse(await error.response.text());
     const errorMessages: string[] = [];
@@ -356,6 +363,12 @@ const FindMyCombos: React.FC = () => {
       setCurrentlyParsedDeck(decklist);
       analyzeDeck(decklist);
     } catch (err) {
+      const status = httpErrorStatus(err);
+      // A URL the backend cannot read a deck from is explained in the body, other failures are not
+      if (status === undefined || status === 429 || status >= 500) {
+        setDeckUrlHint(apiErrorMessage(status ?? 500, rateLimitRetryAfterSeconds(err)));
+        return;
+      }
       const error = err as ResponseError;
       const body: InvalidUrlResponse = JSON.parse(await error.response.text());
       setDeckUrlHint(body.detail);
