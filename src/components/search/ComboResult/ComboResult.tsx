@@ -71,8 +71,8 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
 
   const prereqCount = countNotablePrerequisites(combo);
 
-  const stateBasedColor = combo.status === 'OK' ? 'dark' : combo.status === 'E' ? '[#888888]' : 'wip';
-  const stateBasedColorInverse = combo.status === 'OK' ? 'light' : combo.status === 'E' ? 'dark' : 'light';
+  const statusClass =
+    combo.status === 'OK' ? styles.okStatus : combo.status === 'E' ? styles.exampleStatus : styles.draftStatus;
   const stateBasedTooltip =
     combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
   const isLock = combo.produces.some((result) => result.feature.name.toLowerCase() === 'lock');
@@ -90,7 +90,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
         <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
           {isLock && <Icon name="lock" />}
         </div>
-        <div className={`flex items-center grow flex-col bg-${stateBasedColor} text-white`} title={stateBasedTooltip}>
+        <div className={`flex items-center grow flex-col ${statusClass}`} title={stateBasedTooltip}>
           <ColorIdentity identity={combo.identity} size="small" />
         </div>
         <div className={`grow  ${styles.comboResultSection}`}>
@@ -165,10 +165,7 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
           </div>
         )}
         {sortStatMessage(combo) && (
-          <div
-            className={`sort-footer w-full py-1 text-center shrink bg-${stateBasedColor} text-${stateBasedColorInverse}`}
-            title={stateBasedTooltip}
-          >
+          <div className={`sort-footer w-full py-1 text-center shrink ${statusClass}`} title={stateBasedTooltip}>
             {sortStatMessage(combo)}
             {priceStore && <SolRingPrice className="ml-1" price={combo.prices[priceStore]} store={priceStore} />}
           </div>
