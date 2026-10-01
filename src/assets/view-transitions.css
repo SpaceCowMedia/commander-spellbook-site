@@ -1,0 +1,352 @@
+:root {
+  --page-exit-duration: 150ms;
+  --page-enter-duration: 300ms;
+  --page-slide-duration: 500ms;
+  --page-slide-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --page-flip-duration: 800ms;
+  --page-flip-perspective: 160vw;
+  --search-dock-duration: 400ms;
+  --wheel-duration: 200ms;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+/* The root is captured by every transition but never moves. */
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(root),
+::view-transition-group(site-header),
+::view-transition-group(progress-bar) {
+  animation: none;
+}
+
+::view-transition-group(site-header) {
+  z-index: 100;
+}
+
+::view-transition-group(progress-bar) {
+  z-index: 102;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(progress-bar) {
+  display: none;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(progress-bar) {
+  animation: none;
+}
+
+::view-transition-old(site-header):only-child {
+  display: block;
+  animation: var(--page-exit-duration) ease-in both vt-fade-out;
+}
+
+::view-transition-new(site-header):only-child {
+  animation: var(--page-enter-duration) ease-out both vt-fade-in;
+}
+
+::view-transition-old(.pageExit) {
+  animation: var(--page-exit-duration) ease-in both vt-fade-out;
+}
+
+::view-transition-new(.pageEnter) {
+  animation:
+    var(--page-enter-duration) ease-out 50ms both vt-fade-in,
+    var(--page-enter-duration) cubic-bezier(0.2, 0.7, 0.3, 1) both vt-rise;
+}
+
+::view-transition-group(.searchDock) {
+  z-index: 101;
+  animation-duration: var(--search-dock-duration);
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+::view-transition-image-pair(.searchDock) {
+  overflow: clip;
+  animation-name: dock-blur;
+}
+
+::view-transition-old(.searchDock),
+::view-transition-new(.searchDock) {
+  block-size: 100%;
+  object-fit: none;
+}
+
+::view-transition-old(.wheelToLeft) {
+  animation:
+    var(--wheel-duration) ease-in both vt-fade-out,
+    var(--wheel-duration) ease-in both vt-slide-to-left;
+}
+
+::view-transition-new(.wheelFromRight) {
+  animation:
+    var(--wheel-duration) ease-out both vt-fade-in,
+    var(--wheel-duration) ease-out both vt-slide-from-right;
+}
+
+::view-transition-old(.wheelToRight) {
+  animation:
+    var(--wheel-duration) ease-in both vt-fade-out,
+    var(--wheel-duration) ease-in both vt-slide-to-right;
+}
+
+::view-transition-new(.wheelFromLeft) {
+  animation:
+    var(--wheel-duration) ease-out both vt-fade-in,
+    var(--wheel-duration) ease-out both vt-slide-from-left;
+}
+
+:root:active-view-transition-type(
+    page-slide-forward,
+    page-slide-back,
+    page-flip-forward,
+    page-flip-back
+  )::view-transition-group(.pageTurnExit) {
+  z-index: 2;
+}
+
+:root:active-view-transition-type(
+    page-slide-forward,
+    page-slide-back,
+    page-flip-forward,
+    page-flip-back
+  )::view-transition-group(.pageTurnEnter) {
+  z-index: 1;
+}
+
+:root:active-view-transition-type(page-slide-forward)::view-transition-old(.pageTurnExit) {
+  animation: var(--page-slide-duration) var(--page-slide-easing) both page-slide-out;
+}
+
+:root:active-view-transition-type(page-slide-forward)::view-transition-new(.pageTurnEnter) {
+  animation: var(--page-slide-duration) var(--page-slide-easing) both page-slide-in;
+}
+
+:root:active-view-transition-type(page-slide-back)::view-transition-old(.pageTurnExit) {
+  animation: var(--page-slide-duration) var(--page-slide-easing) reverse both page-slide-in;
+}
+
+:root:active-view-transition-type(page-slide-back)::view-transition-new(.pageTurnEnter) {
+  animation: var(--page-slide-duration) var(--page-slide-easing) reverse both page-slide-out;
+}
+
+:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition {
+  perspective: var(--page-flip-perspective);
+  perspective-origin: 50vw 40vh;
+}
+
+/* Both sides of the flipping sheet share one animation, turning inside groups that pass the perspective down. */
+:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-group(.pageTurnExit),
+:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-group(.pageTurnEnter) {
+  transform-style: preserve-3d;
+}
+
+:root:active-view-transition-type(page-flip-forward)::view-transition-image-pair(.pageTurnExit),
+:root:active-view-transition-type(page-flip-forward)::view-transition-image-pair(.pageTurnEnter) {
+  transform-origin: left;
+  animation: var(--page-flip-duration) linear both page-flip;
+}
+
+:root:active-view-transition-type(page-flip-back)::view-transition-image-pair(.pageTurnExit),
+:root:active-view-transition-type(page-flip-back)::view-transition-image-pair(.pageTurnEnter) {
+  transform-origin: left;
+  animation: var(--page-flip-duration) linear reverse both page-flip;
+}
+
+/*
+ * The sheet is edge-on halfway through, where the old page hides and the new one shows. Browsers flatten the
+ * snapshots into their image-pair differently, so the sides swap on that step rather than by backface-visibility.
+ */
+:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-old(.pageTurnExit) {
+  animation:
+    var(--page-flip-duration) linear reverse both page-uncover,
+    var(--page-flip-duration) steps(2, jump-none) both vt-fade-out;
+}
+
+:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-new(.pageTurnEnter) {
+  animation:
+    var(--page-flip-duration) linear both page-uncover,
+    var(--page-flip-duration) steps(2, jump-none) both vt-fade-in;
+}
+
+/* The page after the flip is printed mirrored on the back of the sheet, so turning the sheet over reads it right. */
+:root:active-view-transition-type(page-flip-forward)::view-transition-new(.pageTurnEnter),
+:root:active-view-transition-type(page-flip-back)::view-transition-old(.pageTurnExit) {
+  transform: scaleX(-1);
+}
+
+@keyframes page-slide-out {
+  to {
+    translate: calc(-50vw - 50%);
+  }
+}
+
+@keyframes page-slide-in {
+  from {
+    translate: calc(50vw + 50%);
+  }
+}
+
+/*
+ * The sheet turns over its left edge, which slides along the table (x = 50% * (1 - cos θ)) while the camera pulls
+ * back and returns (z = -30vw * sin θ). θ eases in and out, sampled every 10% since easing applies per keyframe.
+ */
+@keyframes page-flip {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+  }
+
+  10% {
+    transform: translate3d(0.1%, 0, -2.3vw) rotateY(-4.4deg);
+  }
+
+  20% {
+    transform: translate3d(2.2%, 0, -8.9vw) rotateY(-17.2deg);
+  }
+
+  30% {
+    transform: translate3d(10.1%, 0, -18.1vw) rotateY(-37.1deg);
+  }
+
+  40% {
+    transform: translate3d(26.7%, 0, -26.5vw) rotateY(-62.2deg);
+  }
+
+  50% {
+    transform: translate3d(50%, 0, -30vw) rotateY(-90deg);
+  }
+
+  60% {
+    transform: translate3d(73.3%, 0, -26.5vw) rotateY(-117.8deg);
+  }
+
+  70% {
+    transform: translate3d(89.9%, 0, -18.1vw) rotateY(-142.9deg);
+  }
+
+  80% {
+    transform: translate3d(97.8%, 0, -8.9vw) rotateY(-162.8deg);
+  }
+
+  90% {
+    transform: translate3d(99.9%, 0, -2.3vw) rotateY(-175.6deg);
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0) rotateY(-180deg);
+  }
+}
+
+@keyframes page-uncover {
+  from {
+    filter: brightness(0.55);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    translate: 0 12px;
+  }
+}
+
+@keyframes dock-blur {
+  50% {
+    filter: blur(2px);
+  }
+}
+
+@keyframes vt-slide-to-left {
+  to {
+    translate: -40px 0;
+  }
+}
+
+@keyframes vt-slide-from-right {
+  from {
+    translate: 40px 0;
+  }
+}
+
+@keyframes vt-slide-to-right {
+  to {
+    translate: 40px 0;
+  }
+}
+
+@keyframes vt-slide-from-left {
+  from {
+    translate: -40px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:active-view-transition-type(
+      page-slide-forward,
+      page-slide-back,
+      page-flip-forward,
+      page-flip-back
+    )::view-transition-image-pair(.pageTurnExit),
+  :root:active-view-transition-type(
+      page-slide-forward,
+      page-slide-back,
+      page-flip-forward,
+      page-flip-back
+    )::view-transition-image-pair(.pageTurnEnter),
+  :root:active-view-transition-type(
+      page-slide-forward,
+      page-slide-back,
+      page-flip-forward,
+      page-flip-back
+    )::view-transition-new(.pageTurnEnter) {
+    transform: none;
+    animation: none;
+  }
+
+  :root:active-view-transition-type(
+      page-slide-forward,
+      page-slide-back,
+      page-flip-forward,
+      page-flip-back
+    )::view-transition-old(.pageTurnExit) {
+    transform: none;
+    animation: 200ms ease both vt-fade-out;
+  }
+
+  ::view-transition-new(.pageEnter),
+  ::view-transition-new(.wheelFromLeft),
+  ::view-transition-new(.wheelFromRight) {
+    animation: 200ms ease-out both vt-fade-in;
+  }
+
+  ::view-transition-old(.wheelToLeft),
+  ::view-transition-old(.wheelToRight) {
+    animation: 150ms ease-in both vt-fade-out;
+  }
+
+  ::view-transition-group(.searchDock),
+  ::view-transition-image-pair(.searchDock) {
+    animation-name: none;
+  }
+}

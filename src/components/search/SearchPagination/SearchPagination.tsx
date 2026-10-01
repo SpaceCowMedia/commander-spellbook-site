@@ -2,19 +2,37 @@ import React from 'react';
 import styles from './searchPagination.module.scss';
 
 interface PaginationProps {
+  id: string;
   currentPage: number;
   hasNextPage: boolean;
-  onGoBack: () => void;
-  onGoForward: () => void;
+  onGoBack: () => unknown;
+  onGoForward: () => unknown;
 }
 
-const SearchPagination: React.FC<PaginationProps> = ({ currentPage, hasNextPage, onGoBack, onGoForward }) => {
+const visibleButton = (id: string) => {
+  const button = document.getElementById(id);
+  return button && !button.classList.contains('invisible') ? button : undefined;
+};
+
+const navigateKeepingFocus =
+  (navigate: () => unknown, buttonId: string, fallbackId: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    const keepFocus = event.currentTarget.matches(':focus-visible');
+    const navigation = Promise.resolve(navigate());
+    if (keepFocus) {
+      navigation.then(() => (visibleButton(buttonId) ?? visibleButton(fallbackId))?.focus({ preventScroll: true }));
+    }
+  };
+
+const SearchPagination: React.FC<PaginationProps> = ({ id, currentPage, hasNextPage, onGoBack, onGoForward }) => {
+  const backId = `${id}-back`;
+  const forwardId = `${id}-forward`;
   return (
-    <div className="px-4 mt-3 flex items-center sm:px-1">
+    <div id={id} className="px-4 mt-3 flex items-center sm:px-1">
       <div className="flex-1 flex justify-between">
         <button
+          id={backId}
           className={`back-button ${styles.navButton} ${currentPage === 1 ? 'invisible' : ''}`}
-          onClick={onGoBack}
+          onClick={navigateKeepingFocus(onGoBack, backId, forwardId)}
         >
           <svg
             className={styles.navIcon}
@@ -33,8 +51,9 @@ const SearchPagination: React.FC<PaginationProps> = ({ currentPage, hasNextPage,
         </button>
 
         <button
+          id={forwardId}
           className={`forward-button ${styles.navButton} ${!hasNextPage ? 'invisible' : ''}`}
-          onClick={onGoForward}
+          onClick={navigateKeepingFocus(onGoForward, forwardId, backId)}
         >
           Next <span className="sr-only">78 combos</span>
           <svg
