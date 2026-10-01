@@ -1,0 +1,27 @@
+@reference "../../../assets/globals.css";
+
+.zones {
+  @apply flex flex-wrap items-center justify-center gap-1.5;
+}
+
+.symbol {
+  @apply flex h-8 min-w-8 cursor-help items-center justify-center rounded-full bg-gray-100 text-lg text-gray-700 outline-none transition-colors hover:bg-primary/30 focus-visible:ring-2 focus-visible:ring-link dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-primary/25 dark:focus-visible:ring-primary;
+}
+
+.anyZone {
+  @apply px-3 text-xs font-bold;
+}
+
+.commander {
+  @apply ml-1;
+}
+
+.or {
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .symbol {
+    transition: none;
+  }
+}

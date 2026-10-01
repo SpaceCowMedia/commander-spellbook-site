@@ -29,6 +29,7 @@ interface Props {
 
 const SORT_OPTIONS: Option[] = [
   { value: 'popularity', label: 'Popularity' },
+  { value: 'salt', label: 'Salt' },
   { value: 'identity_count', label: 'Color Identity' },
   { value: 'price_tcgplayer', label: 'Price (TCGPlayer)' },
   { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
@@ -60,6 +61,7 @@ const ORDER_OPTIONS: Option[] = [
 
 const AUTO_SORT_MAP: Record<string, '-'> = {
   popularity: '-',
+  salt: '-',
   created: '-',
   updated: '-',
   variant_count: '-',

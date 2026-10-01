@@ -12,6 +12,11 @@ declare global {
        * attempt makes every following one fail, because the same combo cannot be suggested twice.
        */
       deleteComboSuggestions(): Chainable<void>;
+      /**
+       * Retracts the salt vote of the test account on a combo, so that every attempt starts from a combo it has not
+       * voted on yet.
+       */
+      deleteSaltVote(variantId: string): Chainable<void>;
     }
   }
 }
@@ -51,6 +56,22 @@ Cypress.Commands.add('deleteComboSuggestions', () => {
             failOnStatusCode: false,
           });
         }
+      });
+    });
+  });
+});
+
+Cypress.Commands.add('deleteSaltVote', (variantId: string) => {
+  cy.getCookie('csbJwt').then((jwt) => {
+    if (!jwt) {
+      return;
+    }
+    cy.env(['apiUrl']).then(({ apiUrl }) => {
+      cy.request({
+        method: 'DELETE',
+        url: `${apiUrl}/salt-votes/${variantId}/`,
+        headers: { Authorization: `Bearer ${jwt.value}` },
+        failOnStatusCode: false,
       });
     });
   });

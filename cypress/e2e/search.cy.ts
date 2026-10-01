@@ -21,6 +21,14 @@ describe('Search', () => {
     cy.contains('No Combos Found');
   });
 
+  it('sorts the combos by salt, showing the score of each', () => {
+    cy.visit('/search/?q=monolith&sort=salt');
+
+    cy.get('#sort-combos-select').should('have.value', 'salt');
+    cy.get('.sort-footer').first().should('contain', 'Salt 2.60 / 4 (5 votes)');
+    cy.get('.sort-footer').last().should('contain', 'Too few salt votes');
+  });
+
   it('goes straight to the combo when a single one matches, keeping the query in the search bar', () => {
     cy.visit('/search/?q=mesmeric');
 
