@@ -17,7 +17,7 @@ import useCookie from 'lib/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';
 import { readSeenCombos, rememberSeenCombo } from 'lib/saltVotingSeen';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import isFoolsDay from 'lib/foolsDay';
+import useFoolsDay, { isFoolsDay } from 'lib/foolsDay';
 import styles from './salt-voting.module.scss';
 
 const QUEUE_BATCH_SIZE = 50;
@@ -59,7 +59,7 @@ const SaltVoting: React.FC = () => {
   const [pending, setPending] = useState(false);
   const [voteError, setVoteError] = useState<SaltVoteError | null>(null);
   const [tally, setTally] = useState<Tally>({ voted: 0, skipped: 0 });
-  const [foolsDay, setFoolsDay] = useState(false);
+  const foolsDay = useFoolsDay();
   const queueRef = useRef(queue);
   queueRef.current = queue;
   const requesting = useRef(false);
@@ -109,9 +109,6 @@ const SaltVoting: React.FC = () => {
       setFetching(false);
     }
   };
-
-  // The page is prerendered, so only the browser knows whether today is April Fools.
-  useEffect(() => setFoolsDay(isFoolsDay()), []);
 
   useEffect(() => {
     if (!caughtUp && !loadError && queue.length <= PREFETCH_WHEN_LEFT) {

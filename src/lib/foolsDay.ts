@@ -14,7 +14,7 @@ const BONUS_RESULTS = [
 
 let foolsDay: boolean | undefined;
 
-function isFoolsDay(): boolean {
+export function isFoolsDay(): boolean {
   if (foolsDay === undefined) {
     const today = new Date();
     foolsDay = today.getMonth() === 3 && today.getDate() === 1;
