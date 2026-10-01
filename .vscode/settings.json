@@ -6,7 +6,8 @@
         "statusBarItem.remoteBackground": "#ffeedf",
         "statusBarItem.remoteForeground": "#15202b",
         "statusBar.debuggingBackground": "#c18aff",
-        "statusBar.debuggingForeground": "#15202b"
+        "statusBar.debuggingForeground": "#15202b",
+        "statusBar.inactiveBackground": "#c18aff"
     },
     "peacock.color": "#c18aff",
     "eslint.format.enable": true,
