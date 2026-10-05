@@ -16,7 +16,7 @@ import { comboTitleToText } from 'components/combo/CardHeader/CardHeader';
 import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';
-import { readSeenCombos, rememberSeenCombo } from 'lib/saltVotingSeen';
+import { readSeenCombos, rememberComboToResume, rememberSeenCombo, takeComboToResume } from 'lib/saltVotingSeen';
 import { rememberSaltVotingSession } from 'lib/saltVotingHistory';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import useFoolsDay, { isFoolsDay } from 'lib/foolsDay';
@@ -114,6 +114,12 @@ const SaltVoting: React.FC = () => {
 
   useEffect(() => {
     rememberSaltVotingSession('visited');
+    const resumed = takeComboToResume();
+    if (resumed) {
+      // Set ahead of the render, so that the first batch, fetched right after, leaves it out.
+      queueRef.current = [resumed];
+      setQueue([resumed]);
+    }
   }, []);
 
   useEffect(() => {
@@ -268,7 +274,11 @@ const SaltVoting: React.FC = () => {
                 <p id="salt-voting-error" role="alert" className={styles.error}>
                   {voteError.message}{' '}
                   {voteError.loginRequired && (
-                    <Link href="/login/?final=/salt/" className="font-bold">
+                    <Link
+                      href="/login/?final=/salt/"
+                      className="font-bold"
+                      onClick={() => rememberComboToResume(combo)}
+                    >
                       Log in
                     </Link>
                   )}
@@ -301,7 +311,12 @@ const SaltVoting: React.FC = () => {
                 Log in to vote on how salty this combo is. You can still browse the combos.
               </p>
               <div className={styles.actions}>
-                <Link id="salt-voting-login" href="/login/?final=/salt/" className={styles.voteButton}>
+                <Link
+                  id="salt-voting-login"
+                  href="/login/?final=/salt/"
+                  className={styles.voteButton}
+                  onClick={() => rememberComboToResume(combo)}
+                >
                   Log in to vote
                 </Link>
                 <button id="salt-voting-skip" type="button" className={styles.skipButton} onClick={skip}>

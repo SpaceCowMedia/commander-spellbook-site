@@ -88,6 +88,27 @@ describe('Salt Voting', () => {
     cy.get('img[alt="Front Image"]').should('not.be.visible');
   });
 
+  it('comes back to the combo it was showing once the visitor logs in to vote', () => {
+    serveQueueOf('1-2', '1-3');
+    cy.visit('/salt/');
+    cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
+    cy.get('#salt-voting-login').click();
+    cy.location('pathname').should('equal', '/login/');
+
+    // The queue is drawn at random, so it comes back in another order after logging in.
+    cy.login();
+    serveQueueOf('1-3', '1-2');
+    cy.visit('/salt/');
+    cy.wait('@queue');
+
+    cy.get('#salt-voting-slider').should('exist');
+    cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
+    cy.get('#salt-voting-skip').click();
+    cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-3/');
+    cy.get('#salt-voting-skip').click();
+    cy.get('#salt-voting-caught-up').should('be.visible');
+  });
+
   describe('when logged in', () => {
     beforeEach(() => {
       cy.login();
