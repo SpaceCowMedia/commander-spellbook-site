@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import pluralize from 'pluralize';
 import { SaltVotesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
@@ -217,6 +218,12 @@ const SaltVoting: React.FC = () => {
             <ColorIdentity identity={combo.identity} size="small" />
           </div>
           <h2 className={styles.comboTitle}>{comboTitleToText(combo.uses, combo.requires)}</h2>
+          <p id="salt-voting-popularity" className={styles.popularity}>
+            <Icon name="arrowUpRightDots" />
+            {combo.popularity === null
+              ? 'No EDHREC data yet'
+              : `In ${combo.popularity.toLocaleString('en-US')} ${pluralize('deck', combo.popularity)} on EDHREC`}
+          </p>
         </header>
         <div className={styles.cards}>
           {combo.uses.map((use) => (

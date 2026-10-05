@@ -69,6 +69,24 @@ describe('Salt Voting', () => {
     cy.get('[role="tooltip"]').should('be.visible').and('have.text', 'Starts on the battlefield');
   });
 
+  it('shows how many decks play each combo', () => {
+    cy.env(['apiUrl']).then(({ apiUrl }) => {
+      cy.request(`${apiUrl}/variants/1-2/`).then(({ body: popular }) => {
+        cy.request(`${apiUrl}/variants/1-3/`).then(({ body: unknown }) => {
+          // The seeded combos have no EDHREC data, so one is given some.
+          popular.popularity = 12345;
+          cy.intercept(QUEUE, [popular, unknown]).as('queue');
+        });
+      });
+    });
+    cy.visit('/salt/');
+    cy.wait('@queue');
+
+    cy.get('#salt-voting-popularity').should('have.text', 'In 12,345 decks on EDHREC');
+    cy.get('#salt-voting-skip').click();
+    cy.get('#salt-voting-popularity').should('have.text', 'No EDHREC data yet');
+  });
+
   it('previews a card while its image is hovered', () => {
     const image = 'https://cards.scryfall.io/normal/front/basalt-monolith.jpg';
     cy.env(['apiUrl']).then(({ apiUrl }) => {
