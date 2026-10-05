@@ -1,11 +1,11 @@
 import Modal from 'components/ui/Modal/Modal';
 import React, { addTransitionType, startTransition, useEffect, useState, ViewTransition } from 'react';
 import Dimmer from 'components/ui/Dimmer/Dimmer';
-import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ReplacementCard } from 'lib/types';
+import { replacementCardUrl } from 'lib/cards';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
@@ -126,7 +126,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger, ope
             return (
               <ViewTransition key={result.id} update={index >= movableFrom ? CARD_MOVE : 'none'} default="none">
                 <SpoilerFog className="replacementCard" name={result.name} spoiler={result.spoiler}>
-                  <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer">
+                  <a href={replacementCardUrl(result)} target="_blank" rel="noopener noreferrer">
                     {morphing && morph ? (
                       <ViewTransition name={morph.name} share={TEMPLATE_MORPH_SHARE} default="none">
                         {image}

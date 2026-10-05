@@ -1,15 +1,18 @@
 import React, { useRef, useState } from 'react';
-import styles from './copyComboLinkButton.module.scss';
+import styles from './copyLinkButton.module.scss';
 import { Tooltip } from 'react-tooltip';
-import { event } from '../../../../lib/googleAnalytics';
+import { event } from 'lib/googleAnalytics';
 
 interface Props {
-  comboLink: string;
+  link: string;
   children: React.ReactNode;
   className: string;
+  subject: string;
+  analyticsCategory: string;
 }
 
-const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }) => {
+const CopyLinkButton: React.FC<Props> = ({ link, children, className, subject, analyticsCategory }) => {
+  const subjectId = subject.toLowerCase();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showCopyNotification, setShowCopyNotification] = useState(false);
@@ -31,8 +34,8 @@ const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }
     setShowCopyNotification(true);
 
     event({
-      action: 'Copy Combo Link Clicked',
-      category: 'Combo Detail Page Actions',
+      action: `Copy ${subject} Link Clicked`,
+      category: analyticsCategory,
     });
 
     setTimeout(() => {
@@ -48,31 +51,31 @@ const CopyComboLinkButton: React.FC<Props> = ({ comboLink, children, className }
     <>
       <button
         data-tooltip-place="bottom"
-        data-tooltip-id="copy-combo-tooltip"
-        data-tooltip-content="Copy Combo Link to Clipboard"
+        data-tooltip-id={`copy-${subjectId}-tooltip`}
+        data-tooltip-content={`Copy ${subject} Link to Clipboard`}
         className={className}
-        id="copy-combo-button"
+        id={`copy-${subjectId}-button`}
         ref={buttonRef}
         type="button"
         onClick={handleClick}
       >
         {children}
-        <input ref={inputRef} aria-hidden type="hidden" className={styles.hiddenComboLinkInput} value={comboLink} />
+        <input ref={inputRef} aria-hidden type="hidden" className={styles.hiddenLinkInput} value={link} />
         {showCopyNotification && (
           <div role="alert" className="sr-only">
-            Combo link copied to your clipboard
+            {subject} link copied to your clipboard
           </div>
         )}
         <div
           aria-hidden
-          className={`${styles.copyComboNotification} gradient w-full md:w-1/2 ${showCopyNotification && styles.show}`}
+          className={`${styles.copyNotification} gradient w-full md:w-1/2 ${showCopyNotification && styles.show}`}
         >
-          <div className="bg-dark p-4">Combo link copied to your clipboard!</div>
+          <div className="bg-dark p-4">{subject} link copied to your clipboard!</div>
         </div>
       </button>
-      <Tooltip id="copy-combo-tooltip" />
+      <Tooltip id={`copy-${subjectId}-tooltip`} />
     </>
   );
 };
 
-export default CopyComboLinkButton;
+export default CopyLinkButton;

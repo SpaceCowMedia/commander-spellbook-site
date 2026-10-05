@@ -371,7 +371,7 @@ const CardSubmission = ({
           {previewCard && (
             <div className="flex justify-center pt-2">
               <div className="w-64 max-w-full">
-                <CardImage card={previewCard} />
+                <CardImage card={previewCard} newTab />
               </div>
             </div>
           )}

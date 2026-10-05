@@ -29,6 +29,23 @@ describe('Combo Detail Page', () => {
       .should('have.attr', 'content')
       .then((src) => cy.request(`${src}`).its('status').should('eq', 200));
   });
+
+  it('links its cards to their pages', () => {
+    cy.get('#combo-cards a[href="/card/1/"]').should('contain', 'Basalt Monolith');
+    cy.get('a[href="/card/2/"] img').should('exist');
+  });
+
+  it('describes itself to search engines', () => {
+    cy.title().should('contain', 'Basalt Monolith + Mesmeric Orb Combo');
+    cy.get('meta[property="og:url"]')
+      .should('have.attr', 'content')
+      .and('match', /^https?:\/\/.*\/combo\/1-2\/$/);
+    cy.get('script[type="application/ld+json"]')
+      .invoke('text')
+      .then((text) => JSON.parse(text))
+      .its('about')
+      .should('have.length', 2);
+  });
 });
 
 describe('Combo Metadata', () => {
