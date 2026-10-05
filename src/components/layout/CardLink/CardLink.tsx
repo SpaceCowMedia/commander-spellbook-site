@@ -1,48 +1,67 @@
 import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import ExternalLink from '../ExternalLink/ExternalLink';
 import EDHRECService from '../../../services/edhrec.service';
+import { cardPath, CardReference } from 'lib/cards';
 
 interface Props {
-  name: string;
+  card: CardReference & { name: string };
   children?: React.ReactNode;
   className?: string;
   disableMobileSingleClickAsPreview?: boolean;
+  newTab?: boolean;
 }
 
-const CardLink: React.FC<Props> = ({ name, children, className, disableMobileSingleClickAsPreview }: Props) => {
-  let link = '';
-  const edhrecLink = EDHRECService.getCardUrl(name);
-  if (edhrecLink) {
-    link = edhrecLink;
-  } else {
-    let quotes = '%22';
-    if (name.includes('"')) {
-      quotes = '%27';
-    }
-    link = `https://scryfall.com/search?q=%21${quotes}${encodeURIComponent(name)}${quotes}`;
-  }
+const CardLink: React.FC<Props> = ({ card, children, className, disableMobileSingleClickAsPreview, newTab }) => {
+  const router = useRouter();
+  const internalLink = cardPath(card);
+  const link = internalLink ?? EDHRECService.getCardUrl(card.name);
+  const opensNewTab = newTab || internalLink === undefined;
+
+  const previewsOnSingleClick = () => !disableMobileSingleClickAsPreview && window.innerWidth <= 1024;
 
   // prevent single click on mobile
   const handleSingleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!disableMobileSingleClickAsPreview && window.innerWidth <= 1024) {
+    if (previewsOnSingleClick()) {
       event.preventDefault();
     }
   };
 
   // allow double click on mobile
   const handleDoubleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!disableMobileSingleClickAsPreview && window.innerWidth <= 1024) {
-      window.open(link, '_blank', 'noopener,noreferrer');
+    event.preventDefault();
+    if (!previewsOnSingleClick()) {
+      return;
+    }
+    if (opensNewTab) {
+      // A features argument, even just noopener, makes some browsers open a popup window instead of a tab
+      const opened = window.open(link, '_blank');
+      if (opened) {
+        opened.opener = null;
+      }
     } else {
-      //Do nothing
-      event.preventDefault();
+      router.push(link);
     }
   };
 
+  if (opensNewTab) {
+    return (
+      <ExternalLink className={className} href={link} onClick={handleSingleClick} onDoubleClick={handleDoubleClick}>
+        {children}
+      </ExternalLink>
+    );
+  }
   return (
-    <ExternalLink className={className} href={link} onClick={handleSingleClick} onDoubleClick={handleDoubleClick}>
+    <Link
+      className={className}
+      href={link}
+      prefetch={false}
+      onClick={handleSingleClick}
+      onDoubleClick={handleDoubleClick}
+    >
       {children}
-    </ExternalLink>
+    </Link>
   );
 };
 

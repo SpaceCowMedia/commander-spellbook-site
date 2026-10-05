@@ -1,10 +1,12 @@
-import { readFile } from 'fs/promises';
 import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
 import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverPath from 'lib/serverPath';
+import { loadSymbolImage } from 'lib/symbolImage';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
+import { httpErrorStatus } from 'lib/httpErrors';
+import { IMAGE_CACHE_CONTROL } from 'lib/seo';
 
 const width = 1080;
 const manaOffset = width / 25;
@@ -36,10 +38,7 @@ async function headerCanvas(identityArray: string[], isLock: boolean) {
   const startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
   for (const [index, letter] of identityArray.entries()) {
     const position = index * (iWidth + manaOffset) + startManaPos;
-    // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0,
-    // but Scryfall's mana symbols only have a 100x100 viewBox
-    const svg = await readFile(serverPath(`images/scryfall/symbols/${letter.toUpperCase()}.svg`), 'utf8');
-    const img = await loadImage(Buffer.from(svg.replace('<svg ', "<svg width='100' height='100' ")));
+    const img = await loadSymbolImage(letter);
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
   return canvas1;
@@ -140,6 +139,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     combo = await variantsApi.variantsRetrieve({ id: req.query.id as string });
   } catch (error) {
+    if (httpErrorStatus(error) === 404) {
+      res.status(404).json({ error: 'Combo not found' });
+      return;
+    }
     console.error('Error fetching variants:', error);
     res.status(500).json({ error: 'Failed to fetch image' });
     return;
@@ -181,6 +184,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     drawImage(ctx, footer_c, nextLine);
 
     res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', IMAGE_CACHE_CONTROL);
     const buffer = canvas.toBuffer('image/png');
     res.send(buffer);
   } catch (error) {

@@ -32,7 +32,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {
-        destination: `/login?final=${context.resolvedUrl}`,
+        destination: `/login/?${new URLSearchParams({ final: context.resolvedUrl })}`,
         permanent: false,
       },
     };

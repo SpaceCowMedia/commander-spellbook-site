@@ -1,0 +1,9 @@
+@reference "../../../assets/globals.css";
+
+.notice {
+  @apply font-semibold text-danger;
+}
+
+.empty {
+  @apply my-6;
+}
