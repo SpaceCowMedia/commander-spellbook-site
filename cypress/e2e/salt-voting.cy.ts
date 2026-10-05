@@ -1,5 +1,13 @@
 const QUEUE = { method: 'GET', pathname: '/salt-votes/queue/' };
 const VOTE = { method: 'PUT', pathname: '/salt-votes/*/' };
+const SALT_VOTING_SESSIONS_KEY = 'commander-spellbook-salt-voting-sessions';
+
+const expectSaltVotingSessions = (sessions: { visited: number; voted?: number }) => {
+  cy.window()
+    .its('localStorage')
+    .invoke('getItem', SALT_VOTING_SESSIONS_KEY)
+    .then((stored) => expect(JSON.parse(stored ?? 'null')).to.deep.equal(sessions));
+};
 
 // The seeded combos use a card that is still a spoiler, which the queue leaves out, so it is served from here.
 const serveQueueOf = (...variantIds: string[]) => {
@@ -29,6 +37,7 @@ describe('Salt Voting', () => {
     cy.get('#salt-voting-skip').click();
     cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
     cy.get('#salt-voting-tally').should('contain', '0 voted · 1 skipped');
+    expectSaltVotingSessions({ visited: 1 });
 
     // Every batch brings back the same two combos, so once both are skipped there is nothing new to vote on.
     cy.get('#salt-voting-skip').click();
@@ -82,6 +91,7 @@ describe('Salt Voting', () => {
       cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
       cy.get('#salt-voting-slider').should('have.attr', 'aria-valuetext', 'Not rated');
       cy.get('#salt-voting-tally').should('contain', '1 voted · 0 skipped');
+      expectSaltVotingSessions({ visited: 1, voted: 1 });
 
       cy.get('body').trigger('keydown', { key: '2' });
       cy.get('#salt-voting-slider').should('have.attr', 'aria-valuetext', '2, Moderately salty');
@@ -93,6 +103,7 @@ describe('Salt Voting', () => {
 
       cy.get('#salt-voting-tally').should('contain', '2 voted · 0 skipped');
       cy.get('#salt-voting-caught-up').should('be.visible');
+      expectSaltVotingSessions({ visited: 1, voted: 1 });
     });
 
     it('explains why a vote could not be cast, and stays on the combo', () => {
@@ -109,6 +120,7 @@ describe('Salt Voting', () => {
       cy.get('#salt-voting-error').should('contain', 'not allowed to vote on salt');
       cy.get('#salt-voting-combo').should('contain', 'Mesmeric Orb');
       cy.get('#salt-voting-tally').should('contain', '0 voted · 0 skipped');
+      expectSaltVotingSessions({ visited: 1 });
     });
   });
 });

@@ -16,6 +16,7 @@ import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';
 import { readSeenCombos, rememberSeenCombo } from 'lib/saltVotingSeen';
+import { rememberSaltVotingSession } from 'lib/saltVotingHistory';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import useFoolsDay, { isFoolsDay } from 'lib/foolsDay';
 import styles from './salt.module.scss';
@@ -111,6 +112,10 @@ const SaltVoting: React.FC = () => {
   };
 
   useEffect(() => {
+    rememberSaltVotingSession('visited');
+  }, []);
+
+  useEffect(() => {
     if (!caughtUp && !loadError && queue.length <= PREFETCH_WHEN_LEFT) {
       fetchBatch();
     }
@@ -158,6 +163,7 @@ const SaltVoting: React.FC = () => {
         variant: current.id,
         saltVoteRequest: { score: picked },
       });
+      rememberSaltVotingSession('voted');
       advance(current, 'voted');
     } catch (err) {
       setVoteError(saltVoteError(err));

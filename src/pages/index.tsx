@@ -10,6 +10,10 @@ import UserDropdown from '../components/layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi } from '@space-cow-media/spellbook-client';
 import { GetStaticProps } from 'next';
+import SuggestionBalloon from 'components/layout/SuggestionBalloon/SuggestionBalloon';
+import { saltVotingSuggestion } from 'lib/saltVotingHistory';
+
+const HOME_SUGGESTIONS = [saltVotingSuggestion];
 
 interface FeaturedTab {
   id: number;
@@ -102,6 +106,7 @@ const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
           </div>
           <Footer comboOfTheDay={comboOfTheDay} />
         </div>
+        <SuggestionBalloon suggestions={HOME_SUGGESTIONS} />
       </main>
     </>
   );
