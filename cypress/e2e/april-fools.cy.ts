@@ -1,5 +1,6 @@
 const FRONT_OF_CARD = 'img[alt="the front side of Basalt Monolith"]';
 const EDIBLE_CARD = '[class*="__edible"]';
+const FOOTER_WAVES = 'img[alt="footer"]';
 const APRIL_FOOLS_DAY = new Date(2027, 3, 1, 12);
 const ANY_OTHER_DAY = new Date(2027, 3, 2, 12);
 
@@ -25,6 +26,13 @@ describe("April Fools' Day", () => {
     cy.get('#combo-steps ol li').should('have.length', 1);
     cy.get('#combo-results ol li').should('have.length', 1);
     cy.get(FRONT_OF_CARD).parents(EDIBLE_CARD).should('not.exist');
+    cy.get(FOOTER_WAVES).should('have.attr', 'src').and('contain', '/footer.svg');
+  });
+
+  it('straightens the footer waves into pyramids', () => {
+    visitOn(APRIL_FOOLS_DAY, '/');
+
+    cy.get(FOOTER_WAVES).should('have.attr', 'src').and('contain', '/pointy-footer.svg');
   });
 
   it('pads the combo with one more step and one more result', () => {

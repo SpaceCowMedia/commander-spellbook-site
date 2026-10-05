@@ -1,0 +1,21 @@
+<svg aria-hidden="true" viewBox="0 0 1428 174" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-2.000000, 44.000000)" fill="#222222" fill-rule="nonzero">
+            <path
+                    d="M0,0 L292,60 L759,82.7 L352,136 L0,75 Z"
+                    opacity="0.100000001"></path>
+            <path
+                    d="M100,104.7 L700,41 L979,55 L617,111 L342,137 Z"
+                    opacity="0.100000001"></path>
+            <path
+                    d="M1046,51.7 L1260,28 L1439,40.2 L1439,120 Z"
+                    opacity="0.200000003"></path>
+        </g>
+        <g transform="translate(-4.000000, 76.000000)" fill="#222222" fill-rule="nonzero">
+            <path
+                    d="M0.457,34 L360,96 L1011,0.4 L1440.9,72.4 L1441.2,104.4 L1.1,104 Z">
+            </path>
+        </g>
+    </g>
+</svg>

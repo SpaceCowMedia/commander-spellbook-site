@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styles from './footer.module.scss';
 import Image from 'next/image';
+import useFoolsDay from 'lib/foolsDay';
 
 interface Props {
   className?: string;
@@ -10,11 +11,18 @@ interface Props {
 }
 
 const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
+  const foolsDay = useFoolsDay();
   return (
     <div className={`${className} ${noMargin && 'mt-0 lg:mt-0'}`}>
       {!noMargin && (
         <div className="relative md:-mt-24 lg:-mt-48">
-          <Image className="w-full select-none" height="100" width="2000" src="/footer.svg" alt="footer" />
+          <Image
+            className="w-full select-none"
+            height="100"
+            width="2000"
+            src={foolsDay ? '/pointy-footer.svg' : '/footer.svg'}
+            alt="footer"
+          />
         </div>
       )}
       <footer className={styles.footer}>
