@@ -199,6 +199,13 @@ runs:
           time.sleep(1)
           task.refresh()
         Variant.objects.update(status=Variant.Status.OK)
+        from django.contrib.auth.models import User
+        from spellbook.models import SaltVote, recompute_salt
+        User.objects.filter(username__startswith="salt-voter-").delete()
+        for i, score in enumerate((1, 2, 3, 3, 4)):
+          voter = User.objects.create_user(username=f"salt-voter-{i}")
+          SaltVote.objects.create(user=voter, variant_id="1-2", score=score)
+        recompute_salt()
         task = export_variants_task.enqueue()
         while not task.is_finished:
           time.sleep(1)

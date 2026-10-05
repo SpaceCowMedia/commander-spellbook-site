@@ -18,8 +18,25 @@ import { ExplainQueryApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
 import cn from 'lib/cn';
+import { MAX_SALT } from 'lib/salt';
 
 const EXPLANATION_DELAY = 500;
+
+const DECIMAL_NUMBER = /^(\d+\.?\d*|\.\d+)$/;
+
+function integerError(value: string): string {
+  return Number.isInteger(Number(value)) ? '' : 'Contains a non-integer. Use a full number instead.';
+}
+
+function decimalError(value: string, max?: number): string {
+  if (value && !DECIMAL_NUMBER.test(value)) {
+    return 'Contains an invalid number. Use a number like 2.5 instead.';
+  }
+  if (max !== undefined && Number(value) > max) {
+    return `Contains a number above ${max}. Use a number from 0 to ${max} instead.`;
+  }
+  return '';
+}
 
 interface TagOption {
   name: string;
@@ -342,23 +359,28 @@ const POPULARITY_OPTIONS: readonly OperatorOption[] = [
   { operator: '=', label: 'In exactly x decks (number)', numeric: true },
 ];
 
+const SALT_OPTIONS: readonly OperatorOption[] = [
+  { operator: '>=', label: `Salt at least x (0 to ${MAX_SALT})`, placeholder: 'ex: 2.5', numeric: true },
+  { operator: '<=', label: `Salt at most x (0 to ${MAX_SALT})`, placeholder: 'ex: 1.5', numeric: true },
+];
+
 const PRICE_OPTIONS: readonly OperatorOption[] = [
   {
     operator: '<=',
     label: 'Costs at most x',
-    placeholder: 'ex: 5',
+    placeholder: 'ex: 7.5',
     numeric: true,
   },
   {
     operator: '>=',
     label: 'Costs at least x',
-    placeholder: 'ex: 5',
+    placeholder: 'ex: 7.5',
     numeric: true,
   },
   {
     operator: '=',
     label: 'Costs exactly x',
-    placeholder: 'ex: 5',
+    placeholder: 'ex: 7.5',
     numeric: true,
   },
 ];
@@ -437,6 +459,7 @@ interface Data {
   tags: readonly SelectedTag[];
   commanders: readonly InputData[];
   popularity: readonly InputData[];
+  salt: readonly InputData[];
   prices: readonly InputData[];
   vendor: string;
   format: readonly InputData[];
@@ -461,6 +484,7 @@ const AdvancedSearch: React.FC = () => {
     tags: TAGS_OPTIONS.map((tag) => ({ ...tag })),
     commanders: [{ ...COMMANDER_OPTIONS[0], value: '' }],
     popularity: [{ ...POPULARITY_OPTIONS[0], value: '' }],
+    salt: [{ ...SALT_OPTIONS[0], value: '' }],
     prices: [{ ...PRICE_OPTIONS[0], value: '' }],
     vendor: DEFAULT_VENDOR,
     format: [{ ...LEGALITY_OPERATOR_OPTIONS[0], value: '' }],
@@ -483,6 +507,7 @@ const AdvancedSearch: React.FC = () => {
     tags,
     commanders,
     popularity,
+    salt,
     prices,
     vendor,
     format,
@@ -500,12 +525,8 @@ const AdvancedSearch: React.FC = () => {
     let hasValidationError = false;
     let changed = false;
 
-    function val(input: InputData) {
-      let error = '';
-
-      if ((input.numeric ?? false) && !Number.isInteger(Number(input.value))) {
-        error = 'Contains a non-integer. Use a full number instead.';
-      }
+    function check(input: InputData, numberError: (_value: string) => string) {
+      const error = input.numeric ? numberError(input.value.trim()) : '';
 
       if (error) {
         hasValidationError = true;
@@ -516,6 +537,9 @@ const AdvancedSearch: React.FC = () => {
         changed = true;
       }
     }
+    const val = (input: InputData) => check(input, integerError);
+    const valDecimal = (input: InputData) => check(input, (value) => decimalError(value));
+    const valSalt = (input: InputData) => check(input, (value) => decimalError(value, MAX_SALT));
     const newFormState = { ...formState };
     newFormState.cards.forEach(val);
     newFormState.templates.forEach(val);
@@ -530,7 +554,8 @@ const AdvancedSearch: React.FC = () => {
     newFormState.results.forEach(val);
     newFormState.commanders.forEach(val);
     newFormState.popularity.forEach(val);
-    newFormState.prices.forEach(val);
+    newFormState.salt.forEach(valSalt);
+    newFormState.prices.forEach(valDecimal);
     newFormState.bracket.forEach(val);
     if (hasValidationError != newFormState.validationError) {
       changed = true;
@@ -558,6 +583,7 @@ const AdvancedSearch: React.FC = () => {
     tags,
     commanders,
     popularity,
+    salt,
     prices,
     vendor,
     format,
@@ -572,7 +598,7 @@ const AdvancedSearch: React.FC = () => {
         let value = input.value.trim();
         const negated = input.negate ?? false;
         const numeric = input.numeric ?? false;
-        const isSimpleValue = value.match(/^[\w\d]*$/);
+        const isSimpleValue = numeric || /^[\w\d]*$/.test(value);
         let operator = input.operator;
         let keyInQuery = key;
         const isSimpleCardValue = isSimpleValue && keyInQuery === 'card' && operator === ':' && !negated;
@@ -606,7 +632,8 @@ const AdvancedSearch: React.FC = () => {
             keyInQuery !== 'mv' &&
             keyInQuery !== 'pre' &&
             keyInQuery !== 'prereq' &&
-            keyInQuery !== 'bracket'
+            keyInQuery !== 'bracket' &&
+            keyInQuery !== 'salt'
           ) {
             keyInQuery += 's';
           }
@@ -645,6 +672,7 @@ const AdvancedSearch: React.FC = () => {
     tags.forEach(makeQueryFunctionForTags());
     commanders.forEach(makeQueryFunction('commander'));
     popularity.forEach(makeQueryFunction('popularity'));
+    salt.forEach(makeQueryFunction('salt'));
     prices.forEach(makeQueryFunction('price'));
     format.forEach(makeQueryFunction('legal'));
     bracket.forEach(makeQueryFunction('bracket'));
@@ -862,6 +890,17 @@ const AdvancedSearch: React.FC = () => {
             labelIcon="arrowUpRightDots"
             pluralLabel="Popularity"
             operatorOptions={POPULARITY_OPTIONS}
+          />
+        </div>
+
+        <div id="salt-inputs" className={`${styles.container} container`}>
+          <MultiSearchInput
+            value={salt}
+            onChange={(salt) => setFormState({ salt })}
+            label="Salt"
+            labelIcon="salt"
+            pluralLabel="Salt"
+            operatorOptions={SALT_OPTIONS}
           />
         </div>
 

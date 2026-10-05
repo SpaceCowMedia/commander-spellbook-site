@@ -112,6 +112,11 @@ const DATA = {
       icon: 'arrowUpRightDots',
     },
     {
+      id: 'salt',
+      text: 'Salt',
+      icon: 'salt',
+    },
+    {
       id: 'price',
       text: 'Price',
       icon: 'dollarSign',
@@ -428,6 +433,24 @@ const DATA = {
       description: 'Combos that are in less than 10 decks according to EDHREC.',
     },
   ],
+  saltSnippets: [
+    {
+      search: 'salt>2.5',
+      description: 'Combos with a salt score greater than 2.5.',
+    },
+    {
+      search: 'saltiness<=1',
+      description: 'Combos with a salt score of 1 or less.',
+    },
+    {
+      search: '-salt>=3',
+      description: 'Combos with a salt score, as long as it is less than 3.',
+    },
+    {
+      search: 'salt>=0',
+      description: 'Every combo that has a salt score.',
+    },
+  ],
   priceSnippets: [
     {
       search: 'price<5',
@@ -441,6 +464,10 @@ const DATA = {
       search: 'cardmarket<=100',
       description:
         'Combos where the entire price of the combo is less than or equal to €100.00 according to Cardmarket.',
+    },
+    {
+      search: 'eur>=2.65',
+      description: 'Combos where the entire price of the combo is €2.65 or more according to Cardmarket.',
     },
   ],
   legalitySnippets: [
@@ -1038,12 +1065,46 @@ For example, \`popularity>10000\` searches for combos that are present in more t
 * \`-\` negates the search term
 `;
 
+const SALT_DESCRIPTION = `
+Salt is how unfun a combo is to play against, from 0 (not at all) to 4 (the most).
+It works like EDHREC's salt score for cards, except that Commander Spellbook users vote on it for each combo: [cast your votes here](/salt/).
+
+A combo's salt score is the average of the votes cast or changed in the last year, rounded to two decimals.
+Combos with too few votes have no score yet, and scores are refreshed every couple of hours, so new votes take a while to count.
+
+For example, \`salt>2.5\` searches for combos whose salt score is greater than 2.5.
+
+> [!NOTE]
+> Salt scores can have decimals, like \`salt>=.5\`, from 0 to 4.
+> Only combos that have a score match a \`salt\` search term, even a negated one:
+> \`salt>=0\` lists every combo with a score, and \`-salt>=3\` lists the ones scoring less than 3.
+
+### \`salt\` operators
+
+* \`salt:number\` or \`salt=number\` searches for combos whose salt score is exactly _number_
+* \`salt>number\` searches for combos whose salt score is greater than _number_
+* \`salt>=number\` searches for combos whose salt score is _number_ or more
+* \`salt<number\` searches for combos whose salt score is less than _number_
+* \`salt<=number\` searches for combos whose salt score is _number_ or less
+
+### \`salt\` keyword aliases
+
+* \`saltiness\`
+
+### \`salt\` prefixes
+
+* \`-\` negates the search term
+
+> [!TIP]
+> Sort search results by **Salt** to see the saltiest combos first.
+`;
+
 const PRICE_DESCRIPTION = `
 You can filter combos based on the total price of the cards it contains.
 For example, \`price<number\` searches for combos costing less than _number_ US dollars, based on prices from CardKingdom.
 
 > [!NOTE]
-> This parameter only supports whole numbers.
+> Prices can have decimals, like \`price<2.5\`.
 
 ### \`price\` operators
 
@@ -1453,6 +1514,10 @@ const SyntaxGuide: React.FC = () => {
             snippets={DATA.popularitySnippets}
           >
             <SyntaxMarkdown>{POPULARITY_DESCRIPTION}</SyntaxMarkdown>
+          </SearchGuide>
+
+          <SearchGuide icon="salt" heading="Salt" headingCardName="Armageddon" snippets={DATA.saltSnippets}>
+            <SyntaxMarkdown>{SALT_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>
 
           <SearchGuide

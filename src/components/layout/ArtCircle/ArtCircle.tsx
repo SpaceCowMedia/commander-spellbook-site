@@ -169,6 +169,14 @@ const CARD_ARTS = {
     uid: '0314bea5-4e04-4e74-9832-3e935eb90ee1',
     artist: 'Jonas De Ro',
   },
+  Armageddon: {
+    uid: '77f1f6ac-983f-4f3e-8906-47f774e8367b',
+    artist: 'Chris Rahn',
+  },
+  'Salt Flats': {
+    uid: '224cb63f-9af0-4b00-ba0b-0b604abf20c8',
+    artist: 'Scott Kirschner',
+  },
 };
 
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {

@@ -14,7 +14,7 @@ interface Props {
   templatesInCombo?: TemplateInVariant[];
 }
 
-const PREREQ_ICON_MAP: Record<string, SpellbookIcon> = {
+export const PREREQ_ICON_MAP: Record<string, SpellbookIcon> = {
   B: 'battlefield',
   commander: 'commander',
   C: 'commandZone',

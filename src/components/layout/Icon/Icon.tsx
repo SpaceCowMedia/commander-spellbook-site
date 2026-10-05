@@ -52,8 +52,19 @@ import {
   faHandFist,
   faDroplet,
   faTag,
+  faBan,
+  faWandMagicSparkles,
+  faRotateRight,
+  faExplosion,
+  faBrain,
+  faForward,
+  faTrophy,
+  faFlagCheckered,
+  faBolt,
+  faMasksTheater,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import faSaltShaker from './saltShaker';
 import cn from 'lib/cn';
 import React from 'react';
 
@@ -121,6 +132,17 @@ const SPELLBOOK_FA_ICONS = {
   fist: faHandFist,
   droplet: faDroplet,
   tag: faTag,
+  salt: faSaltShaker,
+  ban: faBan,
+  wandSparkles: faWandMagicSparkles,
+  rotateRight: faRotateRight,
+  explosion: faExplosion,
+  brain: faBrain,
+  forward: faForward,
+  trophy: faTrophy,
+  flagCheckered: faFlagCheckered,
+  bolt: faBolt,
+  masks: faMasksTheater,
 };
 
 /* a square narrowed into the portrait shape of a Magic card */
