@@ -61,7 +61,7 @@
     "@types/react-dom": "^19.3.0",
     "concurrently": "^10.0.5",
     "cross-env": "^10.1.0",
-    "cypress": "^16.1.0",
+    "cypress": "^16.1.1",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^7.0.1",
