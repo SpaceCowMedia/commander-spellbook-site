@@ -36,6 +36,14 @@
   @apply -mt-1 text-xs text-gray-500 dark:text-gray-400;
 }
 
+.expired {
+  @apply flex items-start gap-2 rounded-lg border border-warning bg-warning/20 px-3 py-2 text-sm dark:border-warning/50 dark:bg-warning/10;
+}
+
+.expiredIcon {
+  @apply mt-0.5 shrink-0 text-amber-600 dark:text-warning;
+}
+
 .error {
   @apply rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger dark:text-secondary;
 }

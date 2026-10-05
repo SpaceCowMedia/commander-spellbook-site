@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { ResponseError, SaltVote, SaltVotesApi, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/useCookie';
-import { SaltVoteError, saltTier, saltVoteError } from 'lib/salt';
+import { isVoteExpired, SaltVoteError, saltTier, saltVoteError } from 'lib/salt';
+import Icon from 'components/layout/Icon/Icon';
 import SaltSlider from '../SaltSlider/SaltSlider';
 import styles from './saltVoteControl.module.scss';
 
@@ -143,16 +144,25 @@ const SaltVoteControl: React.FC<Props> = ({ combo, vote, onVoteChange }) => {
             </button>
           )}
         </div>
-        {vote !== null && (
-          <>
-            <p id="salt-vote-status" className={styles.status}>
-              You voted {vote.score} · {saltTier(vote.score)} on {formatDate(vote.updated)}.
+        {vote !== null &&
+          (isVoteExpired(vote) ? (
+            <p id="salt-vote-status" className={styles.expired}>
+              <Icon name="triangleExclamation" className={styles.expiredIcon} />
+              <span>
+                You voted {vote.score} · {saltTier(vote.score)} on {formatDate(vote.updated)}, more than a year ago, so
+                your vote no longer counts. <strong>Vote again</strong> to make it count.
+              </span>
             </p>
-            <p className={styles.hint}>
-              Votes stop counting a year after they are cast or changed, so vote again to refresh yours.
-            </p>
-          </>
-        )}
+          ) : (
+            <>
+              <p id="salt-vote-status" className={styles.status}>
+                You voted {vote.score} · {saltTier(vote.score)} on {formatDate(vote.updated)}.
+              </p>
+              <p className={styles.hint}>
+                Votes stop counting a year after they are cast or changed, so vote again to refresh yours.
+              </p>
+            </>
+          ))}
       </>
     );
   };

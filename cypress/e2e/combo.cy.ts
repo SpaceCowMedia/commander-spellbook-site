@@ -91,6 +91,33 @@ describe('Combo Metadata', () => {
       cy.get('#salt-vote-slider').should('have.attr', 'aria-valuetext', 'Not rated');
     });
 
+    it('asks to vote again once a vote is more than a year old', () => {
+      const oldVote = {
+        variant: '1-3',
+        score: 2,
+        created: '2024-05-01T12:00:00Z',
+        updated: '2024-05-01T12:00:00Z',
+        average: null,
+        voteCount: 0,
+      };
+      cy.intercept(
+        { method: 'GET', pathname: '/salt-votes/', query: { variant: '1-3' } },
+        { count: 1, next: null, previous: null, results: [oldVote] },
+      );
+      cy.intercept('PUT', '**/salt-votes/1-3/').as('vote');
+      cy.visit('/combo/1-3/');
+
+      cy.get('#salt-vote-status')
+        .should('contain', 'You voted 2 · Moderately salty on May 1, 2024')
+        .and('contain', 'your vote no longer counts');
+      cy.get('#salt-vote-submit').should('have.text', 'Vote again').click();
+      cy.wait('@vote').its('response.statusCode').should('eq', 201);
+
+      cy.get('#salt-vote-status')
+        .should('contain', 'You voted 2 · Moderately salty')
+        .and('not.contain', 'no longer counts');
+    });
+
     it('explains why a vote could not be cast', () => {
       cy.intercept('PUT', '**/salt-votes/1-3/', {
         statusCode: 403,

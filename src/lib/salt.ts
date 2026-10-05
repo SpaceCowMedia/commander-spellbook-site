@@ -23,6 +23,13 @@ export function liveSaltStats(stored: SaltStats, vote: SaltVote): SaltStats {
   return { salt: stored.salt === null ? null : vote.average, voteCount: vote.voteCount };
 }
 
+// The API counts only the votes cast or changed in the last year.
+export function isVoteExpired(vote: SaltVote): boolean {
+  const yearAgo = new Date();
+  yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+  return vote.updated < yearAgo;
+}
+
 export interface SaltVoteError {
   message: string;
   loginRequired: boolean;
