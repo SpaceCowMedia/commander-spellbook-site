@@ -218,12 +218,20 @@ const SaltVoting: React.FC = () => {
             <ColorIdentity identity={combo.identity} size="small" />
           </div>
           <h2 className={styles.comboTitle}>{comboTitleToText(combo.uses, combo.requires)}</h2>
-          <p id="salt-voting-popularity" className={styles.popularity}>
-            <Icon name="arrowUpRightDots" />
-            {combo.popularity === null
-              ? 'No EDHREC data yet'
-              : `In ${combo.popularity.toLocaleString('en-US')} ${pluralize('deck', combo.popularity)} on EDHREC`}
-          </p>
+          <div className={styles.stats}>
+            <p id="salt-voting-popularity" className={styles.stat}>
+              <Icon name="arrowUpRightDots" />
+              {combo.popularity === null
+                ? 'No EDHREC data yet'
+                : `In ${combo.popularity.toLocaleString('en-US')} ${pluralize('deck', combo.popularity)} on EDHREC`}
+            </p>
+            <p id="salt-voting-vote-count" className={styles.stat}>
+              <Icon name="salt" />
+              {combo.saltVoteCount === 0
+                ? 'No salt votes in the last year'
+                : `${combo.saltVoteCount.toLocaleString('en-US')} salt ${pluralize('vote', combo.saltVoteCount)} in the last year`}
+            </p>
+          </div>
         </header>
         <div className={styles.cards}>
           {combo.uses.map((use) => (

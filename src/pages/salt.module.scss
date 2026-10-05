@@ -26,8 +26,12 @@
   @apply font-title text-xl;
 }
 
-.popularity {
-  @apply flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400;
+.stats {
+  @apply flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.stat {
+  @apply flex items-center gap-1.5;
 }
 
 .cards {

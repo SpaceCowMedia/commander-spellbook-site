@@ -69,12 +69,13 @@ describe('Salt Voting', () => {
     cy.get('[role="tooltip"]').should('be.visible').and('have.text', 'Starts on the battlefield');
   });
 
-  it('shows how many decks play each combo', () => {
+  it('shows how many decks play each combo and how many salt votes it has', () => {
     cy.env(['apiUrl']).then(({ apiUrl }) => {
       cy.request(`${apiUrl}/variants/1-2/`).then(({ body: popular }) => {
         cy.request(`${apiUrl}/variants/1-3/`).then(({ body: unknown }) => {
-          // The seeded combos have no EDHREC data, so one is given some.
-          popular.popularity = 12345;
+          // The seeded combos have no EDHREC data nor salt votes, so one is given some.
+          Object.assign(popular, { popularity: 12345, saltVoteCount: 1234 });
+          Object.assign(unknown, { popularity: null, saltVoteCount: 0 });
           cy.intercept(QUEUE, [popular, unknown]).as('queue');
         });
       });
@@ -83,8 +84,10 @@ describe('Salt Voting', () => {
     cy.wait('@queue');
 
     cy.get('#salt-voting-popularity').should('have.text', 'In 12,345 decks on EDHREC');
+    cy.get('#salt-voting-vote-count').should('have.text', '1,234 salt votes in the last year');
     cy.get('#salt-voting-skip').click();
     cy.get('#salt-voting-popularity').should('have.text', 'No EDHREC data yet');
+    cy.get('#salt-voting-vote-count').should('have.text', 'No salt votes in the last year');
   });
 
   it('previews a card while its image is hovered', () => {
