@@ -69,6 +69,25 @@ describe('Salt Voting', () => {
     cy.get('[role="tooltip"]').should('be.visible').and('have.text', 'Starts on the battlefield');
   });
 
+  it('previews a card while its image is hovered', () => {
+    const image = 'https://cards.scryfall.io/normal/front/basalt-monolith.jpg';
+    cy.env(['apiUrl']).then(({ apiUrl }) => {
+      cy.request(`${apiUrl}/variants/1-2/`).then(({ body: combo }) => {
+        // The seeded cards have no images, so one is given an image to preview.
+        combo.uses[0].card.imageUriFrontNormal = image;
+        cy.intercept(QUEUE, [combo]).as('queue');
+      });
+    });
+    cy.visit('/salt/');
+    cy.wait('@queue');
+
+    cy.get('#salt-voting-combo img[alt="the front side of Basalt Monolith"]').trigger('mousemove', { force: true });
+    cy.get('img[alt="Front Image"]').should('be.visible').and('have.attr', 'src', image);
+
+    cy.get('#salt-voting-combo img[alt="the front side of Basalt Monolith"]').trigger('mouseout', { force: true });
+    cy.get('img[alt="Front Image"]').should('not.be.visible');
+  });
+
   describe('when logged in', () => {
     beforeEach(() => {
       cy.login();

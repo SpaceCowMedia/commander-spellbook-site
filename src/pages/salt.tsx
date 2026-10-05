@@ -5,6 +5,7 @@ import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
 import ColorIdentity from 'components/layout/ColorIdentity/ColorIdentity';
 import CardImage from 'components/layout/CardImage/CardImage';
+import CardTooltip from 'components/layout/CardTooltip/CardTooltip';
 import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
 import CardZones from 'components/combo/CardZones/CardZones';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
@@ -214,7 +215,9 @@ const SaltVoting: React.FC = () => {
         <div className={styles.cards}>
           {combo.uses.map((use) => (
             <div key={use.card.id} className={styles.card}>
-              <CardImage card={use.card} usedFace={use.usedFace} />
+              <CardTooltip card={use.card} faceToShow={use.usedFace} disableTapPreview>
+                <CardImage card={use.card} usedFace={use.usedFace} />
+              </CardTooltip>
               {use.quantity > 1 && <span className={styles.quantity}>×{use.quantity}</span>}
               <CardZones card={use} className={styles.zones} />
             </div>
