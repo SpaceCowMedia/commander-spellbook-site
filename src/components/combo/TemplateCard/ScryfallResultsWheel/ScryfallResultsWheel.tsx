@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Icon from 'components/layout/Icon/Icon';
-import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/types';
+import { replacementCardUrl } from 'lib/cards';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import { useSwipeable } from 'react-swipeable';
@@ -104,12 +104,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
       </div>
       <div className="h-full flex justify-center items-center">
         <SpoilerFog key={current.id} name={current.name} spoiler={current.spoiler} className="h-full">
-          <a
-            className="h-full"
-            href={edhrecService.getCardUrl(current.name ?? '')}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className="h-full" href={replacementCardUrl(current)} target="_blank" rel="noopener noreferrer">
             <img
               className="max-h-full rounded-xl bg-cover"
               src={current.images[0]}

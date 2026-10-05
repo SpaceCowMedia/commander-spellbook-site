@@ -23,6 +23,24 @@ describe('Combo Submission', () => {
     cy.url().should('include', '/login');
   });
 
+  // The login page sends its destination through the backend and back to the login completion page,
+  // which then opens it. Discord is skipped by logging in directly before following it.
+  it('keeps the card to submit a combo with through the login', () => {
+    const card = 'Minsc & Boo, Timeless Heroes';
+    cy.visit(`/submit-a-combo/?${new URLSearchParams({ card })}`);
+
+    cy.get('a.button[href*="/auth/login/"]')
+      .should('have.attr', 'href')
+      .and('include', 'final')
+      .then((href) => {
+        const next = new URL(new URL(`${href}`).searchParams.get('next') ?? '');
+        cy.login();
+        cy.visit(next.searchParams.get('final') ?? '');
+      });
+
+    cy.get('input[placeholder="Search for a card..."]').should('have.value', card);
+  });
+
   it('submits a combo and lists it among the submissions of the user', () => {
     cy.login();
     // A suggestion left behind by a previous attempt would make this one fail on a duplicate.

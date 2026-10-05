@@ -15,6 +15,13 @@ describe('Search', () => {
     cy.url().should('not.include', 'q=');
   });
 
+  it('keeps search results out of search engines', () => {
+    cy.visit(`/search/?q=${encodeURIComponent('card="Basalt Monolith"')}`);
+
+    cy.get('meta[name="robots"]').should('have.attr', 'content', 'noindex, follow');
+    cy.contains('h1', 'Combos with').should('not.exist');
+  });
+
   it('tells the user when nothing matches the query', () => {
     cy.visit(`/search/?q=${encodeURIComponent('card:"Not A Real Card"')}`);
 

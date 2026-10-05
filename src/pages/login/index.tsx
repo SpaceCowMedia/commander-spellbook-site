@@ -9,9 +9,12 @@ import ExternalLink from '../../components/layout/ExternalLink/ExternalLink';
 import { useRouter } from 'next/router';
 import { apiConfiguration } from 'services/api.service';
 import { UsersApi } from '@space-cow-media/spellbook-client';
+import { queryParameterAsString } from 'lib/queryParameters';
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const final = queryParameterAsString(router.query.final);
+  const completeUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/login/complete/?${final ? new URLSearchParams({ final }) : ''}`;
 
   useEffect(() => {
     const decodedJwt = TokenService.decodeJwt(CookieService.get('csbJwt'));
@@ -44,7 +47,7 @@ const Login: React.FC = () => {
           <Link
             role="button"
             className="button"
-            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/auth/login/?code&next=${process.env.NEXT_PUBLIC_CLIENT_URL}/login/complete/?${router.query.final ? `final=${router.query.final}` : ''}`}
+            href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/auth/login/?code&${new URLSearchParams({ next: completeUrl })}`}
           >
             Login
           </Link>

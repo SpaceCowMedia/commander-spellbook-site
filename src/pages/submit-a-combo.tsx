@@ -11,16 +11,17 @@ import { apiConfiguration } from 'services/api.service';
 
 interface Props {
   variant?: Variant;
+  card?: string;
 }
 
-const SubmitACombo: React.FC<Props> = ({ variant }) => {
+const SubmitACombo: React.FC<Props> = ({ variant, card }) => {
   return (
     <>
       <SpellbookHead
         title="Commander Spellbook: How to Submit a Combo"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
       />
-      <ComboSubmissionForm variant={variant} />
+      <ComboSubmissionForm variant={variant} card={card} />
     </>
   );
 };
@@ -38,7 +39,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {
-        destination: `/login?final=${context.resolvedUrl}`,
+        destination: `/login/?${new URLSearchParams({ final: context.resolvedUrl })}`,
         permanent: false,
       },
     };
@@ -58,6 +59,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   return {
     props: {
       variant: variant || null,
+      card: queryParameterAsString(context.query.card)?.trim() || null,
     },
   };
 });

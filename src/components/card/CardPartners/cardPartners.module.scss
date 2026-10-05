@@ -1,0 +1,39 @@
+@reference "../../../assets/globals.css";
+
+.grid {
+  @apply grid grid-cols-3 sm:grid-cols-4 gap-3;
+}
+
+.tile {
+  @apply block no-underline text-dark dark:text-light h-full;
+}
+
+.card {
+  @apply block rounded-[4.75%/3.5%] overflow-hidden transition-transform motion-reduce:transition-none;
+}
+
+.tile:hover .card,
+.tile:focus-visible .card {
+  @apply -translate-y-1 shadow-lg;
+}
+
+.image {
+  @apply block w-full h-auto bg-light dark:bg-dark;
+}
+
+.caption {
+  @apply block pt-1 text-sm;
+}
+
+.name {
+  @apply block font-bold truncate;
+}
+
+.tile:hover .name,
+.tile:focus-visible .name {
+  @apply underline;
+}
+
+.count {
+  @apply block text-xs opacity-70;
+}

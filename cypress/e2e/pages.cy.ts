@@ -7,6 +7,7 @@ const pages = [
   ['/combo-of-the-day/', 'Combo of the Day'],
   ['/login/', 'Login'],
   ['/salt/', 'Salt Voting'],
+  ['/card/1/', 'Basalt Monolith'],
 ];
 
 describe('Informational Pages', () => {

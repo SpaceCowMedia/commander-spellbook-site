@@ -15,6 +15,7 @@ import {
   getShortNames,
   getTemplateNameSummary,
 } from 'lib/types';
+import { cardPath } from 'lib/cards';
 
 interface Props {
   text: string;
@@ -195,10 +196,10 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
             <CardTooltip
               card={item.card.card}
               faceToShow={getFaceMentionedBy(item.card, item.value)}
-              suppressClick={includeCardLinks}
+              suppressClick={includeCardLinks && cardPath(item.card.card) === undefined}
             >
               {includeCardLinks ? (
-                <CardLink name={item.card.card.name} className="no-underline!">
+                <CardLink card={item.card.card} className="no-underline!">
                   <CardName name={item.value} />
                 </CardLink>
               ) : (
