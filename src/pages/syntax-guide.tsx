@@ -1067,7 +1067,7 @@ For example, \`popularity>10000\` searches for combos that are present in more t
 
 const SALT_DESCRIPTION = `
 Salt is how unfun a combo is to play against, from 0 (not at all) to 4 (the most).
-It works like EDHREC's salt score for cards, except that Commander Spellbook users vote on it for each combo: [cast your votes here](/salt-voting/).
+It works like EDHREC's salt score for cards, except that Commander Spellbook users vote on it for each combo: [cast your votes here](/salt/).
 
 A combo's salt score is the average of the votes cast or changed in the last year, rounded to two decimals.
 Combos with too few votes have no score yet, and scores are refreshed every couple of hours, so new votes take a while to count.

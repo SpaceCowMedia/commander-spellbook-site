@@ -18,7 +18,7 @@ import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';
 import { readSeenCombos, rememberSeenCombo } from 'lib/saltVotingSeen';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import useFoolsDay, { isFoolsDay } from 'lib/foolsDay';
-import styles from './salt-voting.module.scss';
+import styles from './salt.module.scss';
 
 const QUEUE_BATCH_SIZE = 50;
 const PREFETCH_WHEN_LEFT = 5;
@@ -259,7 +259,7 @@ const SaltVoting: React.FC = () => {
                 <p id="salt-voting-error" role="alert" className={styles.error}>
                   {voteError.message}{' '}
                   {voteError.loginRequired && (
-                    <Link href="/login/?final=/salt-voting/" className="font-bold">
+                    <Link href="/login/?final=/salt/" className="font-bold">
                       Log in
                     </Link>
                   )}
@@ -292,7 +292,7 @@ const SaltVoting: React.FC = () => {
                 Log in to vote on how salty this combo is. You can still browse the combos.
               </p>
               <div className={styles.actions}>
-                <Link id="salt-voting-login" href="/login/?final=/salt-voting/" className={styles.voteButton}>
+                <Link id="salt-voting-login" href="/login/?final=/salt/" className={styles.voteButton}>
                   Log in to vote
                 </Link>
                 <button id="salt-voting-skip" type="button" className={styles.skipButton} onClick={skip}>
@@ -352,7 +352,7 @@ const SaltVoting: React.FC = () => {
         description="Vote on how salty EDH combos are, that is how unfun they are to play against."
       />
       <div className="static-page">
-        <ArtCircle cardName="Cyclonic Rift" className="m-auto md:block hidden" />
+        <ArtCircle cardName="Salt Flats" className="m-auto md:block hidden" />
         <h1 className="heading-title">Salt Voting</h1>
         <p className={styles.intro}>
           How unfun is each combo to play against? Vote from 0 (not at all) to {MAX_SALT} (extremely). A combo gets a

@@ -171,7 +171,7 @@ const SaltVoteControl: React.FC<Props> = ({ combo, vote, onVoteChange }) => {
           )}
         </p>
       )}
-      <Link href="/salt-voting/" className={styles.queueLink}>
+      <Link href="/salt/" className={styles.queueLink}>
         Vote on more combos →
       </Link>
     </div>

@@ -18,12 +18,12 @@ const serveQueueOf = (...variantIds: string[]) => {
 describe('Salt Voting', () => {
   it('lets anonymous visitors browse the combos and asks them to log in to vote', () => {
     serveQueueOf('1-2', '1-3');
-    cy.visit('/salt-voting/');
+    cy.visit('/salt/');
     cy.wait('@queue');
 
     cy.get('#salt-voting-combo').should('contain', 'Basalt Monolith').and('contain', 'Mesmeric Orb');
     cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
-    cy.get('#salt-voting-login').should('have.attr', 'href', '/login/?final=/salt-voting/');
+    cy.get('#salt-voting-login').should('have.attr', 'href', '/login/?final=/salt/');
     cy.get('#salt-voting-slider').should('not.exist');
 
     cy.get('#salt-voting-skip').click();
@@ -43,7 +43,7 @@ describe('Salt Voting', () => {
         cy.intercept(QUEUE, [combo]).as('queue');
       });
     });
-    cy.visit('/salt-voting/');
+    cy.visit('/salt/');
     cy.wait('@queue');
 
     cy.get('#salt-voting-combo [data-zone]').should((symbols) => {
@@ -68,7 +68,7 @@ describe('Salt Voting', () => {
 
     it('casts votes with the slider and with the keyboard', () => {
       cy.intercept(VOTE, (request) => request.reply({ statusCode: 201, body: {} })).as('vote');
-      cy.visit('/salt-voting/');
+      cy.visit('/salt/');
 
       cy.get('#salt-voting-vote').should('be.disabled');
       cy.get('[data-salt-tick="4"]').should('not.be.disabled').click();
@@ -100,7 +100,7 @@ describe('Salt Voting', () => {
         statusCode: 403,
         body: { detail: 'You do not have permission to perform this action.' },
       }).as('vote');
-      cy.visit('/salt-voting/');
+      cy.visit('/salt/');
 
       cy.get('[data-salt-tick="1"]').should('not.be.disabled').click();
       cy.get('#salt-voting-vote').click();

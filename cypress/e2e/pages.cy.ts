@@ -6,7 +6,7 @@ const pages = [
   ['/privacy-policy/', 'Privacy Policy'],
   ['/combo-of-the-day/', 'Combo of the Day'],
   ['/login/', 'Login'],
-  ['/salt-voting/', 'Salt Voting'],
+  ['/salt/', 'Salt Voting'],
 ];
 
 describe('Informational Pages', () => {

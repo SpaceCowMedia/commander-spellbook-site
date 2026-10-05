@@ -173,9 +173,9 @@ const CARD_ARTS = {
     uid: '77f1f6ac-983f-4f3e-8906-47f774e8367b',
     artist: 'Chris Rahn',
   },
-  'Cyclonic Rift': {
-    uid: '205c4689-8b02-4d40-9274-3c1fcafa8b82',
-    artist: 'Chris Rahn',
+  'Salt Flats': {
+    uid: '224cb63f-9af0-4b00-ba0b-0b604abf20c8',
+    artist: 'Scott Kirschner',
   },
 };
 
