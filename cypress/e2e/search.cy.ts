@@ -13,6 +13,19 @@ const expectTransitionType = (type: string) => {
   });
 };
 
+// Going back to a page whose data it already has, Next renders it during the popstate event, where React commits the
+// transition synchronously, without starting a view transition at all.
+const expectNoAnimation = () => {
+  cy.document().then((doc) => {
+    if (!('startViewTransition' in doc)) {
+      return;
+    }
+    cy.get<sinon.SinonSpy>('@startViewTransition').should((spy) => {
+      expect(spy.args.every(([options]) => options?.types?.includes('no-animation'))).to.equal(true);
+    });
+  });
+};
+
 describe('Search', () => {
   it('shows the combos matching a query and opens one of them', () => {
     cy.visit('/search/?q=monolith');
@@ -105,7 +118,8 @@ describe('Search', () => {
 
     cy.go('back');
     cy.location('pathname').should('eq', '/');
-    expectTransitionType('no-animation');
+    cy.get('.home-button').should('exist');
+    expectNoAnimation();
   });
 
   it('goes straight to the combo when a single one matches, keeping the query in the search bar', () => {
