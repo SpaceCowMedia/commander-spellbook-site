@@ -247,6 +247,8 @@ export function getFaceMentionedBy(card: CardInVariant, text: string): number | 
    be stored and read back as JSON. */
 export interface ReplacementCard {
   id: string;
+  cardId: number | null;
+  oracleId: string | null;
   name: string;
   images: string[];
   spoiler: boolean;

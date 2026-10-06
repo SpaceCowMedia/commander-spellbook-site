@@ -12,6 +12,7 @@ import { PropertiesApi } from '@space-cow-media/spellbook-client';
 import { GetStaticProps } from 'next';
 import SuggestionBalloon from 'components/layout/SuggestionBalloon/SuggestionBalloon';
 import { saltVotingSuggestion } from 'lib/saltVotingHistory';
+import { websiteJsonLd } from 'lib/seo';
 
 const HOME_SUGGESTIONS = [saltVotingSuggestion];
 
@@ -59,6 +60,8 @@ const Home: React.FC<Props> = ({ featuredTabs, comboOfTheDay }) => {
       <SpellbookHead
         title="Commander Spellbook: The Search Engine for EDH Combos"
         description="The Premier Magic: the Gathering Combo Search Engine for the Commander / Elder Dragon Highlander (EDH) Format."
+        canonicalPath="/"
+        jsonLd={websiteJsonLd()}
       />
       <main>
         <div className="absolute top-5 right-5 z-20">

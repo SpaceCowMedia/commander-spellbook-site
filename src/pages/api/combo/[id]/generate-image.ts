@@ -4,6 +4,8 @@ import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverPath from 'lib/serverPath';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
+import { httpErrorStatus } from 'lib/httpErrors';
+import { IMAGE_CACHE_CONTROL } from 'lib/seo';
 
 const width = 1080;
 const manaOffset = width / 25;
@@ -138,6 +140,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     combo = await variantsApi.variantsRetrieve({ id: req.query.id as string });
   } catch (error) {
+    if (httpErrorStatus(error) === 404) {
+      res.status(404).json({ error: 'Combo not found' });
+      return;
+    }
     console.error('Error fetching variants:', error);
     res.status(500).json({ error: 'Failed to fetch image' });
     return;
@@ -179,6 +185,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     drawImage(ctx, footer_c, nextLine);
 
     res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', IMAGE_CACHE_CONTROL);
     const buffer = canvas.toBuffer('image/png');
     res.send(buffer);
   } catch (error) {

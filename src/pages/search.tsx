@@ -1,8 +1,9 @@
 import React from 'react';
 import SearchMessage from '../components/search/SearchMessage/SearchMessage';
-import StyledSelect, { Option } from '../components/layout/StyledSelect/StyledSelect';
+import StyledSelect from '../components/layout/StyledSelect/StyledSelect';
 import { useRouter } from 'next/router';
-import { DEFAULT_ORDER, DEFAULT_ORDERING, DEFAULT_SORT } from '../lib/constants';
+import { DEFAULT_ORDER, DEFAULT_SORT } from '../lib/constants';
+import { ORDER_OPTIONS, SORT_OPTIONS, toApiOrdering } from '../lib/sorting';
 import SearchPagination from '../components/search/SearchPagination/SearchPagination';
 import ComboResults from '../components/search/ComboResults/ComboResults';
 import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
@@ -26,46 +27,6 @@ interface Props {
   featured?: string;
   explanation?: string | null;
 }
-
-const SORT_OPTIONS: Option[] = [
-  { value: 'popularity', label: 'Popularity' },
-  { value: 'salt', label: 'Salt' },
-  { value: 'identity_count', label: 'Color Identity' },
-  { value: 'price_tcgplayer', label: 'Price (TCGPlayer)' },
-  { value: 'price_cardkingdom', label: 'Price (CardKingdom)' },
-  { value: 'price_cardmarket', label: 'Price (Cardmarket)' },
-  { value: 'variant_count', label: '# of Variants' },
-  {
-    value: 'card_count',
-    label: '# of Cards',
-  },
-  {
-    value: 'result_count',
-    label: '# of Results',
-  },
-  {
-    value: 'created',
-    label: 'Date Created',
-  },
-  {
-    value: 'updated',
-    label: 'Date Updated',
-  },
-];
-
-const ORDER_OPTIONS: Option[] = [
-  { value: 'auto', label: 'Auto' },
-  { value: 'asc', label: 'Ascending' },
-  { value: 'desc', label: 'Descending' },
-];
-
-const AUTO_SORT_MAP: Record<string, '-'> = {
-  popularity: '-',
-  salt: '-',
-  created: '-',
-  updated: '-',
-  variant_count: '-',
-};
 
 // The keywords that constrain the format a combo is playable in. They only accept the `:` operator.
 const LEGALITY_KEYWORDS = ['legal', 'banned', 'format'];
@@ -157,13 +118,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
   const legalityMessage =
     doesQuerySpecifyFormat(query) || variant ? '' : ' (legal:commander has been applied by default)';
 
-  const singleCardQuery = /^card="([^"]+)"$/.exec(query);
-
-  const queryDescription =
-    explanation ||
-    (singleCardQuery
-      ? `Showing combos with the card "${singleCardQuery[1]}".${legalityMessage}`
-      : `Showing results for query "${query}".${legalityMessage}`);
+  const queryDescription = explanation || `Showing results for query "${query}".${legalityMessage}`;
 
   const searchMessage =
     queryDescription + (variant ? ` Only variants of the combo with ID "${variant}" are shown.` : '');
@@ -175,6 +130,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
       <SpellbookHead
         title="Commander Spellbook: Search Results"
         description="Search results for all EDH combos matching your query."
+        noindex
       />
       <div>
         {featured !== null && featured !== undefined ? (
@@ -185,11 +141,7 @@ const Search: React.FC<Props> = ({ combos, page, bannedCombos, error, featured, 
           </>
         ) : (
           <>
-            {singleCardQuery ? (
-              <h1 className="heading-title">Combos with "{singleCardQuery[1]}"</h1>
-            ) : (
-              <h1 className="sr-only">Search Results</h1>
-            )}
+            <h1 className="sr-only">Search Results</h1>
             <SearchMessage
               message={error ? '' : searchMessage}
               errors={error ?? ''}
@@ -360,9 +312,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   }
   const order = queryParameterAsString(context.query.order) || DEFAULT_ORDER;
   const sort = queryParameterAsString(context.query.sort) || DEFAULT_SORT;
-  const ordering =
-    (order === 'auto' ? `${AUTO_SORT_MAP[sort as string] || ''}${sort}` : `${order === 'asc' ? '' : '-'}${sort}`) +
-    `,${DEFAULT_ORDERING}`;
+  const ordering = toApiOrdering(sort, order);
   const groupByCombo = queryParameterAsString(context.query.groupByCombo)?.toLowerCase() !== 'false';
   const variantsApi = new VariantsApi(configuration);
   const explanationPromise = explainQuery(new ExplainQueryApi(configuration), query);

@@ -36,13 +36,17 @@ function getSubtitle(cards: CardInVariant[], templates: TemplateInVariant[]): st
 /* Plain-text rendering of the same title, for contexts that cannot hold markup such as <title>
    and og:title. Card names keep their raw "A-" alchemy prefix here; only the JSX below swaps it
    for the alchemy symbol. */
-export function comboTitleToText(cards: CardInVariant[], templates: TemplateInVariant[] = []): string {
+export function comboTitleToText(
+  cards: CardInVariant[],
+  templates: TemplateInVariant[] = [],
+  separator = ' | ',
+): string {
   const title =
     cards.length === 0
       ? NO_CARDS_TITLE
       : getTitleCards(cards)
           .map(({ card, quantity }) => (quantity > 1 ? `${quantity} ${card.name}` : card.name))
-          .join(' | ');
+          .join(separator);
 
   return [title, getSubtitle(cards, templates)].filter(Boolean).join(' ');
 }

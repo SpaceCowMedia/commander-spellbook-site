@@ -1,7 +1,13 @@
 import { ScryfallCard } from '@scryfall/api-types';
 import scryfall from 'scryfall-client';
 import Card from 'scryfall-client/dist/models/card';
-import { ReplacementCard, ReplacementsPage } from 'lib/types';
+import { getFaceNames, ReplacementCard, ReplacementsPage } from 'lib/types';
+
+export function scryfallCardUrl(cardName: string): string {
+  const name = getFaceNames(cardName)[0];
+  const quote = name.includes('"') ? "'" : '"';
+  return `https://scryfall.com/search?q=${encodeURIComponent(`!${quote}${name}${quote}`)}`;
+}
 
 function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   if ('image_uris' in card) {
@@ -21,6 +27,8 @@ function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
 function toReplacementCard(card: Card): ReplacementCard {
   return {
     id: card.id,
+    cardId: null,
+    oracleId: card.oracle_id ?? null,
     name: card.name,
     images: getScryfallImage(card),
     spoiler: Date.parse(card.released_at) > Date.now(),

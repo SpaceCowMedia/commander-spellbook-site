@@ -14,13 +14,15 @@ interface Props {
   usedFace?: number | null;
   className?: string;
   edible?: boolean;
+  newTab?: boolean;
+  noLink?: boolean;
 }
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card, usedFace, className, edible }: Props) => {
+const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab, noLink }: Props) => {
   const foolsDay = useFoolsDay();
   const { rootProps, frontClassName, backClassName } = useEdibleCard(!!edible);
   const plainCardBack = foolsDay ? weatheredCardBack.src : cardBack.src;
@@ -33,6 +35,15 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className, edible }: Props
   const [backFacing, setBackFacing] = useState(!showsUsedBackFace);
   const [rotated, setRotated] = useState(false);
   const [readyToReveal, setReadyToReveal] = useState(false);
+
+  const linked = (image: React.ReactElement) =>
+    noLink ? (
+      <span className="relative">{image}</span>
+    ) : (
+      <CardLink className="relative" card={card} disableMobileSingleClickAsPreview={true} newTab={newTab}>
+        {image}
+      </CardLink>
+    );
 
   const flip = () => {
     setBackFacing((prev) => !prev);
@@ -75,14 +86,14 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className, edible }: Props
         rotated={rotated && card.layoutRotationFront != null ? card.layoutRotationFront : undefined}
         back={
           hasBack ? (
-            <CardLink className="relative" name={card.name} disableMobileSingleClickAsPreview={true}>
+            linked(
               <img
                 className={`rounded-xl ${backClassName}`}
                 src={card.imageUriBackNormal!}
                 ref={backImageRef}
                 alt={`the back side of ${card.name}`}
-              />
-            </CardLink>
+              />,
+            )
           ) : (
             <img
               className={`rounded-xl ${backClassName}`}
@@ -92,18 +103,16 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className, edible }: Props
             />
           )
         }
-        front={
-          <CardLink className="relative" name={card.name} disableMobileSingleClickAsPreview={true}>
-            <img
-              className={`rounded-xl ${frontClassName}`}
-              ref={frontImageRef}
-              src={card.imageUriFrontNormal ?? plainCardBack}
-              alt={`the front side of ${card.name}`}
-              onLoad={() => setFrontLoaded(true)}
-              onError={() => setFrontLoaded(false)}
-            />
-          </CardLink>
-        }
+        front={linked(
+          <img
+            className={`rounded-xl ${frontClassName}`}
+            ref={frontImageRef}
+            src={card.imageUriFrontNormal ?? plainCardBack}
+            alt={`the front side of ${card.name}`}
+            onLoad={() => setFrontLoaded(true)}
+            onError={() => setFrontLoaded(false)}
+          />,
+        )}
       />
       <div className={styles.buttonsContainer}>
         {readyToReveal && hasBack && (

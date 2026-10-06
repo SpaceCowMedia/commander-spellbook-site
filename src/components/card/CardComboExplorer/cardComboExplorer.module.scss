@@ -1,0 +1,9 @@
+@reference "../../../assets/globals.css";
+
+.sorting {
+  @apply flex flex-wrap items-center gap-2 mb-4;
+}
+
+.footer {
+  @apply flex flex-wrap justify-center items-center gap-2;
+}

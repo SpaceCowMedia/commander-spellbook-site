@@ -1,11 +1,12 @@
 import BuyComboButtons from './BuyComboButtons/BuyComboButtons';
 import EdhrecLink from './EdhrecLink/EdhrecLink';
 import Link from 'next/link';
-import ShareComboButtons from './ShareComboButtons/ShareComboButtons';
+import ShareButtons from 'components/layout/ShareButtons/ShareButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
 import { Variant } from '@space-cow-media/spellbook-client';
 import useCookie from 'lib/useCookie';
+import { absoluteUrl } from 'lib/seo';
 
 interface Props {
   cards: string[];
@@ -46,7 +47,12 @@ const ComboSidebarLinks: React.FC<Props> = ({
             Edit this Combo
           </Link>
         )}
-        <ShareComboButtons comboId={combo.id} />
+        <ShareButtons
+          link={absoluteUrl(`/combo/${combo.id}/`)}
+          text="Check out this combo!"
+          subject="Combo"
+          analyticsCategory="Combo Detail Page Actions"
+        />
       </div>
     </div>
   );

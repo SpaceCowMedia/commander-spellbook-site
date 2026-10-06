@@ -9,6 +9,8 @@ function toReplacementCard(card: CardDetail): ReplacementCard {
   return {
     // a card no editor has curated has no id, but every card has a name
     id: card.oracleId ?? card.name,
+    cardId: card.id ?? null,
+    oracleId: card.oracleId,
     name: card.name,
     images: [card.imageUriFrontNormal, card.imageUriBackNormal].filter((uri) => uri != null),
     spoiler: card.spoiler,
