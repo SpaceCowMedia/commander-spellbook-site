@@ -70,30 +70,38 @@ describe('Search', () => {
     cy.get('input[name=q]').type('monolith{enter}');
     cy.url().should('include', '/search/');
 
-    // Odd pages slide to the next one, and even pages flip over to it.
+    // While a page turns it is printed twice, once more for the sheet that turns over, and only once again after.
+    const expectOnePrint = () => cy.get('a[href*="/combo/"]:has(.card-name)').should('have.length', PAGE_SIZE);
+
     cy.get('.forward-button').first().click();
     cy.url().should('include', 'page=2');
-    expectTransitionType('page-slide-forward');
+    expectTransitionType('page-turn-forward');
+    expectOnePrint();
 
     cy.get('.forward-button').first().click();
     cy.url().should('include', 'page=3');
-    expectTransitionType('page-flip-forward');
+    expectTransitionType('page-turn-forward');
+    expectOnePrint();
 
     cy.get('.back-button').first().click();
     cy.url().should('include', 'page=2');
-    expectTransitionType('page-flip-back');
+    expectTransitionType('page-turn-back');
+    expectOnePrint();
 
     cy.go('back');
     cy.url().should('include', 'page=3');
-    expectTransitionType('page-flip-forward');
+    expectTransitionType('page-turn-forward');
+    expectOnePrint();
 
     cy.go('back');
     cy.url().should('include', 'page=2');
-    expectTransitionType('page-flip-back');
+    expectTransitionType('page-turn-back');
+    expectOnePrint();
 
     cy.go('back');
     cy.url().should('not.include', 'page=');
-    expectTransitionType('page-slide-back');
+    expectTransitionType('page-turn-back');
+    expectOnePrint();
 
     cy.go('back');
     cy.location('pathname').should('eq', '/');

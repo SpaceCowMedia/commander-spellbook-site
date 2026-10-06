@@ -1,12 +1,19 @@
 :root {
   --page-exit-duration: 150ms;
   --page-enter-duration: 300ms;
-  --page-slide-duration: 500ms;
-  --page-slide-easing: cubic-bezier(0.4, 0, 0.2, 1);
-  --page-flip-duration: 800ms;
-  --page-flip-perspective: 160vw;
+  --page-turn-duration: 900ms;
+
+  /* Symmetric, so the turning sheet is edge-on halfway through, where its sides swap. */
+  --page-turn-easing: cubic-bezier(0.4, 0, 0.6, 1);
+  --page-turn-perspective: 160vw;
   --search-dock-duration: 400ms;
   --wheel-duration: 200ms;
+}
+
+@property --page-turn-shade {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
 }
 
 ::view-transition {
@@ -106,150 +113,139 @@
     var(--wheel-duration) ease-out both vt-slide-from-left;
 }
 
-:root:active-view-transition-type(
-    page-slide-forward,
-    page-slide-back,
-    page-flip-forward,
-    page-flip-back
-  )::view-transition-group(.pageTurnExit) {
-  z-index: 2;
-}
-
-:root:active-view-transition-type(
-    page-slide-forward,
-    page-slide-back,
-    page-flip-forward,
-    page-flip-back
-  )::view-transition-group(.pageTurnEnter) {
-  z-index: 1;
-}
-
-:root:active-view-transition-type(page-slide-forward)::view-transition-old(.pageTurnExit) {
-  animation: var(--page-slide-duration) var(--page-slide-easing) both page-slide-out;
-}
-
-:root:active-view-transition-type(page-slide-forward)::view-transition-new(.pageTurnEnter) {
-  animation: var(--page-slide-duration) var(--page-slide-easing) both page-slide-in;
-}
-
-:root:active-view-transition-type(page-slide-back)::view-transition-old(.pageTurnExit) {
-  animation: var(--page-slide-duration) var(--page-slide-easing) reverse both page-slide-in;
-}
-
-:root:active-view-transition-type(page-slide-back)::view-transition-new(.pageTurnEnter) {
-  animation: var(--page-slide-duration) var(--page-slide-easing) reverse both page-slide-out;
-}
-
-:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition {
-  perspective: var(--page-flip-perspective);
+/*
+ * A page turns like one in a book. Going forward, the right half of the old page lifts and turns over onto its left
+ * half, uncovering the right half of the new page, whose left half is printed on the back of the sheet. Going back,
+ * the left half turns over the other way. The page itself (.pageTurnExit, .pageTurnEnter) stays flat and shows the
+ * halves the sheet uncovers, while PageTurn's second print of it (page-turn-sheet) makes both sides of the sheet.
+ */
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition {
+  perspective: var(--page-turn-perspective);
   perspective-origin: 50vw 40vh;
 }
 
-/* Both sides of the flipping sheet share one animation, turning inside groups that pass the perspective down. */
-:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-group(.pageTurnExit),
-:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-group(.pageTurnEnter) {
-  transform-style: preserve-3d;
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnEnter) {
+  z-index: 1;
 }
 
-:root:active-view-transition-type(page-flip-forward)::view-transition-image-pair(.pageTurnExit),
-:root:active-view-transition-type(page-flip-forward)::view-transition-image-pair(.pageTurnEnter) {
-  transform-origin: left;
-  animation: var(--page-flip-duration) linear both page-flip;
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnExit) {
+  z-index: 2;
 }
 
-:root:active-view-transition-type(page-flip-back)::view-transition-image-pair(.pageTurnExit),
-:root:active-view-transition-type(page-flip-back)::view-transition-image-pair(.pageTurnEnter) {
-  transform-origin: left;
-  animation: var(--page-flip-duration) linear reverse both page-flip;
+/* The flat halves stay put, in the shadow of the sheet while it lifts off one and comes down on the other. */
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-old(.pageTurnExit) {
+  animation: var(--page-turn-duration) linear both page-turn-cover;
+}
+
+:root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-new(.pageTurnEnter) {
+  animation: var(--page-turn-duration) linear both page-turn-uncover;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-old(.pageTurnExit),
+:root:active-view-transition-type(page-turn-back)::view-transition-new(.pageTurnEnter) {
+  clip-path: inset(0 50% 0 0);
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-new(.pageTurnEnter),
+:root:active-view-transition-type(page-turn-back)::view-transition-old(.pageTurnExit) {
+  clip-path: inset(0 0 0 50%);
 }
 
 /*
- * The sheet is edge-on halfway through, where the old page hides and the new one shows. Browsers flatten the
- * snapshots into their image-pair differently, so the sides swap on that step rather than by backface-visibility.
+ * The sheet only exists while a page turns. It turns about the spine, inside a group that passes the perspective
+ * down, and both its sides are drawn on the same half of its image pair: the back is the other half of its page,
+ * mirrored, so that turning over reads it right.
  */
-:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-old(.pageTurnExit) {
-  animation:
-    var(--page-flip-duration) linear reverse both page-uncover,
-    var(--page-flip-duration) steps(2, jump-none) both vt-fade-out;
+::view-transition-group(page-turn-sheet) {
+  z-index: 3;
+  transform-style: preserve-3d;
+  animation: none;
 }
 
-:root:active-view-transition-type(page-flip-forward, page-flip-back)::view-transition-new(.pageTurnEnter) {
-  animation:
-    var(--page-flip-duration) linear both page-uncover,
-    var(--page-flip-duration) steps(2, jump-none) both vt-fade-in;
+/*
+ * A snapshot turns as one flat plane, so the sheet can't bend: a curve would take a strip per facet, each one more
+ * print of both pages. It looks curled instead, by a shade that stays off the half near the spine and deepens toward
+ * the lifted edge, most while the sheet stands up. The shade multiplies whichever side is showing.
+ */
+::view-transition-image-pair(page-turn-sheet) {
+  --page-turn-shadow: color-mix(in srgb, black calc(var(--page-turn-shade) * 45%), white);
+
+  isolation: isolate;
+  background: linear-gradient(to right, white 30%, 75%, var(--page-turn-shadow)) right / 50% 100% no-repeat;
 }
 
-/* The page after the flip is printed mirrored on the back of the sheet, so turning the sheet over reads it right. */
-:root:active-view-transition-type(page-flip-forward)::view-transition-new(.pageTurnEnter),
-:root:active-view-transition-type(page-flip-back)::view-transition-old(.pageTurnExit) {
+:root:active-view-transition-type(page-turn-forward)::view-transition-image-pair(page-turn-sheet) {
+  animation:
+    var(--page-turn-duration) var(--page-turn-easing) both page-turn,
+    var(--page-turn-duration) linear both page-turn-shade;
+}
+
+:root:active-view-transition-type(page-turn-back)::view-transition-image-pair(page-turn-sheet) {
+  animation:
+    var(--page-turn-duration) var(--page-turn-easing) reverse both page-turn,
+    var(--page-turn-duration) linear both page-turn-shade;
+}
+
+/*
+ * The sheet is edge-on halfway through, where its front hides and its back shows. Browsers flatten the snapshots into
+ * their image-pair differently, so the sides swap on that step rather than by backface-visibility.
+ */
+::view-transition-old(page-turn-sheet) {
+  mix-blend-mode: multiply;
+  animation: var(--page-turn-duration) steps(2, jump-none) both vt-fade-out;
+}
+
+::view-transition-new(page-turn-sheet) {
+  mix-blend-mode: multiply;
+  animation: var(--page-turn-duration) steps(2, jump-none) both vt-fade-in;
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-old(page-turn-sheet),
+:root:active-view-transition-type(page-turn-back)::view-transition-new(page-turn-sheet) {
+  clip-path: inset(0 0 0 50%);
+}
+
+:root:active-view-transition-type(page-turn-forward)::view-transition-new(page-turn-sheet),
+:root:active-view-transition-type(page-turn-back)::view-transition-old(page-turn-sheet) {
+  clip-path: inset(0 50% 0 0);
   transform: scaleX(-1);
 }
 
-@keyframes page-slide-out {
-  to {
-    translate: calc(-50vw - 50%);
-  }
-}
-
-@keyframes page-slide-in {
+@keyframes page-turn {
   from {
-    translate: calc(50vw + 50%);
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(-180deg);
   }
 }
 
-/*
- * The sheet turns over its left edge, which slides along the table (x = 50% * (1 - cos θ)) while the camera pulls
- * back and returns (z = -30vw * sin θ). θ eases in and out, sampled every 10% since easing applies per keyframe.
- */
-@keyframes page-flip {
+/* The sheet's shadow lifts off the half it uncovers… */
+@keyframes page-turn-uncover {
   0% {
-    transform: translate3d(0, 0, 0) rotateY(0deg);
-  }
-
-  10% {
-    transform: translate3d(0.1%, 0, -2.3vw) rotateY(-4.4deg);
-  }
-
-  20% {
-    transform: translate3d(2.2%, 0, -8.9vw) rotateY(-17.2deg);
-  }
-
-  30% {
-    transform: translate3d(10.1%, 0, -18.1vw) rotateY(-37.1deg);
-  }
-
-  40% {
-    transform: translate3d(26.7%, 0, -26.5vw) rotateY(-62.2deg);
+    filter: brightness(0.55);
   }
 
   50% {
-    transform: translate3d(50%, 0, -30vw) rotateY(-90deg);
-  }
-
-  60% {
-    transform: translate3d(73.3%, 0, -26.5vw) rotateY(-117.8deg);
-  }
-
-  70% {
-    transform: translate3d(89.9%, 0, -18.1vw) rotateY(-142.9deg);
-  }
-
-  80% {
-    transform: translate3d(97.8%, 0, -8.9vw) rotateY(-162.8deg);
-  }
-
-  90% {
-    transform: translate3d(99.9%, 0, -2.3vw) rotateY(-175.6deg);
-  }
-
-  100% {
-    transform: translate3d(100%, 0, 0) rotateY(-180deg);
+    filter: none;
   }
 }
 
-@keyframes page-uncover {
-  from {
+/* …and falls on the half it covers. */
+@keyframes page-turn-cover {
+  50% {
+    filter: none;
+  }
+
+  100% {
     filter: brightness(0.55);
+  }
+}
+
+@keyframes page-turn-shade {
+  50% {
+    --page-turn-shade: 1;
   }
 }
 
@@ -302,35 +298,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root:active-view-transition-type(
-      page-slide-forward,
-      page-slide-back,
-      page-flip-forward,
-      page-flip-back
-    )::view-transition-image-pair(.pageTurnExit),
-  :root:active-view-transition-type(
-      page-slide-forward,
-      page-slide-back,
-      page-flip-forward,
-      page-flip-back
-    )::view-transition-image-pair(.pageTurnEnter),
-  :root:active-view-transition-type(
-      page-slide-forward,
-      page-slide-back,
-      page-flip-forward,
-      page-flip-back
-    )::view-transition-new(.pageTurnEnter) {
-    transform: none;
+  ::view-transition-group(page-turn-sheet) {
+    display: none;
+  }
+
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-new(.pageTurnEnter) {
+    clip-path: none;
     animation: none;
   }
 
-  :root:active-view-transition-type(
-      page-slide-forward,
-      page-slide-back,
-      page-flip-forward,
-      page-flip-back
-    )::view-transition-old(.pageTurnExit) {
-    transform: none;
+  :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-old(.pageTurnExit) {
+    clip-path: none;
     animation: 200ms ease both vt-fade-out;
   }
 

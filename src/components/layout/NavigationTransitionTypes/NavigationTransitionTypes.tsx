@@ -1,4 +1,5 @@
 import React, { addTransitionType, startTransition, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import Router from 'next/router';
 import {
   NO_ANIMATION,
@@ -6,9 +7,15 @@ import {
   bindPendingTransition,
   clearPendingTransition,
   expectHistoryTransition,
+  getTurningSheet,
+  hideTurningSheet,
   historyPageTurn,
+  showTurningSheet,
   takePendingTransition,
 } from 'lib/viewTransitions';
+
+const pagesCanTurn = () =>
+  'startViewTransition' in document && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const NavigationTransitionTypes: React.FC = () => {
   const [, setTaggedNavigations] = useState(0);
@@ -28,9 +35,17 @@ const NavigationTransitionTypes: React.FC = () => {
     // Runs synchronously right before Next renders the navigation, which then joins this transition's lane.
     const onBeforeHistoryChange = (as: string) => {
       const type = takePendingTransition(as);
-      if (type && PAGE_TURNS.includes(type)) {
+      const turnsPage = type !== undefined && PAGE_TURNS.includes(type);
+      if (turnsPage) {
         // Next scrolls to the top after rendering anyway; doing it first captures the old results where the new ones will be.
         window.scrollTo(0, 0);
+      }
+      // The view transition captures the old page as it is now, so the second print of it, for the sheet that turns,
+      // has to be committed already. Any other navigation must not capture one left over from a turn still running.
+      if (turnsPage && pagesCanTurn()) {
+        flushSync(showTurningSheet);
+      } else if (getTurningSheet() !== 0) {
+        flushSync(() => hideTurningSheet());
       }
       if (type) {
         startTransition(() => {
