@@ -19,6 +19,7 @@
     "cy:debug": "concurrently --kill-others -n next,cypress -s command-cypress \"pnpm dev\" \"wait-on http://localhost:3000 && pnpm cy:open\"",
     "cy:dev": "pnpm build:test && concurrently --kill-others -n next,cypress -s command-cypress \"pnpm start:test\" \"wait-on http://localhost:3000 && pnpm cy:open\"",
     "prettier": "prettier --write .",
+    "symbology": "node scripts/update-symbology.mts",
     "test:integration": "pnpm build:test && concurrently --kill-others -n next,cypress -s command-cypress \"pnpm start:test\" \"wait-on http://localhost:3000 && pnpm cy:run\"",
     "clean:cache": "node -e \"for (const p of ['.next/cache', '.next/dev', 'node_modules/.cache', 'tsconfig.tsbuildinfo', '.eslintcache', '.stylelintcache']) require('node:fs').rmSync(p, { recursive: true, force: true })\" && cypress cache clear && pnpm store prune",
     "prepare": "husky"

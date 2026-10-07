@@ -64,6 +64,5 @@ export const stubScryfallPagedSearch = (pageSize: number) => {
 export const stubScryfall = () => {
   stubScryfallSearch();
 
-  cy.intercept({ url: 'https://svgs.scryfall.io/**' }, (req) => req.reply(imageReply));
   cy.intercept({ url: 'https://cards.scryfall.io/**' }, (req) => req.reply(imageReply));
 };

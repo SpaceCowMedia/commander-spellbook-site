@@ -1,3 +1,4 @@
+import { readFile } from 'fs/promises';
 import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
 import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
@@ -35,9 +36,10 @@ async function headerCanvas(identityArray: string[], isLock: boolean) {
   const startManaPos = width / 2 - ((identityArray.length - 1) * (iWidth + manaOffset) + iWidth) / 2;
   for (const [index, letter] of identityArray.entries()) {
     const position = index * (iWidth + manaOffset) + startManaPos;
-    // The local mana symbols svg files come from scryfall and have been modified to have a width and height of 100.
-    // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0
-    const img = await loadImage(serverPath(`images/scryfall/identity/${letter.toUpperCase()}.svg`));
+    // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0,
+    // but Scryfall's mana symbols only have a 100x100 viewBox
+    const svg = await readFile(serverPath(`images/scryfall/symbols/${letter.toUpperCase()}.svg`), 'utf8');
+    const img = await loadImage(Buffer.from(svg.replace('<svg ', "<svg width='100' height='100' ")));
     ctx.drawImage(img, position, manaOffset / 2, iWidth, iWidth);
   }
   return canvas1;

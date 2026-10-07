@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './textWithMagicSymbol.module.scss';
-import Scryfall from 'scryfall-client';
 import CardTooltip from '../CardTooltip/CardTooltip';
+import MagicSymbol from '../MagicSymbol/MagicSymbol';
 import CardLink from '../CardLink/CardLink';
 import CardName from '../CardName/CardName';
 import TemplateReplacementsModal from '../../combo/TemplateCard/TemplateReplacementsModal/TemplateReplacementsModal';
@@ -15,6 +15,7 @@ import {
   getShortNames,
   getTemplateNameSummary,
 } from 'lib/types';
+import { findCardSymbol } from 'lib/symbology';
 
 interface Props {
   text: string;
@@ -132,26 +133,14 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
           value: templateMentions[templateIndex].name,
         };
       }
-      const manaMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
-
-      if (manaMatch) {
-        let manaSymbol = (manaMatch[1] || manaMatch[2]).replace('/', '');
-        if (manaSymbol[0] === 'p') {
-          manaSymbol = manaSymbol[1] + manaSymbol[0];
-        } // This is a hack to swap the p and other symbol for phyrexian mana
-        try {
-          return {
-            nodeType: 'image',
-            value: Scryfall.getSymbolUrl(manaSymbol),
-            manaSymbol,
-          };
-        } catch {
-          console.log('Error getting mana symbol', manaSymbol);
-          return {
-            nodeType: 'text',
-            value,
-          };
-        }
+      const symbolMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
+      const symbol = symbolMatch && findCardSymbol(symbolMatch[1] || symbolMatch[2]);
+      if (symbol) {
+        return {
+          nodeType: 'image',
+          value,
+          symbol,
+        };
       }
 
       return {
@@ -179,15 +168,9 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
     <span>
       {items.map((item, i) => (
         <span key={i} className={styles[`${item.nodeType}Container`]}>
-          {item.nodeType === 'image' && (
+          {item.nodeType === 'image' && item.symbol && (
             <span className={styles.noWrap}>
-              <span className="sr-only">({`{${item.manaSymbol}}`} magic symbol) &nbsp;</span>
-              <img
-                aria-hidden="true"
-                className={styles.magicSymbol}
-                src={item.value}
-                alt={`Magic Symbol (${item.manaSymbol})`}
-              />
+              <MagicSymbol symbol={item.symbol} className={styles.magicSymbol} />
               {symbolTrailingText.get(item)}
             </span>
           )}
