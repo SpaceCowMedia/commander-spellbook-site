@@ -3,6 +3,7 @@ import React from 'react';
 import { Decklist } from 'pages/find-my-combos';
 import { ResultType } from 'lib/findMyCombosResultsCache';
 import pluralize from 'pluralize';
+import styles from './deckCombos.module.scss';
 
 interface Props {
   currentlyParsedDeck?: Decklist;
@@ -36,7 +37,7 @@ const DeckCombos = ({ results, format, currentlyParsedDeck }: Props) => {
   )} Found With Additional Color Requirements`;
 
   return (
-    <div className="py-4">
+    <div className={`${styles.deckCombos} py-4`}>
       <section id="combos-in-deck-section">
         <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
         <ComboResults results={results.included} hideVariants={true} localPageLimit={100} />

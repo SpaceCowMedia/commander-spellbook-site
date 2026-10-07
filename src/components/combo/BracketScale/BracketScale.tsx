@@ -5,7 +5,7 @@ import cn from 'lib/cn';
 import styles from './bracketScale.module.scss';
 
 interface Props {
-  tag: BracketTagEnum;
+  tag?: BracketTagEnum;
   id?: string;
   className?: string;
 }
@@ -22,17 +22,17 @@ const BracketScale: React.FC<Props> = ({ tag, id, className }) => {
       <div className={styles.bars}>
         {COMMANDER_BRACKETS.map((name, index) => {
           const bracket = index + 1;
-          const fit = bracketFit(tag, bracket);
+          const fit = tag && bracketFit(tag, bracket);
           return (
             <div
               key={bracket}
-              className={cn(styles.bar, styles[fit])}
+              className={cn(styles.bar, fit && styles[fit])}
               style={{ '--step': index } as CSSProperties}
-              title={`Bracket ${bracket} · ${name}: ${FIT_LABELS[fit]}`}
+              title={`Bracket ${bracket} · ${name}${fit ? `: ${FIT_LABELS[fit]}` : ''}`}
               data-bracket={bracket}
               data-fit={fit}
             >
-              {fit !== 'excluded' && <div className={styles.fill} />}
+              {fit && fit !== 'excluded' && <div className={styles.fill} />}
               <span className={styles.number}>{bracket}</span>
             </div>
           );

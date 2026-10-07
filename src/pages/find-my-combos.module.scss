@@ -1,16 +1,19 @@
 @reference "../assets/globals.css";
 
 .findMyCombosContainer {
-  p {
-    @apply my-4;
+  > section {
+    &,
+    section {
+      @apply flex flex-col items-center justify-center py-4 w-full;
+    }
+
+    p {
+      @apply my-4;
+    }
   }
 
   p.or {
     @apply uppercase;
-  }
-
-  section {
-    @apply flex flex-col items-center justify-center py-4 w-full;
   }
 
   .decklistInput {

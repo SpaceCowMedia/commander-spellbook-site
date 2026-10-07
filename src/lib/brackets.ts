@@ -76,7 +76,7 @@ function isComboGameEnding(combo: ClassifiedVariant) {
   return combo.relevant;
 }
 
-export function totalQuantity(entries: { quantity: number }[]) {
+function totalQuantity(entries: { quantity: number }[]) {
   return entries.reduce((total, entry) => total + entry.quantity, 0);
 }
 
