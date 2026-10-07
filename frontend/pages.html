@@ -350,6 +350,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Creating a new page
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="pages.html" class="md-nav__link md-nav__link--active">
         
   
@@ -359,6 +370,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#page-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page transitions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -496,6 +535,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#page-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page transitions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -516,6 +572,21 @@
 <h1 id="pages">Pages</h1>
 <p>Create a <code>React</code> component in the pages directory, where the name of the file is the path a user will navigate to in the url.</p>
 <p>In general, try to keep page logic simple. Pull any complex logic out into a component in the <code>components</code> directory in a folder with the same name as the route.</p>
+<h2 id="page-transitions">Page transitions</h2>
+<p>Navigations animate with React's <code>&lt;ViewTransition&gt;</code>. Every page sits in a keyed sheet in <code>PageWrapper</code>, which fades out and in when its key changes. The key defaults to the URL path, so query changes update a page in place.</p>
+<ul>
+<li>A page that should animate on query changes sets a static <code>transitionKey</code>, such as <code>Search.transitionKey = queryTransitionKey('q', 'variant')</code>.</li>
+<li>Paginated lists wrap only their results in <code>&lt;PageTurn page={page}&gt;</code>, and their Previous/Next controls navigate with <code>pushWithTransition(router, url, pageTurn(page, page + 1))</code> (or <code>page - 1</code>). The results turn like a book's page: going forward, their right half turns over onto the left one, with the next page's left half printed on its back; going back, the left half turns over to the right. The rest of the page stays put, and the turn starts from the top of the page, where Next would scroll anyway. Never return or await <code>router.push</code> inside <code>startTransition</code>: it resolves only after the new page commits, so the transition would wait on itself forever.</li>
+<li>The turning sheet needs half of each page while the flat halves show the other ones, but a view transition captures each element once. So while a page turns, <code>PageTurn</code> keeps a copy of its page's DOM under itself as the <code>page-turn-sheet</code> snapshot: rendering the page again would cost as much as the navigation itself, right before the turn starts. The copy follows the page being left until the navigation commits, then the new one while its effects fill it in. The view transition captures the old page as it is when React starts it, so <code>NavigationTransitionTypes</code> commits the copy with <code>flushSync</code> right before Next renders the navigation, and <code>PageTurn</code> removes it once the transition has finished.</li>
+<li>The sheet stays flat: a snapshot only turns as one plane, and bending it would take a strip per facet, each one more print of both pages. Shading toward its lifted edge makes it look curved instead.</li>
+<li>A list paginated in its own state, like the lists of Find My Combos in <code>ComboResults</code>, turns the same way without a navigation: it scrolls to its top, commits its sheet with <code>flushSync(() =&gt; showTurningSheet(owner))</code>, then sets its page in a <code>startTransition</code> tagged with <code>pageTurn</code>. Several such lists can share a page, so each passes its <code>useId()</code> as the <code>owner</code> of its <code>PageTurn</code>, and only the matching one prints the sheet: two snapshots with one name would cancel the whole transition.</li>
+<li>Sorting the results again (<code>RESORT</code>) crossfades them inside their <code>PageTurn</code>, whether the page stays the same or goes back to the first one.</li>
+<li><code>/find-my-combos</code> doesn't fade in when it has results in its session cache: it restores them once mounted and scrolls back down to them, which would jump in the middle of the fade.</li>
+<li>The home page's logo and the header's gear share the <code>site-logo</code> name, so the logo shrinks into the gear as the search bar docks.</li>
+<li>React only names a <code>&lt;ViewTransition&gt;</code> whose elements are in the viewport, so a shared element that is scrolled out of view doesn't fly: the transition goes on without it.</li>
+</ul>
+<p>Other transitions are tagged by their components with <code>addTransitionType</code> inside <code>startTransition</code>: <code>Tab</code> slides its panels across like a carousel, in the order of its tabs, and glides its underline over (<code>TAB_FORWARD</code>, <code>TAB_BACK</code>): its panel updates in place rather than being replaced, so the old and the new one share an image pair clipped to the panel, and a template card grows its wheel's card into its place in the replacement list and back (<code>TEMPLATE_MORPH</code>), through a <code>&lt;ViewTransition name share&gt;</code> that only one of them renders at a time. Load More slides the last row of a replacement list aside as its new cards rise in (<code>LOAD_MORE</code>): only the cards of the last page can move, so only they map <code>update</code> to an animation, which keeps the snapshots few, and the new cards rise in with <code>@starting-style</code> rather than as snapshots, so that the dialog's edges still clip them. Its transition starts when the page arrives, but only ever after a click on Load More. The theme switch is no React update, so <code>ThemeSelector</code> calls <code>document.startViewTransition</code> with the <code>THEME_SWITCH</code> type itself, and applies the theme in its update, after the old page is captured.</p>
+<p>All motion lives in <code>src/assets/view-transitions.css</code>. <code>_document</code> gives the root an inline <code>view-transition-name</code>, so that file, rather than React, decides what the root snapshot does: it keeps it still. The header is named there too, through its <code>siteHeader</code> class, so that transitions that redraw the whole page, like the theme switch, can leave it in the root snapshot. Menus, the cookie banner and modals open and close with CSS transitions and <code>@starting-style</code> instead, without view transitions, and so does content that arrives on its own time, like the bracket estimate: in Firefox, a click that lands while a view transition is starting can be lost, so only an input should start one. <code>Modal</code> is a native <code>&lt;dialog&gt;</code> in the top layer: popups that portal to the body would sit under it, so they portal into the dialog given by <code>ModalPortalContext</code> when there is one.</p>
 
 
 
@@ -538,7 +609,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">March 16, 2023 14:20:09</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">October 7, 2026 14:47:56</span>
   </span>
 
     
@@ -558,12 +629,14 @@
   <span class="md-source-file__fact">
     <span class="md-icon" title="Contributors">
       
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg>
       
     </span>
     <nav>
       
-        <a href="mailto:blade@crookedneighbor.com">Blade Barringer</a>
+        <a href="mailto:44567586+ldeluigi@users.noreply.github.com">ldeluigi</a>, 
+        <a href="mailto:blade@crookedneighbor.com">Blade Barringer</a>, 
+        <a href="mailto:lucadelu97@gmail.com">Luca Deluigi</a>
     </nav>
   </span>
 
@@ -580,7 +653,7 @@
   
     <div class="md-source-date">
       <small>
-          Authors: <span class='git-page-authors git-authors'><a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a></span>
+          Authors: <span class='git-page-authors git-authors'><a href='mailto:44567586+ldeluigi@users.noreply.github.com'>ldeluigi</a> (62.5%), <a href='mailto:blade@crookedneighbor.com'>Blade Barringer</a> (18.75%), <a href='mailto:lucadelu97@gmail.com'>Luca Deluigi</a> (18.75%)</span>
       </small>
     </div>
   
