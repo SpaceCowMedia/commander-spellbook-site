@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { ModalPortalContext } from 'components/ui/Modal/Modal';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
-const TOOLTIP_RIGHT_SHIFT_PX = 30;
+const TOOLTIP_SIDE_SHIFT_PX = 30;
 const TOOLTIP_TOP_SHIFT_PX = 30;
 // browsers treat a touch that drifts this far as a tap, so we must too
 const TAP_MOVE_TOLERANCE_PX = 16;
@@ -38,6 +38,10 @@ function movedLikeAScroll(start: { x: number; y: number }, end: React.Touch): bo
 function tapStart(e: React.TouchEvent): { x: number; y: number } | null {
   const touch = e.touches[0];
   return e.touches.length > 1 || !touch ? null : { x: touch.clientX, y: touch.clientY };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(value, max));
 }
 
 const HoverPreview: React.FC<Props> = ({
@@ -82,8 +86,9 @@ const HoverPreview: React.FC<Props> = ({
   };
 
   /* Every face is previewed side by side, and a screen too narrow to hold them at full size shrinks
-     the whole row rather than cutting it off. The tooltip can only be measured once it has been
-     shown, so until then its size is derived the same way the stylesheet constrains it. */
+     the whole row rather than cutting it off. The size is derived the same way the stylesheet
+     constrains it instead of measured: a fixed box only gets the room left between its left edge
+     and the window's, so a measured width would keep a preview squeezed against that edge. */
   const previewScale = (): number =>
     Math.min(1, (window.innerWidth - VIEWPORT_MARGIN_PX * 2) / (CARD_IMAGE_WIDTH_PX * Math.max(previewCount, 1)));
 
@@ -224,48 +229,35 @@ const HoverPreview: React.FC<Props> = ({
   const getTooltipTop = (mouseY: number): string => {
     const preferredTop = mouseY - TOOLTIP_TOP_SHIFT_PX;
 
-    if (!isMounted || !divRef?.current || !deviceIsMobile()) {
+    if (!isMounted) {
       return preferredTop + 'px';
     }
 
-    const cardBottomLimit = window.innerHeight - VIEWPORT_MARGIN_PX;
-    // the div is still hidden the first time a tap opens it, so clientHeight is 0
-    const cardHeight = divRef.current.clientHeight || CARD_IMAGE_HEIGHT_PX * previewScale();
-    const clampedTop = Math.min(preferredTop, cardBottomLimit - cardHeight);
-
-    return Math.max(VIEWPORT_MARGIN_PX, clampedTop) + 'px';
+    const height = CARD_IMAGE_HEIGHT_PX * previewScale();
+    return clamp(preferredTop, VIEWPORT_MARGIN_PX, window.innerHeight - VIEWPORT_MARGIN_PX - height) + 'px';
   };
 
   function deviceIsMobile(): boolean {
     return isMounted && window?.innerWidth <= 1024;
   }
 
-  const isClickOnScreenLeftSide = (clickX: number) => window?.innerWidth / 2 - clickX > 0;
-
+  /* The preview goes beside the cursor on the side with more room, switching sides rather than
+     shrinking when it doesn't fit there, and only covers the cursor when it fits on neither. */
   const getTooltipLeft = (mouseX: number): string => {
-    if (!isMounted || !divRef?.current) {
+    if (!isMounted) {
       return '0px';
     }
 
-    if (deviceIsMobile()) {
-      const cardRightLimit = window.innerWidth - VIEWPORT_MARGIN_PX;
-      // the div is still hidden the first time a tap opens it, so clientWidth is 0
-      const cardWidth = divRef.current.clientWidth || CARD_IMAGE_WIDTH_PX * previewCount * previewScale();
+    const width = CARD_IMAGE_WIDTH_PX * previewCount * previewScale();
+    // unlike innerWidth, this leaves out the scrollbar the preview can't be drawn over
+    const viewportWidth = document.documentElement.clientWidth;
+    const rightLimit = viewportWidth - VIEWPORT_MARGIN_PX - width;
+    const rightOfCursor = mouseX + TOOLTIP_SIDE_SHIFT_PX;
+    const leftOfCursor = mouseX - TOOLTIP_SIDE_SHIFT_PX - width;
+    const sides = mouseX < viewportWidth / 2 ? [rightOfCursor, leftOfCursor] : [leftOfCursor, rightOfCursor];
+    const left = sides.find((side) => side >= VIEWPORT_MARGIN_PX && side <= rightLimit) ?? sides[0];
 
-      const cardRightXIfShiftedRight = mouseX + cardWidth + TOOLTIP_RIGHT_SHIFT_PX;
-
-      if (cardRightXIfShiftedRight > cardRightLimit) {
-        return cardRightLimit - cardWidth + 'px';
-      } else {
-        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
-      }
-    } else {
-      if (isClickOnScreenLeftSide(mouseX)) {
-        return mouseX + TOOLTIP_RIGHT_SHIFT_PX + 'px';
-      } else {
-        return mouseX - 290 * previewCount + 'px';
-      }
-    }
+    return clamp(left, VIEWPORT_MARGIN_PX, rightLimit) + 'px';
   };
 
   return (
