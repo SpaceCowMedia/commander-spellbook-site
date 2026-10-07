@@ -3,12 +3,12 @@ export const DARK_THEME = 'dark';
 export const SYSTEM_THEME = 'system';
 export const THEME_COOKIE_NAME = 'theme';
 
+export function isDarkTheme(theme: string): boolean {
+  return theme === SYSTEM_THEME ? window.matchMedia('(prefers-color-scheme: dark)').matches : theme === DARK_THEME;
+}
+
 export function applyTheme(theme: string): () => void {
-  let dark = theme === DARK_THEME;
-  if (theme === SYSTEM_THEME) {
-    dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-  document.documentElement.classList.toggle(DARK_THEME, dark);
+  document.documentElement.classList.toggle(DARK_THEME, isDarkTheme(theme));
   if (theme !== SYSTEM_THEME) {
     return () => {};
   }

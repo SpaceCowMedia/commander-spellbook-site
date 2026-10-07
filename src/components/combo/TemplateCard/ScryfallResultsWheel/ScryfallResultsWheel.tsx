@@ -5,61 +5,94 @@ import { ReplacementsPage } from 'lib/types';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import { useSwipeable } from 'react-swipeable';
-import { WHEEL_NEXT, WHEEL_PREVIOUS } from 'lib/viewTransitions';
+import { TEMPLATE_MORPH_SHARE, WHEEL_NEXT, WHEEL_PREVIOUS } from 'lib/viewTransitions';
 
-const CARD_ENTER = { [WHEEL_NEXT]: 'wheelFromRight', [WHEEL_PREVIOUS]: 'wheelFromLeft', default: 'none' };
-const CARD_EXIT = { [WHEEL_NEXT]: 'wheelToLeft', [WHEEL_PREVIOUS]: 'wheelToRight', default: 'none' };
+const CARD_ENTER = { [WHEEL_NEXT]: 'slideFromRight', [WHEEL_PREVIOUS]: 'slideFromLeft', default: 'none' };
+const CARD_EXIT = { [WHEEL_NEXT]: 'slideToLeft', [WHEEL_PREVIOUS]: 'slideToRight', default: 'none' };
+const LAST = -1;
+
+interface Position {
+  page: number;
+  index: number;
+}
 
 interface Props {
   fetchResults: (_page: number) => Promise<ReplacementsPage>;
+  // Shares the card shown with the replacement list, to grow into it.
+  morphName?: string;
+  onCurrentChange?: (_id: string) => void;
 }
 
-const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
-  const [pageCount, setPageCount] = useState<number>(0);
-  const [index, setIndex] = useState(0);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [currentPage, setCurrentPage] = useState<ReplacementsPage | undefined>(undefined);
-  const [pageSize, setPageSize] = useState(1);
-  const [loading, setLoading] = useState(false);
+const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults, morphName, onCurrentChange }) => {
+  const [pages, setPages] = useState<ReplacementsPage[]>([]);
+  const [position, setPosition] = useState<Position>({ page: 0, index: 0 });
+  // The page of the next card is still loading: its slot waits, with the arrows where they are.
+  const [arriving, setArriving] = useState(false);
+  const [moved, setMoved] = useState(false);
   const preloaded = useRef<HTMLImageElement[]>([]);
 
-  const show = (newIndex: number, newPageIndex: number, direction: string) => {
-    if (newPageIndex === pageIndex) {
+  const pageSize = pages[0]?.results.length ?? 0;
+  const pageCount = pageSize ? Math.max(Math.ceil((pages[0].count ?? 0) / pageSize), 1) : 1;
+  const currentPage = pages[position.page];
+  const current = currentPage?.results[position.index];
+
+  const load = (page: number) =>
+    fetchResults(page).then((result) => {
+      setPages((loaded) => {
+        const updated = [...loaded];
+        updated[page] = result;
+        return updated;
+      });
+      return result;
+    });
+
+  const destination = (direction: string): Position => {
+    const length = currentPage?.results.length ?? 0;
+    if (direction === WHEEL_NEXT) {
+      return position.index + 1 < length
+        ? { page: position.page, index: position.index + 1 }
+        : { page: (position.page + 1) % pageCount, index: 0 };
+    }
+    return position.index > 0
+      ? { page: position.page, index: position.index - 1 }
+      : { page: (position.page - 1 + pageCount) % pageCount, index: LAST };
+  };
+
+  const cardAt = ({ page, index }: Position) => {
+    const results = pages[page]?.results;
+    return results?.[index === LAST ? results.length - 1 : index];
+  };
+
+  const move = (direction: string) => {
+    if (arriving || !currentPage) {
+      return;
+    }
+    const target = destination(direction);
+    const show = (page: ReplacementsPage) =>
       startTransition(() => {
         addTransitionType(direction);
-        setIndex(newIndex);
+        setArriving(false);
+        setMoved(true);
+        setPosition({ page: target.page, index: target.index === LAST ? page.results.length - 1 : target.index });
       });
-    } else {
-      setIndex(newIndex);
-      setPageIndex(newPageIndex);
+    const ready = pages[target.page];
+    if (ready) {
+      show(ready);
+      return;
     }
+    startTransition(() => {
+      addTransitionType(direction);
+      setArriving(true);
+      setMoved(true);
+    });
+    load(target.page).then(show, (error) => {
+      console.error(error);
+      setArriving(false);
+    });
   };
 
-  const next = () => {
-    let newIndex = index + 1;
-    let newPageIndex = pageIndex;
-    if (newIndex >= pageSize || (currentPage !== undefined && newIndex >= currentPage.results.length)) {
-      newIndex = 0;
-      newPageIndex += 1;
-    }
-    if (newPageIndex >= pageCount) {
-      newPageIndex = 0;
-    }
-    show(newIndex, newPageIndex, WHEEL_NEXT);
-  };
-
-  const previous = () => {
-    let newIndex = index - 1;
-    let newPageIndex = pageIndex;
-    if (newIndex < 0) {
-      newIndex = pageSize - 1;
-      newPageIndex -= 1;
-    }
-    if (newPageIndex < 0) {
-      newPageIndex = pageCount - 1;
-    }
-    show(newIndex, newPageIndex, WHEEL_PREVIOUS);
-  };
+  const next = () => move(WHEEL_NEXT);
+  const previous = () => move(WHEEL_PREVIOUS);
 
   const handlers = useSwipeable({
     preventScrollOnSwipe: true,
@@ -68,45 +101,50 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
   });
 
   useEffect(() => {
-    if (loading) {
+    load(0).catch((error) => console.error(error));
+  }, []);
+
+  // Once the wheel has turned, a card on the edge of its page loads the page across that edge, to slide over at once.
+  useEffect(() => {
+    if (!moved || pageCount < 2 || !currentPage) {
       return;
     }
-    setLoading(true);
-    fetchResults(pageIndex)
-      .then((page) => {
-        let size = pageSize;
-        if (pageIndex === 0 && page.results.length !== pageSize) {
-          size = page.results.length;
-          setPageSize(size);
-        }
-        const count = Math.ceil((page.count ?? 0) / size);
-        if (count !== pageCount) {
-          setPageCount(count);
-        }
-        setCurrentPage(page);
-        setIndex(Math.min(index, page.results.length - 1));
-      })
-      .catch((error) => {
-        console.error(error);
-        setPageCount(0);
-        setCurrentPage(undefined);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [pageIndex]);
+    const edges = [
+      position.index === 0 && destination(WHEEL_PREVIOUS).page,
+      position.index === currentPage.results.length - 1 && destination(WHEEL_NEXT).page,
+    ];
+    edges.forEach((page) => {
+      if (page !== false && !pages[page]) {
+        load(page).catch((error) => console.error(error));
+      }
+    });
+  }, [moved, position, pageCount, currentPage]);
 
   useEffect(() => {
     // the cards a click away, kept loaded so they show at once
-    preloaded.current = [currentPage?.results[index - 1], currentPage?.results[index + 1]].flatMap((card) =>
-      card?.images[0] ? [Object.assign(new Image(), { src: card.images[0] })] : [],
-    );
-  }, [currentPage, index]);
+    preloaded.current = [destination(WHEEL_PREVIOUS), destination(WHEEL_NEXT)].flatMap((target) => {
+      const image = cardAt(target)?.images[0];
+      return image ? [Object.assign(new Image(), { src: image })] : [];
+    });
+  }, [pages, position]);
 
-  const current = currentPage?.results[index];
-  if (loading || current === undefined) {
+  useEffect(() => {
+    if (current) {
+      onCurrentChange?.(current.id);
+    }
+  }, [current?.id]);
+
+  if (current === undefined) {
     return <Loader />;
   }
+
+  const image = (
+    <img
+      className="h-full aspect-488/680 rounded-xl bg-cover"
+      src={current.images[0]}
+      alt={`Template replacement: ${current.name}`}
+    />
+  );
 
   return (
     <div className="w-full h-full flex justify-center items-center select-none" {...handlers}>
@@ -121,21 +159,29 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults }) => {
         />
       </div>
       <div className="h-full flex justify-center items-center">
-        <ViewTransition key={current.id} enter={CARD_ENTER} exit={CARD_EXIT} default="none">
-          <SpoilerFog name={current.name} spoiler={current.spoiler} className="h-full">
-            <a
-              className="h-full"
-              href={edhrecService.getCardUrl(current.name ?? '')}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                className="h-full aspect-488/680 rounded-xl bg-cover"
-                src={current.images[0]}
-                alt={`Template replacement: ${current.name}`}
-              />
-            </a>
-          </SpoilerFog>
+        <ViewTransition key={arriving ? 'arriving' : current.id} enter={CARD_ENTER} exit={CARD_EXIT} default="none">
+          {arriving ? (
+            <div className="h-full aspect-488/680 flex justify-center items-center text-white">
+              <Loader />
+            </div>
+          ) : (
+            <SpoilerFog name={current.name} spoiler={current.spoiler} className="h-full">
+              <a
+                className="h-full"
+                href={edhrecService.getCardUrl(current.name ?? '')}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {morphName ? (
+                  <ViewTransition name={morphName} share={TEMPLATE_MORPH_SHARE} default="none">
+                    {image}
+                  </ViewTransition>
+                ) : (
+                  image
+                )}
+              </a>
+            </SpoilerFog>
+          )}
         </ViewTransition>
       </div>
       <div className="h-full flex justify-center items-center grow">

@@ -15,7 +15,7 @@ import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import rewriteRenamedResults from 'lib/renamedResults';
 import normalizeQuotes from 'lib/normalizeQuotes';
-import { TransitionPage, pageTurn, pushWithTransition, queryTransitionKey } from 'lib/viewTransitions';
+import { RESORT, TransitionPage, pageTurn, pushWithTransition, queryTransitionKey } from 'lib/viewTransitions';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
 
 const PAGE_SIZE = 50;
@@ -131,26 +131,18 @@ const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, feat
       pageTurn(pageNumber, pageNumber - 1),
     );
 
-  const handleSortChange = (value: string) => {
-    router.push({
-      pathname: '/search/',
-      query: { ...router.query, sort: value, page: '1' },
-    });
-  };
+  const handleSortChange = (value: string) =>
+    pushWithTransition(router, { pathname: '/search/', query: { ...router.query, sort: value, page: '1' } }, RESORT);
 
-  const handleOrderChange = (value: string) => {
-    router.push({
-      pathname: '/search/',
-      query: { ...router.query, order: value, page: '1' },
-    });
-  };
+  const handleOrderChange = (value: string) =>
+    pushWithTransition(router, { pathname: '/search/', query: { ...router.query, order: value, page: '1' } }, RESORT);
 
-  const handleGroupByComboChange = (value: string) => {
-    router.push({
-      pathname: '/search/',
-      query: { ...router.query, groupByCombo: value, page: '1' },
-    });
-  };
+  const handleGroupByComboChange = (value: string) =>
+    pushWithTransition(
+      router,
+      { pathname: '/search/', query: { ...router.query, groupByCombo: value, page: '1' } },
+      RESORT,
+    );
 
   const handleClearVariant = () => {
     router.push({

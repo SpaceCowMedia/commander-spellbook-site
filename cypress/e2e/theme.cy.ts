@@ -1,3 +1,5 @@
+import { expectTransitionType, spyOnViewTransitions } from '../support/viewTransitions';
+
 const themeButton = () => cy.get('button[title^="Switch to"]');
 
 describe('Theme Selector', () => {
@@ -24,6 +26,17 @@ describe('Theme Selector', () => {
 
     themeButton().click();
     cy.getCookie('theme').should('have.property', 'value', 'system');
+  });
+
+  it('spreads a new theme over the page from the corner', () => {
+    cy.setCookie('theme', 'light', { path: '/' });
+    cy.visit('/about/');
+    spyOnViewTransitions();
+
+    themeButton().click();
+    cy.getCookie('theme').should('have.property', 'value', 'dark');
+    cy.get('html').should('have.class', 'dark');
+    expectTransitionType('theme');
   });
 
   it('applies a saved dark theme before paint on a statically rendered page', () => {

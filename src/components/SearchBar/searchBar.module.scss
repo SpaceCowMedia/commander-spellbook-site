@@ -109,6 +109,25 @@
   @apply bg-light;
 }
 
+.mobileMenu {
+  @apply grid md:hidden;
+
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 250ms ease-out,
+    opacity 250ms ease-out;
+
+  &.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 .mobileMenuButton {
   @apply flex flex-row grow items-center w-1/3 rounded-sm py-1 px-2 border border-light mx-2 md:hidden;
 }

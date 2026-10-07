@@ -16,10 +16,24 @@
   cursor: pointer;
 }
 
+/* Hidden rather than undisplayed, so that it fades out in browsers that can't transition display, like Firefox. */
 .dropdownContent {
-  @apply hidden absolute bg-black shadow-sm z-10 top-full right-0 w-full;
+  @apply absolute bg-black shadow-sm z-10 top-full right-0 w-full;
+
+  --dropdown-offset: -0.5rem;
 
   min-width: 200px;
+  visibility: hidden;
+  opacity: 0;
+  translate: 0 var(--dropdown-offset);
+  transition:
+    opacity 150ms ease-out,
+    translate 150ms ease-out,
+    visibility 150ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    --dropdown-offset: 0;
+  }
 }
 
 .dropdownItem {
@@ -27,5 +41,7 @@
 }
 
 .dropdown:focus-within .dropdownContent {
-  @apply block;
+  visibility: visible;
+  opacity: 1;
+  translate: none;
 }

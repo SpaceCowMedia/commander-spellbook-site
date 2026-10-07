@@ -25,7 +25,7 @@ const PageWrapper: React.FC<Props> = ({ children, transitionKey, noMarginFooter 
     <div className={`flex flex-col h-full ${!isHome ? styles.padtop : ''}`}>
       <AnalyticsCookieBanner />
       {!isHome && (
-        <div className={`bg-dark ${styles.locked}`} style={{ viewTransitionName: 'site-header' }}>
+        <div className={`siteHeader bg-dark ${styles.locked}`}>
           <nav className="container">
             <SearchBar />
           </nav>

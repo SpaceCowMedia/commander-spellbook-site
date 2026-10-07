@@ -1,10 +1,11 @@
 import styles from './spoilerFog.module.scss';
-import React, { useId } from 'react';
+import React, { use, useId } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { revealAllSpoilers, revealSpoiler, useSpoilerFogged } from 'lib/spoilers';
+import { ModalPortalContext } from 'components/ui/Modal/Modal';
 
 const REVEAL_ALL_HELP = 'Click to show every spoiler until you close this tab';
-const MODAL_Z_INDEX = 10000000000;
+const TOOLTIP_Z_INDEX = 10000000000;
 
 interface Props {
   name: string;
@@ -18,6 +19,7 @@ interface Props {
 const SpoilerFog: React.FC<Props> = ({ name, spoiler, interactive = true, className, children }) => {
   const tooltipId = useId();
   const fogged = useSpoilerFogged({ name, spoiler });
+  const modal = use(ModalPortalContext);
 
   return (
     <div className={`${styles.spoilerFog} ${fogged ? styles.fogged : ''} ${className ?? ''}`}>
@@ -42,12 +44,12 @@ const SpoilerFog: React.FC<Props> = ({ name, spoiler, interactive = true, classN
                 Spoiler
               </button>
               {fogged && (
-                // out of the card's flip transform, and above the replacements modal
+                // out of the card's flip transform, and into the replacements modal when shown there
                 <Tooltip
                   id={tooltipId}
                   positionStrategy="fixed"
-                  portalRoot={typeof document === 'undefined' ? undefined : document.body}
-                  style={{ zIndex: MODAL_Z_INDEX }}
+                  portalRoot={modal ?? (typeof document === 'undefined' ? undefined : document.body)}
+                  style={{ zIndex: TOOLTIP_Z_INDEX }}
                 />
               )}
             </>

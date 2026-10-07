@@ -37,6 +37,15 @@ export const readResultsCache = (): ResultsCache | null => {
   }
 };
 
+export const hasResultsCache = (): boolean => {
+  try {
+    return sessionStorage.getItem(SESSION_STORAGE_RESULTS_KEY) !== null;
+  } catch {
+    /* see file header */
+    return false;
+  }
+};
+
 export const mergeResultsCache = (patch: Partial<ResultsCache>): void => {
   try {
     const existing = readResultsCache();

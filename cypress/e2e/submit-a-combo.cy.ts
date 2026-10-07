@@ -23,6 +23,27 @@ describe('Combo Submission', () => {
     cy.url().should('include', '/login');
   });
 
+  it('keeps the other steps as they are when one is removed', () => {
+    cy.login();
+    cy.visit('/submit-a-combo/');
+
+    cy.contains('button', 'Add Step').click();
+    cy.contains('button', 'Add Step').click();
+    cy.get('input[placeholder^="e.g. Cast"]').first().type('First step');
+    cy.get('input[placeholder^="e.g. Cast"]').last().type('Second step');
+
+    cy.get('input[placeholder^="e.g. Cast"]')
+      .last()
+      .then(([second]) => {
+        cy.get('button[title="Remove step from combo"]').first().click();
+        cy.get('input[placeholder^="e.g. Cast"]').should(($steps) => {
+          expect($steps).to.have.length(1);
+          expect($steps[0]).to.equal(second);
+          expect($steps[0]).to.have.value('Second step');
+        });
+      });
+  });
+
   it('submits a combo and lists it among the submissions of the user', () => {
     cy.login();
     // A suggestion left behind by a previous attempt would make this one fail on a duplicate.

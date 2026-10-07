@@ -1,5 +1,5 @@
 import Modal from 'components/ui/Modal/Modal';
-import React, { useEffect, useState } from 'react';
+import React, { addTransitionType, startTransition, useEffect, useState, ViewTransition } from 'react';
 import Dimmer from 'components/ui/Dimmer/Dimmer';
 import edhrecService from 'services/edhrec.service';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
@@ -9,35 +9,60 @@ import { ReplacementCard } from 'lib/types';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
+import { LOAD_MORE, TEMPLATE_MORPH_SHARE } from 'lib/viewTransitions';
 
 interface Props {
   template: TemplateInVariant;
   textTrigger?: (_count?: number) => React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (_open: boolean) => void;
+  // The card of the list that shares its name with the one shown elsewhere, to grow out of it.
+  morph?: { name: string; cardId?: string };
 }
 
-const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) => {
+const CARD_MOVE = { [LOAD_MORE]: 'cardMove', default: 'none' };
+
+const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger, open, onOpenChange, morph }) => {
   const title = `Replacement list for “${template.template.name}”`;
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const isOpen = open ?? localOpen;
+  const setIsOpen = onOpenChange ?? setLocalOpen;
   const [count, setCount] = useState<number | undefined>(undefined);
   const [nextPage, setNextPage] = useState<number | undefined>(0);
   const [results, setResults] = useState<ReplacementCard[]>([]);
+  // Only the last row moves when cards are added after it, and it is in the last page.
+  const [pageStarts, setPageStarts] = useState<number[]>([]);
+  const movableFrom = pageStarts.at(-2) ?? 0;
+  const loadedMoreFrom = pageStarts.length > 1 ? pageStarts[pageStarts.length - 1] : results.length;
+  const morphIndex = results.findIndex((result) => result.id === morph?.cardId);
 
-  const fetchNextResults = async () => {
+  const fetchNextResults = async (more = false) => {
     if (nextPage === undefined || loading) {
       return;
     }
     setLoading(true);
     try {
       const page = await cachedTemplateReplacements(template.template, nextPage);
-      setCount(page.count);
-      setNextPage(page.nextPage);
-      setResults(results.concat(page.results));
+      const show = () => {
+        setCount(page.count);
+        setNextPage(page.nextPage);
+        setPageStarts(pageStarts.concat(results.length));
+        setResults(results.concat(page.results));
+        setLoading(false);
+      };
+      if (more) {
+        startTransition(() => {
+          addTransitionType(LOAD_MORE);
+          show();
+        });
+      } else {
+        show();
+      }
     } catch (error) {
       console.error(error);
       setResults([]);
       setNextPage(undefined);
-    } finally {
       setLoading(false);
     }
   };
@@ -85,13 +110,35 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) =
           </ExternalLink>
         )}
         <div className="flex flex-wrap gap-3 justify-center">
-          {results.map((result) => (
-            <SpoilerFog key={result.id} name={result.name} spoiler={result.spoiler}>
-              <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer">
-                <img className="rounded-xl" width="240" src={result.images[0]} alt={result.name} />
-              </a>
-            </SpoilerFog>
-          ))}
+          {results.map((result, index) => {
+            const morphing = isOpen && index === morphIndex;
+            // Lazy, so that opening the list doesn't wait for every card to load, but Load More waits for its own.
+            const image = (
+              <img
+                className="rounded-xl"
+                width="240"
+                height="334"
+                src={result.images[0]}
+                alt={result.name}
+                loading={morphing || index >= loadedMoreFrom ? undefined : 'lazy'}
+              />
+            );
+            return (
+              <ViewTransition key={result.id} update={index >= movableFrom ? CARD_MOVE : 'none'} default="none">
+                <SpoilerFog className="replacementCard" name={result.name} spoiler={result.spoiler}>
+                  <a href={edhrecService.getCardUrl(result.name)} target="_blank" rel="noopener noreferrer">
+                    {morphing && morph ? (
+                      <ViewTransition name={morph.name} share={TEMPLATE_MORPH_SHARE} default="none">
+                        {image}
+                      </ViewTransition>
+                    ) : (
+                      image
+                    )}
+                  </a>
+                </SpoilerFog>
+              </ViewTransition>
+            );
+          })}
         </div>
         <div className="flex justify-center w-full mt-3">
           {loading ? (
@@ -99,7 +146,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger }) =
           ) : (
             nextPage !== undefined &&
             nextPage > 0 && (
-              <button className="button" onClick={fetchNextResults}>
+              <button className="button" onClick={() => fetchNextResults(true)}>
                 Load More
               </button>
             )

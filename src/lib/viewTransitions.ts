@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import type { NextRouter } from 'next/router';
 import { queryParameterAsString } from './queryParameters';
+import { hasResultsCache } from './findMyCombosResultsCache';
 
 export const PAGE_TURN_FORWARD = 'page-turn-forward';
 export const PAGE_TURN_BACK = 'page-turn-back';
@@ -9,8 +10,20 @@ export const PAGE_TURN_SHEET = 'page-turn-sheet';
 export const NO_ANIMATION = 'no-animation';
 export const WHEEL_NEXT = 'wheel-next';
 export const WHEEL_PREVIOUS = 'wheel-previous';
+export const RESORT = 'resort';
+export const TAB_FORWARD = 'tab-forward';
+export const TAB_BACK = 'tab-back';
+export const TEMPLATE_MORPH = 'template-morph';
+export const TEMPLATE_MORPH_SHARE = { [TEMPLATE_MORPH]: 'templateMorph', default: 'none' };
+export const THEME_SWITCH = 'theme';
+export const LOAD_MORE = 'load-more';
 
-const NO_ANIMATION_PATHS = new Set(['/find-my-combos']);
+// The home page's logo shrinks into the header's gear as the search bar docks, and grows back out of it.
+export const SITE_LOGO = 'site-logo';
+export const LOGO_DOCK = { [NO_ANIMATION]: 'none', default: 'logoDock' };
+
+// Find My Combos restores its last results once mounted and scrolls back down to them, which would jump mid-fade.
+const restoresScroll = (path: string) => path === '/find-my-combos' && hasResultsCache();
 
 export type TransitionKey = (router: NextRouter) => string;
 
@@ -96,7 +109,7 @@ export function takePendingTransition(as: string): string | undefined {
     pending = null;
     return type;
   }
-  return NO_ANIMATION_PATHS.has(pathKey(as)) ? NO_ANIMATION : undefined;
+  return restoresScroll(pathKey(as)) ? NO_ANIMATION : undefined;
 }
 
 export function clearPendingTransition(as: string) {
@@ -105,34 +118,43 @@ export function clearPendingTransition(as: string) {
   }
 }
 
-// The sheet that turns shows half of each page, but a view transition captures every element once, so PageTurn prints
-// its page a second time for it while a page turns. The value is the turn the sheet is shown for, or 0.
-let turningSheet = 0;
-let turnCount = 0;
-const turningSheetListeners = new Set<(turn: number) => void>();
+export const pagesCanTurn = () =>
+  'startViewTransition' in document && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function setTurningSheet(turn: number) {
-  turningSheet = turn;
-  turningSheetListeners.forEach((listener) => listener(turn));
+// The sheet that turns shows half of each page, but a view transition captures every element once, so PageTurn prints
+// its page a second time for it while a page turns. The turn is the one the sheet is shown for, or 0, and the owner
+// tells apart the PageTurns of a page that turn on their own, like the lists of Find My Combos.
+export interface TurningSheet {
+  turn: number;
+  owner?: string;
 }
 
-export function showTurningSheet() {
+let turningSheet: TurningSheet = { turn: 0 };
+let turnCount = 0;
+const turningSheetListeners = new Set<(sheet: TurningSheet) => void>();
+
+function setTurningSheet(sheet: TurningSheet) {
+  turningSheet = sheet;
+  turningSheetListeners.forEach((listener) => listener(sheet));
+}
+
+export function showTurningSheet(owner?: string) {
   turnCount += 1;
-  setTurningSheet(turnCount);
+  setTurningSheet({ turn: turnCount, owner });
 }
 
 // A turn cut short by the next one only finishes once that one has shown its own sheet, which it must leave alone.
-export function hideTurningSheet(turn = turningSheet) {
-  if (turn !== 0 && turn === turningSheet) {
-    setTurningSheet(0);
+export function hideTurningSheet(turn = turningSheet.turn) {
+  if (turn !== 0 && turn === turningSheet.turn) {
+    setTurningSheet({ turn: 0 });
   }
 }
 
-export function getTurningSheet(): number {
+export function getTurningSheet(): TurningSheet {
   return turningSheet;
 }
 
-export function subscribeTurningSheet(listener: (turn: number) => void): () => void {
+export function subscribeTurningSheet(listener: (sheet: TurningSheet) => void): () => void {
   turningSheetListeners.add(listener);
   return () => {
     turningSheetListeners.delete(listener);

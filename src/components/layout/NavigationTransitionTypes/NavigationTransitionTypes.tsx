@@ -10,12 +10,10 @@ import {
   getTurningSheet,
   hideTurningSheet,
   historyPageTurn,
+  pagesCanTurn,
   showTurningSheet,
   takePendingTransition,
 } from 'lib/viewTransitions';
-
-const pagesCanTurn = () =>
-  'startViewTransition' in document && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const NavigationTransitionTypes: React.FC = () => {
   const [, setTaggedNavigations] = useState(0);
@@ -43,8 +41,8 @@ const NavigationTransitionTypes: React.FC = () => {
       // The view transition captures the old page as it is now, so the second print of it, for the sheet that turns,
       // has to be committed already. Any other navigation must not capture one left over from a turn still running.
       if (turnsPage && pagesCanTurn()) {
-        flushSync(showTurningSheet);
-      } else if (getTurningSheet() !== 0) {
+        flushSync(() => showTurningSheet());
+      } else if (getTurningSheet().turn !== 0) {
         flushSync(() => hideTurningSheet());
       }
       if (type) {

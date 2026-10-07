@@ -2,31 +2,45 @@ import React, { ViewTransition, useEffect, useLayoutEffect, useRef, useState } f
 import {
   PAGE_TURNS,
   PAGE_TURN_SHEET,
+  RESORT,
   getTurningSheet,
   hideTurningSheet,
   subscribeTurningSheet,
 } from 'lib/viewTransitions';
 
-const EXIT = { ...Object.fromEntries(PAGE_TURNS.map((type) => [type, 'pageTurnExit'])), default: 'none' };
-const ENTER = { ...Object.fromEntries(PAGE_TURNS.map((type) => [type, 'pageTurnEnter'])), default: 'none' };
+// Sorting the results again crossfades them, whether the page stays the same or goes back to the first one.
+const EXIT = {
+  ...Object.fromEntries(PAGE_TURNS.map((type) => [type, 'pageTurnExit'])),
+  [RESORT]: 'crossfade',
+  default: 'none',
+};
+const ENTER = {
+  ...Object.fromEntries(PAGE_TURNS.map((type) => [type, 'pageTurnEnter'])),
+  [RESORT]: 'crossfade',
+  default: 'none',
+};
+const UPDATE = { [RESORT]: 'crossfade', default: 'none' };
 
 // Runs as the turn starts, and returns what React runs once its view transition has finished.
 const hideSheetAfterTurn = () => {
-  const turn = getTurningSheet();
+  const { turn } = getTurningSheet();
   return () => hideTurningSheet(turn);
 };
 
 interface Props {
   page: number;
+  // Tells this page apart from others on the same page that turn on their own.
+  owner?: string;
   children: React.ReactNode;
 }
 
 // The page is opaque so the half turning over doesn't show through its gaps.
-const PageTurn: React.FC<Props> = ({ page, children }) => {
+const PageTurn: React.FC<Props> = ({ page, owner, children }) => {
   // Not useSyncExternalStore: its updates are synchronous, and React skips a view transition that one lands in while
   // it is still being prepared.
-  const [sheet, setSheet] = useState(getTurningSheet);
-  useEffect(() => subscribeTurningSheet(setSheet), []);
+  const [turningSheet, setTurningSheet] = useState(getTurningSheet);
+  useEffect(() => subscribeTurningSheet(setTurningSheet), []);
+  const sheet = turningSheet.owner === owner ? turningSheet.turn : 0;
 
   const pageRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -61,6 +75,7 @@ const PageTurn: React.FC<Props> = ({ page, children }) => {
         key={page}
         exit={EXIT}
         enter={ENTER}
+        update={UPDATE}
         default="none"
         onExit={hideSheetAfterTurn}
         onEnter={hideSheetAfterTurn}

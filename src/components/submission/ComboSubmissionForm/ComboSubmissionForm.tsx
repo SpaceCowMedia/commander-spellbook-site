@@ -33,6 +33,7 @@ import { useDebounce } from 'use-debounce';
 import Icon from '../../layout/Icon/Icon';
 import SectionHeading from '../SectionHeading/SectionHeading';
 import ComboResult from '../../search/ComboResult/ComboResult';
+import useRowKeys from 'lib/useRowKeys';
 
 const VALIDATION_INTERVAL_MS = 3000;
 const VALIDATION_MAX_RETRIES = 3;
@@ -104,6 +105,10 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   const [variantOf, setVariantOf] = useState(() => submission?.variantOf ?? variant?.id);
   const [spoiler, setSpoiler] = useState(() => submission?.spoiler ?? variant?.spoiler ?? false);
   const [manaCost, setManaCost] = useState(() => submission?.manaNeeded ?? variant?.manaNeeded ?? '');
+  const cardKeys = useRowKeys(cards.length);
+  const templateKeys = useRowKeys(templates.length);
+  const featureKeys = useRowKeys(features.length);
+  const stepKeys = useRowKeys(steps.length);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorObj, setErrorObj] = useState<ComboSubmissionErrorType>();
@@ -179,10 +184,15 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
       console.log(suggestionRequestBackup);
       if (shouldRestore) {
         const backupRequest = backup[backupKey];
+        const restoredSteps = backupRequest.description.split('\n');
         setCards(backupRequest.uses);
         setTemplates(backupRequest.requires);
         setFeatures(backupRequest.produces);
-        setSteps(backupRequest.description.split('\n'));
+        setSteps(restoredSteps);
+        cardKeys.reset(backupRequest.uses.length);
+        templateKeys.reset(backupRequest.requires.length);
+        featureKeys.reset(backupRequest.produces.length);
+        stepKeys.reset(restoredSteps.length);
         setEasyPrerequisites(backupRequest.easyPrerequisites || '');
         setNotablePrerequisites(backupRequest.notablePrerequisites || '');
         setComment(backupRequest.comment || '');
@@ -316,9 +326,6 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
     spoiler,
   ]);
 
-  // Makes sure the keys of lists are distinct after an element is deleted
-  const [keyId, setKeyId] = useState<number>(0);
-
   const handleAddCard = () => {
     setCards([
       ...cards,
@@ -333,6 +340,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         mustBeCommander: false,
       },
     ]);
+    cardKeys.add();
   };
 
   const handleAddTemplate = () => {
@@ -349,6 +357,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         mustBeCommander: false,
       },
     ]);
+    templateKeys.add();
   };
 
   const handleAddFeature = () => {
@@ -358,6 +367,12 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         feature: '',
       },
     ]);
+    featureKeys.add();
+  };
+
+  const handleAddStep = () => {
+    setSteps([...steps, '']);
+    stepKeys.add();
   };
 
   const handleCardChange = (card: CardUsedInVariantSuggestionRequest, index: number) => {
@@ -385,25 +400,26 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         mustBeCommander: card.mustBeCommander,
       },
     ]);
-    setKeyId(keyId + 1);
+    cardKeys.remove(index);
+    templateKeys.add();
   };
 
   const handleDeleteCard = (index: number) => {
     setCards([...cards.slice(0, index), ...cards.slice(index + 1)]);
-    setKeyId(keyId + 1);
+    cardKeys.remove(index);
   };
   const handleDeleteTemplate = (index: number) => {
     setTemplates([...templates.slice(0, index), ...templates.slice(index + 1)]);
-    setKeyId(keyId + 1);
+    templateKeys.remove(index);
   };
   const handleDeleteFeature = (index: number) => {
     setFeatures([...features.slice(0, index), ...features.slice(index + 1)]);
-    setKeyId(keyId + 1);
+    featureKeys.remove(index);
   };
 
   const handleDeleteStep = (index: number) => {
     setSteps([...steps.slice(0, index), ...steps.slice(index + 1)]);
-    setKeyId(keyId + 1);
+    stepKeys.remove(index);
   };
 
   const confirmSubmit = async () => {
@@ -584,7 +600,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               submittedTemplateNames={templates.map((template) => template.template)}
               index={index}
               errors={itemErrors(errorObj?.uses, index)}
-              key={`${index}-${keyId}`}
+              key={cardKeys.keys[index]}
             />
           ))}
         </div>
@@ -609,7 +625,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               }
               index={index}
               errors={itemErrors(errorObj?.requires, index)}
-              key={`${index}-${keyId}`}
+              key={templateKeys.keys[index]}
             />
           ))}
         </div>
@@ -663,7 +679,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         <ErrorMessage list={errorObj?.description} />
         <div className="flex flex-col gap-3">
           {steps.map((step, index) => (
-            <div className="flex items-center gap-3" key={`${index}-${keyId}`}>
+            <div className="flex items-center gap-3" key={stepKeys.keys[index]}>
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-link text-sm font-bold text-white dark:bg-primary dark:text-dark">
                 {index + 1}
               </span>
@@ -685,7 +701,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
             </div>
           ))}
         </div>
-        <button className="add-button mt-3" onClick={() => setSteps([...steps, ''])}>
+        <button className="add-button mt-3" onClick={handleAddStep}>
           <Icon name="plus" /> Add Step
         </button>
       </section>
@@ -702,7 +718,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
               onDelete={() => handleDeleteFeature(index)}
               index={index}
               errors={itemErrors(errorObj?.produces, index)}
-              key={`${index}-${keyId}`}
+              key={featureKeys.keys[index]}
             />
           ))}
         </div>

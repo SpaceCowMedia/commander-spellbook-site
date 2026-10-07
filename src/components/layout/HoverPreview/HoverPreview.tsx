@@ -1,6 +1,7 @@
 import styles from './hoverPreview.module.scss';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { ModalPortalContext } from 'components/ui/Modal/Modal';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
 const TOOLTIP_RIGHT_SHIFT_PX = 30;
@@ -55,6 +56,7 @@ const HoverPreview: React.FC<Props> = ({
   const emulatedMouseSuppressedRef = useRef(false);
   const emulatedMouseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasShownRef = useRef(false);
+  const modal = use(ModalPortalContext);
   const [isMounted, setIsMounted] = useState(false);
   const [currentlyHovered, setCurrentlyHovered] = useState(false);
   const [tapPreviewOpen, setTapPreviewOpen] = useState(false);
@@ -279,7 +281,7 @@ const HoverPreview: React.FC<Props> = ({
         tapPreviewOpen &&
         createPortal(
           <div className={styles.tapCatcher} onTouchEnd={handleTapCatcherTouchEnd} onClick={handleTapCatcherClick} />,
-          document.body,
+          modal ?? document.body,
         )}
       <div
         ref={divRef}

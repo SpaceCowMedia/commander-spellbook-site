@@ -48,6 +48,19 @@ export const stubScryfallSearch = (spoilers: string[] = []) => {
   );
 };
 
+// Splits the seeded cards into pages of the given size, so that the replacements of a template span several pages.
+export const stubScryfallPagedSearch = (pageSize: number) => {
+  cy.intercept({ method: 'GET', url: `${SCRYFALL_API}/cards/search*` }, (req) => {
+    const page = Number(req.query.page ?? 1);
+    const cards = SEEDED_CARDS.slice((page - 1) * pageSize, page * pageSize);
+    req.reply({
+      ...list(cards, []),
+      has_more: page * pageSize < SEEDED_CARDS.length,
+      total_cards: SEEDED_CARDS.length,
+    });
+  });
+};
+
 export const stubScryfall = () => {
   stubScryfallSearch();
 

@@ -42,6 +42,10 @@ html {
   }
 }
 
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
 body,
 html,
 #__next {

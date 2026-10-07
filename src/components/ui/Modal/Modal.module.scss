@@ -1,37 +1,56 @@
 @reference "../../../assets/globals.css";
 
-.outerModalContainer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10000000000; /* Higher than mediavine's adhesion */
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity ease-in-out 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.visible {
-  opacity: 1;
-}
-
 .modal {
+  --modal-offset: -2rem;
+
+  position: fixed;
+  inset: 0;
   width: 90%;
   max-width: 40rem;
   max-height: 95vh;
-  z-index: 1001;
-  margin-top: -50%;
-  transition: margin-top ease-in-out 0.2s;
+  margin: auto;
+  padding: 0;
+  border: none;
   overflow: auto;
-  position: relative;
+  color: inherit;
+  opacity: 0;
+  translate: 0 var(--modal-offset);
+  transition:
+    opacity 200ms ease-in-out,
+    translate 200ms ease-in-out,
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete;
   @apply bg-white dark:bg-dark;
-}
 
-.inPosition {
-  margin-top: 0;
+  &[open] {
+    opacity: 1;
+    translate: none;
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 var(--modal-offset);
+    }
+  }
+
+  &::backdrop {
+    background-color: rgb(0 0 0 / 0%);
+    transition:
+      background-color 200ms ease-in-out,
+      display 200ms allow-discrete,
+      overlay 200ms allow-discrete;
+  }
+
+  &[open]::backdrop {
+    background-color: rgb(0 0 0 / 80%);
+
+    @starting-style {
+      background-color: rgb(0 0 0 / 0%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --modal-offset: 0;
+  }
 }
 
 .content {

@@ -10,9 +10,16 @@
 }
 
 .bottomBorder {
+  position: relative;
   height: 4px;
   width: 100%;
   background: rgb(148 148 148 / 27%);
+}
+
+.underline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #c18aff, #ff9595);
 }
 
 .tabHeader {
@@ -34,8 +41,4 @@
   display: flex;
   justify-content: center;
   border: none;
-
-  .bottomBorder {
-    background: linear-gradient(135deg, #c18aff, #ff9595);
-  }
 }

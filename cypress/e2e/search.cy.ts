@@ -1,30 +1,6 @@
+import { expectNoAnimation, expectTransitionType, spyOnViewTransitions } from '../support/viewTransitions';
+
 const PAGE_SIZE = 50;
-
-// Browsers without view transitions skip these checks.
-const expectTransitionType = (type: string) => {
-  cy.document().then((doc) => {
-    if (!('startViewTransition' in doc)) {
-      return;
-    }
-    cy.get<sinon.SinonSpy>('@startViewTransition').should((spy) => {
-      expect(spy.args.some(([options]) => options?.types?.includes(type))).to.equal(true);
-    });
-    cy.get<sinon.SinonSpy>('@startViewTransition').invoke('resetHistory');
-  });
-};
-
-// Going back to a page whose data it already has, Next renders it during the popstate event, where React commits the
-// transition synchronously, without starting a view transition at all.
-const expectNoAnimation = () => {
-  cy.document().then((doc) => {
-    if (!('startViewTransition' in doc)) {
-      return;
-    }
-    cy.get<sinon.SinonSpy>('@startViewTransition').should((spy) => {
-      expect(spy.args.every(([options]) => options?.types?.includes('no-animation'))).to.equal(true);
-    });
-  });
-};
 
 describe('Search', () => {
   it('shows the combos matching a query and opens one of them', () => {
@@ -57,6 +33,16 @@ describe('Search', () => {
     cy.get('.sort-footer').last().should('contain', 'Too few salt votes');
   });
 
+  it('crossfades the combos when sorting them again', () => {
+    cy.visit('/search/?q=monolith');
+    spyOnViewTransitions();
+
+    cy.get('#sort-combos-select').select('salt');
+    cy.url().should('include', 'sort=salt');
+    expectTransitionType('resort');
+    cy.get('.sort-footer').first().should('contain', 'Salt 2.60 / 4 (5 votes)');
+  });
+
   it('turns the page when moving between result pages', () => {
     // The test database is too small to fill a page, so every results page repeats a real combo.
     let sample: { id: string } | undefined;
@@ -75,11 +61,7 @@ describe('Search', () => {
     });
 
     cy.visit('/');
-    cy.document().then((doc) => {
-      if ('startViewTransition' in doc) {
-        cy.spy(doc, 'startViewTransition').as('startViewTransition');
-      }
-    });
+    spyOnViewTransitions();
     cy.get('input[name=q]').type('monolith{enter}');
     cy.url().should('include', '/search/');
 

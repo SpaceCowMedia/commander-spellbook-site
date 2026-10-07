@@ -8,7 +8,7 @@ import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
 import CookieService from 'services/cookie.service';
 import normalizeQuotes from 'lib/normalizeQuotes';
-import { NO_ANIMATION } from 'lib/viewTransitions';
+import { LOGO_DOCK, NO_ANIMATION, SITE_LOGO } from 'lib/viewTransitions';
 
 const SEARCH_DOCK = { [NO_ANIMATION]: 'none', default: 'searchDock' };
 
@@ -119,7 +119,9 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
           {!onHomepage && (
             <Link href="/" className="block mr-2 shrink py-1">
               <div className="mr-1">
-                <img src="/images/gear.svg" alt="Go to home page" className="w-8 inline-block" />
+                <ViewTransition name={SITE_LOGO} share={LOGO_DOCK} default="none">
+                  <img src="/images/gear.svg" alt="Go to home page" className="w-8 inline-block" />
+                </ViewTransition>
               </div>
             </Link>
           )}
@@ -147,6 +149,8 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
                 id="search-bar-menu-button"
                 type="button"
                 className={styles.mobileMenuButton}
+                aria-expanded={mobileMenuIsOpen}
+                aria-controls="search-bar-mobile-menu"
                 onClick={() => setMobileMenuIsOpen(!mobileMenuIsOpen)}
               >
                 <div className={`${styles.menuIcon} ${styles.linkIcon}`} aria-hidden="true" />
@@ -175,23 +179,32 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
           )}
         </form>
 
-        {!onHomepage && mobileMenuIsOpen && (
+        {!onHomepage && (
+          // Stays mounted, so that it folds away as it unfolds.
           <div
-            className="md:hidden flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
-            onClick={() => setMobileMenuIsOpen(!mobileMenuIsOpen)}
+            id="search-bar-mobile-menu"
+            inert={!mobileMenuIsOpen}
+            className={`${styles.mobileMenu} ${mobileMenuIsOpen ? styles.open : ''}`}
           >
-            <Link href="/advanced-search/" className={styles.mobileMenuButton}>
-              <div className={`${styles.advancedSearchIcon} ${styles.linkIcon}`} aria-hidden="true" />
-              Advanced
-            </Link>
-            <Link href="/syntax-guide/" className={styles.mobileMenuButton}>
-              <div className={`${styles.syntaxGuideIcon} ${styles.linkIcon}`} aria-hidden="true" />
-              Syntax
-            </Link>
-            <Link href="/random" className={styles.mobileMenuButton}>
-              <div className={`${styles.randomIcon} ${styles.linkIcon}`} aria-hidden="true" />
-              Random
-            </Link>
+            <div className="min-h-0 overflow-hidden">
+              <div
+                className="flex flex-wrap flex-row text-center mt-2 py-4 border-t border-light text-light"
+                onClick={() => setMobileMenuIsOpen(!mobileMenuIsOpen)}
+              >
+                <Link href="/advanced-search/" className={styles.mobileMenuButton}>
+                  <div className={`${styles.advancedSearchIcon} ${styles.linkIcon}`} aria-hidden="true" />
+                  Advanced
+                </Link>
+                <Link href="/syntax-guide/" className={styles.mobileMenuButton}>
+                  <div className={`${styles.syntaxGuideIcon} ${styles.linkIcon}`} aria-hidden="true" />
+                  Syntax
+                </Link>
+                <Link href="/random" className={styles.mobileMenuButton}>
+                  <div className={`${styles.randomIcon} ${styles.linkIcon}`} aria-hidden="true" />
+                  Random
+                </Link>
+              </div>
+            </div>
           </div>
         )}
       </div>

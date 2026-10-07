@@ -12,6 +12,8 @@ interface Props {
 const SuggestionBalloon: React.FC<Props> = ({ suggestions }) => {
   const [jwt, , cookieLoaded] = useCookie('csbJwt');
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
+  // Dismissed but still sinking away, so it stays until its animation ends.
+  const [dismissed, setDismissed] = useState(false);
   const rolled = useRef(false);
 
   useEffect(() => {
@@ -34,8 +36,14 @@ const SuggestionBalloon: React.FC<Props> = ({ suggestions }) => {
     <aside
       id="suggestion-balloon"
       data-suggestion={suggestion.id}
-      className={styles.balloon}
+      className={`${styles.balloon} ${dismissed ? styles.dismissed : ''}`}
       aria-labelledby="suggestion-balloon-title"
+      inert={dismissed}
+      onAnimationEnd={(event) => {
+        if (dismissed && event.target === event.currentTarget) {
+          setSuggestion(null);
+        }
+      }}
     >
       <Icon name={suggestion.icon} className={styles.icon} />
       <div className={styles.body}>
@@ -52,7 +60,7 @@ const SuggestionBalloon: React.FC<Props> = ({ suggestions }) => {
         type="button"
         className={styles.dismiss}
         aria-label="Dismiss suggestion"
-        onClick={() => setSuggestion(null)}
+        onClick={() => setDismissed(true)}
       >
         <Icon name="cross" />
       </button>

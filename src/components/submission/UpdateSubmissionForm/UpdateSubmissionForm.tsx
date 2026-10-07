@@ -21,6 +21,7 @@ import { useDebounce } from 'use-debounce';
 import Icon from '../../layout/Icon/Icon';
 import SectionHeading from '../SectionHeading/SectionHeading';
 import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
+import useRowKeys from 'lib/useRowKeys';
 
 const VALIDATION_INTERVAL_MS = 5000;
 const VALIDATION_MAX_RETRIES = 3;
@@ -43,6 +44,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
   const [variants, setVariants] = useState<VariantInVariantUpdateSuggestionRequest[]>(() =>
     (submission?.variants ?? []).concat(comboId ? [{ variant: comboId, issue: '' }] : []),
   );
+  const variantKeys = useRowKeys(variants.length);
   const [kind, setKind] = useState<KindEnum>(() => submission?.kind ?? KindEnum.Nw);
   const [comment, setComment] = useState(() => submission?.comment ?? '');
   const [issue, setIssue] = useState(() => submission?.issue ?? '');
@@ -80,6 +82,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
       if (shouldRestore) {
         const backupRequest = backup[backupKey];
         setVariants(backupRequest.variants ?? []);
+        variantKeys.reset(backupRequest.variants?.length ?? 0);
         setKind(backupRequest.kind);
         setComment(backupRequest.comment ?? '');
         setIssue(backupRequest.issue);
@@ -194,9 +197,6 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
     });
   }, [kind, variants, issue, solution, comment]);
 
-  // Makes sure the keys of lists are distinct after an element is deleted
-  const [keyId, setKeyId] = useState<number>(0);
-
   const handleAddVariant = () => {
     setVariants((prev) => [
       ...prev,
@@ -205,6 +205,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
         issue: '',
       },
     ]);
+    variantKeys.add();
   };
 
   const handleVariantChange = (variant: VariantInVariantUpdateSuggestionRequest, index: number) => {
@@ -213,7 +214,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
 
   const handleDeleteVariant = (index: number) => {
     setVariants([...variants.slice(0, index), ...variants.slice(index + 1)]);
-    setKeyId(keyId + 1);
+    variantKeys.remove(index);
   };
 
   const handleSubmit = async () => {
@@ -326,7 +327,7 @@ const UpdateSubmissionForm: React.FC<Props> = ({ submission, comboId }) => {
               onChange={(variant) => handleVariantChange(variant, index)}
               index={index}
               errors={itemErrors(errorObj?.variants, index)}
-              key={`${index}-${keyId}`}
+              key={variantKeys.keys[index]}
             />
           ))}
         </div>
