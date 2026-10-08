@@ -62,6 +62,7 @@ import {
   faFlagCheckered,
   faBolt,
   faMasksTheater,
+  faDice,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSaltShaker from './saltShaker';
@@ -143,6 +144,7 @@ const SPELLBOOK_FA_ICONS = {
   flagCheckered: faFlagCheckered,
   bolt: faBolt,
   masks: faMasksTheater,
+  dice: faDice,
 };
 
 /* a square narrowed into the portrait shape of a Magic card */

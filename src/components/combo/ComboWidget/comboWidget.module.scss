@@ -1,0 +1,391 @@
+@reference "../../../assets/globals.css";
+
+/* ---------- Panel ---------- */
+
+.widget {
+  @apply relative my-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm md:mr-6 dark:border-gray-700 dark:bg-white/5;
+
+  /* the site's purple to pink, as a thin band on top */
+  &::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary to-secondary;
+  }
+}
+
+.header {
+  @apply px-5 pt-6 pb-3;
+}
+
+.kicker {
+  @apply mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-bold tracking-wide text-link uppercase dark:bg-primary/20 dark:text-primary;
+}
+
+.title {
+  @apply font-title text-2xl leading-tight font-bold;
+}
+
+.summary {
+  @apply mt-1 text-sm text-gray-600 dark:text-gray-300;
+}
+
+.body {
+  @apply flex flex-col gap-5 px-5 pb-5;
+}
+
+.footer {
+  @apply border-t border-gray-200 px-5 py-3 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400;
+}
+
+/* ---------- Inputs ---------- */
+
+.inputs {
+  @apply grid gap-4;
+
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+}
+
+.field {
+  @apply flex min-w-0 flex-col gap-1.5;
+}
+
+.choiceField {
+  @apply col-span-full border-0 p-0;
+}
+
+.fieldLabel {
+  @apply text-left text-sm font-bold;
+}
+
+.fieldHint {
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+.stepper {
+  @apply flex h-11 items-stretch overflow-hidden rounded-xl border border-gray-300 bg-white transition-shadow focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/40 motion-reduce:transition-none dark:border-gray-600 dark:bg-dark;
+}
+
+.stepper.compact {
+  @apply h-9 w-32 rounded-lg;
+}
+
+.stepButton {
+  @apply flex w-11 shrink-0 items-center justify-center text-xl font-bold text-link transition-colors select-none hover:bg-primary/15 focus-visible:bg-primary/20 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent motion-reduce:transition-none dark:text-primary dark:disabled:text-gray-600;
+
+  .compact & {
+    @apply w-9 text-lg;
+  }
+}
+
+.stepInput {
+  @apply w-full min-w-0 flex-1 border-x border-y-0 border-gray-200 bg-transparent px-1 text-center text-lg font-semibold tabular-nums focus:outline-none dark:border-gray-700;
+
+  appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  .compact & {
+    @apply text-base;
+  }
+}
+
+.segmented {
+  @apply flex flex-wrap gap-2;
+}
+
+.segment {
+  @apply relative flex-1 cursor-pointer;
+
+  min-width: 12rem;
+}
+
+.segmentInput {
+  @apply absolute opacity-0;
+}
+
+.segmentLabel {
+  @apply block h-full rounded-xl border border-gray-300 px-3 py-2 text-sm transition-colors motion-reduce:transition-none dark:border-gray-600;
+
+  .segmentInput:checked + & {
+    @apply border-link bg-primary/15 font-semibold dark:border-primary dark:bg-primary/20;
+  }
+
+  .segmentInput:focus-visible + & {
+    @apply ring-2 ring-primary/50;
+  }
+
+  .segment:hover & {
+    @apply border-primary;
+  }
+}
+
+/* ---------- Opponents ---------- */
+
+.opponents {
+  @apply flex flex-col items-start gap-2;
+}
+
+.tableScroll {
+  @apply w-full overflow-x-auto;
+}
+
+.opponentsTable {
+  @apply w-full border-separate text-sm;
+
+  border-spacing: 0 0.375rem;
+
+  caption {
+    @apply pb-1;
+  }
+
+  th[scope='col'] {
+    @apply px-2 pb-1 text-left text-xs font-bold tracking-wide whitespace-nowrap text-gray-500 uppercase dark:text-gray-400;
+  }
+
+  td {
+    @apply px-2 align-middle;
+  }
+}
+
+.opponentName {
+  @apply pr-2 text-left font-semibold whitespace-nowrap;
+}
+
+.removeButton {
+  @apply flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-danger/10 hover:text-danger focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:outline-none motion-reduce:transition-none;
+}
+
+.addButton {
+  @apply inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-primary/50 px-4 py-2 text-sm font-semibold text-link transition-colors hover:border-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none motion-reduce:transition-none dark:text-primary;
+}
+
+.outcome {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap;
+}
+
+/* ---------- Results ---------- */
+
+.result {
+  @apply grid items-center gap-4 rounded-xl bg-gray-50 p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] dark:bg-white/5;
+}
+
+.headline {
+  @apply flex flex-col;
+}
+
+.headlineLabel {
+  @apply text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400;
+}
+
+.headlineValue {
+  @apply bg-linear-to-br from-link to-primary bg-clip-text font-title text-5xl leading-tight font-bold break-words text-transparent dark:from-primary dark:to-secondary;
+
+  /* mana symbols keep their own colors */
+  img {
+    @apply align-middle;
+  }
+}
+
+.headlineCaption {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.verdict {
+  @apply flex items-start gap-3 rounded-xl border-l-4 bg-white p-3 dark:bg-dark;
+}
+
+.verdictIcon {
+  @apply mt-0.5 shrink-0 text-xl;
+}
+
+.verdictTitle {
+  @apply font-bold text-gray-900 dark:text-gray-100;
+}
+
+.verdictDetail {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.stats {
+  @apply grid gap-3;
+
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+}
+
+.stat {
+  @apply rounded-xl border border-gray-200 p-3 dark:border-gray-700;
+}
+
+.statLabel {
+  @apply text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400;
+}
+
+.statValue {
+  @apply mt-0.5 font-title text-xl font-bold;
+}
+
+.statCaption {
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+/* Tones always come with an icon and words, never as color alone */
+.toneGood {
+  @apply border-emerald-500 text-emerald-700 dark:text-emerald-300;
+
+  &.outcome {
+    @apply bg-emerald-100 dark:bg-emerald-900/40;
+  }
+}
+
+.toneBad {
+  @apply border-danger text-danger dark:border-secondary dark:text-secondary;
+
+  &.outcome {
+    @apply bg-red-100 dark:bg-red-900/40;
+  }
+}
+
+.toneWarn {
+  @apply border-amber-500 text-amber-700 dark:text-amber-300;
+
+  &.outcome {
+    @apply bg-amber-100 dark:bg-amber-900/40;
+  }
+}
+
+.toneNeutral {
+  @apply border-gray-400 text-gray-600 dark:text-gray-300;
+
+  &.outcome {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+}
+
+/* ---------- Charts ---------- */
+
+.chart {
+  @apply m-0 flex flex-col gap-2;
+}
+
+.chartTitle {
+  @apply text-left text-sm font-bold;
+}
+
+.chartAxis {
+  @apply text-center text-xs text-gray-500 dark:text-gray-400;
+}
+
+.bars {
+  @apply flex h-44 items-stretch gap-1 sm:gap-1.5;
+}
+
+.bar {
+  @apply flex min-w-0 flex-1 flex-col items-center gap-1 rounded-lg px-0.5 pt-1 pb-0.5;
+}
+
+button.bar {
+  @apply cursor-pointer transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:outline-none motion-reduce:transition-none;
+}
+
+.barSelected {
+  @apply bg-primary/15 ring-2 ring-link dark:ring-primary;
+}
+
+.barValue {
+  @apply max-w-full truncate text-[0.65rem] font-semibold text-gray-600 tabular-nums sm:text-xs dark:text-gray-300;
+}
+
+.barTrack {
+  @apply flex w-full flex-1 items-end;
+}
+
+.barFill {
+  @apply w-full rounded-t-md transition-[height] duration-300 ease-out motion-reduce:transition-none;
+
+  &.toneGood {
+    @apply bg-emerald-500/80;
+  }
+
+  &.toneBad {
+    @apply bg-danger/70 dark:bg-secondary/70;
+  }
+
+  &.toneWarn {
+    @apply bg-amber-400/80;
+  }
+
+  &.toneNeutral {
+    @apply bg-linear-to-t from-link to-primary dark:from-primary dark:to-secondary;
+  }
+}
+
+.barLabel {
+  @apply text-xs font-semibold tabular-nums;
+}
+
+.lineChart {
+  @apply w-full overflow-hidden;
+
+  svg {
+    @apply block;
+  }
+}
+
+.gridLine {
+  @apply stroke-gray-200 dark:stroke-gray-700;
+
+  stroke-width: 1;
+}
+
+.tickLabel {
+  @apply fill-gray-500 text-[11px] tabular-nums dark:fill-gray-400;
+}
+
+.linePath {
+  @apply fill-none stroke-link dark:stroke-primary;
+
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.areaStart {
+  stop-color: var(--color-primary);
+  stop-opacity: 0.35;
+}
+
+.areaEnd {
+  stop-color: var(--color-primary);
+  stop-opacity: 0;
+}
+
+.markLine {
+  stroke: currentcolor;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+.markLabel {
+  @apply text-[11px] font-semibold;
+
+  fill: currentcolor;
+}
+
+.dataTable {
+  @apply w-full text-sm tabular-nums;
+
+  caption {
+    @apply pb-2;
+  }
+
+  th {
+    @apply border-b border-gray-200 px-2 py-1 text-left text-xs font-bold tracking-wide text-gray-500 uppercase dark:border-gray-700 dark:text-gray-400;
+  }
+
+  td {
+    @apply border-b border-gray-100 px-2 py-1.5 dark:border-gray-800;
+  }
+}

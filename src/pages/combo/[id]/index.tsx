@@ -29,6 +29,7 @@ import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
 import { SpoilerContext } from 'lib/spoilers';
 import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
 import ComboMeta from 'components/combo/ComboMeta/ComboMeta';
+import ComboWidget from 'components/combo/ComboWidget/ComboWidget';
 
 interface Props {
   combo?: Variant;
@@ -130,6 +131,8 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               cardsInCombo={combo.uses}
               templatesInCombo={combo.requires}
             />
+
+            <ComboWidget key={combo.id} combo={combo} />
 
             <ComboList
               title="Steps"
