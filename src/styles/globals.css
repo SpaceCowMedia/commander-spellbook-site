@@ -57,6 +57,14 @@ html,
   src: url('../assets/fonts/spellbook-font.ttf');
 }
 
+/* only the figures and the comma, for generic mana amounts */
+@font-face {
+  font-family: 'STIX Two Text';
+  src: url('../assets/fonts/stix-two-text-figures.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+2C, U+30-39;
+}
+
 :target {
   scroll-margin-top: 50px;
 }

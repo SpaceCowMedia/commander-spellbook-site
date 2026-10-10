@@ -20,13 +20,13 @@ Every component has its own folder, named like the component, holding `Component
 
 2. **Anything else goes to `layout` or `ui`,** depending on one question: does it take `children`?
    - `layout` holds components that contain and handle `children`, or other content nodes like the panels of `Tab`: they wrap, arrange, show, hide or animate what they're given. Examples: `PageWrapper`, `Modal`, `Tab`, `Alert`, `PageTurn`.
-   - `ui` holds self-contained pieces of the interface that render everything from their props. Examples: `Icon`, `Loader`, `ProgressBar`, `Footer`.
+   - `ui` holds self-contained pieces of the interface that render everything from their props. Examples: `Icon`, `Loader`, `Stepper`, `DotChart`, `Footer`.
 
-A component never imports another component's stylesheet. When two components need the same look, one of them exposes it through a prop, like `<Loader centered />`.
+A component never imports another component's stylesheet. When two components need the same look, one of them exposes it through a prop, like `<Loader centered />`. Good, bad, risky and neutral results share their colors through `components/ui/tones`: a tone's class only sets `--tone…` variables, which each component paints its own parts with, and every tone comes with an icon and a word so that color is never the only cue.
 
 ## Logic
 
-Code without JSX lives in `src/lib`, which mirrors the component areas (`lib/card`, `lib/combo`, `lib/salt`…). Helpers that every area uses are grouped by what they do: `lib/http`, `lib/react` and `lib/text`. Site-wide modules like `viewTransitions` stay at the root of `lib`. Calls to external services live in `src/services`.
+Code without JSX lives in `src/lib`, which mirrors the component areas (`lib/card`, `lib/combo`, `lib/salt`…). Helpers that every area uses are grouped by what they do: `lib/charts`, `lib/http`, `lib/react` and `lib/text`. Site-wide modules like `viewTransitions` stay at the root of `lib`. Calls to external services live in `src/services`.
 
 ## Imports
 

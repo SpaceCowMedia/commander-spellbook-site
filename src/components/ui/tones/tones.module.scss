@@ -1,0 +1,66 @@
+@reference "../../../styles/globals.css";
+
+/* The site's dark variant, spelled out: Sass would move a nested @variant out of its rule. */
+@mixin dark {
+  &:where([class~='dark'], [class~='dark'] *) {
+    @content;
+  }
+}
+
+/* A tone class only sets what components paint with: --tone for rails, marks and meters, --tone-fill
+   for bars, --tone-text for words, --tone-soft for backgrounds, and --tone-pattern so that
+   no tone relies on color alone. */
+
+.good {
+  --tone: --theme(--color-emerald-500);
+  --tone-fill: linear-gradient(to top, --theme(--color-emerald-600), --theme(--color-emerald-400));
+  --tone-text: --theme(--color-emerald-700);
+  --tone-soft: color-mix(in oklab, --theme(--color-emerald-500) 14%, transparent);
+  --tone-pattern: none;
+
+  @include dark {
+    --tone-text: --theme(--color-emerald-300);
+    --tone-soft: color-mix(in oklab, --theme(--color-emerald-500) 22%, transparent);
+  }
+}
+
+.bad {
+  --tone: --theme(--color-danger);
+  --tone-fill: linear-gradient(to top, --theme(--color-danger), --theme(--color-secondary));
+  --tone-text: --theme(--color-danger);
+  --tone-soft: color-mix(in oklab, --theme(--color-danger) 12%, transparent);
+  --tone-pattern: repeating-linear-gradient(-45deg, transparent 0 5px, rgb(255 255 255 / 45%) 5px 8px);
+
+  @include dark {
+    --tone: --theme(--color-secondary);
+    --tone-text: --theme(--color-secondary);
+    --tone-soft: color-mix(in oklab, --theme(--color-secondary) 18%, transparent);
+  }
+}
+
+.warn {
+  --tone: --theme(--color-amber-500);
+  --tone-fill: linear-gradient(to top, --theme(--color-amber-500), --theme(--color-amber-300));
+  --tone-text: --theme(--color-amber-700);
+  --tone-soft: color-mix(in oklab, --theme(--color-amber-400) 20%, transparent);
+  --tone-pattern: radial-gradient(circle, rgb(255 255 255 / 55%) 1.5px, transparent 2px) 0 0 / 7px 7px;
+
+  @include dark {
+    --tone-text: --theme(--color-amber-300);
+    --tone-soft: color-mix(in oklab, --theme(--color-amber-400) 22%, transparent);
+  }
+}
+
+.neutral {
+  --tone: --theme(--color-link);
+  --tone-fill: linear-gradient(to top, --theme(--color-primary), --theme(--color-secondary));
+  --tone-text: --theme(--color-gray-600);
+  --tone-soft: --theme(--color-gray-100);
+  --tone-pattern: none;
+
+  @include dark {
+    --tone: --theme(--color-primary);
+    --tone-text: --theme(--color-gray-300);
+    --tone-soft: --theme(--color-gray-800);
+  }
+}
