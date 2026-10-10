@@ -2,27 +2,27 @@ import styles from './comboVariantGroup.module.scss';
 import pluralize from 'pluralize';
 import React, { useContext, useId, useMemo, useState } from 'react';
 import { ColorEnum, Deck, Variant } from '@space-cow-media/spellbook-client';
-import ColorIdentity from 'components/layout/ColorIdentity/ColorIdentity';
-import CardTooltip from 'components/layout/CardTooltip/CardTooltip';
-import TemplateTooltip from 'components/layout/TemplateTooltip/TemplateTooltip';
-import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
-import CardName from 'components/layout/CardName/CardName';
-import Icon from 'components/layout/Icon/Icon';
-import Modal, { ModalDepthContext } from 'components/ui/Modal/Modal';
-import ComboResultFrame from '../ComboResultFrame/ComboResultFrame';
-import ComboResults from '../ComboResults/ComboResults';
-import VariantTransition, { GatheredVariants } from '../VariantTransition/VariantTransition';
-import VariantGroupingSwitch from '../VariantGroupingSwitch/VariantGroupingSwitch';
+import ColorIdentity from 'components/symbols/ColorIdentity/ColorIdentity';
+import CardTooltip from 'components/card/CardTooltip/CardTooltip';
+import TemplateTooltip from 'components/card/TemplateTooltip/TemplateTooltip';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
+import CardName from 'components/card/CardName/CardName';
+import Icon from 'components/ui/Icon/Icon';
+import Modal, { ModalDepthContext } from 'components/layout/Modal/Modal';
+import ComboResultFrame from 'components/search/ComboResultFrame/ComboResultFrame';
+import ComboResults from 'components/search/ComboResults/ComboResults';
+import VariantTransition, { GatheredVariants } from 'components/search/VariantTransition/VariantTransition';
+import VariantGroupingSwitch from 'components/search/VariantGroupingSwitch/VariantGroupingSwitch';
 import MissingCardClusters, {
   groupByMissingCard,
-} from 'components/FindMyCombos/MissingCardClusters/MissingCardClusters';
-import useVariantGrouping from 'lib/useVariantGrouping';
+} from 'components/findMyCombos/MissingCardClusters/MissingCardClusters';
+import useVariantGrouping from 'lib/search/useVariantGrouping';
 import { MODAL_REGROUP } from 'lib/viewTransitions';
-import { ComboPiece, ReplaceablePiece, VariantCategory, variantReplacements } from 'lib/variantGroups';
-import { getTemplateNameSummary } from 'lib/types';
+import { ComboPiece, ReplaceablePiece, VariantCategory, variantReplacements } from 'lib/search/variantGroups';
+import { getTemplateNameSummary } from 'lib/card/faces';
 import { DEFAULT_SORT, IS_LOCK } from 'lib/constants';
-import cn from 'lib/cn';
-import countDeckCards, { isMissingFromDeck } from 'lib/countDeckCards';
+import classNames from 'lib/react/classNames';
+import countDeckCards, { isMissingFromDeck } from 'lib/findMyCombos/countDeckCards';
 
 interface Props {
   variants: Variant[];
@@ -91,7 +91,7 @@ const Piece: React.FC<{ piece: ComboPiece; decklist?: Map<string, number> }> = (
   const { template, quantity } = piece.template;
   return (
     <TemplateTooltip template={piece.template} caption="Open the combo to see all possible replacements">
-      <span className={cn(styles.piece, styles.muted)}>
+      <span className={classNames(styles.piece, styles.muted)}>
         + {quantity > 1 ? `${quantity}x ` : ''}
         <TextWithMagicSymbol text={getTemplateNameSummary(template.name) ?? template.name} />
       </span>
@@ -204,7 +204,7 @@ const ComboVariantGroup: React.FC<Props> = ({ variants, categories, deck, viewTr
                 <span className="sr-only">Cards in the most popular variant, each followed by its replacements:</span>
                 {replaceablePieces.map(({ piece, replacements }) => (
                   <div key={piece.key}>
-                    <div className={cn(styles.stop, styles.mostPopular)}>
+                    <div className={classNames(styles.stop, styles.mostPopular)}>
                       <Piece piece={piece} decklist={decklist} />
                     </div>
                     {replacements.length > 0 && (
@@ -234,7 +234,7 @@ const ComboVariantGroup: React.FC<Props> = ({ variants, categories, deck, viewTr
                   </div>
                 ))}
                 {otherResultCount > 0 && (
-                  <div className={cn('pl-3 pr-3', styles.muted)}>
+                  <div className={classNames('pl-3 pr-3', styles.muted)}>
                     {results.length
                       ? `+${otherResultCount} more ${pluralize('result', otherResultCount)} in some variants`
                       : `${otherResultCount} ${pluralize('result', otherResultCount)}, depending on the variant`}

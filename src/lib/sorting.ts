@@ -1,4 +1,4 @@
-import { Option } from 'components/layout/StyledSelect/StyledSelect';
+import { Option } from 'components/ui/StyledSelect/StyledSelect';
 import { DEFAULT_ORDERING } from './constants';
 
 export const SORT_OPTIONS: Option[] = [

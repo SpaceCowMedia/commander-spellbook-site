@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { Image, loadImage } from 'canvas';
-import serverPath from './serverPath';
+import serverPath from './http/serverPath';
 
 // Width and height are mandatory for the svg to be displayed correctly from canvas 3.0.0,
 // but Scryfall's symbols only have a 100x100 viewBox

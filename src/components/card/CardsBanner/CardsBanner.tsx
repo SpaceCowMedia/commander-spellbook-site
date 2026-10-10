@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardInVariant } from '@space-cow-media/spellbook-client';
-import { getUsedFaceArtCrop } from 'lib/types';
+import { getUsedFaceArtCrop } from 'lib/card/faces';
 import styles from './cardsBanner.module.scss';
 
 interface Props {

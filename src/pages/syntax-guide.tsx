@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './syntax-guide.module.scss';
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
 import Link from 'next/link';
-import SearchGuide from '../components/layout/SearchGuide/SearchGuide';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import SyntaxMarkdown from '../components/layout/SyntaxMarkdown/SyntaxMarkdown';
-import Icon, { SpellbookIcon } from '../components/layout/Icon/Icon';
+import SearchGuide from 'components/search/SearchGuide/SearchGuide';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import SyntaxMarkdown from 'components/search/SyntaxMarkdown/SyntaxMarkdown';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 import { BracketTagEnum } from '@space-cow-media/spellbook-client';
 
 interface SectionType {
@@ -1359,7 +1359,7 @@ const SyntaxGuide: React.FC = () => {
             <SyntaxMarkdown>{INTRODUCTION}</SyntaxMarkdown>
           </div>
         </div>
-        <div className={styles.searchGuideContainer}>
+        <div>
           <SearchGuide headingCardName="Peek" snippets={DATA.cardSnippets} heading="Cards" icon="signature">
             <SyntaxMarkdown>{CARDS_DESCRIPTION}</SyntaxMarkdown>
           </SearchGuide>

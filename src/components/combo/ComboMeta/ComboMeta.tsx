@@ -2,15 +2,15 @@ import React, { CSSProperties, useState } from 'react';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { SaltVote, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
-import Icon, { SpellbookIcon } from 'components/layout/Icon/Icon';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import SaltMeter from 'components/salt/SaltMeter/SaltMeter';
 import SaltVoteControl from 'components/salt/SaltVoteControl/SaltVoteControl';
-import ComboBracket from 'components/combo/ComboBracket/ComboBracket';
+import ComboBracket from 'components/bracket/ComboBracket/ComboBracket';
 import EDHRECService from 'services/edhrec.service';
 import { IS_LOCK } from 'lib/constants';
-import { formatSalt, liveSaltStats, MAX_SALT, SaltStats, saltTier } from 'lib/salt';
-import cn from 'lib/cn';
+import { formatSalt, liveSaltStats, MAX_SALT, SaltStats, saltTier } from 'lib/salt/salt';
+import classNames from 'lib/react/classNames';
 import styles from './comboMeta.module.scss';
 
 interface Props {
@@ -94,7 +94,7 @@ const ComboMeta: React.FC<Props> = ({ combo }) => {
       {badges.length > 0 && (
         <ul className={styles.badges}>
           {badges.map((badge) => (
-            <li key={badge.label} className={cn('status-badge', badge.className)} title={badge.description}>
+            <li key={badge.label} className={classNames('status-badge', badge.className)} title={badge.description}>
               <Icon name={badge.icon} /> {badge.label}
             </li>
           ))}

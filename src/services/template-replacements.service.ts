@@ -1,5 +1,5 @@
 import { CardDetail, CardsApi, Template } from '@space-cow-media/spellbook-client';
-import { ReplacementCard, ReplacementsPage } from 'lib/types';
+import { ReplacementCard, ReplacementsPage } from 'lib/card/replacements';
 import { apiConfiguration } from './api.service';
 import { scryfallQueryReplacements } from './scryfall.service';
 

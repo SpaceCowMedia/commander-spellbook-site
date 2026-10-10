@@ -1,12 +1,12 @@
 import styles from './comboResults.module.scss';
-import ComboResult from '../ComboResult/ComboResult';
-import ComboVariantGroup from '../ComboVariantGroup/ComboVariantGroup';
+import ComboResult from 'components/search/ComboResult/ComboResult';
+import ComboVariantGroup from 'components/search/ComboVariantGroup/ComboVariantGroup';
 import { ClassifiedVariant, Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { useId, useMemo, useState } from 'react';
-import PagedResults from '../PagedResults/PagedResults';
+import PagedResults from 'components/search/PagedResults/PagedResults';
 import { turnOwnPage } from 'lib/viewTransitions';
-import countDeckCards from 'lib/countDeckCards';
-import { groupVariantsByCombo, isOfCombo, VariantCategory, VariantGroup } from 'lib/variantGroups';
+import countDeckCards from 'lib/findMyCombos/countDeckCards';
+import { groupVariantsByCombo, isOfCombo, VariantCategory, VariantGroup } from 'lib/search/variantGroups';
 
 interface Props {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck

@@ -1,8 +1,8 @@
 import React, { CSSProperties, useRef } from 'react';
 import styles from './saltSlider.module.scss';
-import { MAX_SALT, SALT_LEVELS, saltTier } from 'lib/salt';
-import Icon from 'components/layout/Icon/Icon';
-import cn from 'lib/cn';
+import { MAX_SALT, SALT_LEVELS, saltTier } from 'lib/salt/salt';
+import Icon from 'components/ui/Icon/Icon';
+import classNames from 'lib/react/classNames';
 
 interface Props {
   id: string;
@@ -42,7 +42,7 @@ const SaltSlider: React.FC<Props> = ({ id, label, value, onChange, onConfirm, di
 
   return (
     <div
-      className={cn(styles.slider, value === null && styles.unset, disabled && styles.disabled)}
+      className={classNames(styles.slider, value === null && styles.unset, disabled && styles.disabled)}
       style={{ '--value': position } as CSSProperties}
     >
       <div className={styles.readout} aria-hidden="true">
@@ -101,7 +101,7 @@ const SaltSlider: React.FC<Props> = ({ id, label, value, onChange, onConfirm, di
             tabIndex={-1}
             data-salt-tick={score}
             title={`${score} · ${level}`}
-            className={cn(styles.tick, value === score && styles.picked)}
+            className={classNames(styles.tick, value === score && styles.picked)}
             style={{ '--stop': score } as CSSProperties}
             disabled={disabled}
             onMouseDown={(event) => event.preventDefault()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComboSubmissionErrorType, ErrorDetail } from '../../../lib/types';
+import { ComboSubmissionErrorType, ErrorDetail } from 'lib/submission/submissions';
 
 interface Props {
   list?: ErrorDetail;

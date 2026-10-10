@@ -3,7 +3,7 @@ import BulkApiService from 'services/bulk-api.service';
 import { absoluteUrl } from 'lib/seo';
 import { cardPath } from 'lib/cards';
 import { pagedSitemap, sendXml } from 'lib/sitemap';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 
 const STATIC_PATHS = ['/', '/find-my-combos/', '/advanced-search/', '/syntax-guide/', '/about/'];
 

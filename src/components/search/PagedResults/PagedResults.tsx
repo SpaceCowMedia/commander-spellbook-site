@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
-import SearchPagination from '../SearchPagination/SearchPagination';
-import SearchOptions, { SearchOptionsProps } from '../SearchOptions/SearchOptions';
+import SearchPagination from 'components/search/SearchPagination/SearchPagination';
+import SearchOptions, { SearchOptionsProps } from 'components/search/SearchOptions/SearchOptions';
 
 interface Props {
   id: string;

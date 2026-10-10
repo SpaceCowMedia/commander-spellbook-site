@@ -1,9 +1,9 @@
 import React from 'react';
-import Footer from '../Footer/Footer';
-import SearchBar from '../../SearchBar/SearchBar';
+import Footer from 'components/ui/Footer/Footer';
+import SearchBar from 'components/search/SearchBar/SearchBar';
 import styles from './pageWrapper.module.scss';
-import AnalyticsCookieBanner from '../AnalyticsCookieBanner/AnalyticsCookieBanner';
-import PageTransition from '../PageTransition/PageTransition';
+import AnalyticsCookieBanner from 'components/ui/AnalyticsCookieBanner/AnalyticsCookieBanner';
+import PageTransition from 'components/layout/PageTransition/PageTransition';
 import { useRouter } from 'next/router';
 
 interface Props {

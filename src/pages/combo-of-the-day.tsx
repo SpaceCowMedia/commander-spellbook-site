@@ -1,8 +1,8 @@
 import React from 'react';
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import Link from 'next/link';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi, ResponseError } from '@space-cow-media/spellbook-client';
 
