@@ -54,6 +54,7 @@ import {
   faTag,
   faBan,
   faWandMagicSparkles,
+  faRotateLeft,
   faRotateRight,
   faExplosion,
   faBrain,
@@ -65,6 +66,7 @@ import {
   faWindowMaximize,
   faWindowRestore,
   faAddressBook,
+  faDice,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSaltShaker from './saltShaker';
@@ -138,6 +140,7 @@ const SPELLBOOK_FA_ICONS = {
   salt: faSaltShaker,
   ban: faBan,
   wandSparkles: faWandMagicSparkles,
+  rotateLeft: faRotateLeft,
   rotateRight: faRotateRight,
   explosion: faExplosion,
   brain: faBrain,
@@ -149,6 +152,7 @@ const SPELLBOOK_FA_ICONS = {
   windowMaximize: faWindowMaximize,
   windowRestore: faWindowRestore,
   addressBook: faAddressBook,
+  dice: faDice,
 };
 
 /* a square narrowed into the portrait shape of a Magic card */

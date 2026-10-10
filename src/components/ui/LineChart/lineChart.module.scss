@@ -1,0 +1,72 @@
+@reference "../../../styles/globals.css";
+
+.plot {
+  @apply w-full;
+}
+
+.svg {
+  @apply block h-auto w-full overflow-visible;
+}
+
+.grid {
+  @apply stroke-gray-200 dark:stroke-white/10;
+
+  stroke-width: 1;
+}
+
+.tick {
+  @apply fill-gray-500 text-[11px] tabular-nums dark:fill-gray-400;
+}
+
+.area {
+  @apply fill-primary/20;
+
+  animation: fade-in 1.2s ease-out both;
+
+  @apply motion-reduce:animate-none;
+}
+
+/* drawn from left to right as the chart appears */
+.line {
+  @apply fill-none stroke-link dark:stroke-primary;
+
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  animation: draw-in 1s ease-out both;
+
+  @apply motion-reduce:animate-none;
+}
+
+.mark {
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+/* with a halo, so it stays readable where the curve crosses it */
+.markLabel {
+  @apply stroke-white text-[11px] font-semibold dark:stroke-black;
+
+  fill: var(--tone-text);
+  paint-order: stroke;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}

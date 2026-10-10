@@ -1,0 +1,206 @@
+@reference "../../../styles/globals.css";
+
+/* the scale, then the dots, with room on the right for the arrow past the last one */
+.plot {
+  @apply grid gap-x-2 pr-5;
+
+  grid-template-columns: auto minmax(0, 1fr);
+
+  /* room above the dots for the picked one's value, and how high they can go */
+  --headroom: 1.75rem;
+  --plot: 9rem;
+}
+
+.scale {
+  @apply relative mt-(--headroom) h-(--plot) text-right text-[0.65rem] text-gray-500 tabular-nums dark:text-gray-400;
+}
+
+/* the longest label, invisible, so the scale is as wide as it */
+.widest {
+  @apply invisible block h-0 overflow-hidden;
+}
+
+.scaleTick {
+  @apply absolute right-0 translate-y-1/2 leading-none;
+
+  bottom: var(--at);
+}
+
+/* columns paint their bands below the lines, and dots and tooltips above them */
+.frame {
+  @apply relative isolate;
+}
+
+.grid,
+.lines {
+  @apply pointer-events-none absolute inset-x-0 top-(--headroom) h-(--plot);
+}
+
+.gridLine {
+  @apply absolute inset-x-0 border-t border-gray-200 dark:border-white/10;
+
+  bottom: var(--at);
+}
+
+.baseline {
+  @apply border-gray-300 dark:border-white/25;
+}
+
+.lines {
+  @apply w-full overflow-visible;
+}
+
+.area {
+  @apply fill-primary/15 dark:fill-primary/10;
+}
+
+.line,
+.beyond {
+  @apply fill-none stroke-link dark:stroke-primary;
+
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* where the line heads past the dots shown */
+.beyond {
+  stroke-dasharray: 2 4;
+}
+
+.columns {
+  @apply m-0 flex list-none p-0;
+}
+
+.column {
+  @apply flex min-w-0 flex-1 flex-col gap-1.5 rounded-md pb-1 transition-colors hover:bg-primary/5 motion-reduce:transition-none dark:hover:bg-primary/10;
+}
+
+.pickable {
+  @apply cursor-pointer;
+}
+
+.column:has(.radio:focus-visible) {
+  @apply ring-2 ring-link ring-inset dark:ring-primary;
+}
+
+.radio {
+  @apply sr-only;
+}
+
+.selected {
+  @apply bg-primary/10 hover:bg-primary/10 dark:bg-primary/15 dark:hover:bg-primary/15;
+}
+
+.cell {
+  @apply relative mt-(--headroom) h-(--plot);
+}
+
+/* filled, hollow when it's bad and a diamond when it's risky, so tone isn't color alone */
+.dot {
+  @apply absolute left-1/2 aspect-square w-[min(0.625rem,55%)] -translate-x-1/2 translate-y-1/2 rounded-full bg-(--tone) ring-2 ring-(--page-background) transition-[scale] motion-reduce:transition-none;
+
+  bottom: var(--at);
+
+  [data-tone='bad'] & {
+    @apply border-2 border-(--tone) bg-(--page-background);
+  }
+
+  [data-tone='warn'] & {
+    @apply rotate-45 rounded-[2px];
+  }
+
+  .column:hover & {
+    @apply scale-125;
+  }
+
+  .selected & {
+    @apply w-[min(0.875rem,70%)] outline-2 outline-offset-2 outline-(--tone);
+  }
+}
+
+.value {
+  @apply absolute left-1/2 -translate-x-1/2 rounded bg-(--page-background) px-1 text-[0.7rem] leading-tight font-bold whitespace-nowrap text-gray-900 tabular-nums dark:text-white;
+
+  bottom: calc(var(--at) + 0.75rem);
+
+  .column:hover &,
+  .column:has(.radio:focus-visible) & {
+    @apply invisible;
+  }
+}
+
+.tip {
+  @apply pointer-events-none invisible absolute z-10 w-max max-w-56 rounded-md bg-white px-2 py-1 text-xs font-normal text-gray-900 opacity-0 shadow-md ring-1 ring-gray-200 transition-[opacity,visibility] motion-reduce:transition-none dark:bg-gray-900 dark:text-white dark:ring-white/15;
+
+  bottom: calc(var(--at) + 1.125rem);
+
+  .column:hover &,
+  .column:has(.radio:focus-visible) & {
+    @apply visible opacity-100;
+  }
+}
+
+.below {
+  @apply bottom-auto;
+
+  top: calc(100% - var(--at) + 1.125rem);
+}
+
+.start {
+  @apply left-0;
+}
+
+.middle {
+  @apply left-1/2 -translate-x-1/2;
+}
+
+.end {
+  @apply right-0;
+}
+
+/* Columns too narrow for their ticks keep every other one, and long ticks turn upright. */
+.tickBox {
+  @apply flex justify-center;
+
+  container-type: inline-size;
+}
+
+.tick {
+  @apply text-xs text-gray-600 tabular-nums dark:text-gray-300;
+
+  .selected & {
+    @apply font-bold text-gray-900 dark:text-white;
+  }
+
+  @container (max-width: 1.25rem) {
+    .column:nth-child(odd):not(.selected) & {
+      visibility: hidden;
+    }
+  }
+
+  .longTicks & {
+    @container (max-width: 3.5rem) {
+      writing-mode: vertical-rl;
+      rotate: 180deg;
+    }
+  }
+}
+
+/* level with the ticks, just outside the columns */
+.more {
+  @apply absolute bottom-0 flex h-6 w-5 items-center justify-center border-0 bg-transparent p-0 text-xs text-gray-500 dark:text-gray-400;
+}
+
+button.more {
+  @apply cursor-pointer hover:text-link dark:hover:text-primary;
+}
+
+.before {
+  @apply left-0 -translate-x-full;
+}
+
+.after {
+  @apply right-0 translate-x-full;
+}

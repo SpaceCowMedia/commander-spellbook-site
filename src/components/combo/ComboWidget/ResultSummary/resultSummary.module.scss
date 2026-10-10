@@ -1,0 +1,72 @@
+@reference "../../../../styles/globals.css";
+
+.summary {
+  @apply relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5 dark:border-primary/25 dark:bg-primary/10;
+
+  container-type: inline-size;
+}
+
+.answer {
+  @apply grid items-center gap-4;
+
+  @container (min-width: 30rem) {
+    &:has(.verdict) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    }
+  }
+}
+
+.headline {
+  @apply flex min-w-0 flex-col;
+
+  container-type: inline-size;
+}
+
+.label {
+  @apply text-xs font-bold tracking-wide text-gray-600 uppercase dark:text-gray-300;
+}
+
+/* sized by its column and the length of the answer, so 1.23 × 10⁴⁵⁶⁷ fits on a phone */
+.value {
+  @apply inline-block self-start py-1 font-title leading-none font-bold [overflow-wrap:anywhere] text-link dark:text-primary;
+
+  font-size: clamp(1.75rem, calc(160cqi / var(--characters)), 3.5rem);
+  animation: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+
+  @apply motion-reduce:animate-none;
+}
+
+.mana {
+  @apply text-4xl text-gray-900 dark:text-gray-100;
+}
+
+.caption {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.verdict {
+  @apply flex items-start gap-3 rounded-xl border-l-4 bg-white/80 p-3 shadow-xs dark:bg-black/40;
+
+  border-left-color: var(--tone);
+}
+
+.verdictIcon {
+  @apply mt-0.5 shrink-0 text-xl;
+
+  color: var(--tone-text);
+}
+
+.verdictTitle {
+  @apply block font-bold text-gray-900 dark:text-gray-100;
+}
+
+.verdictDetail {
+  @apply block text-sm text-gray-600 dark:text-gray-300;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0.35;
+    transform: translateY(0.15em) scale(0.9);
+  }
+}
