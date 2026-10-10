@@ -1,0 +1,17 @@
+@reference "../../../styles/globals.css";
+
+.amount {
+  @apply inline-flex flex-wrap items-center gap-x-[0.12em] gap-y-1 align-middle;
+}
+
+img.symbol {
+  @apply inline-block h-[1em] w-auto;
+}
+
+.run {
+  @apply inline-flex items-center gap-[0.25em] whitespace-nowrap;
+}
+
+.times {
+  @apply text-[0.8em] font-semibold;
+}

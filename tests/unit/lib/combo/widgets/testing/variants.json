@@ -1,0 +1,563 @@
+{
+  "1164-2173-4740-6123": {
+    "uses": ["Mirror of Fate", "Aetherflux Reservoir", "Bolas's Citadel", "Necrodominance"],
+    "easyPrerequisites": "Your life total is 16 or higher.",
+    "notes": "You can cast the other spells you exile with Mirror of Fate each loop if your life total allows. You can also start with less life if you've cast spells during the turn prior to starting the combo. Another option is to place small mana value spells on top of Mirror of Fate and cast them to increase your storm count so Aetherflux Reservoir will give you more life faster.",
+    "description": "Activate Mirror of Fate by tapping it and exiling it due to Necrodominance, choosing Mirror of Fate and up to six other cards from exile, then exiling your library and putting the chosen cards on top of your library, ensuring to place Mirror of Fate on top of your library.\nCast Mirror of Fate from the top of your library by paying 5 life due to Bolas's Citadel.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat."
+  },
+  "2790-4836-5361": {
+    "uses": ["Angel of Destiny", "The Master, Multiplied", "Auton Soldier"],
+    "easyPrerequisites": "Your life total is equal to or greater than 55 minus 4 for each opponent you have.\nAuton Soldier is a copy of Angel of Destiny and does not have summoning sickness.",
+    "notablePrerequisites": "Opponents cannot block creatures you control.",
+    "description": "Declare Auton Soldier as an attacker. Its myriad ability triggers, creating a tapped and attacking copy of Auton Soldier, which is a copy of Angel of Destiny, attacking each other opponent.\nDeal combat damage with Auton Soldier, causing each Auton Soldier to trigger, causing you to gain 4 life for each Auton Soldier and causing each opponent to gain 4 life.\nMove to your end step. The Auton Soldier tokens won't be exiled due to The Master.\nAt the beginning of your end step, each Auton Soldier triggers, causing each opponent they dealt combat damage to to lose the game."
+  },
+  "1870-3609-4153": {
+    "uses": ["Eternity Vessel", "Magistrate's Scepter", "Resourceful Defense"],
+    "manaNeeded": "{6}",
+    "notablePrerequisites": "You have a way to put an artifact into your graveyard from the battlefield.",
+    "notes": "The total number of turns you will get is equal to: (your life total + the number of charge counters on Magistrate's Scepter)/3, rounded down.",
+    "description": "Cast Eternity Vessel by paying {6}. It will enter with a number of charge counters on it equal to your life total.\nCause Eternity Vessel to leave the battlefield. When it does, Resourceful Defense triggers, putting a number of charge counters on Magistrate's Scepter equal to the number Eternity Vessel had on it.\nActivate Magistrate's Scepter's second ability by tapping it and removing three charge counters from it, causing you to take an extra turn after this one.\nRepeat step 3 as able each turn."
+  },
+  "4050-4740-7498-7541": {
+    "uses": ["Grave Researcher // Reanimate", "Biblioplex Tomekeeper", "Aetherflux Reservoir", "Phyrexian Altar"],
+    "easyPrerequisites": "You have at least 7 life.\nGrave Researcher is prepared.",
+    "notes": "The minimum life you need to start this combo is reduced depending on how many spells you have cast this turn.",
+    "description": "Activate Phyrexian Altar by sacrificing Biblioplex Tomekeeper, adding {B}.\nCast the copy of Reanimate from exile by paying {B}.\nAetherflux Reservoir triggers, gaining 1 life for each spell you've cast this turn.\nResolve Reanimate, returning Biblioplex Tomekeeper from your graveyard to the battlefield and losing 4 life.\nWhen Biblioplex Tomekeeper enters, it triggers, preparing Grave Researcher.\nRepeat any number of times.\nOnce you have infinite life, you may activate Aetherflux Reservoir's last ability any number of times, dealing infinite damage."
+  },
+  "851-4365-7858": {
+    "uses": ["Hollowhenge Overlord", "Adrix and Nev, Twincasters", "Mondrak, Glory Dominus"],
+    "notes": "The number of Wolves and/or Werewolves you'll control after performing steps 1 and 2 is equal to 5^X * Y, where X is the number of iterations of those steps you've performed (starting at 1), and Y is the initial number of Wolves and/or Werewolves you started with. So if you start with 6 creatures, you'll have 30 after the first iteration, 150 after the second, and so on. This also assumes no Wolves and/or Werewolves die, and no more are created during the turns.",
+    "description": "At the beginning of your upkeep, Hollowhenge Overlord triggers, creating four 2/2 Wolf creature tokens for each Wolf and/or Werewolf you control due to Adrix and Nev and Mondrak.\nRepeat step 1 during each of your upkeeps. You'll create exponentially more Wolves each time assuming the Wolf tokens survive."
+  },
+  "1698-3260-3540-7753": {
+    "uses": ["K'rrik, Son of Yawgmoth", "Pontiff of Blight", "Mourning", "Valeria Richards, Precocious"],
+    "manaNeeded": "{B/P} plus either {W/B} or {B/P}",
+    "notablePrerequisites": "You control at least four creatures.\nYou have at least three opponents.",
+    "notes": "Once you have two or less opponents, the combo no longer makes enough life to continue. You may repeat the loop using your own resources as desired.",
+    "description": "Cast Mourning by paying 2 life if able, or {B} otherwise.\nEach creature you control's extort ability triggers.\nResolve the first extort trigger, causing you to pay 2 life if able, or {W/B} otherwise, causing each opponent to lose 1 life and you to gain that much life.\nRepeat step 3 for each remaining extort trigger.\nResolve Mourning, attaching it to a creature you control.\nActivate Mourning by paying 2 life, returning it from the battlefield to your hand.\nRepeat until an opponent loses the game due to having 0 or less life."
+  },
+  "328-3260-4078-6798": {
+    "uses": [
+      "Chainer, Dementia Master",
+      "K'rrik, Son of Yawgmoth",
+      "Gray Merchant of Asphodel",
+      "Umbral Collar Zealot"
+    ],
+    "easyPrerequisites": "Your life total is 10 or greater.\nYou have at least two opponents, or your devotion to black is at least ten.",
+    "notes": "The additional gained life can be used by Chainer to return all creature cards from all graveyards to the battlefield under your control.",
+    "description": "Activate Umbral Collar Zealot by sacrificing Gray Merchant.\nActivate Chainer by paying 9 life due to K'rrik, returning Gray Merchant from your graveyard to the battlefield as a Nightmare in addition to its other creature types.\nWhen Gray Merchant enters, it triggers, causing each opponent to lose life equal to your devotion to black and causing you to gain that much life.\nRepeat."
+  },
+  "3209-4740-7439": {
+    "uses": ["Yavimaya Bloomsage // Channel", "Aetherflux Reservoir", "Sprout Swarm"],
+    "manaNeeded": "{G}{G} plus an additional {G} if you don't control an untapped green creature",
+    "easyPrerequisites": "Your life total is at least 11.",
+    "notes": "The life requirement can be lowered if you've cast spells beforehand this turn and/or if you supply additional mana. After the first loop, you'll want to tap the Saproling to reduce Sprout Swarm's cost by {G} via its convoke ability.",
+    "description": "Cast a copy of Channel by paying {G}{G}.\nActivate the ability granted by Channel four times by paying 4 life, adding {C}{C}{C}{C}.\nCast Sprout Swarm with buyback by paying {4} and either tapping a green creature if you're able or paying an additional {G}.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nResolve Sprout Swarm, creating a 1/1 Saproling creature token and returning Sprout Swarm to your hand.\nRepeat from step 2."
+  },
+  "2676-6785": {
+    "uses": ["Scourge of Valkas", "Devastating Onslaught"],
+    "manaNeeded": "{10}{R}",
+    "notes": "You can cast Devastating Onslaught for any desired amount of mana, meaning {10}{R} for the cost is simply a recommendation and should be tailored based on your needs at the time. You can also deal more damage if you control other Dragon(s).",
+    "description": "Cast Devastating Onslaught by paying {10}{R}, creating five token copies of Scourge of Valkas.\nThe five Scourge of Valkas tokens enter the battlefield, triggering each Scourge of Valkas five times.\nResolve all Scourge of Valkas triggers, dealing at least 180 damage divided among a maximum of 30 targets."
+  },
+  "2292-4740-5220-6900": {
+    "uses": ["Mortuary", "Viscera Seer", "Aetherflux Reservoir", "Gwenom, Remorseless"],
+    "easyPrerequisites": "Your life total is at least 2.",
+    "notablePrerequisites": "Gwenom has attacked this turn.",
+    "description": "Activate Viscera Seer by sacrificing it.\nWhen Viscera Seer dies, Mortuary triggers, putting Viscera Seer from your graveyard onto the top of your library.\nResolve the Viscera Seer ability.\nCast Viscera Seer from the top of your library by paying 1 life.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat."
+  },
+  "4050-4740-6742": {
+    "uses": ["Timeline Culler", "Aetherflux Reservoir", "Phyrexian Altar"],
+    "manaNeeded": "{B}{B} at most",
+    "easyPrerequisites": "Your life total is 2 or higher, plus an additional 2 life if you cast Timeline Culler using its warp ability.",
+    "notes": "The amount of life and mana you need to start the combo varies based on how many spells you've cast this turn and where Timeline Culler starts. The life pre-requisite assumes you've cast no spells this turn. If you start by casting Timeline Culler using its warp ability, the starting mana will be {B} instead. Once you have infinite life, you can activate Aetherflux Reservoir to deal damage.",
+    "description": "Cast Timeline Culler from your hand by paying {B}{B} or from your graveyard or hand for its warp cost by paying {B} and 2 life.\nAetherflux Reservoir, causing you to gain 1 life for each spell you've cast this turn.\nActivate Phyrexian Altar by sacrificing Timeline Culler, adding {B}.\nRepeat."
+  },
+  "4740-5670-6742": {
+    "uses": ["Timeline Culler", "Aetherflux Reservoir", "Warren Soultrader"],
+    "manaNeeded": "{B}{B} at most",
+    "easyPrerequisites": "Your life total is 4 or higher, plus an additional 2 life if you cast Timeline Culler using its warp ability.",
+    "notes": "The amount of life and mana you need to start the combo varies based on how many spells you've cast this turn and where Timeline Culler starts. The life pre-requisite assumes you've cast no spells this turn. If you start by casting Timeline Culler using its warp ability, the starting mana will be {B} instead. Once you have infinite life, you can activate Aetherflux Reservoir to deal damage.",
+    "description": "Cast Timeline Culler from your hand by paying {B}{B} or from your graveyard or hand for its warp cost by paying {B} and 2 life.\nAetherflux Reservoir, causing you to gain 1 life for each spell you've cast this turn.\nActivate Warren Soultrader by paying 1 life and sacrificing Timeline Culler, creating a Treasure token.\nActivate the Treasure by tapping and sacrificing it, adding {B}.\nRepeat."
+  },
+  "3858-6864": {
+    "uses": ["Mayael's Aria", "Chameleon Colossus"],
+    "manaNeeded": "{6} plus six {G}",
+    "notes": "The mana prerequisite assumes Chameleon Colossus has 4 power when executing the combo. If it has more power, the mana cost will be reduced accordingly.",
+    "description": "At the beginning of your upkeep, Mayael's Aria triggers.\nHolding priority, activate Chameleon Colossus by paying {2}{G}{G}, causing it to get +X/+X until end of turn, where X is its power.\nRepeat step 2 until Chameleon Colossus has power 20 or greater.\nResolve the Mayael's Aria trigger, causing you to put a +1/+1 counter on each creature you control, gain 10 life and win the game."
+  },
+  "1110-6785": {
+    "uses": ["Devastating Onslaught", "Terror of the Peaks"],
+    "manaNeeded": "{10}{R}",
+    "notes": "Paying {10} while casting Devastating Onslaught is a recommendation. You can pay more or less depending on what mana you have available and how much damage you wish to deal. {10} allows three opponents to be dealt at least 40 damage.",
+    "description": "Cast Devastating Onslaught by paying {10}{R}, creating five token copies of Terror the Peaks.\nThe Terror of the Peaks tokenss enter the battlefield, triggering the nontoken Terror of the Peaks five times, and each Terror of the Peaks token four times.\nResolve all Terror of the Peaks triggers, dealing 125 damage divided among a maximum of 25 targets."
+  },
+  "4740-6613-6614--44": {
+    "uses": ["Noctis, Prince of Lucis", "Aetherflux Reservoir", "Vexing Bauble"],
+    "easyPrerequisites": "Your life total is at least 4 if you've cast two or more spells this turn, 5 if you've cast one spell this turn, or 7 otherwise.",
+    "description": "Cast the artifact from your graveyard by paying {0} and 3 life.\nAetherflux Reservoir and Vexing Bauble trigger.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast this turn.\nResolve the Vexing Bauble trigger, countering the artifact and returning it to your graveyard.\nRepeat"
+  },
+  "1414-4417-4740-6613": {
+    "uses": ["Noctis, Prince of Lucis", "Aetherflux Reservoir", "Hex Parasite", "Lotus Petal"],
+    "manaNeeded": "{1}",
+    "easyPrerequisites": "Your life total is at least 4.",
+    "notes": "Your life total will need to be between 4 and 14 depending on your starting storm count. The exact values are as follows, in order from storm count 0 to 4 or higher: 14, 10, 6, 5, 4. These life totals can be reduced further if you have available {B} to pay for Hex Parasite's trigger instead of using life.",
+    "description": "Cast Lotus Petal from your graveyard by paying {0} and 3 life. It will not enter with a finality counter due to Solemnity.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nActivate Hex Parasite by paying {1}{B/P}, removing the finality counter from Lotus Petal.\nActivate Lotus Petal by tapping and sacrificing it, adding {1}.\nRepeat"
+  },
+  "778-3750": {
+    "uses": ["Ancient Copper Dragon", "Aggravated Assault"],
+    "easyPrerequisites": "Ancient Copper Dragon cannot be blocked by an opponent.",
+    "notes": "This combo can fail if you roll less than a 5 and do not control enough Treasures to make up the difference. You can control creatures that tap for mana and/or have additional mana to start the combo and reduce the chance of failure. You can also carry over Treasures from prior iterations to cover the difference.",
+    "description": "Deal combat damage to an opponent using Ancient Copper Dragon, triggering it, causing you to roll a d20 and create that many Treasure tokens.\nMove to your postcombat main phase.\nActivate a Treasure by tapping and sacrificing it, adding {R}.\nRepeat step 3 until you have {3}{R}{R} or run out of Treasures.\nActivate Aggravated Assault by paying {3}{R}{R}, causing you to untap all creatures you control and to get an additional combat and main phase after this one.\nRepeat."
+  },
+  "985-4740-5078-5313": {
+    "uses": ["Sensei's Divining Top", "Aetherflux Reservoir", "Treasonous Ogre", "Mystic Forge"],
+    "manaNeeded": "{2} minus {1} for each 3 life you have and minus {1} if your storm count is 2 or greater",
+    "description": "Activate Sensei's Divining Top's second ability by tapping it, causing you to draw a card and put Sensei's Divining Top from the battlefield onto the top of your library.\nIf needed, activate Treasonous Ogre by paying 3 life, adding {R}.\nCast Sensei's Divining Top from the top of your library by paying {1}.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat."
+  },
+  "2855-5982": {
+    "uses": ["Dragon Tempest", "Ancient Gold Dragon"],
+    "notablePrerequisites": "Ancient Gold Dragon does not have summoning sickness and cannot be blocked by an opponent.",
+    "notes": "The amount of damage this combo deals is highly variable by how many Dragons you control and the result of the d20 roll. The more Dragons you control, the more damage will be dealt. It can also be repeated, if needed.",
+    "description": "Deal combat damage using Ancient Gold Dragon.\nAncient Gold Dragon triggers, causing you to roll a d20 and create that many 1/1 Faerie Dragon creature tokens.\nWhen the Faerie Dragons enter the battlefield, Dragon Tempest's second ability triggers that many times.\nResolve the first trigger, dealing damage to any target equal to the number of Dragons you control.\nRepeat step 4 for each remaining trigger."
+  },
+  "2484-4083": {
+    "uses": ["Blasphemous Act", "Repercussion"],
+    "manaNeeded": "{8}{R} at most",
+    "notes": "This combo will also deal damage to you equal to 13 times the number of creatures you control. It is recommended that your life total is above this number to ensure you don't lose the game from the damage if your opponents will not take lethal damage from this combo.",
+    "description": "Cast Blasphemous Act by paying at most {8}{R}, dealing 13 damage to each creature.\nRepercussion triggers for each creature dealt damage this way.\nResolve the first Repercussion trigger, dealing 13 damage to an opponent.\nRepeat step 3 for each Repercussion trigger, ensuring to resolve all triggers that would damage your opponent(s) first."
+  },
+  "1558-4711": {
+    "uses": ["Time Sieve", "Legion Loyalty"],
+    "notablePrerequisites": "You have at least two opponents.\nYou control a number of nonlegendary artifact creatures that do not have summoning sickness equal to five divided by the number of opponents you have minus one, rounded up.\nOpponents cannot block and kill creatures you control.",
+    "description": "Declare any number of nonlegendary artifact creatures as attackers.\nEach creature's myriad ability triggers, creating a token copy of each creature attacking each other opponent.\nActivate Time Sieve by tapping it and sacrificing five of the creature tokens, causing you to take an extra turn after this one.\nRepeat each turn."
+  },
+  "2868-4629": {
+    "uses": ["Ojer Axonil, Deepest Might // Temple of Power", "Pyrohemia"],
+    "manaNeeded": "{R} equal to the highest life total among your opponents divided by Ojer Axonil's power, rounded up",
+    "notablePrerequisites": "Your life total is equal to or greater than the highest life total among your opponents divided by Ojer Axonil's power, rounded up.\nYou have a way to give Ojer Axonil indestructible or protection from red if its toughness is less than the highest life total among your opponents divided by Ojer Axonil's power, rounded up.\n You have an amount of",
+    "description": "Give Ojer Axonil indestructible or protection from red, if needed.\nActivate Pyrohemia by paying {R}, dealing 1 damage to each creature and to you, and dealing damage equal to Ojer Axonil's power to each opponent.\nIf any opponent has 0 or less life, they lose the game as a state-based action.\nRepeat from step 2 until each opponent has lost the game."
+  },
+  "1594-3260-3540-4740": {
+    "uses": ["K'rrik, Son of Yawgmoth", "Aetherflux Reservoir", "Mourning", "Helm of Awakening"],
+    "notablePrerequisites": "\"Enchantment\" chosen with Cloud Key.\nYour life total is at least nine if your storm count is equal to zero, at least six if your storm count is equal to one, at least four if your storm count is equal to two, or at least three otherwise.",
+    "description": "Cast Mourning by paying 2 life, targeting K'rrik.\nAetherflux Reservoir and K'rrik trigger.\nResolve the K'rrik trigger, putting a +1/+1 counter on it.\nResolve the Aetherflux Reservoir trigger, causing you to gain an amount of life equal to your storm count.\nResolve Mourning, attaching it to K'rrik.\nActivate Mourning by paying 2 life, returning it to your hand from the battlefield.\nRepeat.\nOnce you have infinite life, you may use Aetherflux Reservoir's ability to deal infinite damage to any target(s)."
+  },
+  "328-791-1494-2334": {
+    "uses": ["Unspeakable Symbol", "Sage of Hours", "Gray Merchant of Asphodel", "Soulherder"],
+    "notablePrerequisites": "Your devotion to black times the number of opponents you have is greater than or equal to 15.",
+    "description": "At the beginning of your end step, Soulherder's second ability triggers, blinking Gray Merchant of Asphodel.\nSoulherder's first ability and Gray Merchant of Asphodel trigger.\nResolve the Soulherder trigger, putting a +1/+1 counter on it.\nResolve the Gray Merchant of Asphodel trigger, causing each opponent to lose life equal to your devotion to black, and you to gain life equal to the life lost this way.\nActivate Unspeakable Symbol five times by paying 15 life, putting five +1/+1 counters on Sage of Hours.\nActivate Sage of Hours by removing all +1/+1 counters from it, causing you to take at least one extra turn after this one.\nRepeat each turn."
+  },
+  "2734-4740": {
+    "uses": ["Aetherflux Reservoir", "Cyberdrive Awakener"],
+    "manaNeeded": "{5}{U}",
+    "notablePrerequisites": "You have a way to give Aetherflux Reservoir lifelink.\nYour life total is at least 50 minus your storm count.",
+    "description": "Cast Cyberdrive Awakener by paying {5}{U}.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nWhen Cyberdrive Awakener enters the battlefield, it triggers, causing Aetherflux Reservoir to become a 4/4 artifact creature until end of turn.\nGive Aetherflux Reservoir lifelink.\nActivate Aetherflux Reservoir by paying 50 life, dealing 50 damage to any target and causing you to gain 50 life.\nRepeat step 5."
+  },
+  "38-659-1288": {
+    "uses": [
+      {
+        "name": "Krenko, Mob Boss",
+        "mustBeCommander": true,
+        "typeLine": "Legendary Creature — Goblin Warrior"
+      },
+      {
+        "name": "Skirk Prospector",
+        "typeLine": "Creature — Goblin"
+      },
+      {
+        "name": "Goblin Warchief",
+        "typeLine": "Creature — Goblin Warrior"
+      }
+    ],
+    "notablePrerequisites": "You control a number of Goblins that is equal to or greater than six plus Krenko's commander tax.",
+    "description": "Activate Krenko by tapping it, creating a number of 1/1 Goblin creature tokens equal to the number of Goblins you control.\nActivate Skirk Prospector by sacrificing Krenko, adding {R}.\nChoose to return Krenko to the command zone from your graveyard.\nActivate Skirk Prospector by sacrificing a Goblin, adding {R}.\nRepeat step 4 until you have enough mana to cast Krenko.\nCast Krenko from the command zone by paying {2}{R}{R} plus commander tax.\nRepeat."
+  },
+  "2481-2790": {
+    "uses": ["Angel of Destiny", "Seize the Day"],
+    "manaNeeded": "{5}{R}{R}",
+    "notablePrerequisites": "Angel of Destiny does not have summoning sickness.\nOpponents are unable to block and kill Angel of Destiny.\nYour life total is at least 11 greater than your starting life total plus an additional 2 life for each opponent beyond the first.\nYou have no more than three opponents.",
+    "description": "Deal combat damage to an opponent using Angel of Destiny.\nAngel of Destiny's first ability triggers, causing you and the opponent to gain life equal to the damage dealt.\nMove to your postcombat main phase.\nCast Seize the Day by paying {3}{R}, untapping Angel of Destiny and causing you to get an additional combat and main phase after this one.\nRepeat steps 1 through 3 one additional time, attacking a different opponent.\nCast Seize the Day from your graveyard for its flashback cost by paying {2}{R}, untapping Angel of Destiny and causing you to get an additional combat and main phase after this one.\nRepeat steps 1 through 3 one additional time, attacking a different opponent.\nAt the beginning of your end step, Angel of Destiny triggers, causing each opponent it attacked this turn to lose the game."
+  },
+  "1623-2125-4740": {
+    "uses": ["Guile", "Temporal Extortion", "Aetherflux Reservoir"],
+    "manaNeeded": "{B}{B}{B}{B}",
+    "description": "Cast Temporal Extortion by paying {B}{B}{B}{B}.\nTemporal Extortion and Aetherflux Reservoir trigger.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast this turn.\nResolve the Temporal Extortion trigger, causing you to pay half your life total, rounded up, and then exile Temporal Extortion and cast it without paying its mana cost due to Guile.\nRepeat.\nOnce you have infinite life, you may activate Aetherflux Reservoir infinite times to deal infinite damage to any target(s)."
+  },
+  "5069-5080": {
+    "uses": ["Duskmantle Guildmage", "Maddening Cacophony"],
+    "manaNeeded": "{5}{U}{U}{U}{B}",
+    "notablePrerequisites": "Each opponent has a life total that is less than or equal to half their library size, rounded up.",
+    "description": "Activate Duskmantle Guildmage's first ability by paying {1}{U}{B}.\nCast Maddening Cacophony with kicker by paying {4}{U}{U}, causing each opponent to mill half their library, rounded up.\nDuskmantle Guildmage triggers for each card milled this way.\nResolve the first Duskmantle Guildmage trigger, causing the opponent to lose 1 life.\nRepeat step 4 until the opponent loses the game due to having zero or less life.\nRepeat from step 4 for each remaining trigger."
+  },
+  "1560-2232-4740": {
+    "uses": ["Aetherflux Reservoir", "Cloudstone Curio", "Defiler of Vigor"],
+    "notablePrerequisites": "Your life total is at least 5.\nYou have a green nonartifact permanent card in hand with mana cost {G}.\nYou control a nontoken nonartifact green permanent with mana cost {G} that shares a card type with the card in hand.",
+    "description": "Cast the green permanent card in your hand by paying 2 life.\nDefiler of Vigor and Aetherflux Reservoir triggers.\nResolve the Defiler of Vigor trigger, putting a +1/+1 counter on each creature you control.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast before it this turn.\nThe green permanent enters the battlefield, triggering Cloudstone Curio, returning another nontoken nonartifact green permanent with mana cost {G} from the battlefield to your hand.\nRepeat.\nOnce you have infinite life, you may activate Aetherflux Reservoir infinite times to deal infinite damage to any target(s)."
+  },
+  "2438-2577-3260-4740": {
+    "uses": ["K'rrik, Son of Yawgmoth", "Gravecrawler", "Aetherflux Reservoir", "Carrion Feeder"],
+    "notablePrerequisites": "Your storm count is at least one.\nYour life total is at least three.",
+    "description": "Activate Carrion Feeder by sacrificing Gravecrawler, putting a +1/+1 counter on Carrion Feeder.\nCast Gravecrawler from your graveyard by paying 2 life.\nAetherflux Reservoir and K'rrik triggers.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast this turn.\nResolve the K'rrik trigger, putting a +1/+1 counter on it.\nRepeat.\nOnce you have infinite life, you may use it to activate Aetherflux Reservoir's ability to deal infinite damage to any target(s)."
+  },
+  "2034-3705-4740-5313": {
+    "uses": ["Treasonous Ogre", "Aetherflux Reservoir", "Squee, the Immortal", "Ashnod's Altar"],
+    "notablePrerequisites": "You have a storm count of at least five.\nYour life total is at least seven.",
+    "description": "Activate Treasonous Ogre twice by paying 6 life, adding {R}{R}.\nActivate Ashnod's Altar by sacrificing Squee, adding {C}{C}.\nCast Squee from your graveyard by paying {1}{R}{R}.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat.\nOnce you have infinite life, you may activate Aetherflux Reservoir's ability infinitely to deal infinite damage to any target(s)."
+  },
+  "411-4740-5313": {
+    "uses": ["Treasonous Ogre", "Aetherflux Reservoir", "Grinning Ignus"],
+    "notablePrerequisites": "You have a storm count of at least two.\nYour life total is at least four.",
+    "description": "Activate Treasonous Ogre by paying three life, adding {R}.\nActivate Grinning Ignus by paying {R} and returning it to your hand, adding {C}{C}{R}.\nCast Grinning Ignus by paying {2}{R}.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat.\nOnce you have infinite life, you may activate Aetherflux Reservoir's ability infinitely to deal infinite damage to any target(s)."
+  },
+  "2173-4740-5078": {
+    "uses": ["Sensei's Divining Top", "Aetherflux Reservoir", "Bolas's Citadel"],
+    "easyPrerequisites": "Your life total is at least 2.",
+    "description": "Activate Sensei's Divining Top by tapping it, drawing a card and then putting Sensei's Divining Top on top of your library.\nCast Sensei's Divining Top from the top of your library by paying 1 life.\nAetherflux Reservoir triggers, gaining you 1 life for each spell you have cast this turn.\nRepeat until your life total is 52 or greater.\nActivate Aetherflux Reservoir by paying 50 life, dealing 50 damage to any target.\nRepeat."
+  },
+  "2903-3260-4740": {
+    "uses": ["Aetherflux Reservoir", "Leshrac's Sigil", "K'rrik, Son of Yawgmoth"],
+    "notablePrerequisites": "Your life total is at least 33.",
+    "description": "Cast Leshrac's Sigil by paying 4 life.\nK'rrik and Aetherflux Reservoir triggers.\nResolve the K'rrik triggers, putting a +1/+1 counter on it.\nResolve the Aetherflux Reservoir triggers, gaining you life equal to the number of spells that you have cast this turn.\nActivate Leshrac Sigil's second ability by paying 4 life, returning it to your hand.\nRepeat for infinite life.\nOnce you have infinite life, you can activate Aetherflux Reservoir by paying 50 life, dealing 50 damage to any target."
+  },
+  "328-1377-2292-3211-3260-4078": {
+    "uses": [
+      "K'rrik, Son of Yawgmoth",
+      "Buried Alive",
+      "Reanimate",
+      "Chainer, Dementia Master",
+      "Viscera Seer",
+      "Gray Merchant of Asphodel"
+    ],
+    "manaNeeded": "{2}",
+    "notablePrerequisites": "Your life total is at least 23.\nYour devotion to black is at least ten or you have at least two opponents.",
+    "description": "Cast Buried Alive by paying {2} and two life, searching for Chainer, Viscera Seer, and Gray Merchant of Asphodel.\nCast Reanimate by paying 2 life.\nreturning Chainer onto the battlefield and causing you to lose five life.\nActivate Chainer by paying nine life, returning Viscera Seer from your graveyard to the battlefield as a Nightmare in addition to its other creature types.\nActivate Chainer by paying nine life, returning Gray Merchant of Asphodel from your graveyard to the battlefield as a Nightmare in addition to its other creature types.\nGray Merchant of Asphodel enters the battlefield, causing each opponent to lose life equal to your devotion to black and causing you to gain life equal to the amount of life lost this way.\nActivate Viscera Seer by sacrificing Gray Merchant of Asphodel, scrying 1.\nRepeat from step 5."
+  },
+  "884-2232-3260-4740": {
+    "uses": ["K'rrik, Son of Yawgmoth", "Ayara, First of Locthwain", "Cloudstone Curio", "Aetherflux Reservoir"],
+    "notablePrerequisites": "Your life total is at least ten.\nYou have a creature card in hand with mana cost {B}.",
+    "description": "Cast any creature card in your hand with mana cost {B} by paying 2 life.\nAetherflux Reservoir and K'rrik trigger.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast this turn.\nResolve the K'rrik trigger, putting a +1/+1 counter on it.\nThe creature enters the battlefield, triggering Ayara and Cloudstone Curio.\nResolve the Ayara trigger, causing each opponent to lose 1 life and you to gain 1 life.\nResolve the Cloudstone Curio trigger, returning Ayara from the battlefield to your hand.\nCast Ayara by paying 6 life.\nAetherflux Reservoir and K'rrik trigger.\nResolve the Aetherflux Reservoir trigger, causing you to gain 1 life for each spell you've cast this turn.\nResolve the K'rrik trigger, putting a +1/+1 counter on it.\nAyara enters the battlefield, triggering itself and Cloudstone Curio.\nResolve the Ayara trigger, causing each opponent to lose 1 life and you to gain 1 life.\nResolve the Cloudstone Curio trigger, returning the creature with mana cost {B} from the battlefield to your hand.\nRepeat.\nOnce you have an arbitrarily large lifetotal, you may activate Aetherflux Reservoir's ability infinite times to deal infinite damage to any target(s)."
+  },
+  "1170-1812-2440-7528": {
+    "uses": [
+      {
+        "name": "Displacer Kitten",
+        "typeLine": "Creature — Cat Beast"
+      },
+      "Mana Echoes",
+      {
+        "name": "Strife Scholar // Awaken the Ages",
+        "typeLine": "Creature — Orc Sorcerer // Sorcery"
+      },
+      {
+        "name": "Prismite",
+        "typeLine": "Artifact Creature — Golem"
+      }
+    ],
+    "manaNeeded": "{5}{R}{R}",
+    "description": "Cast the copy of Awaken the Ages from exile by paying its mana cost.\nWhen you cast that spell, Displacer Kitten triggers, flickering Strife Scholar, which enters prepared.\nWhen Strife Scholar enters, Mana Echoes triggers, adding at least {C}.\nResolve the spell from step 1, creating two 2/2 Spirit creature tokens.\nWhen the tokens enter, Mana Echoes triggers for each of them, adding a total of at least {C}{C}{C}{C}.\nPay an additional {R} to repeat steps 1 through 5 an additional time, this time adding nine {C}.\nActivate Prismite by paying {2}, adding one colored mana.\nRepeat steps 1 through 5 and step 7 any number of times."
+  },
+  "1283-1537-2440-4183": {
+    "uses": [
+      {
+        "name": "Saheeli, the Sun's Brilliance",
+        "typeLine": "Legendary Creature — Human Artificer"
+      },
+      "Mana Echoes",
+      "Chromatic Orrery",
+      {
+        "name": "Zealous Conscripts",
+        "typeLine": "Creature — Human Warrior"
+      }
+    ],
+    "manaNeeded": "{2}",
+    "notablePrerequisites": "Saheeli does not have summoning sickness.",
+    "description": "Activate Saheeli by paying {2} and tapping it, creating a token copy of Zealous Conscripts with haste.\nWhen the token Zealous Conscripts enters the battlefield, it and Mana Echoes trigger.\nResolve the Zealous Conscripts trigger, untapping Saheeli.\nResolve the Mana Echoes trigger, adding {C} for each creature you control that shares a creature type with Zealous Conscripts.\nRepeat."
+  },
+  "1283-2273-2440": {
+    "uses": [
+      {
+        "name": "Sliver Overlord",
+        "typeLine": "Legendary Creature — Sliver Mutant"
+      },
+      "Mana Echoes",
+      "Chromatic Orrery"
+    ],
+    "manaNeeded": "{4}",
+    "notablePrerequisites": "There are at least three Slivers on the battlefield.",
+    "description": "Activate Sliver Overlord's first ability by paying {3}, searching your library for the lowest mana value Sliver creature card in your library and putting it into your hand.\nCast the Sliver by paying its mana cost.\nWhen the Sliver enters the battlefield, Mana Echoes triggers, adding {C} for each Sliver on the battlefield.\nRepeat until you have no Slivers left in your library.",
+    "notes": "The amount of mana required to execute this combo fluctuates depending on the lowest mana value of Slivers in your library, as well as how many Slivers are on the battlefield as you execute the combo."
+  },
+  "147-3771-7300": {
+    "uses": ["Animar, Soul of Elements", "Dualcaster Mage", "Airbender's Reversal"],
+    "manaNeeded": "{3}{R}{R}{W} at most",
+    "notablePrerequisites": "Animar has at least X +1/+1 counters on it.",
+    "description": "Cast Airbender's Reversal by paying its mana cost, targeting any applicable target(s).\nHolding priority, cast Dualcaster Mage by paying its mana cost.\nAnimar triggers, putting a +1/+1 counter on it.\nWhen Dualcaster Mage enters, it triggers, copying Airbender's Reversal targeting Dualcaster Mage.\nResolve Airbender's Reversal, airbending Dualcaster Mage.\nHolding priority, cast Dualcaster Mage from exile by paying {2} reduced to Animar.\nRepeat from step 3.",
+    "notes": "You can reduce the cost by up to {2} if Animar starts with +1/+1 counters."
+  },
+  "1537-1812-2440-4183": {
+    "uses": [
+      {
+        "name": "Saheeli, the Sun's Brilliance",
+        "typeLine": "Legendary Creature — Human Artificer"
+      },
+      "Mana Echoes",
+      {
+        "name": "Zealous Conscripts",
+        "typeLine": "Creature — Human Warrior"
+      },
+      {
+        "name": "Prismite",
+        "typeLine": "Artifact Creature — Golem"
+      }
+    ],
+    "notablePrerequisites": "Saheeli does not have summoning sickness.\n{U}{R} available, plus an additional {U}{R} if you control less than three creatures that share a creature type with Zealous Conscripts",
+    "description": "Activate Saheeli by paying {U}{R} and tapping it, creating a token copy of Zealous Conscripts with haste.\nWhen the token Zealous Conscripts enters the battlefield, it and Mana Echoes trigger.\nResolve the Zealous Conscripts trigger, untapping Saheeli.\nHolding priority, if you control less than four creatures that share a creature type with Zealous Conscripts, repeat steps 1 through 3 one additional time.\nResolve all Mana Echoes triggers, adding {C} for each creature you control that shares a creature type with Zealous Conscripts for each trigger resolved this way.\nActivate Prismite twice by paying {4}, adding {U}{R}.\nRepeat."
+  },
+  "1744-2719-6567": {
+    "uses": ["Dragonhawk, Fate's Tempest", "Rite of Replication", "Sakashima of a Thousand Faces"],
+    "manaNeeded": "{7}{U}{U}",
+    "description": "Cast Rite of Replication with kicker by paying {7}{U}{U}, creating five token copies of Dragonhawk.\nWhen the Dragonhawk tokens enter the battlefield, they each trigger.\nResolve the first trigger, exiling a number of cards from the top of your library with the ability to play them until your next end step.\nRepeat step 3 for each remaining trigger.\nAt the beginning of your end step, each Dragonhawk token triggers, dealing 2 damage to each opponent for each card exiled by the Dragonhawk tokens that were not played.",
+    "notes": "Assuming you control no other creatures with power 4 or greater, this combo can deal up to 60 damage to each opponent. This is reduced by 2 for each card you play that is exiled. For every additional creature you control with power 4 or greater, this combo deals up to an additional 10 damage per creature to each opponent."
+  },
+  "1765-2054-2440-7311": {
+    "uses": [
+      "Improvised Arsenal",
+      "Mana Echoes",
+      {
+        "name": "Chishiro, the Shattered Blade",
+        "typeLine": "Legendary Creature — Snake Samurai"
+      },
+      "Urn of Godfire"
+    ],
+    "manaNeeded": "{8}{2/R}{2/R}{2/R}{2/R} at most",
+    "description": "Activate Improvised Arsenal by paying {4}{R}, creating a token copy of it.\nChishiro triggers, creating a creature token.\nWhen the creature token enters, Mana Echoes triggers, adding {C} for each creature you control that shares a creature type with the creature token.\nIf needed, activate Urn of Godfire by paying {2}, adding {R}.\nRepeat.",
+    "notes": "The mana cost can be reduced if you control more creatures that share type(s) with the created tokens as the combo begins. You should perform step 4 only if you have no {R} in your mana pool. With infinite mana, the Improvised Arsenal tokens can be attached to creatures you control to make them infinitely large."
+  },
+  "182-6907-6908": {
+    "uses": ["Cosmogoyf", "Jarad, Golgari Lich Lord", "Arc-Slogger"],
+    "manaNeeded": "{1}{B}{G} plus an additional amount of {R}",
+    "description": "Activate Arc-Slogger by paying {R} and exiling the top 10 cards of your library, dealing 2 damage to any target.\nRepeat step 1 as desired. It is recommended to do this until your library is empty or until the amount of cards you own in exile is greater than or equal to each opponent's life total, whichever comes first.\nActivate Jarad by paying {1}{B}{G} and sacrificing Cosmogoyf, causing each opponent to lose life equal to Cosmogoyf's power.",
+    "notes": "The amount of {R} needed is recommended to be equal to your deck size divided by 10 (rounded up) or equal to (the largest life total among your opponents - the number of cards you own in exile)/10, rounded up - whichever is less. This will ensure you cause maximum lifeloss and/or end the game. You can also reduce an opponent's life total using Arc-Slogger's ability, which may reduce the amount of {R} needed."
+  },
+  "1966-3719-6981": {
+    "uses": ["Ruthless Technomancer", "Perigee Beckoner", "Nim Shambler"],
+    "manaNeeded": "{1}{B}",
+    "notablePrerequisites": "You control ten or more artifacts.",
+    "description": "Cast Perigee Beckoner for its warp cost by paying {1}{B}.\nWhen Perigee Beckoner enters, it triggers, targeting Ruthless Technomancer.\nActivate Nim Shambler by sacrificing Ruthless Technomancer.\nWhen Ruthless Technomancer dies, its ability given to it by Perigee Beckoner triggers, returning Ruthless Technomancer from your graveyard to the battlefield tapped.\nWhen Ruthless Technomancer enters, its first ability triggers, causing you to sacrifice Nim Shambler and creating a number of Treasure tokens equal to Nim Shambler's power.\nResolve the Nim Shambler ability from step 3.\nActivate six Treasures by tapping and sacrificing them, adding {4}{B}{B}.\nActivate Ruthless Technomancer by paying {2}{B} and sacrificing two Treasures, returning Nim Shambler from your graveyard to the battlefield.\nActivate Nim Shambler by sacrificing Perigee Beckoner.\nActivate Ruthless Technomancer by paying {2}{B} and sacrificing four Treasures, returning Perigee Beckoner from your graveyard to the battlefield.\nRepeat from step 2.",
+    "notes": "You can reduce the number of artifacts you control to start by adding additional mana. You must create at least six Treasures, and therefore must control at least seven artifacts to start. The remaining three can be reduced by adding up to {4}{B}{B} in mana to pay for Ruthless Technomancer's abilities. The needed mana is as follows: {4}{B}{B} extra if you control seven artifacts, {4} if you control eight artifacts and {2} if you control nine artifacts. You must ensure to have ten artifacts remaining after sacrificing six to the abilities, and sacrificing additional Treasures for mana. You may also skip step 7 in these circumstances and/or sacrifice less Treasures. You can also boost Nim Shambler's power using an anthem effect (such as Always Watching)."
+  },
+  "2-3771": {
+    "uses": ["Ancestral Statue", "Animar, Soul of Elements"],
+    "description": "Cast Ancestral Statue by paying {0}.\nAnimar triggers, putting a +1/+1 counter on it\nWhen Ancestral Statue enters the battlefield, it triggers, returning itself from the battlefield to your hand.\nRepeat.",
+    "notes": "You can start the combo if Animar has fewer +1/+1 counters on it, but will need to provide mana to compensate."
+  },
+  "2024-7308": {
+    "uses": ["Seedcradle Witch", "Mona Lisa, Science Geek"],
+    "manaNeeded": "{2}{G/W}{G/W} at most",
+    "description": "Activate Mona Lisa by tapping it, adding an amount of {G} or {W} equal to its power.\nActivate Seedcradle Witch by paying {2}{G}{W}, untapping Mona Lisa and giving it +3/+3 until end of turn.\nRepeat.",
+    "notes": "The cost can be reduced to a minimum of {G/W} depending on Mona Lisa's power to start the combo."
+  },
+  "204-3940-5851": {
+    "uses": ["Stormsplitter", "Sorcerer Class", "Haze of Rage"],
+    "manaNeeded": "{8} at most, depending on how many Stormsplitters and/or other creatures you control without summoning sickness",
+    "notablePrerequisites": "Sorcerer Class is at least level 2.",
+    "description": "Activate any creature you control that does not have summoning sickness by tapping it, adding {R} that can only be spent to cast an instant or sorcery spell, or to gain a Class level.\nRepeat step 1 until you control no untapped creatures without summoning sickness, or until you have {3}{R} available, whichever comes first.\nCast Haze of Rage with buyback by paying {3}{R}.\nHaze of Rage's storm ability triggers, each Stormsplitter you control triggers, and Sorcerer Class's third ability triggers if it is level 3.\nResolve the Stormsplitter triggers, creating that many token copies of Stormsplitter.\nResolve the Sorcerer Class trigger, if applicable, dealing damage to any target equal to the number of instant and/or sorcery spells you've cast this turn.\nResolve the Haze of Rage trigger, copying it for each spell you've cast before it this turn.\nResolve all Haze of Rages, causing creatures you control to get +1/+0 for each Haze of Rage, and returning the original Haze of Rage to your hand.\nRepeat."
+  },
+  "2043-4659-5747": {
+    "uses": ["Urza, Prince of Kroog", "Simulacrum Synthesizer", "Krark-Clan Ironworks"],
+    "manaNeeded": "{12}",
+    "description": "Activate Urza by paying {6}, creating a copy of Simulacrum Synthesizer that is a 1/1 Construct.\nWhen the Simulacrum Synthesizer token enters the battlefield, its first ability and each other SImulacrum Synthesizer you control's second abilities trigger.\nResolve the first trigger, causing you to scry 2.\nResolve the remaining triggers, creating a 0/0 Construct artifact creature token for each trigger resolved this way.\nActivate Krark-Clan Ironworks by sacrificing a 0/0 Construct, adding {C}{C}.\nRepeat step 5 for each other 0/0 Construct you control, if applicable.\nRepeat from step 1.",
+    "notes": "Once you have three Simulacrum Synthesizer tokens, this combo will begin to break even and eventually net additional tokens and mana."
+  },
+  "2060-3771-4518-6930": {
+    "uses": ["Spider-Man India", "Crystalline Crawler", "Animar, Soul of Elements", "Kor Skyfisher"],
+    "manaNeeded": "{W}",
+    "notablePrerequisites": "Animar has at least one +1/+1 counter on it.",
+    "description": "Cast Kor Skyfisher by paying {W}.\nAnimar and Spider-Man India trigger.\nResolve the Animar trigger, putting a +1/+1 counter on it.\nResolve the Spider-Man India trigger, putting a +1/+1 counter on Crystalline Crawler.\nWhen Kor Skyfisher enters, it triggers, returning itself from the battlefield to your hand.\nActivate Crystalline Crawler by removing a +1/+1 counter from it, adding {W}.\nRepeat.",
+    "notes": "You may begin the combo with no counters on Animar if you supply an additional {1}."
+  },
+  "2136-3604-6567": {
+    "uses": ["Dragonhawk, Fate's Tempest", "Orthion, Hero of Lavabrink", "Cadric, Soul Kindler"],
+    "manaNeeded": "{6}{R}{R}{R}",
+    "description": "Activate Orthion's second ability by paying {6}{R}{R}{R} and tapping it, creating five token copies of Dragonhawk with haste.\nWhen the Dragonhawk tokens enter the battlefield, they each trigger.\nResolve the first trigger, exiling a number of cards from the top of your library with the ability to play them until your next end step.\nRepeat step 3 for each remaining trigger.\nAt the beginning of your end step, each Dragonhawk token triggers, dealing 2 damage to each opponent for each card exiled by the Dragonhawk tokens that were not played.",
+    "notes": "Assuming you control no other creatures with power 4 or greater, this combo can deal up to 70 damage to each opponent. This is reduced by 2 for each card you play that is exiled. For every additional creature you control with power 4 or greater, this combo deals up to an additional 10 damage per creature to each opponent."
+  },
+  "2136-4836-6567": {
+    "uses": ["Dragonhawk, Fate's Tempest", "Orthion, Hero of Lavabrink", "The Master, Multiplied"],
+    "manaNeeded": "{6}{R}{R}{R}",
+    "description": "Activate Orthion's second ability by paying {6}{R}{R}{R} and tapping it, creating five token copies of Dragonhawk with haste.\nWhen the Dragonhawk tokens enter the battlefield, they each trigger.\nResolve the first trigger, exiling a number of cards from the top of your library with the ability to play them until your next end step.\nRepeat step 3 for each remaining trigger.\nAt the beginning of your end step, each Dragonhawk token triggers, dealing 2 damage to each opponent for each card exiled by the Dragonhawk tokens that were not played.",
+    "notes": "Assuming you control no other creatures with power 4 or greater, this combo can deal up to 60 damage to each opponent. This is reduced by 2 for each card you play that is exiled. For every additional creature you control with power 4 or greater, this combo deals up to an additional 10 damage per creature to each opponent."
+  },
+  "215-4050-6251": {
+    "uses": ["Aatchik, Emerald Radian", "Phyrexian Altar", "Temur Sabertooth"],
+    "manaNeeded": "{3}{B}{B}{G} plus enough mana to pay for commander tax if applicable",
+    "notablePrerequisites": "You have at least eight artifact and/or creature cards in your graveyard.",
+    "description": "Cast Aatchik either from your hand or from the command zone by paying {3}{B}{B}{G} plus commander tax, if applicable.\nWhen Aatchik enters the battlefield, its first ability triggers, creating a 1/1 Insect creature token for each artifact and/or creature card in your graveyard.\nActivate Phyrexian Altar eight times by sacrificing eight Insects, adding {4}{B}{B}{G}{G}.\nWhen the Insects die, Aatchik's second ability triggers eight times, putting eight +1/+1 counters on Aatchik and causing each opponent to lose 8 life.\nActivate Temur Sabertooth by paying {1}{G}, returning Aatchik from the battlefield to your hand.\nRepeat.",
+    "notes": "If you have nine or more artifact and/or creature cards in your graveyard, this combo will net infinite tokens, mana and +1/+1 counters on Aatchik."
+  },
+  "2232-4050-6251": {
+    "uses": ["Aatchik, Emerald Radian", "Phyrexian Altar", "Cloudstone Curio"],
+    "manaNeeded": "{3}{B}{B}{G} plus enough mana to pay for commander tax if applicable",
+    "notablePrerequisites": "You have at least six artifact and/or creature cards in your graveyard.",
+    "description": "Cast Aatchik either from your hand or from the command zone by paying {3}{B}{B}{G} plus commander tax, if applicable.\nWhen Aatchik enters the battlefield, its first ability and Cloudstone Curio trigger.\nResolve the Cloudstone Curio trigger, choosing to return nothing to your hand.\nResolve the Aatchik trigger, creating a 1/1 Insect creature token for each artifact and/or creature card in your graveyard.\nWhen the Insects enter the battlefield, Cloudstone Curio triggers that many times. \nHolding priority, activate Phyrexian Altar six times by sacrificing six Insects, adding {3}{B}{B}{G}.\nWhen the Insects die, Aatchik's second ability triggers six times, putting six +1/+1 counters on Aatchik and causing each opponent to lose 6 life.\nResolve the Cloudstone Curio triggers, returning Aatchik from the battlefield to your hand with the first trigger and returning nothing to your hand with each subsequent trigger.\nRepeat.",
+    "notes": "If you have seven or more artifact and/or creature cards in your graveyard, this combo will net infinite tokens, mana and +1/+1 counters on Aatchik."
+  },
+  "2440-2797": {
+    "uses": ["Retrofitter Foundry", "Mana Echoes"],
+    "manaNeeded": "{2} plus up to {10} additional depending on the number of Servos you control",
+    "description": "Activate Retrofitter Foundry's second ability by paying {2} and tapping it, creating a 1/1 Servo artifact creature token.\nWhen the Servo enters the battlefield, Mana Echoes triggers.\nIf you control less than three Servos, activate Retrofitter Foundry's first ability by paying {3}, untapping it.\nIf you control less than three Servos, repeat from step 1 until you control three Servos.\nResolve all Mana Echoes triggers, adding {C} for each Servo you control for each trigger.\nActivate Retrofitter Foundry's first ability by paying {3}, untapping it.\nActivate Retrofitter Foundry's second ability by paying {2} and tapping it, creating a 1/1 Servo artifact creature token.\nWhen the Servo enters the battlefield, Mana Echoes triggers, adding {C} for each Servo you control.\nRepeat from step 6.\nOnce you have infinite mana, you may use Retrofitter Foundry's other abilities."
+  },
+  "2440-4720-7546": {
+    "uses": [
+      {
+        "name": "Inspired Skypainter // Maestro's Gift",
+        "typeLine": "Creature — Lizard Wizard // Sorcery"
+      },
+      "Mana Echoes",
+      {
+        "name": "Stonework Packbeast",
+        "typeLine": "Artifact Creature — Beast"
+      }
+    ],
+    "manaNeeded": "{5}{U}{U}{U/R}{U/R}{R}{R} at most",
+    "description": "Cast Maestro's Gift from exile by paying {U}{R}, creating a token copy of Inspired Skypainter with haste that enters prepared.\nWhen the token enters, Mana Echoes triggers, adding {C} for each Lizard or Wizard creature you control.\nIf needed, activate Stonework Packbeast by paying {2}, adding {U/R}.\nIf needed, repeat step 3 an additional time.\nRepeat.",
+    "notes": "Mana needed drops significantly for each additional creature you control that is a Lizard or Wizard.\r\n\r\nNote that Stonework Packbeast is a Wizard."
+  },
+  "2440-5090-5663": {
+    "uses": [
+      {
+        "name": "Cayth, Famed Mechanist",
+        "typeLine": "Legendary Creature — Dwarf Artificer"
+      },
+      "Mana Echoes",
+      "Singing Bell Strike"
+    ],
+    "manaNeeded": "{2}",
+    "easyPrerequisites": "Singing Bell Strike attached to Cayth.",
+    "notablePrerequisites": "You control at least one creature token.\nYou control at least seven creatures that share a creature type with the creature token.\nCayth does not have summoning sickness.",
+    "description": "Activate Cayth by paying {2} and tapping it, creating a token copy of a creature token you control.\nWhen the creature token enters the battlefield, Mana Echoes triggers, adding {C} for each creature you control that shares a creature type with it.\nActivate Singing Bell Strike by paying {6}, untapping Cayth.\nRepeat.",
+    "notes": "You may begin the combo with less creatures that share a type with the token, but you will need additional mana to do so until you begin to break even from Mana Echoes' trigger. Once you have infinite mana, you may instead use Cayth to get infinite proliferate."
+  },
+  "2440-6873": {
+    "uses": [
+      {
+        "name": "Fire Nation Archers",
+        "typeLine": "Creature — Human Archer"
+      },
+      "Mana Echoes"
+    ],
+    "manaNeeded": "{14}",
+    "description": "Activate Fire Nation Archers by paying {5}, dealing 2 damage to each opponent and creating a 2/2 Soldier creature token.\nWhen the Soldier enters, Mana Echoes triggers.\nHolding priority, activate Fire Nation Archers by paying {5}, dealing 2 damage to each opponent and creating a 2/2 Soldier creature token.\nWhen the Soldier enters, Mana Echoes triggers. \nResolve the Mana Echoes triggers from steps 2 and 4, adding {C}{C} for each Soldier you control.\nActivate Fire Nation Archers by paying {5}, dealing 2 damage to each opponent and creating a 2/2 Soldier creature token.\nWhen the Soldier enters, Mana Echoes triggers, adding {C} for each Soldier you control.\nRepeat from step 6.",
+    "notes": "The starting mana cost assumes you control no other Soldiers when starting the combo. If you control more Soldiers, the mana needed is as follows: {10} for one Soldier, {8} for two Soldiers, {6} for three Soldiers and {5} for four or more Soldiers. If you control two or more Soldiers, only perform steps 6 through 8."
+  },
+  "2440-7282": {
+    "uses": [
+      {
+        "name": "Chrome Dome",
+        "typeLine": "Artifact Creature — Robot Ninja"
+      },
+      "Mana Echoes"
+    ],
+    "manaNeeded": "{10} at most",
+    "easyPrerequisites": "You control another nonlegendary artifact creature.",
+    "description": "Activate Chrome Dome twice by paying {10}, creating two token copies of another artifact creature you control with haste.\nWhen the creature tokens enter, Mana Echoes triggers, adding {C}{C} for each creature you control that shares a type with the creature tokens.\nActivate Chrome Dome by paying {5}, creating a token copy of another artifact creature you control with haste.\nWhen the creature token enters, Mana Echoes triggers, adding {C} for each creature you control that shares a type with the creature token.\nRepeat from step 3.",
+    "notes": "The cost will vary depending on the artifact creature you choose and how many creatures you control that share a type with that creature. The above cost assumes you control no creatures that share a type with the chosen artifact creature. If you control more creatures, then start the combo at step 3 instead for maximum efficiency."
+  },
+  "2440-8167": {
+    "uses": [
+      {
+        "name": "Kiora of Fire and Ashes",
+        "typeLine": "Legendary Creature — Merfolk Noble"
+      },
+      "Mana Echoes"
+    ],
+    "manaNeeded": "{8}",
+    "notablePrerequisites": "You control seven or more Dragons.",
+    "description": "Activate Kiora by paying {8}, creating a 5/5 Dragon creature token with flying\nWhen the Dragon enters, Mana Echoes triggers, adding {C} for each Dragon you control.\nRepeat.",
+    "notes": "You may begin the combo controlling less Dragons, but you'll need additional mana to compensate."
+  },
+  "252-2054-2440-7311": {
+    "uses": [
+      "Improvised Arsenal",
+      "Mana Echoes",
+      {
+        "name": "Displaced Dinosaurs",
+        "typeLine": "Creature — Dinosaur"
+      },
+      "Urn of Godfire"
+    ],
+    "manaNeeded": "{8}{2/R}{2/R}{2/R}{2/R} at most",
+    "description": "Activate Improvised Arsenal by paying {4}{R}, creating a token copy of it. It will enter as a 7/7 Dinosaur due to Displaced Dinosaurs.\nWhen the Improvised Arsenal token enters, Mana Echoes triggers, adding {C} for each Dinosaur you control.\nIf needed, activate Urn of Godfire by paying {2}, adding {R}.\nRepeat.",
+    "notes": "The mana cost can be reduced if you control more Dinosaurs as the combo begins. You should perform step 3 only if you have no {R} in your mana pool."
+  },
+  "2609-4050-5851": {
+    "uses": ["Stormsplitter", "Phyrexian Altar", "Recruit the Worthy"],
+    "manaNeeded": "{9}{W} at most, depending on how many Stormsplitters you control",
+    "description": "Cast Recruit the Worthy with buyback by paying {3}{W}.\nEach Stormsplitter you control triggers, creating that many token copies of Stormsplitter.\nResolve Recruit the Worthy, creating a 1/1 Soldier creature token and returning Recruit the Worthy to your hand.\nActivate Phyrexian Altar by sacrificing the Soldier, adding {W}.\nIf you control at least 6 Stormsplitters, activate Phyrexian Altar three times by sacrificing three Stormsplitter tokens, adding {3}.\nRepeat."
+  },
+  "2815-3750-6473": {
+    "uses": ["Professional Face-Breaker", "Aggravated Assault", "Mardu Siegebreaker"],
+    "manaNeeded": "{2}",
+    "easyPrerequisites": "You have three or more opponents.",
+    "notablePrerequisites": "Opponents cannot block creatures you control.",
+    "description": "Declare Mardu Siegebreaker as an attacker, triggering its second ability, creating a token copy of Professional Face-Breaker that is tapped and attacking each opponent.\nDeal combat damage with Mardu Siegebreaker and any number of Professional Face-Breaker token(s), triggering each Professional Face-Breaker, creating that many Treasure tokens.\nMove to your postcombat main phase.\nActivate up to five Treasures by tapping and sacrificing them, adding {R} for each Treasure sacrificed this way.\nActivate Aggravated Assault by paying {3}{R}{R}, causing you to untap all creatures you control and to get an additional combat and main phase after this one.\nRepeat.",
+    "notes": "The combo assumes that each opponent and each Professional Face-Breaker will survive the first combat phase. The pre-requisites may vary if this is not the case. You may also perform this combo with less opponents but will require more mana. Once you have five Professional Face-Breaker tokens, this combo will break even."
+  },
+  "2871-4050-5851": {
+    "uses": ["Stormsplitter", "Phyrexian Altar", "Seething Anger"],
+    "manaNeeded": "{9}{R}{R}{R} at most, depending on how many Stormsplitters you control",
+    "description": "Cast Seething Anger with buyback by paying {3}{R}.\nEach Stormsplitter you control triggers, creating that many token copies of Stormsplitter.\nResolve Seething Anger, giving target creature +3/+0 until end of turn, and returning Seething Anger to your hand.\nIf you control at least 8 Stormsplitters, activate Phyrexian Altar four times by sacrificing four Stormsplitter tokens, adding {3}{R}.\nRepeat.\nIf you have an additional {3}{R} available and/or control additional Stormsplitter tokens, this combo will result in infinite Stormsplitter tokens and infinite colored mana."
+  },
+  "3035-3519": {
+    "uses": [
+      {
+        "name": "Nadier, Agent of the Duskenel",
+        "mustBeCommander": true
+      },
+      "Food Chain"
+    ],
+    "manaNeeded": "{1}, plus increasingly more for each additional time Nadier has been cast from the command zone beyond the first",
+    "description": "Activate Food Chain by exiling Nadier, adding seven {B} that can only be spent on creature spells.\nChoose to put Nadier from exile into the command zone.\nNadier's second ability triggers, creating a number of 1/1 Elf tokens equal to its power.\nCast Nadier by paying {5}{B} plus commander tax.\nActivate Food Chain by exiling a 1/1 Elf token, adding {B} that can only be spent on creature spells.\nNadier triggers, putting a +1/+1 counter on itself.\nRepeat from step 5 until you control no Elf tokens.\nRepeat.\nOnce you have infinite mana, you may repeat without exiling the tokens."
+  },
+  "3209-5851": {
+    "uses": ["Stormsplitter", "Sprout Swarm"],
+    "manaNeeded": "{8}{G} at most, depending on how many creatures you control",
+    "description": "Cast Sprout Swarm with buyback by paying {4}{G}, reduced by {1} for each creature you can tap as you cast it.\nEach Stormsplitter you control triggers, creating that many token copies of Stormsplitter.\nResolve Sprout Swarm, creating a 1/1 Saproling creature token and returning Sprout Swarm to your hand.\nRepeat.",
+    "notes": "You should aim to tap as many creatures as possible (up to five) when casting Sprout Swarm to reduce the amount of mana you pay to cast it."
+  },
+  "3771-6867-7043": {
+    "uses": ["Appa, Steadfast Guardian", "Animar, Soul of Elements", "Aang, Swift Savior // Aang and La, Ocean's Fury"],
+    "manaNeeded": "{1}{W}{W} at most",
+    "description": "Cast Appa by paying {W}{W}.\nAnimar triggers, putting a +1/+1 counter on it.\nWhen Appa enters, it triggers, airbending Aang\nCast Aang from exile by paying {0}.\nAppa and Animar trigger, creating a 1/1 Ally creature token and putting a +1/+1 counter on Animar.\nWhen Aang enters, it triggers, airbending Appa.\nCast Appa from exile by paying {0}.\nRepeat from step 2.",
+    "notes": "The starting cost can be reduced by {1} if Animar has a +1/+1 counter on it."
+  },
+  "3771-6869-6884": {
+    "uses": ["Aang, Airbending Master", "Aang, the Last Airbender", "Animar, Soul of Elements"],
+    "manaNeeded": "{2}{W} at most",
+    "notablePrerequisites": "Animar has at least two +1/+1 counters on it.",
+    "description": "Cast Aang, Airbending Master by paying {2}{W}.\nAnimar triggers, putting a +1/+1 counter on it.\nWhen Aang, Airbending Master enters, it triggers, airbending Aang, the Last Airbender\nCast Aang, the Last Airbender from exile by paying {0}.\nAnimar triggers, putting a +1/+1 counter on it.\nWhen Aang, the Last Airbender enters, it triggers, airbending Aang, Airbending Master.\nCast Aang, Airbending Master from exile by paying {0}.\nRepeat from step 2.",
+    "notes": "You can perform this combo if Animar has fewer +1/+1 counters on it. If Animar has exactly one counter, add {1} to the mana cost. If Animar has no counters, add {3} to the mana cost. If Animar has more than two counters, you can reduce the cost to {1}{W} or {W}."
+  },
+  "648-1494-6730": {
+    "uses": ["Sin, Unending Cataclysm", "Body of Research", "Sage of Hours"],
+    "manaNeeded": "{5}{G}{G}{G}{G}{U}{U}{U} plus commander tax if applicable",
+    "easyPrerequisites": "You have a way to kill a creature.",
+    "description": "Cast Body of Research by paying {G}{G}{G}{U}{U}{U}, creating a 0/0 Fractal creature token and putting a number of +1/+1 counters on it equal to your deck size.\nCast Sin either from your hand or from the command zone by paying {5}{G}{U} plus commander tax if applicable. As it enters, remove all the counters from the Fractal and put twice that many +1/+1 counters on Sin.\nKill Sin. When it dies, it second ability triggers, putting its counters on Sage of Hours and shuffling Sin into your library.\nActivate Sage of Hours by removing all +1/+1 counters from it, causing you to get an extra turn for each five +1/+1 counters removed from it.",
+    "notes": "You can remove counters from other permanents in step 2 to get more counters as desired. The number of extra turns you will get will maximize using the following formula: 2*(your deck size + the number of counters on artifacts, creatures and enchantments)/5, rounded down. If desired, you can take two turns to execute the combo to spread the mana cost out by doing step 1 the first turn and all other steps on the second turn."
+  },
+  "81-1636-4050-6730": {
+    "uses": [
+      {
+        "name": "Sin, Unending Cataclysm",
+        "mustBeCommander": true
+      },
+      "Intruder Alarm",
+      "Phyrexian Altar",
+      "Kami of Whispered Hopes"
+    ],
+    "manaNeeded": "{5}{G}{U}{G/U} plus commander tax if applicable",
+    "notablePrerequisites": "There are at least X counters on artifacts, creatures and/or enchantments you control, where X is 3 plus the number of times you've cast Sin from the command zone this game.",
+    "description": "Cast Sin either from your hand or command zone by paying {5}{G}{U} plus commander tax if applicable.\nAs Sin enters, remove all counters from all artifacts, enchantments and creatures you control, putting twice that many +1/+1 counters on Sin plus one due to Kami of Whispered Hopes.\nWhen Sin enters, Intruder Alarm triggers, untapping all creatures.\nActivate Phyrexian Altar by sacrificing Sin, adding {G/U}.\nChoose to return Sin to the command zone from your graveyard.\nWhen Sin dies, it triggers, putting its counters plus one +1/+1 counter on Kami of Whispered Hopes.\nActivate Kami of Whispered Hopes by tapping it, adding an amount of {G} or {U} equal to its power.\nRepeat."
+  }
+}
