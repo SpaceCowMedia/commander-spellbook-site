@@ -1,0 +1,11 @@
+@reference "../../../styles/globals.css";
+
+.generic {
+  @apply fill-[#cac5c0];
+
+  text {
+    @apply fill-[#0d0f0f] font-normal;
+
+    font-family: 'STIX Two Text', 'Times New Roman', serif;
+  }
+}

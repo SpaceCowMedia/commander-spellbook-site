@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './textWithMagicSymbol.module.scss';
 import CardTooltip from 'components/card/CardTooltip/CardTooltip';
+import GenericMana from 'components/symbols/GenericMana/GenericMana';
 import MagicSymbol from 'components/symbols/MagicSymbol/MagicSymbol';
 import CardLink from 'components/card/CardLink/CardLink';
 import CardName from 'components/card/CardName/CardName';
@@ -16,6 +17,7 @@ import {
   getTemplateNameSummary,
 } from 'lib/card/faces';
 import { findCardSymbol } from 'lib/symbols/symbology';
+import TextWithSuperscripts, { hasSuperscripts } from 'components/ui/TextWithSuperscripts/TextWithSuperscripts';
 
 interface Props {
   text: string;
@@ -30,6 +32,9 @@ const WORD_CHARACTER = /[\p{L}\p{N}]/u;
    an <img> is a line break opportunity, so the punctuation is moved inside the symbol's
    non-wrapping container instead of starting the following text node. */
 const PUNCTUATION_AFTER_SYMBOL = /^[.,;:!?)\]}'"’”»…]+/;
+
+/* an amount of generic mana, written 1234 or 1,234 */
+const GENERIC_AMOUNT = /^(\d+|\d{1,3}(,\d{3})+)$/;
 
 function isWholeWordMatch(text: string, start: number, length: number): boolean {
   const before = text[start - 1];
@@ -134,12 +139,20 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
         };
       }
       const symbolMatch = value.match(/:mana([^:]+):|{([^}]+)}/);
-      const symbol = symbolMatch && findCardSymbol(symbolMatch[1] || symbolMatch[2]);
+      const code = symbolMatch && (symbolMatch[1] || symbolMatch[2]);
+      const symbol = code && findCardSymbol(code);
       if (symbol) {
         return {
           nodeType: 'image',
           value,
           symbol,
+        };
+      }
+      if (code && GENERIC_AMOUNT.test(code)) {
+        return {
+          nodeType: 'image',
+          value,
+          genericAmount: Number(code.replaceAll(',', '')),
         };
       }
 
@@ -168,9 +181,13 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
     <span>
       {items.map((item, i) => (
         <span key={i} className={styles[`${item.nodeType}Container`]}>
-          {item.nodeType === 'image' && item.symbol && (
+          {item.nodeType === 'image' && (
             <span className={styles.noWrap}>
-              <MagicSymbol symbol={item.symbol} className={styles.magicSymbol} />
+              {item.symbol ? (
+                <MagicSymbol symbol={item.symbol} className={styles.magicSymbol} />
+              ) : (
+                <GenericMana amount={item.genericAmount ?? 0} className={styles.magicSymbol} />
+              )}
               {symbolTrailingText.get(item)}
             </span>
           )}
@@ -201,9 +218,10 @@ const TextWithMagicSymbol: React.FC<Props> = ({ text, cardsInCombo = [], include
               )}
             />
           )}
-          {item.nodeType !== 'card' && item.nodeType !== 'image' && item.nodeType !== 'template' && (
-            <CardName name={item.value} />
-          )}
+          {item.nodeType !== 'card' &&
+            item.nodeType !== 'image' &&
+            item.nodeType !== 'template' &&
+            (hasSuperscripts(item.value) ? <TextWithSuperscripts text={item.value} /> : <CardName name={item.value} />)}
         </span>
       ))}
     </span>

@@ -548,8 +548,8 @@ const FindMyCombos: React.FC = () => {
                   )}
                 </div>
               )}
-              {decklistErrors.map((error) => (
-                <ErrorMessage key={error}>{error}</ErrorMessage>
+              {decklistErrors.map((error, index) => (
+                <ErrorMessage key={index}>{error}</ErrorMessage>
               ))}
             </>
           )}

@@ -1,0 +1,13 @@
+@reference "../../../styles/globals.css";
+
+.chart {
+  @apply m-0 flex min-w-0 flex-col gap-2 border-0 p-0;
+}
+
+.title {
+  @apply p-0 text-left text-sm font-bold;
+}
+
+.axis {
+  @apply text-left text-sm font-bold;
+}

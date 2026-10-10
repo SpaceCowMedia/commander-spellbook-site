@@ -1,0 +1,55 @@
+@reference "../../../styles/globals.css";
+
+.field {
+  @apply m-0 min-w-0 border-0 p-0;
+}
+
+.legend {
+  @apply mb-1.5 p-0 text-left text-sm font-bold;
+}
+
+.icon {
+  @apply mr-1.5;
+}
+
+.hint {
+  @apply mb-2 text-xs text-gray-500 dark:text-gray-400;
+}
+
+.options {
+  @apply flex flex-wrap gap-2;
+}
+
+.option {
+  @apply relative flex min-w-fit flex-1 cursor-pointer;
+}
+
+.radio {
+  @apply sr-only;
+}
+
+.text {
+  @apply flex w-full items-center gap-2.5 rounded-xl border border-gray-300 px-3 py-2 text-left text-sm transition-colors motion-reduce:transition-none dark:border-gray-600;
+
+  /* a radio dot, so the choice never shows by color alone */
+  &::before {
+    content: '';
+    @apply size-4 shrink-0 rounded-full border-2 border-gray-400 transition-[border-width,border-color] motion-reduce:transition-none dark:border-gray-500;
+  }
+
+  .option:hover & {
+    @apply border-primary;
+  }
+
+  .radio:checked + & {
+    @apply border-link bg-primary/15 font-semibold dark:border-primary dark:bg-primary/20;
+
+    &::before {
+      @apply border-[5px] border-link dark:border-primary;
+    }
+  }
+
+  .radio:focus-visible + & {
+    @apply ring-3 ring-primary/50;
+  }
+}
