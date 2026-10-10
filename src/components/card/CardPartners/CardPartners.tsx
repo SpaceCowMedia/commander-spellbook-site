@@ -2,13 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import cardBack from 'assets/images/card-back.png';
-import CardName from 'components/layout/CardName/CardName';
-import CardTooltip from 'components/layout/CardTooltip/CardTooltip';
-import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
+import CardName from 'components/card/CardName/CardName';
+import CardTooltip from 'components/card/CardTooltip/CardTooltip';
+import SpoilerFog from 'components/card/SpoilerFog/SpoilerFog';
 import { CardPartner } from 'lib/cardCombos';
 import { cardPath } from 'lib/cards';
 import { formatCount } from 'lib/seo';
-import sections from '../cardSections.module.scss';
+import sections from 'components/card/cardSections.module.scss';
 import styles from './cardPartners.module.scss';
 
 interface Props {

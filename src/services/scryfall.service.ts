@@ -1,5 +1,6 @@
 import { ScryfallCard, ScryfallError, ScryfallList } from '@scryfall/api-types';
-import { getFaceNames, ReplacementCard, ReplacementsPage } from 'lib/types';
+import { getFaceNames } from 'lib/card/faces';
+import { ReplacementCard, ReplacementsPage } from 'lib/card/replacements';
 
 export function scryfallCardUrl(cardName: string): string {
   const name = getFaceNames(cardName)[0];

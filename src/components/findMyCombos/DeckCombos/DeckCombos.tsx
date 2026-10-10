@@ -1,0 +1,371 @@
+import ComboResults from 'components/search/ComboResults/ComboResults';
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { Decklist } from 'pages/find-my-combos';
+import { CommanderCombos, ResultType } from 'lib/findMyCombos/findMyCombosResultsCache';
+import pluralize from 'pluralize';
+import { Card, Deck, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
+import styles from './deckCombos.module.scss';
+import Modal from 'components/layout/Modal/Modal';
+import CardTooltip from 'components/card/CardTooltip/CardTooltip';
+import CardName from 'components/card/CardName/CardName';
+import Icon from 'components/ui/Icon/Icon';
+import SpoilerFog from 'components/card/SpoilerFog/SpoilerFog';
+import ComboResultFrame from 'components/search/ComboResultFrame/ComboResultFrame';
+import { DEFAULT_SORT } from 'lib/constants';
+import countDeckCards from 'lib/findMyCombos/countDeckCards';
+import { cardPath } from 'lib/cards';
+
+interface Props {
+  currentlyParsedDeck?: Decklist;
+  results: ResultType | undefined;
+  commanderCombos?: CommanderCombos;
+  query: string;
+}
+
+interface MissingCardGroup {
+  key: string;
+  card: Card;
+  combos: Variant[];
+  /* Only when every combo of the group shares it. */
+  status?: VariantStatusEnum;
+  previewCards: Card[];
+}
+
+type MissingCardCombos = Pick<MissingCardGroup, 'key' | 'card' | 'combos'>;
+
+interface MissingCardSectionProps {
+  id: string;
+  title: string;
+  description: string;
+  combos: Variant[];
+  deck?: Deck;
+  deckCardCounts?: Map<string, number>;
+}
+
+interface MissingCardPreviewProps {
+  card: Card;
+  className: string;
+  fallbackClassName: string;
+  interactive?: boolean;
+}
+
+const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({ card, className, fallbackClassName, interactive }) => {
+  const imageUri = card.imageUriFrontNormal;
+  return (
+    <SpoilerFog name={card.name} spoiler={card.spoiler} interactive={interactive} className={className}>
+      {imageUri ? (
+        <img src={imageUri} alt={`Preview of ${card.name}`} />
+      ) : (
+        <span className={fallbackClassName} aria-hidden="true">
+          <Icon name="card" />
+        </span>
+      )}
+    </SpoilerFog>
+  );
+};
+
+const getMissingCardUse = (combo: Variant, deckCardCounts?: Map<string, number>) =>
+  combo.uses.find(({ card, quantity }) => quantity - (deckCardCounts?.get(card.name.toLowerCase()) ?? 0) > 0);
+
+const getGroupPreviewCards = (group: MissingCardCombos) => {
+  const cards = new Map<string, { card: Card; count: number }>();
+
+  group.combos.forEach((combo) => {
+    combo.uses.forEach(({ card }) => {
+      const key = card.name.toLowerCase();
+      if (key === group.key) {
+        return;
+      }
+      const existing = cards.get(key);
+      cards.set(key, {
+        card,
+        count: (existing?.count ?? 0) + 1,
+      });
+    });
+  });
+
+  return Array.from(cards.values())
+    .sort((left, right) => right.count - left.count || left.card.name.localeCompare(right.card.name))
+    .slice(0, 2)
+    .map(({ card }) => card);
+};
+
+const getSharedStatus = (combos: Variant[]) =>
+  combos.every(({ status }) => status === combos[0].status) ? combos[0].status : undefined;
+
+const groupByMissingCard = (combos: Variant[], deckCardCounts?: Map<string, number>): MissingCardGroup[] => {
+  const groups = new Map<string, MissingCardCombos>();
+
+  combos.forEach((combo) => {
+    const missingCardUse = getMissingCardUse(combo, deckCardCounts);
+    if (!missingCardUse) {
+      return;
+    }
+
+    const key = missingCardUse.card.name.toLowerCase();
+    const existing = groups.get(key);
+    if (existing) {
+      existing.combos.push(combo);
+      return;
+    }
+
+    groups.set(key, {
+      key,
+      card: missingCardUse.card,
+      combos: [combo],
+    });
+  });
+
+  return Array.from(groups.values())
+    .map((group) => ({ ...group, status: getSharedStatus(group.combos), previewCards: getGroupPreviewCards(group) }))
+    .sort((left, right) => right.combos.length - left.combos.length || left.card.name.localeCompare(right.card.name));
+};
+
+const MissingCardHand: React.FC<{ group: MissingCardGroup }> = ({ group }) => {
+  // From the back of the hand to the missing card, held in front.
+  const hand: [Card | undefined, string][] = [
+    [group.previewCards[0], styles.groupHandCardBack],
+    [group.previewCards[1], styles.groupHandCardMiddle],
+    [group.card, styles.groupHandCardFront],
+  ];
+
+  return (
+    <div className={styles.groupCardHand}>
+      {hand.map(
+        ([card, slotClassName]) =>
+          card && (
+            <CardTooltip card={card} key={slotClassName}>
+              <div className={`${styles.groupHandCardSlot} ${slotClassName}`}>
+                <MissingCardPreview
+                  card={card}
+                  className={styles.groupHandCard}
+                  fallbackClassName={styles.groupCardPreviewFallback}
+                />
+              </div>
+            </CardTooltip>
+          ),
+      )}
+    </div>
+  );
+};
+
+const MissingCardSection: React.FC<MissingCardSectionProps> = ({
+  id,
+  title,
+  description,
+  combos,
+  deck,
+  deckCardCounts,
+}) => {
+  const [expandedGroupKey, setExpandedGroupKey] = useState<string>();
+  const groups = useMemo(() => groupByMissingCard(combos, deckCardCounts), [combos, deckCardCounts]);
+  const expandedGroup = groups.find((group) => group.key === expandedGroupKey);
+
+  if (!combos.length) {
+    return null;
+  }
+
+  return (
+    <section id={id}>
+      <h2 className="heading-subtitle">{title}</h2>
+      <p>
+        {description}{' '}
+        {groups.length > 0 && (
+          <strong>
+            Grouped into {groups.length} missing-card {pluralize('cluster', groups.length)}. Select one to inspect its
+            variants.
+          </strong>
+        )}
+      </p>
+      {groups.length > 0 ? (
+        <>
+          <div className={styles.groupGrid}>
+            {groups.map((group) => (
+              <div
+                key={group.key}
+                role="button"
+                tabIndex={0}
+                className={styles.groupCardButton}
+                onClick={() => setExpandedGroupKey(group.key)}
+                onKeyDown={(event) => {
+                  if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) {
+                    return;
+                  }
+                  event.preventDefault();
+                  setExpandedGroupKey(group.key);
+                }}
+              >
+                <SpoilerFog name={group.card.name} spoiler={group.card.spoiler} blurContent>
+                  <ComboResultFrame
+                    status={group.status}
+                    header={
+                      <div className={styles.groupCardHeader}>
+                        <CardTooltip card={group.card}>
+                          <span>
+                            <CardName name={group.card.name} />
+                          </span>
+                        </CardTooltip>
+                      </div>
+                    }
+                    footer={`${group.combos.length} ${pluralize('combo', group.combos.length)}`}
+                  >
+                    <div className={styles.groupCardBody}>
+                      <MissingCardHand group={group} />
+                    </div>
+                  </ComboResultFrame>
+                </SpoilerFog>
+              </div>
+            ))}
+          </div>
+
+          <Modal open={!!expandedGroup} onClose={() => setExpandedGroupKey(undefined)} closeIcon={true} size="large">
+            {expandedGroup && (
+              <div className={styles.groupModalContent}>
+                <Link
+                  href={cardPath(expandedGroup.card) ?? '#'}
+                  prefetch={false}
+                  className={styles.groupModalHeader}
+                  title={`Open ${expandedGroup.card.name} and its combos`}
+                >
+                  <CardTooltip card={expandedGroup.card} disableTapPreview>
+                    <MissingCardPreview
+                      card={expandedGroup.card}
+                      className={styles.groupModalPreview}
+                      fallbackClassName={styles.groupCardPreviewFallback}
+                      interactive={false}
+                    />
+                  </CardTooltip>
+                  <div className={styles.groupModalCopy}>
+                    <p className={styles.groupModalLabel}>Missing card</p>
+                    <h3 className={styles.groupModalTitle}>
+                      <CardTooltip card={expandedGroup.card} disableTapPreview>
+                        <span className={styles.groupModalCardName}>
+                          <CardName name={expandedGroup.card.name} />
+                        </span>
+                      </CardTooltip>
+                    </h3>
+                  </div>
+                </Link>
+                <p className={styles.groupModalDescription}>
+                  This cluster contains {expandedGroup.combos.length} {pluralize('combo', expandedGroup.combos.length)}{' '}
+                  that all miss this single piece.
+                </p>
+                <div className={styles.groupModalResults}>
+                  <ComboResults
+                    results={expandedGroup.combos}
+                    deck={deck}
+                    sort={DEFAULT_SORT}
+                    hideVariants={true}
+                    localPageLimit={100}
+                  />
+                </div>
+              </div>
+            )}
+          </Modal>
+        </>
+      ) : (
+        <ComboResults results={combos} deck={deck} sort={DEFAULT_SORT} hideVariants={true} localPageLimit={100} />
+      )}
+    </section>
+  );
+};
+
+const CommanderSection: React.FC<{ commanderCombos: CommanderCombos; deck?: Deck }> = ({ commanderCombos, deck }) => {
+  const { query, combos, count } = commanderCombos;
+  const numberOfCommanders = deck?.commanders.length ?? 1;
+
+  if (!combos.length) {
+    return null;
+  }
+
+  return (
+    <section id="commander-combos-section">
+      <h2 className="heading-subtitle">
+        {count} {pluralize('Combo', count)} Found Using Your {pluralize('Commander', numberOfCommanders)}
+      </h2>
+      <p>
+        List of the most popular combos using {numberOfCommanders > 1 ? 'any of your commanders' : 'your commander'}{' '}
+        within your color identity, however many combo pieces your decklist is missing.
+      </p>
+      <ComboResults results={combos} deck={deck} sort={DEFAULT_SORT} hideVariants={true} />
+      <Link href={`/search/?q=${encodeURIComponent(query)}&groupByCombo=false`} className="button">
+        Show all {count} {pluralize('combo', count)}
+      </Link>
+    </section>
+  );
+};
+
+const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Props) => {
+  const deckCardCounts = useMemo(() => countDeckCards(currentlyParsedDeck?.deck), [currentlyParsedDeck]);
+
+  if (!results) {
+    return (
+      <div>
+        <br />
+        <h1 className="heading-subtitle">Loading Combos...</h1>
+      </div>
+    );
+  }
+  const numOfCombos = results.included.length;
+  const combosInDeckHeadingText = !numOfCombos
+    ? `No combos found${query.trim() ? ' for this filter query' : ''}`
+    : `${numOfCombos} ${pluralize('Combo', numOfCombos)} Found`;
+
+  const numPotentialCombos = results.almostIncluded.length;
+  const potentialCombosInDeckHeadingText = `${numPotentialCombos} Potential ${pluralize(
+    'Combo',
+    numPotentialCombos,
+  )} Found`;
+
+  const potentialCombosInAdditionalColorsHeadingText = `${results.almostIncludedByAddingColors.length} Potential ${pluralize(
+    'Combo',
+    results.almostIncludedByAddingColors.length,
+  )} Found With Additional Color Requirements`;
+
+  return (
+    <div className={`${styles.deckCombos} py-4`}>
+      <section id="combos-in-deck-section">
+        <h2 className="heading-subtitle">{combosInDeckHeadingText}</h2>
+        <ComboResults results={results.included} sort={DEFAULT_SORT} hideVariants={true} localPageLimit={100} />
+      </section>
+
+      <MissingCardSection
+        id="potential-combos-in-deck-section"
+        title={potentialCombosInDeckHeadingText}
+        description="List of combos where your decklist is missing 1 combo piece."
+        combos={results.almostIncluded}
+        deck={currentlyParsedDeck?.deck}
+        deckCardCounts={deckCardCounts}
+      />
+
+      <MissingCardSection
+        id="potential-combos-outside-color-identity-section"
+        title={potentialCombosInAdditionalColorsHeadingText}
+        description="List of combos where your decklist is missing 1 combo piece, but requires at least one additional color."
+        combos={results.almostIncludedByAddingColors}
+        deck={currentlyParsedDeck?.deck}
+        deckCardCounts={deckCardCounts}
+      />
+      <MissingCardSection
+        id="potential-combos-outside-commander-section"
+        title={`${results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander`}
+        description="List of combos where your decklist is missing 1 combo piece, but requires changing your commander."
+        combos={results.almostIncludedByChangingCommanders}
+        deck={currentlyParsedDeck?.deck}
+        deckCardCounts={deckCardCounts}
+      />
+      <MissingCardSection
+        id="potential-combos-outside-color-identity-and-commander-section"
+        title={`${results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different Commander and Additional Colors`}
+        description="List of combos where your decklist is missing 1 combo piece, but requires changing your commander and adding a color."
+        combos={results.almostIncludedByAddingColorsAndChangingCommanders}
+        deck={currentlyParsedDeck?.deck}
+        deckCardCounts={deckCardCounts}
+      />
+      {commanderCombos && <CommanderSection commanderCombos={commanderCombos} deck={currentlyParsedDeck?.deck} />}
+    </div>
+  );
+};
+
+export default DeckCombos;

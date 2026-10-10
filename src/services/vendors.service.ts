@@ -1,4 +1,4 @@
-import { getFaceNames } from 'lib/types';
+import { getFaceNames } from 'lib/card/faces';
 
 const TCGPLAYER_AFFILIATE_URL = 'https://partner.tcgplayer.com/c/4913290/1830156/21018?partnerpropertyid=5237567';
 const CARD_KINGDOM_PARTNER_PARAMETERS =

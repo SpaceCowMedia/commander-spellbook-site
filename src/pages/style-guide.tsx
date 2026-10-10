@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
-import ExternalLink from '../components/layout/ExternalLink/ExternalLink';
-import TextWithMagicSymbol from '../components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import styles from './style-guide.module.scss';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 
 const StyleGuide: React.FC = () => {
   return (

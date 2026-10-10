@@ -1,18 +1,18 @@
 import CardsBanner from 'components/card/CardsBanner/CardsBanner';
-import CardName from 'components/layout/CardName/CardName';
+import CardName from 'components/card/CardName/CardName';
 import { comboSubtitle, comboTitleCards, NO_CARDS_TITLE } from 'lib/comboTitle';
-import CardGroup from '../../../components/combo/CardGroup/CardGroup';
-import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
-import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
+import CardGroup from 'components/combo/CardGroup/CardGroup';
+import ColorIdentity from 'components/symbols/ColorIdentity/ColorIdentity';
+import ComboList, { ComboListItem } from 'components/combo/ComboList/ComboList';
 import styles from './combo.module.scss';
-import ComboSidebarLinks from '../../../components/combo/ComboSidebarLinks/ComboSidebarLinks';
-import { withApiErrorPage } from 'lib/apiErrorPage';
-import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
+import ComboSidebarLinks from 'components/combo/ComboSidebarLinks/ComboSidebarLinks';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import React, { useEffect, useState } from 'react';
-import PrerequisiteList from '../../../components/combo/PrerequisiteList/PrerequisiteList';
-import { getPrerequisiteList } from '../../../lib/prerequisitesProcessor';
-import EDHRECService from '../../../services/edhrec.service';
-import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
+import PrerequisiteList from 'components/combo/PrerequisiteList/PrerequisiteList';
+import { getPrerequisiteList } from 'lib/combo/prerequisitesProcessor';
+import EDHRECService from 'services/edhrec.service';
+import NoCombosFound from 'components/search/NoCombosFound/NoCombosFound';
 import {
   FindMyCombosApi,
   ResponseError,
@@ -22,12 +22,12 @@ import {
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import BulkApiService from 'services/bulk-api.service';
-import Loader from 'components/layout/Loader/Loader';
+import Loader from 'components/ui/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import { getNameWithUsedFace } from 'lib/types';
-import { SpoilerContext } from 'lib/spoilers';
+import { getNameWithUsedFace } from 'lib/card/faces';
+import { SpoilerContext } from 'lib/card/spoilers';
 import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
 import ComboMeta from 'components/combo/ComboMeta/ComboMeta';
 import LegalityTable from 'components/layout/LegalityTable/LegalityTable';

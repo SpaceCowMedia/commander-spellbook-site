@@ -1,5 +1,5 @@
 import React from 'react';
-import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
 interface Props {
   link: string;

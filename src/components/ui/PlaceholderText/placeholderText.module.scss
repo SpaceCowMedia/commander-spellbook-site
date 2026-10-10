@@ -1,0 +1,28 @@
+@reference "../../../styles/globals.css";
+
+.placedholderText {
+  @apply inline-block w-full;
+}
+
+.textBar {
+  height: 0.8em;
+  margin-top: 0.2em;
+  animation-name: color;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  @apply bg-light rounded-sm inline-block;
+}
+
+@keyframes color {
+  0% {
+    background-color: var(--color-gray-300);
+  }
+
+  50% {
+    background-color: var(--color-gray-400);
+  }
+
+  100% {
+    background-color: var(--color-gray-300);
+  }
+}

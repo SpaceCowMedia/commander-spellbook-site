@@ -1,6 +1,6 @@
 import styles from './shareButtons.module.scss';
-import CopyLinkButton from '../CopyLinkButton/CopyLinkButton';
-import ShareNetwork from '../ShareNetwork/ShareNetwork';
+import CopyLinkButton from 'components/layout/CopyLinkButton/CopyLinkButton';
+import ShareNetwork from 'components/layout/ShareNetwork/ShareNetwork';
 import React from 'react';
 
 interface Props {

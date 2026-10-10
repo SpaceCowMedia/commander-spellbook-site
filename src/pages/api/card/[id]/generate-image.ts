@@ -3,13 +3,13 @@ import { CardDetail, CardsApi, VariantsApi } from '@space-cow-media/spellbook-cl
 import { NextApiRequest, NextApiResponse } from 'next';
 import pluralize from 'pluralize';
 import { apiConfiguration } from 'services/api.service';
-import serverPath from 'lib/serverPath';
+import serverPath from 'lib/http/serverPath';
 import { loadSymbolImage } from 'lib/symbolImage';
-import { httpErrorStatus } from 'lib/httpErrors';
+import { httpErrorStatus } from 'lib/http/httpErrors';
 import { cardComboQuery, commanderFormatTerm } from 'lib/cards';
 import { formatCount, IMAGE_CACHE_CONTROL } from 'lib/seo';
-import { queryParameterAsString } from 'lib/queryParameters';
-import { FACE_SEPARATOR } from 'lib/types';
+import { queryParameterAsString } from 'lib/http/queryParameters';
+import { FACE_SEPARATOR } from 'lib/card/faces';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
