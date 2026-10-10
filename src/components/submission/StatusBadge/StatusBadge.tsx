@@ -1,6 +1,6 @@
 import React from 'react';
 import { SuggestionStatusEnum } from '@space-cow-media/spellbook-client';
-import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 
 interface StatusInfo {
   label: string;

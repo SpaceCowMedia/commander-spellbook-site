@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ArtCircle from '../../layout/ArtCircle/ArtCircle';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
 import { useRouter } from 'next/router';
-import Loader from '../../layout/Loader/Loader';
-import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
-import { ComboSubmissionErrorType } from '../../../lib/types';
-import normalizeQuotes from '../../../lib/normalizeQuotes';
+import Loader from 'components/ui/Loader/Loader';
+import ErrorMessage, { itemErrors, listLevelErrors } from 'components/submission/ErrorMessage/ErrorMessage';
+import { ComboSubmissionErrorType } from 'lib/submission/submissions';
+import normalizeQuotes from 'lib/text/normalizeQuotes';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import Link from 'next/link';
 import {
@@ -16,12 +16,12 @@ import {
   VariantUpdateSuggestionsApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
-import VariantIdSubmission from '../VariantIdSubmission/VariantIdSubmission';
+import VariantIdSubmission from 'components/submission/VariantIdSubmission/VariantIdSubmission';
 import { useDebounce } from 'use-debounce';
-import Icon from '../../layout/Icon/Icon';
-import SectionHeading from '../SectionHeading/SectionHeading';
-import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
-import useRowKeys from 'lib/useRowKeys';
+import Icon from 'components/ui/Icon/Icon';
+import SectionHeading from 'components/submission/SectionHeading/SectionHeading';
+import { formatDuration, httpErrorMessage, retryAfterSeconds } from 'lib/http/httpErrors';
+import useRowKeys from 'lib/react/useRowKeys';
 
 const VALIDATION_INTERVAL_MS = 5000;
 const VALIDATION_MAX_RETRIES = 3;

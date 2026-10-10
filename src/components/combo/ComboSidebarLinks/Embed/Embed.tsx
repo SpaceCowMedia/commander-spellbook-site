@@ -1,8 +1,8 @@
-import Icon from 'components/layout/Icon/Icon';
+import Icon from 'components/ui/Icon/Icon';
 import { useState } from 'react';
-import Modal from 'components/ui/Modal/Modal';
+import Modal from 'components/layout/Modal/Modal';
 import { Variant } from '@space-cow-media/spellbook-client';
-import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
+import { countNotablePrerequisites } from 'lib/combo/prerequisitesProcessor';
 
 interface Props {
   combo: Variant;

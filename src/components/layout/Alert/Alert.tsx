@@ -1,6 +1,6 @@
 import React from 'react';
-import Icon, { SpellbookIcon } from '../Icon/Icon';
-import styles from './Alert.module.scss';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
+import styles from './alert.module.scss';
 
 interface Props {
   type: 'error' | 'warning' | 'info' | 'success' | 'important';

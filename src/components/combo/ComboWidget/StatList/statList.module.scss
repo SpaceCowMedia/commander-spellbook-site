@@ -1,0 +1,23 @@
+@reference "../../../../styles/globals.css";
+
+.stats {
+  @apply m-0 grid gap-3;
+
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.stat {
+  @apply flex flex-col rounded-xl border border-primary/60 p-3;
+}
+
+.label {
+  @apply text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400;
+}
+
+.value {
+  @apply m-0 mt-1 font-title text-xl leading-tight font-bold [overflow-wrap:anywhere];
+}
+
+.caption {
+  @apply m-0 text-xs text-gray-500 dark:text-gray-400;
+}

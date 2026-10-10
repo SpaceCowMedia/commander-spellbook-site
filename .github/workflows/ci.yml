@@ -91,6 +91,26 @@ jobs:
       - name: Run typescript 👀
         run: pnpm tsc --noEmit
 
+  unit-test:
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm 📦
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Setup Node ⬢
+        uses: actions/setup-node@v7
+        with: *setup-node
+
+      - name: Install 📦
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests 🧪
+        run: pnpm test
+
   test:
     runs-on: ubuntu-22.04
     needs: build
@@ -235,6 +255,7 @@ jobs:
       - build
       - lint
       - type-check
+      - unit-test
       - test
       - docker
       - integration-test

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ArtCircle from '../../components/layout/ArtCircle/ArtCircle';
-import styles from '../report-error.module.scss';
-import SpellbookHead from '../../components/SpellbookHead/SpellbookHead';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import styles from './login.module.scss';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import { useRouter } from 'next/router';
-import TokenService from '../../services/token.service';
-import CookieService from '../../services/cookie.service';
+import TokenService from 'services/token.service';
+import CookieService from 'services/cookie.service';
 import { TokenApi, UsersApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 

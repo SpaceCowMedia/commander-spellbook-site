@@ -1,22 +1,22 @@
 import styles from './comboResult.module.scss';
 import Link from 'next/link';
-import ColorIdentity from '../../layout/ColorIdentity/ColorIdentity';
-import CardTooltip from '../../layout/CardTooltip/CardTooltip';
-import TemplateTooltip from '../../layout/TemplateTooltip/TemplateTooltip';
-import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
-import CardName from '../../layout/CardName/CardName';
+import ColorIdentity from 'components/symbols/ColorIdentity/ColorIdentity';
+import CardTooltip from 'components/card/CardTooltip/CardTooltip';
+import TemplateTooltip from 'components/card/TemplateTooltip/TemplateTooltip';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
+import CardName from 'components/card/CardName/CardName';
 import pluralize from 'pluralize';
 import { CardPrices, Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
-import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
-import Icon from 'components/layout/Icon/Icon';
+import { countNotablePrerequisites } from 'lib/combo/prerequisitesProcessor';
+import Icon from 'components/ui/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
 import { useRouter } from 'next/router';
-import { queryParameterAsString } from 'lib/queryParameters';
-import { getTemplateNameSummary } from 'lib/types';
+import { queryParameterAsString } from 'lib/http/queryParameters';
+import { getTemplateNameSummary } from 'lib/card/faces';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
-import SolRingPrice from 'components/layout/SolRingPrice/SolRingPrice';
-import { formatSalt, MAX_SALT } from 'lib/salt';
+import SolRingPrice from 'components/combo/SolRingPrice/SolRingPrice';
+import { formatSalt, MAX_SALT } from 'lib/salt/salt';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck

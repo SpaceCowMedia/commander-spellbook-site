@@ -1,0 +1,83 @@
+@reference "../../../styles/globals.css";
+
+/* a section of the combo page, like Metadata */
+.section {
+  @apply my-4 flex w-full flex-col gap-3 py-4 md:pr-6;
+}
+
+.sectionTitle {
+  @apply text-xl font-bold;
+}
+
+.widget {
+  @apply relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-white/3;
+
+  container-type: inline-size;
+
+  /* the site's purple, as a band on top */
+  &::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-1 bg-primary;
+  }
+}
+
+.header {
+  @apply px-5 pt-7 pb-4;
+}
+
+/* stops short of the reset button */
+.kicker {
+  @apply mb-2.5 inline-flex max-w-[calc(100%-4.5rem)] items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-bold tracking-wide text-link uppercase dark:bg-primary/20 dark:text-primary;
+}
+
+/* a narrow widget has room for this word or for the reset button, not both */
+.kickerNoun {
+  @container (max-width: 26rem) {
+    @apply sr-only;
+  }
+}
+
+/* level with the kicker */
+.reset {
+  @apply absolute top-6.75 right-2.5 inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-bold text-gray-500 transition-[color,background-color,opacity] focus-visible:ring-3 focus-visible:ring-primary/50 focus-visible:outline-none motion-reduce:transition-none dark:text-gray-400;
+
+  &:not([aria-disabled='true']) {
+    @apply cursor-pointer hover:bg-primary/10 hover:text-link dark:hover:text-primary;
+  }
+
+  &[aria-disabled='true'] {
+    @apply opacity-40;
+  }
+}
+
+.title {
+  @apply font-title text-2xl leading-tight font-bold;
+}
+
+.summary {
+  @apply mt-1.5 text-sm text-gray-600 dark:text-gray-300;
+}
+
+.body {
+  @apply flex flex-col gap-6 px-5 pb-5;
+}
+
+/* The rows touch, so a field without a hint leaves no gap behind, and the fields bring the space
+   between one row of them and the next. */
+.inputs {
+  @apply -mt-4 grid items-end gap-x-4;
+
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+
+  > * {
+    @apply mt-4;
+  }
+}
+
+.wide {
+  @apply col-span-full;
+}
+
+.footer {
+  @apply border-t border-gray-200 px-5 py-3 text-xs text-gray-500 dark:border-white/10 dark:text-gray-400;
+}

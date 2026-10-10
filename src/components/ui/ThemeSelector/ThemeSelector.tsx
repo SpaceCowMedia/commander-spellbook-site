@@ -1,4 +1,4 @@
-import Icon from 'components/layout/Icon/Icon';
+import Icon from 'components/ui/Icon/Icon';
 import React, { useEffect } from 'react';
 import {
   DARK_THEME,
@@ -8,9 +8,9 @@ import {
   applyTheme,
   isDarkTheme,
 } from 'services/theme.service';
-import useCookie from 'lib/useCookie';
+import useCookie from 'lib/react/useCookie';
 import { THEME_SWITCH } from 'lib/viewTransitions';
-import styles from './ThemeSelector.module.scss';
+import styles from './themeSelector.module.scss';
 
 const ThemeSelector: React.FC = () => {
   const [theme, setTheme, loaded] = useCookie(THEME_COOKIE_NAME);

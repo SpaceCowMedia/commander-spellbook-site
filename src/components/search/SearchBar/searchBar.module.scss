@@ -1,0 +1,164 @@
+@reference "../../../styles/globals.css";
+
+.outerContainer {
+  @apply mx-auto;
+
+  a {
+    @apply text-white no-underline;
+  }
+}
+
+.mainSearchInputContainer {
+  @apply flex m-auto h-full;
+}
+
+.mainSearchInput {
+  @apply w-full h-full appearance-none block py-2 leading-tight;
+}
+
+/* typed text only ever has to contrast with the background, so it stays put
+   across states; the placeholder is what shifts on focus */
+.homepageInput {
+  @apply bg-white text-gray-800;
+}
+
+.homepageInput::placeholder {
+  @apply text-gray-500;
+}
+
+.homepageInput:focus::placeholder {
+  @apply text-gray-400;
+}
+
+.homepageInput:focus {
+  @apply outline-hidden bg-white;
+}
+
+/* the nav bar behind this input is `bg-dark`, so blend into it until focused */
+.navInput {
+  @apply bg-dark text-gray-100;
+}
+
+.navInput::placeholder {
+  @apply text-gray-400;
+}
+
+/* focused: light theme lifts the field to white, dark theme keeps the nav bar's
+   own color with a hint of the brand color mixed in */
+.navInput:focus {
+  @apply outline-hidden bg-white text-gray-800 placeholder:text-gray-400;
+  @apply dark:bg-[color-mix(in_oklab,var(--color-primary)_15%,var(--color-dark))] dark:text-gray-100 dark:placeholder:text-gray-100;
+}
+
+/* the icon overlays the input, so it has to contrast with the focused background */
+.mainSearchInputContainer:has(.navInput:focus) .searchInputIcon {
+  @apply bg-gray-800 dark:bg-light;
+}
+
+.linkIcon {
+  @apply bg-white h-4 w-4 mr-2;
+}
+
+.menuIcon {
+  mask: url('../../../assets/svgs/bars-solid.svg') no-repeat center;
+  @apply mr-0;
+}
+
+.advancedSearchIcon {
+  mask: url('../../../assets/svgs/columns-solid.svg') no-repeat center;
+}
+
+.syntaxGuideIcon {
+  mask: url('../../../assets/svgs/question-solid.svg') no-repeat center;
+}
+
+.profileIcon {
+  mask: url('../../../assets/svgs/user-circle-solid.svg') no-repeat center;
+}
+
+.randomIcon {
+  mask: url('../../../assets/svgs/random-solid.svg') no-repeat center;
+}
+
+.discordIcon {
+  mask: url('../../../assets/svgs/discord.svg') no-repeat center;
+}
+
+.searchInputIcon {
+  mask: url('../../../assets/svgs/search-solid.svg') no-repeat center;
+  @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
+}
+
+.searchInputIcon:hover {
+  @apply bg-light;
+}
+
+.menuLink {
+  @apply items-center flex-row px-4 text-white border-l border-white;
+}
+
+/* .menuLink:last-of-type {
+  @apply pr-0;
+} */
+
+.menuLink:hover {
+  @apply text-light;
+}
+
+.menuLink:hover .linkIcon {
+  @apply bg-light;
+}
+
+.mobileMenu {
+  @apply grid md:hidden;
+
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 250ms ease-out,
+    opacity 250ms ease-out;
+
+  &.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.mobileMenuButton {
+  @apply flex flex-row grow items-center w-1/3 rounded-sm py-1 px-2 border border-light mx-2 md:hidden;
+}
+
+.mobileMenuButton:hover {
+  @apply border-light text-light;
+}
+
+.mobileMenuButton:hover .linkIcon {
+  @apply bg-light;
+}
+
+.mobileMenuButton:nth-child(even),
+.mobileMenuButton:last-of-type {
+  @apply mr-0;
+}
+
+.mobileMenuButton:nth-child(odd) {
+  @apply ml-0;
+}
+
+.mobileMenuButton:nth-child(n + 3) {
+  @apply mt-2;
+}
+
+@media (width <= 1280px) {
+  .desktopMenu a div {
+    display: none;
+  }
+}
+
+.buttonContainer {
+  @apply items-center flex-row text-white md:border-l border-white;
+}

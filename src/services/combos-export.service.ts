@@ -1,5 +1,5 @@
 import { Variant } from '@space-cow-media/spellbook-client';
-import { getPrerequisiteList } from 'lib/prerequisitesProcessor';
+import { getPrerequisiteList } from 'lib/combo/prerequisitesProcessor';
 
 const LINE_BREAK = '\n';
 const CSV_SEPARATOR = ';';

@@ -1,5 +1,5 @@
 import styles from './comboResults.module.scss';
-import ComboResult from '../ComboResult/ComboResult';
+import ComboResult from 'components/search/ComboResult/ComboResult';
 import { ClassifiedVariant, Deck, Variant, VariantPrices } from '@space-cow-media/spellbook-client';
 import React, { addTransitionType, startTransition, useId, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
