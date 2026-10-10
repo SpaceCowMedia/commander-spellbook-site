@@ -1,7 +1,7 @@
 import styles from './hoverPreview.module.scss';
 import React, { use, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ModalPortalContext } from 'components/ui/Modal/Modal';
+import { ModalPortalContext } from 'components/layout/Modal/Modal';
 
 const VISIBLE_TOOLTIP_DISPLAY = 'flex';
 const TOOLTIP_SIDE_SHIFT_PX = 30;

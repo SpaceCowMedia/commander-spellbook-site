@@ -1,0 +1,7 @@
+/* the spinner rotates, so the wrapper carries the translation that centers it */
+.centered {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,4 +1,4 @@
-import HttpErrorPage from '../components/layout/HttpErrorPage/HttpErrorPage';
+import HttpErrorPage from 'components/ui/HttpErrorPage/HttpErrorPage';
 import React from 'react';
 
 const NotFoundPage: React.FC = () => {

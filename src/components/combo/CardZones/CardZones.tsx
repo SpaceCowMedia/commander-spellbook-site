@@ -1,10 +1,10 @@
 import React, { useId } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import Icon from 'components/layout/Icon/Icon';
+import Icon from 'components/ui/Icon/Icon';
 import { PREREQ_ICON_MAP } from 'components/combo/PrerequisiteList/PrerequisiteList';
-import { ZONE_MAP } from 'lib/prerequisitesProcessor';
-import cn from 'lib/cn';
+import { ZONE_MAP } from 'lib/combo/prerequisitesProcessor';
+import classNames from 'lib/react/classNames';
 import styles from './cardZones.module.scss';
 
 type Zone = keyof typeof ZONE_MAP;
@@ -29,7 +29,7 @@ interface SymbolProps {
 const ZoneSymbol: React.FC<SymbolProps> = ({ description, tooltipId, zone, className, children }) => (
   <button
     type="button"
-    className={cn(styles.symbol, className)}
+    className={classNames(styles.symbol, className)}
     aria-label={description}
     data-zone={zone}
     data-tooltip-id={tooltipId}
@@ -62,7 +62,7 @@ const CardZones: React.FC<Props> = ({ card, className }) => {
   };
 
   return (
-    <div className={cn(styles.zones, className)}>
+    <div className={classNames(styles.zones, className)}>
       {anyZone ? (
         <ZoneSymbol description="Can start in any zone" tooltipId={tooltipId} className={styles.anyZone}>
           Any zone

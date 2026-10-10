@@ -1,6 +1,6 @@
 import React from 'react';
-import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import { apiConfiguration } from 'services/api.service';
 import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';

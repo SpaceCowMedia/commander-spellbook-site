@@ -1,5 +1,5 @@
 import { Variant } from '@space-cow-media/spellbook-client';
-import { getFaceNames } from 'lib/types';
+import { getFaceNames } from 'lib/card/faces';
 
 const getComboUrl = (variant: Variant) => {
   return `https://edhrec.com/combos/${variant.identity.toLowerCase()}/${variant.id}`;

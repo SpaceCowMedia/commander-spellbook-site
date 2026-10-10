@@ -1,19 +1,23 @@
 import React from 'react';
 import { VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
 import { useRouter } from 'next/router';
-import NoCombosFound from 'components/layout/NoCombosFound/NoCombosFound';
+import NoCombosFound from 'components/search/NoCombosFound/NoCombosFound';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
 import styles from './my-submissions.module.scss';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 import { pageTurn, pushWithTransition } from 'lib/viewTransitions';
 import ComboSubmissionItem from 'components/submission/ComboSubmissionItem/ComboSubmissionItem';
-import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
-import { ComboSubmission, variantSuggestionFromSubmission, variantSuggestionToSubmission } from 'lib/types';
+import {
+  ComboSubmission,
+  variantSuggestionFromSubmission,
+  variantSuggestionToSubmission,
+} from 'lib/submission/submissions';
 
 const PAGE_SIZE = 20;
 

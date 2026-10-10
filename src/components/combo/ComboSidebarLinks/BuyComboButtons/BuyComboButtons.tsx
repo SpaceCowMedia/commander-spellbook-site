@@ -1,7 +1,7 @@
-import ExternalLink from '../../../layout/ExternalLink/ExternalLink';
-import { event } from '../../../../lib/googleAnalytics';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
+import { event } from 'lib/googleAnalytics';
 import React from 'react';
-import SolRingPrice from '../../../layout/SolRingPrice/SolRingPrice';
+import SolRingPrice from 'components/combo/SolRingPrice/SolRingPrice';
 
 interface Props {
   cards: string[];

@@ -1,7 +1,7 @@
 import React from 'react';
-import ArtCircle from '../../components/layout/ArtCircle/ArtCircle';
-import styles from '../report-error.module.scss';
-import SpellbookHead from '../../components/SpellbookHead/SpellbookHead';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import styles from './login.module.scss';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import Link from 'next/link';
 
 const Login: React.FC = () => {

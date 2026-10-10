@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './cardHeader.module.scss';
-import CardName from '../../layout/CardName/CardName';
+import CardName from 'components/card/CardName/CardName';
 import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 /* A combo title only names the first few cards; everything else is summarised in the subtitle.

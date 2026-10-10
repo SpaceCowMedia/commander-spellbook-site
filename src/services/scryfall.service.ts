@@ -1,7 +1,7 @@
 import { ScryfallCard } from '@scryfall/api-types';
 import scryfall from 'scryfall-client';
 import Card from 'scryfall-client/dist/models/card';
-import { ReplacementCard, ReplacementsPage } from 'lib/types';
+import { ReplacementCard, ReplacementsPage } from 'lib/card/replacements';
 
 function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   if ('image_uris' in card) {

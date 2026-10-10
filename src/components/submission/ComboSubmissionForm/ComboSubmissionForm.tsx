@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import ArtCircle from '../../layout/ArtCircle/ArtCircle';
-import CardSubmission, { CardGroup } from '../CardSubmission/CardSubmission';
-import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import CardSubmission, { CardGroup } from 'components/submission/CardSubmission/CardSubmission';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import { useRouter } from 'next/router';
-import FeatureSubmission from '../Feature Submission/FeatureSubmission';
-import Loader from '../../layout/Loader/Loader';
-import ErrorMessage, { itemErrors, listLevelErrors } from '../ErrorMessage/ErrorMessage';
-import { ComboSubmissionErrorType } from '../../../lib/types';
-import normalizeQuotes from '../../../lib/normalizeQuotes';
-import freeCastingCardName from '../../../lib/freeCastingCardName';
-import { formatDuration, httpErrorMessage, retryAfterSeconds } from '../../../lib/httpErrors';
+import FeatureSubmission from 'components/submission/FeatureSubmission/FeatureSubmission';
+import Loader from 'components/ui/Loader/Loader';
+import ErrorMessage, { itemErrors, listLevelErrors } from 'components/submission/ErrorMessage/ErrorMessage';
+import { ComboSubmissionErrorType } from 'lib/submission/submissions';
+import normalizeQuotes from 'lib/text/normalizeQuotes';
+import freeCastingCardName from 'lib/submission/freeCastingCardName';
+import { formatDuration, httpErrorMessage, retryAfterSeconds } from 'lib/http/httpErrors';
 import Alert from 'components/layout/Alert/Alert';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
-import Modal from 'components/ui/Modal/Modal';
+import Modal from 'components/layout/Modal/Modal';
 import Link from 'next/link';
 import {
   CardInDeckRequest,
@@ -30,10 +30,10 @@ import {
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
-import Icon from '../../layout/Icon/Icon';
-import SectionHeading from '../SectionHeading/SectionHeading';
-import ComboResult from '../../search/ComboResult/ComboResult';
-import useRowKeys from 'lib/useRowKeys';
+import Icon from 'components/ui/Icon/Icon';
+import SectionHeading from 'components/submission/SectionHeading/SectionHeading';
+import ComboResult from 'components/search/ComboResult/ComboResult';
+import useRowKeys from 'lib/react/useRowKeys';
 
 const VALIDATION_INTERVAL_MS = 3000;
 const VALIDATION_MAX_RETRIES = 3;

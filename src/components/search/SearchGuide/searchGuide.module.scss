@@ -1,0 +1,31 @@
+@reference "../../../styles/globals.css";
+
+.searchGuide {
+  code {
+    @apply pl-1 pr-1;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gray-400 pl-4 mb-1;
+  }
+
+  .description p {
+    @apply mb-4;
+  }
+
+  &:last-child {
+    @apply border-0;
+  }
+
+  @media (width >= 768px) {
+    &:nth-child(even) {
+      .description {
+        @apply order-last pr-0 pl-4;
+      }
+
+      .searchSnippets {
+        @apply pl-0 pr-4;
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
-import ExternalLink from '../components/layout/ExternalLink/ExternalLink';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import styles from './privacy-policy.module.scss';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import React from 'react';
 
 const PrivacyPolicy: React.FC = () => {
