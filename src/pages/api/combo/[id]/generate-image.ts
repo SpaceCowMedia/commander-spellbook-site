@@ -3,8 +3,8 @@ import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canva
 import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
-import serverPath from 'lib/serverPath';
-import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
+import serverPath from 'lib/http/serverPath';
+import { countNotablePrerequisites } from 'lib/combo/prerequisitesProcessor';
 
 const width = 1080;
 const manaOffset = width / 25;

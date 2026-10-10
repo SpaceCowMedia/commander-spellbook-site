@@ -1,8 +1,8 @@
 import { ColorEnum, VariantsApi } from '@space-cow-media/spellbook-client';
-import ArtCircle from 'components/layout/ArtCircle/ArtCircle';
-import ManaSymbol from 'components/layout/ManaSymbol/ManaSymbol';
-import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
-import { LEGALITY_FORMATS } from 'lib/types';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import ManaSymbol from 'components/symbols/ManaSymbol/ManaSymbol';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { LEGALITY_FORMATS } from 'lib/combo/legality';
 import useFoolsDay from 'lib/foolsDay';
 import { GetStaticProps } from 'next';
 import React from 'react';

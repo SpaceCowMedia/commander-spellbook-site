@@ -1,17 +1,17 @@
 import Link from 'next/link';
-import Footer from '../components/layout/Footer/Footer';
-import SearchBar from '../components/SearchBar/SearchBar';
-import SpellbookLogo from '../components/layout/SpellbookLogo/SpellbookLogo';
-import RandomButton from '../components/RandomButton/RandomButton';
+import Footer from 'components/ui/Footer/Footer';
+import SearchBar from 'components/search/SearchBar/SearchBar';
+import SpellbookLogo from 'components/home/SpellbookLogo/SpellbookLogo';
+import RandomButton from 'components/home/RandomButton/RandomButton';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import UserDropdown from '../components/layout/UserDropdown/UserDropdown';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import UserDropdown from 'components/ui/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { PropertiesApi } from '@space-cow-media/spellbook-client';
 import { GetStaticProps } from 'next';
-import SuggestionBalloon from 'components/layout/SuggestionBalloon/SuggestionBalloon';
-import { saltVotingSuggestion } from 'lib/saltVotingHistory';
+import SuggestionBalloon from 'components/home/SuggestionBalloon/SuggestionBalloon';
+import { saltVotingSuggestion } from 'lib/salt/saltVotingHistory';
 
 const HOME_SUGGESTIONS = [saltVotingSuggestion];
 

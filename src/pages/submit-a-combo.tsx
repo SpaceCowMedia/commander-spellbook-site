@@ -1,11 +1,11 @@
 import React from 'react';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { withApiErrorPage } from 'lib/apiErrorPage';
-import { httpErrorStatus } from 'lib/httpErrors';
-import ComboSubmissionForm from '../components/submission/ComboSubmissionForm/ComboSubmissionForm';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
+import { httpErrorStatus } from 'lib/http/httpErrors';
+import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 import { Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 

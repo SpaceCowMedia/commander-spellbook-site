@@ -49,6 +49,17 @@ export default defineConfig(
     },
   },
   {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [{ regex: '^\\.\\./', message: 'Import through the alias path (components/…, lib/…) instead.' }],
+        },
+      ] as const,
+    },
+  },
+  {
     files: ['**/*.config.js', '**/*.config.ts', '**/*.config.mjs'],
     rules: {
       'import/no-anonymous-default-export': 'off' as const,
