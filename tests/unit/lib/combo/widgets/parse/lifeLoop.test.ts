@@ -30,6 +30,25 @@ describe('parseLifeLoop', () => {
     expect(parseLifeLoop(lines.join('\n'))).toBeUndefined();
   });
 
+  test('reads a drain set off by a comma, and one worded as an amount of life equal to your devotion', () => {
+    expect(
+      parseLifeLoop(
+        [
+          "Resolve Kokusho's trigger, causing each opponent to lose 5 life, and causing you to gain life equal to the life lost this way.",
+          'Repeat.',
+        ].join('\n'),
+      )?.loop,
+    ).toEqual([{ kind: 'drain', perOpponent: 5 }]);
+    expect(
+      parseLifeLoop(
+        [
+          'Resolve the Gray Merchant trigger, causing each opponent to lose an amount of life equal to your devotion to black.',
+          'Repeat.',
+        ].join('\n'),
+      )?.loop,
+    ).toEqual([{ kind: 'drain', perOpponent: 'devotion' }]);
+  });
+
   test('ignores life that someone else loses', () => {
     expect(
       parseLifeLoop('Activate the ability, causing each opponent to lose 1 life and you to gain that much.\nRepeat.')

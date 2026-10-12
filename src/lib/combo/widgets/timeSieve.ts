@@ -33,10 +33,8 @@ export const timeSieve = defineWidget('time-sieve', {
         meter: { have: attackers, need: needed, unit: 'attackers' },
         charts: [
           {
-            kind: 'dots',
             title: 'Attackers needed',
             xLabel: TABLE.label,
-            yLabel: 'Attackers',
             selects: TABLE.key,
             steadyFrom: ONE_IS_ENOUGH,
             ...sweptDots(

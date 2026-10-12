@@ -5,7 +5,6 @@ import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWith
 import ChoiceField from 'components/ui/ChoiceField/ChoiceField';
 import DotChart from 'components/ui/DotChart/DotChart';
 import Icon from 'components/ui/Icon/Icon';
-import LineChart from 'components/ui/LineChart/LineChart';
 import NumberField from 'components/ui/NumberField/NumberField';
 import { calculatorFor, detectWidget } from 'lib/combo/widgets';
 import type { Calculator } from 'lib/combo/widgets/shared/calculator';
@@ -26,15 +25,14 @@ interface PanelProps {
 }
 
 const Panel: React.FC<PanelProps> = ({ widget, calculator, comboId }) => {
-  const { values, result, pristine, resets, setNumber, setChoice, setOpponents, reset } = useWidgetValues(calculator);
+  const { values, result, pristine, resets, setNumber, setChoice, setOpponents, setPage, reset } =
+    useWidgetValues(calculator);
   const titleId = useId();
   const category = CATEGORIES[calculator.category];
   /* where a chart's answer stops changing, the input it selects stops too */
   const steadyFrom: Record<string, number | undefined> = Object.fromEntries(
     (result.charts ?? []).flatMap((chart) =>
-      chart.kind === 'dots' && chart.selects && chart.steadyFrom !== undefined
-        ? [[chart.selects, chart.steadyFrom]]
-        : [],
+      chart.selects && chart.steadyFrom !== undefined ? [[chart.selects, chart.steadyFrom]] : [],
     ),
   );
   const shown = (key: string) => Math.min(values.numbers[key], steadyFrom[key] ?? Infinity);
@@ -116,34 +114,23 @@ const Panel: React.FC<PanelProps> = ({ widget, calculator, comboId }) => {
 
         {result.stats && result.stats.length > 0 && <StatList stats={result.stats} />}
 
-        {result.charts?.map((chart, i) =>
-          chart.kind === 'dots' ? (
-            <DotChart
-              key={`dots${i}`}
-              title={chart.title}
-              xLabel={chart.xLabel}
-              dots={chart.dots.map((dot) => ({ ...dot, label: <TextWithMagicSymbol text={dot.label} /> }))}
-              before={chart.before}
-              after={chart.after}
-              max={chart.percent ? 100 : undefined}
-              format={chart.percent ? percent : formatCompact}
-              selected={chart.selects ? shown(chart.selects) : undefined}
-              onSelect={chart.selects ? (x) => setNumber(chart.selects!, x) : undefined}
-              orMore={chart.steadyFrom}
-            />
-          ) : (
-            <LineChart
-              key={`line${i}`}
-              title={chart.title}
-              xLabel={chart.xLabel}
-              yLabel={chart.yLabel}
-              points={chart.points}
-              marks={chart.marks}
-              summary={chart.summary}
-              format={formatCompact}
-            />
-          ),
-        )}
+        {result.charts?.map((chart, i) => (
+          <DotChart
+            key={i}
+            title={chart.title}
+            xLabel={chart.xLabel}
+            dots={chart.dots.map((dot) => ({ ...dot, label: <TextWithMagicSymbol text={dot.label} /> }))}
+            before={chart.before}
+            after={chart.after}
+            max={chart.percent ? 100 : undefined}
+            format={chart.percent ? percent : formatCompact}
+            selected={chart.selects ? shown(chart.selects) : undefined}
+            onSelect={chart.selects ? (x) => setNumber(chart.selects!, x) : undefined}
+            orMore={chart.steadyFrom}
+            marks={chart.marks}
+            {...(chart.page !== undefined && { page: chart.page, onPage: setPage })}
+          />
+        ))}
       </div>
 
       <footer className={styles.footer}>

@@ -38,10 +38,8 @@ export const siegebreakerFaceBreaker = defineWidget('siegebreaker-face-breaker',
         ],
         charts: [
           {
-            kind: 'dots',
             title: 'Mana to start',
             xLabel: OPPONENTS_HIT.label,
-            yLabel: 'Mana value',
             selects: OPPONENTS_HIT.key,
             steadyFrom: FREE_FROM,
             ...sweptDots(

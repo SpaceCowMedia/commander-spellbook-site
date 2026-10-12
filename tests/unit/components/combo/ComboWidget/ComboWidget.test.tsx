@@ -135,7 +135,6 @@ test.each([
   ['chances as percentages', '778-3750'],
   ['mana as the answer', '2024-7308'],
   ['a chart of the steps of a loop', '38-659-1288'],
-  ['growth charted upkeep by upkeep', '851-4365-7858'],
   ['opponents with more than their life', '2484-4083'],
   ['mana as a statistic', '2868-4629'],
   ['mana to start a loop that pays itself back', '2440-6873'],

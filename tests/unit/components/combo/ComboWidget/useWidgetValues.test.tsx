@@ -59,3 +59,20 @@ test('goes back to the initial values, and knows when it is there', () => {
   expect(result.current.result.headline.value).toBe('-40');
   expect(result.current.resets).toBe(before + 1);
 });
+
+test('turns the charts to the page picked, and back to the first when an input changes', () => {
+  const paged: Calculator = {
+    ...calculator,
+    compute: (values) => ({ headline: { label: 'Page', value: String(values.page) } }),
+  };
+  const { result } = renderHook(() => useWidgetValues(paged));
+  expect(result.current.result.headline.value).toBe('0');
+  act(() => result.current.setPage(3));
+  expect(result.current.result.headline.value).toBe('3');
+  expect(result.current.pristine).toBe(true);
+  act(() => result.current.setNumber('life', 100));
+  expect(result.current.result.headline.value).toBe('0');
+  act(() => result.current.setPage(2));
+  act(() => result.current.reset());
+  expect(result.current.result.headline.value).toBe('0');
+});

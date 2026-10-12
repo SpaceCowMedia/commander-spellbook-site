@@ -50,6 +50,42 @@ export function sweptDots(
   return dots(sweep(input, current, steadyFrom, step), dot, { min: input.min, max: Math.min(input.max, steadyFrom) });
 }
 
+/* Dots one step apart, added in the order a loop goes through them */
+export function stepDots(): { dots: Dot[]; add(y: number, label: string, tone?: Tone): void } {
+  const dots: Dot[] = [];
+  return {
+    dots,
+    add: (y, label, tone) => {
+      dots.push({ x: dots.length, y, label, ...(tone && { tone }) });
+    },
+  };
+}
+
+/* A page of a loop played step by step. The first page starts with the `lead` dots before the loop
+   proper, like where it starts, and each page shows `size` steps after those, the steps on either
+   side of a page being where its line heads. The loop ends where `play`, which gives its first
+   `count` dots placed by their step, gives no more, or where a number grows past what one can hold. */
+export function stepPage(
+  play: (count: number) => Dot[],
+  page: number,
+  size: number,
+  lead = 1,
+): Pick<DotChart, 'dots' | 'before' | 'after' | 'page'> {
+  const played = play(lead + 1 + (page + 1) * size);
+  const end = played.findIndex((dot) => !Number.isFinite(dot.y));
+  const steps = end < 0 ? played : played.slice(0, end);
+  const shown = Math.max(0, Math.min(page, Math.ceil((steps.length - lead) / size) - 1));
+  const from = shown === 0 ? 0 : lead + shown * size;
+  const to = lead + (shown + 1) * size;
+  const point = ({ x, y }: Dot) => ({ x, y });
+  return {
+    dots: steps.slice(from, to),
+    ...(from > 0 && { before: point(steps[from - 1]) }),
+    ...(to < steps.length && { after: point(steps[to]) }),
+    page: shown,
+  };
+}
+
 export function chanceTone(chance: number): Tone {
   return chance >= 0.9 ? 'good' : chance >= 0.5 ? 'warn' : 'bad';
 }

@@ -15,7 +15,7 @@ test('Terror of the Peaks: every copy sees every other one enter', () => {
   expect(result.headline).toEqual({ label: 'Total damage', value: '125', caption: '25 triggers of 5' });
   expect(result.stats).toEqual([{ label: 'X', value: '5', caption: '{5}{5}{R}' }]);
   const chart = result.charts?.[0];
-  expect(chart?.kind === 'dots' && chart.dots.find((dot) => dot.x === 11)).toEqual({
+  expect(chart?.dots.find((dot) => dot.x === 11)).toEqual({
     x: 11,
     y: 125,
     label: '{11}: 125 damage',

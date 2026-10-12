@@ -1,4 +1,4 @@
-import type { DotChart, LineChart, Result, Stat } from './shared/calculator';
+import type { DotChart, Result, Stat } from './shared/calculator';
 import { sweptDots } from './shared/charts';
 import { formatNumber, formatReachable, plural, signed } from './shared/format';
 import { LIFE, numberInput } from './shared/inputs';
@@ -7,7 +7,8 @@ import {
   NO_LOOP_INPUTS,
   firstRisingLoop,
   hasStep,
-  lifeTrace,
+  lifePage,
+  lifeSteps,
   loopsUntilAbove,
   manaToGoOff,
   stormMinimumLife,
@@ -58,8 +59,8 @@ export const stormLifeLoop = defineWidget<'storm-life-loop', LifeLoop & { payoff
 
         const stats: Stat[] = [];
         if (reachable) {
-          const firstLoop = lifeTrace(spec, inputs, start, 1);
-          const afterSetup = firstLoop.filter((point) => point.x === 0).pop()!.y;
+          const firstLoop = lifeSteps(spec, inputs, start, 1 + spec.setup.length + spec.loop.length);
+          const afterSetup = firstLoop[spec.setup.length].y;
           stats.push({ label: 'Net life, first loop', value: signed(firstLoop[firstLoop.length - 1].y - afterSetup) });
         }
         if (risingFrom && risingFrom > 1) {
@@ -77,10 +78,8 @@ export const stormLifeLoop = defineWidget<'storm-life-loop', LifeLoop & { payoff
         }
 
         const byStorm: DotChart = {
-          kind: 'dots',
           title: 'Minimum life by spells already cast',
           xLabel: 'Spells cast before the loop',
-          yLabel: 'Minimum life',
           selects: STORM.key,
           ...sweptDots(STORM, inputs.storm, (storm) => {
             const need = stormMinimumLife(spec, { ...inputs, storm });
@@ -93,22 +92,15 @@ export const stormLifeLoop = defineWidget<'storm-life-loop', LifeLoop & { payoff
         };
         const charts: Result['charts'] = [byStorm];
         if (reachable) {
-          const loops = Math.min(14, Math.max(4, (ready ?? risingFrom ?? 4) + 2));
-          const points = lifeTrace(spec, inputs, start, loops);
-          const lowest = points.reduce((low, point) => (point.y < low.y ? point : low), points[0]);
-          const curve: LineChart = {
-            kind: 'line',
+          charts.push({
             title: `Your life, starting from ${formatNumber(start)}`,
-            xLabel: 'Loops',
-            yLabel: 'Life',
-            points,
+            xLabel: 'Step',
             marks: [
               { y: 1, label: 'Lowest you can go', tone: 'bad' },
               ...(payoff ? [{ y: payoff.life + 1, label: `${payoff.name} can fire`, tone: 'good' as const }] : []),
             ],
-            summary: `Starting at ${formatNumber(start)} life, your life is lowest at ${formatNumber(lowest.y)} and reaches ${formatNumber(points[points.length - 1].y)} after ${plural(loops, 'loop')}.`,
-          };
-          charts.push(curve);
+            ...lifePage(spec, inputs, start, values.page ?? 0),
+          });
         }
 
         return {

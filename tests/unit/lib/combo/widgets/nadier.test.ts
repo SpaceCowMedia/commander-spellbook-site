@@ -30,7 +30,7 @@ test('peaks once and then pays for itself, like cycle by cycle', () => {
 });
 
 test('charts the mana step by step: up for Nadier, down to recast it, up for its Elves', () => {
-  const { dots, after } = cycleByCycle(1, 3);
+  const dots = cycleByCycle(1, 3);
   expect(dots.map((dot) => dot.y)).toEqual([1, 8, 0, 3, 10, 0, 6, 13, 1, 10, 17, 3, 15, 22, 6, 21]);
   expect(dots.slice(0, 4).map((dot) => dot.label)).toEqual([
     'To start: {1}',
@@ -38,16 +38,15 @@ test('charts the mana step by step: up for Nadier, down to recast it, up for its
     'Recast it for {8}: {0} left',
     'Exile its 3 Elves: {3}',
   ]);
-  expect(after).toEqual({ x: 16, y: 28 });
   const chart = run(calculatorFor(nadier, '3035-3519')).charts![1] as DotChart;
-  expect(chart).toMatchObject({ kind: 'dots', title: 'Your mana, step by step', xLabel: 'Step' });
+  expect(chart).toMatchObject({ title: 'Your mana, step by step', xLabel: 'Step', after: { x: 16, y: 28 } });
   expect(chart.dots).toEqual(dots);
 });
 
 test('the mana to start is all spent at the worst step and never short', () => {
   for (let casts = 0; casts < 12; casts++) {
     for (let power = 0; power < 12; power++) {
-      const lowest = Math.min(...cycleByCycle(casts, power, 40).dots.map((dot) => dot.y));
+      const lowest = Math.min(...cycleByCycle(casts, power, 1 + 3 * 40).map((dot) => dot.y));
       expect(lowest, `${casts} casts, ${power} power`).toBeGreaterThanOrEqual(0);
       if (nadierMana(casts, power) > 0) {
         expect(lowest, `${casts} casts, ${power} power`).toBe(0);

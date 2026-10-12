@@ -56,10 +56,8 @@ export const mayaelsAriaDoubling = defineWidget('mayaels-aria-doubling', {
           ],
           charts: [
             {
-              kind: 'dots',
               title: 'Activations by starting power',
               xLabel: 'Starting power',
-              yLabel: 'Activations',
               selects: power.key,
               steadyFrom: target,
               ...sweptDots(

@@ -13,9 +13,9 @@ const HALF_PAYMENT = /\bpay(?:s|ing)? half (?:of )?your life/i;
 const CHOICE = /^(.*?)\bby paying (.+?) or (.+?)\s*\bby paying (.+?)\.?$/i;
 const CAST = /(?:^|,\s*)(?:cast|recast)\b/i;
 const FIXED_GAIN = new RegExp(`\\b(?:you (?:to )?gain|gaining you|gain) ${NUMBER} life\\b(?! for each)`, 'i');
-const DEVOTION_DRAIN = /\beach opponent to lose life equal to your devotion\b/i;
+const DEVOTION_DRAIN = /\beach opponent to lose (?:an amount of )?life equal to your devotion\b/i;
 const FIXED_DRAIN = new RegExp(
-  `\\beach opponent to lose ${NUMBER} life and (?:causing )?(?:you to gain|gaining you|you gain) (?:life equal to|that much)`,
+  `\\beach opponent to lose ${NUMBER} life,? and (?:causing )?(?:you to gain|gaining you|you gain) (?:life equal to|that much)`,
   'i',
 );
 
@@ -104,7 +104,7 @@ function parseLine(line: string, extortSeen: boolean): Line {
 /* Where the repeated part is: "Repeat." repeats every step above it, "Repeat from step 5." the steps
    from the fifth on, and "Repeat step 5." only that one. "Repeat step 3 for each remaining trigger"
    repeats inside the loop instead, and doesn't end it. */
-function loopBounds(lines: string[]): { start: number; end: number } | undefined {
+export function loopBounds(lines: string[]): { start: number; end: number } | undefined {
   for (let i = 0; i < lines.length; i++) {
     const rest = lines[i].match(/^repeat\b(.*)$/i)?.[1].trim();
     if (rest === undefined) {

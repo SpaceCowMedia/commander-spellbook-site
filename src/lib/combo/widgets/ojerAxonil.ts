@@ -48,10 +48,8 @@ export const ojerAxonil = defineWidget('ojer-axonil', {
           ],
           charts: [
             {
-              kind: 'dots',
               title: "Activations by Ojer Axonil's power",
               xLabel: POWER.label,
-              yLabel: 'Activations',
               selects: POWER.key,
               steadyFrom: highestLife,
               ...sweptDots(

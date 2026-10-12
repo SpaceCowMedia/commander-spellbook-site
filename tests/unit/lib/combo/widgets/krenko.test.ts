@@ -37,10 +37,10 @@ test('needs a Goblin less when Goblin Warchief makes Krenko cost {1} less', () =
 });
 
 test('keeps up with the tax on two more Goblins a loop, never short of the next recast', () => {
-  const { dots, after, failedAt } = stepByStep(6, 1, 1);
+  const { dots, failedAt } = stepByStep(6, 1, 1);
   expect(failedAt).toBeUndefined();
   expect(dots.map((dot) => dot.y)).toEqual([6, 12, 8, 16, 10, 20, 12, 24, 14, 28, 16, 32, 18, 36, 20, 40, 22]);
-  expect(after).toEqual({ x: 17, y: 44 });
+  expect(stepByStep(6, 1, 1, 18).dots[17]).toMatchObject({ x: 17, y: 44 });
 });
 
 test('starts at the fewest Goblins that keep the loop going after one cast of Krenko', () => {
@@ -66,7 +66,7 @@ test('takes the discount from The Fire Crystal too', () => {
 
 test('charts the Goblins step by step: up when Krenko taps, down to recast it', () => {
   const chart = run(calculator(), { numbers: { goblins: 8, casts: 1 } }).charts![0] as DotChart;
-  expect(chart).toMatchObject({ kind: 'dots', title: 'Goblins, step by step', xLabel: 'Step' });
+  expect(chart).toMatchObject({ title: 'Goblins, step by step', xLabel: 'Step' });
   expect(chart.dots).toHaveLength(17);
   expect(chart.dots.slice(0, 5)).toEqual([
     { x: 0, y: 8, label: 'To start: 8 Goblins' },
@@ -94,9 +94,8 @@ test('charges {2}{R}{R} plus tax without a discount', () => {
 });
 
 test('ends the chart on the tap that leaves too few Goblins to recast Krenko', () => {
-  const { dots, after, failedAt } = stepByStep(4, 1, 1);
+  const { dots, failedAt } = stepByStep(4, 1, 1, 100);
   expect(failedAt).toBe(3);
-  expect(after).toBeUndefined();
   expect(dots.map((dot) => dot.y)).toEqual([4, 8, 4, 8, 2, 4]);
   expect(dots.at(-1)).toEqual({
     x: 5,

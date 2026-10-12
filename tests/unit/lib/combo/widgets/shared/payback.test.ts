@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { formatMana, manaValue, parseMana } from 'lib/symbols/mana';
 import { numberInput } from 'lib/combo/widgets/shared/inputs';
-import { Payback, startFor, steadyFrom } from 'lib/combo/widgets/shared/payback';
+import { Payback, manaSteps, startFor, steadyFrom } from 'lib/combo/widgets/shared/payback';
 
 const loop = (overrides: Partial<Payback>): Payback => ({
   costs: ['{5}'],
@@ -16,7 +16,11 @@ const loop = (overrides: Partial<Payback>): Payback => ({
 
 /* Every order of activations and refunds, with mana of one kind, as the reference: the least mana
    from which some order reaches a pool that pays for the next activation, which pays for itself. */
-function leastByEveryOrder({ costs, rate, base, made, bonus, stacks }: Payback, counted: number): number {
+function leastByEveryOrder(
+  { costs, rate, base, made, refunds, bonus, after = 0, stacks }: Payback,
+  counted: number,
+): number {
+  const each = refunds ?? made;
   const generic = costs.map((cost) => parseMana(cost)!.generic);
   const reaches = (start: number) => {
     const seen = new Set<string>();
@@ -28,14 +32,17 @@ function leastByEveryOrder({ costs, rate, base, made, bonus, stacks }: Payback, 
       seen.add(key);
       const next = Math.min(activations, generic.length - 1);
       const dearest = Math.max(...generic.slice(next));
-      if (bonus + made * rate * (base + counted + creatures + made) >= dearest && pool >= dearest) {
+      if (bonus + each * rate * (base + counted + creatures + made) >= dearest + after && pool >= dearest) {
         return true;
       }
       const cost = generic[next];
       if (pool >= cost) {
-        const after = creatures + made;
-        const back = stacks ? bonus : bonus + made * rate * (base + counted + after);
-        if (search(pool - cost + back, activations + 1, after, stacks ? pending + made : 0)) {
+        const total = creatures + made;
+        const back = stacks ? bonus : bonus + each * rate * (base + counted + total) - after;
+        if (
+          pool - cost + back >= 0 &&
+          search(pool - cost + back, activations + 1, total, stacks ? pending + each : 0)
+        ) {
           return true;
         }
       }
@@ -68,6 +75,35 @@ describe('the least mana to start a loop that pays back more and more', () => {
     for (const counted of [1, 2, 3]) {
       expect(manaValue(startFor(synthesizers, counted)!.mana)).toBe(leastByEveryOrder(synthesizers, counted));
     }
+  });
+
+  test('matches every order with mana paid after the refunds, and with one refund for many permanents', () => {
+    for (const costs of [['{1}'], ['{2}'], ['{4}'], ['{6}'], ['{7}']]) {
+      for (const shape of [
+        loop({ costs, stacks: false, after: 1 }),
+        loop({ costs, stacks: false, after: 2 }),
+        loop({ costs, stacks: false, made: 3, refunds: 1 }),
+        loop({ costs, stacks: true, made: 3, refunds: 1 }),
+      ]) {
+        for (const counted of [0, 1, 3]) {
+          expect(manaValue(startFor(shape, counted)!.mana), `${JSON.stringify(shape)} ${counted}`).toBe(
+            leastByEveryOrder(shape, counted),
+          );
+        }
+      }
+    }
+  });
+
+  test('returns Trusty Boomerang for {2} after each refund', () => {
+    const boomerang = loop({ costs: ['{1}'], after: 2, stacks: false });
+    expect(manaValue(startFor(boomerang, 0)!.mana)).toBe(4);
+    expect(manaValue(startFor({ ...boomerang, base: 1 }, 0)!.mana)).toBe(2);
+  });
+
+  test('taps each Bag End Banquet copy once for every Food', () => {
+    const banquet = loop({ costs: ['{6}'], made: 3, refunds: 1, stacks: false, colorRate: Infinity });
+    expect([0, 1, 2, 3, 9].map((foods) => manaValue(startFor(banquet, foods)!.mana))).toEqual([9, 8, 7, 6, 6]);
+    expect(manaValue(startFor({ ...banquet, costs: ['{7}'] }, 0)!.mana)).toBe(12);
   });
 
   test('stacks Fire Nation Archers activations for one mana less than one at a time', () => {
@@ -110,9 +146,16 @@ test('settles at the count from which the start no longer changes', () => {
   };
   for (const costs of [['{2}'], ['{5}'], ['{2}', '{5}'], ['{U}{R}'], ['{2}', '{5}', '{6}']]) {
     for (const stacks of [true, false]) {
-      for (const made of [1, 2]) {
+      for (const made of [1, 2, 3]) {
         for (const extra of [0, 3]) {
-          const shape = loop({ costs, stacks, made, bonus: made === 2 ? 1 : 0 });
+          const shape = loop({
+            costs,
+            stacks,
+            made,
+            bonus: made === 2 ? 1 : 0,
+            ...(made === 3 && { refunds: 1 }),
+            ...(!stacks && made === 1 && { after: 2 }),
+          });
           const steady = steadyFrom(shape, counted, extra)!;
           const settled = answer(shape, steady, extra);
           const name = `${costs} ${stacks} ${made} ${extra}`;
@@ -127,4 +170,31 @@ test('settles at the count from which the start no longer changes', () => {
     }
   }
   expect(steadyFrom(loop({ costs: ['{R}'], colorRate: Infinity }), counted)).toBeUndefined();
+});
+
+describe('the mana step by step', () => {
+  test('goes down for each activation and up for each refund, for as many steps as asked', () => {
+    const archers = loop({ costs: ['{5}'] });
+    const steps = manaSteps(archers, 0, 0, startFor(archers, 0)!, 'Mana Echoes adds', 16);
+    expect(steps.map((dot) => dot.y)).toEqual([13, 8, 3, 5, 0, 3, 6, 1, 5, 0, 5, 0, 6, 1, 8, 3]);
+    expect(steps.slice(0, 4).map((dot) => dot.label)).toEqual([
+      'To start: {13}',
+      'Pay {5}: 8 left',
+      'Pay {5}: 3 left',
+      'Mana Echoes adds 2: 5',
+    ]);
+    expect(manaSteps(archers, 0, 0, startFor(archers, 0)!, 'Mana Echoes adds', 400)).toHaveLength(400);
+  });
+
+  test('pays what is due after each refund', () => {
+    const boomerang = loop({ costs: ['{1}'], after: 2, stacks: false });
+    const steps = manaSteps(boomerang, 0, 0, startFor(boomerang, 0)!, 'Mana Echoes adds');
+    expect(steps.slice(0, 4).map((dot) => [dot.y, dot.label])).toEqual([
+      [4, 'To start: {4}'],
+      [3, 'Pay {1}: 3 left'],
+      [4, 'Mana Echoes adds 1: 4'],
+      [2, 'Pay {2} more: 2 left'],
+    ]);
+    expect(Math.min(...steps.map((dot) => dot.y))).toBe(0);
+  });
 });

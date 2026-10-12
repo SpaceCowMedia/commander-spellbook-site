@@ -1,14 +1,35 @@
 @reference "../../../styles/globals.css";
 
+/* how far a page has turned, from 0 to 1 */
+@property --turned {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 /* the scale, then the dots, with room on the right for the arrow past the last one */
 .plot {
-  @apply grid gap-x-2 pr-5;
+  @apply relative grid gap-x-2 pr-5;
 
   grid-template-columns: auto minmax(0, 1fr);
 
   /* room above the dots for the picked one's value, and how high they can go */
   --headroom: 1.75rem;
   --plot: 9rem;
+  --turn: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* the page scrolls up and down under a finger, which turns the chart's pages sideways */
+.swipes {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* how high a tick, a line or a dot sits, from its own page's scale */
+.scaleTick,
+.gridLine,
+.mark,
+.cell {
+  --at: calc(var(--own) * 1%);
 }
 
 .scale {
@@ -31,6 +52,11 @@
   @apply relative isolate;
 }
 
+/* a page of dots and their line */
+.sheet {
+  @apply relative;
+}
+
 .grid,
 .lines {
   @apply pointer-events-none absolute inset-x-0 top-(--headroom) h-(--plot);
@@ -44,6 +70,17 @@
 
 .baseline {
   @apply border-gray-300 dark:border-white/25;
+}
+
+/* dashed across the plot in its tone, its label above it on the right */
+.mark {
+  @apply absolute inset-x-0 border-t-[1.5px] border-dashed border-(--tone);
+
+  bottom: var(--at);
+}
+
+.markLabel {
+  @apply absolute right-0 bottom-0.5 text-[0.65rem] leading-none font-semibold text-(--tone-text);
 }
 
 .lines {
@@ -190,11 +227,16 @@
 
 /* level with the ticks, just outside the columns */
 .more {
-  @apply absolute bottom-0 flex h-6 w-5 items-center justify-center border-0 bg-transparent p-0 text-xs text-gray-500 dark:text-gray-400;
+  @apply absolute col-start-2 col-end-3 row-start-1 row-end-2 bottom-0 flex h-6 w-5 items-center justify-center border-0 bg-transparent p-0 text-xs text-gray-500 dark:text-gray-400;
 }
 
 button.more {
   @apply cursor-pointer hover:text-link dark:hover:text-primary;
+}
+
+/* a page of steps the keyboard reaches too */
+.paging {
+  @apply rounded-sm text-gray-700 focus-visible:ring-2 focus-visible:ring-link focus-visible:outline-none dark:text-gray-200 dark:focus-visible:ring-primary;
 }
 
 .before {
@@ -203,4 +245,127 @@ button.more {
 
 .after {
   @apply right-0 translate-x-full;
+}
+
+/* As a page turns, the new one slides in beside the old one while the scale goes from the old page's
+   to the new one's, both drawn to it as it goes; the ticks only one of them has fade. */
+.turning {
+  .frame {
+    @apply overflow-clip;
+  }
+
+  .scale {
+    @apply overflow-clip;
+
+    overflow-clip-margin: var(--headroom);
+  }
+
+  .scale,
+  .frame {
+    --z: calc(var(--from-zero) + (var(--to-zero) - var(--from-zero)) * var(--turned));
+    --zero: var(--to-zero);
+    --factor: min(exp(var(--zoom) * (var(--turned) - 1)), 1e6);
+  }
+
+  .leaving {
+    --zero: var(--from-zero);
+    --factor: min(exp(var(--zoom) * var(--turned)), 1e6);
+  }
+
+  .scaleTick,
+  .gridLine,
+  .mark,
+  .cell {
+    --at: calc((var(--z) + (var(--own) - var(--zero)) * var(--factor)) * 1%);
+  }
+
+  .rescaled {
+    transform: translateY(calc((100 - var(--z) - (100 - var(--zero)) * var(--factor)) * 1px)) scaleY(var(--factor));
+  }
+
+  .sheet,
+  .entering {
+    animation: fade-in var(--turn) both;
+  }
+
+  .leaving {
+    animation: fade-out var(--turn) both;
+  }
+
+  .leaving.sheet {
+    @apply absolute inset-0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .turning {
+    .scale,
+    .frame {
+      animation: turned var(--turn) both;
+    }
+
+    .sheet {
+      animation-name: slide-from-right;
+    }
+
+    .leaving.sheet {
+      animation-name: slide-to-left;
+    }
+  }
+
+  .back {
+    .sheet {
+      animation-name: slide-from-left;
+    }
+
+    .leaving.sheet {
+      animation-name: slide-to-right;
+    }
+  }
+}
+
+@keyframes turned {
+  from {
+    --turned: 0;
+  }
+
+  to {
+    --turned: 1;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    translate: 100% 0;
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    translate: -100% 0;
+  }
+}
+
+@keyframes slide-to-left {
+  to {
+    translate: -100% 0;
+  }
+}
+
+@keyframes slide-to-right {
+  to {
+    translate: 100% 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
 }
