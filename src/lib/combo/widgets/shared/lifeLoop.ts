@@ -1,4 +1,6 @@
-import type { NumberInput } from './calculator';
+import type { Dot, DotChart, NumberInput } from './calculator';
+import { stepDots, stepPage } from './charts';
+import { formatNumber, signed } from './format';
 import { lowestPassing } from './search';
 
 export type LifeStep =
@@ -294,22 +296,77 @@ function survives(loop: LifeLoop, inputs: LoopInputs, life: number): boolean {
   return true;
 }
 
-/* Your life after every step, with loops on the x axis: the setup sits at 0 and loop n ends at n. */
-export function lifeTrace(
+/* What a step did to your life, in words */
+function told(step: LifeStep, before: Play, after: Play): string {
+  const change = after.life - before.life;
+  switch (step.kind) {
+    case 'cast':
+      return 'cast a spell';
+    case 'drain':
+      return `drain ${formatNumber(change)} life`;
+    case 'extort':
+      return `extort for ${signed(change)} life`;
+    case 'pay-or-mana':
+      if (change === 0) {
+        return `pay {${formatNumber(step.mana)}} instead`;
+      }
+  }
+  return change < 0 ? `pay ${formatNumber(-change)} life` : `gain ${formatNumber(change)} life`;
+}
+
+/* Your life after each of the first `count` steps from `start`: the setup, then the loop again and
+   again. Against opponents' `lives` it stops once they are all dead, and when `checked` at the payment
+   you can't make. */
+export function lifeSteps(
   loop: LifeLoop,
   inputs: LoopInputs,
   start: number,
-  loops: number,
-): { x: number; y: number }[] {
-  const play = newPlay(start, false, inputs);
-  const points = [{ x: 0, y: start }];
-  playSteps(play, loop.setup, inputs, () => points.push({ x: 0, y: play.life }));
-  const perLoop = Math.max(1, loop.loop.length);
-  for (let n = 1; n <= loops; n++) {
-    let step = 0;
-    playSteps(play, loop.loop, inputs, () => points.push({ x: n - 1 + ++step / perLoop, y: play.life }));
+  count: number,
+  { lives = [], checked = false }: { lives?: number[]; checked?: boolean } = {},
+): Dot[] {
+  const play = newPlay(start, checked, inputs, lives);
+  const { dots, add } = stepDots();
+  add(start, `To start: ${formatNumber(start)} life`);
+  const played = (step: LifeStep, when: string) => {
+    const before = copyPlay(play);
+    const paid = playStep(play, step, inputs);
+    add(play.life, `${when}, ${told(step, before, play)}: ${formatNumber(play.life)} life`, paid ? undefined : 'bad');
+    return paid;
+  };
+  for (const step of loop.setup) {
+    if (dots.length >= count || !played(step, 'Before the loop')) {
+      return dots;
+    }
   }
-  return points;
+  for (let n = 1; loop.loop.length > 0 && dots.length < count && (lives.length === 0 || alive(play) > 0); n++) {
+    play.loop = n;
+    for (const step of loop.loop) {
+      if (dots.length >= count || !played(step, `Loop ${formatNumber(n)}`)) {
+        return dots;
+      }
+    }
+  }
+  return dots;
+}
+
+/* about how many steps a page of a life chart shows: as many whole loops as fit */
+const PAGE = 24;
+
+/* A page of your life step by step, see lifeSteps, the setup on the first page with where you start. */
+export function lifePage(
+  loop: LifeLoop,
+  inputs: LoopInputs,
+  start: number,
+  page: number,
+  options: { lives?: number[]; checked?: boolean } = {},
+): Pick<DotChart, 'dots' | 'before' | 'after' | 'page'> {
+  const perLoop = Math.max(1, loop.loop.length);
+  return stepPage(
+    (count) => lifeSteps(loop, inputs, start, count, options),
+    page,
+    perLoop * Math.max(1, Math.floor(PAGE / perLoop)),
+    1 + loop.setup.length,
+  );
 }
 
 /* The fewest loops after which your life is above `threshold`, or undefined if it never gets there. */
@@ -534,6 +591,19 @@ export function drainNetPerLoop(loop: LifeLoop, inputs: LoopInputs, lives: numbe
   const play = newPlay(0, false, inputs, lives);
   playSteps(play, loop.setup, inputs);
   return loopProfile(play, loop.loop, inputs).net;
+}
+
+/* Every step a fixed amount, and each loop drains at least what it pays even with one opponent left:
+   past what the first loop needs, your life only goes up. */
+export function drainCannotRunOut(loop: LifeLoop): boolean {
+  const fixed = stepsOf(loop).every(
+    (step) =>
+      step.kind === 'pay' ||
+      step.kind === 'gain' ||
+      step.kind === 'cast' ||
+      (step.kind === 'drain' && step.perOpponent !== 'devotion'),
+  );
+  return fixed && drainNetPerLoop(loop, NO_LOOP_INPUTS, [Infinity]) >= 0;
 }
 
 export function drainPerOpponent(loop: LifeLoop, inputs: LoopInputs): number {

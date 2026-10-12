@@ -98,10 +98,8 @@ export const animar = defineWidget('animar', {
           headline: { label: 'Mana to start', value: formatMana(mana), mana },
           charts: [
             {
-              kind: 'dots',
               title: 'Mana to start',
               xLabel: counters.label,
-              yLabel: 'Mana value',
               selects: counters.key,
               steadyFrom,
               ...sweptDots(

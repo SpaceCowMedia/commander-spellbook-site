@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import type { DotChart } from 'lib/combo/widgets/shared/calculator';
 import { manaEchoes } from 'lib/combo/widgets/manaEchoes';
 import { calculatorFor, expectSaneAtExtremes, expectSteadyFrom, run, specFor } from './testing/widgetTesting';
 
@@ -38,6 +39,35 @@ test('counts the combo pieces that share a creature type with the new creatures'
   expect(startOf('1170-1812-2440-7528')).toBe('{5}{R}{R}');
 });
 
+test('returns Trusty Boomerang for {2} more each loop, its token counting the others of its type', () => {
+  expect(specFor(manaEchoes, '2440-3581-7109-7297')).toMatchObject({ costs: ['{1}'], after: 2, base: 0 });
+  expect(startOf('2440-3581-7109-7297')).toBe('{4}');
+  expect(startOf('1765-1849-2440-7109')).toBe('{4}');
+  expect(specFor(manaEchoes, '2440-7108-7109-7296')).toMatchObject({ base: 1 });
+  expect(startOf('2440-7108-7109-7296')).toBe('{2}');
+  expect(startOf('2079-2440-6737-7109')).toBe('{2}');
+  expect(run(calculatorFor(manaEchoes, '2440-3581-7109-7297')).stats?.[0]).toMatchObject({ value: '{3}' });
+});
+
+test("casts a suspended spell again for The Tenth Doctor's {7}, from the creatures the prerequisites count", () => {
+  expect(specFor(manaEchoes, '1618-2440-6596-7377')).toMatchObject({ costs: ['{7}'], stacks: false, initial: 6 });
+  expect(startOf('1618-2440-6596-7377')).toBe('{7}');
+  expect(startOf('1618-2440-6596-7377', { others: 0 })).toBe('{28}');
+  expect(specFor(manaEchoes, '796-1618-2440-2806').others).toBe('Other Zombies you control');
+});
+
+test('copies Myr Propagator on top of the Mana Echoes triggers', () => {
+  expect(specFor(manaEchoes, '2440-2703-5295')).toMatchObject({ costs: ['{3}'], stacks: true, base: 1 });
+  expect(startOf('2440-2703-5295')).toBe('{4}');
+});
+
+test('charts the mana step by step, down for each activation and up for each refund', () => {
+  const chart = run(calculatorFor(manaEchoes, '2440-2703-5295')).charts![1] as DotChart;
+  expect(chart.title).toBe('Your mana, step by step');
+  expect(chart.dots.map((dot) => dot.y).slice(0, 6)).toEqual([4, 1, 3, 0, 3, 0]);
+  expect(chart.dots[2].label).toBe('Mana Echoes adds 2: 3');
+});
+
 test('stays sane at the extremes', () => {
   const ids: Fixture[] = [
     '2440-6873',
@@ -46,6 +76,9 @@ test('stays sane at the extremes', () => {
     '1283-2273-2440',
     '1765-2054-2440-7311',
     '2440-4720-7546',
+    '2440-3581-7109-7297',
+    '1618-2440-6596-7377',
+    '2440-2703-5295',
   ];
   ids.forEach((id) => expectSaneAtExtremes(calculatorFor(manaEchoes, id)));
 });

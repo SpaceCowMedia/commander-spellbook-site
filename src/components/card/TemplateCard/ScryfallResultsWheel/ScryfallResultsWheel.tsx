@@ -4,7 +4,7 @@ import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/card/replacements';
 import Loader from 'components/ui/Loader/Loader';
 import SpoilerFog from 'components/card/SpoilerFog/SpoilerFog';
-import { useSwipeable } from 'react-swipeable';
+import useSwipe from 'lib/react/useSwipe';
 import { TEMPLATE_MORPH_SHARE, WHEEL_NEXT, WHEEL_PREVIOUS } from 'lib/viewTransitions';
 
 const CARD_ENTER = { [WHEEL_NEXT]: 'slideFromRight', [WHEEL_PREVIOUS]: 'slideFromLeft', default: 'none' };
@@ -94,11 +94,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults, morphName, onCurr
   const next = () => move(WHEEL_NEXT);
   const previous = () => move(WHEEL_PREVIOUS);
 
-  const handlers = useSwipeable({
-    preventScrollOnSwipe: true,
-    onSwipedLeft: next,
-    onSwipedRight: previous,
-  });
+  const swipes = useSwipe((direction) => (direction === 'left' ? next() : previous()));
 
   useEffect(() => {
     load(0).catch((error) => console.error(error));
@@ -147,7 +143,10 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults, morphName, onCurr
   );
 
   return (
-    <div className="w-full h-full flex justify-center items-center select-none" {...handlers}>
+    <div
+      className="w-full h-full flex justify-center items-center select-none touch-pan-y touch-pinch-zoom"
+      {...swipes}
+    >
       <div className="h-full flex justify-center items-center grow">
         <Icon
           name="chevronLeft"

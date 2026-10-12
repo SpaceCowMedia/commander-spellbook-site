@@ -32,6 +32,8 @@ export interface Values {
   choices: Record<string, string>;
   /* one record per opponent, keyed like the opponent fields */
   opponents: Record<string, number>[];
+  /* the page of a loop's steps its chart shows, the first when there is none */
+  page?: number;
 }
 
 export interface Stat {
@@ -70,12 +72,17 @@ export interface Dot extends Point {
   tone?: Tone;
 }
 
+/* a line across a chart worth pointing out, like the life you can't go below */
+export interface Mark {
+  y: number;
+  label: string;
+  tone?: Tone;
+}
+
 /* one answer per x, as dots on a line */
 export interface DotChart {
-  kind: 'dots';
   title: string;
   xLabel: string;
-  yLabel: string;
   dots: Dot[];
   /* the answers just past the first and last dots, where the x goes on that way */
   before?: Point;
@@ -86,17 +93,10 @@ export interface DotChart {
      too, and the input the chart selects goes no higher */
   steadyFrom?: number;
   percent?: boolean;
-}
-
-export interface LineChart {
-  kind: 'line';
-  title: string;
-  xLabel: string;
-  yLabel: string;
-  points: Point[];
-  marks?: { y: number; label: string; tone?: Tone }[];
-  /* the curve in words */
-  summary: string;
+  marks?: Mark[];
+  /* for a loop played step by step, which can go on past what one chart holds: the page of its steps
+     shown, `before` and `after` being the steps on either side of it */
+  page?: number;
 }
 
 export interface Result {
@@ -106,7 +106,7 @@ export interface Result {
   stats?: Stat[];
   /* one per opponent, in the same order */
   outcomes?: Outcome[];
-  charts?: (DotChart | LineChart)[];
+  charts?: DotChart[];
 }
 
 export interface Calculator {

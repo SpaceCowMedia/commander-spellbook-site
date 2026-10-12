@@ -59,13 +59,30 @@ describe('stormLifeLoop', () => {
 
   test('charts the minimum life for the storm counts around yours', () => {
     const chart = run(calculatorFor(stormLifeLoop, '2903-3260-4740'), { numbers: { life: 25, storm: 2 } }).charts![0];
-    expect(chart).toMatchObject({ kind: 'dots', selects: 'storm' });
-    expect(chart.kind === 'dots' && chart.dots.slice(0, 4).map((dot) => [dot.x, dot.y, dot.tone])).toEqual([
+    expect(chart).toMatchObject({ selects: 'storm' });
+    expect(chart.dots.slice(0, 4).map((dot) => [dot.x, dot.y, dot.tone])).toEqual([
       [0, 33, 'bad'],
       [1, 26, 'bad'],
       [2, 20, 'good'],
       [3, 15, 'good'],
     ]);
+  });
+
+  test('charts your life step by step, page after page, since the loop never stops', () => {
+    const calculator = calculatorFor(stormLifeLoop, '2903-3260-4740');
+    const lifeOn = (page: number) =>
+      run(calculator, { numbers: { life: 40, storm: 0 }, page }).charts!.find((chart) => chart.page !== undefined)!;
+    const first = lifeOn(0);
+    expect(first).toMatchObject({ title: 'Your life, starting from 40', page: 0 });
+    expect(first.marks?.map((mark) => mark.y)).toEqual([1, 51]);
+    expect(first.dots.slice(0, 5).map((dot) => dot.y)).toEqual([40, 36, 36, 37, 33]);
+    expect(first.dots[3].label).toBe('Loop 1, gain 1 life: 37 life');
+    expect(first.after).toEqual({ x: 25, y: 9 });
+    const fourth = lifeOn(3);
+    expect(fourth.page).toBe(3);
+    expect(fourth.dots[0]).toMatchObject({ x: 73, y: 63, label: 'Loop 19, pay 4 life: 63 life' });
+    expect(fourth.before).toEqual({ x: 72, y: 67 });
+    expect(fourth.after).toEqual({ x: 97, y: 144 });
   });
 
   test('asks for the mana that pays when life cannot', () => {

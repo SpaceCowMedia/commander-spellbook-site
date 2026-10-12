@@ -142,10 +142,8 @@ export const manaFormula = defineWidget('mana-formula', {
           headline: { label: 'Mana needed', value: formatMana(cost), mana: cost },
           charts: swept && [
             {
-              kind: 'dots',
               title: 'Mana needed',
               xLabel: swept.label,
-              yLabel: 'Mana value',
               selects: swept.key,
               steadyFrom: steady,
               ...sweptDots(

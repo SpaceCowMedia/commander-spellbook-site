@@ -24,11 +24,6 @@
     "notes": "The minimum life you need to start this combo is reduced depending on how many spells you have cast this turn.",
     "description": "Activate Phyrexian Altar by sacrificing Biblioplex Tomekeeper, adding {B}.\nCast the copy of Reanimate from exile by paying {B}.\nAetherflux Reservoir triggers, gaining 1 life for each spell you've cast this turn.\nResolve Reanimate, returning Biblioplex Tomekeeper from your graveyard to the battlefield and losing 4 life.\nWhen Biblioplex Tomekeeper enters, it triggers, preparing Grave Researcher.\nRepeat any number of times.\nOnce you have infinite life, you may activate Aetherflux Reservoir's last ability any number of times, dealing infinite damage."
   },
-  "851-4365-7858": {
-    "uses": ["Hollowhenge Overlord", "Adrix and Nev, Twincasters", "Mondrak, Glory Dominus"],
-    "notes": "The number of Wolves and/or Werewolves you'll control after performing steps 1 and 2 is equal to 5^X * Y, where X is the number of iterations of those steps you've performed (starting at 1), and Y is the initial number of Wolves and/or Werewolves you started with. So if you start with 6 creatures, you'll have 30 after the first iteration, 150 after the second, and so on. This also assumes no Wolves and/or Werewolves die, and no more are created during the turns.",
-    "description": "At the beginning of your upkeep, Hollowhenge Overlord triggers, creating four 2/2 Wolf creature tokens for each Wolf and/or Werewolf you control due to Adrix and Nev and Mondrak.\nRepeat step 1 during each of your upkeeps. You'll create exponentially more Wolves each time assuming the Wolf tokens survive."
-  },
   "1698-3260-3540-7753": {
     "uses": ["K'rrik, Son of Yawgmoth", "Pontiff of Blight", "Mourning", "Valeria Richards, Precocious"],
     "manaNeeded": "{B/P} plus either {W/B} or {B/P}",
@@ -172,12 +167,6 @@
     ],
     "notablePrerequisites": "You control a number of Goblins that is equal to or greater than six plus Krenko's commander tax.",
     "description": "Activate Krenko by tapping it, creating a number of 1/1 Goblin creature tokens equal to the number of Goblins you control.\nActivate Skirk Prospector by sacrificing Krenko, adding {R}.\nChoose to return Krenko to the command zone from your graveyard.\nActivate Skirk Prospector by sacrificing a Goblin, adding {R}.\nRepeat step 4 until you have enough mana to cast Krenko.\nCast Krenko from the command zone by paying {2}{R}{R} plus commander tax.\nRepeat."
-  },
-  "2481-2790": {
-    "uses": ["Angel of Destiny", "Seize the Day"],
-    "manaNeeded": "{5}{R}{R}",
-    "notablePrerequisites": "Angel of Destiny does not have summoning sickness.\nOpponents are unable to block and kill Angel of Destiny.\nYour life total is at least 11 greater than your starting life total plus an additional 2 life for each opponent beyond the first.\nYou have no more than three opponents.",
-    "description": "Deal combat damage to an opponent using Angel of Destiny.\nAngel of Destiny's first ability triggers, causing you and the opponent to gain life equal to the damage dealt.\nMove to your postcombat main phase.\nCast Seize the Day by paying {3}{R}, untapping Angel of Destiny and causing you to get an additional combat and main phase after this one.\nRepeat steps 1 through 3 one additional time, attacking a different opponent.\nCast Seize the Day from your graveyard for its flashback cost by paying {2}{R}, untapping Angel of Destiny and causing you to get an additional combat and main phase after this one.\nRepeat steps 1 through 3 one additional time, attacking a different opponent.\nAt the beginning of your end step, Angel of Destiny triggers, causing each opponent it attacked this turn to lose the game."
   },
   "1623-2125-4740": {
     "uses": ["Guile", "Temporal Extortion", "Aetherflux Reservoir"],
@@ -389,20 +378,6 @@
     "description": "Activate Orthion's second ability by paying {6}{R}{R}{R} and tapping it, creating five token copies of Dragonhawk with haste.\nWhen the Dragonhawk tokens enter the battlefield, they each trigger.\nResolve the first trigger, exiling a number of cards from the top of your library with the ability to play them until your next end step.\nRepeat step 3 for each remaining trigger.\nAt the beginning of your end step, each Dragonhawk token triggers, dealing 2 damage to each opponent for each card exiled by the Dragonhawk tokens that were not played.",
     "notes": "Assuming you control no other creatures with power 4 or greater, this combo can deal up to 60 damage to each opponent. This is reduced by 2 for each card you play that is exiled. For every additional creature you control with power 4 or greater, this combo deals up to an additional 10 damage per creature to each opponent."
   },
-  "215-4050-6251": {
-    "uses": ["Aatchik, Emerald Radian", "Phyrexian Altar", "Temur Sabertooth"],
-    "manaNeeded": "{3}{B}{B}{G} plus enough mana to pay for commander tax if applicable",
-    "notablePrerequisites": "You have at least eight artifact and/or creature cards in your graveyard.",
-    "description": "Cast Aatchik either from your hand or from the command zone by paying {3}{B}{B}{G} plus commander tax, if applicable.\nWhen Aatchik enters the battlefield, its first ability triggers, creating a 1/1 Insect creature token for each artifact and/or creature card in your graveyard.\nActivate Phyrexian Altar eight times by sacrificing eight Insects, adding {4}{B}{B}{G}{G}.\nWhen the Insects die, Aatchik's second ability triggers eight times, putting eight +1/+1 counters on Aatchik and causing each opponent to lose 8 life.\nActivate Temur Sabertooth by paying {1}{G}, returning Aatchik from the battlefield to your hand.\nRepeat.",
-    "notes": "If you have nine or more artifact and/or creature cards in your graveyard, this combo will net infinite tokens, mana and +1/+1 counters on Aatchik."
-  },
-  "2232-4050-6251": {
-    "uses": ["Aatchik, Emerald Radian", "Phyrexian Altar", "Cloudstone Curio"],
-    "manaNeeded": "{3}{B}{B}{G} plus enough mana to pay for commander tax if applicable",
-    "notablePrerequisites": "You have at least six artifact and/or creature cards in your graveyard.",
-    "description": "Cast Aatchik either from your hand or from the command zone by paying {3}{B}{B}{G} plus commander tax, if applicable.\nWhen Aatchik enters the battlefield, its first ability and Cloudstone Curio trigger.\nResolve the Cloudstone Curio trigger, choosing to return nothing to your hand.\nResolve the Aatchik trigger, creating a 1/1 Insect creature token for each artifact and/or creature card in your graveyard.\nWhen the Insects enter the battlefield, Cloudstone Curio triggers that many times. \nHolding priority, activate Phyrexian Altar six times by sacrificing six Insects, adding {3}{B}{B}{G}.\nWhen the Insects die, Aatchik's second ability triggers six times, putting six +1/+1 counters on Aatchik and causing each opponent to lose 6 life.\nResolve the Cloudstone Curio triggers, returning Aatchik from the battlefield to your hand with the first trigger and returning nothing to your hand with each subsequent trigger.\nRepeat.",
-    "notes": "If you have seven or more artifact and/or creature cards in your graveyard, this combo will net infinite tokens, mana and +1/+1 counters on Aatchik."
-  },
   "2440-2797": {
     "uses": ["Retrofitter Foundry", "Mana Echoes"],
     "manaNeeded": "{2} plus up to {10} additional depending on the number of Servos you control",
@@ -559,5 +534,198 @@
     "manaNeeded": "{5}{G}{U}{G/U} plus commander tax if applicable",
     "notablePrerequisites": "There are at least X counters on artifacts, creatures and/or enchantments you control, where X is 3 plus the number of times you've cast Sin from the command zone this game.",
     "description": "Cast Sin either from your hand or command zone by paying {5}{G}{U} plus commander tax if applicable.\nAs Sin enters, remove all counters from all artifacts, enchantments and creatures you control, putting twice that many +1/+1 counters on Sin plus one due to Kami of Whispered Hopes.\nWhen Sin enters, Intruder Alarm triggers, untapping all creatures.\nActivate Phyrexian Altar by sacrificing Sin, adding {G/U}.\nChoose to return Sin to the command zone from your graveyard.\nWhen Sin dies, it triggers, putting its counters plus one +1/+1 counter on Kami of Whispered Hopes.\nActivate Kami of Whispered Hopes by tapping it, adding an amount of {G} or {U} equal to its power.\nRepeat."
+  },
+  "1742-1978-3363-3488": {
+    "uses": ["The One Ring", "Voltaic Construct", "Skirge Familiar", "Katsumasa, the Animator"],
+    "manaNeeded": "{2}{U}",
+    "notablePrerequisites": "The One Ring has a burden counter on it and does not have summoning sickness.",
+    "description": "Animate The One Ring using Katsumasa.\nActivate The One Ring by tapping it, putting a burden counter on it and drawing a card for each burden counter on it.\nActivate Skirge Familiar twice by discarding two cards, adding {B}{B}.\nActivate Voltaic Construct by paying {2}, untapping The One Ring.\nRepeat from step 2."
+  },
+  "1765-1849-2440-7109": {
+    "uses": [
+      "Trusty Boomerang",
+      "Mana Echoes",
+      {
+        "name": "Chishiro, the Shattered Blade",
+        "typeLine": "Legendary Creature — Snake Samurai"
+      },
+      "Mass Hysteria"
+    ],
+    "manaNeeded": "{4} at most",
+    "description": "Cast Trusty Boomerang by paying {1}.\nWhen Trusty Boomerang enters, Chishiro's triggers, creating a 2/2 Spirit creature token.\nWhen the Spirit enters, Mana Echoes triggers, adding {C} for each Spirit you control.\nActivate Trusty Boomerang's equip ability by paying {1}, attaching it to the Spirit token.\nActivate the Spirit by paying {1} and tapping it, tapping a creature and returning Trusty Boomerang from the battlefield to your hand.\nRepeat.",
+    "notes": "The cost can be reduced if you control more Spirits."
+  },
+  "2440-3581-7109-7297": {
+    "uses": [
+      {
+        "name": "Kykar, Wind's Fury",
+        "typeLine": "Legendary Creature — Bird Wizard"
+      },
+      "Trusty Boomerang",
+      "Mana Echoes",
+      "Barbarian Class"
+    ],
+    "manaNeeded": "{4} at most",
+    "description": "Cast Trusty Boomerang by paying {1}.\nKykar triggers, creating a 1/1 Spirit creature token.\nWhen the Spirit enters, Mana Echoes triggers, adding {C} for each Spirit you control.\nActivate Trusty Boomerang's equip ability by paying {1}, attaching it to the Spirit token.\nActivate the Spirit token by paying {1} and tapping it, tapping a creature a returning Trusty Boomerang from the battlefield to your hand.\nRepeat.",
+    "notes": "The cost can be reduced to as little as {1} if you control other Spirits. You can also sacrifice the Spirits once you have enough to get infinite {R}."
+  },
+  "2440-7108-7109-7296": {
+    "uses": [
+      {
+        "name": "Sokka, Tenacious Tactician",
+        "typeLine": "Legendary Creature — Human Warrior Ally"
+      },
+      "Trusty Boomerang",
+      "Mana Echoes",
+      "Gimli's Reckless Might"
+    ],
+    "manaNeeded": "{2}",
+    "description": "Cast Trusty Boomerang by paying {1}.\nSokka's second ability and each Ally you control's prowess ability trigger.\nResolve all prowess triggers, giving each Ally you control +1/+1 until end of turn.\nResolve the Sokka trigger, creating a 1/1 Ally creature token.\nWhen the Ally enters, Mana Echoes triggers, adding {C} for each Ally you control.\nActivate Trusty Boomerang's equip ability by paying {1}, attaching it to the Ally token.\nActivate the Ally token by paying {1} and tapping it, tapping a creature a returning Trusty Boomerang from the battlefield to your hand.\nRepeat.",
+    "notes": "The cost can be reduced by {1} if you control another Ally."
+  },
+  "132-1742-1978-3363": {
+    "uses": ["The One Ring", "Voltaic Construct", "Skirge Familiar", "Myr Welder"],
+    "easyPrerequisites": "The One Ring is exiled by Myr Welder.\nYou have either {1}, a burden counter on Myr Welder or an additional card in hand.",
+    "description": "Activate Myr Welder using The One Ring's ability by tapping it, putting a burden counter on it and drawing a card for each burden counter on it.\nActivate Skirge Familiar twice by discarding two cards, adding {B}{B}.\nActivate Voltaic Construct by paying {2}, untapping Myr Welder\nRepeat",
+    "notes": "For the first loop, in step 2, you can either discard an additional card for {B} or provide {1} if Myr Welder doesn't start with a burden counter on it. On subsequent loops, this won't be an issue"
+  },
+  "2043-6965-7826": {
+    "uses": ["Urza, Prince of Kroog", "Bag End Banquet", "Frostcliff Siege"],
+    "manaNeeded": "{9}",
+    "description": "Activate Urza by paying {6}, creating a token copy of Bag End Banquet that is a 1/1 Soldier in addition to its other types.\nWhen the Bag End Banquet token enters, it triggers, creating three Food tokens.\nActivate the Bag End Banquet token by tapping it, adding {C} for each Food you control.\nRepeat",
+    "notes": "You can reduce the cost by up to {3} if you control additional Food(s) as you start the combo. You can also tap the original Bag End Banquet for mana after the Foods are created initially if you're able to do so."
+  },
+  "1618-2440-6596-7377": {
+    "uses": [
+      {
+        "name": "The Tenth Doctor",
+        "typeLine": "Legendary Creature — Time Lord Doctor"
+      },
+      "Mana Echoes",
+      "Festering March",
+      {
+        "name": "Hermes, Overseer of Elpis",
+        "typeLine": "Legendary Creature — Elder Wizard"
+      }
+    ],
+    "manaNeeded": "{7}",
+    "notablePrerequisites": "You control at least six creatures that share a creature type with the tokens generated by Hermes",
+    "description": "Activate The Tenth Doctor by paying {7}, removing all time counters from Festering March.\nFestering March triggers, causing you to cast it from exile without paying its mana cost.\nHermes triggers, creating a creature token.\nWhen the creature token enters, Mana Echoes triggers, adding {C} for each creature you control that shares a creature type with the token.\nResolve Festering March.\nRepeat.",
+    "notes": "You may start the combo controlling fewer that six creatures that share a type with the tokens generated by Hermes. If you do, you need to provide an appropriate amount of mana until Mana Echoes will start generating seven {C} or more."
+  },
+  "122-328-2732-8095": {
+    "uses": ["Prowling Geistcatcher", "Phyrexian Delver", "Gray Merchant of Asphodel", "Hammerhead, Maggia Boss"],
+    "description": "Activate Hammerhead twice by sacrificing Phyrexian Delver and Gray Merchant.\nWhen Phyrexian Delver and Gray Merchant die, Prowling Geistcatcher's first ability triggers twice, exiling Phyrexian Delver and Gray Merchant from your graveyard.\nActivate Hammerhead by sacrificing Prowling Geistcatcher.\nWhen Prowling Geistcatcher dies, its second ability triggers, returning Phyrexian Delver and Gray Merchant from exile to the battlefield.\nWhen Phyrexian Delver and Gray Merchant enter the battlefield, they trigger.\nResolve the Gray Merchant trigger, causing each opponent to lose an amount of life equal to your devotion to black, and causing you to gain life equal to the life lost this way.\nResolve the Phyrexian Delver trigger, causing you to return Prowling Geistcatcher from your graveyard to the battlefield and lose 4 life.\nResolve the Hammerhead abilities from steps 1 and 3.\nRepeat."
+  },
+  "81-725-4050-6730": {
+    "uses": [
+      {
+        "name": "Sin, Unending Cataclysm",
+        "mustBeCommander": true
+      },
+      "Aura of Dominion",
+      "Phyrexian Altar",
+      "Kami of Whispered Hopes"
+    ],
+    "manaNeeded": "{6}{G}{U} plus commander tax if applicable",
+    "notablePrerequisites": "There are at least X counters on artifacts, creatures and/or enchantments you control, where X is 4 plus the number of times you've cast Sin from the command zone this game.",
+    "description": "Cast Sin either from your hand or command zone by paying {5}{G}{U} plus commander tax if applicable.\nAs Sin enters, remove all counters from all artifacts, enchantments and creatures you control, putting twice that many +1/+1 counters on Sin.\nActivate Aura of Dominion by paying {1} and tapping Sin, untapping Kami of Whispered Hopes.\nActivate Phyrexian Altar by sacrificing Sin, adding {G/U}.\nChoose to return Sin to the command zone from your graveyard.\nWhen Sin dies, it triggers, putting its counters on Kami of Whispered Hopes.\nActivate Kami of Whispered Hopes by tapping it, adding an amount of {G} or {U} equal to its power.\nRepeat."
+  },
+  "198-4067-5801-6571": {
+    "uses": ["Shantotto, Tactician Magician", "Mind Over Matter", "Empowered Autogenerator", "Mind Peel"],
+    "description": "Activate Empowered Autogenerator by tapping it, putting a charge counter on it and adding {B} for each charge counter on it.\nCast Mind Peel with buyback by paying {2}{B}{B}{B}.\nShantotto triggers, giving it +5/+0 until end of turn and causing you to draw a card.\nResolve Mind Peel.\nActivate Mind Over Matter by discarding a card, untapping Empowered Autogenerator.\nRepeat."
+  },
+  "1270-2876-4050": {
+    "uses": [
+      {
+        "name": "Elenda, the Dusk Rose",
+        "mustBeCommander": true
+      },
+      "Ojer Taq, Deepest Foundation // Temple of Civilization",
+      "Phyrexian Altar"
+    ],
+    "notablePrerequisites": "Elenda has power equal to or greater than 2 plus the number of times you've cast Elenda from the command zone this game.",
+    "description": "Activate Phyrexian Altar by sacrificing Elenda, adding {W}.\nChoose to return Elenda to the command zone from your graveyard.\nWhen Elenda dies, its second ability triggers, creating a number of 1/1 Vampire creature tokens equal to three times Elenda's power.\nActivate Phyrexian Altar by sacrificing a Vampire, adding {B}.\nRepeat step 4 until you have enough mana to cast Elenda.\nCast Elenda from the command zone by paying {2}{W}{B} plus commander tax, if applicable.\nActivate Phyrexian Altar by sacrificing a Vampire token, adding {B}.\nWhen the Vampire dies, Elenda's first ability triggers, putting a +1/+1 counter on it.\nRepeat from step 7 for each remaining Vampire token.\nRepeat from step 1."
+  },
+  "198-3750-3918": {
+    "uses": ["Trazyn the Infinite", "Aggravated Assault", "Empowered Autogenerator"],
+    "description": "Activate Trazyn using Empowered Autogenerator's ability by tapping it, putting a charge counter on it and adding {R} for each charge counter on it.\nActivate Aggravated Assault by paying {3}{R}{R}, untapping all creatures you control and causing you to get an additional combat and main phase after this one.\nRepeat.",
+    "notes": "You can begin the combo with fewer charge counters on Trazyn but will need to supply mana to start or have creatures that can tap for mana to compensate."
+  },
+  "796-1618-2440-2806": {
+    "uses": [
+      {
+        "name": "The Tenth Doctor",
+        "typeLine": "Legendary Creature — Time Lord Doctor"
+      },
+      "Mana Echoes",
+      "Reality Strobe",
+      {
+        "name": "Poppet Stitcher // Poppet Factory",
+        "typeLine": "Creature — Human Wizard // Artifact"
+      }
+    ],
+    "manaNeeded": "{7}",
+    "notablePrerequisites": "You control at least six creatures that share a creature type with the tokens generated by Poppet Stitcher",
+    "description": "Activate The Tenth Doctor by paying {7}, removing all time counters from Reality Strobe.\nReality Strobe triggers, causing you to cast it from exile without paying its mana cost.\nPoppet Stitcher triggers, creating a creature token.\nWhen the creature token enters, Mana Echoes triggers, adding {C} for each creature you control that shares a creature type with the token.\nResolve Reality Strobe.\nRepeat.",
+    "notes": "You may start the combo controlling fewer that six creatures that share a type with the tokens generated by Poppet Stitcher. If you do, you need to provide an appropriate amount of mana until Mana Echoes will start generating seven {C} or more."
+  },
+  "152-7826": {
+    "uses": ["Cogwork Assembler", "Bag End Banquet"],
+    "manaNeeded": "{12}",
+    "description": "Activate Cogwork Assembler by paying {7}, creating a token copy of Bag End Banquet.\nWhen the Bag End Banquet token enters, it triggers, creating three Food tokens.\nActivate the Bag End Banquet token by tapping it, adding {C} for each Food you control.\nRepeat",
+    "notes": "You can reduce the cost by up to {5} if you control additional Food(s) as you start the combo. You can also tap the original Bag End Banquet for mana after the Foods are created initially if you're able to do so."
+  },
+  "2079-2440-6737-7109": {
+    "uses": [
+      "Trusty Boomerang",
+      "Mana Echoes",
+      "Temur Ascendancy",
+      {
+        "name": "Barret, Avalanche Leader",
+        "typeLine": "Legendary Creature — Human Rebel"
+      }
+    ],
+    "manaNeeded": "{2} at most",
+    "description": "Cast Trusty Boomerang by paying {1}.\nWhen Trusty Boomerang enters, Barret's triggers, creating a 2/2 Rebel creature token.\nWhen the Rebel enters, Mana Echoes triggers, adding {C} for each Rebel you control.\nActivate Trusty Boomerang's equip ability by paying {1}, attaching it to the Rebel token.\nActivate the Rebel by paying {1} and tapping it, tapping a creature and returning Trusty Boomerang from the battlefield to your hand.\nRepeat.",
+    "notes": "The cost can be reduced by {1} if you control another Rebel."
+  },
+  "2440-2703-5295": {
+    "uses": [
+      {
+        "name": "Myr Propagator",
+        "typeLine": "Artifact Creature — Myr"
+      },
+      "Mana Echoes",
+      "Thousand-Year Elixir"
+    ],
+    "manaNeeded": "{4} at most",
+    "description": "Activate Myr Propagator by paying {3} and tapping it, creating a token copy of it.\nWhen the Myr Propagator token enters the battlefield, Mana Echoes triggers, adding {C} for each Myr you control.\nRepeat using the Myr Propagator token instead."
+  },
+  "654-880-2907": {
+    "uses": ["Perilous Forays", "Scute Swarm", "Amulet of Vigor"],
+    "manaNeeded": "{1}",
+    "notablePrerequisites": "You control at least one additional creature.",
+    "description": "Activate Perilous Forays by paying {1} and sacrificing a creature you control, searching your library for a land card with a basic land type and putting it on the battlefield tapped.\nWhen the land enters the battlefield, each Scute Swarm you control and Amulet of Vigor trigger.\nResolve the Scute Swarm trigger(s), creating that many creature token(s).\nResolve the Amulet of Vigor trigger, untapping the land.\nActivate the land by tapping it, adding {1}.\nRepeat."
+  },
+  "198-1978-3301": {
+    "uses": ["Voltaic Construct", "Empowered Autogenerator", "Tezzeret, Betrayer of Flesh"],
+    "manaNeeded": "{1}",
+    "description": "Animate Empowered Autogenerator using Tezzeret, Betrayer of Flesh.\nActivate Empowered Autogenerator by tapping it, putting a charge counter on it and adding {1} for each charge counter on it.\nActivate Voltaic Construct by paying {2}, untapping Empowered Autogenerator.\nRepeat from step 2.",
+    "notes": "The combo assumes Empowered Autogenerator has no charge counters on it when you start. If it has charge counters, the mana cost is reduced by {1}."
+  },
+  "132-198-5090": {
+    "uses": ["Myr Welder", "Empowered Autogenerator", "Singing Bell Strike"],
+    "description": "Activate Myr Welder using Empowered Autogenerator's ability by tapping it, putting a charge counter on it and adding one mana of any color for each charge counter on it.\nActivate Myr Welder by paying {6}, untapping it.\nRepeat.",
+    "notes": "You can start the combo with fewer charge counters on Myr Welder but will need additional mana to compensate."
+  },
+  "3363-4067": {
+    "uses": ["Mind Over Matter", "The One Ring"],
+    "description": "Activate The One Ring by tapping it, putting a burden counter on it and then causing you to draw a card for each burden counter on it.\nActivate Mind Over Matter by discarding a card, untapping The One Ring.\nRepeat."
+  },
+  "198-3911-4331": {
+    "uses": ["Drafna, Founder of Lat-Nam", "Galvanic Key", "Empowered Autogenerator"],
+    "notablePrerequisites": "Empowered Autogenerator has at least four charge counters on it.",
+    "description": "Activate Empowered Autogenerator by tapping it, putting a charge counter on it and adding {U} for each charge counter on it.\nActivate Galvanic Key by paying {3} and tapping it, untapping Empowered Autogenerator.\nActivate Empowered Autogenerator by tapping it, putting a charge counter on it and adding {U} for each charge counter on it.\nActivate Drafna's first ability by paying {1}{U}, returning Galvanic Key from the battlefield to your hand.\nCast Galvanic Key by paying {2}.\nRepeat from step 2."
   }
 }

@@ -75,10 +75,8 @@ export function stormsplitterCalculator({
         ],
         charts: [
           {
-            kind: 'dots',
             title: 'Mana to start',
             xLabel: STORMSPLITTERS.label,
-            yLabel: 'Mana value',
             selects: STORMSPLITTERS.key,
             steadyFrom: steady,
             ...sweptDots(

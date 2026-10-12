@@ -1,4 +1,5 @@
-import type { Dot, Point } from './shared/calculator';
+import type { Dot } from './shared/calculator';
+import { stepPage } from './shared/charts';
 import { formatNumber, plural } from './shared/format';
 import { castsInput, numberInput } from './shared/inputs';
 import { defineWidget } from './shared/widget';
@@ -7,22 +8,24 @@ import { has, says, usesAny } from './parse/variant';
 
 const CASTS = { ...castsInput('Krenko'), initial: 1 };
 const LOOPS = 8;
+/* steps on a page of the chart: a tap and a recast for each loop */
+const PAGE = 2 * LOOPS;
 /* cards that make Krenko cost {1} less: Goblin spells for one, red spells for the other */
 const DISCOUNTS = ['Goblin Warchief', 'The Fire Crystal'];
 
 /* Krenko doubles your Goblins, then the outlet sacrifices it with enough Goblins to recast it:
    {2}{R}{R} plus tax, less any discount, one Goblin per mana, and the recast Krenko is a Goblin
-   again. Each of the two is a step, and a loop that is still going after the last one shown has the
-   next tap to head for. */
+   again. Each of the two is a step: the first `steps` of them, and the loop in which they run out. */
 export function stepByStep(
   goblins: number,
   casts: number,
   discount: number,
-): { dots: Dot[]; after?: Point; failedAt?: number } {
+  steps = 1 + PAGE,
+): { dots: Dot[]; failedAt?: number } {
   const dots: Dot[] = [{ x: 0, y: goblins, label: `To start: ${plural(goblins, 'Goblin')}` }];
   let count = goblins;
   let tax = 2 * casts;
-  for (let loop = 1; loop <= LOOPS; loop++) {
+  for (let loop = 1; dots.length < steps; loop++) {
     const doubled = 2 * count;
     const cost = 4 + tax - discount;
     const recast = `{${2 + tax - discount}}{R}{R}`;
@@ -40,7 +43,7 @@ export function stepByStep(
     });
     tax += 2;
   }
-  return { dots, after: { x: dots.length, y: 2 * count } };
+  return { dots: dots.slice(0, steps) };
 }
 
 export const krenko = defineWidget('krenko', {
@@ -97,12 +100,9 @@ export const krenko = defineWidget('krenko', {
           meter: { have: goblins, need: needed(casts), unit: 'Goblins' },
           charts: [
             {
-              kind: 'dots',
               title: 'Goblins, step by step',
               xLabel: 'Step',
-              yLabel: 'Goblins',
-              dots: run.dots,
-              after: run.after,
+              ...stepPage((steps) => stepByStep(goblins, casts, discount, steps).dots, values.page ?? 0, PAGE),
             },
           ],
         };
