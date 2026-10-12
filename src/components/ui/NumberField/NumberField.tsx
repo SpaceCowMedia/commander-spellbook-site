@@ -10,6 +10,7 @@ interface Props {
   orMore?: boolean;
   onChange: (value: number) => void;
   compact?: boolean;
+  step?: number;
 }
 
 /* In a grid, the label, the picker and the hint take three of its rows, so fields side by side keep

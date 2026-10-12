@@ -1,4 +1,17 @@
 {
+  "2173-3591-4740": {
+    "uses": ["Aetherflux Reservoir", "Necropotence", "Bolas's Citadel"],
+    "easyPrerequisites": "write pre-reqs here",
+    "description": "If the top card of your library is a land, or you are unable to cast that card for any reason, activate Necropotence by paying 1 life, exiling that card. Then, skip to step 5.\nIf the top card of your library is a nonland card, cast it from the top of your library by paying an amount of life equal to its mana value.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nResolve the cast spell.\nRepeat as able.",
+    "notes": "In step 1, you may not be able to cast the card if it won't have legal targets or due to timing restrictions. If this occurs, you must exile it and move to the next card. If the top card is a land and you have a land drop available, you can opt to play that land instead of exiling it."
+  },
+  "3591-4740-6900": {
+    "uses": ["Aetherflux Reservoir", "Necropotence", "Gwenom, Remorseless"],
+    "easyPrerequisites": "write pre-reqs here",
+    "notablePrerequisites": "Gwenom has attacked this turn.",
+    "description": "If the top card of your library is a land, or you are unable to cast that card for any reason, activate Necropotence by paying 1 life, exiling that card. Then, skip to step 5.\nIf the top card of your library is a nonland card, cast it from the top of your library by paying an amount of life equal to its mana value.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nResolve the cast spell.\nRepeat as able.",
+    "notes": "In step 1, you may not be able to cast the card if it won't have legal targets or due to timing restrictions. If this occurs, you must exile it and move to the next card. If the top card is a land and you have a land drop available, you can opt to play that land instead of exiling it."
+  },
   "1164-2173-4740-6123": {
     "uses": ["Mirror of Fate", "Aetherflux Reservoir", "Bolas's Citadel", "Necrodominance"],
     "easyPrerequisites": "Your life total is 16 or higher.",

@@ -9,9 +9,10 @@ interface ControlledProps {
   max?: number;
   orMore?: boolean;
   onValue?: (value: number) => void;
+  step?: number;
 }
 
-function ControlledStepper({ initial = 5, max = 1_000_000_000, orMore, onValue = vi.fn() }: ControlledProps) {
+function ControlledStepper({ initial = 5, max = 1_000_000_000, orMore, onValue = vi.fn(), step }: ControlledProps) {
   const [value, setValue] = useState(initial);
   return (
     <Stepper
@@ -20,6 +21,7 @@ function ControlledStepper({ initial = 5, max = 1_000_000_000, orMore, onValue =
       min={0}
       max={max}
       orMore={orMore}
+      step={step}
       onChange={(next) => {
         setValue(next);
         onValue(next);
@@ -36,6 +38,12 @@ describe('parseNumber', () => {
     expect(parseNumber('1e9')).toBe(1_000_000_000);
     expect(parseNumber('2.6')).toBe(3);
     expect(parseNumber('5+')).toBe(5);
+  });
+
+  test('rounds to the step', () => {
+    expect(parseNumber('3.14', 0.1)).toBe(3.1);
+    expect(parseNumber('0.3', 0.1)).toBe(0.3);
+    expect(parseNumber('2.25', 0.5)).toBe(2.5);
   });
 
   test('rejects anything else', () => {
@@ -96,6 +104,27 @@ describe('Stepper', () => {
     expect(field).toHaveValue('100');
     await user.keyboard('{Home}');
     expect(field).toHaveValue('0');
+  });
+
+  test('steps by its step, without float dust', async () => {
+    const user = userEvent.setup();
+    const onValue = vi.fn();
+    render(<ControlledStepper initial={0.1} max={16} step={0.1} onValue={onValue} />);
+    const field = screen.getByRole('spinbutton');
+    expect(field).toHaveAttribute('inputmode', 'decimal');
+    await user.click(field);
+    await user.keyboard('{ArrowUp}');
+    expect(field).toHaveValue('0.2');
+    await user.click(screen.getByRole('button', { name: 'Increase Life' }));
+    expect(field).toHaveValue('0.3');
+    expect(onValue).toHaveBeenLastCalledWith(0.3);
+    await user.click(field);
+    await user.keyboard('{PageUp}');
+    expect(field).toHaveValue('1.3');
+    await user.clear(field);
+    await user.type(field, '3.14');
+    await user.tab();
+    expect(field).toHaveValue('3.1');
   });
 
   test('keeps its buttons out of the tab order and stops them at the limits', async () => {
