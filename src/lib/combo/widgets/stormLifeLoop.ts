@@ -1,7 +1,7 @@
 import type { DotChart, Result, Stat } from './shared/calculator';
 import { sweptDots } from './shared/charts';
 import { formatNumber, formatReachable, plural, signed } from './shared/format';
-import { LIFE, numberInput } from './shared/inputs';
+import { LIFE, STORM, numberInput } from './shared/inputs';
 import {
   LifeLoop,
   NO_LOOP_INPUTS,
@@ -24,7 +24,6 @@ interface Payoff {
   damage: number;
 }
 
-const STORM = numberInput('storm', 'Spells you cast this turn before the loop', 0);
 const MANA = numberInput('mana', 'Mana you can spend instead of life', 0);
 
 export const stormLifeLoop = defineWidget<'storm-life-loop', LifeLoop & { payoff?: Payoff }>('storm-life-loop', {

@@ -15,6 +15,8 @@ export interface NumberInput {
   max: number;
   initial: number;
   hint?: string;
+  /* the smallest change, 1 unless the number takes decimals */
+  step?: number;
 }
 
 export interface ChoiceInput {

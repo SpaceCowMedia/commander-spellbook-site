@@ -9,9 +9,9 @@ export function numberInput(
   key: string,
   label: string,
   initial: number,
-  { min = 0, max = BIG, hint }: { min?: number; max?: number; hint?: string } = {},
+  { min = 0, max = BIG, hint, step }: { min?: number; max?: number; hint?: string; step?: number } = {},
 ): NumberInput {
-  return { kind: 'number', key, label, min, max, initial, ...(hint && { hint }) };
+  return { kind: 'number', key, label, min, max, initial, ...(hint && { hint }), ...(step && { step }) };
 }
 
 export function choiceInput(key: string, label: string, options: [string, string][], initial?: string): ChoiceInput {
@@ -30,6 +30,7 @@ export const HIGHEST_LIFE = numberInput('highestLife', 'Highest life total among
   min: 1,
 });
 export const LIBRARY = numberInput('library', 'Cards in your library', 60);
+export const STORM = numberInput('storm', 'Spells you cast this turn before the loop', 0);
 
 export function castsInput(commander: string): NumberInput {
   return numberInput('casts', `Times ${commander} was cast from the command zone`, 0);
