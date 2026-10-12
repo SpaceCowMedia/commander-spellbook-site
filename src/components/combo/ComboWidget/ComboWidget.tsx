@@ -69,6 +69,7 @@ const Panel: React.FC<PanelProps> = ({ widget, calculator, comboId }) => {
                   min={input.min}
                   max={steadyFrom[input.key] ?? input.max}
                   orMore={steadyFrom[input.key] !== undefined}
+                  step={input.step}
                   onChange={(value) => setNumber(input.key, value)}
                 />
               ) : (

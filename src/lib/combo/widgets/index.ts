@@ -21,6 +21,7 @@ import { manaEchoes } from './manaEchoes';
 import { manaFormula } from './manaFormula';
 import { mayaelsAriaDoubling } from './mayaelsAriaDoubling';
 import { nadier } from './nadier';
+import { necropotenceAetherflux } from './necropotenceAetherflux';
 import { ojerAxonil } from './ojerAxonil';
 import { repercussion } from './repercussion';
 import { sageOfHours } from './sageOfHours';
@@ -38,6 +39,7 @@ import { timeSieve } from './timeSieve';
 /* Every widget, in the order they are tried: the first that recognizes a variant wins. The generic
    formulas come last, after every widget that knows its combo by name. */
 export const WIDGETS = [
+  necropotenceAetherflux,
   stormLifeLoop,
   drainLoop,
   krenko,
