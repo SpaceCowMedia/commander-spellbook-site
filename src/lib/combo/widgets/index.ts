@@ -23,6 +23,7 @@ import { mayaelsAriaDoubling } from './mayaelsAriaDoubling';
 import { nadier } from './nadier';
 import { necropotenceAetherflux } from './necropotenceAetherflux';
 import { ojerAxonil } from './ojerAxonil';
+import { ratadrabikDrain } from './ratadrabikDrain';
 import { repercussion } from './repercussion';
 import { sageOfHours } from './sageOfHours';
 import { scepterTurns } from './scepterTurns';
@@ -40,6 +41,7 @@ import { timeSieve } from './timeSieve';
    formulas come last, after every widget that knows its combo by name. */
 export const WIDGETS = [
   necropotenceAetherflux,
+  ratadrabikDrain,
   stormLifeLoop,
   drainLoop,
   krenko,
