@@ -42,10 +42,8 @@ export function onslaughtWidget<Id extends string>(id: Id, dragon: Dragon, detec
           stats: [{ label: 'X', value: formatNumber(x), caption: `{${x}}{${x}}{R}` }],
           charts: [
             {
-              kind: 'dots',
               title: 'Damage by mana spent',
               xLabel: 'Mana',
-              yLabel: 'Damage',
               selects: ONSLAUGHT_MANA.key,
               /* two mana at a time, one more X each */
               ...sweptDots(

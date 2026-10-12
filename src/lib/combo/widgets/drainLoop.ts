@@ -3,20 +3,30 @@ import { formatNumber, formatReachable, plural, signed } from './shared/format';
 import { LIFE, OPPONENT_LIFE, numberInput } from './shared/inputs';
 import {
   LifeLoop,
+  drainCannotRunOut,
   drainMinimumLife,
   drainNetPerLoop,
   drainPerOpponent,
   drainRun,
   hasStep,
   lifeAtLoop,
+  lifePage,
 } from './shared/lifeLoop';
 import { defineWidget } from './shared/widget';
 import { loopChoices, loopInputs, readLifeLoop } from './lifeLoop';
 
-const POINTS = 40;
+/* the most loops the chart of a long run shows */
+const POINTS = 24;
+/* from how many loops a run also gets a chart loop by loop */
+const LONG_RUN = 12;
+const LOWEST = [{ y: 1, label: 'Lowest you can go', tone: 'bad' as const }];
 
 export const drainLoop = defineWidget<'drain-loop', LifeLoop>('drain-loop', {
-  detect: (variant) => readLifeLoop(variant, 'drain'),
+  /* a loop your life can't run out in leaves nothing to work out */
+  detect: (variant) => {
+    const loop = readLifeLoop(variant, 'drain');
+    return loop && !drainCannotRunOut(loop) && loop;
+  },
   calculator(spec) {
     const inputs: Input[] = [LIFE];
     if ([...spec.setup, ...spec.loop].some((step) => step.kind === 'drain' && step.perOpponent === 'devotion')) {
@@ -39,14 +49,23 @@ export const drainLoop = defineWidget<'drain-loop', LifeLoop>('drain-loop', {
         const run = drainRun(spec, loopValues, lives, life);
         const needed = drainMinimumLife(spec, loopValues, lives);
         const dead = run.deaths.filter((death) => death !== null).length;
-        const step = Math.max(1, Math.ceil(run.loops / POINTS));
-        const points = [];
-        for (let n = 0; n <= run.loops; n += step) {
-          points.push({ x: n, y: lifeAtLoop(run, n) ?? life });
+        const every = Math.max(1, Math.ceil(run.loops / POINTS));
+        const loops = [];
+        for (let n = 0; n <= run.loops; n += every) {
+          loops.push(n);
         }
-        if (points[points.length - 1].x !== run.loops && run.loops > 0) {
-          points.push({ x: run.loops, y: lifeAtLoop(run, run.loops) ?? life });
+        if (loops[loops.length - 1] !== run.loops && run.loops > 0) {
+          loops.push(run.loops);
         }
+        const dots = loops.map((n) => {
+          const at = lifeAtLoop(run, n) ?? life;
+          return {
+            x: n,
+            y: at,
+            label: `${n === 0 ? 'To start' : `Loop ${formatNumber(n)}`}: ${formatNumber(at)} life`,
+          };
+        });
+        const steps = lifePage(spec, loopValues, life, values.page ?? 0, { lives, checked: true });
         return {
           headline: {
             label: 'Life needed to kill the table',
@@ -84,20 +103,14 @@ export const drainLoop = defineWidget<'drain-loop', LifeLoop>('drain-loop', {
               ? { tone: 'good', text: `Dies in loop ${formatNumber(run.deaths[i]!)}` }
               : { tone: 'bad', text: `Survives at ${formatNumber(remaining)}` },
           ),
-          charts:
-            points.length > 1
-              ? [
-                  {
-                    kind: 'line',
-                    title: 'Your life, loop by loop',
-                    xLabel: 'Loops',
-                    yLabel: 'Life',
-                    points,
-                    marks: [{ y: 1, label: 'Lowest you can go', tone: 'bad' }],
-                    summary: `Your life goes from ${formatNumber(points[0].y)} to ${formatNumber(points[points.length - 1].y)} over ${plural(run.loops, 'loop')}.`,
-                  },
-                ]
-              : undefined,
+          charts: [
+            ...(steps.dots.length > 1
+              ? [{ title: 'Your life, step by step', xLabel: 'Step', marks: LOWEST, ...steps }]
+              : []),
+            ...(run.loops > LONG_RUN && dots.length > 1
+              ? [{ title: 'Your life, loop by loop', xLabel: 'Loop', marks: LOWEST, dots }]
+              : []),
+          ],
         };
       },
     };

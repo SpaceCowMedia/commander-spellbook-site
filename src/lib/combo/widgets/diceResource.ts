@@ -56,10 +56,8 @@ export const diceResource = defineWidget('dice-resource', {
           ],
           charts: [
             {
-              kind: 'dots',
               title: `Chance of at least this many extra ${iteration}s`,
               xLabel: `Extra ${iteration}s`,
-              yLabel: 'Chance',
               percent: true,
               selects: target.key,
               ...sweptDots(target, wanted, (n) => {

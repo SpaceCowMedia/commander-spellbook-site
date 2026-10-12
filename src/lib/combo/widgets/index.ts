@@ -2,10 +2,9 @@ import type { Variant } from '@space-cow-media/spellbook-client';
 import type { Calculator } from './shared/calculator';
 import { valuesFor } from './shared/values';
 import type { SpecOf, Widget } from './shared/widget';
-import { aatchikLoop } from './aatchikLoop';
-import { angelOfDestinyCombats } from './angelOfDestinyCombats';
 import { angelOfDestinyMyriad } from './angelOfDestinyMyriad';
 import { animar } from './animar';
+import { bagEndBanquet } from './bagEndBanquet';
 import { cosmogoyf } from './cosmogoyf';
 import { devastatingOnslaughtScourge } from './devastatingOnslaughtScourge';
 import { devastatingOnslaughtTerror } from './devastatingOnslaughtTerror';
@@ -13,6 +12,8 @@ import { diceResource } from './diceResource';
 import { dragonhawk } from './dragonhawk';
 import { dragonTempest } from './dragonTempest';
 import { drainLoop } from './drainLoop';
+import { elenda } from './elenda';
+import { empoweredAutogenerator } from './empoweredAutogenerator';
 import { grayMerchantDevotion } from './grayMerchantDevotion';
 import { krenko } from './krenko';
 import { maddeningCacophony } from './maddeningCacophony';
@@ -24,13 +25,15 @@ import { ojerAxonil } from './ojerAxonil';
 import { repercussion } from './repercussion';
 import { sageOfHours } from './sageOfHours';
 import { scepterTurns } from './scepterTurns';
+import { scuteSwarm } from './scuteSwarm';
 import { siegebreakerFaceBreaker } from './siegebreakerFaceBreaker';
 import { simulacrumSynthesizer } from './simulacrumSynthesizer';
+import { sin } from './sin';
 import { stormLifeLoop } from './stormLifeLoop';
 import { stormsplitterSacrifice } from './stormsplitterSacrifice';
 import { stormsplitterTapping } from './stormsplitterTapping';
+import { theOneRing } from './theOneRing';
 import { timeSieve } from './timeSieve';
-import { tokenGrowth } from './tokenGrowth';
 
 /* Every widget, in the order they are tried: the first that recognizes a variant wins. The generic
    formulas come last, after every widget that knows its combo by name. */
@@ -40,7 +43,6 @@ export const WIDGETS = [
   krenko,
   mayaelsAriaDoubling,
   maddeningCacophony,
-  angelOfDestinyCombats,
   angelOfDestinyMyriad,
   ojerAxonil,
   cosmogoyf,
@@ -50,7 +52,6 @@ export const WIDGETS = [
   devastatingOnslaughtTerror,
   devastatingOnslaughtScourge,
   dragonhawk,
-  tokenGrowth,
   scepterTurns,
   sageOfHours,
   timeSieve,
@@ -59,10 +60,15 @@ export const WIDGETS = [
   simulacrumSynthesizer,
   stormsplitterSacrifice,
   stormsplitterTapping,
-  aatchikLoop,
   siegebreakerFaceBreaker,
   nadier,
   grayMerchantDevotion,
+  elenda,
+  sin,
+  scuteSwarm,
+  empoweredAutogenerator,
+  theOneRing,
+  bagEndBanquet,
   manaFormula,
 ] as const;
 
@@ -79,7 +85,7 @@ export function hasNothingToChange(calculator: Calculator): boolean {
   }
   const steadyFrom = new Map(
     (calculator.compute(valuesFor(calculator)).charts ?? []).flatMap((chart) =>
-      chart.kind === 'dots' && chart.selects !== undefined ? [[chart.selects, chart.steadyFrom]] : [],
+      chart.selects !== undefined ? [[chart.selects, chart.steadyFrom]] : [],
     ),
   );
   return calculator.inputs.every((input) => input.kind === 'number' && steadyFrom.get(input.key) === input.min);

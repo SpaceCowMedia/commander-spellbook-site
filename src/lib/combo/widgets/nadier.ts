@@ -1,5 +1,5 @@
-import type { Dot, Point } from './shared/calculator';
-import { sweptDots } from './shared/charts';
+import type { Dot } from './shared/calculator';
+import { stepPage, sweptDots } from './shared/charts';
 import { formatNumber, plural } from './shared/format';
 import { castsInput, commanderTaxStat, numberInput } from './shared/inputs';
 import { defineWidget } from './shared/widget';
@@ -11,7 +11,8 @@ const POWER = numberInput('power', "Nadier's power", 3);
 const FOOD_CHAIN_FOR_NADIER = 7;
 const NADIER_COST = 6;
 const NADIER_BASE_POWER = 3;
-const CYCLES = 5;
+/* steps on a page of the chart: three for each cycle */
+const PAGE = 15;
 
 /* Each cycle exiles Nadier for 7, recasts it for 6 plus tax, then exiles its Elves for 1 each, each
    one a counter on the new Nadier. Cycle by cycle the tax grows by 2 and the Elves by 3, so what you
@@ -23,14 +24,14 @@ export function nadierMana(casts: number, power: number): number {
   return Math.max(0, 2 * casts - 1 + peak);
 }
 
-/* The mana you hold through the first cycles, starting with what the loop needs: up as Food Chain
-   exiles Nadier, down to recast it, up again as its Elves are exiled. */
-export function cycleByCycle(casts: number, power: number, cycles = CYCLES): { dots: Dot[]; after: Point } {
+/* The mana you hold through the first `steps` steps, starting with what the loop needs: up as Food
+   Chain exiles Nadier, down to recast it, up again as its Elves are exiled. */
+export function cycleByCycle(casts: number, power: number, steps = 1 + PAGE): Dot[] {
   let mana = nadierMana(casts, power);
   let elves = power;
   const dots: Dot[] = [{ x: 0, y: mana, label: `To start: {${formatNumber(mana)}}` }];
   const step = (label: string) => dots.push({ x: dots.length, y: mana, label });
-  for (let cycle = 0; cycle < cycles; cycle++) {
+  for (let cycle = 0; dots.length < steps; cycle++) {
     mana += FOOD_CHAIN_FOR_NADIER;
     step(`Exile Nadier with Food Chain: {${formatNumber(mana)}}`);
     const cost = NADIER_COST + 2 * (casts + cycle);
@@ -40,7 +41,7 @@ export function cycleByCycle(casts: number, power: number, cycles = CYCLES): { d
     step(`Exile its ${plural(elves, 'Elf', 'Elves')}: {${formatNumber(mana)}}`);
     elves += NADIER_BASE_POWER;
   }
-  return { dots, after: { x: dots.length, y: mana + FOOD_CHAIN_FOR_NADIER } };
+  return dots.slice(0, steps);
 }
 
 export const nadier = defineWidget('nadier', {
@@ -58,10 +59,8 @@ export const nadier = defineWidget('nadier', {
         stats: [commanderTaxStat(casts)],
         charts: [
           {
-            kind: 'dots',
             title: 'Mana to start',
             xLabel: CASTS.label,
-            yLabel: 'Mana',
             selects: CASTS.key,
             ...sweptDots(CASTS, casts, (x) => ({
               y: nadierMana(x, power),
@@ -69,11 +68,9 @@ export const nadier = defineWidget('nadier', {
             })),
           },
           {
-            kind: 'dots',
             title: 'Your mana, step by step',
             xLabel: 'Step',
-            yLabel: 'Mana',
-            ...cycleByCycle(casts, power),
+            ...stepPage((steps) => cycleByCycle(casts, power, steps), values.page ?? 0, PAGE),
           },
         ],
       };

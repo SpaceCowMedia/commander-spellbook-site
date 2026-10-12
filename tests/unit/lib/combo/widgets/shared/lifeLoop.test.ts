@@ -4,11 +4,13 @@ import {
   LifeStep,
   LoopInputs,
   NO_LOOP_INPUTS,
+  drainCannotRunOut,
   drainMinimumLife,
   drainRun,
   firstRisingLoop,
   lifeAtLoop,
-  lifeTrace,
+  lifePage,
+  lifeSteps,
   loopsUntilAbove,
   manaToGoOff,
   stormMinimumLife,
@@ -237,9 +239,34 @@ describe('storm loop curves', () => {
   });
 
   test('trace life after every step', () => {
-    const points = lifeTrace(krrikSigil, storm(0), 33, 1);
-    expect(points.map((p) => p.y)).toEqual([33, 29, 29, 30, 26]);
-    expect(points[points.length - 1].x).toBe(1);
+    const steps = lifeSteps(krrikSigil, storm(0), 33, 9);
+    expect(steps.map((dot) => dot.y)).toEqual([33, 29, 29, 30, 26, 22, 22, 24, 20]);
+    expect(steps.map((dot) => dot.x)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(steps.slice(0, 5).map((dot) => dot.label)).toEqual([
+      'To start: 33 life',
+      'Loop 1, pay 4 life: 29 life',
+      'Loop 1, cast a spell: 29 life',
+      'Loop 1, gain 1 life: 30 life',
+      'Loop 1, pay 4 life: 26 life',
+    ]);
+  });
+
+  test('stop the trace at the payment you cannot make', () => {
+    const steps = lifeSteps(krrikSigil, storm(0), 5, 100, { checked: true });
+    expect(steps.map((dot) => dot.y)).toEqual([5, 1, 1, 2, -2]);
+    expect(steps[steps.length - 1].tone).toBe('bad');
+    expect(steps.slice(0, -1).every((dot) => dot.tone === undefined)).toBe(true);
+  });
+
+  test('page the trace by whole loops', () => {
+    const first = lifePage(krrikSigil, storm(0), 33, 0);
+    expect(first.dots).toHaveLength(25);
+    expect(first.before).toBeUndefined();
+    expect(first.after).toEqual({ x: 25, y: lifeSteps(krrikSigil, storm(0), 33, 26)[25].y });
+    const second = lifePage(krrikSigil, storm(0), 33, 1);
+    expect(second.dots.map((dot) => dot.x)).toEqual(Array.from({ length: 24 }, (_, i) => 25 + i));
+    expect(second.before).toEqual({ x: 24, y: first.dots[24].y });
+    expect(second.page).toBe(1);
   });
 });
 
@@ -294,5 +321,22 @@ describe('drain loops', () => {
     const run = drainRun(grayMerchant, NO_LOOP_INPUTS, [10], 50);
     expect(run.end).toBe('stuck');
     expect(drainMinimumLife(grayMerchant, NO_LOOP_INPUTS, [10])).toBe(Infinity);
+  });
+
+  test('cannot run your life out when every loop drains a fixed amount at least as big as it pays', () => {
+    const kokusho = loopOf({ kind: 'pay', life: 1 }, { kind: 'drain', perOpponent: 5 }, { kind: 'pay', life: 1 });
+    expect(drainCannotRunOut(kokusho)).toBe(true);
+    expect(
+      drainCannotRunOut({
+        setup: [{ kind: 'pay', life: 9 }],
+        loop: [
+          { kind: 'pay', life: 5 },
+          { kind: 'drain', perOpponent: 5 },
+        ],
+      }),
+    ).toBe(true);
+    expect(drainCannotRunOut(loopOf({ kind: 'pay', life: 9 }, { kind: 'drain', perOpponent: 5 }))).toBe(false);
+    expect(drainCannotRunOut(grayMerchant)).toBe(false);
+    expect(drainCannotRunOut(extortLoop)).toBe(false);
   });
 });

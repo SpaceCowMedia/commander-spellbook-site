@@ -19,5 +19,6 @@ export const simulacrumSynthesizer = defineWidget('simulacrum-synthesizer', {
       summary:
         'Each copy Urza makes costs {6}, and every other Simulacrum Synthesizer you control answers it with a Construct worth {C}{C}, so the loop pays for itself from three Synthesizers on.',
       counted: numberInput('synthesizers', 'Simulacrum Synthesizers you control', 1, { min: 1 }),
+      refunded: 'Sacrificing the Constructs makes',
     }),
 });

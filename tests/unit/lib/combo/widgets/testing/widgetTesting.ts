@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import type { Calculator, DotChart, NumberInput, Result, Values } from 'lib/combo/widgets/shared/calculator';
+import type { Calculator, NumberInput, Result, Values } from 'lib/combo/widgets/shared/calculator';
 import { valuesFor } from 'lib/combo/widgets/shared/values';
 import type { SpecOf, Widget } from 'lib/combo/widgets/shared/widget';
 import { FakeVariant, fakeVariant, fixtureVariant } from './fakeVariant';
@@ -27,6 +27,8 @@ interface Overrides {
   choices?: Record<string, string>;
   /* the opponents' life totals, or whole rows */
   opponents?: (number | Record<string, number>)[];
+  /* the page of the charts that turn pages */
+  page?: number;
 }
 
 /* Computes with every input at its initial value except the ones given. */
@@ -40,6 +42,7 @@ export function run(calculator: Calculator, overrides: Overrides = {}): Result {
     numbers: { ...values.numbers, ...overrides.numbers },
     choices: { ...values.choices, ...overrides.choices },
     opponents: opponents ?? values.opponents,
+    ...(overrides.page !== undefined && { page: overrides.page }),
   };
   return calculator.compute(merged);
 }
@@ -82,8 +85,7 @@ export function expectSteadyFrom(
   overrides: Overrides = {},
 ): void {
   const at = (x: number) => run(calculator, { ...overrides, numbers: { ...overrides.numbers, [key]: x } });
-  const chartAt = (x: number) =>
-    at(x).charts?.find((chart): chart is DotChart => chart.kind === 'dots' && chart.selects === key);
+  const chartAt = (x: number) => at(x).charts?.find((chart) => chart.selects === key);
   const input = calculator.inputs.find((candidate) => candidate.key === key) as NumberInput;
   expect(chartAt(input.initial)?.steadyFrom).toBe(expected);
   if (expected === undefined) {

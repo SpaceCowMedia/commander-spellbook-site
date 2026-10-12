@@ -49,7 +49,7 @@ test('shows the decimals the chances differ in', () => {
     return {
       headline: result.headline.value,
       never: result.stats?.[0].value,
-      dots: chart?.kind === 'dots' ? chart.dots.map((dot) => dot.label) : [],
+      dots: chart?.dots.map((dot) => dot.label) ?? [],
     };
   };
   expect(labels(4)).toEqual({
@@ -83,5 +83,5 @@ test('keeps to whole percents where the chances are estimates', () => {
   const result = run(falling, { numbers: { start: 100_000, target: 60_000 } });
   const chart = result.charts?.[0];
   expect(result.headline.value).toMatch(/^[<>]?\d+(\.\d)?%$/);
-  expect(chart?.kind === 'dots' && chart.dots.every((dot) => /: [<>]?\d+(\.\d)?%$/.test(dot.label))).toBe(true);
+  expect(chart?.dots.every((dot) => /: [<>]?\d+(\.\d)?%$/.test(dot.label))).toBe(true);
 });

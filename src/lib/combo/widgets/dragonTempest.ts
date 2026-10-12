@@ -26,10 +26,8 @@ export const dragonTempest = defineWidget('dragon-tempest', {
         },
         charts: [
           {
-            kind: 'dots',
             title: 'Damage by d20 roll',
             xLabel: 'Roll',
-            yLabel: 'Damage',
             dots: ROLLS.map((roll) => ({
               x: roll,
               y: damage(roll),
