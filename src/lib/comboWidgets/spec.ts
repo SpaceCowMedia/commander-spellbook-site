@@ -115,7 +115,13 @@ export type LethalCheckSpec = { widget: 'lethal-check' } & (
       model: 'debt';
       via: 'revenge' | 'beacon' | 'life-lost';
     }
-  | /* Angel of Destiny's end step check */ { model: 'angel-destiny'; myriad: boolean }
+  | /* Angel of Destiny's end step check */ {
+      model: 'angel-destiny';
+      /* where the life comes from: one Angel over several combats, myriad tokens, or creatures turned into copies */
+      via: 'combats' | 'myriad' | 'copies';
+      /* +1/+1 counters put on the Angel being copied, which its copies don't get */
+      counters?: number;
+    }
   | /* Ojer Axonil pinging everyone through Pyrohemia or Warmonger */ { model: 'ojer'; outlet: string; mana: string }
   | /* Heartless Hidetsugu with infect */ { model: 'hidetsugu' }
   | /* Twenty-Toed Toad needs 20 cards in hand */ { model: 'toad'; via: 'peer' | 'enter-the-infinite' }

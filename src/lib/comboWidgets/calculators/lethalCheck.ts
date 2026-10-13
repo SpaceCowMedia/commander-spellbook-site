@@ -149,6 +149,19 @@ function lowestWinning(test: (life: number) => boolean, cap = 100000): number {
   return low;
 }
 
+/* Every Angel of Destiny you control triggers on every hit, and double strike hits twice: a combat
+   where `attackers` of them connect gains you 2 × angels × the damage they deal at once. One of the
+   attackers may have `extraPower` on top of its 2. */
+function angelLifeGain(angels: number, attackers: number, extraPower = 0): number {
+  return attackers > 0 ? 2 * angels * (2 * attackers + extraPower) : 0;
+}
+
+/* The fewest Angels that gain at least `life` when they all connect: n at the positive root of
+   2n × (2n + extraPower) = life, rounded up. */
+function angelsNeeded(life: number, extraPower = 0): number {
+  return Math.max(1, Math.ceil((Math.sqrt(extraPower ** 2 + 4 * Math.max(0, life)) - extraPower) / 4));
+}
+
 export function lethalCheckCalculator(spec: LethalCheckSpec): Calculator {
   switch (spec.model) {
     case 'peer':
@@ -384,32 +397,75 @@ export function lethalCheckCalculator(spec: LethalCheckSpec): Calculator {
       };
     case 'debt':
       return debtCalculator(spec.via);
-    case 'angel-destiny':
+    case 'angel-destiny': {
+      const { via, counters = 0 } = spec;
+      const copies = via === 'copies';
       return {
         title: 'Enough life for Angel of Destiny?',
-        summary: spec.myriad
-          ? 'Myriad gives one attacking Angel per opponent, and every Angel triggers on every hit: with N opponents you gain 4 × N² life. At your end step you need 15 more life than you started the game with.'
-          : 'Each combat Angel of Destiny deals 2 + 2 damage and you gain 4 life. At your end step you need 15 more life than you started the game with.',
+        summary: `${
+          copies
+            ? `Every creature turned into a copy is one more Angel of Destiny, and every Angel triggers on every hit. With double strike you gain 4 life for each Angel you control, times the Angels that connect.${counters ? ' Each +1/+1 counter on the original adds 2 more for each Angel you control.' : ''}`
+            : via === 'myriad'
+              ? 'Myriad gives one attacking Angel per opponent, and every Angel triggers on every hit: with N opponents you gain 4 × N² life.'
+              : 'Each combat Angel of Destiny deals 2 + 2 damage and you gain 4 life.'
+        } At your end step you need 15 more life than you started the game with.`,
         inputs: [
           LIFE_INPUT,
           numberInput('start', 'Your starting life total', 1, 99, STARTING_LIFE),
-          spec.myriad
-            ? numberInput('opponents', 'Opponents', 1, 7, 3)
-            : numberInput('combats', 'Combats with Angel of Destiny', 1, 10, 3),
+          ...(copies
+            ? [
+                numberInput('angels', 'Angels of Destiny you control', 1, 99, 4, 'The original and every copy of it.'),
+                numberInput(
+                  'idle',
+                  "Angels that are blocked or can't attack",
+                  0,
+                  99,
+                  0,
+                  'They still trigger for the ones that connect.',
+                ),
+              ]
+            : [
+                via === 'myriad'
+                  ? numberInput('opponents', 'Opponents', 1, 7, 3)
+                  : numberInput('combats', 'Combats with Angel of Destiny', 1, 10, 3),
+              ]),
         ],
         compute(values) {
-          const gained = spec.myriad ? 4 * values.numbers.opponents ** 2 : 4 * values.numbers.combats;
-          const needed = values.numbers.start + 15 - gained;
+          const { life, start, angels, idle, opponents, combats } = values.numbers;
+          const gained = copies
+            ? angelLifeGain(angels, angels - idle, counters)
+            : via === 'myriad'
+              ? angelLifeGain(opponents, opponents)
+              : combats * angelLifeGain(1, 1);
+          const needed = start + 15 - gained;
           return {
             headline: { label: 'Life needed now', value: formatNumber(Math.max(1, needed)) },
             verdict:
-              values.numbers.life >= needed
-                ? { tone: 'good', title: 'You win at your end step' }
-                : { tone: 'bad', title: `You need ${formatNumber(needed - values.numbers.life)} more life` },
-            stats: [{ label: 'Life gained by the Angels', value: formatNumber(gained) }],
+              life >= needed
+                ? {
+                    tone: 'good',
+                    title: 'You win at your end step',
+                    ...(copies && {
+                      detail: 'Each Angel takes out the player it attacked, so send at least one at every opponent.',
+                    }),
+                  }
+                : { tone: 'bad', title: `You need ${formatNumber(needed - life)} more life` },
+            stats: [
+              { label: 'Life gained by the Angels', value: formatNumber(gained) },
+              ...(copies
+                ? [
+                    {
+                      label: 'Angels needed',
+                      value: formatNumber(angelsNeeded(start + 15 - life, counters)),
+                      caption: 'at your life total, if they all connect',
+                    },
+                  ]
+                : []),
+            ],
           };
         },
       };
+    }
     case 'ojer':
       return {
         title: `How many ${spec.outlet} activations?`,

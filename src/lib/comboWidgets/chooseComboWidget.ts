@@ -175,12 +175,21 @@ const RULES: Rule[] = [
           : undefined;
     return via && { widget: 'lethal-check', model: 'debt', via };
   },
+  // Sakashima's Will, Mirrorweave and the like turn every creature you control into Angel of Destiny
+  (v) =>
+    has(v, 'Angel of Destiny') &&
+    says(v, /each Angel of Destiny you control triggers/i) && {
+      widget: 'lethal-check',
+      model: 'angel-destiny',
+      via: 'copies',
+      counters: says(v, /\ba \+1\/\+1 counter on the targeted creature/i) ? 1 : 0,
+    },
   (v) =>
     has(v, 'Angel of Destiny') &&
     says(v, /starting life total|\d+ minus \d+ for each opponent/i) && {
       widget: 'lethal-check',
       model: 'angel-destiny',
-      myriad: says(v, /myriad/i),
+      via: says(v, /myriad/i) ? 'myriad' : 'combats',
     },
   (v) => {
     const outlet =
