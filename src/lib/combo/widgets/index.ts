@@ -2,6 +2,7 @@ import type { Variant } from '@space-cow-media/spellbook-client';
 import type { Calculator } from './shared/calculator';
 import { valuesFor } from './shared/values';
 import type { SpecOf, Widget } from './shared/widget';
+import { angelOfDestinyCopies } from './angelOfDestinyCopies';
 import { angelOfDestinyMyriad } from './angelOfDestinyMyriad';
 import { animar } from './animar';
 import { bagEndBanquet } from './bagEndBanquet';
@@ -47,6 +48,7 @@ export const WIDGETS = [
   krenko,
   mayaelsAriaDoubling,
   maddeningCacophony,
+  angelOfDestinyCopies,
   angelOfDestinyMyriad,
   ojerAxonil,
   cosmogoyf,

@@ -42,6 +42,20 @@
     "notes": "You can cast the other spells you exile with Mirror of Fate each loop if your life total allows. You can also start with less life if you've cast spells during the turn prior to starting the combo. Another option is to place small mana value spells on top of Mirror of Fate and cast them to increase your storm count so Aetherflux Reservoir will give you more life faster.",
     "description": "Activate Mirror of Fate by tapping it and exiling it due to Necrodominance, choosing Mirror of Fate and up to six other cards from exile, then exiling your library and putting the chosen cards on top of your library, ensuring to place Mirror of Fate on top of your library.\nCast Mirror of Fate from the top of your library by paying 5 life due to Bolas's Citadel.\nAetherflux Reservoir triggers, causing you to gain 1 life for each spell you've cast this turn.\nRepeat."
   },
+  "2790-2990": {
+    "uses": ["Angel of Destiny", "Sakashima's Will"],
+    "manaNeeded": "{3}{U}",
+    "easyPrerequisites": "Your life total must be 5 or higher.\nAngel of Destiny must not have summoning sickness.",
+    "notablePrerequisites": "You control 3 other creatures that do not have summoning sickness.\nOpponents cannot block flying creatures you control.",
+    "description": "Cast or activate Sakashima's Will targeting Angel of Destiny, causing each other creature you control to become a copy of the chosen creature until end of turn.\nMove to combat and swing all your Angels, sending at least one Angel at each opponent.\nWhen first strike damage is dealt, each Angel of Destiny you control triggers for each creature that dealt damage.\nResolve each trigger, causing each opponent to gain life equal to X times the damage they took and you to gain life equal to that combined total.\nRepeat steps 4-5 for the normal damage step.\nAt the beginning of your end step, since your life total is at least 45, each Angel of Destiny you control triggers, causing the player it attacked to lose the game."
+  },
+  "2790-6558": {
+    "uses": ["Angel of Destiny", "Naga Fleshcrafter"],
+    "manaNeeded": "{2}{U}",
+    "easyPrerequisites": "Your life total must be 5 or higher.\nAngel of Destiny must not have summoning sickness.",
+    "notablePrerequisites": "You control 3 other creatures that do not have summoning sickness.\nOpponents cannot block flying creatures you control.",
+    "description": "Cast or activate Naga Fleshcrafter targeting Angel of Destiny, putting a +1/+1 counter on the targeted creature and making each other creature you control become a copy of it until end of turn.\nMove to combat and swing all your Angels, sending at least one Angel at each opponent.\nWhen first strike damage is dealt, each Angel of Destiny you control triggers for each creature that dealt damage.\nResolve each trigger, causing each opponent to gain life equal to X times the damage they took and you to gain life equal to that combined total.\nRepeat steps 4-5 for the normal damage step.\nAt the beginning of your end step, since your life total is at least 45, each Angel of Destiny you control triggers, causing the player it attacked to lose the game."
+  },
   "2790-4836-5361": {
     "uses": ["Angel of Destiny", "The Master, Multiplied", "Auton Soldier"],
     "easyPrerequisites": "Your life total is equal to or greater than 55 minus 4 for each opponent you have.\nAuton Soldier is a copy of Angel of Destiny and does not have summoning sickness.",
