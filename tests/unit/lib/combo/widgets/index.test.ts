@@ -19,6 +19,7 @@ const EXAMPLES: Record<WidgetId, keyof typeof fixtures> = {
   krenko: '38-659-1288',
   'mayaels-aria-doubling': '3858-6864',
   'maddening-cacophony': '5069-5080',
+  'angel-of-destiny-copies': '2790-2990',
   'angel-of-destiny-myriad': '2790-4836-5361',
   'ojer-axonil': '2868-4629',
   cosmogoyf: '182-6907-6908',
