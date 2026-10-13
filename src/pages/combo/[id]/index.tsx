@@ -132,7 +132,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               templatesInCombo={combo.requires}
             />
 
-            <ComboWidget key={combo.id} combo={combo} />
+            <ComboWidget key={`widget-${combo.id}`} combo={combo} />
 
             <ComboList
               title="Steps"
@@ -166,7 +166,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               emptyText="This combo doesn't produce notable results."
             />
 
-            <ComboMeta key={combo.id} combo={combo} />
+            <ComboMeta key={`meta-${combo.id}`} combo={combo} />
           </div>
 
           <aside className="w-full md:w-1/3 text-center">
