@@ -1,9 +1,11 @@
-import { ScryfallCard } from '@scryfall/api-types';
-import scryfall from 'scryfall-client';
-import Card from 'scryfall-client/dist/models/card';
+import { ScryfallCard, ScryfallError, ScryfallList } from '@scryfall/api-types';
 import { ReplacementCard, ReplacementsPage } from 'lib/types';
 
-function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
+const SEARCH_URL = 'https://api.scryfall.com/cards/search';
+/* Accept is all a search sends: the browser keeps its own User-Agent and needs no CORS preflight. */
+const HEADERS = { Accept: 'application/json;q=0.9,*/*;q=0.8' };
+
+function getScryfallImage(card: ScryfallCard.Any): string[] {
   if ('image_uris' in card) {
     return [card.image_uris?.normal || ''];
   } else if ('card_faces' in card) {
@@ -18,7 +20,7 @@ function getScryfallImage(card: ScryfallCard.Any | Card): string[] {
   return [''];
 }
 
-function toReplacementCard(card: Card): ReplacementCard {
+function toReplacementCard(card: ScryfallCard.Any): ReplacementCard {
   return {
     id: card.id,
     name: card.name,
@@ -30,11 +32,18 @@ function toReplacementCard(card: Card): ReplacementCard {
 /* Only a query still being typed in the submission form is searched on Scryfall: a saved template is
    matched against the cards by the backend itself. */
 export async function scryfallQueryReplacements(scryfallQuery: string, page: number): Promise<ReplacementsPage> {
-  const response = await scryfall.search(`(${scryfallQuery}) legal:commander`, { page: page + 1 }); // Scryfall pages are 1-indexed
+  const query = new URLSearchParams({ q: `(${scryfallQuery}) legal:commander`, page: `${page + 1}` }); // Scryfall pages are 1-indexed
+  const response = await fetch(`${SEARCH_URL}?${query}`, { headers: HEADERS });
+  if (!response.ok) {
+    // a query that matches no card is an error too, whose details say so
+    const error: ScryfallError = await response.json();
+    throw new Error(error.details);
+  }
+  const list: ScryfallList.Cards = await response.json();
   return {
-    results: response.map(toReplacementCard),
+    results: list.data.map(toReplacementCard),
     page: page,
-    nextPage: response.has_more ? page + 1 : undefined,
-    count: response.total_cards,
+    nextPage: list.has_more ? page + 1 : undefined,
+    count: list.total_cards,
   };
 }
