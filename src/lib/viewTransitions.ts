@@ -118,8 +118,12 @@ export function clearPendingTransition(as: string) {
   }
 }
 
+// Chromium 111 to 124 has startViewTransition, but throws when given the transition types every animation here needs.
+export const supportsTransitionTypes = () =>
+  'startViewTransition' in document && CSS.supports('selector(:active-view-transition-type(x))');
+
 export const pagesCanTurn = () =>
-  'startViewTransition' in document && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  supportsTransitionTypes() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // The sheet that turns shows half of each page, but a view transition captures every element once, so PageTurn prints
 // its page a second time for it while a page turns. The turn is the one the sheet is shown for, or 0, and the owner

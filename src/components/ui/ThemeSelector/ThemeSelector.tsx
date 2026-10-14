@@ -9,7 +9,7 @@ import {
   isDarkTheme,
 } from 'services/theme.service';
 import useCookie from 'lib/useCookie';
-import { THEME_SWITCH } from 'lib/viewTransitions';
+import { THEME_SWITCH, supportsTransitionTypes } from 'lib/viewTransitions';
 import styles from './ThemeSelector.module.scss';
 
 const ThemeSelector: React.FC = () => {
@@ -23,7 +23,7 @@ const ThemeSelector: React.FC = () => {
   // is captured: the effect below would otherwise apply the new theme before.
   const switchTheme = (next: string) => {
     const root = document.documentElement;
-    if (!('startViewTransition' in document) || isDarkTheme(next) === root.classList.contains(DARK_THEME)) {
+    if (!supportsTransitionTypes() || isDarkTheme(next) === root.classList.contains(DARK_THEME)) {
       updateTheme(next);
       return;
     }

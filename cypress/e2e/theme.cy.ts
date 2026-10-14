@@ -39,6 +39,19 @@ describe('Theme Selector', () => {
     expectTransitionType('theme');
   });
 
+  it('switches the theme in a browser whose view transitions take no types', () => {
+    cy.setCookie('theme', 'light', { path: '/' });
+    cy.visit('/about/');
+    cy.window().then((win) => {
+      cy.stub(win.CSS, 'supports').returns(false);
+      cy.stub(win.document, 'startViewTransition').throws(new TypeError('Overload resolution failed.'));
+    });
+
+    themeButton().click();
+    cy.getCookie('theme').should('have.property', 'value', 'dark');
+    cy.get('html').should('have.class', 'dark');
+  });
+
   it('applies a saved dark theme before paint on a statically rendered page', () => {
     cy.setCookie('theme', 'dark', { path: '/' });
     // The inline script in _document is the only thing that can do this: /about/ is
