@@ -17,9 +17,10 @@ const PLACEHOLDER_IMAGE = '<svg xmlns="http://www.w3.org/2000/svg" width="1" hei
 
 const imageReply = { headers: { 'content-type': 'image/svg+xml' }, body: PLACEHOLDER_IMAGE };
 
+// Only the versions Scryfall keeps serving from 2027, when its other JPEGs are retired.
 const imageUris = (card: SeededCard) => {
-  const uri = `https://cards.scryfall.io/normal/front/${card.oracleId}.jpg`;
-  return { small: uri, normal: uri, large: uri, png: uri, art_crop: uri, border_crop: uri };
+  const uri = `https://cards.scryfall.io/grid/front/${card.oracleId}.webp`;
+  return { thumb: uri, grid: uri, display: uri, art: uri, crop: uri, jpeg: uri, png: uri };
 };
 
 const cardObject = (card: SeededCard, spoilers: string[]) => ({

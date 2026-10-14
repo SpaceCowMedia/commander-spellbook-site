@@ -14,7 +14,7 @@ const CARD_ARTS = {
     artist: 'Mark Brill',
   },
   Brainstorm: {
-    uid: 'beb755c1-9221-480e-bef9-73f1f13a3345.jpg?1592712969',
+    uid: 'beb755c1-9221-480e-bef9-73f1f13a3345',
     artist: 'DiTerlizzi',
   },
   'Bruvac the Grandiloquent': {
@@ -182,7 +182,7 @@ const CARD_ARTS = {
 const ArtCircle: React.FC<ArtCircleProps> = ({ title, cardName, size, className }: ArtCircleProps) => {
   const { uid, artist } = CARD_ARTS[cardName];
 
-  const imgSrc = `https://cards.scryfall.io/art_crop/front/${uid[0]}/${uid[1]}/${uid}.jpg`;
+  const imgSrc = `https://cards.scryfall.io/art/front/${uid[0]}/${uid[1]}/${uid}.webp`;
 
   const customSize = size ? size : 16;
 

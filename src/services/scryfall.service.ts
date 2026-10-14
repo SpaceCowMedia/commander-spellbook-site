@@ -5,14 +5,19 @@ const SEARCH_URL = 'https://api.scryfall.com/cards/search';
 /* Accept is all a search sends: the browser keeps its own User-Agent and needs no CORS preflight. */
 const HEADERS = { Accept: 'application/json;q=0.9,*/*;q=0.8' };
 
+/* Scryfall's WebP versions are newer than its API types. */
+function gridImage(imageUris: object | undefined): string {
+  return (imageUris as { grid?: string } | undefined)?.grid || '';
+}
+
 function getScryfallImage(card: ScryfallCard.Any): string[] {
   if ('image_uris' in card) {
-    return [card.image_uris?.normal || ''];
+    return [gridImage(card.image_uris)];
   } else if ('card_faces' in card) {
     const result = [];
     for (const face of card.card_faces) {
       if ('image_uris' in face) {
-        result.push(face.image_uris?.normal || '');
+        result.push(gridImage(face.image_uris));
       }
     }
     return result;

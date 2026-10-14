@@ -91,7 +91,7 @@ describe('Salt Voting', () => {
   });
 
   it('previews a card while its image is hovered', () => {
-    const image = 'https://cards.scryfall.io/normal/front/basalt-monolith.jpg';
+    const image = 'https://cards.scryfall.io/grid/front/basalt-monolith.webp';
     cy.env(['apiUrl']).then(({ apiUrl }) => {
       cy.request(`${apiUrl}/variants/1-2/`).then(({ body: combo }) => {
         // The seeded cards have no images, so one is given an image to preview.
