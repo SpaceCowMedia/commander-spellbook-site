@@ -1,7 +1,7 @@
 import { EstimateBracketResult, Variant } from '@space-cow-media/spellbook-client';
 
 const SESSION_STORAGE_RESULTS_KEY = 'commander-spellbook-combo-finder-results';
-const DEFAULT_FIND_MY_COMBOS_QUERY = 'legal:commander';
+export const DEFAULT_FIND_MY_COMBOS_QUERY = 'legal:commander';
 
 // sessionStorage access is best-effort: every call below swallows errors so that
 // quota limits, private-mode restrictions, or malformed entries can't break the page.

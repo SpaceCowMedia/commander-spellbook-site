@@ -29,7 +29,7 @@ describe('Search', () => {
     cy.visit('/search/?q=monolith&sort=salt');
 
     cy.get('#sort-combos-select').should('have.value', 'salt');
-    cy.get('.sort-footer').first().should('contain', 'Salt 2.60 / 4 (5 votes)');
+    cy.get('.sort-footer').first().should('contain', 'Salt: 2.60 / 4 (5 votes)');
     cy.get('.sort-footer').last().should('contain', 'Too few salt votes');
   });
 
@@ -40,7 +40,7 @@ describe('Search', () => {
     cy.get('#sort-combos-select').select('salt');
     cy.url().should('include', 'sort=salt');
     expectTransitionType('resort');
-    cy.get('.sort-footer').first().should('contain', 'Salt 2.60 / 4 (5 votes)');
+    cy.get('.sort-footer').first().should('contain', 'Salt: 2.60 / 4 (5 votes)');
   });
 
   it('turns the page when moving between result pages', () => {

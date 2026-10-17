@@ -6,8 +6,8 @@ import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
+import SearchInput from 'components/ui/SearchInput/SearchInput';
 import CookieService from 'services/cookie.service';
-import normalizeQuotes from 'lib/normalizeQuotes';
 import { LOGO_DOCK, NO_ANIMATION, SITE_LOGO } from 'lib/viewTransitions';
 
 const SEARCH_DOCK = { [NO_ANIMATION]: 'none', default: 'searchDock' };
@@ -15,19 +15,6 @@ const SEARCH_DOCK = { [NO_ANIMATION]: 'none', default: 'searchDock' };
 interface Props {
   onHomepage?: boolean;
   className?: string;
-}
-
-interface SearchInputProps {
-  className?: string;
-  hasSearchIconMargin?: boolean;
-  id: string;
-  inputClassName: string;
-  inputRef?: React.Ref<HTMLInputElement>;
-  onChange: (value: string) => void;
-  placeholder: string;
-  showSubmitButton?: boolean;
-  submitButtonClassName?: string;
-  value: string;
 }
 
 const countUpToString = (count: number) => {
@@ -51,41 +38,6 @@ function getQueryFromRouter(router: NextRouter): string {
   }
   return '';
 }
-
-export const SearchInput: React.FC<SearchInputProps> = ({
-  className,
-  hasSearchIconMargin,
-  id,
-  inputClassName,
-  inputRef,
-  onChange,
-  placeholder,
-  showSubmitButton,
-  submitButtonClassName,
-  value,
-}) => (
-  <div className={`flex grow items-center ${className ?? ''}`}>
-    {showSubmitButton && (
-      <button
-        className={`${styles.searchInputIcon} ${hasSearchIconMargin ? styles.insetSearchInputIcon : ''} ${submitButtonClassName ?? ''}`}
-        type="submit"
-      />
-    )}
-    <label htmlFor={id} className="sr-only text-white" aria-hidden="true">
-      Combo Search
-    </label>
-    <input
-      value={value}
-      name="q"
-      ref={inputRef}
-      onChange={(e) => onChange(normalizeQuotes(e.target.value))}
-      placeholder={placeholder}
-      id={id}
-      type="text"
-      className={inputClassName}
-    />
-  </div>
-);
 
 const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   const configuration = apiConfiguration();
@@ -176,12 +128,14 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
 
           <SearchInput
             id="search-bar-input"
+            label="Combo Search"
             value={inputValue}
-            inputRef={inputRef}
+            ref={inputRef}
             onChange={setInputValue}
             placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
             inputClassName={`${styles.mainSearchInput} ${onHomepage ? `${styles.homepageInput} text-2xl text-center` : `${styles.navInput} pl-8 -ml-6`}`}
             showSubmitButton={!onHomepage}
+            submitButtonClassName={styles.navSearchIcon}
           />
 
           {!onHomepage && (

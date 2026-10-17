@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { Decklist } from 'pages/find-my-combos';
 import { ResultType } from 'lib/findMyCombosResultsCache';
 import pluralize from 'pluralize';
-import { Card, Deck, Variant } from '@space-cow-media/spellbook-client';
+import { Card, Deck, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
 import styles from './deckCombos.module.scss';
 import Modal from 'components/ui/Modal/Modal';
 import CardTooltip from 'components/layout/CardTooltip/CardTooltip';
@@ -12,6 +12,7 @@ import Icon from 'components/layout/Icon/Icon';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import ComboResultFrame from 'components/search/ComboResult/ComboResultFrame';
 import { DEFAULT_SORT } from 'lib/constants';
+import countDeckCards from 'lib/countDeckCards';
 
 interface Props {
   currentlyParsedDeck?: Decklist;
@@ -23,8 +24,12 @@ interface MissingCardGroup {
   key: string;
   card: Card;
   combos: Variant[];
+  /* Only when every combo of the group shares it. */
+  status?: VariantStatusEnum;
   previewCards: Card[];
 }
+
+type MissingCardCombos = Pick<MissingCardGroup, 'key' | 'card' | 'combos'>;
 
 interface MissingCardSectionProps {
   id: string;
@@ -39,18 +44,12 @@ interface MissingCardPreviewProps {
   card: Card;
   className: string;
   fallbackClassName: string;
-  spoilerInteractive?: boolean;
 }
 
-const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({
-  card,
-  className,
-  fallbackClassName,
-  spoilerInteractive = true,
-}) => {
+const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({ card, className, fallbackClassName }) => {
   const imageUri = card.imageUriFrontNormal;
   return (
-    <SpoilerFog name={card.name} spoiler={card.spoiler} interactive={spoilerInteractive} className={className}>
+    <SpoilerFog name={card.name} spoiler={card.spoiler} className={className}>
       {imageUri ? (
         <img src={imageUri} alt={`Preview of ${card.name}`} />
       ) : (
@@ -62,17 +61,10 @@ const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({
   );
 };
 
-const getDeckCardCounts = (deck?: Deck) =>
-  deck?.main.concat(deck.commanders).reduce((acc, card) => {
-    const key = card.card.toLowerCase();
-    acc.set(key, (acc.get(key) ?? 0) + card.quantity);
-    return acc;
-  }, new Map<string, number>());
-
 const getMissingCardUse = (combo: Variant, deckCardCounts?: Map<string, number>) =>
   combo.uses.find(({ card, quantity }) => quantity - (deckCardCounts?.get(card.name.toLowerCase()) ?? 0) > 0);
 
-const getGroupPreviewCards = (group: Omit<MissingCardGroup, 'previewCards'>) => {
+const getGroupPreviewCards = (group: MissingCardCombos) => {
   const cards = new Map<string, { card: Card; count: number }>();
 
   group.combos.forEach((combo) => {
@@ -95,8 +87,11 @@ const getGroupPreviewCards = (group: Omit<MissingCardGroup, 'previewCards'>) => 
     .map(({ card }) => card);
 };
 
+const getSharedStatus = (combos: Variant[]) =>
+  combos.every(({ status }) => status === combos[0].status) ? combos[0].status : undefined;
+
 const groupByMissingCard = (combos: Variant[], deckCardCounts?: Map<string, number>): MissingCardGroup[] => {
-  const groups = new Map<string, Omit<MissingCardGroup, 'previewCards'>>();
+  const groups = new Map<string, MissingCardCombos>();
 
   combos.forEach((combo) => {
     const missingCardUse = getMissingCardUse(combo, deckCardCounts);
@@ -119,45 +114,37 @@ const groupByMissingCard = (combos: Variant[], deckCardCounts?: Map<string, numb
   });
 
   return Array.from(groups.values())
-    .map((group) => ({ ...group, previewCards: getGroupPreviewCards(group) }))
+    .map((group) => ({ ...group, status: getSharedStatus(group.combos), previewCards: getGroupPreviewCards(group) }))
     .sort((left, right) => right.combos.length - left.combos.length || left.card.name.localeCompare(right.card.name));
 };
 
-const MissingCardHand: React.FC<{ group: MissingCardGroup }> = ({ group }) => (
-  <div className={styles.groupCardHand}>
-    {group.previewCards[0] && (
-      <CardTooltip card={group.previewCards[0]} portalPreview>
-        <div className={`${styles.groupHandCardSlot} ${styles.groupHandCardBack}`}>
-          <MissingCardPreview
-            card={group.previewCards[0]}
-            className={styles.groupHandCard}
-            fallbackClassName={styles.groupCardPreviewFallback}
-          />
-        </div>
-      </CardTooltip>
-    )}
-    {group.previewCards[1] && (
-      <CardTooltip card={group.previewCards[1]} portalPreview>
-        <div className={`${styles.groupHandCardSlot} ${styles.groupHandCardMiddle}`}>
-          <MissingCardPreview
-            card={group.previewCards[1]}
-            className={styles.groupHandCard}
-            fallbackClassName={styles.groupCardPreviewFallback}
-          />
-        </div>
-      </CardTooltip>
-    )}
-    <CardTooltip card={group.card} portalPreview>
-      <div className={`${styles.groupHandCardSlot} ${styles.groupHandCardFront}`}>
-        <MissingCardPreview
-          card={group.card}
-          className={styles.groupHandCard}
-          fallbackClassName={styles.groupCardPreviewFallback}
-        />
-      </div>
-    </CardTooltip>
-  </div>
-);
+const MissingCardHand: React.FC<{ group: MissingCardGroup }> = ({ group }) => {
+  // From the back of the hand to the missing card, held in front.
+  const hand: [Card | undefined, string][] = [
+    [group.previewCards[0], styles.groupHandCardBack],
+    [group.previewCards[1], styles.groupHandCardMiddle],
+    [group.card, styles.groupHandCardFront],
+  ];
+
+  return (
+    <div className={styles.groupCardHand}>
+      {hand.map(
+        ([card, slotClassName]) =>
+          card && (
+            <CardTooltip card={card} key={slotClassName}>
+              <div className={`${styles.groupHandCardSlot} ${slotClassName}`}>
+                <MissingCardPreview
+                  card={card}
+                  className={styles.groupHandCard}
+                  fallbackClassName={styles.groupCardPreviewFallback}
+                />
+              </div>
+            </CardTooltip>
+          ),
+      )}
+    </div>
+  );
+};
 
 const MissingCardSection: React.FC<MissingCardSectionProps> = ({
   id,
@@ -212,16 +199,18 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
                   className={styles.groupSpoilerFog}
                 >
                   <ComboResultFrame
-                    className={styles.groupCard}
-                    footerText={`${group.combos.length} ${pluralize('combo', group.combos.length)}`}
+                    status={group.status}
+                    header={
+                      <div className={styles.groupCardHeader}>
+                        <CardTooltip card={group.card}>
+                          <span>
+                            <CardName name={group.card.name} />
+                          </span>
+                        </CardTooltip>
+                      </div>
+                    }
+                    footer={`${group.combos.length} ${pluralize('combo', group.combos.length)}`}
                   >
-                    <div className={styles.groupCardHeader}>
-                      <CardTooltip card={group.card} portalPreview>
-                        <span>
-                          <CardName name={group.card.name} />
-                        </span>
-                      </CardTooltip>
-                    </div>
                     <div className={styles.groupCardBody}>
                       <MissingCardHand group={group} />
                     </div>
@@ -240,7 +229,6 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
                       card={expandedGroup.card}
                       className={styles.groupModalPreview}
                       fallbackClassName={styles.groupCardPreviewFallback}
-                      spoilerInteractive
                     />
                   </CardTooltip>
                   <div className={styles.groupModalCopy}>
@@ -277,7 +265,7 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
 };
 
 const DeckCombos = ({ results, query, currentlyParsedDeck }: Props) => {
-  const deckCardCounts = useMemo(() => getDeckCardCounts(currentlyParsedDeck?.deck), [currentlyParsedDeck]);
+  const deckCardCounts = useMemo(() => countDeckCards(currentlyParsedDeck?.deck), [currentlyParsedDeck]);
 
   if (!results) {
     return (

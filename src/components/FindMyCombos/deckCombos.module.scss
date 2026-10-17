@@ -19,29 +19,25 @@
 .groupCardButton {
   @apply w-full cursor-pointer text-left;
 
-  &:focus-visible .groupCard {
+  &:focus-visible {
     @apply outline-2 outline-primary outline-offset-2;
   }
 }
 
-.groupCard {
-  @apply relative max-w-none mx-0 my-0 h-full overflow-hidden transition-all;
-}
-
 .groupSpoilerFog {
-  @apply w-full;
+  @apply w-full h-full;
 
   border-radius: 0.125rem;
 }
 
 .groupCardBody {
-  @apply flex grow items-center justify-center py-4;
+  @apply flex grow items-center justify-center overflow-hidden py-4;
 
   min-height: 13rem;
 }
 
 .groupCardHeader {
-  @apply flex h-10 min-w-0 items-center justify-center overflow-hidden bg-dark px-3 text-center font-title text-lg leading-5 text-light;
+  @apply flex h-10 w-full min-w-0 items-center justify-center overflow-hidden px-3 font-title text-lg leading-5;
 
   overflow-wrap: anywhere;
 

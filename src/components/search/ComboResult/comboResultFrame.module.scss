@@ -1,21 +1,39 @@
 @reference "../../../assets/globals.css";
 
 .comboResultFrame {
-  @apply w-full min-w-0 max-w-lg mx-0 my-2 rounded-sm border-2 border-dark grow flex flex-col content-center no-underline text-dark dark:text-light;
+  @apply flex flex-col w-full min-w-0 rounded-sm border-2 border-dark text-dark dark:text-light;
+}
+
+.header {
+  @apply relative flex flex-col items-center justify-center min-w-0 text-center;
 }
 
 .content {
   @apply flex flex-col grow;
 }
 
-.footer {
-  @apply w-full min-w-0 shrink-0 border-t-2 py-1 text-center border-dark bg-dark text-light;
+.banner {
+  @apply w-full min-w-0 shrink-0 pr-2 text-right bg-pink-300 dark:bg-link;
 
   overflow-wrap: anywhere;
 }
 
-.banner {
-  @apply w-full min-w-0 shrink-0 pr-2;
+.footer {
+  @apply w-full min-w-0 shrink-0 border-t-2 border-dark py-1 text-center;
 
   overflow-wrap: anywhere;
+}
+
+.okStatus {
+  @apply bg-dark text-light;
+}
+
+.exampleStatus {
+  @apply bg-[#888888] text-dark;
+}
+
+.draftStatus {
+  @apply text-light;
+
+  background: repeating-linear-gradient(-45deg, #be9800ff, #be9800ff 20px, #000 20px, #000 40px);
 }

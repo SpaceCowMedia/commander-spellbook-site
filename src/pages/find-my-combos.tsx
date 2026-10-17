@@ -22,7 +22,13 @@ import {
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import { ResultType, clearResultsCache, mergeResultsCache, readResultsCache } from 'lib/findMyCombosResultsCache';
+import {
+  DEFAULT_FIND_MY_COMBOS_QUERY,
+  ResultType,
+  clearResultsCache,
+  mergeResultsCache,
+  readResultsCache,
+} from 'lib/findMyCombosResultsCache';
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
@@ -35,13 +41,16 @@ import Loader from 'components/layout/Loader/Loader';
 import { BRACKET_RANGE_MAP } from 'lib/brackets';
 import useFoolsDay from 'lib/foolsDay';
 import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
-import { SearchInput } from 'components/SearchBar/SearchBar';
+import SearchInput from 'components/ui/SearchInput/SearchInput';
+import { useDebounce } from 'use-debounce';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 const LOCAL_STORAGE_QUERY_STORAGE_KEY = 'commander-spellbook-combo-finder-last-query';
-const DEFAULT_FIND_MY_COMBOS_QUERY = 'legal:commander';
+const EXPLANATION_DELAY = 300;
 
-const isCommanderLegalityQuery = (query: string) => /\b(?:legal|format):(?:commander|edh)\b/i.test(query);
+// A term starts the query or follows whitespace, a parenthesis or a boolean operator alias, but not the
+// `-` that negates it: excluding Commander-legal combos is no reason to estimate a Commander bracket.
+const isCommanderLegalityQuery = (query: string) => /(?:^|[\s()&|])(?:legal|format):(?:commander|edh)\b/i.test(query);
 
 export class Decklist {
   deck: Deck;
@@ -90,7 +99,10 @@ const FindMyCombos: React.FC = () => {
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
   const [query, setQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
-  const [queryExplanation, setQueryExplanation] = useState<string>();
+  const [debouncedQuery] = useDebounce(query.trim(), EXPLANATION_DELAY);
+  // Kept together with the query it describes, so an explanation is never presented as the meaning
+  // of a query the user has since edited.
+  const [queryExplanation, setQueryExplanation] = useState<{ query: string; text: string }>();
   // Tracks the query the currently-loaded `results` were computed for.
   const [analyzedQuery, setAnalyzedQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
@@ -264,7 +276,7 @@ const FindMyCombos: React.FC = () => {
     }
   };
 
-  const analyzeDeck = (decklist: Decklist, queryValue: string = query) => {
+  const analyzeDeck = (decklist: Decklist, queryValue: string) => {
     lookupCombos(decklist, queryValue);
     lookupBracket(decklist);
   };
@@ -314,37 +326,28 @@ const FindMyCombos: React.FC = () => {
   }, [router.events]);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_QUERY_STORAGE_KEY, query);
-  }, [query]);
-
-  useEffect(() => {
-    const queryToExplain = query.trim();
-    if (!queryToExplain) {
+    if (!debouncedQuery) {
       setQueryExplanation(undefined);
       return;
     }
-
-    let active = true;
-    const timeout = window.setTimeout(() => {
-      new ExplainQueryApi(apiConfiguration())
-        .explainQueryRetrieve({ q: queryToExplain })
-        .then(({ explanation }) => {
-          if (active) {
-            setQueryExplanation(explanation);
-          }
-        })
-        .catch(() => {
-          if (active) {
-            setQueryExplanation(undefined);
-          }
-        });
-    }, 300);
-
+    let outdated = false;
+    new ExplainQueryApi(configuration)
+      .explainQueryRetrieve({ q: debouncedQuery })
+      .then(({ explanation }) => {
+        if (!outdated) {
+          setQueryExplanation({ query: debouncedQuery, text: explanation });
+        }
+      })
+      .catch(() => {
+        // An invalid query is reported by the lookup itself, there is just nothing to explain.
+        if (!outdated) {
+          setQueryExplanation(undefined);
+        }
+      });
     return () => {
-      active = false;
-      window.clearTimeout(timeout);
+      outdated = true;
     };
-  }, [query]);
+  }, [debouncedQuery]);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -544,17 +547,16 @@ const FindMyCombos: React.FC = () => {
                     onChange={setQuery}
                     inputClassName={styles.queryInput}
                     showSubmitButton
-                    hasSearchIconMargin
                     submitButtonClassName={styles.queryInputSubmit}
                   />
                 </form>
                 <p className={styles.queryInputHint}>
                   Add filter terms to narrow suggestions (example: <code>legal:commander and prerequisites&lt;=2</code>
                   ). Exclude a card with <code>-card:&quot;Sol Ring&quot;</code>.
-                  {queryExplanation && (
+                  {queryExplanation?.query === query.trim() && (
                     <span id="combo-filter-query-explanation" className={styles.queryExplanation}>
                       {' Currently filtering for '}
-                      {queryExplanation}
+                      {queryExplanation.text}
                     </span>
                   )}
                 </p>
