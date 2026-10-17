@@ -1,5 +1,6 @@
 const FRONT_OF_CARD = 'img[alt="the front side of Basalt Monolith"]';
-const EDIBLE_CARD = '[class*="__edible"]';
+// The CSS module prefixes its class with a hash and an underscore: `Ix67aq_edible` in a production build.
+const EDIBLE_CARD = '[class*="_edible"]';
 const FOOTER_WAVES = 'img[alt="footer"]';
 const APRIL_FOOLS_DAY = new Date(2027, 3, 1, 12);
 const ANY_OTHER_DAY = new Date(2027, 3, 2, 12);
