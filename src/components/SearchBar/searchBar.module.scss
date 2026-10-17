@@ -51,7 +51,7 @@
 }
 
 /* the icon overlays the input, so it has to contrast with the focused background */
-.mainSearchInputContainer:has(.navInput:focus) .searchInputIcon {
+.mainSearchInputContainer:has(.navInput:focus) .navSearchIcon {
   @apply bg-gray-800 dark:bg-light;
 }
 
@@ -82,15 +82,6 @@
 
 .discordIcon {
   mask: url('../../assets/svgs/discord.svg') no-repeat center;
-}
-
-.searchInputIcon {
-  mask: url('../../assets/svgs/search-solid.svg') no-repeat center;
-  @apply bg-light w-4 h-4 mt-1 z-10 cursor-pointer;
-}
-
-.searchInputIcon:hover {
-  @apply bg-light;
 }
 
 .menuLink {

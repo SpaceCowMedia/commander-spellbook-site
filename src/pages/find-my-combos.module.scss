@@ -61,6 +61,50 @@
     @apply h-20;
   }
 
+  .queryInputShell {
+    @apply w-full mt-6 mb-3 border-2 border-dark rounded-sm bg-white dark:bg-dark;
+
+    @media (width >= 768px) {
+      @apply w-2/3;
+    }
+  }
+
+  .queryInputLabel {
+    @apply block px-4 py-2 text-sm font-bold border-b border-dark bg-dark text-white;
+  }
+
+  .queryInputForm {
+    @apply flex border-b border-dark;
+  }
+
+  .queryInput {
+    @apply w-full bg-white px-2 py-2 text-sm text-dark dark:bg-dark dark:text-light;
+
+    &:focus {
+      @apply outline-hidden;
+    }
+  }
+
+  .queryInputSubmit {
+    @apply mx-2 bg-dark dark:bg-light;
+  }
+
+  .queryInputHint {
+    @apply mt-0 mb-0 px-4 py-2 text-sm text-gray-600 dark:text-gray-300;
+
+    code {
+      @apply font-mono text-xs;
+    }
+  }
+
+  .queryExplanation {
+    @apply font-medium text-dark dark:text-light;
+  }
+
+  .queryOutOfDateHint {
+    @apply m-0 px-4 pb-3 text-sm font-semibold text-danger;
+  }
+
   @media (width >= 768px) {
     .decklistInput {
       @apply w-2/3;

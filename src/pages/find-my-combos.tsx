@@ -17,13 +17,18 @@ import {
   ResponseError,
   EstimateBracketApi,
   EstimateBracketResult,
+  ExplainQueryApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
-import { LEGALITY_FORMATS } from 'lib/types';
-import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import { ResultType, clearResultsCache, mergeResultsCache, readResultsCache } from 'lib/findMyCombosResultsCache';
+import {
+  DEFAULT_FIND_MY_COMBOS_QUERY,
+  ResultType,
+  clearResultsCache,
+  mergeResultsCache,
+  readResultsCache,
+} from 'lib/findMyCombosResultsCache';
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
 import normalizeStringInput from 'lib/normalizeStringInput';
@@ -36,8 +41,16 @@ import Loader from 'components/layout/Loader/Loader';
 import { BRACKET_RANGE_MAP } from 'lib/brackets';
 import useFoolsDay from 'lib/foolsDay';
 import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
+import SearchInput from 'components/ui/SearchInput/SearchInput';
+import { useDebounce } from 'use-debounce';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
+const LOCAL_STORAGE_QUERY_STORAGE_KEY = 'commander-spellbook-combo-finder-last-query';
+const EXPLANATION_DELAY = 300;
+
+// A term starts the query or follows whitespace, a parenthesis or a boolean operator alias, but not the
+// `-` that negates it: excluding Commander-legal combos is no reason to estimate a Commander bracket.
+const isCommanderLegalityQuery = (query: string) => /(?:^|[\s()&|])(?:legal|format):(?:commander|edh)\b/i.test(query);
 
 export class Decklist {
   deck: Deck;
@@ -85,11 +98,13 @@ const FindMyCombos: React.FC = () => {
   const [deckUrlError, setDeckUrlHint] = useState<string>('');
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
-  const [format, setFormat] = useState<string>('commander');
-  // Tracks the format filter the currently-loaded `results` were computed for.
-  // The format-change effect re-analyzes only when these diverge, which prevents
-  // hydration (which sets `format` from cache) from triggering a redundant fetch.
-  const [analyzedFormat, setAnalyzedFormat] = useState<string>('commander');
+  const [query, setQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
+  const [debouncedQuery] = useDebounce(query.trim(), EXPLANATION_DELAY);
+  // Kept together with the query it describes, so an explanation is never presented as the meaning
+  // of a query the user has since edited.
+  const [queryExplanation, setQueryExplanation] = useState<{ query: string; text: string }>();
+  // Tracks the query the currently-loaded `results` were computed for.
+  const [analyzedQuery, setAnalyzedQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
@@ -159,6 +174,7 @@ const FindMyCombos: React.FC = () => {
 
   const lookupCombos = async (
     decklist: Decklist,
+    queryValue: string,
     forwardedResults?: typeof results,
     offset?: number,
   ): Promise<void> => {
@@ -170,13 +186,14 @@ const FindMyCombos: React.FC = () => {
     }
 
     localStorage.setItem(LOCAL_STORAGE_DECK_STORAGE_KEY, JSON.stringify(DeckToJSON(decklist.deck)));
+    localStorage.setItem(LOCAL_STORAGE_QUERY_STORAGE_KEY, queryValue);
 
     try {
       const combos = await findMyCombosApi.findMyCombosCreate({
         deckRequest: decklist.deck,
         offset,
         ordering: DEFAULT_ORDERING,
-        q: format ? `legal:${format}` : undefined,
+        q: queryValue.trim() ? queryValue : undefined,
       });
 
       const newResults = {
@@ -205,14 +222,14 @@ const FindMyCombos: React.FC = () => {
         newResults.almostIncludedByAddingColorsAndChangingCommanders.length;
 
       if (combos.next && (offset ?? 0) <= 5000) {
-        return lookupCombos(decklist, newResults, resultCount);
+        return lookupCombos(decklist, queryValue, newResults, resultCount);
       } // Adding a page limit to prevent infinite loops
 
       setResults(newResults);
-      setAnalyzedFormat(format);
+      setAnalyzedQuery(queryValue);
       mergeResultsCache({
         deckJson: JSON.stringify(DeckToJSON(decklist.deck)),
-        format,
+        query: queryValue,
         results: newResults,
         scrollY: 0,
       });
@@ -249,15 +266,18 @@ const FindMyCombos: React.FC = () => {
     setDecklistErrors([]);
     setResults(undefined);
     setBracketInfo(undefined);
+    setQuery(DEFAULT_FIND_MY_COMBOS_QUERY);
+    setAnalyzedQuery(DEFAULT_FIND_MY_COMBOS_QUERY);
     localStorage.removeItem(LOCAL_STORAGE_DECK_STORAGE_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_QUERY_STORAGE_KEY);
     clearResultsCache();
     if (router.query.deckUrl) {
       router.push({ pathname: '/find-my-combos/', query: {} });
     }
   };
 
-  const analyzeDeck = (decklist: Decklist) => {
-    lookupCombos(decklist);
+  const analyzeDeck = (decklist: Decklist, queryValue: string) => {
+    lookupCombos(decklist, queryValue);
     lookupBracket(decklist);
   };
 
@@ -277,8 +297,8 @@ const FindMyCombos: React.FC = () => {
     pendingScrollY.current = cache.scrollY;
     setResults(cache.results);
     setBracketInfo(cache.bracketInfo);
-    setFormat(cache.format);
-    setAnalyzedFormat(cache.format);
+    setQuery(cache.query);
+    setAnalyzedQuery(cache.query);
     return true;
   };
 
@@ -306,9 +326,36 @@ const FindMyCombos: React.FC = () => {
   }, [router.events]);
 
   useEffect(() => {
+    if (!debouncedQuery) {
+      setQueryExplanation(undefined);
+      return;
+    }
+    let outdated = false;
+    new ExplainQueryApi(configuration)
+      .explainQueryRetrieve({ q: debouncedQuery })
+      .then(({ explanation }) => {
+        if (!outdated) {
+          setQueryExplanation({ query: debouncedQuery, text: explanation });
+        }
+      })
+      .catch(() => {
+        // An invalid query is reported by the lookup itself, there is just nothing to explain.
+        if (!outdated) {
+          setQueryExplanation(undefined);
+        }
+      });
+    return () => {
+      outdated = true;
+    };
+  }, [debouncedQuery]);
+
+  useEffect(() => {
     if (!router.isReady) {
       return;
     }
+
+    const savedQuery = localStorage.getItem(LOCAL_STORAGE_QUERY_STORAGE_KEY) || DEFAULT_FIND_MY_COMBOS_QUERY;
+    setQuery(savedQuery);
 
     if (router.query.decklist || router.query.commanders) {
       const decklist = (router.query.decklist as string) || '';
@@ -317,7 +364,7 @@ const FindMyCombos: React.FC = () => {
         if (tryHydrateFromCache(parsed)) {
           return;
         }
-        analyzeDeck(parsed);
+        analyzeDeck(parsed, savedQuery);
       });
       return;
     }
@@ -336,7 +383,7 @@ const FindMyCombos: React.FC = () => {
       if (tryHydrateFromCache(decklist)) {
         return;
       }
-      analyzeDeck(decklist);
+      analyzeDeck(decklist, savedQuery);
     } catch (e) {
       console.error('Failed to load saved decklist from local storage', e);
       clearDecklist();
@@ -361,7 +408,7 @@ const FindMyCombos: React.FC = () => {
       setDecklist(decklist.mainListString());
       setCommanderList(decklist.commanderListString());
       setCurrentlyParsedDeck(decklist);
-      analyzeDeck(decklist);
+      analyzeDeck(decklist, query);
     } catch (err) {
       const status = httpErrorStatus(err);
       // A URL the backend cannot read a deck from is explained in the body, other failures are not
@@ -389,15 +436,10 @@ const FindMyCombos: React.FC = () => {
     }
   }, [deckUrl, urlQueryParam]);
 
-  useEffect(() => {
-    if (!currentlyParsedDeck) {
-      return;
-    }
-    if (format === analyzedFormat) {
-      return;
-    }
-    analyzeDeck(currentlyParsedDeck);
-  }, [format, analyzedFormat, currentlyParsedDeck]);
+  const refreshDeckAnalysis = () => {
+    window.history.replaceState(null, '', '/find-my-combos/');
+    parseDecklist(decklist, commanderList).then((parsed) => analyzeDeck(parsed, query));
+  };
 
   const getNormalizedFileName = () => {
     const commandersNormalized = currentlyParsedDeck
@@ -428,6 +470,8 @@ const FindMyCombos: React.FC = () => {
     const combosExport = CombosExportService.exportToCsv(results.included);
     DownloadFileService.downloadTextFile(`${getNormalizedFileName()}.csv`, combosExport);
   };
+
+  const showBracketTab = isCommanderLegalityQuery(analyzedQuery);
 
   return (
     <>
@@ -485,16 +529,48 @@ const FindMyCombos: React.FC = () => {
                     : 'No Sol Ring? A deck of rare courage and restraint. We salute you.'}
                 </p>
               )}
+              <div className={styles.queryInputShell}>
+                <label htmlFor="combo-filter-query-input" className={styles.queryInputLabel}>
+                  Combo filter query
+                </label>
+                <form
+                  className={styles.queryInputForm}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    refreshDeckAnalysis();
+                  }}
+                >
+                  <SearchInput
+                    id="combo-filter-query-input"
+                    value={query}
+                    placeholder={DEFAULT_FIND_MY_COMBOS_QUERY}
+                    onChange={setQuery}
+                    inputClassName={styles.queryInput}
+                    showSubmitButton
+                    submitButtonClassName={styles.queryInputSubmit}
+                  />
+                </form>
+                <p className={styles.queryInputHint}>
+                  Add filter terms to narrow suggestions (example: <code>legal:commander and prerequisites&lt;=2</code>
+                  ). Exclude a card with <code>-card:&quot;Sol Ring&quot;</code>.
+                  {queryExplanation?.query === query.trim() && (
+                    <span id="combo-filter-query-explanation" className={styles.queryExplanation}>
+                      {' Currently filtering for '}
+                      {queryExplanation.text}
+                    </span>
+                  )}
+                </p>
+                {query.trim() !== analyzedQuery.trim() && !lookupInProgress && (
+                  <p className={styles.queryOutOfDateHint}>Filter changed. Click Find New Combos! to refresh.</p>
+                )}
+              </div>
               {!lookupInProgress && (
                 <div className="flex flex-col gap-y-2 lg:flex-row">
                   <div className="flex flex-row gap-y-2">
                     <button
                       id="parse-decklist-input"
                       className={`${styles.clearDecklistInput} button`}
-                      onClick={() => {
-                        window.history.replaceState(null, '', '/find-my-combos/');
-                        parseDecklist(decklist, commanderList).then(analyzeDeck);
-                      }}
+                      onClick={refreshDeckAnalysis}
                     >
                       Find New Combos!
                     </button>
@@ -591,31 +667,16 @@ const FindMyCombos: React.FC = () => {
               {deckUrlError && <ErrorMessage>{deckUrlError}</ErrorMessage>}
             </section>
           )}
-
-          <div className="w-full flex mt-4">
-            <label
-              htmlFor="format-select"
-              className="border-dark border text-center align-middle p-2 bg-dark text-white"
-            >
-              Format
-            </label>
-            <StyledSelect
-              label="Format"
-              id="format-select"
-              options={LEGALITY_FORMATS}
-              value={format}
-              onChange={setFormat}
-              selectBackgroundClassName="grow border-dark border"
-            />
-          </div>
         </section>
         {currentlyParsedDeck &&
-          (format === 'commander' ? (
+          (showBracketTab ? (
             <Tab
               tabs={[
                 {
                   title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
-                  content: <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />,
+                  content: (
+                    <DeckCombos results={results} query={analyzedQuery} currentlyParsedDeck={currentlyParsedDeck} />
+                  ),
                 },
                 {
                   title: (
@@ -629,7 +690,7 @@ const FindMyCombos: React.FC = () => {
               ]}
             />
           ) : (
-            <DeckCombos results={results} format={format} currentlyParsedDeck={currentlyParsedDeck} />
+            <DeckCombos results={results} query={analyzedQuery} currentlyParsedDeck={currentlyParsedDeck} />
           ))}
       </div>
     </>

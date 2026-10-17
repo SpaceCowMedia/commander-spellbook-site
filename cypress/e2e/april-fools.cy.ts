@@ -9,6 +9,18 @@ function visitOn(day: Date, url: string) {
   cy.visit(url);
 }
 
+function interceptSolRingPrices() {
+  const solRing = {
+    name: 'Sol Ring',
+    features: [],
+    prices: { tcgplayer: '1.87', cardkingdom: '2.00', cardmarket: '1.00' },
+  };
+  cy.intercept(
+    { pathname: '/cards/', query: { q: 'Sol Ring' } },
+    { body: { count: null, next: null, previous: null, results: [solRing] } },
+  );
+}
+
 function leaveWithMouse() {
   cy.get(FRONT_OF_CARD).then(($front) => {
     cy.wrap($front).trigger('pointerout', {
@@ -46,19 +58,18 @@ describe("April Fools' Day", () => {
   });
 
   it('prices the combo in Sol Rings', () => {
-    const solRing = {
-      name: 'Sol Ring',
-      features: [],
-      prices: { tcgplayer: '1.87', cardkingdom: '2.00', cardmarket: '1.00' },
-    };
-    cy.intercept(
-      { pathname: '/cards/', query: { q: 'Sol Ring' } },
-      { body: { count: null, next: null, previous: null, results: [solRing] } },
-    );
+    interceptSolRingPrices();
     visitOn(APRIL_FOOLS_DAY, '/combo/1-2/');
 
     cy.get('#tcg-buy-this-combo').should('contain', '≈ 4 Sol Rings');
     cy.get('#ck-buy-this-combo').should('not.contain', 'Sol Ring');
+  });
+
+  it('prices the combos found in Sol Rings when sorting them by price', () => {
+    interceptSolRingPrices();
+    visitOn(APRIL_FOOLS_DAY, '/search/?q=monolith&sort=price_tcgplayer');
+
+    cy.get('.sort-footer').should('contain', ' Sol Rings').and('not.contain', '$');
   });
 
   it('eats a card one piece per hover, then brings it back whole', () => {

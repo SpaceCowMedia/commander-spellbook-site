@@ -9,6 +9,11 @@ $dissolve-duration: 0.9s;
   border-radius: 0.75rem;
 }
 
+/* fogged as a whole, the content is a box of the site rather than a card image */
+.blurContent {
+  @apply rounded-sm;
+}
+
 /* a block image leaves no gap below it for the fog to spill into */
 .spoilerFog img {
   display: block;
@@ -16,6 +21,14 @@ $dissolve-duration: 0.9s;
 }
 
 .fogged img {
+  filter: blur(12px) grayscale(1);
+}
+
+.blurContent > :not(.fog) {
+  transition: filter $dissolve-duration ease-out;
+}
+
+.blurContent.fogged > :not(.fog) {
   filter: blur(12px) grayscale(1);
 }
 

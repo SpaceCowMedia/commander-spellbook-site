@@ -6,7 +6,7 @@ import TemplateTooltip from '../../layout/TemplateTooltip/TemplateTooltip';
 import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
-import { CardPrices, Variant } from '@space-cow-media/spellbook-client';
+import { CardPrices, ColorEnum, Variant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
@@ -15,8 +15,9 @@ import { useRouter } from 'next/router';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
-import SolRingPrice from 'components/layout/SolRingPrice/SolRingPrice';
 import { formatSalt, MAX_SALT } from 'lib/salt';
+import ComboResultFrame from '../ComboResultFrame/ComboResultFrame';
+import useSolRingPrice, { priceInSolRings, SOL_RING } from 'lib/solRingPrice';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -46,140 +47,144 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
         ? 'cardmarket'
         : 'tcgplayer';
 
-  const sortStatMessage = (combo: Variant) => {
-    if (!sort) {
-      return '';
-    }
+  const solRingPrice = useSolRingPrice(priceStore);
 
-    if (sort === 'popularity') {
-      const numberOfDecks = combo.popularity;
-
-      if (numberOfDecks === null || numberOfDecks === undefined) {
-        return 'No deck data (EDHREC)';
+  // The value the combos are sorted by, if the combo has one to show.
+  const sortStatMessage = (): string | undefined => {
+    switch (sort) {
+      case 'popularity':
+        if (combo.popularity === null || combo.popularity === undefined) {
+          return 'No deck data (EDHREC)';
+        }
+        return `${combo.popularity} ${pluralize('deck', combo.popularity)} (EDHREC)`;
+      case 'salt':
+        if (combo.salt === null) {
+          return 'Too few salt votes';
+        }
+        return `Salt: ${formatSalt(combo.salt)} / ${MAX_SALT} (${combo.saltVoteCount} ${pluralize('vote', combo.saltVoteCount)})`;
+      case 'identity_count': {
+        const colors = combo.identity === ColorEnum.C ? 0 : combo.identity.length;
+        return colors ? `${colors} ${pluralize('color', colors)}` : 'Colorless';
       }
-
-      const deckString = pluralize('deck', numberOfDecks);
-
-      return `${numberOfDecks} ${deckString} (EDHREC)`;
-    }
-
-    if (sort === 'salt') {
-      if (combo.salt === null) {
-        return 'Too few salt votes';
+      case 'variant_count':
+        return `${combo.variantCount} ${pluralize('variant', combo.variantCount)}`;
+      case 'card_count': {
+        const cards = combo.uses.length + combo.requires.length;
+        return `${cards} ${pluralize('card', cards)}`;
       }
-
-      return `Salt ${formatSalt(combo.salt)} / ${MAX_SALT} (${combo.saltVoteCount} ${pluralize('vote', combo.saltVoteCount)})`;
+      case 'result_count':
+        return `${combo.produces.length} ${pluralize('result', combo.produces.length)}`;
     }
 
     if (priceStore) {
-      return `${priceStore === 'cardmarket' ? '€' : '$'}${combo.prices[priceStore]}`;
+      const price = combo.prices[priceStore];
+      const solRings = priceInSolRings(price, solRingPrice);
+      return solRings === undefined
+        ? `Price: ${priceStore === 'cardmarket' ? '€' : '$'}${price}`
+        : `Price: ${solRings.toFixed(2)} ${pluralize(SOL_RING, solRings)}`;
     }
 
-    return '';
+    // Combos carry no creation or update date to show.
+    return undefined;
   };
 
   const prereqCount = countNotablePrerequisites(combo);
 
-  const statusClass =
-    combo.status === 'OK' ? styles.okStatus : combo.status === 'E' ? styles.exampleStatus : styles.draftStatus;
-  const stateBasedTooltip =
-    combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
   const isLock = combo.produces.some((result) => result.feature.name.toLowerCase() === 'lock');
   const results = combo.produces.filter((result) => result.feature.name.toLowerCase() != 'lock');
+  const sortStat = sortStatMessage();
+  // Left to the footer when the combos are sorted by their number of variants.
+  const variantCountText =
+    !hideVariants && sort !== 'variant_count' && combo.variantCount > 1
+      ? `+ ${combo.variantCount - 1} variant${combo.variantCount > 2 ? 's' : ''}`
+      : undefined;
 
   return (
     <Link
       href={comboLink}
       key={combo.id}
-      className={`${styles.comboResult} w-full md:w-1/4`}
+      className="flex w-full min-w-0 max-w-lg my-2 grow md:w-1/4 no-underline"
       rel={newTab ? 'noopener noreferrer' : undefined}
       target={newTab ? '_blank' : undefined}
     >
-      <div className="flex flex-col relative">
-        <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
-          {isLock && <Icon name="lock" />}
-        </div>
-        <div className={`flex items-center grow flex-col ${statusClass}`} title={stateBasedTooltip}>
-          <ColorIdentity identity={combo.identity} size="small" />
-        </div>
-        <div className={`grow  ${styles.comboResultSection}`}>
-          <div className="py-1">
-            <span className="sr-only">Cards in combo:</span>
-            {combo.uses.map(({ card, quantity, usedFace }) => (
-              <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
-                <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
-                  {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
-                    decklistMessage != undefined ? (
-                      <strong className="text-blue-800">
-                        <CardName name={card.name} />
-                        {decklistMessage ? ` (${decklistMessage})` : ''}
-                      </strong>
-                    ) : (
-                      <strong className="text-red-800">
-                        <CardName name={card.name} /> (not in deck)
-                      </strong>
-                    )
-                  ) : (
-                    <span>
-                      {quantity > 1 ? `${quantity} ` : ''}
-                      <CardName name={card.name} />
-                    </span>
-                  )}
-                </div>
-              </CardTooltip>
-            ))}
-            {combo.requires.map((template) => (
-              <TemplateTooltip
-                template={template}
-                key={template.template.id}
-                caption="Open the combo to see all possible replacements"
-              >
-                <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
-                  <span>
-                    + {template.quantity > 1 ? `${template.quantity}x ` : ''}
-                    <TextWithMagicSymbol
-                      text={getTemplateNameSummary(template.template.name) ?? template.template.name}
-                    />
-                  </span>
-                </div>
-              </TemplateTooltip>
-            ))}
-            {prereqCount > 0 && (
-              <div className={`${styles.prerequisites} pl-3 pr-3`}>
-                <span>
-                  +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
-                </span>
+      <ComboResultFrame
+        status={combo.status}
+        header={
+          <>
+            {isLock && (
+              <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
+                <Icon name="lock" />
               </div>
             )}
-          </div>
-        </div>
-        <div className="grow">
-          <span className="sr-only">Results in combo:</span>
-          {results.map((result) => (
-            <div key={result.feature.name} className={`result pl-3 pr-3`}>
-              <TextWithMagicSymbol text={result.feature.name} />
+            <ColorIdentity identity={combo.identity} size="small" />
+          </>
+        }
+        banner={variantCountText}
+        footer={sortStat && <span className="sort-footer">{sortStat}</span>}
+      >
+        <div className="flex flex-col">
+          <div className={`grow  ${styles.comboResultSection}`}>
+            <div className="py-1">
+              <span className="sr-only">Cards in combo:</span>
+              {combo.uses.map(({ card, quantity, usedFace }) => (
+                <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
+                  <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
+                    {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
+                      decklistMessage != undefined ? (
+                        <strong className="text-blue-800">
+                          <CardName name={card.name} />
+                          {decklistMessage ? ` (${decklistMessage})` : ''}
+                        </strong>
+                      ) : (
+                        <strong className="text-red-800">
+                          <CardName name={card.name} /> (not in deck)
+                        </strong>
+                      )
+                    ) : (
+                      <span>
+                        {quantity > 1 ? `${quantity} ` : ''}
+                        <CardName name={card.name} />
+                      </span>
+                    )}
+                  </div>
+                </CardTooltip>
+              ))}
+              {combo.requires.map((template) => (
+                <TemplateTooltip
+                  template={template}
+                  key={template.template.id}
+                  caption="Open the combo to see all possible replacements"
+                >
+                  <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
+                    <span>
+                      + {template.quantity > 1 ? `${template.quantity}x ` : ''}
+                      <TextWithMagicSymbol
+                        text={getTemplateNameSummary(template.template.name) ?? template.template.name}
+                      />
+                    </span>
+                  </div>
+                </TemplateTooltip>
+              ))}
+              {prereqCount > 0 && (
+                <div className={`${styles.prerequisites} pl-3 pr-3`}>
+                  <span>
+                    +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
             </div>
-          ))}
-          {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
+          </div>
+          <div className="grow">
+            <span className="sr-only">Results in combo:</span>
+            {results.map((result) => (
+              <div key={result.feature.name} className={`result pl-3 pr-3`}>
+                <TextWithMagicSymbol text={result.feature.name} />
+              </div>
+            ))}
+            {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
+          </div>
         </div>
-      </div>
-      <div className="flex items-center grow flex-col">
-        <div className="grow" />
-        {!hideVariants && combo.variantCount > 1 && (
-          <div className={styles.variantBanner}>
-            <span className="pl-3 pr-3">
-              + {combo.variantCount - 1} variant
-              {combo.variantCount > 2 ? 's' : ''}
-            </span>
-          </div>
-        )}
-        {sortStatMessage(combo) && (
-          <div className={`sort-footer w-full py-1 text-center shrink ${statusClass}`} title={stateBasedTooltip}>
-            {sortStatMessage(combo)}
-            {priceStore && <SolRingPrice className="ml-1" price={combo.prices[priceStore]} store={priceStore} />}
-          </div>
-        )}
-      </div>
+      </ComboResultFrame>
     </Link>
   );
 };

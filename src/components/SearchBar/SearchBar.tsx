@@ -6,8 +6,8 @@ import UserDropdown from '../layout/UserDropdown/UserDropdown';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@space-cow-media/spellbook-client';
 import ThemeSelector from 'components/ui/ThemeSelector/ThemeSelector';
+import SearchInput from 'components/ui/SearchInput/SearchInput';
 import CookieService from 'services/cookie.service';
-import normalizeQuotes from 'lib/normalizeQuotes';
 import { LOGO_DOCK, NO_ANIMATION, SITE_LOGO } from 'lib/viewTransitions';
 
 const SEARCH_DOCK = { [NO_ANIMATION]: 'none', default: 'searchDock' };
@@ -126,22 +126,17 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             </Link>
           )}
 
-          <div className="flex grow items-center">
-            {!onHomepage && <button className={styles.searchInputIcon} type="submit" />}
-            <label htmlFor="search-bar-input" className="sr-only text-white" aria-hidden="true">
-              Combo Search
-            </label>
-            <input
-              value={inputValue}
-              name="q"
-              ref={inputRef}
-              onChange={(e) => setInputValue(normalizeQuotes(e.target.value))}
-              placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
-              id="search-bar-input"
-              type="text"
-              className={`${styles.mainSearchInput} ${onHomepage ? `${styles.homepageInput} text-2xl text-center` : `${styles.navInput} pl-8 -ml-6`}`}
-            />
-          </div>
+          <SearchInput
+            id="search-bar-input"
+            label="Combo Search"
+            value={inputValue}
+            ref={inputRef}
+            onChange={setInputValue}
+            placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
+            inputClassName={`${styles.mainSearchInput} ${onHomepage ? `${styles.homepageInput} text-2xl text-center` : `${styles.navInput} pl-8 -ml-6`}`}
+            showSubmitButton={!onHomepage}
+            submitButtonClassName={styles.navSearchIcon}
+          />
 
           {!onHomepage && (
             <div className="flex flex-row-reverse md:flex-row items-center desktopMenu">

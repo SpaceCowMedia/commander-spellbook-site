@@ -5,6 +5,7 @@ import React, { addTransitionType, startTransition, useId, useRef, useState } fr
 import { flushSync } from 'react-dom';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
 import { pageTurn, pagesCanTurn, showTurningSheet } from 'lib/viewTransitions';
+import countDeckCards from 'lib/countDeckCards';
 
 interface Props {
   deck?: Deck; // If passed in, will highlight cards in the combo that are not in the deck
@@ -20,11 +21,7 @@ const ComboResults: React.FC<Props> = ({ results, sort, deck, hideVariants, deck
   const ref = useRef<HTMLDivElement>(null);
   const owner = useId();
   const [page, setPage] = useState(1);
-  const decklist = deck?.main.concat(deck.commanders).reduce((acc, card) => {
-    const lowercase = card.card.toLowerCase();
-    acc.set(lowercase, (acc.get(lowercase) ?? 0) + card.quantity);
-    return acc;
-  }, new Map<string, number>());
+  const decklist = countDeckCards(deck);
 
   // Turns like the result pages of a search, from the top of the list rather than of the page.
   const handlePageChange = (newPage: number) => {
