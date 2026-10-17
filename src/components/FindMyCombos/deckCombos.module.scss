@@ -131,7 +131,7 @@
 }
 
 .groupModalHeader {
-  @apply grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-5 bg-dark p-5 text-light;
+  @apply grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-5 bg-dark p-5 text-light no-underline;
 }
 
 .groupModalCopy {
@@ -159,6 +159,11 @@
 
 .groupModalCardName {
   overflow-wrap: anywhere;
+}
+
+.groupModalHeader:hover .groupModalCardName,
+.groupModalHeader:focus-visible .groupModalCardName {
+  @apply underline;
 }
 
 .groupModalDescription {
