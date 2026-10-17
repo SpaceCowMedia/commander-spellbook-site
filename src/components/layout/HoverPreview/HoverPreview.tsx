@@ -26,6 +26,7 @@ interface Props {
   onVisibleChange?: (_visible: boolean, _tapped: boolean) => void;
   /* Lets a tapped preview answer a tap on itself, instead of closing like a tap anywhere else does. */
   onPreviewTap?: () => void;
+  portalPreview?: boolean;
   children?: React.ReactNode;
 }
 
@@ -52,6 +53,7 @@ const HoverPreview: React.FC<Props> = ({
   onFirstShow,
   onVisibleChange,
   onPreviewTap,
+  portalPreview,
   children,
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -260,6 +262,23 @@ const HoverPreview: React.FC<Props> = ({
     return clamp(left, VIEWPORT_MARGIN_PX, rightLimit) + 'px';
   };
 
+  const previewElement = (
+    <div
+      ref={divRef}
+      className={`${styles.hoverPreview} ${previewTappable ? styles.tappable : ''}`}
+      onTouchStart={previewTappable ? handlePreviewTouchStart : undefined}
+      onTouchEnd={previewTappable ? handlePreviewTouchEnd : undefined}
+      onClick={previewTappable ? handlePreviewClick : undefined}
+      style={{
+        display: isVisible ? VISIBLE_TOOLTIP_DISPLAY : 'none',
+        top: getTooltipTop(mousePosition.y),
+        left: getTooltipLeft(mousePosition.x),
+      }}
+    >
+      {preview}
+    </div>
+  );
+
   return (
     <span
       onMouseMove={handleMouseMove}
@@ -275,20 +294,7 @@ const HoverPreview: React.FC<Props> = ({
           <div className={styles.tapCatcher} onTouchEnd={handleTapCatcherTouchEnd} onClick={handleTapCatcherClick} />,
           modal ?? document.body,
         )}
-      <div
-        ref={divRef}
-        className={`${styles.hoverPreview} ${previewTappable ? styles.tappable : ''}`}
-        onTouchStart={previewTappable ? handlePreviewTouchStart : undefined}
-        onTouchEnd={previewTappable ? handlePreviewTouchEnd : undefined}
-        onClick={previewTappable ? handlePreviewClick : undefined}
-        style={{
-          display: isVisible ? VISIBLE_TOOLTIP_DISPLAY : 'none',
-          top: getTooltipTop(mousePosition.y),
-          left: getTooltipLeft(mousePosition.x),
-        }}
-      >
-        {preview}
-      </div>
+      {portalPreview && isMounted ? createPortal(previewElement, modal ?? document.body) : previewElement}
       {children}
     </span>
   );

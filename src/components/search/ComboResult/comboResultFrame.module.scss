@@ -1,0 +1,21 @@
+@reference "../../../assets/globals.css";
+
+.comboResultFrame {
+  @apply w-full min-w-0 max-w-lg mx-0 my-2 rounded-sm border-2 border-dark grow flex flex-col content-center no-underline text-dark dark:text-light;
+}
+
+.content {
+  @apply flex flex-col grow;
+}
+
+.footer {
+  @apply w-full min-w-0 shrink-0 border-t-2 py-1 text-center border-dark bg-dark text-light;
+
+  overflow-wrap: anywhere;
+}
+
+.banner {
+  @apply w-full min-w-0 shrink-0 pr-2;
+
+  overflow-wrap: anywhere;
+}

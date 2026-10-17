@@ -23,6 +23,20 @@ describe('Find My Combos', () => {
     cy.get('#commander-input').should('be.empty');
   });
 
+  it('explains the combo filter query', () => {
+    cy.intercept('GET', '**/explain-query*', {
+      body: {
+        q: 'format:edh',
+        explanation: 'Commander-legal combos.',
+      },
+    }).as('explainQuery');
+
+    cy.get('#combo-filter-query-input').clear();
+    cy.get('#combo-filter-query-input').type('format:edh');
+    cy.wait('@explainQuery').its('request.url').should('include', 'q=format%3Aedh');
+    cy.get('#combo-filter-query-explanation').should('have.text', ' Currently filtering for Commander-legal combos.');
+  });
+
   it('turns the pages of the combos found', () => {
     // The test database is too small to fill a page, so the combo found is repeated over a page and a half.
     cy.intercept('POST', '**/find-my-combos*', (req) => {

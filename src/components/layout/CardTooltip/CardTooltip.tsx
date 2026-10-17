@@ -14,6 +14,7 @@ interface Props {
   faceToShow?: number | null;
   images?: string[];
   disableTapPreview?: boolean;
+  portalPreview?: boolean;
   /* For a trigger wrapping the card's own link, which the preview stands in for on desktop. */
   suppressClick?: boolean;
   children?: React.ReactNode;
@@ -40,7 +41,15 @@ function getFaceImages(card: Card, faceToShow?: number | null): { url: string; a
   return faces;
 }
 
-const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPreview, suppressClick, children }) => {
+const CardTooltip: React.FC<Props> = ({
+  card,
+  faceToShow,
+  images,
+  disableTapPreview,
+  portalPreview,
+  suppressClick,
+  children,
+}) => {
   const [hasHovered, setHasHovered] = useState(false);
   const [cards, setCards] = useState<CardImage[]>([]);
   const [shown, setShown] = useState<'hovered' | 'tapped'>();
@@ -92,6 +101,7 @@ const CardTooltip: React.FC<Props> = ({ card, faceToShow, images, disableTapPrev
       onFirstShow={() => setHasHovered(true)}
       onVisibleChange={(visible, tapped) => setShown(visible ? (tapped ? 'tapped' : 'hovered') : undefined)}
       onPreviewTap={fogged ? revealAllSpoilers : undefined}
+      portalPreview={portalPreview}
       preview={
         <div className="relative flex min-w-0">
           {!allImagesGotRequested() && (

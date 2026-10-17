@@ -19,6 +19,14 @@ $dissolve-duration: 0.9s;
   filter: blur(12px) grayscale(1);
 }
 
+.blurContent > :not(.fog) {
+  transition: filter $dissolve-duration ease-out;
+}
+
+.blurContent.fogged > :not(.fog) {
+  filter: blur(12px) grayscale(1);
+}
+
 .fog {
   position: absolute;
   inset: 0;

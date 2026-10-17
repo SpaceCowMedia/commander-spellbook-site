@@ -17,6 +17,19 @@ interface Props {
   className?: string;
 }
 
+interface SearchInputProps {
+  className?: string;
+  hasSearchIconMargin?: boolean;
+  id: string;
+  inputClassName: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  onChange: (value: string) => void;
+  placeholder: string;
+  showSubmitButton?: boolean;
+  submitButtonClassName?: string;
+  value: string;
+}
+
 const countUpToString = (count: number) => {
   const countString = count.toString();
   const countLength = countString.length;
@@ -38,6 +51,41 @@ function getQueryFromRouter(router: NextRouter): string {
   }
   return '';
 }
+
+export const SearchInput: React.FC<SearchInputProps> = ({
+  className,
+  hasSearchIconMargin,
+  id,
+  inputClassName,
+  inputRef,
+  onChange,
+  placeholder,
+  showSubmitButton,
+  submitButtonClassName,
+  value,
+}) => (
+  <div className={`flex grow items-center ${className ?? ''}`}>
+    {showSubmitButton && (
+      <button
+        className={`${styles.searchInputIcon} ${hasSearchIconMargin ? styles.insetSearchInputIcon : ''} ${submitButtonClassName ?? ''}`}
+        type="submit"
+      />
+    )}
+    <label htmlFor={id} className="sr-only text-white" aria-hidden="true">
+      Combo Search
+    </label>
+    <input
+      value={value}
+      name="q"
+      ref={inputRef}
+      onChange={(e) => onChange(normalizeQuotes(e.target.value))}
+      placeholder={placeholder}
+      id={id}
+      type="text"
+      className={inputClassName}
+    />
+  </div>
+);
 
 const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
   const configuration = apiConfiguration();
@@ -126,22 +174,15 @@ const SearchBar: React.FC<Props> = ({ onHomepage, className }) => {
             </Link>
           )}
 
-          <div className="flex grow items-center">
-            {!onHomepage && <button className={styles.searchInputIcon} type="submit" />}
-            <label htmlFor="search-bar-input" className="sr-only text-white" aria-hidden="true">
-              Combo Search
-            </label>
-            <input
-              value={inputValue}
-              name="q"
-              ref={inputRef}
-              onChange={(e) => setInputValue(normalizeQuotes(e.target.value))}
-              placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
-              id="search-bar-input"
-              type="text"
-              className={`${styles.mainSearchInput} ${onHomepage ? `${styles.homepageInput} text-2xl text-center` : `${styles.navInput} pl-8 -ml-6`}`}
-            />
-          </div>
+          <SearchInput
+            id="search-bar-input"
+            value={inputValue}
+            inputRef={inputRef}
+            onChange={setInputValue}
+            placeholder={`Search ${variantCount === initialCount ? '+' : ''}${variantCount} EDH combos`}
+            inputClassName={`${styles.mainSearchInput} ${onHomepage ? `${styles.homepageInput} text-2xl text-center` : `${styles.navInput} pl-8 -ml-6`}`}
+            showSubmitButton={!onHomepage}
+          />
 
           {!onHomepage && (
             <div className="flex flex-row-reverse md:flex-row items-center desktopMenu">

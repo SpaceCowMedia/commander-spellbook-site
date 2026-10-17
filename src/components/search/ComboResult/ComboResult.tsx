@@ -15,8 +15,8 @@ import { useRouter } from 'next/router';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
-import SolRingPrice from 'components/layout/SolRingPrice/SolRingPrice';
 import { formatSalt, MAX_SALT } from 'lib/salt';
+import ComboResultFrame from './ComboResultFrame';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -68,11 +68,11 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
         return 'Too few salt votes';
       }
 
-      return `Salt ${formatSalt(combo.salt)} / ${MAX_SALT} (${combo.saltVoteCount} ${pluralize('vote', combo.saltVoteCount)})`;
+      return `Salt: ${formatSalt(combo.salt)} / ${MAX_SALT} (${combo.saltVoteCount} ${pluralize('vote', combo.saltVoteCount)})`;
     }
 
     if (priceStore) {
-      return `${priceStore === 'cardmarket' ? '€' : '$'}${combo.prices[priceStore]}`;
+      return `Price: ${priceStore === 'cardmarket' ? '€' : '$'}${combo.prices[priceStore]}`;
     }
 
     return '';
@@ -86,100 +86,97 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVaria
     combo.status === 'OK' ? undefined : combo.status === 'E' ? 'Combo marked as EXAMPLE' : 'Combo marked as DRAFT';
   const isLock = combo.produces.some((result) => result.feature.name.toLowerCase() === 'lock');
   const results = combo.produces.filter((result) => result.feature.name.toLowerCase() != 'lock');
+  const sortStat = sortStatMessage(combo);
+  const variantCountText =
+    !hideVariants && combo.variantCount > 1
+      ? `+ ${combo.variantCount - 1} variant${combo.variantCount > 2 ? 's' : ''}`
+      : undefined;
+  const footerText = sortStat || `${combo.uses.length} ${pluralize('card', combo.uses.length)}`;
 
   return (
     <Link
       href={comboLink}
       key={combo.id}
-      className={`${styles.comboResult} w-full md:w-1/4`}
+      className="flex w-full min-w-0 md:w-1/4 no-underline"
       rel={newTab ? 'noopener noreferrer' : undefined}
       target={newTab ? '_blank' : undefined}
     >
-      <div className="flex flex-col relative">
-        <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
-          {isLock && <Icon name="lock" />}
-        </div>
-        <div className={`flex items-center grow flex-col ${statusClass}`} title={stateBasedTooltip}>
-          <ColorIdentity identity={combo.identity} size="small" />
-        </div>
-        <div className={`grow  ${styles.comboResultSection}`}>
-          <div className="py-1">
-            <span className="sr-only">Cards in combo:</span>
-            {combo.uses.map(({ card, quantity, usedFace }) => (
-              <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
-                <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
-                  {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
-                    decklistMessage != undefined ? (
-                      <strong className="text-blue-800">
-                        <CardName name={card.name} />
-                        {decklistMessage ? ` (${decklistMessage})` : ''}
-                      </strong>
+      <ComboResultFrame
+        className="h-full min-w-0"
+        bannerText={variantCountText}
+        bannerClassName={styles.variantBanner}
+        footerText={footerText}
+        footerTitle={sortStat ? stateBasedTooltip : undefined}
+      >
+        <div className="flex flex-col relative">
+          <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
+            {isLock && <Icon name="lock" />}
+          </div>
+          <div className={`flex items-center grow flex-col ${statusClass}`} title={stateBasedTooltip}>
+            <ColorIdentity identity={combo.identity} size="small" />
+          </div>
+          <div className={`grow  ${styles.comboResultSection}`}>
+            <div className="py-1">
+              <span className="sr-only">Cards in combo:</span>
+              {combo.uses.map(({ card, quantity, usedFace }) => (
+                <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
+                  <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
+                    {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
+                      decklistMessage != undefined ? (
+                        <strong className="text-blue-800">
+                          <CardName name={card.name} />
+                          {decklistMessage ? ` (${decklistMessage})` : ''}
+                        </strong>
+                      ) : (
+                        <strong className="text-red-800">
+                          <CardName name={card.name} /> (not in deck)
+                        </strong>
+                      )
                     ) : (
-                      <strong className="text-red-800">
-                        <CardName name={card.name} /> (not in deck)
-                      </strong>
-                    )
-                  ) : (
+                      <span>
+                        {quantity > 1 ? `${quantity} ` : ''}
+                        <CardName name={card.name} />
+                      </span>
+                    )}
+                  </div>
+                </CardTooltip>
+              ))}
+              {combo.requires.map((template) => (
+                <TemplateTooltip
+                  template={template}
+                  key={template.template.id}
+                  caption="Open the combo to see all possible replacements"
+                >
+                  <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
                     <span>
-                      {quantity > 1 ? `${quantity} ` : ''}
-                      <CardName name={card.name} />
+                      + {template.quantity > 1 ? `${template.quantity}x ` : ''}
+                      <TextWithMagicSymbol
+                        text={getTemplateNameSummary(template.template.name) ?? template.template.name}
+                      />
                     </span>
-                  )}
-                </div>
-              </CardTooltip>
-            ))}
-            {combo.requires.map((template) => (
-              <TemplateTooltip
-                template={template}
-                key={template.template.id}
-                caption="Open the combo to see all possible replacements"
-              >
-                <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
+                  </div>
+                </TemplateTooltip>
+              ))}
+              {prereqCount > 0 && (
+                <div className={`${styles.prerequisites} pl-3 pr-3`}>
                   <span>
-                    + {template.quantity > 1 ? `${template.quantity}x ` : ''}
-                    <TextWithMagicSymbol
-                      text={getTemplateNameSummary(template.template.name) ?? template.template.name}
-                    />
+                    +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
                   </span>
                 </div>
-              </TemplateTooltip>
-            ))}
-            {prereqCount > 0 && (
-              <div className={`${styles.prerequisites} pl-3 pr-3`}>
-                <span>
-                  +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="grow">
-          <span className="sr-only">Results in combo:</span>
-          {results.map((result) => (
-            <div key={result.feature.name} className={`result pl-3 pr-3`}>
-              <TextWithMagicSymbol text={result.feature.name} />
+              )}
             </div>
-          ))}
-          {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
+          </div>
+          <div className="grow">
+            <span className="sr-only">Results in combo:</span>
+            {results.map((result) => (
+              <div key={result.feature.name} className={`result pl-3 pr-3`}>
+                <TextWithMagicSymbol text={result.feature.name} />
+              </div>
+            ))}
+            {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
+          </div>
         </div>
-      </div>
-      <div className="flex items-center grow flex-col">
-        <div className="grow" />
-        {!hideVariants && combo.variantCount > 1 && (
-          <div className={styles.variantBanner}>
-            <span className="pl-3 pr-3">
-              + {combo.variantCount - 1} variant
-              {combo.variantCount > 2 ? 's' : ''}
-            </span>
-          </div>
-        )}
-        {sortStatMessage(combo) && (
-          <div className={`sort-footer w-full py-1 text-center shrink ${statusClass}`} title={stateBasedTooltip}>
-            {sortStatMessage(combo)}
-            {priceStore && <SolRingPrice className="ml-1" price={combo.prices[priceStore]} store={priceStore} />}
-          </div>
-        )}
-      </div>
+      </ComboResultFrame>
     </Link>
   );
 };

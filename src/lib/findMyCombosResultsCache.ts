@@ -1,6 +1,7 @@
 import { EstimateBracketResult, Variant } from '@space-cow-media/spellbook-client';
 
 const SESSION_STORAGE_RESULTS_KEY = 'commander-spellbook-combo-finder-results';
+const DEFAULT_FIND_MY_COMBOS_QUERY = 'legal:commander';
 
 // sessionStorage access is best-effort: every call below swallows errors so that
 // quota limits, private-mode restrictions, or malformed entries can't break the page.
@@ -17,11 +18,13 @@ export interface ResultType {
 
 export type ResultsCache = {
   deckJson: string;
-  format: string;
+  query: string;
   results: ResultType;
   bracketInfo: EstimateBracketResult | undefined;
   scrollY: number;
 };
+
+const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object';
 
 export const readResultsCache = (): ResultsCache | null => {
   try {
@@ -29,8 +32,25 @@ export const readResultsCache = (): ResultsCache | null => {
     if (!raw) {
       return null;
     }
-    const parsed: ResultsCache = JSON.parse(raw);
-    return parsed;
+    const parsed: unknown = JSON.parse(raw);
+    if (!isRecord(parsed) || typeof parsed.deckJson !== 'string' || !isRecord(parsed.results)) {
+      return null;
+    }
+
+    const query =
+      typeof parsed.query === 'string'
+        ? parsed.query
+        : typeof parsed.format === 'string'
+          ? `legal:${parsed.format}`
+          : DEFAULT_FIND_MY_COMBOS_QUERY;
+
+    return {
+      deckJson: parsed.deckJson,
+      query,
+      results: parsed.results as unknown as ResultType,
+      bracketInfo: parsed.bracketInfo as EstimateBracketResult | undefined,
+      scrollY: typeof parsed.scrollY === 'number' ? parsed.scrollY : 0,
+    };
   } catch {
     /* see file header */
     return null;

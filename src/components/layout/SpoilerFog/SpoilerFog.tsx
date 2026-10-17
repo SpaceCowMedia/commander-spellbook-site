@@ -12,32 +12,40 @@ interface Props {
   spoiler: boolean;
   /* Off in hover previews, which reveal spoilers as a whole. */
   interactive?: boolean;
+  blurContent?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
 
-const SpoilerFog: React.FC<Props> = ({ name, spoiler, interactive = true, className, children }) => {
+const SpoilerFog: React.FC<Props> = ({ name, spoiler, interactive = true, blurContent, className, children }) => {
   const tooltipId = useId();
   const fogged = useSpoilerFogged({ name, spoiler });
   const modal = use(ModalPortalContext);
+  const reveal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    revealSpoiler(name);
+  };
+  const revealAll = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    revealAllSpoilers();
+  };
 
   return (
-    <div className={`${styles.spoilerFog} ${fogged ? styles.fogged : ''} ${className ?? ''}`}>
+    <div
+      className={`${styles.spoilerFog} ${fogged ? styles.fogged : ''} ${blurContent ? styles.blurContent : ''} ${className ?? ''}`}
+    >
       {children}
       {spoiler && (
         <div className={`${styles.fog} ${fogged ? '' : styles.dissolved}`} aria-hidden={!interactive || undefined}>
           {interactive ? (
             <>
-              <button
-                type="button"
-                className={styles.veil}
-                aria-label="Reveal this spoiler card"
-                onClick={() => revealSpoiler(name)}
-              />
+              <button type="button" className={styles.veil} aria-label="Reveal this spoiler card" onClick={reveal} />
               <button
                 type="button"
                 className={styles.label}
-                onClick={revealAllSpoilers}
+                onClick={revealAll}
                 data-tooltip-id={tooltipId}
                 data-tooltip-content={REVEAL_ALL_HELP}
               >
