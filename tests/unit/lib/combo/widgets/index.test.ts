@@ -14,6 +14,7 @@ import fixtures from './testing/variants.json';
 const EXAMPLES: Record<WidgetId, keyof typeof fixtures> = {
   'necropotence-aetherflux': '3591-4740-6900',
   'ratadrabik-drain': '2523-5468-8252--219',
+  'radiant-solar-dungeons': '670-1734-4432-4605-8194',
   'storm-life-loop': '2903-3260-4740',
   'drain-loop': '328-1377-2292-3211-3260-4078',
   krenko: '38-659-1288',

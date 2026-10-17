@@ -24,6 +24,7 @@ import { mayaelsAriaDoubling } from './mayaelsAriaDoubling';
 import { nadier } from './nadier';
 import { necropotenceAetherflux } from './necropotenceAetherflux';
 import { ojerAxonil } from './ojerAxonil';
+import { radiantSolarDungeons } from './radiantSolarDungeons';
 import { ratadrabikDrain } from './ratadrabikDrain';
 import { repercussion } from './repercussion';
 import { sageOfHours } from './sageOfHours';
@@ -43,6 +44,7 @@ import { timeSieve } from './timeSieve';
 export const WIDGETS = [
   necropotenceAetherflux,
   ratadrabikDrain,
+  radiantSolarDungeons,
   stormLifeLoop,
   drainLoop,
   krenko,
