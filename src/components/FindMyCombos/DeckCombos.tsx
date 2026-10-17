@@ -241,13 +241,15 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
                   This cluster contains {expandedGroup.combos.length} {pluralize('combo', expandedGroup.combos.length)}{' '}
                   that all miss this single piece.
                 </p>
-                <ComboResults
-                  results={expandedGroup.combos}
-                  deck={deck}
-                  sort={DEFAULT_SORT}
-                  hideVariants={true}
-                  localPageLimit={100}
-                />
+                <div className={styles.groupModalResults}>
+                  <ComboResults
+                    results={expandedGroup.combos}
+                    deck={deck}
+                    sort={DEFAULT_SORT}
+                    hideVariants={true}
+                    localPageLimit={100}
+                  />
+                </div>
               </div>
             )}
           </Modal>

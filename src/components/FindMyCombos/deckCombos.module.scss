@@ -164,3 +164,9 @@
 .groupModalDescription {
   @apply mt-5 mb-4 text-center;
 }
+
+/* The results turn on the page's background, which sets them apart from the dialog's in dark mode. It reaches past
+   them on the sides as it does above and below, so that their edges don't run into the dialog. */
+.groupModalResults {
+  @apply bg-(--page-background) px-2;
+}
