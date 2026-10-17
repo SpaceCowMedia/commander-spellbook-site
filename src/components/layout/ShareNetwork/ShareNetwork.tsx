@@ -7,16 +7,17 @@ interface Props {
   url: string;
   children?: React.ReactNode;
   network: string;
+  subject: string;
 }
 
-const ShareNetwork: React.FC<Props> = ({ className, url, children, network }) => {
-  const id = `share-combo-tooltip-${network}`;
+const ShareNetwork: React.FC<Props> = ({ className, url, children, network, subject }) => {
+  const id = `share-${subject.toLowerCase()}-tooltip-${network}`;
   return (
     <>
       <Link
         data-tooltip-place="bottom"
         data-tooltip-id={id}
-        data-tooltip-content={`Share Combo on ${network}`}
+        data-tooltip-content={`Share ${subject} on ${network}`}
         href={url}
         className={className}
         rel="noreferrer noopener"

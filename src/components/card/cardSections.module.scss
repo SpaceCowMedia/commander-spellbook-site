@@ -1,0 +1,42 @@
+@reference "../../assets/globals.css";
+
+.section {
+  @apply my-6 w-full;
+}
+
+.sectionTitle {
+  @apply font-bold text-xl mb-2;
+}
+
+.sectionNote {
+  @apply text-sm opacity-70 mb-3;
+}
+
+.chipList {
+  @apply flex flex-wrap gap-2;
+}
+
+.chip {
+  @apply inline-flex items-center gap-1 rounded-full border-2 border-primary px-3 py-1 text-sm no-underline text-link dark:text-primary;
+}
+
+a.chip:hover,
+a.chip:focus {
+  @apply bg-link text-white border-link;
+}
+
+.chipCount {
+  @apply font-bold;
+}
+
+.badge {
+  @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide no-underline bg-light text-dark;
+}
+
+.badgeDanger {
+  @apply bg-danger text-white;
+}
+
+.badgeHighlight {
+  @apply bg-primary text-dark;
+}
