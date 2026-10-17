@@ -16,7 +16,7 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
 import { formatSalt, MAX_SALT } from 'lib/salt';
-import ComboResultFrame from './ComboResultFrame';
+import ComboResultFrame from '../ComboResultFrame/ComboResultFrame';
 import useSolRingPrice, { priceInSolRings, SOL_RING } from 'lib/solRingPrice';
 
 interface Props {

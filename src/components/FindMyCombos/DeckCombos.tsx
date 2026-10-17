@@ -10,7 +10,7 @@ import CardTooltip from 'components/layout/CardTooltip/CardTooltip';
 import CardName from 'components/layout/CardName/CardName';
 import Icon from 'components/layout/Icon/Icon';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
-import ComboResultFrame from 'components/search/ComboResult/ComboResultFrame';
+import ComboResultFrame from 'components/search/ComboResultFrame/ComboResultFrame';
 import { DEFAULT_SORT } from 'lib/constants';
 import countDeckCards from 'lib/countDeckCards';
 
