@@ -16,6 +16,19 @@ describe('Find My Combos', () => {
     cy.get('#combos-in-deck-section').should('contain', '1 Combo Found').and('contain', 'Basalt Monolith');
   });
 
+  it('links the missing card of a group to its page', () => {
+    cy.get('#decklist-input').clear();
+    cy.get('#decklist-input').type('1 Basalt Monolith');
+    cy.get('#parse-decklist-input').click();
+
+    cy.contains('#potential-combos-in-deck-section [role="button"]', 'Mesmeric Orb').contains('Mesmeric Orb').click();
+    cy.get('dialog[open] a[href="/card/2/"]')
+      .should('contain', 'Missing card')
+      .and('have.attr', 'title', 'Open Mesmeric Orb and its combos')
+      .click();
+    cy.location('pathname').should('eq', '/card/2/');
+  });
+
   it('can clear the decklist', () => {
     cy.get('#clear-decklist-input').click();
 
