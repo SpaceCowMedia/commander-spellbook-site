@@ -17,17 +17,12 @@
 }
 
 .groupCardButton {
-  @apply w-full cursor-pointer text-left;
+  /* a grid, so that the card fills the whole cell */
+  @apply grid w-full cursor-pointer text-left;
 
   &:focus-visible {
     @apply outline-2 outline-primary outline-offset-2;
   }
-}
-
-.groupSpoilerFog {
-  @apply w-full h-full;
-
-  border-radius: 0.125rem;
 }
 
 .groupCardBody {

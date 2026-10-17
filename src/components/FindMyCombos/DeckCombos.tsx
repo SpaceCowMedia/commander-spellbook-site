@@ -192,12 +192,7 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
                   setExpandedGroupKey(group.key);
                 }}
               >
-                <SpoilerFog
-                  name={group.card.name}
-                  spoiler={group.card.spoiler}
-                  blurContent
-                  className={styles.groupSpoilerFog}
-                >
+                <SpoilerFog name={group.card.name} spoiler={group.card.spoiler} blurContent>
                   <ComboResultFrame
                     status={group.status}
                     header={
