@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styles from './copyComboLinkButton.module.scss';
 import { Tooltip } from 'react-tooltip';
-import { event } from '../../../../lib/googleAnalytics';
+import { event } from 'lib/googleAnalytics';
 
 interface Props {
   comboLink: string;

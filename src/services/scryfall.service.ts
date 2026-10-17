@@ -1,5 +1,5 @@
 import { ScryfallCard, ScryfallError, ScryfallList } from '@scryfall/api-types';
-import { ReplacementCard, ReplacementsPage } from 'lib/types';
+import { ReplacementCard, ReplacementsPage } from 'lib/card/replacements';
 
 const SEARCH_URL = 'https://api.scryfall.com/cards/search';
 /* Accept is all a search sends: the browser keeps its own User-Agent and needs no CORS preflight. */

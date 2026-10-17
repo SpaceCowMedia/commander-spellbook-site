@@ -38,6 +38,7 @@ If you are coming from `npm` or `yarn`, most commands map over directly. Note th
 | Lint (eslint + stylelint + prettier) | `pnpm lint`                      |
 | Auto-format                          | `pnpm prettier`                  |
 | Type-check                           | `pnpm tsc --noEmit`              |
+| Run the unit tests                   | `pnpm test`                      |
 | Open Cypress                         | `pnpm cy:open`                   |
 | Run Cypress headlessly               | `pnpm cy:run`                    |
 | Build, serve and open Cypress        | `pnpm cy:dev`                    |
@@ -62,4 +63,5 @@ The backend (auth, api, database) is all managed by a separate API outside of th
 
 ## Automated Testing
 
+- [Unit Testing](./testing/unit-testing.md)
 - [Integration Testing](./testing/integration-testing.md)

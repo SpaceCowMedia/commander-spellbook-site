@@ -1,6 +1,6 @@
 import React from 'react';
-import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import { apiConfiguration } from 'services/api.service';
 import { VariantUpdateSuggestion, VariantUpdateSuggestionsApi } from '@space-cow-media/spellbook-client';
 import CookieService from 'services/cookie.service';

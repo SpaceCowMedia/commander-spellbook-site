@@ -1,5 +1,5 @@
 import React from 'react';
-import ArtCircle, { ArtCircleProps } from '../ArtCircle/ArtCircle';
+import ArtCircle, { ArtCircleProps } from 'components/card/ArtCircle/ArtCircle';
 import styles from './splashPage.module.scss';
 
 interface Props {

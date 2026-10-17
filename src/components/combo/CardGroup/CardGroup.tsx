@@ -1,7 +1,7 @@
 import styles from './cardGroup.module.scss';
 import React, { useRef, useState } from 'react';
-import CardImage from '../../layout/CardImage/CardImage';
-import TemplateCard from 'components/combo/TemplateCard/TemplateCard';
+import CardImage from 'components/card/CardImage/CardImage';
+import TemplateCard from 'components/card/TemplateCard/TemplateCard';
 import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 
 interface Props {

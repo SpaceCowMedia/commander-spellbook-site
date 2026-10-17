@@ -1,10 +1,10 @@
 import styles from './comboList.module.scss';
-import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import React, { useEffect, useState } from 'react';
-import PlaceholderText from '../../layout/PlaceholderText/PlaceholderText';
-import { addPeriod } from '../../../lib/addPeriod';
+import PlaceholderText from 'components/ui/PlaceholderText/PlaceholderText';
+import { addPeriod } from 'lib/text/addPeriod';
 import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
-import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 
 /* An entry that says what it is: the card list marks each name as a card or as a template. */
 export interface ComboListItem {

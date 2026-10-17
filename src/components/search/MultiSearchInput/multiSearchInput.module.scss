@@ -1,0 +1,9 @@
+@reference "../../../styles/globals.css";
+
+.inputLabel {
+  @apply font-semibold;
+}
+
+.inputButton {
+  @apply px-2 text-white flex flex-row items-center text-3xl border grow justify-center;
+}

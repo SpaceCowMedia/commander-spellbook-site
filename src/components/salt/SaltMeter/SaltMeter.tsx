@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
 import styles from './saltMeter.module.scss';
-import { MAX_SALT, SALT_LEVELS } from 'lib/salt';
-import cn from 'lib/cn';
+import { MAX_SALT, SALT_LEVELS } from 'lib/salt/salt';
+import classNames from 'lib/react/classNames';
 
 interface Props {
   salt: number | null;
@@ -12,7 +12,7 @@ const SEGMENTS = Array.from({ length: MAX_SALT }, (_, segment) => segment);
 
 const SaltMeter: React.FC<Props> = ({ salt, className }) => {
   return (
-    <div className={cn(styles.meter, salt === null && styles.empty, className)} aria-hidden="true">
+    <div className={classNames(styles.meter, salt === null && styles.empty, className)} aria-hidden="true">
       <div className={styles.segments}>
         {SEGMENTS.map((segment) => (
           <div

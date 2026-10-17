@@ -1,24 +1,21 @@
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
 import Link from 'next/link';
-import MultiSearchInput, {
-  InputData,
-  OperatorOption,
-} from '../components/advancedSearch/MultiSearchInput/MultiSearchInput';
-import { DEFAULT_VENDOR } from '../lib/constants';
+import MultiSearchInput, { InputData, OperatorOption } from 'components/search/MultiSearchInput/MultiSearchInput';
+import ChoiceField from 'components/ui/ChoiceField/ChoiceField';
+import { DEFAULT_VENDOR } from 'lib/constants';
 import React, { useEffect, useState } from 'react';
-import COLOR_AUTOCOMPLETES from '../lib/colorAutocompletes';
+import COLOR_AUTOCOMPLETES from 'lib/search/colorAutocompletes';
 import styles from './advanced-search.module.scss';
-import RadioSearchInput from '../components/advancedSearch/RadioSearchInput/RadioSearchInput';
 import { useRouter } from 'next/router';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { SpellbookIcon } from '../components/layout/Icon/Icon';
-import { LEGALITY_FORMATS } from 'lib/types';
-import normalizeStringInput from 'lib/normalizeStringInput';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { SpellbookIcon } from 'components/ui/Icon/Icon';
+import { LEGALITY_FORMATS } from 'lib/combo/legality';
+import normalizeStringInput from 'lib/text/normalizeStringInput';
 import { ExplainQueryApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
-import cn from 'lib/cn';
-import { MAX_SALT } from 'lib/salt';
+import classNames from 'lib/react/classNames';
+import { MAX_SALT } from 'lib/salt/salt';
 
 const EXPLANATION_DELAY = 500;
 
@@ -384,6 +381,12 @@ const PRICE_OPTIONS: readonly OperatorOption[] = [
     numeric: true,
   },
 ];
+
+const TAG_CHOICES = [
+  { value: 'true', label: 'Yes' },
+  { value: 'false', label: 'No' },
+  { value: 'null', label: 'Either' },
+] as const;
 
 const PRICE_VENDORS: readonly { value: string; label: string }[] = [
   {
@@ -917,12 +920,11 @@ const AdvancedSearch: React.FC = () => {
 
         {hasPriceInQuery && (
           <div id="vendor" className={`${styles.container} container`}>
-            <RadioSearchInput
-              checkedValue={vendor}
-              options={PRICE_VENDORS}
-              formName="vendor"
+            <ChoiceField
               label="Card Vendor"
-              labelIcon="cartShopping"
+              icon="cartShopping"
+              options={PRICE_VENDORS}
+              value={vendor}
               onChange={(vendor) => setFormState({ vendor })}
             />
           </div>
@@ -957,17 +959,12 @@ const AdvancedSearch: React.FC = () => {
 
         {tags.map((tagOption, tagIndex) => (
           <div id={`${tagOption.name}-tag`} className={`${styles.container} container`} key={tagIndex}>
-            <RadioSearchInput
-              checkedValue={tagOption.selected?.toString() ?? 'null'}
-              options={[
-                { value: 'true', label: 'Yes' },
-                { value: 'false', label: 'No' },
-                { value: 'null', label: 'Either' },
-              ]}
-              formName={tagOption.name}
+            <ChoiceField
               label={tagOption.label}
-              labelIcon={tagOption.labelIcon}
-              description={tagOption.description}
+              icon={tagOption.labelIcon}
+              hint={tagOption.description}
+              options={TAG_CHOICES}
+              value={tagOption.selected?.toString() ?? 'null'}
               onChange={(tag) => {
                 setFormState({
                   tags: tags.map((t, i) =>
@@ -1004,7 +1001,7 @@ const AdvancedSearch: React.FC = () => {
           {query && (
             <div
               id="search-query-explanation"
-              className={cn(styles.searchQueryExplanation, explanation?.query !== query && styles.pending)}
+              className={classNames(styles.searchQueryExplanation, explanation?.query !== query && styles.pending)}
             >
               {explanation ? explanation.text : 'Working out what this query means…'}
             </div>

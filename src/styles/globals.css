@@ -1,0 +1,343 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([class~="dark"], [class~="dark"] *));
+
+@theme {
+  --color-primary: #c18aff;
+  --color-secondary: #ff9595;
+  --color-link: #5b2499;
+  --color-dark: #222222;
+  --color-light: #dfdfdf;
+  --color-danger: #c54329;
+  --color-warning: #ffc580;
+
+  --font-title: 'Josefin Sans', sans-serif;
+  --font-body: Roboto, sans-serif;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+html {
+  --page-background: var(--color-white);
+  @apply bg-(--page-background) font-body dark:text-white;
+
+  @variant dark {
+    --page-background: var(--color-black);
+  }
+}
+
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
+body,
+html,
+#__next {
+  @apply h-full;
+}
+
+@font-face {
+  font-family: 'Spellbook Icons';
+  src: url('../assets/fonts/spellbook-font.ttf');
+}
+
+/* only the figures and the comma, for generic mana amounts */
+@font-face {
+  font-family: 'STIX Two Text';
+  src: url('../assets/fonts/stix-two-text-figures.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+2C, U+30-39;
+}
+
+:target {
+  scroll-margin-top: 50px;
+}
+
+a {
+  @apply underline text-link dark:text-primary;
+}
+
+#main:focus {
+  outline: 0 solid transparent;
+}
+
+.container {
+  @apply w-full max-w-5xl px-4 mx-auto;
+}
+
+.static-page {
+  /* not sure why, but had to duplicate the container stuff here :/ */
+  @apply w-full max-w-5xl px-4 py-6 mx-auto;
+}
+
+/* adapted from https://codepen.io/P1N2O/pen/pyBNzX */
+.gradient {
+  background-size: 150% 150%;
+  animation: gradient 10s ease infinite;
+
+  @apply bg-linear-to-br from-primary to-secondary;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.heading-title {
+  @apply font-title text-center text-4xl text-dark uppercase dark:text-light;
+}
+
+.heading-subtitle {
+  @apply text-2xl font-title text-center;
+}
+
+.button {
+  @apply m-4 inline-block py-3 px-4 bg-transparent text-link border-2 border-primary rounded-xs no-underline dark:text-primary;
+}
+
+input,
+textarea,
+select,
+option,
+.input,
+.inputControl {
+  @apply border-dark bg-white dark:bg-dark dark:text-light;
+}
+
+.button.tight {
+  @apply m-0;
+}
+
+.button.dark {
+  @apply bg-dark text-white border-dark;
+}
+
+.button svg {
+  @apply inline-block mr-1 fill-current;
+}
+
+.button.disabled {
+  @apply bg-light text-dark border-dark cursor-not-allowed;
+}
+
+.button.disabled:hover,
+.button.disabled:focus {
+  @apply bg-light text-dark border-dark;
+}
+
+.button.w-full {
+  @apply mx-0 my-1;
+}
+
+.button:hover,
+.button:focus {
+  @apply bg-link text-white border-link;
+}
+
+.centered-container {
+  @apply flex flex-col items-center justify-center text-center m-auto;
+}
+
+.home-button {
+  @apply mx-0 mt-2 mb-0 grow;
+
+  border: 2px solid rgb(255 255 255 / 5%);
+}
+
+.home-button:hover {
+  @apply bg-transparent text-dark;
+
+  background: rgb(255 255 255 / 40%);
+  backdrop-filter: blur(5px);
+}
+
+@media (width >= 768px) {
+  .home-button {
+    @apply ml-2;
+  }
+
+  .home-button:first-child {
+    @apply ml-0;
+  }
+
+  .home-button:last-child {
+    @apply mr-0;
+  }
+}
+
+.input {
+  @apply border px-3 py-2 w-full appearance-none rounded-none;
+}
+
+.input[disabled] {
+  @apply cursor-not-allowed;
+}
+
+.spinner {
+  /* mask: url("../assets/svgs/circle-notch-solid.svg") no-repeat center; */
+
+  @apply animate-spin;
+}
+
+@media (width >= 640px) {
+  .heading-title {
+    @apply text-5xl my-4;
+  }
+}
+
+/* ---------- Submission form ---------- */
+.submission-section {
+  @apply mb-10;
+}
+
+.submission-heading {
+  @apply flex items-center gap-2 mb-2 pb-2 font-title text-2xl text-left border-b-2 border-primary/40;
+}
+
+.submission-count {
+  @apply ml-1 inline-flex items-center justify-center min-w-6 h-6 px-2 rounded-full text-sm font-body font-bold text-white bg-link dark:bg-primary dark:text-dark;
+}
+
+.submission-hint {
+  @apply -mt-1 mb-4 text-sm text-gray-500 dark:text-gray-400;
+}
+
+.submission-panel {
+  @apply relative rounded-xl border border-gray-200 bg-white p-5 mb-4 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-white/5;
+}
+
+.submission-remove {
+  @apply absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-danger text-white shadow-md transition-transform hover:scale-110;
+}
+
+.field-label {
+  @apply mb-1 block text-sm font-bold;
+}
+
+.field-group {
+  @apply mb-3;
+}
+
+.field-input {
+  @apply w-full rounded-lg border border-gray-300 px-3 py-2 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-gray-600;
+}
+
+.add-button {
+  @apply flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-primary/50 py-3 font-title text-lg font-semibold text-link no-underline transition-colors hover:border-primary hover:bg-primary/10 dark:text-primary;
+}
+
+.submit-button {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-link px-8 py-3 font-title text-xl font-semibold text-white no-underline shadow-md transition-all hover:bg-primary hover:text-dark hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 dark:bg-primary dark:text-dark dark:hover:bg-secondary;
+}
+
+.submission-card {
+  @apply relative flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:items-start sm:justify-between dark:border-gray-700 dark:bg-white/5;
+}
+
+.submission-card-title {
+  @apply font-title text-xl;
+}
+
+.submission-field-label {
+  @apply mb-0.5 text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400;
+}
+
+.status-badge {
+  @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold;
+}
+
+.icon-button {
+  @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full no-underline transition-transform hover:scale-110;
+}
+
+/* v-tooltip styles */
+.tooltip {
+  @apply block z-50;
+}
+
+.tooltip .tooltip-inner {
+  @apply text-white bg-dark rounded-sm p-2;
+}
+
+.tooltip .tooltip-arrow {
+  @apply w-0 h-0 border border-dark z-10 absolute m-2;
+}
+
+.tooltip[x-placement^='top'] {
+  @apply mb-2;
+}
+
+.tooltip[x-placement^='top'] .tooltip-arrow {
+  border-width: 0.25rem 0.25rem 0;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: calc(50% - 0.25rem);
+  @apply my-0 -bottom-1;
+}
+
+.tooltip[x-placement^='bottom'] {
+  @apply mt-2;
+}
+
+.tooltip[x-placement^='bottom'] .tooltip-arrow {
+  border-width: 0 0.25rem 0.25rem;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  left: calc(50% - 0.25rem);
+  @apply my-0 -top-1;
+}
+
+.tooltip[x-placement^='right'] {
+  @apply ml-2;
+}
+
+.tooltip[x-placement^='right'] .tooltip-arrow {
+  border-width: 0.25rem 0.25rem 0.25rem 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  top: calc(50% - 0.25rem);
+  @apply mx-0 -left-1;
+}
+
+.tooltip[x-placement^='left'] {
+  @apply mr-2;
+}
+
+.tooltip[x-placement^='left'] .tooltip-arrow {
+  border-width: 0.25rem 0 0.25rem 0.25rem;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  top: calc(50% - 0.25rem);
+  @apply mx-0 -right-1;
+}
+
+/* end v-tooltip styles */

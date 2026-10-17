@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ResponseError, SaltVote, SaltVotesApi, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
-import useCookie from 'lib/useCookie';
-import { isVoteExpired, SaltVoteError, saltTier, saltVoteError } from 'lib/salt';
-import Icon from 'components/layout/Icon/Icon';
-import SaltSlider from '../SaltSlider/SaltSlider';
+import useCookie from 'lib/react/useCookie';
+import { isVoteExpired, SaltVoteError, saltTier, saltVoteError } from 'lib/salt/salt';
+import Icon from 'components/ui/Icon/Icon';
+import SaltSlider from 'components/salt/SaltSlider/SaltSlider';
 import styles from './saltVoteControl.module.scss';
 
 const VOTABLE_STATUSES: string[] = [VariantStatusEnum.Ok, VariantStatusEnum.E];
