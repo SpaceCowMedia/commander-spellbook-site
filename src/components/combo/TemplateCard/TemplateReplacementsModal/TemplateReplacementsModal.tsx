@@ -5,7 +5,7 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import { TemplateInVariant } from '@space-cow-media/spellbook-client';
 import { ReplacementCard } from 'lib/types';
-import { replacementCardUrl } from 'lib/cards';
+import CardLink from 'components/layout/CardLink/CardLink';
 import { cachedTemplateReplacements } from 'lib/templateReplacementsCache';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
@@ -126,7 +126,10 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger, ope
             return (
               <ViewTransition key={result.id} update={index >= movableFrom ? CARD_MOVE : 'none'} default="none">
                 <SpoilerFog className="replacementCard" name={result.name} spoiler={result.spoiler}>
-                  <a href={replacementCardUrl(result)} target="_blank" rel="noopener noreferrer">
+                  <CardLink
+                    card={{ id: result.cardId, oracleId: result.oracleId, name: result.name }}
+                    disableMobileSingleClickAsPreview
+                  >
                     {morphing && morph ? (
                       <ViewTransition name={morph.name} share={TEMPLATE_MORPH_SHARE} default="none">
                         {image}
@@ -134,7 +137,7 @@ const TemplateReplacementsModal: React.FC<Props> = ({ template, textTrigger, ope
                     ) : (
                       image
                     )}
-                  </a>
+                  </CardLink>
                 </SpoilerFog>
               </ViewTransition>
             );

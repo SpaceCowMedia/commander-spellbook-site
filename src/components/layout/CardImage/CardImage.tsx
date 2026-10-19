@@ -14,7 +14,6 @@ interface Props {
   usedFace?: number | null;
   className?: string;
   edible?: boolean;
-  newTab?: boolean;
   linkToEdhrec?: boolean;
 }
 
@@ -22,7 +21,7 @@ function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab, linkToEdhrec }: Props) => {
+const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, linkToEdhrec }: Props) => {
   const foolsDay = useFoolsDay();
   const { rootProps, frontClassName, backClassName } = useEdibleCard(!!edible);
   const plainCardBack = foolsDay ? weatheredCardBack.src : cardBack.src;
@@ -37,13 +36,7 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab,
   const [readyToReveal, setReadyToReveal] = useState(false);
 
   const linked = (image: React.ReactElement) => (
-    <CardLink
-      className="relative"
-      card={card}
-      disableMobileSingleClickAsPreview={true}
-      newTab={newTab}
-      linkToEdhrec={linkToEdhrec}
-    >
+    <CardLink className="relative" card={card} disableMobileSingleClickAsPreview={true} linkToEdhrec={linkToEdhrec}>
       {image}
     </CardLink>
   );

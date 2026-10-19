@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 
@@ -14,17 +14,15 @@ const ShareNetwork: React.FC<Props> = ({ className, url, children, network, subj
   const id = `share-${subject.toLowerCase()}-tooltip-${network}`;
   return (
     <>
-      <Link
+      <ExternalLink
         data-tooltip-place="bottom"
         data-tooltip-id={id}
         data-tooltip-content={`Share ${subject} on ${network}`}
         href={url}
         className={className}
-        rel="noreferrer noopener"
-        target="_blank"
       >
         {children}
-      </Link>
+      </ExternalLink>
       <Tooltip id={id} />
     </>
   );

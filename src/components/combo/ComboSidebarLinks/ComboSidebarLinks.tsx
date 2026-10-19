@@ -1,6 +1,7 @@
 import BuyComboButtons from './BuyComboButtons/BuyComboButtons';
 import EdhrecLink from './EdhrecLink/EdhrecLink';
 import Link from 'next/link';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import ShareButtons from 'components/layout/ShareButtons/ShareButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
@@ -39,13 +40,13 @@ const ComboSidebarLinks: React.FC<Props> = ({
         </Link>
         <Embed combo={combo} />
         {csbIsStaff === 'true' && (
-          <Link
+          <ExternalLink
             id="edit-combo-button"
             className="button w-full"
             href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/spellbook/variant/${comboId}/change/`}
           >
             Edit this Combo
-          </Link>
+          </ExternalLink>
         )}
         <ShareButtons
           link={absoluteUrl(`/combo/${combo.id}/`)}

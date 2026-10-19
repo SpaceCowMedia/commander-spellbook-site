@@ -87,7 +87,7 @@ const VariantIdSubmission = ({ variant, onChange, index, onDelete, errors }: Pro
         />
         {previewCombo && (
           <div className="flex justify-center pt-3">
-            <ComboResult combo={previewCombo} hideVariants newTab />
+            <ComboResult combo={previewCombo} hideVariants />
           </div>
         )}
       </div>

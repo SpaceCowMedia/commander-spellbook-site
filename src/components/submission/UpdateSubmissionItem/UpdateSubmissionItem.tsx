@@ -95,9 +95,7 @@ const UpdateSubmissionItem: React.FC<Props> = ({ submission: initialSubmission }
             <p>
               {submission.variants.map((variant, index) => (
                 <React.Fragment key={index}>
-                  <Link href={`/combo/${variant.variant}`} target="_blank" rel="noopener noreferrer">
-                    {variant.variant}
-                  </Link>
+                  <Link href={`/combo/${variant.variant}`}>{variant.variant}</Link>
                   {index < submission.variants.length - 1 && <span>, </span>}
                 </React.Fragment>
               ))}

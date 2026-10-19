@@ -1,28 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ExternalLink from '../ExternalLink/ExternalLink';
 import EDHRECService from '../../../services/edhrec.service';
 import { cardPath, CardReference } from 'lib/cards';
+import { NewTabContext } from 'lib/newTab';
 
 interface Props {
   card: CardReference & { name: string };
   children?: React.ReactNode;
   className?: string;
   disableMobileSingleClickAsPreview?: boolean;
-  newTab?: boolean;
   linkToEdhrec?: boolean;
 }
 
-const CardLink: React.FC<Props> = ({
-  card,
-  children,
-  className,
-  disableMobileSingleClickAsPreview,
-  newTab,
-  linkToEdhrec,
-}) => {
+const CardLink: React.FC<Props> = ({ card, children, className, disableMobileSingleClickAsPreview, linkToEdhrec }) => {
   const router = useRouter();
+  const newTab = useContext(NewTabContext);
   const internalLink = linkToEdhrec ? undefined : cardPath(card);
   const link = internalLink ?? EDHRECService.getCardUrl(card.name);
   const opensNewTab = newTab || internalLink === undefined;

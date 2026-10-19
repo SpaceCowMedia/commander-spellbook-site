@@ -59,14 +59,14 @@ const CardSidebar: React.FC<Props> = ({ card }) => {
           Submit a Combo with this Card
         </Link>
         {csbIsStaff === 'true' && (
-          <Link
+          <ExternalLink
             id="edit-card-button"
             className="button w-full"
             href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/spellbook/card/?${new URLSearchParams({ q: card.name })}`}
             title="Find this card in the admin panel"
           >
             Edit this Card
-          </Link>
+          </ExternalLink>
         )}
         <ShareButtons
           link={absoluteUrl(cardCanonicalPath(card))}

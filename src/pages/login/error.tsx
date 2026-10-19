@@ -3,6 +3,7 @@ import ArtCircle from '../../components/layout/ArtCircle/ArtCircle';
 import styles from '../report-error.module.scss';
 import SpellbookHead from '../../components/SpellbookHead/SpellbookHead';
 import Link from 'next/link';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
 const Login: React.FC = () => {
   return (
@@ -17,9 +18,9 @@ const Login: React.FC = () => {
 
         <div className="text-center">
           <p>You must be a member of the Commander Spellbook discord server to login.</p>
-          <Link role="button" className="button" href="https://discord.com/invite/DkAyVJG">
+          <ExternalLink role="button" className="button" href="https://discord.com/invite/DkAyVJG">
             Join the Commander Spellbook Discord
-          </Link>
+          </ExternalLink>
         </div>
         <div className="text-center">
           <Link role="button" className="button" href="/login">

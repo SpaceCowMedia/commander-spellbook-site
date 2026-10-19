@@ -6,6 +6,7 @@ import { VariantUpdateSuggestion, VariantUpdateSuggestionsApi } from '@space-cow
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
+import { NewTabContext } from 'lib/newTab';
 
 interface Props {
   submission: VariantUpdateSuggestion;
@@ -18,7 +19,9 @@ const EditUpdateSubmission: React.FC<Props> = ({ submission }) => {
         title="Commander Spellbook: Change Update Submission"
         description="Changed your mind? Edit your update submission."
       />
-      <UpdateSubmissionForm submission={submission} />
+      <NewTabContext value>
+        <UpdateSubmissionForm submission={submission} />
+      </NewTabContext>
     </>
   );
 };

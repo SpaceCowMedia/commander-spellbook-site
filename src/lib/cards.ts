@@ -1,6 +1,3 @@
-import EDHRECService from 'services/edhrec.service';
-import { ReplacementCard } from './types';
-
 export interface CardReference {
   id?: number | null;
   oracleId?: string | null;
@@ -19,10 +16,6 @@ export function cardPath(card: CardReference): string | undefined {
     return `/card/${card.oracleId}/`;
   }
   return undefined;
-}
-
-export function replacementCardUrl(card: ReplacementCard): string {
-  return cardPath({ id: card.cardId, oracleId: card.oracleId }) ?? EDHRECService.getCardUrl(card.name);
 }
 
 // The backend matches no value containing an escaped double quote

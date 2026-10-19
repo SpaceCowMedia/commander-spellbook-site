@@ -763,7 +763,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant, card: prefil
         />
         {variantOfPreview && (
           <div className="flex justify-center pt-3">
-            <ComboResult combo={variantOfPreview} hideVariants newTab />
+            <ComboResult combo={variantOfPreview} hideVariants />
           </div>
         )}
       </section>

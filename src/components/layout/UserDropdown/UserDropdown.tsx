@@ -2,6 +2,7 @@ import styles from './userDropdown.module.scss';
 import React, { useEffect, useState } from 'react';
 import CookieService from '../../../services/cookie.service';
 import Link from 'next/link';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 
 const UserDropdown: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -59,11 +60,11 @@ const UserDropdown: React.FC = () => {
             </button>
           </Link>
           {csbIsStaff && (
-            <Link onClick={() => console.log('hello')} href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/`}>
+            <ExternalLink href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/`}>
               <button type="button" className={styles.dropdownItem}>
                 Admin Page
               </button>
-            </Link>
+            </ExternalLink>
           )}
 
           <button type="button" className={styles.dropdownItem} onClick={signOut}>

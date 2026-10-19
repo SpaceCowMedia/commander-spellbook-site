@@ -3,6 +3,7 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { withApiErrorPage } from 'lib/apiErrorPage';
 import { httpErrorStatus } from 'lib/httpErrors';
 import ComboSubmissionForm from '../components/submission/ComboSubmissionForm/ComboSubmissionForm';
+import { NewTabContext } from 'lib/newTab';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import { queryParameterAsString } from 'lib/queryParameters';
@@ -21,7 +22,9 @@ const SubmitACombo: React.FC<Props> = ({ variant, card }) => {
         title="Commander Spellbook: How to Submit a Combo"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
       />
-      <ComboSubmissionForm variant={variant} card={card} />
+      <NewTabContext value>
+        <ComboSubmissionForm variant={variant} card={card} />
+      </NewTabContext>
     </>
   );
 };

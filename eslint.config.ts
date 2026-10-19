@@ -46,6 +46,18 @@ export default defineConfig(
       ],
       'cypress/no-unnecessary-waiting': 'off' as const,
       curly: ['error', 'all'] as const,
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "JSXOpeningElement[name.name='a']",
+          message: 'Link pages of this site with Link, cards with CardLink and other sites with ExternalLink.',
+        },
+        {
+          selector:
+            "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'] > Literal[value=/^(https?|mailto):/]",
+          message: 'Link other sites with ExternalLink.',
+        },
+      ],
     },
   },
   {
