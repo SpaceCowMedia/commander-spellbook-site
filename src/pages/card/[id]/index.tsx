@@ -23,7 +23,7 @@ import { apiConfiguration } from 'services/api.service';
 import { httpErrorStatus } from 'lib/httpErrors';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import { cardComboQuery, commanderFormatTerm, submitComboPath } from 'lib/cards';
-import { CardPartner, CardResult, toListedVariant, topPartners, topResults } from 'lib/cardCombos';
+import { CardPartner, toListedVariant, topPartners } from 'lib/cardCombos';
 import { SpoilerContext } from 'lib/spoilers';
 import { absoluteUrl } from 'lib/seo';
 import styles from './card.module.scss';
@@ -34,7 +34,6 @@ const NOT_FOUND_REVALIDATE_SECONDS = 60 * 60;
 const SAMPLE_SIZE = 100;
 const LISTED_COMBOS = 20;
 const PARTNER_LIMIT = 8;
-const RESULT_LIMIT = 8;
 const TEMPLATE_LIMIT = 20;
 const CARD_ID = /^(\d+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 
@@ -45,12 +44,11 @@ export interface CardPageProps {
   combos: Variant[];
   sampleSize: number;
   partners: CardPartner[];
-  results: CardResult[];
   templates: Template[];
 }
 
 const CardPage: React.FC<CardPageProps> = (props) => {
-  const { card, formatTerm, combosCount, combos, partners, sampleSize, results, templates } = props;
+  const { card, formatTerm, combosCount, combos, partners, sampleSize, templates } = props;
   const legalButBannedCombos = card.legalities.commander && formatTerm !== 'legal:commander';
   return (
     <SpoilerContext value={card.spoiler}>
@@ -109,7 +107,7 @@ const CardPage: React.FC<CardPageProps> = (props) => {
               </p>
             </section>
           )}
-          <CardRoles card={card} formatTerm={formatTerm} results={results} templates={templates} />
+          <CardRoles card={card} templates={templates} />
         </div>
         <aside className="w-full md:w-1/3 text-center">
           <CardSidebar card={card} />
@@ -208,7 +206,6 @@ export const getStaticProps: GetStaticProps<CardPageProps, { id: string }> = asy
       combos: combos.sample.slice(0, LISTED_COMBOS).map(toListedVariant),
       sampleSize: combos.sample.length,
       partners: topPartners(card, combos.sample, PARTNER_LIMIT),
-      results: topResults(combos.sample, RESULT_LIMIT),
       templates: cardTemplates ?? [],
     },
     revalidate: cardTemplates !== null ? REVALIDATE_SECONDS : RETRY_REVALIDATE_SECONDS,

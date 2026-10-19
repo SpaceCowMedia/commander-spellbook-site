@@ -6,9 +6,7 @@ import { apiConfiguration } from 'services/api.service';
 import serverPath from 'lib/serverPath';
 import { loadSymbolImage } from 'lib/symbolImage';
 import { httpErrorStatus } from 'lib/httpErrors';
-import { DEFAULT_ORDERING } from 'lib/constants';
 import { cardComboQuery, commanderFormatTerm } from 'lib/cards';
-import { topResults } from 'lib/cardCombos';
 import { formatCount, IMAGE_CACHE_CONTROL } from 'lib/seo';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { FACE_SEPARATOR } from 'lib/types';
@@ -22,8 +20,6 @@ const TEXT_LEFT = PADDING * 2 + CARD_WIDTH;
 const TEXT_WIDTH = WIDTH - TEXT_LEFT - PADDING;
 const PIP_SIZE = 44;
 const FONT_FAMILY = 'Noto Sans';
-const SAMPLE_SIZE = 30;
-const RESULT_LINES = 3;
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxLines: number): string[] {
   const lines: string[] = [];
@@ -71,20 +67,15 @@ async function loadCardImage(card: CardDetail): Promise<Image | undefined> {
 
 async function loadComboSummary(card: CardDetail) {
   if (!card.id) {
-    return { count: 0, results: [] as string[], legal: card.legalities.commander };
+    return { count: 0, legal: card.legalities.commander };
   }
   const page = await new VariantsApi(apiConfiguration()).variantsList({
     q: cardComboQuery(card, commanderFormatTerm(card.legalities.commander)),
     groupByCombo: false,
-    ordering: DEFAULT_ORDERING,
-    limit: SAMPLE_SIZE,
+    limit: 1,
     count: true,
   });
-  return {
-    count: page.count ?? page.results.length,
-    results: topResults(page.results, RESULT_LINES).map((result) => result.name),
-    legal: card.legalities.commander,
-  };
+  return { count: page.count ?? 0, legal: card.legalities.commander };
 }
 
 async function drawCardImage(card: CardDetail) {
@@ -144,14 +135,6 @@ async function drawCardImage(card: CardDetail) {
     TEXT_LEFT + countWidth + 16,
     y,
   );
-  y += 52;
-
-  ctx.fillStyle = '#dfdfdf';
-  ctx.font = `26px ${FONT_FAMILY}`;
-  for (const result of summary.results) {
-    ctx.fillText(wrapText(ctx, `• ${result}`, TEXT_WIDTH, 1)[0], TEXT_LEFT, y);
-    y += 38;
-  }
 
   const brand = 'Commander Spellbook';
   ctx.font = `bold 30px ${FONT_FAMILY}`;

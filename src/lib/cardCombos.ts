@@ -5,11 +5,6 @@ export interface CardPartner {
   count: number;
 }
 
-export interface CardResult {
-  name: string;
-  count: number;
-}
-
 function ranked<T>(entries: Map<string, { value: T; count: number; popularity: number }>, limit: number) {
   return [...entries.values()]
     .sort((a, b) => b.count - a.count || b.popularity - a.popularity)
@@ -29,19 +24,6 @@ export function topPartners(card: { id: number | null }, variants: Variant[], li
     }
   }
   return ranked(partners, limit).map(({ value, count }) => ({ card: value, count }));
-}
-
-export function topResults(variants: Variant[], limit: number): CardResult[] {
-  const results = new Map<string, { value: string; count: number; popularity: number }>();
-  for (const variant of variants) {
-    for (const name of new Set(variant.produces.map((produced) => produced.feature.name))) {
-      const entry = results.get(name) ?? { value: name, count: 0, popularity: 0 };
-      entry.count++;
-      entry.popularity += variant.popularity ?? 0;
-      results.set(name, entry);
-    }
-  }
-  return ranked(results, limit).map(({ value, count }) => ({ name: value, count }));
 }
 
 function trimmedCard(card: Card): Card {

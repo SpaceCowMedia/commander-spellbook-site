@@ -7,10 +7,6 @@ import { CardPageProps } from 'pages/card/[id]';
 
 const JSON_LD_COMBOS = 10;
 
-function lowerFirst(text: string): string {
-  return text.charAt(0).toLowerCase() + text.slice(1);
-}
-
 export function cardCanonicalPath(card: CardPageProps['card']): string {
   return `/card/${card.id || card.oracleId}/`;
 }
@@ -19,7 +15,7 @@ export function cardTitle({ card, combosCount }: CardPageProps): string {
   return withSiteName(combosCount > 0 ? `${card.name} Combos` : card.name);
 }
 
-export function cardSummary({ card, combosCount, formatTerm, results, partners }: CardPageProps): string {
+export function cardSummary({ card, combosCount, formatTerm, partners }: CardPageProps): string {
   if (combosCount === 0) {
     return `${card.name} (${card.typeLine}): rules text, legality, prices and the roles it can fill in combos.`;
   }
@@ -27,9 +23,6 @@ export function cardSummary({ card, combosCount, formatTerm, results, partners }
   const sentences = [
     `${card.name} is part of ${formatCount(combosCount)} ${pluralize('combo', combosCount)}${legality}`,
   ];
-  if (results.length > 0) {
-    sentences[0] += `, for ${formatList(results.slice(0, 3).map((result) => lowerFirst(result.name)))}`;
-  }
   if (partners.length > 0) {
     sentences.push(`Often combined with ${formatList(partners.slice(0, 2).map((partner) => partner.card.name))}`);
   }
