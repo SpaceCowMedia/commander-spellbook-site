@@ -25,8 +25,8 @@ export function comboSubtitle(cards: CardInVariant[], templates: TemplateInVaria
 }
 
 /* Plain-text rendering of the combo title, for contexts that cannot hold markup such as <title>
-   and og:title. Card names keep their raw "A-" alchemy prefix here; only ComboTitle swaps it
-   for the alchemy symbol. */
+   and og:title. Card names keep their raw "A-" alchemy prefix here; only the combo page banner
+   swaps it for the alchemy symbol. */
 export function comboTitleToText(
   cards: CardInVariant[],
   templates: TemplateInVariant[] = [],

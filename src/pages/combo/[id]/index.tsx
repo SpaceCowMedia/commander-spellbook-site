@@ -1,6 +1,6 @@
 import CardsBanner from 'components/card/CardsBanner/CardsBanner';
-import ComboTitle from 'components/combo/ComboTitle/ComboTitle';
-import { comboSubtitle } from 'lib/comboTitle';
+import CardName from 'components/layout/CardName/CardName';
+import { comboSubtitle, comboTitleCards, NO_CARDS_TITLE } from 'lib/comboTitle';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
 import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
@@ -117,7 +117,17 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
         />
         <CardsBanner
           cards={combo.uses}
-          title={<ComboTitle cards={combo.uses} />}
+          title={
+            combo.uses.length === 0
+              ? NO_CARDS_TITLE
+              : comboTitleCards(combo.uses).map(({ card, quantity }, index) => (
+                  <React.Fragment key={index}>
+                    {index > 0 && ' | '}
+                    {quantity > 1 && `${quantity} `}
+                    <CardName name={card.name} />
+                  </React.Fragment>
+                ))
+          }
           subtitle={comboSubtitle(combo.uses, combo.requires)}
           className="hidden sm:block"
         />
