@@ -11,11 +11,19 @@ interface Props {
   className?: string;
   disableMobileSingleClickAsPreview?: boolean;
   newTab?: boolean;
+  linkToEdhrec?: boolean;
 }
 
-const CardLink: React.FC<Props> = ({ card, children, className, disableMobileSingleClickAsPreview, newTab }) => {
+const CardLink: React.FC<Props> = ({
+  card,
+  children,
+  className,
+  disableMobileSingleClickAsPreview,
+  newTab,
+  linkToEdhrec,
+}) => {
   const router = useRouter();
-  const internalLink = cardPath(card);
+  const internalLink = linkToEdhrec ? undefined : cardPath(card);
   const link = internalLink ?? EDHRECService.getCardUrl(card.name);
   const opensNewTab = newTab || internalLink === undefined;
 
@@ -47,7 +55,13 @@ const CardLink: React.FC<Props> = ({ card, children, className, disableMobileSin
 
   if (opensNewTab) {
     return (
-      <ExternalLink className={className} href={link} onClick={handleSingleClick} onDoubleClick={handleDoubleClick}>
+      <ExternalLink
+        className={className}
+        href={link}
+        title={linkToEdhrec ? `Open ${card.name} on EDHREC, in a new tab` : undefined}
+        onClick={handleSingleClick}
+        onDoubleClick={handleDoubleClick}
+      >
         {children}
       </ExternalLink>
     );

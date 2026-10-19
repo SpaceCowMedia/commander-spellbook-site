@@ -22,6 +22,7 @@ describe('Card Page', () => {
   });
 
   it('links to the card references and vendors', () => {
+    cy.get('#card-details a[href="https://edhrec.com/cards/basalt-monolith"] img').should('exist');
     cy.get('#card-edhrec-link').should('have.attr', 'href', 'https://edhrec.com/cards/basalt-monolith');
     cy.get('#card-scryfall-link').should('have.attr', 'href').and('include', 'https://scryfall.com/search?q=');
     cy.get('#card-gatherer-link')
@@ -36,6 +37,11 @@ describe('Card Page', () => {
 
   it('explains its links with titles', () => {
     cy.get('#card-gatherer-link').should('have.attr', 'title', 'Open Basalt Monolith on Gatherer, in a new tab');
+    cy.get('#card-details a[href^="https://edhrec.com/"]').should(
+      'have.attr',
+      'title',
+      'Open Basalt Monolith on EDHREC, in a new tab',
+    );
     cy.get('#card-partners a[href="/card/2/"]').should('have.attr', 'title', 'Open Mesmeric Orb and its combos');
   });
 

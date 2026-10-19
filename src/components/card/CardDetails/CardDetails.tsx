@@ -70,7 +70,7 @@ const CardDetails: React.FC<Props> = ({ card, summary }) => {
   return (
     <section id="card-details" className={`${sections.section} ${styles.details}`}>
       <div className={styles.image}>
-        <CardImage card={card} noLink />
+        <CardImage card={card} linkToEdhrec />
       </div>
       <div className={styles.text}>
         <p className="mb-4">{summary}</p>

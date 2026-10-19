@@ -15,14 +15,14 @@ interface Props {
   className?: string;
   edible?: boolean;
   newTab?: boolean;
-  noLink?: boolean;
+  linkToEdhrec?: boolean;
 }
 
 function isLoaded(e: HTMLImageElement) {
   return e.complete && e.naturalHeight !== 0;
 }
 
-const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab, noLink }: Props) => {
+const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab, linkToEdhrec }: Props) => {
   const foolsDay = useFoolsDay();
   const { rootProps, frontClassName, backClassName } = useEdibleCard(!!edible);
   const plainCardBack = foolsDay ? weatheredCardBack.src : cardBack.src;
@@ -36,14 +36,17 @@ const CardImage: React.FC<Props> = ({ card, usedFace, className, edible, newTab,
   const [rotated, setRotated] = useState(false);
   const [readyToReveal, setReadyToReveal] = useState(false);
 
-  const linked = (image: React.ReactElement) =>
-    noLink ? (
-      <span className="relative">{image}</span>
-    ) : (
-      <CardLink className="relative" card={card} disableMobileSingleClickAsPreview={true} newTab={newTab}>
-        {image}
-      </CardLink>
-    );
+  const linked = (image: React.ReactElement) => (
+    <CardLink
+      className="relative"
+      card={card}
+      disableMobileSingleClickAsPreview={true}
+      newTab={newTab}
+      linkToEdhrec={linkToEdhrec}
+    >
+      {image}
+    </CardLink>
+  );
 
   const flip = () => {
     setBackFacing((prev) => !prev);
