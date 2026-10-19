@@ -1,6 +1,7 @@
 import { expectTransitionType, spyOnViewTransitions } from '../support/viewTransitions';
 
 const COMBOS_IN_DECK = '#combos-in-deck-section';
+const COMMANDER_COMBOS = '#commander-combos-section';
 const combosShown = () => cy.get(`${COMBOS_IN_DECK} a[href*="/combo/"]:has(.card-name)`);
 
 describe('Find My Combos', () => {
@@ -14,6 +15,23 @@ describe('Find My Combos', () => {
 
     cy.get('#decklist-card-count').should('contain', '2 cards');
     cy.get('#combos-in-deck-section').should('contain', '1 Combo Found').and('contain', 'Basalt Monolith');
+  });
+
+  it('lists the combos using the commander and searches all of them', () => {
+    cy.get('#commander-input').type('Basalt Monolith');
+    cy.get('#parse-decklist-input').click();
+
+    cy.get(COMMANDER_COMBOS)
+      .should('contain', '2 Combos Found Using Your Commander')
+      .and('contain', 'Forsaken Monument (not in deck)');
+    cy.contains(`${COMMANDER_COMBOS} a`, 'Show all 2 combos').click();
+
+    cy.location('pathname').should('eq', '/search/');
+    cy.get('input[name=q]').should(
+      'have.value',
+      'card="Basalt Monolith" ci:c (-is:commander OR commander="Basalt Monolith") (legal:commander)',
+    );
+    cy.get('a[href*="/combo/"]:has(.card-name)').should('have.length', 2);
   });
 
   it('can clear the decklist', () => {

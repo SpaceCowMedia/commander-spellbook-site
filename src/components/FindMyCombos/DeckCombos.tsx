@@ -1,7 +1,8 @@
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Decklist } from 'pages/find-my-combos';
-import { ResultType } from 'lib/findMyCombosResultsCache';
+import { CommanderCombos, ResultType } from 'lib/findMyCombosResultsCache';
 import pluralize from 'pluralize';
 import { Card, Deck, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
 import styles from './deckCombos.module.scss';
@@ -17,6 +18,7 @@ import countDeckCards from 'lib/countDeckCards';
 interface Props {
   currentlyParsedDeck?: Decklist;
   results: ResultType | undefined;
+  commanderCombos?: CommanderCombos;
   query: string;
 }
 
@@ -261,7 +263,32 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
   );
 };
 
-const DeckCombos = ({ results, query, currentlyParsedDeck }: Props) => {
+const CommanderSection: React.FC<{ commanderCombos: CommanderCombos; deck?: Deck }> = ({ commanderCombos, deck }) => {
+  const { query, combos, count } = commanderCombos;
+  const numberOfCommanders = deck?.commanders.length ?? 1;
+
+  if (!combos.length) {
+    return null;
+  }
+
+  return (
+    <section id="commander-combos-section">
+      <h2 className="heading-subtitle">
+        {count} {pluralize('Combo', count)} Found Using Your {pluralize('Commander', numberOfCommanders)}
+      </h2>
+      <p>
+        List of the most popular combos using {numberOfCommanders > 1 ? 'any of your commanders' : 'your commander'}{' '}
+        within your color identity, however many combo pieces your decklist is missing.
+      </p>
+      <ComboResults results={combos} deck={deck} sort={DEFAULT_SORT} hideVariants={true} />
+      <Link href={`/search/?q=${encodeURIComponent(query)}&groupByCombo=false`} className="button">
+        Show all {count} {pluralize('combo', count)}
+      </Link>
+    </section>
+  );
+};
+
+const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Props) => {
   const deckCardCounts = useMemo(() => countDeckCards(currentlyParsedDeck?.deck), [currentlyParsedDeck]);
 
   if (!results) {
@@ -328,6 +355,7 @@ const DeckCombos = ({ results, query, currentlyParsedDeck }: Props) => {
         deck={currentlyParsedDeck?.deck}
         deckCardCounts={deckCardCounts}
       />
+      {commanderCombos && <CommanderSection commanderCombos={commanderCombos} deck={currentlyParsedDeck?.deck} />}
     </div>
   );
 };

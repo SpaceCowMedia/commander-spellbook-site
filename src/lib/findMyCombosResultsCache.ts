@@ -16,10 +16,17 @@ export interface ResultType {
   almostIncludedByAddingColorsAndChangingCommanders: Variant[];
 }
 
+export interface CommanderCombos {
+  query: string;
+  combos: Variant[];
+  count: number;
+}
+
 export type ResultsCache = {
   deckJson: string;
   query: string;
   results: ResultType;
+  commanderCombos?: CommanderCombos;
   bracketInfo: EstimateBracketResult | undefined;
   scrollY: number;
 };
@@ -48,6 +55,9 @@ export const readResultsCache = (): ResultsCache | null => {
       deckJson: parsed.deckJson,
       query,
       results: parsed.results as unknown as ResultType,
+      commanderCombos: isRecord(parsed.commanderCombos)
+        ? (parsed.commanderCombos as unknown as CommanderCombos)
+        : undefined,
       bracketInfo: parsed.bracketInfo as EstimateBracketResult | undefined,
       scrollY: typeof parsed.scrollY === 'number' ? parsed.scrollY : 0,
     };

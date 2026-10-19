@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import {
   CardListFromTextApi,
   CardListFromUrlApi,
+  CardsApi,
   Deck,
   FindMyCombosApi,
   InvalidUrlResponse,
@@ -18,11 +19,13 @@ import {
   EstimateBracketApi,
   EstimateBracketResult,
   ExplainQueryApi,
+  VariantsApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { queryParameterAsString } from 'lib/queryParameters';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import {
+  CommanderCombos,
   DEFAULT_FIND_MY_COMBOS_QUERY,
   ResultType,
   clearResultsCache,
@@ -43,10 +46,12 @@ import useFoolsDay from 'lib/foolsDay';
 import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
 import SearchInput from 'components/ui/SearchInput/SearchInput';
 import { useDebounce } from 'use-debounce';
+import commanderCombosQuery from 'lib/commanderCombosQuery';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 const LOCAL_STORAGE_QUERY_STORAGE_KEY = 'commander-spellbook-combo-finder-last-query';
 const EXPLANATION_DELAY = 300;
+const COMMANDER_COMBOS_PREVIEW_SIZE = 12;
 
 // A term starts the query or follows whitespace, a parenthesis or a boolean operator alias, but not the
 // `-` that negates it: excluding Commander-legal combos is no reason to estimate a Commander bracket.
@@ -108,6 +113,7 @@ const FindMyCombos: React.FC = () => {
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
+  const [commanderCombos, setCommanderCombos] = useState<CommanderCombos>();
   const [bracketInfo, setBracketInfo] = useState<EstimateBracketResult>();
   const foolsDay = useFoolsDay();
   // When restoring from cache, hold the target scroll position until `results` commits.
@@ -117,6 +123,8 @@ const FindMyCombos: React.FC = () => {
   const configuration = apiConfiguration();
   const findMyCombosApi = new FindMyCombosApi(configuration);
   const estimateBracketApi = new EstimateBracketApi(configuration);
+  const variantsApi = new VariantsApi(configuration);
+  const cardsApi = new CardsApi(configuration);
   const cardListFromUrlApi = new CardListFromUrlApi(configuration);
   const cardListFromTextApi = new CardListFromTextApi(configuration);
 
@@ -241,6 +249,40 @@ const FindMyCombos: React.FC = () => {
     setLookupInProgress(false);
   };
 
+  // Exact names come first, but a name matching no card still returns the cards that contain it.
+  const findCard = async (name: string) => {
+    const { results } = await cardsApi.cardsList({ q: name, limit: 1 });
+    return results.find((card) => normalizeStringInput(card.name) === normalizeStringInput(name));
+  };
+
+  const lookupCommanderCombos = async (decklist: Decklist, queryValue: string): Promise<void> => {
+    setCommanderCombos(undefined);
+    let found: CommanderCombos | undefined;
+    try {
+      const commanders = (await Promise.all(decklist.deck.commanders.map(({ card }) => findCard(card)))).filter(
+        (card) => card !== undefined,
+      );
+      if (commanders.length) {
+        const query = commanderCombosQuery(commanders, queryValue);
+        const page = await variantsApi.variantsList({
+          q: query,
+          groupByCombo: false,
+          limit: COMMANDER_COMBOS_PREVIEW_SIZE,
+          ordering: DEFAULT_ORDERING,
+          count: true,
+        });
+        found = { query, combos: page.results, count: page.count ?? page.results.length };
+      }
+    } catch (error) {
+      console.error('Failed to fetch the combos of the commanders', error);
+    }
+    setCommanderCombos(found);
+    mergeResultsCache({
+      deckJson: JSON.stringify(DeckToJSON(decklist.deck)),
+      commanderCombos: found,
+    });
+  };
+
   const lookupBracket = async (decklist: Decklist): Promise<void> => {
     try {
       const bracketInfo = await estimateBracketApi.estimateBracketCreate({
@@ -265,6 +307,7 @@ const FindMyCombos: React.FC = () => {
     setDeckUrlHint('');
     setDecklistErrors([]);
     setResults(undefined);
+    setCommanderCombos(undefined);
     setBracketInfo(undefined);
     setQuery(DEFAULT_FIND_MY_COMBOS_QUERY);
     setAnalyzedQuery(DEFAULT_FIND_MY_COMBOS_QUERY);
@@ -279,6 +322,7 @@ const FindMyCombos: React.FC = () => {
   const analyzeDeck = (decklist: Decklist, queryValue: string) => {
     lookupCombos(decklist, queryValue);
     lookupBracket(decklist);
+    lookupCommanderCombos(decklist, queryValue);
   };
 
   const tryHydrateFromCache = (decklist: Decklist): boolean => {
@@ -296,6 +340,7 @@ const FindMyCombos: React.FC = () => {
     }
     pendingScrollY.current = cache.scrollY;
     setResults(cache.results);
+    setCommanderCombos(cache.commanderCombos);
     setBracketInfo(cache.bracketInfo);
     setQuery(cache.query);
     setAnalyzedQuery(cache.query);
@@ -675,7 +720,12 @@ const FindMyCombos: React.FC = () => {
                 {
                   title: <>Combos&nbsp;{lookupInProgress && <Loader />}</>,
                   content: (
-                    <DeckCombos results={results} query={analyzedQuery} currentlyParsedDeck={currentlyParsedDeck} />
+                    <DeckCombos
+                      results={results}
+                      commanderCombos={commanderCombos}
+                      query={analyzedQuery}
+                      currentlyParsedDeck={currentlyParsedDeck}
+                    />
                   ),
                 },
                 {
@@ -690,7 +740,12 @@ const FindMyCombos: React.FC = () => {
               ]}
             />
           ) : (
-            <DeckCombos results={results} query={analyzedQuery} currentlyParsedDeck={currentlyParsedDeck} />
+            <DeckCombos
+              results={results}
+              commanderCombos={commanderCombos}
+              query={analyzedQuery}
+              currentlyParsedDeck={currentlyParsedDeck}
+            />
           ))}
       </div>
     </>
