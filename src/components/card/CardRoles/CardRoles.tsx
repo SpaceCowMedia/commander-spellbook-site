@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { CardDetail, FeatureStatusEnum, Template } from '@space-cow-media/spellbook-client';
+import { CardDetail, FeatureStatusEnum, TemplateDetail } from '@space-cow-media/spellbook-client';
 import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
 import { quotedSearchValue, searchPath } from 'lib/cards';
 import sections from '../cardSections.module.scss';
 
 interface Props {
   card: CardDetail;
-  templates: Template[];
+  templates: TemplateDetail[];
 }
 
 const Chip: React.FC<{ href?: string; title?: string; children: React.ReactNode }> = ({ href, title, children }) =>

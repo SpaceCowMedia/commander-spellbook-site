@@ -1,7 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { CardDetail, CardsApi, Template, TemplatesApi, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
+import {
+  CardDetail,
+  CardsApi,
+  TemplateDetail,
+  TemplatesApi,
+  Variant,
+  VariantsApi,
+} from '@space-cow-media/spellbook-client';
 import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
 import CardsBanner from 'components/card/CardsBanner/CardsBanner';
 import CardName from 'components/layout/CardName/CardName';
@@ -44,7 +51,7 @@ export interface CardPageProps {
   combos: Variant[];
   sampleSize: number;
   partners: CardPartner[];
-  templates: Template[];
+  templates: TemplateDetail[];
 }
 
 const CardPage: React.FC<CardPageProps> = (props) => {
@@ -185,9 +192,9 @@ export const getStaticProps: GetStaticProps<CardPageProps, { id: string }> = asy
   }
 
   const templates = new TemplatesApi(configuration)
-    .templatesList({ matches: [canonicalId], limit: TEMPLATE_LIMIT })
+    .templatesList({ matches: [canonicalId], ordering: '-variant_count,name', limit: TEMPLATE_LIMIT })
     .then(
-      (page) => page.results,
+      (page) => page.results.filter((template) => template.variantCount > 0),
       (error) => {
         console.error(`Error fetching the templates of card ${canonicalId}`, error);
         return null;
