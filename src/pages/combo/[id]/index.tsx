@@ -1,4 +1,6 @@
-import CardHeader from '../../../components/combo/CardHeader/CardHeader';
+import CardsBanner from 'components/card/CardsBanner/CardsBanner';
+import ComboTitle from 'components/combo/ComboTitle/ComboTitle';
+import { comboSubtitle } from 'lib/comboTitle';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
 import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
@@ -24,7 +26,7 @@ import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
+import { getNameWithUsedFace } from 'lib/types';
 import { SpoilerContext } from 'lib/spoilers';
 import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
 import ComboMeta from 'components/combo/ComboMeta/ComboMeta';
@@ -79,7 +81,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   }, [combo]);
 
   if (combo) {
-    const cardArts = combo.uses.map(getUsedFaceArtCrop).filter((uri) => uri != null);
     const cardNamesWithQuantities: ComboListItem[] = combo.uses.map((card) => ({
       text: card.quantity > 1 ? `${card.quantity} ${getNameWithUsedFace(card)}` : getNameWithUsedFace(card),
       icon: 'card',
@@ -114,7 +115,12 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
           imageAlt={`Summary of the ${comboName(combo)}`}
           jsonLd={comboJsonLd(combo, description)}
         />
-        <CardHeader cardsArt={cardArts} cards={combo.uses} templates={combo.requires} />
+        <CardsBanner
+          cards={combo.uses}
+          title={<ComboTitle cards={combo.uses} />}
+          subtitle={comboSubtitle(combo.uses, combo.requires)}
+          className="hidden sm:block"
+        />
         <CardGroup key={combo.id} cards={combo.uses} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">

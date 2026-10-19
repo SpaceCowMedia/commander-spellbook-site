@@ -13,7 +13,7 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import Loader from 'components/layout/Loader/Loader';
 import Icon from 'components/layout/Icon/Icon';
 import SaltSlider from 'components/salt/SaltSlider/SaltSlider';
-import { comboTitleToText } from 'components/combo/CardHeader/CardHeader';
+import { comboTitleToText } from 'lib/comboTitle';
 import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';

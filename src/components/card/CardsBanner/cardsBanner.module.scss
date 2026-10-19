@@ -1,7 +1,11 @@
 @reference "../../../assets/globals.css";
 
 .banner {
-  @apply relative flex w-full h-40 sm:h-64 overflow-hidden bg-dark;
+  @apply relative w-full h-40 sm:h-64 overflow-hidden bg-dark;
+}
+
+.arts {
+  @apply flex h-full;
 }
 
 .art {
@@ -21,19 +25,20 @@
 }
 
 .mask {
-  @apply absolute inset-0 bg-dark opacity-75;
+  @apply absolute inset-0 bg-dark opacity-80;
 }
 
-.titleWrapper {
+.content {
   @apply absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4;
 }
 
-.title {
-  @apply font-title uppercase text-2xl sm:text-4xl lg:text-5xl text-white my-0;
+.title,
+.subtitle {
+  @apply font-title uppercase text-xl -mt-2 mb-4;
 }
 
-.subtitle {
-  @apply mt-2 text-base sm:text-lg opacity-90;
+.title {
+  @apply md:text-2xl lg:text-3xl xl:text-4xl;
 }
 
 @keyframes drift {

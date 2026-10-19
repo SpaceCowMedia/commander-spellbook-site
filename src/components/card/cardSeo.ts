@@ -1,9 +1,9 @@
 import pluralize from 'pluralize';
 import EDHRECService from 'services/edhrec.service';
 import { scryfallCardUrl } from 'services/scryfall.service';
-import { comboTitleToText } from 'components/combo/CardHeader/CardHeader';
+import { comboTitleToText } from 'lib/comboTitle';
 import { absoluteUrl, formatCount, formatList, truncateDescription, websiteJsonLd, withSiteName } from 'lib/seo';
-import { CardPageProps } from './cardPageData';
+import { CardPageProps } from 'pages/card/[id]';
 
 const JSON_LD_COMBOS = 10;
 

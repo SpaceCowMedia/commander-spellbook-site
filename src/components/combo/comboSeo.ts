@@ -1,6 +1,6 @@
 import pluralize from 'pluralize';
 import { Variant } from '@space-cow-media/spellbook-client';
-import { comboTitleToText } from './CardHeader/CardHeader';
+import { comboTitleToText } from 'lib/comboTitle';
 import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
 import { cardPath } from 'lib/cards';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
