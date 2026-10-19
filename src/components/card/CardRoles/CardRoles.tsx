@@ -60,7 +60,7 @@ const CardRoles: React.FC<Props> = ({ card, formatTerm, results, templates }) =>
       )}
       {(templates.length > 0 || features.length > 0) && (
         <section id="card-roles" className={sections.section}>
-          <h2 className={sections.sectionTitle}>Combo roles</h2>
+          <h2 className={sections.sectionTitle}>Roles in combos</h2>
           {templates.length > 0 && (
             <>
               <p className={sections.sectionNote}>

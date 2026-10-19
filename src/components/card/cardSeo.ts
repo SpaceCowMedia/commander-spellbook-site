@@ -21,7 +21,7 @@ export function cardTitle({ card, combosCount }: CardPageProps): string {
 
 export function cardSummary({ card, combosCount, formatTerm, results, partners }: CardPageProps): string {
   if (combosCount === 0) {
-    return `${card.name} (${card.typeLine}): rules text, legality, prices and the combo roles it can fill.`;
+    return `${card.name} (${card.typeLine}): rules text, legality, prices and the roles it can fill in combos.`;
   }
   const legality = formatTerm === 'legal:commander' ? ' legal in Commander' : '';
   const sentences = [
