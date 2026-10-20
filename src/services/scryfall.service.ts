@@ -1,5 +1,11 @@
 import { ScryfallCard, ScryfallError, ScryfallList } from '@scryfall/api-types';
-import { ReplacementCard, ReplacementsPage } from 'lib/types';
+import { getFaceNames, ReplacementCard, ReplacementsPage } from 'lib/types';
+
+export function scryfallCardUrl(cardName: string): string {
+  const name = getFaceNames(cardName)[0];
+  const quote = name.includes('"') ? "'" : '"';
+  return `https://scryfall.com/search?q=${encodeURIComponent(`!${quote}${name}${quote}`)}`;
+}
 
 const SEARCH_URL = 'https://api.scryfall.com/cards/search';
 /* Accept is all a search sends: the browser keeps its own User-Agent and needs no CORS preflight. */
@@ -28,6 +34,8 @@ function getScryfallImage(card: ScryfallCard.Any): string[] {
 function toReplacementCard(card: ScryfallCard.Any): ReplacementCard {
   return {
     id: card.id,
+    cardId: null,
+    oracleId: 'oracle_id' in card ? card.oracle_id : null,
     name: card.name,
     images: getScryfallImage(card),
     spoiler: Date.parse(card.released_at) > Date.now(),

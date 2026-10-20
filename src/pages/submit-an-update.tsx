@@ -4,6 +4,7 @@ import { withApiErrorPage } from 'lib/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';
+import { NewTabContext } from 'lib/newTab';
 
 interface Props {
   comboId?: string;
@@ -16,7 +17,9 @@ const SubmitAnUpdate: React.FC<Props> = ({ comboId }) => {
         title="Commander Spellbook: How to Submit an Update"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
       />
-      <UpdateSubmissionForm comboId={comboId} />
+      <NewTabContext value>
+        <UpdateSubmissionForm comboId={comboId} />
+      </NewTabContext>
     </>
   );
 };
@@ -32,7 +35,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {
-        destination: `/login?final=${context.resolvedUrl}`,
+        destination: `/login/?${new URLSearchParams({ final: context.resolvedUrl })}`,
         permanent: false,
       },
     };

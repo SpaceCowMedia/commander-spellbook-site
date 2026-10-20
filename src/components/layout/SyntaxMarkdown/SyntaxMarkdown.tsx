@@ -1,5 +1,7 @@
 import Markdown from 'markdown-to-jsx';
+import Link from 'next/link';
 import Alert from '../Alert/Alert';
+import ExternalLink from '../ExternalLink/ExternalLink';
 import React, { AnchorHTMLAttributes } from 'react';
 
 interface Props {
@@ -87,15 +89,12 @@ const SyntaxMarkdown: React.FC<Props> = ({ children }) => {
             },
           },
           a: {
-            component: (props: AnchorHTMLAttributes<HTMLAnchorElement>) => (
-              <a
-                href={props.href}
-                target={props.href?.startsWith('http') ? '_blank' : '_self'}
-                rel="noopener noreferrer"
-              >
-                {props.children}
-              </a>
-            ),
+            component: ({ href = '', children }: AnchorHTMLAttributes<HTMLAnchorElement>) =>
+              href.startsWith('http') ? (
+                <ExternalLink href={href}>{children}</ExternalLink>
+              ) : (
+                <Link href={href}>{children}</Link>
+              ),
           },
           hr: {
             props: {

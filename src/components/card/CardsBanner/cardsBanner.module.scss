@@ -1,0 +1,52 @@
+@reference "../../../assets/globals.css";
+
+.banner {
+  @apply relative w-full h-40 sm:h-64 overflow-hidden bg-dark;
+}
+
+.arts {
+  @apply flex h-full;
+}
+
+.art {
+  @apply h-full grow object-cover min-w-0;
+}
+
+.noArt {
+  @apply grow;
+
+  background: linear-gradient(120deg, var(--color-dark), var(--color-primary), var(--color-dark));
+  background-size: 300% 300%;
+  animation: drift 8s ease-in-out infinite alternate;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.mask {
+  @apply absolute inset-0 bg-dark opacity-80;
+}
+
+.content {
+  @apply absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4;
+}
+
+.title,
+.subtitle {
+  @apply font-title uppercase text-xl -mt-2 mb-4;
+}
+
+.title {
+  @apply md:text-2xl lg:text-3xl xl:text-4xl;
+}
+
+@keyframes drift {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 100% 50%;
+  }
+}

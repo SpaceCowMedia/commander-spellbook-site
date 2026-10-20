@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
 import ExternalLink from '../components/layout/ExternalLink/ExternalLink';
 import TextWithMagicSymbol from '../components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
@@ -306,7 +307,7 @@ const StyleGuide: React.FC = () => {
             In some cases, a triggered ability may occur in between paying the cost of and the resolution of a spell or
             activated ability, or priority may be held and additional spells may be cast or activated abilities may be
             activated. See&nbsp;
-            <a href="#delayed-resolution">Delayed Resolution</a> for how to handle such cases.
+            <Link href="#delayed-resolution">Delayed Resolution</Link> for how to handle such cases.
           </li>
         </ul>
 
@@ -320,7 +321,7 @@ const StyleGuide: React.FC = () => {
               <li>
                 In some cases, something else will be put onto the stack before the one spell, ability, or trigger is
                 able to resolve. See&nbsp;
-                <a href="#delayed-resolution">Delayed Resolution</a> for how to handle such cases.
+                <Link href="#delayed-resolution">Delayed Resolution</Link> for how to handle such cases.
               </li>
             </ul>
           </li>

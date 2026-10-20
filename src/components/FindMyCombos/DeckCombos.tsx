@@ -14,6 +14,7 @@ import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import ComboResultFrame from 'components/search/ComboResultFrame/ComboResultFrame';
 import { DEFAULT_SORT } from 'lib/constants';
 import countDeckCards from 'lib/countDeckCards';
+import { cardPath } from 'lib/cards';
 
 interface Props {
   currentlyParsedDeck?: Decklist;
@@ -46,12 +47,13 @@ interface MissingCardPreviewProps {
   card: Card;
   className: string;
   fallbackClassName: string;
+  interactive?: boolean;
 }
 
-const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({ card, className, fallbackClassName }) => {
+const MissingCardPreview: React.FC<MissingCardPreviewProps> = ({ card, className, fallbackClassName, interactive }) => {
   const imageUri = card.imageUriFrontNormal;
   return (
-    <SpoilerFog name={card.name} spoiler={card.spoiler} className={className}>
+    <SpoilerFog name={card.name} spoiler={card.spoiler} interactive={interactive} className={className}>
       {imageUri ? (
         <img src={imageUri} alt={`Preview of ${card.name}`} />
       ) : (
@@ -220,25 +222,31 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
           <Modal open={!!expandedGroup} onClose={() => setExpandedGroupKey(undefined)} closeIcon={true} size="large">
             {expandedGroup && (
               <div className={styles.groupModalContent}>
-                <div className={styles.groupModalHeader}>
-                  <CardTooltip card={expandedGroup.card}>
+                <Link
+                  href={cardPath(expandedGroup.card) ?? '#'}
+                  prefetch={false}
+                  className={styles.groupModalHeader}
+                  title={`Open ${expandedGroup.card.name} and its combos`}
+                >
+                  <CardTooltip card={expandedGroup.card} disableTapPreview>
                     <MissingCardPreview
                       card={expandedGroup.card}
                       className={styles.groupModalPreview}
                       fallbackClassName={styles.groupCardPreviewFallback}
+                      interactive={false}
                     />
                   </CardTooltip>
                   <div className={styles.groupModalCopy}>
                     <p className={styles.groupModalLabel}>Missing card</p>
                     <h3 className={styles.groupModalTitle}>
-                      <CardTooltip card={expandedGroup.card}>
+                      <CardTooltip card={expandedGroup.card} disableTapPreview>
                         <span className={styles.groupModalCardName}>
                           <CardName name={expandedGroup.card.name} />
                         </span>
                       </CardTooltip>
                     </h3>
                   </div>
-                </div>
+                </Link>
                 <p className={styles.groupModalDescription}>
                   This cluster contains {expandedGroup.combos.length} {pluralize('combo', expandedGroup.combos.length)}{' '}
                   that all miss this single piece.

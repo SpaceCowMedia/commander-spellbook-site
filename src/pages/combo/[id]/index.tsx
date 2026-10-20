@@ -1,4 +1,6 @@
-import CardHeader, { comboTitleToText } from '../../../components/combo/CardHeader/CardHeader';
+import CardsBanner from 'components/card/CardsBanner/CardsBanner';
+import CardName from 'components/layout/CardName/CardName';
+import { comboSubtitle, comboTitleCards, NO_CARDS_TITLE } from 'lib/comboTitle';
 import CardGroup from '../../../components/combo/CardGroup/CardGroup';
 import ColorIdentity from '../../../components/layout/ColorIdentity/ColorIdentity';
 import ComboList, { ComboListItem } from '../../../components/combo/ComboList/ComboList';
@@ -23,12 +25,20 @@ import BulkApiService from 'services/bulk-api.service';
 import Loader from 'components/layout/Loader/Loader';
 import ComboResults from 'components/search/ComboResults/ComboResults';
 import Link from 'next/link';
-import Icon from 'components/layout/Icon/Icon';
 import { DEFAULT_ORDERING } from 'lib/constants';
-import { getNameWithUsedFace, getUsedFaceArtCrop } from 'lib/types';
+import { getNameWithUsedFace } from 'lib/types';
 import { SpoilerContext } from 'lib/spoilers';
 import useFoolsDay, { bonusResult, explanationStep } from 'lib/foolsDay';
 import ComboMeta from 'components/combo/ComboMeta/ComboMeta';
+import LegalityTable from 'components/layout/LegalityTable/LegalityTable';
+import {
+  comboCanonicalPath,
+  comboDescription,
+  comboImageUrl,
+  comboJsonLd,
+  comboName,
+  comboTitle,
+} from 'components/combo/comboSeo';
 
 interface Props {
   combo?: Variant;
@@ -36,10 +46,6 @@ interface Props {
 }
 
 const MAX_VARIANTS_COUNT = 50;
-
-function booleanToIcon(value: boolean) {
-  return value ? <Icon name={'check'} className="text-green-500" /> : <Icon name={'cross'} className="text-red-500" />;
-}
 
 const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   const [variants, setVariants] = useState<Variant[]>();
@@ -75,7 +81,6 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
   }, [combo]);
 
   if (combo) {
-    const cardArts = combo.uses.map(getUsedFaceArtCrop).filter((uri) => uri != null);
     const cardNamesWithQuantities: ComboListItem[] = combo.uses.map((card) => ({
       text: card.quantity > 1 ? `${card.quantity} ${getNameWithUsedFace(card)}` : getNameWithUsedFace(card),
       icon: 'card',
@@ -94,18 +99,38 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
       .filter((feature) => feature.feature.name.toLowerCase() !== 'lock')
       .map((feature) => (feature.quantity > 1 ? `${feature.quantity} ${feature.feature.name}` : feature.feature.name));
 
+    const description = comboDescription(combo, results, stepCount);
+
     return (
       <SpoilerContext value={combo.spoiler}>
         <SpellbookHead
-          title={comboTitleToText(combo.uses, combo.requires)}
-          description={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
+          title={comboTitle(combo)}
+          description={description}
+          socialDescription={results.reduce((str, result) => str + `\n  * ${result}`, 'Combo Results:')}
           // A search hands its query over through the URL before the search bar drops it, so the
           // combo is indexed under its plain address rather than once per query that leads to it.
-          canonicalPath={`/combo/${combo.id}/`}
+          canonicalPath={comboCanonicalPath(combo)}
           // Image URL must be absolute to properly work on Reddit, even though the specification says it can be relative
-          imageUrl={`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/combo/${combo.id}/generate-image`}
+          imageUrl={comboImageUrl(combo)}
+          imageAlt={`Summary of the ${comboName(combo)}`}
+          jsonLd={comboJsonLd(combo, description)}
         />
-        <CardHeader cardsArt={cardArts} cards={combo.uses} templates={combo.requires} />
+        <CardsBanner
+          cards={combo.uses}
+          title={
+            combo.uses.length === 0
+              ? NO_CARDS_TITLE
+              : comboTitleCards(combo.uses).map(({ card, quantity }, index) => (
+                  <React.Fragment key={index}>
+                    {index > 0 && ' | '}
+                    {quantity > 1 && `${quantity} `}
+                    <CardName name={card.name} />
+                  </React.Fragment>
+                ))
+          }
+          subtitle={comboSubtitle(combo.uses, combo.requires)}
+          className="hidden sm:block"
+        />
         <CardGroup key={combo.id} cards={combo.uses} templates={combo.requires} />
         <div className="container md:flex flex-row">
           <div className="w-full md:w-2/3">
@@ -190,80 +215,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
               combo={combo}
             />
 
-            <table className={styles.legalityTable}>
-              <thead>
-                <tr>
-                  <th>Legality</th>
-                  <th>Format</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.commander)}</td>
-                  <td>Commander</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.pauperCommander)}</td>
-                  <td>Pauper Commander</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.pauperCommanderMain)}</td>
-                  <td>Pauper Commander in 99</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.oathbreaker)}</td>
-                  <td>Oathbreaker</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.predh)}</td>
-                  <td>PreDH</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.alchemy)}</td>
-                  <td>Alchemy</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.standardBrawl)}</td>
-                  <td>Standard Brawl</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.brawl)}</td>
-                  <td>Brawl</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.competitiveBrawl)}</td>
-                  <td>Competitive Brawl</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.standard)}</td>
-                  <td>Standard</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.pioneer)}</td>
-                  <td>Pioneer</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.modern)}</td>
-                  <td>Modern</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.premodern)}</td>
-                  <td>Premodern</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.pauper)}</td>
-                  <td>Pauper</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.legacy)}</td>
-                  <td>Legacy</td>
-                </tr>
-                <tr>
-                  <td>{booleanToIcon(combo.legalities.vintage)}</td>
-                  <td>Vintage</td>
-                </tr>
-              </tbody>
-            </table>
+            <LegalityTable legalities={combo.legalities} />
           </aside>
         </div>
         <div className="container flex-row">
@@ -317,6 +269,7 @@ const Combo: React.FC<Props> = ({ combo, alternatives }) => {
         <SpellbookHead
           title="Combo Not Found"
           description="The combo you are looking for could not be found. Here are some similar alternatives."
+          noindex
         />
         <div className="static-page">
           <NoCombosFound single={true} alternatives={alternatives} criteria="similar" />

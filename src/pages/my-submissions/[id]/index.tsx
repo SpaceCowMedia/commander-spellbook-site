@@ -2,6 +2,7 @@ import React from 'react';
 import SpellbookHead from '../../../components/SpellbookHead/SpellbookHead';
 import { withApiErrorPage } from 'lib/apiErrorPage';
 import ComboSubmissionForm from 'components/submission/ComboSubmissionForm/ComboSubmissionForm';
+import { NewTabContext } from 'lib/newTab';
 import { apiConfiguration } from 'services/api.service';
 import { VariantSuggestion, VariantSuggestionsApi } from '@space-cow-media/spellbook-client';
 import CookieService from 'services/cookie.service';
@@ -18,7 +19,9 @@ const EditSubmission: React.FC<Props> = ({ submission }) => {
         title="Commander Spellbook: Update Combo Submission"
         description="Changed your mind? Edit your combo submission."
       />
-      <ComboSubmissionForm submission={submission} />
+      <NewTabContext value>
+        <ComboSubmissionForm submission={submission} />
+      </NewTabContext>
     </>
   );
 };

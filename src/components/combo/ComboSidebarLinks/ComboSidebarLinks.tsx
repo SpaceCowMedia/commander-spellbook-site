@@ -1,11 +1,13 @@
 import BuyComboButtons from './BuyComboButtons/BuyComboButtons';
 import EdhrecLink from './EdhrecLink/EdhrecLink';
 import Link from 'next/link';
-import ShareComboButtons from './ShareComboButtons/ShareComboButtons';
+import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
+import ShareButtons from 'components/layout/ShareButtons/ShareButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
 import { Variant } from '@space-cow-media/spellbook-client';
 import useCookie from 'lib/useCookie';
+import { absoluteUrl } from 'lib/seo';
 
 interface Props {
   cards: string[];
@@ -38,15 +40,20 @@ const ComboSidebarLinks: React.FC<Props> = ({
         </Link>
         <Embed combo={combo} />
         {csbIsStaff === 'true' && (
-          <Link
+          <ExternalLink
             id="edit-combo-button"
             className="button w-full"
             href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/admin/spellbook/variant/${comboId}/change/`}
           >
             Edit this Combo
-          </Link>
+          </ExternalLink>
         )}
-        <ShareComboButtons comboId={combo.id} />
+        <ShareButtons
+          link={absoluteUrl(`/combo/${combo.id}/`)}
+          text="Check out this combo!"
+          subject="Combo"
+          analyticsCategory="Combo Detail Page Actions"
+        />
       </div>
     </div>
   );

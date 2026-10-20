@@ -17,6 +17,7 @@ const ExternalLink: React.FC<Props> = (props) => {
     delete attributes.href;
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   return <a {...attributes}>{children}</a>;
 };
 

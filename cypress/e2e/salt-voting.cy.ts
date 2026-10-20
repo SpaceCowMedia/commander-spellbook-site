@@ -52,7 +52,11 @@ describe('Salt Voting', () => {
         cy.intercept(QUEUE, [combo]).as('queue');
       });
     });
-    cy.visit('/salt/');
+    cy.visit('/salt/', {
+      onBeforeLoad(win) {
+        cy.spy(win.document, 'addEventListener').withArgs('focusin').as('tooltipFocusListener');
+      },
+    });
     cy.wait('@queue');
 
     cy.get('#salt-voting-combo [data-zone]').should((symbols) => {
@@ -65,6 +69,8 @@ describe('Salt Voting', () => {
     cy.get('#salt-voting-combo [data-zone="E"]').prev().should('have.text', 'or');
     cy.get('#salt-voting-combo [aria-label="Must be your commander"]').should('exist');
 
+    // react-tooltip starts listening for focus from an effect, which can run after Cypress has found the symbol.
+    cy.get('@tooltipFocusListener').should('have.been.called');
     cy.get('#salt-voting-combo [data-zone="B"]').focus();
     cy.get('[role="tooltip"]').should('be.visible').and('have.text', 'Starts on the battlefield');
   });

@@ -41,10 +41,28 @@ const VALIDATION_MAX_RETRIES = 3;
 interface Props {
   submission?: VariantSuggestion;
   variant?: Variant;
+  card?: string;
 }
 
-const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
-  const backupKey = submission ? `submission-${submission.id}` : variant ? `variant-${variant.id}` : '';
+const newCard = (card = ''): CardUsedInVariantSuggestionRequest => ({
+  card,
+  quantity: 1,
+  zoneLocations: [],
+  battlefieldCardState: '',
+  exileCardState: '',
+  graveyardCardState: '',
+  libraryCardState: '',
+  mustBeCommander: false,
+});
+
+const CombSubmissionForm: React.FC<Props> = ({ submission, variant, card: prefilledCard }) => {
+  const backupKey = submission
+    ? `submission-${submission.id}`
+    : variant
+      ? `variant-${variant.id}`
+      : prefilledCard
+        ? `card-${prefilledCard}`
+        : '';
   const router = useRouter();
   const [suggestionRequestBackup, setSuggestionRequestBackup] = useState<
     Record<string, VariantSuggestionRequest> | undefined
@@ -66,7 +84,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         libraryCardState: c.libraryCardState,
         mustBeCommander: c.mustBeCommander,
       })) ??
-      [],
+      (prefilledCard ? [newCard(prefilledCard)] : []),
   );
   const [templates, setTemplates] = useState<TemplateRequiredInVariantSuggestionRequest[]>(
     () =>
@@ -327,19 +345,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
   ]);
 
   const handleAddCard = () => {
-    setCards([
-      ...cards,
-      {
-        card: '',
-        quantity: 1,
-        zoneLocations: [],
-        battlefieldCardState: '',
-        exileCardState: '',
-        graveyardCardState: '',
-        libraryCardState: '',
-        mustBeCommander: false,
-      },
-    ]);
+    setCards([...cards, newCard()]);
     cardKeys.add();
   };
 
@@ -757,7 +763,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant }) => {
         />
         {variantOfPreview && (
           <div className="flex justify-center pt-3">
-            <ComboResult combo={variantOfPreview} hideVariants newTab />
+            <ComboResult combo={variantOfPreview} hideVariants />
           </div>
         )}
       </section>

@@ -1,7 +1,7 @@
 import React, { addTransitionType, startTransition, useEffect, useRef, useState, ViewTransition } from 'react';
 import Icon from 'components/layout/Icon/Icon';
-import edhrecService from 'services/edhrec.service';
 import { ReplacementsPage } from 'lib/types';
+import CardLink from 'components/layout/CardLink/CardLink';
 import Loader from 'components/layout/Loader/Loader';
 import SpoilerFog from 'components/layout/SpoilerFog/SpoilerFog';
 import { useSwipeable } from 'react-swipeable';
@@ -166,11 +166,10 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults, morphName, onCurr
             </div>
           ) : (
             <SpoilerFog name={current.name} spoiler={current.spoiler} className="h-full">
-              <a
+              <CardLink
                 className="h-full"
-                href={edhrecService.getCardUrl(current.name ?? '')}
-                target="_blank"
-                rel="noopener noreferrer"
+                card={{ id: current.cardId, oracleId: current.oracleId, name: current.name }}
+                disableMobileSingleClickAsPreview
               >
                 {morphName ? (
                   <ViewTransition name={morphName} share={TEMPLATE_MORPH_SHARE} default="none">
@@ -179,7 +178,7 @@ const ScryfallResultsWheel: React.FC<Props> = ({ fetchResults, morphName, onCurr
                 ) : (
                   image
                 )}
-              </a>
+              </CardLink>
             </SpoilerFog>
           )}
         </ViewTransition>

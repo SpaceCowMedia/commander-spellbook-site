@@ -7,7 +7,7 @@ import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicS
 import CardName from '../../layout/CardName/CardName';
 import pluralize from 'pluralize';
 import { CardPrices, ColorEnum, Variant } from '@space-cow-media/spellbook-client';
-import React from 'react';
+import React, { useContext } from 'react';
 import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
 import Icon from 'components/layout/Icon/Icon';
 import { IS_LOCK } from 'lib/constants';
@@ -16,6 +16,7 @@ import { queryParameterAsString } from 'lib/queryParameters';
 import { getTemplateNameSummary } from 'lib/types';
 import useFoolsDay, { bonusResult } from 'lib/foolsDay';
 import { formatSalt, MAX_SALT } from 'lib/salt';
+import { NewTabContext } from 'lib/newTab';
 import ComboResultFrame from '../ComboResultFrame/ComboResultFrame';
 import useSolRingPrice, { priceInSolRings, SOL_RING } from 'lib/solRingPrice';
 
@@ -24,12 +25,12 @@ interface Props {
   decklistMessage?: string;
   combo: Variant;
   sort?: string;
-  newTab?: boolean;
   hideVariants?: boolean;
 }
 
-const ComboResult: React.FC<Props> = ({ combo, decklist, sort, newTab, hideVariants, decklistMessage }) => {
+const ComboResult: React.FC<Props> = ({ combo, decklist, sort, hideVariants, decklistMessage }) => {
   const router = useRouter();
+  const newTab = useContext(NewTabContext);
 
   // A result opened from a search hands the query over to the combo page, the same way the redirect
   // to a single match does: the search bar picks it up and drops it from the URL, so the search

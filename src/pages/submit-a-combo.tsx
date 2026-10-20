@@ -3,6 +3,7 @@ import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
 import { withApiErrorPage } from 'lib/apiErrorPage';
 import { httpErrorStatus } from 'lib/httpErrors';
 import ComboSubmissionForm from '../components/submission/ComboSubmissionForm/ComboSubmissionForm';
+import { NewTabContext } from 'lib/newTab';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import { queryParameterAsString } from 'lib/queryParameters';
@@ -11,16 +12,19 @@ import { apiConfiguration } from 'services/api.service';
 
 interface Props {
   variant?: Variant;
+  card?: string;
 }
 
-const SubmitACombo: React.FC<Props> = ({ variant }) => {
+const SubmitACombo: React.FC<Props> = ({ variant, card }) => {
   return (
     <>
       <SpellbookHead
         title="Commander Spellbook: How to Submit a Combo"
         description="Learn how to contribute to Commander Spellbook by submitting a new combo."
       />
-      <ComboSubmissionForm variant={variant} />
+      <NewTabContext value>
+        <ComboSubmissionForm variant={variant} card={card} />
+      </NewTabContext>
     </>
   );
 };
@@ -38,7 +42,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   if (!csbUsername || !csbJwt) {
     return {
       redirect: {
-        destination: `/login?final=${context.resolvedUrl}`,
+        destination: `/login/?${new URLSearchParams({ final: context.resolvedUrl })}`,
         permanent: false,
       },
     };
@@ -58,6 +62,7 @@ export const getServerSideProps = withApiErrorPage(async (context) => {
   return {
     props: {
       variant: variant || null,
+      card: queryParameterAsString(context.query.card)?.trim() || null,
     },
   };
 });

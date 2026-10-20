@@ -13,13 +13,14 @@ import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithM
 import Loader from 'components/layout/Loader/Loader';
 import Icon from 'components/layout/Icon/Icon';
 import SaltSlider from 'components/salt/SaltSlider/SaltSlider';
-import { comboTitleToText } from 'components/combo/CardHeader/CardHeader';
+import { comboTitleToText } from 'lib/comboTitle';
 import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt';
 import { readSeenCombos, rememberComboToResume, rememberSeenCombo, takeComboToResume } from 'lib/saltVotingSeen';
 import { rememberSaltVotingSession } from 'lib/saltVotingHistory';
 import { DEFAULT_ORDERING } from 'lib/constants';
+import { NewTabContext } from 'lib/newTab';
 import useFoolsDay, { isFoolsDay } from 'lib/foolsDay';
 import styles from './salt.module.scss';
 
@@ -404,7 +405,7 @@ const SaltVoting: React.FC = () => {
             <Icon name="masks" /> Happy April Fools! Today's queue serves the least popular combos.
           </p>
         )}
-        {renderState()}
+        <NewTabContext value>{renderState()}</NewTabContext>
         <p id="salt-voting-tally" className={styles.tally} aria-live="polite">
           {tally.voted} voted · {tally.skipped} skipped
           <span className={styles.shortcuts} aria-hidden="true">
