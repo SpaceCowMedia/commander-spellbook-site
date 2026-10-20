@@ -1,0 +1,52 @@
+@reference "../../../../styles/globals.css";
+
+.opponents {
+  @apply flex flex-col items-start gap-3;
+}
+
+.list {
+  @apply m-0 grid w-full list-none gap-3 p-0;
+
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr));
+}
+
+.card {
+  @apply relative rounded-xl border border-gray-200 bg-white shadow-xs transition-[border-color,box-shadow] motion-reduce:transition-none dark:border-white/15 dark:bg-white/5;
+
+  &:focus-within {
+    @apply border-primary shadow-md;
+  }
+}
+
+/* an opponent with an outcome gets its tone along the edge */
+.judged {
+  border-color: color-mix(in oklab, var(--tone) 55%, transparent);
+}
+
+.fieldset {
+  @apply m-0 flex min-w-0 flex-col gap-2.5 border-0 p-3;
+}
+
+.name {
+  @apply float-left mb-0.5 w-full p-0 pr-8 font-title text-base font-bold;
+
+  & + * {
+    @apply clear-both;
+  }
+}
+
+.remove {
+  @apply absolute top-2 right-2 flex size-7 cursor-pointer items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-danger/10 hover:text-danger focus-visible:ring-3 focus-visible:ring-danger/40 focus-visible:outline-none motion-reduce:transition-none dark:hover:text-secondary;
+}
+
+.fields {
+  @apply flex flex-col gap-2.5;
+}
+
+.outcome {
+  @apply m-0;
+}
+
+.add {
+  @apply inline-flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-primary/60 px-4 py-2 text-sm font-semibold text-link transition-colors hover:border-primary hover:bg-primary/10 focus-visible:ring-3 focus-visible:ring-primary/50 focus-visible:outline-none motion-reduce:transition-none dark:text-primary;
+}

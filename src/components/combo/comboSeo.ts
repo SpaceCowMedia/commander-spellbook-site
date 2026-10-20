@@ -1,9 +1,9 @@
 import pluralize from 'pluralize';
 import { Variant } from '@space-cow-media/spellbook-client';
 import { comboTitleToText } from 'lib/comboTitle';
-import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/brackets';
+import { BRACKET_NAME_MAP, BRACKET_RANGE_MAP } from 'lib/bracket/brackets';
 import { cardPath } from 'lib/cards';
-import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
+import { countNotablePrerequisites } from 'lib/combo/prerequisitesProcessor';
 import { absoluteUrl, formatList, truncateDescription, websiteJsonLd, withSiteName } from 'lib/seo';
 
 export function comboCanonicalPath(combo: Variant): string {

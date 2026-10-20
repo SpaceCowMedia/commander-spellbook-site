@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import type { NextRouter } from 'next/router';
-import { queryParameterAsString } from './queryParameters';
-import { hasResultsCache } from './findMyCombosResultsCache';
+import { queryParameterAsString } from './http/queryParameters';
+import { hasResultsCache } from './findMyCombos/findMyCombosResultsCache';
 
 export const PAGE_TURN_FORWARD = 'page-turn-forward';
 export const PAGE_TURN_BACK = 'page-turn-back';

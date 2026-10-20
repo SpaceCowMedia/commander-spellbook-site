@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 
 interface Props {
   icon: SpellbookIcon;

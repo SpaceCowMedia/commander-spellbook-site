@@ -1,10 +1,10 @@
 import React from 'react';
 import { CardDetail } from '@space-cow-media/spellbook-client';
-import CardImage from 'components/layout/CardImage/CardImage';
-import CardName from 'components/layout/CardName/CardName';
-import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
-import { FACE_SEPARATOR, getFaceNames } from 'lib/types';
-import sections from '../cardSections.module.scss';
+import CardImage from 'components/card/CardImage/CardImage';
+import CardName from 'components/card/CardName/CardName';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
+import { FACE_SEPARATOR, getFaceNames } from 'lib/card/faces';
+import sections from 'components/card/cardSections.module.scss';
 import styles from './cardDetails.module.scss';
 
 interface Props {

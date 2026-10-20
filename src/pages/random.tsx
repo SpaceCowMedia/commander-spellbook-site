@@ -1,7 +1,7 @@
 import React from 'react';
-import SplashPage from '../components/layout/SplashPage/SplashPage';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import SplashPage from 'components/layout/SplashPage/SplashPage';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import { apiConfiguration } from 'services/api.service';
 import { VariantsApi } from '@space-cow-media/spellbook-client';
 

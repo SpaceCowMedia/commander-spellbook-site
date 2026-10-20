@@ -1,0 +1,36 @@
+@reference "../../../styles/globals.css";
+
+.stepper {
+  @apply flex h-11 w-full items-stretch overflow-hidden rounded-xl border border-gray-300 bg-white shadow-xs transition-[border-color,box-shadow] focus-within:border-primary focus-within:ring-3 focus-within:ring-primary/35 motion-reduce:transition-none dark:border-gray-600 dark:bg-dark;
+
+  /* a long number gets smaller rather than wider than the field */
+  --largest: 1.125rem;
+  --buttons: 5rem;
+
+  container-type: inline-size;
+
+  &:has([aria-invalid='true']) {
+    @apply border-danger ring-3 ring-danger/25 dark:border-secondary dark:ring-secondary/30;
+  }
+}
+
+.compact {
+  @apply h-9 rounded-lg;
+
+  --largest: 1rem;
+  --buttons: 4rem;
+}
+
+.button {
+  @apply flex w-10 shrink-0 cursor-pointer items-center justify-center text-xl font-bold text-link transition-colors select-none hover:bg-primary/15 active:bg-primary/25 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent motion-reduce:transition-none dark:text-primary dark:disabled:text-gray-600;
+
+  .compact & {
+    @apply w-8 text-lg;
+  }
+}
+
+.input {
+  @apply min-w-0 flex-1 border-x border-y-0 border-gray-200 bg-transparent px-2 text-center font-semibold tabular-nums outline-none dark:border-gray-700;
+
+  font-size: min(var(--largest), calc((100cqi - var(--buttons) - 1rem) / var(--digits) * 1.65));
+}

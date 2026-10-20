@@ -6,7 +6,7 @@ import ShareButtons from 'components/layout/ShareButtons/ShareButtons';
 import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
 import React from 'react';
 import { Variant } from '@space-cow-media/spellbook-client';
-import useCookie from 'lib/useCookie';
+import useCookie from 'lib/react/useCookie';
 import { absoluteUrl } from 'lib/seo';
 
 interface Props {

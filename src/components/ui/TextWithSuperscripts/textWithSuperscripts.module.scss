@@ -1,0 +1,8 @@
+@reference "../../../styles/globals.css";
+
+.superscript {
+  @apply relative align-baseline leading-none;
+
+  top: -0.6em;
+  font-size: 0.6em;
+}

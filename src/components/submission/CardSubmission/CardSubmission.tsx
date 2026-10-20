@@ -1,4 +1,4 @@
-import AutocompleteInput from '../../advancedSearch/AutocompleteInput/AutocompleteInput';
+import AutocompleteInput from 'components/search/AutocompleteInput/AutocompleteInput';
 import { useEffect, useRef, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 import {
@@ -13,17 +13,17 @@ import {
   ZoneLocationsEnum,
 } from '@space-cow-media/spellbook-client';
 import { useDebounce } from 'use-debounce';
-import TemplateCard from '../../combo/TemplateCard/TemplateCard';
-import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
-import CardImage from '../../layout/CardImage/CardImage';
-import Icon from '../../layout/Icon/Icon';
-import { ComboSubmissionErrorType } from '../../../lib/types';
-import normalizeQuotes from '../../../lib/normalizeQuotes';
-import normalizeStringInput from '../../../lib/normalizeStringInput';
-import { cachedTemplateReplacements } from '../../../lib/templateReplacementsCache';
-import ScryfallQueryHelp from '../ScryfallQueryHelp/ScryfallQueryHelp';
-import Alert from '../../layout/Alert/Alert';
-import freeCastingCardName from '../../../lib/freeCastingCardName';
+import TemplateCard from 'components/card/TemplateCard/TemplateCard';
+import ErrorMessage, { unhandledErrors } from 'components/submission/ErrorMessage/ErrorMessage';
+import CardImage from 'components/card/CardImage/CardImage';
+import Icon from 'components/ui/Icon/Icon';
+import { ComboSubmissionErrorType } from 'lib/submission/submissions';
+import normalizeQuotes from 'lib/text/normalizeQuotes';
+import normalizeStringInput from 'lib/text/normalizeStringInput';
+import { cachedTemplateReplacements } from 'lib/card/templateReplacementsCache';
+import ScryfallQueryHelp from 'components/submission/ScryfallQueryHelp/ScryfallQueryHelp';
+import Alert from 'components/layout/Alert/Alert';
+import freeCastingCardName from 'lib/submission/freeCastingCardName';
 import { apiConfiguration } from 'services/api.service';
 
 const CARD_GROUPS_SEARCH_LIMIT = 20;

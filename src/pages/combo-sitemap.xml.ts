@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import BulkApiService from 'services/bulk-api.service';
 import { absoluteUrl } from 'lib/seo';
 import { pagedSitemap, sendXml } from 'lib/sitemap';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 
 function SiteMap() {
   // getServerSideProps will do the heavy lifting

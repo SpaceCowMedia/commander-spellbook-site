@@ -1,4 +1,4 @@
-@reference "../assets/globals.css";
+@reference "../styles/globals.css";
 
 .syntaxGuideContainer {
   code {
@@ -17,39 +17,5 @@
   h4 {
     padding-bottom: 1rem;
     @apply font-bold dark:text-white;
-  }
-}
-
-.searchGuideContainer {
-  code {
-    @apply pl-1 pr-1;
-  }
-
-  .description p {
-    @apply mb-4;
-  }
-
-  @media (width >= 768px) {
-    .searchGuide:nth-child(even) {
-      .description {
-        @apply order-last pr-0 pl-4;
-      }
-    }
-
-    .searchGuide:nth-child(even) {
-      .searchSnippets {
-        @apply pl-0 pr-4;
-      }
-    }
-  }
-
-  .searchGuide {
-    &:last-child {
-      @apply border-0;
-    }
-  }
-
-  blockquote {
-    @apply border-l-4 border-gray-400 pl-4 mb-1;
   }
 }

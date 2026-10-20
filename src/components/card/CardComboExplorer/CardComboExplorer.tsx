@@ -3,14 +3,14 @@ import Link from 'next/link';
 import pluralize from 'pluralize';
 import { CardDetail, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import ComboResults from 'components/search/ComboResults/ComboResults';
-import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
-import Loader from 'components/layout/Loader/Loader';
+import StyledSelect from 'components/ui/StyledSelect/StyledSelect';
+import Loader from 'components/ui/Loader/Loader';
 import { apiConfiguration } from 'services/api.service';
 import { cardComboQuery, commanderFormatTerm, variantSearchPath } from 'lib/cards';
 import { DEFAULT_ORDER, DEFAULT_SORT } from 'lib/constants';
 import { ORDER_OPTIONS, SORT_OPTIONS, toApiOrdering } from 'lib/sorting';
 import { formatCount } from 'lib/seo';
-import sections from '../cardSections.module.scss';
+import sections from 'components/card/cardSections.module.scss';
 import styles from './cardComboExplorer.module.scss';
 
 interface Props {

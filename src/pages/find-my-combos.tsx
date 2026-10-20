@@ -1,9 +1,9 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import pluralize from 'pluralize';
 import styles from './find-my-combos.module.scss';
-import ArtCircle from '../components/layout/ArtCircle/ArtCircle';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { isValidHttpUrl } from '../lib/url-check';
+import ArtCircle from 'components/card/ArtCircle/ArtCircle';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { isValidHttpUrl } from 'lib/http/urlCheck';
 import ErrorMessage from 'components/submission/ErrorMessage/ErrorMessage';
 import { useRouter } from 'next/router';
 import {
@@ -22,7 +22,7 @@ import {
   VariantsApi,
 } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import {
   CommanderCombos,
@@ -31,20 +31,20 @@ import {
   clearResultsCache,
   mergeResultsCache,
   readResultsCache,
-} from 'lib/findMyCombosResultsCache';
+} from 'lib/findMyCombos/findMyCombosResultsCache';
 import CombosExportService from 'services/combos-export.service';
 import DownloadFileService from 'services/download-file.service';
-import normalizeStringInput from 'lib/normalizeStringInput';
-import normalizeQuotes from 'lib/normalizeQuotes';
-import Modal from 'components/ui/Modal/Modal';
-import Tab from 'components/ui/Tab/Tab.';
-import DeckCombos from 'components/FindMyCombos/DeckCombos';
-import DeckBracket from 'components/FindMyCombos/DeckBracket';
-import Loader from 'components/layout/Loader/Loader';
-import { BRACKET_RANGE_MAP } from 'lib/brackets';
+import normalizeStringInput from 'lib/text/normalizeStringInput';
+import normalizeQuotes from 'lib/text/normalizeQuotes';
+import Modal from 'components/layout/Modal/Modal';
+import Tab from 'components/layout/Tab/Tab';
+import DeckCombos from 'components/findMyCombos/DeckCombos/DeckCombos';
+import DeckBracket from 'components/bracket/DeckBracket/DeckBracket';
+import Loader from 'components/ui/Loader/Loader';
+import { BRACKET_RANGE_MAP } from 'lib/bracket/brackets';
 import useFoolsDay from 'lib/foolsDay';
-import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
-import SearchInput from 'components/ui/SearchInput/SearchInput';
+import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/http/httpErrors';
+import SearchInput from 'components/search/SearchInput/SearchInput';
 import { useDebounce } from 'use-debounce';
 import commanderCombosQuery from 'lib/commanderCombosQuery';
 
@@ -664,8 +664,8 @@ const FindMyCombos: React.FC = () => {
                   )}
                 </div>
               )}
-              {decklistErrors.map((error) => (
-                <ErrorMessage key={error}>{error}</ErrorMessage>
+              {decklistErrors.map((error, index) => (
+                <ErrorMessage key={index}>{error}</ErrorMessage>
               ))}
             </>
           )}

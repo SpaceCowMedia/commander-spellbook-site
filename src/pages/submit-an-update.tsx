@@ -1,6 +1,6 @@
 import React from 'react';
-import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import TokenService from 'services/token.service';
 import UpdateSubmissionForm from 'components/submission/UpdateSubmissionForm/UpdateSubmissionForm';

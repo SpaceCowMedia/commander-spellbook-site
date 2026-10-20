@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { CardDetail, FeatureStatusEnum, TemplateDetail } from '@space-cow-media/spellbook-client';
-import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import { quotedSearchValue, searchPath } from 'lib/cards';
-import sections from '../cardSections.module.scss';
+import sections from 'components/card/cardSections.module.scss';
 
 interface Props {
   card: CardDetail;

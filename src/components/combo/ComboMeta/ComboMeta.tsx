@@ -2,15 +2,14 @@ import React, { CSSProperties, useState } from 'react';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { SaltVote, Variant, VariantStatusEnum } from '@space-cow-media/spellbook-client';
-import Icon, { SpellbookIcon } from 'components/layout/Icon/Icon';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import SaltMeter from 'components/salt/SaltMeter/SaltMeter';
 import SaltVoteControl from 'components/salt/SaltVoteControl/SaltVoteControl';
-import ComboBracket from 'components/combo/ComboBracket/ComboBracket';
+import ComboBracket from 'components/bracket/ComboBracket/ComboBracket';
 import EDHRECService from 'services/edhrec.service';
-import { IS_LOCK } from 'lib/constants';
-import { formatSalt, liveSaltStats, MAX_SALT, SaltStats, saltTier } from 'lib/salt';
-import cn from 'lib/cn';
+import { formatSalt, liveSaltStats, MAX_SALT, SaltStats, saltTier } from 'lib/salt/salt';
+import classNames from 'lib/react/classNames';
 import styles from './comboMeta.module.scss';
 
 interface Props {
@@ -29,20 +28,20 @@ const NEUTRAL_BADGE = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray
 const STATUS_BADGES: Partial<Record<VariantStatusEnum, Badge>> = {
   [VariantStatusEnum.E]: {
     icon: 'lightbulb',
-    label: 'Example · no explanation',
-    description: "This combo is an example of a variant and doesn't provide an explanation.",
+    label: 'Example',
+    description: "An example of a variant, so it doesn't provide an explanation.",
     className: NEUTRAL_BADGE,
   },
   [VariantStatusEnum.D]: {
     icon: 'pencil',
-    label: 'Draft · only visible to editors',
-    description: 'This combo is a draft and is only visible to editors.',
+    label: 'Draft',
+    description: 'Only visible to editors.',
     className: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
   },
   [VariantStatusEnum.Nr]: {
     icon: 'eye',
-    label: 'Needs review · only visible to editors',
-    description: 'This combo needs to be reviewed and is only visible to editors.',
+    label: 'Needs review',
+    description: 'Only visible to editors until it is reviewed.',
     className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
   },
 };
@@ -50,7 +49,12 @@ const STATUS_BADGES: Partial<Record<VariantStatusEnum, Badge>> = {
 function getBadges(combo: Variant): Badge[] {
   const badges: Badge[] = [];
   if (combo.produces.some((feature) => feature.feature.name.toLowerCase() === 'lock')) {
-    badges.push({ icon: 'lock', label: 'Lock', description: IS_LOCK, className: NEUTRAL_BADGE });
+    badges.push({
+      icon: 'lock',
+      label: 'Lock',
+      description: 'Locks your opponents out of taking some actions.',
+      className: 'bg-primary/20 text-link dark:bg-primary/15 dark:text-primary',
+    });
   }
   const statusBadge = STATUS_BADGES[combo.status];
   if (statusBadge) {
@@ -94,8 +98,14 @@ const ComboMeta: React.FC<Props> = ({ combo }) => {
       {badges.length > 0 && (
         <ul className={styles.badges}>
           {badges.map((badge) => (
-            <li key={badge.label} className={cn('status-badge', badge.className)} title={badge.description}>
-              <Icon name={badge.icon} /> {badge.label}
+            <li key={badge.label} className={styles.badge}>
+              <span className={classNames(styles.badgeIcon, badge.className)}>
+                <Icon name={badge.icon} />
+              </span>
+              <div>
+                <div className={styles.badgeLabel}>{badge.label}</div>
+                <div className={styles.badgeDescription}>{badge.description}</div>
+              </div>
             </li>
           ))}
         </ul>
