@@ -347,7 +347,8 @@ const FindMyCombos: React.FC = () => {
     return true;
   };
 
-  // Persist the scroll position after navigating to a combo detail page
+  // Coming back from another page scrolls back to where the results were left, only once: reloading the page later
+  // starts from its top again rather than jumping back there.
   useLayoutEffect(() => {
     if (pendingScrollY.current === null || !results) {
       return;
@@ -355,6 +356,7 @@ const FindMyCombos: React.FC = () => {
     const target = pendingScrollY.current;
     pendingScrollY.current = null;
     window.scrollTo(0, target);
+    mergeResultsCache({ scrollY: 0 });
   }, [results]);
 
   useEffect(() => {
@@ -482,7 +484,10 @@ const FindMyCombos: React.FC = () => {
   }, [deckUrl, urlQueryParam]);
 
   const refreshDeckAnalysis = () => {
-    window.history.replaceState(null, '', '/find-my-combos/');
+    // Through the router, since replacing the entry by hand drops the state Next needs to come back to it.
+    if (router.query.deckUrl) {
+      router.replace('/find-my-combos/', undefined, { shallow: true });
+    }
     parseDecklist(decklist, commanderList).then((parsed) => analyzeDeck(parsed, query));
   };
 
