@@ -1,11 +1,23 @@
 import styles from './Modal.module.scss';
 import cn from 'lib/cn';
-import React, { createContext, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+  ViewTransition,
+} from 'react';
 import ReactDOM from 'react-dom';
 import Icon from 'components/layout/Icon/Icon';
+import { MODAL_RESIZE } from 'lib/viewTransitions';
 
 // A modal dialog sits in the top layer, above anything portalled to the body, so popups inside it portal into it.
 export const ModalPortalContext = createContext<HTMLElement | null>(null);
+
+// How many modals the content is nested in, so that it can open no further ones.
+export const ModalDepthContext = createContext(0);
 
 interface Props {
   open?: boolean;
@@ -29,6 +41,7 @@ const Modal: React.FC<Props> = ({ open = false, children, onClose, footer, size,
   const [closing, setClosing] = useState(false);
   const [wasOpen, setWasOpen] = useState(open);
   const pressedOutside = useRef(false);
+  const depth = useContext(ModalDepthContext);
 
   if (open !== wasOpen) {
     setWasOpen(open);
@@ -57,33 +70,38 @@ const Modal: React.FC<Props> = ({ open = false, children, onClose, footer, size,
     return null;
   }
 
+  // Content regrouped in place resizes the whole dialog as one snapshot, its own name told apart from any other modal's.
   return ReactDOM.createPortal(
-    <dialog
-      ref={attachDialog}
-      className={cn(styles.modal, size && styles[size])}
-      onCancel={(event) => {
-        event.preventDefault();
-        onClose();
-      }}
-      onPointerDown={(event) => {
-        pressedOutside.current = event.target === dialog && isOutside(dialog, event);
-      }}
-      onClick={(event) => {
-        if (pressedOutside.current && event.target === dialog && isOutside(dialog, event)) {
+    <ViewTransition update={MODAL_RESIZE} default="none">
+      <dialog
+        ref={attachDialog}
+        className={cn(styles.modal, size && styles[size])}
+        onCancel={(event) => {
+          event.preventDefault();
           onClose();
-        }
-      }}
-    >
-      <ModalPortalContext value={dialog}>
-        {closeIcon && (
-          <div className={styles.closeIcon} onClick={() => onClose()}>
-            <Icon name="close" />
-          </div>
-        )}
-        <div className={styles.content}>{children}</div>
-        {footer && <div className={styles.footer}>{footer}</div>}
-      </ModalPortalContext>
-    </dialog>,
+        }}
+        onPointerDown={(event) => {
+          pressedOutside.current = event.target === dialog && isOutside(dialog, event);
+        }}
+        onClick={(event) => {
+          if (pressedOutside.current && event.target === dialog && isOutside(dialog, event)) {
+            onClose();
+          }
+        }}
+      >
+        <ModalPortalContext value={dialog}>
+          <ModalDepthContext value={depth + 1}>
+            {closeIcon && (
+              <div className={styles.closeIcon} onClick={() => onClose()}>
+                <Icon name="close" />
+              </div>
+            )}
+            <div className={styles.content}>{children}</div>
+            {footer && <div className={styles.footer}>{footer}</div>}
+          </ModalDepthContext>
+        </ModalPortalContext>
+      </dialog>
+    </ViewTransition>,
     document.body,
   );
 };

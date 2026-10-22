@@ -18,7 +18,9 @@ import useFoolsDay, { bonusResult } from 'lib/foolsDay';
 import { formatSalt, MAX_SALT } from 'lib/salt';
 import { NewTabContext } from 'lib/newTab';
 import ComboResultFrame from '../ComboResultFrame/ComboResultFrame';
+import VariantTransition from '../VariantTransition/VariantTransition';
 import useSolRingPrice, { priceInSolRings, SOL_RING } from 'lib/solRingPrice';
+import { isMissingFromDeck } from 'lib/countDeckCards';
 
 interface Props {
   decklist?: Map<string, number>; // If passed in, will highlight cards in the combo that are not in the deck
@@ -26,9 +28,17 @@ interface Props {
   combo: Variant;
   sort?: string;
   hideVariants?: boolean;
+  viewTransitionScope?: string;
 }
 
-const ComboResult: React.FC<Props> = ({ combo, decklist, sort, hideVariants, decklistMessage }) => {
+const ComboResult: React.FC<Props> = ({
+  combo,
+  decklist,
+  sort,
+  hideVariants,
+  decklistMessage,
+  viewTransitionScope,
+}) => {
   const router = useRouter();
   const newTab = useContext(NewTabContext);
 
@@ -101,92 +111,97 @@ const ComboResult: React.FC<Props> = ({ combo, decklist, sort, hideVariants, dec
       : undefined;
 
   return (
-    <Link
-      href={comboLink}
-      key={combo.id}
-      className="flex w-full min-w-0 max-w-lg my-2 grow md:w-1/4 no-underline"
-      rel={newTab ? 'noopener noreferrer' : undefined}
-      target={newTab ? '_blank' : undefined}
-    >
-      <ComboResultFrame
-        status={combo.status}
-        header={
-          <>
-            {isLock && (
-              <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
-                <Icon name="lock" />
-              </div>
-            )}
-            <ColorIdentity identity={combo.identity} size="small" />
-          </>
-        }
-        banner={variantCountText}
-        footer={sortStat && <span className="sort-footer">{sortStat}</span>}
+    <VariantTransition scope={viewTransitionScope} variant={combo}>
+      <Link
+        href={comboLink}
+        key={combo.id}
+        className="flex w-full min-w-0 max-w-lg my-2 grow md:w-1/4 no-underline"
+        rel={newTab ? 'noopener noreferrer' : undefined}
+        target={newTab ? '_blank' : undefined}
       >
-        <div className="flex flex-col">
-          <div className={`grow  ${styles.comboResultSection}`}>
-            <div className="py-1">
-              <span className="sr-only">Cards in combo:</span>
-              {combo.uses.map(({ card, quantity, usedFace }) => (
-                <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
-                  <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
-                    {decklist && quantity - (decklist.get(card.name.toLowerCase()) ?? 0) > 0 ? (
-                      decklistMessage != undefined ? (
-                        <strong className="text-blue-800">
-                          <CardName name={card.name} />
-                          {decklistMessage ? ` (${decklistMessage})` : ''}
-                        </strong>
-                      ) : (
-                        <strong className="text-red-800">
-                          <CardName name={card.name} /> (not in deck)
-                        </strong>
-                      )
-                    ) : (
-                      <span>
-                        {quantity > 1 ? `${quantity} ` : ''}
-                        <CardName name={card.name} />
-                      </span>
-                    )}
-                  </div>
-                </CardTooltip>
-              ))}
-              {combo.requires.map((template) => (
-                <TemplateTooltip
-                  template={template}
-                  key={template.template.id}
-                  caption="Open the combo to see all possible replacements"
-                >
-                  <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
-                    <span>
-                      + {template.quantity > 1 ? `${template.quantity}x ` : ''}
-                      <TextWithMagicSymbol
-                        text={getTemplateNameSummary(template.template.name) ?? template.template.name}
-                      />
-                    </span>
-                  </div>
-                </TemplateTooltip>
-              ))}
-              {prereqCount > 0 && (
-                <div className={`${styles.prerequisites} pl-3 pr-3`}>
-                  <span>
-                    +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
-                  </span>
+        <ComboResultFrame
+          status={combo.status}
+          header={
+            <>
+              {isLock && (
+                <div className="absolute left-2 top-2 text-xl text-gray-600" title={IS_LOCK}>
+                  <Icon name="lock" />
                 </div>
               )}
+              <ColorIdentity identity={combo.identity} size="small" />
+            </>
+          }
+          banner={variantCountText}
+          footer={sortStat && <span className="sort-footer">{sortStat}</span>}
+        >
+          <div className="flex flex-col">
+            <div className={`grow  ${styles.comboResultSection}`}>
+              <div className="py-1">
+                <span className="sr-only">Cards in combo:</span>
+                {combo.uses.map((use) => {
+                  const { card, quantity, usedFace } = use;
+                  return (
+                    <CardTooltip card={card} faceToShow={usedFace} key={card.name}>
+                      <div className={`card-name pl-3 pr-3 ${styles.cardName}`}>
+                        {decklist && isMissingFromDeck(use, decklist) ? (
+                          decklistMessage != undefined ? (
+                            <strong className="text-blue-800 dark:text-blue-300">
+                              <CardName name={card.name} />
+                              {decklistMessage ? ` (${decklistMessage})` : ''}
+                            </strong>
+                          ) : (
+                            <strong className="text-red-800">
+                              <CardName name={card.name} /> (not in deck)
+                            </strong>
+                          )
+                        ) : (
+                          <span>
+                            {quantity > 1 ? `${quantity} ` : ''}
+                            <CardName name={card.name} />
+                          </span>
+                        )}
+                      </div>
+                    </CardTooltip>
+                  );
+                })}
+                {combo.requires.map((template) => (
+                  <TemplateTooltip
+                    template={template}
+                    key={template.template.id}
+                    caption="Open the combo to see all possible replacements"
+                  >
+                    <div className={`${styles.prerequisites} ${styles.cardName} pl-3 pr-3`}>
+                      <span>
+                        + {template.quantity > 1 ? `${template.quantity}x ` : ''}
+                        <TextWithMagicSymbol
+                          text={getTemplateNameSummary(template.template.name) ?? template.template.name}
+                        />
+                      </span>
+                    </div>
+                  </TemplateTooltip>
+                ))}
+                {prereqCount > 0 && (
+                  <div className={`${styles.prerequisites} pl-3 pr-3`}>
+                    <span>
+                      +{prereqCount} other prerequisite{prereqCount > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="grow">
+              <span className="sr-only">Results in combo:</span>
+              {results.map((result) => (
+                <div key={result.feature.name} className={`result pl-3 pr-3`}>
+                  <TextWithMagicSymbol text={result.feature.name} />
+                </div>
+              ))}
+              {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
             </div>
           </div>
-          <div className="grow">
-            <span className="sr-only">Results in combo:</span>
-            {results.map((result) => (
-              <div key={result.feature.name} className={`result pl-3 pr-3`}>
-                <TextWithMagicSymbol text={result.feature.name} />
-              </div>
-            ))}
-            {foolsDay && results.length > 0 && <div className="result pl-3 pr-3">{bonusResult(combo.id)}</div>}
-          </div>
-        </div>
-      </ComboResultFrame>
-    </Link>
+        </ComboResultFrame>
+      </Link>
+    </VariantTransition>
   );
 };
 

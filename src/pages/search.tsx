@@ -1,10 +1,10 @@
 import React from 'react';
 import SearchMessage from '../components/search/SearchMessage/SearchMessage';
-import StyledSelect from '../components/layout/StyledSelect/StyledSelect';
 import { useRouter } from 'next/router';
 import { DEFAULT_ORDER, DEFAULT_SORT } from '../lib/constants';
-import { ORDER_OPTIONS, SORT_OPTIONS, toApiOrdering } from '../lib/sorting';
+import { toApiOrdering } from '../lib/sorting';
 import SearchPagination from '../components/search/SearchPagination/SearchPagination';
+import SearchOptions from '../components/search/SearchOptions/SearchOptions';
 import ComboResults from '../components/search/ComboResults/ComboResults';
 import NoCombosFound from '../components/layout/NoCombosFound/NoCombosFound';
 import SpellbookHead from '../components/SpellbookHead/SpellbookHead';
@@ -98,10 +98,10 @@ const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, feat
   const handleOrderChange = (value: string) =>
     pushWithTransition(router, { pathname: '/search/', query: { ...router.query, order: value, page: '1' } }, RESORT);
 
-  const handleGroupByComboChange = (value: string) =>
+  const handleGroupByComboChange = (groupByCombo: boolean) =>
     pushWithTransition(
       router,
-      { pathname: '/search/', query: { ...router.query, groupByCombo: value, page: '1' } },
+      { pathname: '/search/', query: { ...router.query, groupByCombo: String(groupByCombo), page: '1' } },
       RESORT,
     );
 
@@ -154,60 +154,29 @@ const Search: TransitionPage<Props> = ({ combos, page, bannedCombos, error, feat
         )}
 
         {hasResults && (
-          <div className="border-b border-light">
-            <div className="container sm:flex flex-row items-center justify-center">
-              <div className="mr-2 sm:mt-0 mt-2" aria-hidden="true">
-                Sorted by
-              </div>
-              <StyledSelect
-                value={sort}
-                id="sort-combos-select"
-                onChange={handleSortChange}
-                selectBackgroundClassName="border-dark border-2 my-2 sm:mr-2"
-                label="Change how combos are sorted"
-                options={SORT_OPTIONS}
-              />
-              <div className="mx-1 hidden sm:block" aria-hidden="true">
-                :
-              </div>
-              <StyledSelect
-                id="order-combos-select"
-                value={order}
-                onChange={handleOrderChange}
-                selectBackgroundClassName="border-dark border-2 sm:m-2"
-                label="Change sort direction, ascending or descending"
-                options={ORDER_OPTIONS}
-              />
-              <div className="mr-2 sm:mt-0 mt-2" aria-hidden="true">
-                Variants grouped by combo
-              </div>
-              <StyledSelect
-                id="group-by-combo-select"
-                value={groupBy ? 'true' : 'false'}
-                onChange={handleGroupByComboChange}
-                selectBackgroundClassName="border-dark border-2 my-2 sm:mr-2"
-                label="Group variants by combo"
-                options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
-                ]}
-              />
-              {variant && (
-                <button onClick={handleClearVariant} className="cursor-pointer">
-                  Clear Variant Filter
-                </button>
-              )}
-              <div className="grow min-h-2" />
-              <SearchPagination
-                id="top-pagination"
-                currentPage={pageNumber}
-                hasNextPage={hasNextPage}
-                aria-hidden="true"
-                onGoForward={goForward}
-                onGoBack={goBack}
-              />
-            </div>
-          </div>
+          <SearchOptions
+            sort={sort}
+            order={order}
+            groupByCombo={groupBy}
+            onSortChange={handleSortChange}
+            onOrderChange={handleOrderChange}
+            onGroupByComboChange={handleGroupByComboChange}
+          >
+            {variant && (
+              <button onClick={handleClearVariant} className="cursor-pointer">
+                Clear Variant Filter
+              </button>
+            )}
+            <div className="grow min-h-2" />
+            <SearchPagination
+              id="top-pagination"
+              currentPage={pageNumber}
+              hasNextPage={hasNextPage}
+              aria-hidden="true"
+              onGoForward={goForward}
+              onGoBack={goBack}
+            />
+          </SearchOptions>
         )}
 
         <div className="container sm:flex flex-row">

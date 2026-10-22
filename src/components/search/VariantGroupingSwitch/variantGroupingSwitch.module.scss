@@ -1,0 +1,62 @@
+@reference "../../../assets/globals.css";
+
+.variantGrouping {
+  @apply flex flex-wrap items-center justify-center gap-x-2;
+}
+
+.switch {
+  --options: 2;
+  --selected: 0;
+
+  @apply relative my-2 inline-grid auto-cols-fr grid-flow-col rounded-sm border-2 border-dark p-0.5;
+
+  &:has(> label:nth-of-type(3)) {
+    --options: 3;
+  }
+
+  &:has(> label:nth-of-type(2) > :checked) {
+    --selected: 1;
+  }
+
+  &:has(> label:nth-of-type(3) > :checked) {
+    --selected: 2;
+  }
+
+  &:has(input:focus-visible) {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  > .option {
+    @apply cursor-pointer text-gray-600 dark:text-gray-300;
+
+    transition: color 150ms;
+
+    &:hover {
+      @apply text-dark dark:text-white;
+    }
+
+    &:has(:checked) {
+      cursor: default;
+    }
+  }
+}
+
+.option {
+  @apply flex h-9 items-center justify-center gap-1.5 px-2 text-sm whitespace-nowrap select-none sm:gap-2 sm:px-4 sm:text-base;
+}
+
+.thumb {
+  @apply pointer-events-none absolute inset-0.5 grid auto-cols-fr grid-flow-col bg-link text-white dark:bg-primary dark:text-dark;
+
+  clip-path: inset(
+    0 calc((var(--options) - var(--selected) - 1) * 100% / var(--options)) 0
+      calc(var(--selected) * 100% / var(--options)) round 0.125rem
+  );
+  transition: clip-path var(--tab-slide-duration) var(--tab-slide-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
+}

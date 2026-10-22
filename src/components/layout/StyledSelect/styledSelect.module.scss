@@ -1,5 +1,33 @@
 @reference "../../../assets/globals.css";
 
+/* Its label is drawn by the reel, while its options keep their own colors in the list that opens. */
 .operatorSelector {
   @apply w-full h-10 pl-3 pr-6 appearance-none cursor-pointer disabled:cursor-not-allowed;
+
+  color: transparent;
+
+  option {
+    @apply text-dark dark:text-light;
+  }
+}
+
+.reel {
+  @apply pointer-events-none absolute inset-y-0 left-0 right-6 overflow-hidden pl-3;
+
+  > span {
+    @apply flex h-full items-center whitespace-nowrap;
+
+    translate: 0 calc(var(--selected) * -100%);
+    transition: translate var(--tab-slide-duration) var(--tab-slide-easing);
+  }
+}
+
+.operatorSelector:disabled + .reel {
+  @apply text-gray-500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel > span {
+    transition: none;
+  }
 }

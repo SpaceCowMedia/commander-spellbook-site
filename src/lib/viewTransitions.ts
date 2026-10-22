@@ -1,3 +1,5 @@
+import { addTransitionType, startTransition } from 'react';
+import { flushSync } from 'react-dom';
 import type { NextPage } from 'next';
 import type { NextRouter } from 'next/router';
 import { queryParameterAsString } from './queryParameters';
@@ -17,6 +19,16 @@ export const TEMPLATE_MORPH = 'template-morph';
 export const TEMPLATE_MORPH_SHARE = { [TEMPLATE_MORPH]: 'templateMorph', default: 'none' };
 export const THEME_SWITCH = 'theme';
 export const LOAD_MORE = 'load-more';
+export const REGROUP = 'regroup';
+export const REGROUP_MOVE = { [REGROUP]: 'regroupMove', default: 'none' };
+export const REGROUP_GATHER = { [REGROUP]: 'regroupGather', default: 'none' };
+export const REGROUP_FADE = { [REGROUP]: 'regroupFade', default: 'none' };
+// Regrouping inside a modal leaves the cards on the page behind it alone.
+export const MODAL_REGROUP = 'modal-regroup';
+export const MODAL_RESIZE = { [MODAL_REGROUP]: 'modalResize', default: 'none' };
+export const MODAL_SWITCH = { [MODAL_REGROUP]: 'modalSwitch', default: 'none' };
+
+export const variantTransitionName = (scope: string, variantId: string) => `${scope}-variant-${variantId}`;
 
 // The home page's logo shrinks into the header's gear as the search bar docks, and grows back out of it.
 export const SITE_LOGO = 'site-logo';
@@ -152,6 +164,18 @@ export function hideTurningSheet(turn = turningSheet.turn) {
   if (turn !== 0 && turn === turningSheet.turn) {
     setTurningSheet({ turn: 0 });
   }
+}
+
+// A list paginated in its own state turns without a navigation: its sheet is committed first, so that the turn
+// captures it, then the page changes in a transition tagged with the turn.
+export function turnOwnPage(owner: string, fromPage: number, toPage: number, changePage: () => void) {
+  if (pagesCanTurn()) {
+    flushSync(() => showTurningSheet(owner));
+  }
+  startTransition(() => {
+    addTransitionType(pageTurn(fromPage, toPage));
+    changePage();
+  });
 }
 
 export function getTurningSheet(): TurningSheet {

@@ -1,0 +1,135 @@
+@reference "../../../assets/globals.css";
+
+/* The rails take the color of the banner that counts the variants. */
+.comboVariantGroup {
+  --rail-color: --theme(--color-pink-300);
+
+  @apply cursor-pointer text-left;
+
+  &:where([class~='dark'], [class~='dark'] *) {
+    --rail-color: --theme(--color-link);
+  }
+
+  &:focus-visible {
+    @apply outline-2 outline-primary outline-offset-2;
+  }
+}
+
+.tree {
+  --rail-left: 0.35rem;
+
+  @apply border-b-2 border-light dark:border-dark;
+}
+
+.piece {
+  @apply block;
+
+  text-indent: -1em;
+  margin-left: 1em;
+}
+
+.muted {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+.stop {
+  @apply block;
+}
+
+/*
+ * A card of the most popular variant turns its rail out of its left side, down along the cards that replace it, each
+ * reached by a stop. The rail runs in the gutter left of the cards.
+ */
+.mostPopular {
+  @apply relative px-3;
+
+  &:has(+ .replacements)::before {
+    @apply absolute bottom-0;
+
+    content: '';
+    top: calc(0.5lh - 1px);
+    left: var(--rail-left);
+    width: calc(0.75rem - var(--rail-left) - 0.15rem);
+    border-top-left-radius: 0.5rem;
+    border-top: 2px solid var(--rail-color);
+    border-left: 2px solid var(--rail-color);
+  }
+}
+
+.replacements {
+  @apply pr-3;
+}
+
+.replacement {
+  @apply relative;
+
+  padding-left: 1.6rem;
+
+  /* the turn from the rail into this replacement */
+  &::before {
+    @apply absolute top-0 z-1;
+
+    content: '';
+    left: var(--rail-left);
+    width: calc(0.85rem - var(--rail-left));
+    height: calc(0.5lh + 1px);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom: 2px solid var(--rail-color);
+    border-left: 2px solid var(--rail-color);
+  }
+
+  /* the rail running on to the next replacements */
+  &:not(:last-child)::after {
+    @apply absolute top-0 bottom-0;
+
+    content: '';
+    left: var(--rail-left);
+    border-left: 2px solid var(--rail-color);
+  }
+
+  > .stop::before {
+    @apply absolute rounded-full bg-(--page-background);
+
+    content: '';
+    top: calc(0.5lh - 0.3rem);
+    left: 0.85rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 2px solid var(--rail-color);
+  }
+}
+
+/* More replacements than shown: the rail trails off, turning aside so it doesn't run into the next card's. */
+.more {
+  @apply relative h-4;
+
+  /* three dots along a quarter turn, the first one copied twice by its shadows */
+  &::before {
+    @apply absolute top-0.5 rounded-full bg-(--rail-color);
+
+    content: '';
+    left: calc(var(--rail-left) - 0.5px);
+    width: 3px;
+    height: 3px;
+    box-shadow:
+      2.5px 5.5px 0 var(--rail-color),
+      8px 8px 0 var(--rail-color);
+  }
+}
+
+.modalTitle {
+  @apply m-0 font-title text-3xl leading-tight;
+}
+
+.modalSection {
+  @apply mt-6 mb-2 font-title text-xl;
+}
+
+.modalDescription {
+  @apply mb-4;
+}
+
+/* The results turn on the page's background, which sets them apart from the dialog's in dark mode. */
+.modalResults {
+  @apply bg-(--page-background) px-2;
+}

@@ -45,13 +45,10 @@ import { BRACKET_RANGE_MAP } from 'lib/brackets';
 import useFoolsDay from 'lib/foolsDay';
 import { apiErrorMessage, httpErrorStatus, rateLimitRetryAfterSeconds } from 'lib/httpErrors';
 import SearchInput from 'components/ui/SearchInput/SearchInput';
-import { useDebounce } from 'use-debounce';
-import commanderCombosQuery from 'lib/commanderCombosQuery';
+import commanderCombosQuery, { COMMANDER_COMBOS_PAGE_SIZE } from 'lib/commanderCombosQuery';
 
 const LOCAL_STORAGE_DECK_STORAGE_KEY = 'commander-spellbook-combo-finder-last-decklist';
 const LOCAL_STORAGE_QUERY_STORAGE_KEY = 'commander-spellbook-combo-finder-last-query';
-const EXPLANATION_DELAY = 300;
-const COMMANDER_COMBOS_PREVIEW_SIZE = 12;
 
 // A term starts the query or follows whitespace, a parenthesis or a boolean operator alias, but not the
 // `-` that negates it: excluding Commander-legal combos is no reason to estimate a Commander bracket.
@@ -104,12 +101,11 @@ const FindMyCombos: React.FC = () => {
   const [lookupInProgress, setLookupInProgress] = useState<boolean>(false);
   const [currentlyParsedDeck, setCurrentlyParsedDeck] = useState<Decklist>();
   const [query, setQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
-  const [debouncedQuery] = useDebounce(query.trim(), EXPLANATION_DELAY);
-  // Kept together with the query it describes, so an explanation is never presented as the meaning
-  // of a query the user has since edited.
-  const [queryExplanation, setQueryExplanation] = useState<{ query: string; text: string }>();
   // Tracks the query the currently-loaded `results` were computed for.
   const [analyzedQuery, setAnalyzedQuery] = useState<string>(DEFAULT_FIND_MY_COMBOS_QUERY);
+  // Explains the analyzed query rather than the one being edited, and is kept together with it so that an
+  // explanation is never presented as the meaning of a query the results were not computed for.
+  const [queryExplanation, setQueryExplanation] = useState<{ query: string; text: string }>();
   const numberOfCardsInDeck = currentlyParsedDeck?.countCards() || 0;
   const numberOfCardsText = `${numberOfCardsInDeck} ${pluralize('card', numberOfCardsInDeck)}`;
   const [results, setResults] = useState<ResultType>();
@@ -267,7 +263,7 @@ const FindMyCombos: React.FC = () => {
         const page = await variantsApi.variantsList({
           q: query,
           groupByCombo: false,
-          limit: COMMANDER_COMBOS_PREVIEW_SIZE,
+          limit: COMMANDER_COMBOS_PAGE_SIZE,
           ordering: DEFAULT_ORDERING,
           count: true,
         });
@@ -373,16 +369,17 @@ const FindMyCombos: React.FC = () => {
   }, [router.events]);
 
   useEffect(() => {
-    if (!debouncedQuery) {
+    const explainedQuery = analyzedQuery.trim();
+    if (!explainedQuery) {
       setQueryExplanation(undefined);
       return;
     }
     let outdated = false;
     new ExplainQueryApi(configuration)
-      .explainQueryRetrieve({ q: debouncedQuery })
+      .explainQueryRetrieve({ q: explainedQuery })
       .then(({ explanation }) => {
         if (!outdated) {
-          setQueryExplanation({ query: debouncedQuery, text: explanation });
+          setQueryExplanation({ query: explainedQuery, text: explanation });
         }
       })
       .catch(() => {
@@ -394,7 +391,7 @@ const FindMyCombos: React.FC = () => {
     return () => {
       outdated = true;
     };
-  }, [debouncedQuery]);
+  }, [analyzedQuery]);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -603,7 +600,7 @@ const FindMyCombos: React.FC = () => {
                 <p className={styles.queryInputHint}>
                   Add filter terms to narrow suggestions (example: <code>legal:commander and prerequisites&lt;=2</code>
                   ). Exclude a card with <code>-card:&quot;Sol Ring&quot;</code>.
-                  {queryExplanation?.query === query.trim() && (
+                  {queryExplanation?.query === analyzedQuery.trim() && (
                     <span id="combo-filter-query-explanation" className={styles.queryExplanation}>
                       {' Currently filtering for '}
                       {queryExplanation.text}

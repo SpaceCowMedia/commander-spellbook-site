@@ -50,6 +50,17 @@ describe('Search', () => {
     cy.get('.sort-footer').first().should('contain', 'Salt: 2.60 / 4 (5 votes)');
   });
 
+  it('groups the variants of each combo unless switched to no grouping', () => {
+    cy.visit('/search/?q=monolith');
+    spyOnViewTransitions();
+
+    cy.get('#variant-grouping input[value="combo"]').should('be.checked');
+    cy.contains('#variant-grouping label', 'Ungrouped').click();
+    cy.url().should('include', 'groupByCombo=false');
+    expectTransitionType('resort');
+    cy.get('#variant-grouping input[value="ungrouped"]').should('be.checked');
+  });
+
   it('turns the page when moving between result pages', () => {
     // The test database is too small to fill a page, so every results page repeats a real combo.
     let sample: { id: string } | undefined;

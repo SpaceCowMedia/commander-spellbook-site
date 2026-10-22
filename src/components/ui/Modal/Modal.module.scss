@@ -20,7 +20,7 @@
     translate 200ms ease-in-out,
     display 200ms allow-discrete,
     overlay 200ms allow-discrete;
-  @apply bg-white dark:bg-dark;
+  @apply bg-white dark:bg-dark rounded-lg;
 
   &[open] {
     opacity: 1;

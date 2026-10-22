@@ -8,16 +8,16 @@
   }
 
   @media (width >= 768px) {
-    > a {
+    > * {
       @apply m-2;
     }
 
-    > a:nth-child(3n + 3),
-    > a:last-child {
+    > :nth-child(3n + 3),
+    > :last-child {
       @apply mr-0;
     }
 
-    > a:nth-child(3n + 1) {
+    > :nth-child(3n + 1) {
       @apply ml-0;
     }
   }

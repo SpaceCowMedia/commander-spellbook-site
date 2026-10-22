@@ -42,14 +42,14 @@ const RadioSearchInput: React.FC<Props> = ({
               id={`${formName}-radio-input-${index}`}
               type="radio"
               name={formName}
-              className="h-5 w-5 mt-3 ml-2 mr-1"
+              className="h-5 w-5 mt-3 ml-2 mr-1 cursor-pointer"
               defaultChecked={checkedValue === option.value}
               value={option.value}
               onChange={handleChange}
             />
             <label
               htmlFor={`${formName}-radio-input-${index}`}
-              className="radio-wrapper sm:inline-flex items-center mt-3 mr-4"
+              className="radio-wrapper sm:inline-flex items-center mt-3 mr-4 cursor-pointer"
             >
               {option.label}
             </label>

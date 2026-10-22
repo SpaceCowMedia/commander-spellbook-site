@@ -1,4 +1,4 @@
-import { Deck } from '@space-cow-media/spellbook-client';
+import { CardInVariant, Deck } from '@space-cow-media/spellbook-client';
 
 // How many copies of each card the deck holds, by lowercase card name.
 export default function countDeckCards(deck?: Deck): Map<string, number> | undefined {
@@ -8,3 +8,6 @@ export default function countDeckCards(deck?: Deck): Map<string, number> | undef
     return acc;
   }, new Map<string, number>());
 }
+
+export const isMissingFromDeck = ({ card, quantity }: CardInVariant, deckCardCounts?: Map<string, number>) =>
+  quantity - (deckCardCounts?.get(card.name.toLowerCase()) ?? 0) > 0;

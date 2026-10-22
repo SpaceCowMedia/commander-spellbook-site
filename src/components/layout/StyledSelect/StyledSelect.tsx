@@ -40,8 +40,13 @@ const StyledSelect: React.FC<Props> = ({
     setLocalValue(value);
   }, [value]);
 
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === localValue),
+  );
+
   return (
-    <div className={`${selectBackgroundClassName} rounded-l-sm relative`}>
+    <div className={`rounded-sm ${selectBackgroundClassName} relative`}>
       <label htmlFor={id} className="sr-only" aria-hidden="true">
         {label}
       </label>
@@ -58,6 +63,12 @@ const StyledSelect: React.FC<Props> = ({
           </option>
         ))}
       </select>
+      {/* A select can't animate its label, so it shows this reel of them instead, rolled to the selected one. */}
+      <div className={styles.reel} style={{ '--selected': selectedIndex } as React.CSSProperties} aria-hidden="true">
+        {options.map((option, index) => (
+          <span key={`${option.value}-${index}`}>{option.label}</span>
+        ))}
+      </div>
       <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none" aria-hidden="true">
         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
           <path

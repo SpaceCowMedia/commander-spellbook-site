@@ -16,6 +16,7 @@
   --template-morph-duration: 350ms;
   --card-move-duration: 400ms;
   --card-rise-delay: 100ms;
+  --regroup-duration: 450ms;
 }
 
 @property --page-turn-shade {
@@ -34,6 +35,11 @@
 }
 
 :root:active-view-transition-type(theme, template-morph, load-more) .siteHeader {
+  view-transition-name: none;
+}
+
+/* An open modal is drawn in the root snapshot, which a header snapshot of its own would cover. */
+:root:has(dialog:modal) .siteHeader {
   view-transition-name: none;
 }
 
@@ -145,6 +151,117 @@
   }
 }
 
+/*
+ * Grouped otherwise, the variants found keep their cards: a group's card grows out of its most popular variant's and
+ * back, and the cards of its other variants fly into it and out of it, as they do into a missing card's cluster. The
+ * clusters fade in and out together.
+ */
+::view-transition-group(.regroupMove),
+::view-transition-group(.regroupGather) {
+  animation-duration: var(--regroup-duration);
+  animation-timing-function: var(--dock-easing);
+}
+
+::view-transition-group(.regroupMove) {
+  z-index: 1;
+}
+
+::view-transition-group(.regroupGather) {
+  z-index: 2;
+}
+
+/*
+ * Both sides start at the top of the card and are cut to its height, which its row changes, so that its footer
+ * doesn't show twice. They add up as they fade, which the browser's own fade does through an animation that
+ * setting these drops.
+ */
+::view-transition-image-pair(.regroupMove) {
+  overflow: clip;
+  isolation: isolate;
+}
+
+::view-transition-old(.regroupMove) {
+  mix-blend-mode: plus-lighter;
+  animation: var(--regroup-duration) ease-in-out both vt-fade-out;
+}
+
+::view-transition-new(.regroupMove) {
+  mix-blend-mode: plus-lighter;
+  animation: var(--regroup-duration) ease-in-out both vt-fade-in;
+}
+
+/* A card gathered into another stays whole until it lands on it, which is all the new side shows. */
+::view-transition-old(.regroupGather) {
+  animation: var(--regroup-duration) ease-in both regroup-land;
+}
+
+::view-transition-new(.regroupGather) {
+  animation: none;
+}
+
+::view-transition-old(.regroupFade) {
+  animation: var(--page-exit-duration) ease-in both vt-fade-out;
+}
+
+::view-transition-new(.regroupFade) {
+  animation: var(--regroup-duration) ease-out both vt-fade-in;
+}
+
+/*
+ * A modal regrouping its content glides to its new size and place as one, crossfading what it shows: cards flying on
+ * their own would leave its edges, which clip them only on the page. Its box stays opaque all along.
+ */
+::view-transition-group(.modalResize) {
+  border-radius: var(--radius-lg, 0.5rem);
+  background: var(--color-white, white);
+  animation-duration: var(--regroup-duration);
+  animation-timing-function: var(--dock-easing);
+}
+
+:root.dark::view-transition-group(.modalResize) {
+  background: var(--color-dark, #222);
+}
+
+::view-transition-image-pair(.modalResize) {
+  overflow: clip;
+  isolation: isolate;
+  border-radius: inherit;
+}
+
+::view-transition-old(.modalResize) {
+  mix-blend-mode: plus-lighter;
+  animation: var(--regroup-duration) ease-in-out both vt-fade-out;
+}
+
+::view-transition-new(.modalResize) {
+  mix-blend-mode: plus-lighter;
+  animation: var(--regroup-duration) ease-in-out both vt-fade-in;
+}
+
+/* Its switch moves along with it, live, rather than crossfading from one thumb to the other. */
+::view-transition-group(.modalSwitch) {
+  animation-duration: var(--regroup-duration);
+  animation-timing-function: var(--dock-easing);
+}
+
+::view-transition-old(.modalSwitch) {
+  display: none;
+}
+
+::view-transition-new(.modalSwitch) {
+  animation: none;
+}
+
+@keyframes regroup-land {
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 ::view-transition-image-pair(.searchDock) {
   overflow: clip;
   animation-name: dock-blur;
@@ -253,6 +370,16 @@
 :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition {
   perspective: var(--page-turn-perspective);
   perspective-origin: 50vw 40vh;
+}
+
+/*
+ * The new page and the sheet follow their elements, while the old page stays where it was captured, so scrolling
+ * would tear them apart: the page holds still while it turns. The gutter keeps the width the scrollbar took.
+ */
+:root:active-view-transition-type(page-turn-forward, page-turn-back) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+  touch-action: none;
 }
 
 :root:active-view-transition-type(page-turn-forward, page-turn-back)::view-transition-group(.pageTurnEnter) {
@@ -486,8 +613,15 @@
   ::view-transition-group(.templateMorph),
   ::view-transition-group(.cardMove),
   ::view-transition-group(.tabSlideForward),
-  ::view-transition-group(.tabSlideBack) {
+  ::view-transition-group(.tabSlideBack),
+  ::view-transition-group(.regroupMove),
+  ::view-transition-group(.modalResize),
+  ::view-transition-group(.modalSwitch) {
     animation-name: none;
+  }
+
+  ::view-transition-group(.regroupGather) {
+    display: none;
   }
 
   ::view-transition-old(.tabSlideForward),

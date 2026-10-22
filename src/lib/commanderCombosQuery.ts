@@ -2,6 +2,8 @@ import { CardDetail } from '@space-cow-media/spellbook-client';
 
 const COLORS = ['W', 'U', 'B', 'R', 'G'];
 
+export const COMMANDER_COMBOS_PAGE_SIZE = 12;
+
 const quote = (name: string) => `"${name.replaceAll('"', '\\"')}"`;
 
 // The combos a deck can play with its commanders: they use at least one of them, fit their color identity and need
