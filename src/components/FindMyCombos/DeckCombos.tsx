@@ -31,7 +31,7 @@ interface MissingCardSectionProps {
   id: string;
   title: string;
   description: string;
-  category: VariantCategory;
+  /* The categories of the combos found, this section's first. */
   categories: VariantCategory[];
   deck?: Deck;
   deckCardCounts?: Map<string, number>;
@@ -64,14 +64,13 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
   id,
   title,
   description,
-  category,
   categories,
   deck,
   deckCardCounts,
 }) => {
   const [grouping, regroup] = useVariantGrouping('card');
   const viewTransitionScope = useId();
-  const combos = category.variants;
+  const [{ variants: combos }] = categories;
   const groups = useMemo(() => groupByMissingCard(combos, deckCardCounts), [combos, deckCardCounts]);
 
   if (!combos.length) {
@@ -100,7 +99,6 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
       {byCard ? (
         <MissingCardClusters
           groups={groups}
-          category={category}
           categories={categories}
           deck={deck}
           viewTransitionScope={viewTransitionScope}
@@ -112,7 +110,7 @@ const MissingCardSection: React.FC<MissingCardSectionProps> = ({
           sort={DEFAULT_SORT}
           hideVariants={true}
           localPageLimit={100}
-          groupVariants={grouping === 'combo' ? { category, categories } : undefined}
+          groupVariants={grouping === 'combo' ? categories : undefined}
           viewTransitionScope={viewTransitionScope}
         />
       )}
@@ -273,8 +271,6 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
     results.almostIncludedByAddingColors.length,
   )} Found With Additional Color Requirements`;
 
-  const allCategories: VariantCategory[] = Object.values(categories);
-
   return (
     // The combos open in a new tab, leaving the deck and what was found for it where they are.
     <NewTabContext value>
@@ -289,9 +285,7 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
             sort={DEFAULT_SORT}
             hideVariants={true}
             localPageLimit={100}
-            groupVariants={
-              includedGrouping === 'combo' ? { category: categories.included, categories: allCategories } : undefined
-            }
+            groupVariants={includedGrouping === 'combo' ? [categories.included, categories.almostIncluded] : undefined}
             deck={currentlyParsedDeck?.deck}
             viewTransitionScope={includedScope}
           />
@@ -301,8 +295,7 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
           id="potential-combos-in-deck-section"
           title={potentialCombosInDeckHeadingText}
           description="List of combos where your decklist is missing 1 combo piece."
-          category={categories.almostIncluded}
-          categories={allCategories}
+          categories={[categories.almostIncluded, categories.included]}
           deck={currentlyParsedDeck?.deck}
           deckCardCounts={deckCardCounts}
         />
@@ -311,8 +304,13 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
           id="potential-combos-outside-color-identity-section"
           title={potentialCombosInAdditionalColorsHeadingText}
           description="List of combos where your decklist is missing 1 combo piece, but requires at least one additional color."
-          category={categories.almostIncludedByAddingColors}
-          categories={allCategories}
+          categories={[
+            categories.almostIncludedByAddingColors,
+            categories.included,
+            categories.almostIncluded,
+            categories.almostIncludedByChangingCommanders,
+            categories.almostIncludedByAddingColorsAndChangingCommanders,
+          ]}
           deck={currentlyParsedDeck?.deck}
           deckCardCounts={deckCardCounts}
         />
@@ -320,8 +318,13 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
           id="potential-combos-outside-commander-section"
           title={`${results.almostIncludedByChangingCommanders.length} Potential Combos Found With Different Commander`}
           description="List of combos where your decklist is missing 1 combo piece, but requires changing your commander."
-          category={categories.almostIncludedByChangingCommanders}
-          categories={allCategories}
+          categories={[
+            categories.almostIncludedByChangingCommanders,
+            categories.included,
+            categories.almostIncluded,
+            categories.almostIncludedByAddingColors,
+            categories.almostIncludedByAddingColorsAndChangingCommanders,
+          ]}
           deck={currentlyParsedDeck?.deck}
           deckCardCounts={deckCardCounts}
         />
@@ -329,8 +332,13 @@ const DeckCombos = ({ results, commanderCombos, query, currentlyParsedDeck }: Pr
           id="potential-combos-outside-color-identity-and-commander-section"
           title={`${results.almostIncludedByAddingColorsAndChangingCommanders.length} Potential Combos Found With Different Commander and Additional Colors`}
           description="List of combos where your decklist is missing 1 combo piece, but requires changing your commander and adding a color."
-          category={categories.almostIncludedByAddingColorsAndChangingCommanders}
-          categories={allCategories}
+          categories={[
+            categories.almostIncludedByAddingColorsAndChangingCommanders,
+            categories.included,
+            categories.almostIncluded,
+            categories.almostIncludedByAddingColors,
+            categories.almostIncludedByChangingCommanders,
+          ]}
           deck={currentlyParsedDeck?.deck}
           deckCardCounts={deckCardCounts}
         />

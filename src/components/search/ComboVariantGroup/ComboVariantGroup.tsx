@@ -26,8 +26,7 @@ import countDeckCards, { isMissingFromDeck } from 'lib/countDeckCards';
 
 interface Props {
   variants: Variant[];
-  category: VariantCategory;
-  /* Every category with its variants of the same combo, this group's own included. */
+  /* Every category with its variants of the same combo, in the order the modal lists them, this group's own first. */
   categories: VariantCategory[];
   deck?: Deck;
   viewTransitionScope?: string;
@@ -100,13 +99,9 @@ const Piece: React.FC<{ piece: ComboPiece; decklist?: Map<string, number> }> = (
   );
 };
 
-// The variants of one category, which can be grouped by the card they miss.
-const ModalCategory: React.FC<{ category: VariantCategory; categories: VariantCategory[]; deck?: Deck }> = ({
-  category,
-  categories,
-  deck,
-}) => {
-  const { label, detail, variants, inDeck } = category;
+// The variants of the first category, which can be grouped by the card they miss.
+const ModalCategory: React.FC<{ categories: VariantCategory[]; deck?: Deck }> = ({ categories, deck }) => {
+  const [{ label, detail, variants, inDeck }] = categories;
   const [grouping, regroup] = useVariantGrouping('card', MODAL_REGROUP);
   const id = useId();
   // Clusters open modals of their own, which would open more without end inside a modal already nested.
@@ -138,7 +133,7 @@ const ModalCategory: React.FC<{ category: VariantCategory; categories: VariantCa
         )
       )}
       {grouping === 'card' && groups.length > 0 ? (
-        <MissingCardClusters groups={groups} category={category} categories={categories} deck={deck} />
+        <MissingCardClusters groups={groups} categories={categories} deck={deck} />
       ) : (
         <div className={styles.modalResults}>
           <ComboResults
@@ -155,16 +150,13 @@ const ModalCategory: React.FC<{ category: VariantCategory; categories: VariantCa
   );
 };
 
-const ComboVariantGroup: React.FC<Props> = ({ variants, category, categories, deck, viewTransitionScope }) => {
+const ComboVariantGroup: React.FC<Props> = ({ variants, categories, deck, viewTransitionScope }) => {
   const [mostPopular, ...otherVariants] = variants;
+  const [category] = categories;
   const replaceablePieces = useMemo(() => namedOnce(variantReplacements(variants)), [variants]);
   const [open, setOpen] = useState(false);
   const decklist = countDeckCards(deck);
   const variantCount = categories.reduce((count, { variants }) => count + variants.length, 0);
-  // Under the combos found, the variants in the deck come first; under the suggestions, the suggested ones do.
-  const modalCategories = category.inDeck
-    ? categories
-    : [...categories.filter(({ inDeck }) => !inDeck), ...categories.filter(({ inDeck }) => inDeck)];
 
   const results = mostPopular.produces.filter(({ feature }) =>
     variants.every(({ produces }) => produces.some((result) => result.feature.id === feature.id)),
@@ -257,13 +249,12 @@ const ComboVariantGroup: React.FC<Props> = ({ variants, category, categories, de
 
       <Modal open={open} onClose={() => setOpen(false)} closeIcon={true} size="large">
         <h3 className={styles.modalTitle}>{variantCount} variants of the same combo</h3>
-        {modalCategories
+        {categories
           .filter(({ variants }) => variants.length)
           .map((shownCategory) => (
             <ModalCategory
               key={`${shownCategory.label} ${shownCategory.detail}`}
-              category={shownCategory}
-              categories={categories}
+              categories={[shownCategory, ...categories.filter((category) => category !== shownCategory)]}
               deck={deck}
             />
           ))}

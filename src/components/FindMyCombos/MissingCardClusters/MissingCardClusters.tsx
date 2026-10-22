@@ -139,8 +139,7 @@ const MissingCardHand: React.FC<{ group: MissingCardGroup }> = ({ group }) => {
 
 interface Props {
   groups: MissingCardGroup[];
-  /* The category of the combos, among all those found, for grouping a cluster's combos by combo. */
-  category: VariantCategory;
+  /* The categories of the combos found, theirs first, for grouping a cluster's combos by combo. */
   categories: VariantCategory[];
   deck?: Deck;
   viewTransitionScope?: string;
@@ -148,7 +147,6 @@ interface Props {
 
 const ClusterCombos: React.FC<Omit<Props, 'groups' | 'viewTransitionScope'> & { group: MissingCardGroup }> = ({
   group,
-  category,
   categories,
   deck,
 }) => {
@@ -171,7 +169,7 @@ const ClusterCombos: React.FC<Omit<Props, 'groups' | 'viewTransitionScope'> & { 
           sort={DEFAULT_SORT}
           hideVariants={true}
           localPageLimit={100}
-          groupVariants={groupable && grouping === 'combo' ? { category, categories } : undefined}
+          groupVariants={groupable && grouping === 'combo' ? categories : undefined}
         />
       </div>
     </>
@@ -180,7 +178,7 @@ const ClusterCombos: React.FC<Omit<Props, 'groups' | 'viewTransitionScope'> & { 
 
 // The combos that miss a card, one cluster per card, each opening its combos. Given a scope, their cards fly into the
 // clusters and out of them as they are grouped otherwise; in a modal, which can't clip them, the modal resizes instead.
-const MissingCardClusters: React.FC<Props> = ({ groups, category, categories, deck, viewTransitionScope }) => {
+const MissingCardClusters: React.FC<Props> = ({ groups, categories, deck, viewTransitionScope }) => {
   const [expandedGroupKey, setExpandedGroupKey] = useState<string>();
   const expandedGroup = groups.find((group) => group.key === expandedGroupKey);
   const grid = (
@@ -267,7 +265,7 @@ const MissingCardClusters: React.FC<Props> = ({ groups, category, categories, de
               This cluster contains {expandedGroup.combos.length} {pluralize('combo', expandedGroup.combos.length)} that
               all miss this single piece.
             </p>
-            <ClusterCombos group={expandedGroup} category={category} categories={categories} deck={deck} />
+            <ClusterCombos group={expandedGroup} categories={categories} deck={deck} />
           </div>
         )}
       </Modal>

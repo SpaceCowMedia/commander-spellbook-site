@@ -113,7 +113,8 @@ describe('Find My Combos', () => {
     cy.get('#parse-decklist-input').click();
 
     cy.get('#combos-in-deck-grouping input[value="combo"]').should('be.checked');
-    cy.get(COMBOS_IN_DECK).should('contain', '2 Combos Found').and('contain', '+ 1/3 variants in your deck');
+    // Lotus Petal needs a color more, so the variants it counts among are only those in the deck or missing a card.
+    cy.get(COMBOS_IN_DECK).should('contain', '2 Combos Found').and('contain', '+ 1/2 variants in your deck');
     cy.get(`${COMBOS_IN_DECK} .card-name:contains("Basalt Monolith")`).should('have.length', 1);
     cy.get(`${COMBOS_IN_DECK} li`).should('have.length', 1).and('contain', 'Sol Ring');
 
@@ -126,26 +127,47 @@ describe('Find My Combos', () => {
     cy.get(`${COMBOS_IN_DECK} li`).should('have.length', 1);
 
     cy.contains(`${COMBOS_IN_DECK} [role="button"]`, 'Sol Ring').find('.result').click();
-    cy.get('dialog[open]').should('contain', '4 variants of the same combo');
+    cy.get('dialog[open]').should('contain', '3 variants of the same combo');
     cy.get('dialog[open] h4').should(($headings) =>
-      expect(Cypress._.map($headings, 'textContent')).to.deep.equal([
-        '2 in your deck',
-        '1 missing one card',
-        '1 missing one card, with additional colors',
-      ]),
+      expect(Cypress._.map($headings, 'textContent')).to.deep.equal(['2 in your deck', '1 missing one card']),
     );
     cy.get('dialog[open] a[href*="/combo/"]').should('have.length', 2);
     cy.get('dialog[open] a[href*="/combo/1-2-10"] strong').should('have.text', 'Sol Ring');
     cy.get('dialog[open] a[href*="/combo/1-2-10"]').should('not.contain', 'Mesmeric Orb');
     cy.contains('dialog[open] [role="button"]', 'Mana Vault').should('contain', '1 combo');
 
-    cy.contains('dialog[open] h4', 'with additional colors').next().contains('label', 'Ungrouped').click();
-    cy.get('dialog[open] a[href*="/combo/1-2-12"] strong').should('have.text', 'Lotus Petal (not in deck)');
-    cy.contains('dialog[open] [role="button"]', 'Lotus Petal').should('not.exist');
+    cy.contains('dialog[open] h4', 'missing one card').next().contains('label', 'Ungrouped').click();
+    cy.get('dialog[open] a[href*="/combo/1-2-11"] strong').should('have.text', 'Mana Vault (not in deck)');
+    cy.contains('dialog[open] [role="button"]', 'Mana Vault').should('not.exist');
     cy.contains('dialog[open] a[href*="/combo/"]', 'Mesmeric Orb')
       .should('have.attr', 'target', '_blank')
       .and('have.attr', 'href')
       .and('match', /^\/combo\/1-2\/?$/);
+  });
+
+  it('counts the variants of a combo needing more colors among all those found', () => {
+    addVariants((results, variant) => {
+      results.almostIncluded = [variant('11', 'Mana Vault')];
+      results.almostIncludedByAddingColors = [
+        { ...variant('12', 'Lotus Petal'), identity: 'W' },
+        { ...variant('14', 'Mox Pearl'), identity: 'W' },
+      ];
+    });
+    cy.get('#parse-decklist-input').click();
+    const section = '#potential-combos-outside-color-identity-section';
+
+    cy.contains(`${section} label`, 'By combo').click();
+    cy.get(section).should('contain', '+ 1/3 variants missing one card');
+    cy.contains(`${section} [role="button"]`, 'Lotus Petal').find('.result').click();
+    // Its own section's variants come first, then the others in the order of their sections.
+    cy.get('dialog[open]').should('contain', '4 variants of the same combo');
+    cy.get('dialog[open] h4').should(($headings) =>
+      expect(Cypress._.map($headings, 'textContent')).to.deep.equal([
+        '2 missing one card, with additional colors',
+        '1 in your deck',
+        '1 missing one card',
+      ]),
+    );
   });
 
   it('groups the combos missing a card by that card, unless switched to their combos or to no grouping', () => {

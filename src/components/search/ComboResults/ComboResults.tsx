@@ -16,8 +16,8 @@ interface Props {
   vendor?: (keyof VariantPrices)[];
   hideVariants?: boolean;
   localPageLimit?: number; // If passed in, will limit the number of results shown on the local page
-  /* Groups the variants of each combo, those of the listed category, shown along with the others of that combo. */
-  groupVariants?: { category: VariantCategory; categories: VariantCategory[] };
+  /* Groups the variants of each combo, those of the first category, shown along with the others of that combo. */
+  groupVariants?: VariantCategory[];
   viewTransitionScope?: string;
 }
 
@@ -55,11 +55,10 @@ const ComboResults: React.FC<Props> = ({
         groupVariants && variants.length > 1 ? (
           <ComboVariantGroup
             variants={variants}
-            category={groupVariants.category}
-            categories={groupVariants.categories.map((category) => ({
+            categories={groupVariants.map((category) => ({
               ...category,
               variants:
-                category === groupVariants.category
+                category === groupVariants[0]
                   ? variants
                   : category.variants.filter((variant) => isOfCombo(variant, generator)),
             }))}
