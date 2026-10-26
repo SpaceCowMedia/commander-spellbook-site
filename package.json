@@ -78,7 +78,7 @@
     "stylelint-scss": "^7.3.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2",
+    "typescript-eslint": "^8.72.0",
     "wait-on": "^9.5.1"
   }
 }
