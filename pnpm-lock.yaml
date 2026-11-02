@@ -201,8 +201,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.1)
       '@space-cow-media/spellbook-client':
-        specifier: ^7.3.1
-        version: 7.3.1
+        specifier: ^7.3.4
+        version: 7.3.4
       canvas:
         specifier: ^3.2.3
         version: 3.2.3
@@ -1079,8 +1079,8 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@space-cow-media/spellbook-client@7.3.1':
-    resolution: {integrity: sha512-pFobmIBk8ell4HZlvB2hzr1PHJyBGdpceoBtnlz07nyX239V9F9LRveSjTWOAo3xYE26a6TfrkZbZrkDTv3LUw==}
+  '@space-cow-media/spellbook-client@7.3.4':
+    resolution: {integrity: sha512-hf03QA5dYzuTuaROtno6i6nSC70yIvFu/WVhKW/BgBaVCg59Uwb5fjLGSjM1ME/LX9P69bJ4i2Juq/5HRcnQDg==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -4202,7 +4202,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@space-cow-media/spellbook-client@7.3.1': {}
+  '@space-cow-media/spellbook-client@7.3.4': {}
 
   '@standard-schema/spec@1.1.0': {}
 
