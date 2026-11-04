@@ -18,6 +18,7 @@ const EXAMPLES: Record<WidgetId, keyof typeof fixtures> = {
   'storm-life-loop': '2903-3260-4740',
   'drain-loop': '328-1377-2292-3211-3260-4078',
   krenko: '38-659-1288',
+  'krark-flips': '1434-1704-4549--227',
   'mayaels-aria-doubling': '3858-6864',
   'maddening-cacophony': '5069-5080',
   'angel-of-destiny-copies': '2790-2990',
