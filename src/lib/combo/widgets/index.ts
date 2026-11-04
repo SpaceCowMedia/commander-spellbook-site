@@ -16,6 +16,7 @@ import { drainLoop } from './drainLoop';
 import { elenda } from './elenda';
 import { empoweredAutogenerator } from './empoweredAutogenerator';
 import { grayMerchantDevotion } from './grayMerchantDevotion';
+import { krarkFlips } from './krarkFlips';
 import { krenko } from './krenko';
 import { maddeningCacophony } from './maddeningCacophony';
 import { manaEchoes } from './manaEchoes';
@@ -48,6 +49,7 @@ export const WIDGETS = [
   stormLifeLoop,
   drainLoop,
   krenko,
+  krarkFlips,
   mayaelsAriaDoubling,
   maddeningCacophony,
   angelOfDestinyCopies,
