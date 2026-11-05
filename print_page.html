@@ -439,6 +439,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing/unit-testing.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unit Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -562,6 +583,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#testing-unit-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Unit Testing
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -669,6 +699,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#testing-unit-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Unit Testing
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -767,6 +806,10 @@
 <td><code>pnpm tsc --noEmit</code></td>
 </tr>
 <tr>
+<td>Run the unit tests</td>
+<td><code>pnpm test</code></td>
+</tr>
+<tr>
 <td>Open Cypress</td>
 <td><code>pnpm cy:open</code></td>
 </tr>
@@ -822,6 +865,7 @@
 <p>The backend (auth, api, database) is all managed by a separate API outside of this repo.</p>
 <h2 id="index-automated-testing">Automated Testing</h2>
 <ul>
+<li><a href="#testing-unit-testing">Unit Testing</a></li>
 <li><a href="#testing-integration-testing">Integration Testing</a></li>
 </ul></section>
                         <h1 class='nav-section-title' id='section-frontend'>
@@ -842,7 +886,7 @@ pnpm<span class="w"> </span>build
 pnpm<span class="w"> </span>start
 </code></pre></div></section><section class="print-page" id="frontend-pages"><h1 id="frontend-pages-pages">Pages</h1>
 <p>Create a <code>React</code> component in the pages directory, where the name of the file is the path a user will navigate to in the url.</p>
-<p>In general, try to keep page logic simple. Pull any complex logic out into a component in the <code>components</code> directory in a folder with the same name as the route.</p>
+<p>In general, try to keep page logic simple. Pull any complex logic out into components and <code>lib</code> modules, placed as described in <a href="#frontend-components">Creating a component</a>.</p>
 <h2 id="frontend-pages-page-transitions">Page transitions</h2>
 <p>Navigations animate with React's <code>&lt;ViewTransition&gt;</code>. Every page sits in a keyed sheet in <code>PageWrapper</code>, which fades out and in when its key changes. The key defaults to the URL path, so query changes update a page in place.</p>
 <ul>
@@ -858,8 +902,68 @@ pnpm<span class="w"> </span>start
 <li>React only names a <code>&lt;ViewTransition&gt;</code> whose elements are in the viewport, so a shared element that is scrolled out of view doesn't fly: the transition goes on without it.</li>
 </ul>
 <p>Other transitions are tagged by their components with <code>addTransitionType</code> inside <code>startTransition</code>: <code>Tab</code> slides its panels across like a carousel, in the order of its tabs, and glides its underline over (<code>TAB_FORWARD</code>, <code>TAB_BACK</code>): its panel updates in place rather than being replaced, so the old and the new one share an image pair clipped to the panel, and a template card grows its wheel's card into its place in the replacement list and back (<code>TEMPLATE_MORPH</code>), through a <code>&lt;ViewTransition name share&gt;</code> that only one of them renders at a time. Load More slides the last row of a replacement list aside as its new cards rise in (<code>LOAD_MORE</code>): only the cards of the last page can move, so only they map <code>update</code> to an animation, which keeps the snapshots few, and the new cards rise in with <code>@starting-style</code> rather than as snapshots, so that the dialog's edges still clip them. Its transition starts when the page arrives, but only ever after a click on Load More. The theme switch is no React update, so <code>ThemeSelector</code> calls <code>document.startViewTransition</code> with the <code>THEME_SWITCH</code> type itself, and applies the theme in its update, after the old page is captured.</p>
-<p>All motion lives in <code>src/assets/view-transitions.css</code>. <code>_document</code> gives the root an inline <code>view-transition-name</code>, so that file, rather than React, decides what the root snapshot does: it keeps it still. The header is named there too, through its <code>siteHeader</code> class, so that transitions that redraw the whole page, like the theme switch, can leave it in the root snapshot. It stays there whenever a modal is open too: the root snapshot draws the modal, which the header's own snapshot would cover. Menus, the cookie banner and modals open and close with CSS transitions and <code>@starting-style</code> instead, without view transitions, <code>VariantGroupingSwitch</code> slides its thumb and <code>StyledSelect</code> rolls its label like a reel, and so does content that arrives on its own time, like the bracket estimate: in Firefox, a click that lands while a view transition is starting can be lost, so only an input should start one. <code>Modal</code> is a native <code>&lt;dialog&gt;</code> in the top layer: popups that portal to the body would sit under it, so they portal into the dialog given by <code>ModalPortalContext</code> when there is one.</p></section><section class="print-page" id="frontend-components"><h1 id="frontend-components-components">Components</h1>
-<p>Create a <code>React</code> component in the <code>components</code> directory. If it's a component specific to a page, nest it in a directory with the same name as the page.</p>
+<p>All motion lives in <code>src/styles/view-transitions.css</code>. <code>_document</code> gives the root an inline <code>view-transition-name</code>, so that file, rather than React, decides what the root snapshot does: it keeps it still. The header is named there too, through its <code>siteHeader</code> class, so that transitions that redraw the whole page, like the theme switch, can leave it in the root snapshot. It stays there whenever a modal is open too: the root snapshot draws the modal, which the header's own snapshot would cover. Menus, the cookie banner and modals open and close with CSS transitions and <code>@starting-style</code> instead, without view transitions, <code>VariantGroupingSwitch</code> slides its thumb and <code>StyledSelect</code> rolls its label like a reel, and so does content that arrives on its own time, like the bracket estimate: in Firefox, a click that lands while a view transition is starting can be lost, so only an input should start one. <code>Modal</code> is a native <code>&lt;dialog&gt;</code> in the top layer: popups that portal to the body would sit under it, so they portal into the dialog given by <code>ModalPortalContext</code> when there is one.</p></section><section class="print-page" id="frontend-components"><h1 id="frontend-components-components">Components</h1>
+<p>Every component has its own folder, named like the component, holding <code>Component.tsx</code>, its <code>component.module.scss</code> and its tests (<code>Component.test.tsx</code>). A part only that component uses nests inside its folder; a part that siblings share gets a folder of its own.</p>
+<h2 id="frontend-components-where-a-component-goes">Where a component goes</h2>
+<ol>
+<li><strong>What it shows decides its area.</strong> A component that shows Magic or Spellbook content lives in the area of that content, whether or not it takes children:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>card</code></td>
+<td>cards and templates: images, names, links, tooltips, previews, spoiler fog</td>
+</tr>
+<tr>
+<td><code>symbols</code></td>
+<td>mana and other card symbols, color identities, text with symbols in it</td>
+</tr>
+<tr>
+<td><code>combo</code></td>
+<td>the combo page and what describes a single combo</td>
+</tr>
+<tr>
+<td><code>bracket</code></td>
+<td>Commander brackets of combos and decks</td>
+</tr>
+<tr>
+<td><code>salt</code></td>
+<td>salt scores and votes</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>search inputs, results, pagination and the syntax guide</td>
+</tr>
+<tr>
+<td><code>findMyCombos</code></td>
+<td>the decklist lookup</td>
+</tr>
+<tr>
+<td><code>submission</code></td>
+<td>combo and update submissions</td>
+</tr>
+<tr>
+<td><code>home</code></td>
+<td>the home page</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li><strong>Anything else goes to <code>layout</code> or <code>ui</code>,</strong> depending on one question: does it take <code>children</code>?<br />
+   - <code>layout</code> holds components that contain and handle <code>children</code>, or other content nodes like the panels of <code>Tab</code>: they wrap, arrange, show, hide or animate what they're given. Examples: <code>PageWrapper</code>, <code>Modal</code>, <code>Tab</code>, <code>Alert</code>, <code>PageTurn</code>.<br />
+   - <code>ui</code> holds self-contained pieces of the interface that render everything from their props. Examples: <code>Icon</code>, <code>Loader</code>, <code>Stepper</code>, <code>DotChart</code>, <code>Footer</code>.</li>
+</ol>
+<p>A component never imports another component's stylesheet. When two components need the same look, one of them exposes it through a prop, like <code>&lt;Loader centered /&gt;</code>. Good, bad, risky and neutral results share their colors through <code>components/ui/tones</code>: a tone's class only sets <code>--tone…</code> variables, which each component paints its own parts with, and every tone comes with an icon and a word so that color is never the only cue.</p>
+<h2 id="frontend-components-logic">Logic</h2>
+<p>Code without JSX lives in <code>src/lib</code>, which mirrors the component areas (<code>lib/card</code>, <code>lib/combo</code>, <code>lib/salt</code>…). Helpers that every area uses are grouped by what they do: <code>lib/charts</code>, <code>lib/http</code>, <code>lib/react</code> and <code>lib/text</code>. Site-wide modules like <code>viewTransitions</code> stay at the root of <code>lib</code>. Calls to external services live in <code>src/services</code>.</p>
+<h2 id="frontend-components-imports">Imports</h2>
+<p>Import through the alias paths: <code>components/…</code>, <code>lib/…</code>, <code>services/…</code>, <code>styles/…</code>, <code>assets/…</code>. Only files in the same folder, or in a folder nested inside it, are imported with <code>./</code>. ESLint rejects <code>../</code>.</p>
 <h2 id="frontend-components-links">Links</h2>
 <ul>
 <li>Pages of this site, jumps within the page included: <code>Link</code> from <code>next/link</code>, or <code>CardLink</code> for a card. They open in the same tab.</li>
@@ -909,7 +1013,37 @@ pnpm<span class="w"> </span>start
 <h2 id="testing-integration-testing-videosscreenshots">Videos/Screenshots</h2>
 <p>By default, because it takes so long to process video, we have the video and screenshot capabilities turned off. If it's useful to inspect the video of what happened after the tests run, you can append this config flag to the test command:</p>
 <div class="highlight"><pre><span></span><code>pnpm cy:run --config video=true,videoUploadOnPasses=true,screenshotOnRunFailure=true
-</code></pre></div></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
+</code></pre></div></section><section class="print-page" id="testing-unit-testing"><h1 id="testing-unit-testing-unit-testing">Unit Testing</h1>
+<p>Unit and component tests run on <a href="https://vitest.dev/">Vitest</a> with <a href="https://testing-library.com/docs/react-testing-library/intro/">Testing Library</a> in a <code>jsdom</code> environment.</p>
+<h2 id="testing-unit-testing-what-to-test">What to test</h2>
+<p>Test anything with logic of its own: parsers, calculations, hooks and components that handle input or announce results. Query components the way a person would find them, by role and accessible name, rather than by class or test id.</p>
+<h2 id="testing-unit-testing-where-tests-live">Where tests live</h2>
+<p>Tests live under <code>tests/unit</code>, at the same path as the file they test and with its name: <code>src/components/ui/Stepper/Stepper.tsx</code> is tested by <code>tests/unit/components/ui/Stepper/Stepper.test.tsx</code>, <code>src/lib/combo/widgets/shared/lifeLoop.ts</code> by <code>tests/unit/lib/combo/widgets/shared/lifeLoop.test.ts</code>. They import what they test through the alias paths. Nothing for testing lives in <code>src</code>.</p>
+<p>Combo widget tests share the helpers in <code>tests/unit/lib/combo/widgets/testing</code>: real variants trimmed to the texts the widgets read (<code>variants.json</code>, with type lines where a widget counts creature types), and <code>expectSaneAtExtremes</code> to run a calculator with every input at its limits, failing it when it takes too long.</p>
+<h2 id="testing-unit-testing-how-to-run-them">How to run them</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run every test once</td>
+<td><code>pnpm test</code></td>
+</tr>
+<tr>
+<td>Re-run tests as files change</td>
+<td><code>pnpm test:watch</code></td>
+</tr>
+<tr>
+<td>Run one file, or the files matching</td>
+<td><code>pnpm test lifeLoop</code></td>
+</tr>
+</tbody>
+</table>
+<p>CI runs <code>pnpm test</code> on every push.</p></section><h1 class='nav-section-title-end'>Ended: Testing</h1></div>
 
 
 
