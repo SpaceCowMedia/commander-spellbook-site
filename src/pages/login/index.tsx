@@ -31,17 +31,17 @@ const Login: React.FC = () => {
   return (
     <>
       <SpellbookHead
-        title="Commander Spellbook: Login"
-        description="Login through discord to submit combo suggestions."
+        title="Commander Spellbook: Log In"
+        description="Log in through discord to submit combo suggestions."
       />
       <div className={`static-page ${styles.reportErrorContainer}`}>
         <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
-        <h1 className="heading-title">Login</h1>
+        <h1 className="heading-title">Log In</h1>
         <div className="text-center">
           <p>
-            Currently you can only login through discord. You must be a member of the{' '}
+            Currently you can only log in through discord. You must be a member of the{' '}
             <ExternalLink href="https://discord.com/invite/DkAyVJG">Commander Spellbook Discord server</ExternalLink> to
-            login.
+            log in.
           </p>
 
           <Link
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
             className="button"
             href={`${process.env.NEXT_PUBLIC_EDITOR_BACKEND_URL}/auth/login/?code&${new URLSearchParams({ next: completeUrl })}`}
           >
-            Login
+            Log In
           </Link>
         </div>
       </div>

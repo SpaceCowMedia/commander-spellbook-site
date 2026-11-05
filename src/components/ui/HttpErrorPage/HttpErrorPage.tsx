@@ -22,7 +22,7 @@ const BAD_REQUEST: ErrorTemplate = {
 };
 
 const UNAUTHORIZED: ErrorTemplate = {
-  title: 'Login Required',
+  title: 'Please Log In',
   arts: [
     [styles.gatekeeperOfMalakir, 'Halt! Who goes there?'],
     [styles.ghostlyPrison, 'None shall pass unannounced.'],

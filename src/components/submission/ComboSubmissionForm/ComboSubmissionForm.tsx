@@ -484,7 +484,7 @@ const CombSubmissionForm: React.FC<Props> = ({ submission, variant, card: prefil
         setErrorObj({
           statusCode: status,
           detail:
-            'You are not authorized to submit combos. Please log in and try again. You can login on a different tab and come back to this page.' +
+            'You are not authorized to submit combos. Please log in and try again. You can log in on a different tab and come back to this page.' +
             (suggestionRequestBackup && suggestionRequestBackup[backupKey]
               ? ' Your current progress has been saved, so you can restore it after logging in if this tab gets closed.'
               : ''),
