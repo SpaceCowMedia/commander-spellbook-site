@@ -5,7 +5,7 @@ const pages = [
   ['/style-guide/', 'Style Guide'],
   ['/privacy-policy/', 'Privacy Policy'],
   ['/combo-of-the-day/', 'Combo of the Day'],
-  ['/login/', 'Login'],
+  ['/login/', 'Log In'],
   ['/salt/', 'Salt Voting'],
   ['/card/1/', 'Basalt Monolith'],
 ];

@@ -49,7 +49,7 @@ const Footer: React.FC<Props> = ({ className, noMargin, comboOfTheDay }) => {
             <Link href="/submit-an-update/">Update / Error Submission</Link>
             <Link href="/style-guide/">Combo Style Guide</Link>
             <Link href="/privacy-policy/">Privacy Policy</Link>
-            <Link href="/login/?final=">Login</Link>
+            <Link href="/login/?final=">Log In</Link>
             <Link href="/metrics/">Metrics</Link>
           </div>
           <div className={styles.linkCollection}>
