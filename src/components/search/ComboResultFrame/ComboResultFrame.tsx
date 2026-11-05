@@ -1,7 +1,7 @@
 import React from 'react';
 import { VariantStatusEnum } from '@space-cow-media/spellbook-client';
 import styles from './comboResultFrame.module.scss';
-import cn from 'lib/cn';
+import classNames from 'lib/react/classNames';
 
 interface Props {
   header: React.ReactNode;
@@ -29,13 +29,13 @@ const ComboResultFrame: React.FC<Props> = ({ header, status, banner, footer, chi
 
   return (
     <div className={styles.comboResultFrame}>
-      <div className={cn(styles.header, statusClass)} title={tooltip}>
+      <div className={classNames(styles.header, statusClass)} title={tooltip}>
         {header}
       </div>
       <div className={styles.content}>{children}</div>
       {banner && <div className={styles.banner}>{banner}</div>}
       {footer && (
-        <div className={cn(styles.footer, statusClass)} title={tooltip}>
+        <div className={classNames(styles.footer, statusClass)} title={tooltip}>
           {footer}
         </div>
       )}

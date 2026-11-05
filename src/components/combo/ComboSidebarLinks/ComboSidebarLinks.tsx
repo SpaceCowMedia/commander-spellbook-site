@@ -3,10 +3,10 @@ import EdhrecLink from './EdhrecLink/EdhrecLink';
 import Link from 'next/link';
 import ExternalLink from 'components/layout/ExternalLink/ExternalLink';
 import ShareButtons from 'components/layout/ShareButtons/ShareButtons';
-import Embed from 'components/combo/ComboSidebarLinks/Embed/Embed';
+import Embed from './Embed/Embed';
 import React from 'react';
 import { Variant } from '@space-cow-media/spellbook-client';
-import useCookie from 'lib/useCookie';
+import useCookie from 'lib/react/useCookie';
 import { absoluteUrl } from 'lib/seo';
 
 interface Props {

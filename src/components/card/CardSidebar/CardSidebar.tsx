@@ -9,10 +9,10 @@ import EDHRECService from 'services/edhrec.service';
 import GathererService from 'services/gatherer.service';
 import { scryfallCardUrl } from 'services/scryfall.service';
 import VendorsService from 'services/vendors.service';
-import useCookie from 'lib/useCookie';
+import useCookie from 'lib/react/useCookie';
 import { absoluteUrl } from 'lib/seo';
 import { submitComboPath } from 'lib/cards';
-import { cardCanonicalPath } from '../cardSeo';
+import { cardCanonicalPath } from 'components/card/cardSeo';
 
 interface Props {
   card: CardDetail;

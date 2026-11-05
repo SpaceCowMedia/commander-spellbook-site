@@ -4,18 +4,18 @@ import { useRouter } from 'next/router';
 import SearchPagination from 'components/search/SearchPagination/SearchPagination';
 import PageTurn from 'components/layout/PageTurn/PageTurn';
 import styles from './my-update-submissions.module.scss';
-import { withApiErrorPage } from 'lib/apiErrorPage';
+import { withApiErrorPage } from 'lib/http/apiErrorPage';
 import CookieService from 'services/cookie.service';
 import { apiConfiguration } from 'services/api.service';
-import { queryParameterAsString } from 'lib/queryParameters';
+import { queryParameterAsString } from 'lib/http/queryParameters';
 import { pageTurn, pushWithTransition } from 'lib/viewTransitions';
-import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import TokenService from 'services/token.service';
 import {
   UpdateSubmission,
   variantUpdateSuggestionFromSubmission,
   variantUpdateSuggestionToSubmission,
-} from 'lib/types';
+} from 'lib/submission/submissions';
 import UpdateSubmissionItem from 'components/submission/UpdateSubmissionItem/UpdateSubmissionItem';
 import SplashPage from 'components/layout/SplashPage/SplashPage';
 import Link from 'next/link';

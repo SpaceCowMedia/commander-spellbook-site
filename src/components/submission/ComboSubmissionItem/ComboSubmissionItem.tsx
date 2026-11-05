@@ -1,10 +1,10 @@
 import { VariantSuggestion, VariantSuggestionsApi, SuggestionStatusEnum } from '@space-cow-media/spellbook-client';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import Icon from 'components/layout/Icon/Icon';
-import Modal from 'components/ui/Modal/Modal';
+import Icon from 'components/ui/Icon/Icon';
+import Modal from 'components/layout/Modal/Modal';
 import { apiConfiguration } from 'services/api.service';
-import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import StatusBadge from 'components/submission/StatusBadge/StatusBadge';
 
 interface Props {

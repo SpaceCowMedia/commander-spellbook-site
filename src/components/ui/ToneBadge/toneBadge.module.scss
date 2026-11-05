@@ -1,0 +1,8 @@
+@reference "../../../styles/globals.css";
+
+.badge {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap;
+
+  color: var(--tone-text);
+  background: var(--tone-soft);
+}

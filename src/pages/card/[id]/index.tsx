@@ -9,10 +9,10 @@ import {
   Variant,
   VariantsApi,
 } from '@space-cow-media/spellbook-client';
-import SpellbookHead from 'components/SpellbookHead/SpellbookHead';
+import SpellbookHead from 'components/layout/SpellbookHead/SpellbookHead';
 import CardsBanner from 'components/card/CardsBanner/CardsBanner';
-import CardName from 'components/layout/CardName/CardName';
-import TextWithMagicSymbol from 'components/layout/TextWithMagicSymbol/TextWithMagicSymbol';
+import CardName from 'components/card/CardName/CardName';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
 import CardDetails from 'components/card/CardDetails/CardDetails';
 import CardPartners from 'components/card/CardPartners/CardPartners';
 import CardRoles from 'components/card/CardRoles/CardRoles';
@@ -27,11 +27,11 @@ import {
   cardTitle,
 } from 'components/card/cardSeo';
 import { apiConfiguration } from 'services/api.service';
-import { httpErrorStatus } from 'lib/httpErrors';
+import { httpErrorStatus } from 'lib/http/httpErrors';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import { cardComboQuery, commanderFormatTerm, submitComboPath } from 'lib/cards';
 import { CardPartner, toListedVariant, topPartners } from 'lib/cardCombos';
-import { SpoilerContext } from 'lib/spoilers';
+import { SpoilerContext } from 'lib/card/spoilers';
 import { absoluteUrl } from 'lib/seo';
 import styles from './card.module.scss';
 

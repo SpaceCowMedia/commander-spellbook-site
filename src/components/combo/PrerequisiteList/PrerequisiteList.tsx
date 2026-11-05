@@ -1,7 +1,7 @@
-import { ComboPrerequisites } from '../../../lib/types';
-import TextWithMagicSymbol from '../../layout/TextWithMagicSymbol/TextWithMagicSymbol';
-import Icon, { SpellbookIcon } from '../../layout/Icon/Icon';
-import { addPeriod } from '../../../lib/addPeriod';
+import { ComboPrerequisites } from 'lib/combo/prerequisitesProcessor';
+import TextWithMagicSymbol from 'components/symbols/TextWithMagicSymbol/TextWithMagicSymbol';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
+import { addPeriod } from 'lib/text/addPeriod';
 import { CardInVariant, TemplateInVariant } from '@space-cow-media/spellbook-client';
 import React from 'react';
 

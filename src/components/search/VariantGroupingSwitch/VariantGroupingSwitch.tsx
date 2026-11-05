@@ -1,7 +1,7 @@
 import styles from './variantGroupingSwitch.module.scss';
 import React, { useState, ViewTransition } from 'react';
-import { VariantGrouping } from 'lib/variantGroups';
-import Icon, { SpellbookIcon } from 'components/layout/Icon/Icon';
+import { VariantGrouping } from 'lib/search/variantGroups';
+import Icon, { SpellbookIcon } from 'components/ui/Icon/Icon';
 import { MODAL_SWITCH } from 'lib/viewTransitions';
 
 interface Props {

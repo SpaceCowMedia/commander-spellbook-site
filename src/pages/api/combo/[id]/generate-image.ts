@@ -2,10 +2,10 @@ import { Canvas, CanvasRenderingContext2D, createCanvas, loadImage } from 'canva
 import { Card, FeatureProducedByVariant, Variant, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { NextApiRequest, NextApiResponse } from 'next';
-import serverPath from 'lib/serverPath';
+import serverPath from 'lib/http/serverPath';
 import { loadSymbolImage } from 'lib/symbolImage';
-import { countNotablePrerequisites } from 'lib/prerequisitesProcessor';
-import { httpErrorStatus } from 'lib/httpErrors';
+import { countNotablePrerequisites } from 'lib/combo/prerequisitesProcessor';
+import { httpErrorStatus } from 'lib/http/httpErrors';
 import { IMAGE_CACHE_CONTROL } from 'lib/seo';
 
 const width = 1080;

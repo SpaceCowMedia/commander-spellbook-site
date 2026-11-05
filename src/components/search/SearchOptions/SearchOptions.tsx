@@ -1,7 +1,7 @@
 import React from 'react';
-import StyledSelect from 'components/layout/StyledSelect/StyledSelect';
+import StyledSelect from 'components/ui/StyledSelect/StyledSelect';
 import { ORDER_OPTIONS, SORT_OPTIONS } from 'lib/sorting';
-import VariantGroupingSwitch from '../VariantGroupingSwitch/VariantGroupingSwitch';
+import VariantGroupingSwitch from 'components/search/VariantGroupingSwitch/VariantGroupingSwitch';
 
 export interface SearchOptionsProps {
   sort: string;

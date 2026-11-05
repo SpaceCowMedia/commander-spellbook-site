@@ -1,0 +1,26 @@
+@reference "../../../styles/globals.css";
+
+.meter {
+  @apply flex flex-col gap-1.5;
+}
+
+.track {
+  @apply h-3 w-full overflow-hidden rounded-full bg-gray-200 shadow-inner dark:bg-white/10;
+}
+
+.fill {
+  @apply h-full rounded-full transition-[width] duration-500 ease-out motion-reduce:transition-none;
+
+  width: calc(var(--ratio) * 100%);
+  background: var(--tone-pattern), var(--tone);
+}
+
+.caption {
+  @apply text-xs text-gray-600 tabular-nums dark:text-gray-300;
+}
+
+.have {
+  @apply font-bold;
+
+  color: var(--tone-text);
+}

@@ -1,0 +1,6 @@
+@reference "../../../styles/globals.css";
+
+.submitIcon {
+  mask: url('../../../assets/svgs/search-solid.svg') no-repeat center;
+  @apply shrink-0 bg-light w-4 h-4 z-10 cursor-pointer;
+}

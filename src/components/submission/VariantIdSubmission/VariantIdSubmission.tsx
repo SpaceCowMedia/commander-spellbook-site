@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import Icon from '../../layout/Icon/Icon';
-import ComboResult from '../../search/ComboResult/ComboResult';
+import Icon from 'components/ui/Icon/Icon';
+import ComboResult from 'components/search/ComboResult/ComboResult';
 import { Variant, VariantInVariantUpdateSuggestionRequest, VariantsApi } from '@space-cow-media/spellbook-client';
 import { apiConfiguration } from 'services/api.service';
 import { useDebounce } from 'use-debounce';
-import ErrorMessage, { unhandledErrors } from '../ErrorMessage/ErrorMessage';
-import { ComboSubmissionErrorType } from '../../../lib/types';
-import normalizeQuotes from '../../../lib/normalizeQuotes';
+import ErrorMessage, { unhandledErrors } from 'components/submission/ErrorMessage/ErrorMessage';
+import { ComboSubmissionErrorType } from 'lib/submission/submissions';
+import normalizeQuotes from 'lib/text/normalizeQuotes';
 
 interface Props {
   variant: VariantInVariantUpdateSuggestionRequest;

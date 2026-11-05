@@ -1,6 +1,6 @@
 import React from 'react';
 import { CardLegalities, VariantLegalities } from '@space-cow-media/spellbook-client';
-import Icon from 'components/layout/Icon/Icon';
+import Icon from 'components/ui/Icon/Icon';
 import styles from './legalityTable.module.scss';
 
 interface Props {
