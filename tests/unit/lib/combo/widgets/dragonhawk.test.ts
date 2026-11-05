@@ -3,7 +3,8 @@ import { dragonhawk, dragonhawkDamage } from 'lib/combo/widgets/dragonhawk';
 import { calculatorFor, expectSaneAtExtremes, run, specFor } from './testing/widgetTesting';
 
 test('counts the creatures with power 4 or more among the combo pieces', () => {
-  expect(specFor(dragonhawk, '1744-2719-6567')).toEqual({ widget: 'dragonhawk', strong: 6 });
+  /* Sakashima of a Thousand Faces, a clone, copies Dragonhawk */
+  expect(specFor(dragonhawk, '1744-2719-6567')).toEqual({ widget: 'dragonhawk', strong: 7 });
   expect(specFor(dragonhawk, '2136-3604-6567')).toEqual({ widget: 'dragonhawk', strong: 7 });
   expect(specFor(dragonhawk, '2136-4836-6567')).toEqual({ widget: 'dragonhawk', strong: 7 });
 });
@@ -19,8 +20,8 @@ test('answers with the damage each opponent takes', () => {
   const calculator = calculatorFor(dragonhawk, '1744-2719-6567');
   expect(calculator.opponents).toBeUndefined();
   expect(run(calculator, { numbers: { played: 5 } })).toEqual({
-    headline: { label: 'Damage to each opponent', value: '50' },
-    stats: [{ label: 'Cards exiled', value: '30' }],
+    headline: { label: 'Damage to each opponent', value: '60' },
+    stats: [{ label: 'Cards exiled', value: '35' }],
   });
   expectSaneAtExtremes(calculator);
 });

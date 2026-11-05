@@ -1,12 +1,14 @@
 import { formatNumber } from './shared/format';
 import { LIBRARY, numberInput } from './shared/inputs';
 import { defineWidget } from './shared/widget';
+import { clonesOf } from './parse/clones';
 import { has, usesAny } from './parse/variant';
 
+const DRAGONHAWK = "Dragonhawk, Fate's Tempest";
 const COPIES = 5;
 /* Dragonhawk and its five copies have 5 power */
 const DRAGONHAWKS = COPIES + 1;
-/* the combo's other pieces with 4 power or more */
+/* the combo's other pieces with 4 power or more, along with each clone, a copy of Dragonhawk */
 const STRONG_PIECES = ['Cadric, Soul Kindler', 'The Master, Multiplied'];
 
 const OTHERS = numberInput('others', 'Other creatures you control with power 4 or more', 0);
@@ -21,9 +23,10 @@ export function dragonhawkDamage(strong: number, library: number, played: number
 
 export const dragonhawk = defineWidget('dragonhawk', {
   detect: (variant) =>
-    has(variant, "Dragonhawk, Fate's Tempest") &&
+    has(variant, DRAGONHAWK) &&
     usesAny(variant, ['Rite of Replication', 'Orthion, Hero of Lavabrink']) && {
-      strong: DRAGONHAWKS + STRONG_PIECES.filter((name) => has(variant, name)).length,
+      strong:
+        DRAGONHAWKS + STRONG_PIECES.filter((name) => has(variant, name)).length + clonesOf(variant, DRAGONHAWK).length,
     },
   calculator: ({ strong }) => ({
     category: 'finite',

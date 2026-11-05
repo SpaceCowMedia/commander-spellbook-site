@@ -813,15 +813,39 @@
   },
   "1434-1704-4549--227": {
     "uses": ["Krark, the Thumbless", "Mirror Box", "Relic of Legends"],
+    "requires": [
+      {
+        "name": "Instant/Sorcery that Copies a Legendary Creature You Control without Bypassing Legend Rule",
+        "quantity": 2
+      }
+    ],
     "manaNeeded": "{2} plus a variable additional amount",
     "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. See the widget below for calculations.",
     "description": "Activate Relic of Legends's second ability by tapping an untapped legendary creature you control, adding one mana.\nRepeat until there are no more available creatures to tap.\nCast the first creature-copying spell, targeting Krark.\nWhen you cast it, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning that spell to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the spell itself, creating one more Krark token and putting the spell into your graveyard.\nRepeat steps 1 through 8 with the second creature-copying spell.\nIf you manage to pass a critical threshold of Krark copies before both spells end up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
   },
   "1704-2466-4600--227": {
     "uses": ["Krark, the Thumbless", "Honor-Worn Shaku", "Mirror Gallery"],
+    "requires": [
+      {
+        "name": "Instant/Sorcery that Copies a Legendary Creature You Control without Bypassing Legend Rule",
+        "quantity": 2
+      }
+    ],
     "manaNeeded": "{2} plus a variable additional amount",
     "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. See the widget below for calculations.",
     "description": "Activate Honor-Worn Shaku's second ability by tapping an untapped legendary permanent you control, untapping it.\r\nActivate Honor-Worn Shaku's first ability by tapping it, adding {C}.\nRepeat until there are no more available creatures to tap.\nCast the first creature-copying spell, targeting Krark.\nWhen you cast it, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning that spell to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the spell itself, creating one more Krark token and putting the spell into your graveyard.\nRepeat steps 1 through 9 with the second creature-copying spell.\nIf you manage to pass a critical threshold of Krark copies before both spells end up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-2719-4549--227": {
+    "uses": ["Krark, the Thumbless", "Sakashima of a Thousand Faces", "Relic of Legends"],
+    "requires": [
+      {
+        "name": "Instant/Sorcery that Copies a Legendary Creature You Control without Bypassing Legend Rule",
+        "quantity": 2
+      }
+    ],
+    "manaNeeded": "{2} plus a variable additional amount",
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. See the widget below for calculations.",
+    "description": "Activate Relic of Legends's second ability by tapping an untapped legendary creature you control, adding one mana.\nRepeat until there are no more available creatures to tap.\nCast the first creature-copying spell, targeting Krark.\nWhen you cast it, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning that spell to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the spell itself, creating one more Krark token and putting the spell into your graveyard.\nRepeat steps 1 through 8 with the second creature-copying spell.\nIf you manage to pass a critical threshold of Krark copies before both spells end up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
   },
   "1704-4493-5195-7063": {
     "uses": ["Krark, the Thumbless", "Storm-Kiln Artist", "Irenicus's Vile Duplication", "Ember Island Production"],

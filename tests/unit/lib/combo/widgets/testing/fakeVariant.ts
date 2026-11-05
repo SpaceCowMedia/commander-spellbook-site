@@ -1,11 +1,18 @@
 import type { Variant } from '@space-cow-media/spellbook-client';
 import fixtures from './variants.json';
 
-type Card = string | { name: string; mustBeCommander?: boolean; typeLine?: string };
+/* `battlefieldCardState` is how it starts out on the battlefield, like "as a copy of Radiant Solar" */
+type Card =
+  | string
+  | { name: string; mustBeCommander?: boolean; typeLine?: string; quantity?: number; battlefieldCardState?: string };
+
+/* a template by its name, which stands for any card that fits it */
+type Template = string | { name: string; quantity?: number; battlefieldCardState?: string };
 
 export interface FakeVariant {
   id?: string;
   uses?: Card[];
+  requires?: Template[];
   manaNeeded?: string;
   easyPrerequisites?: string;
   notablePrerequisites?: string;
@@ -18,10 +25,28 @@ export function fakeVariant(fake: FakeVariant): Variant {
   return {
     id: fake.id ?? 'fake',
     uses: (fake.uses ?? []).map((card) => {
-      const { name, mustBeCommander = false, typeLine = '' } = typeof card === 'string' ? { name: card } : card;
-      return { card: { name, faces: name.split(' // ').length, typeLine }, mustBeCommander, quantity: 1 };
+      const {
+        name,
+        mustBeCommander = false,
+        typeLine = '',
+        quantity = 1,
+        battlefieldCardState = '',
+      } = typeof card === 'string' ? { name: card } : card;
+      return {
+        card: { name, faces: name.split(' // ').length, typeLine },
+        mustBeCommander,
+        quantity,
+        battlefieldCardState,
+      };
     }),
-    requires: [],
+    requires: (fake.requires ?? []).map((template) => {
+      const {
+        name,
+        quantity = 1,
+        battlefieldCardState = '',
+      } = typeof template === 'string' ? { name: template } : template;
+      return { template: { name }, mustBeCommander: false, quantity, battlefieldCardState };
+    }),
     manaNeeded: fake.manaNeeded ?? '',
     easyPrerequisites: fake.easyPrerequisites ?? '',
     notablePrerequisites: fake.notablePrerequisites ?? '',
