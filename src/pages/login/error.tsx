@@ -9,22 +9,22 @@ const Login: React.FC = () => {
   return (
     <>
       <SpellbookHead
-        title="Commander Spellbook: Login Error"
+        title="Commander Spellbook: Unable to Log In"
         description="An error occurred during the login process."
       />
       <div className={`static-page ${styles.reportErrorContainer}`}>
         <ArtCircle cardName="Kethis, the Hidden Hand" className="m-auto md:block hidden" />
-        <h1 className="heading-title">Login Error</h1>
+        <h1 className="heading-title">Unable to Log In</h1>
 
         <div className="text-center">
-          <p>You must be a member of the Commander Spellbook discord server to login.</p>
+          <p>You must be a member of the Commander Spellbook discord server to log in.</p>
           <ExternalLink role="button" className="button" href="https://discord.com/invite/DkAyVJG">
             Join the Commander Spellbook Discord
           </ExternalLink>
         </div>
         <div className="text-center">
           <Link role="button" className="button" href="/login">
-            Retry Login
+            Log In Again
           </Link>
         </div>
       </div>
