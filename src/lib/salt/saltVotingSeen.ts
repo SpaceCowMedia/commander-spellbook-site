@@ -21,6 +21,16 @@ export function rememberSeenCombo(id: string): void {
   }
 }
 
+export function forgetSeenCombo(id: string): void {
+  try {
+    const seen = readSeenCombos();
+    seen.delete(id);
+    sessionStorage.setItem(SESSION_STORAGE_SEEN_KEY, JSON.stringify([...seen]));
+  } catch {
+    // sessionStorage is best-effort: without it, a combo gone back to is not shown again after logging in
+  }
+}
+
 // The queue is drawn at random, so the combo shown when leaving to log in is kept to be shown again on return.
 export function rememberComboToResume(combo: Variant): void {
   try {

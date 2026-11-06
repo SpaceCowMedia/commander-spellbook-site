@@ -33,11 +33,18 @@ describe('Salt Voting', () => {
     cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
     cy.get('#salt-voting-login').should('have.attr', 'href', '/login/?final=/salt/');
     cy.get('#salt-voting-slider').should('not.exist');
+    cy.get('#salt-voting-back').should('be.disabled');
 
     cy.get('#salt-voting-skip').click();
     cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
     cy.get('#salt-voting-tally').should('contain', '0 voted · 1 skipped');
     expectSaltVotingSessions({ visited: 1 });
+
+    cy.get('#salt-voting-back').click();
+    cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
+    cy.get('#salt-voting-skip').click();
+    cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
+    cy.get('#salt-voting-tally').should('contain', '0 voted · 1 skipped');
 
     // Every batch brings back the same two combos, so once both are skipped there is nothing new to vote on.
     cy.get('#salt-voting-skip').click();
@@ -115,9 +122,12 @@ describe('Salt Voting', () => {
     cy.get('img[alt="Front Image"]').should('not.be.visible');
   });
 
-  it('comes back to the combo it was showing once the visitor logs in to vote', () => {
+  it('comes back to the combo it was showing once the visitor logs in to vote, even one gone back to', () => {
     serveQueueOf('1-2', '1-3');
     cy.visit('/salt/');
+    cy.get('#salt-voting-skip').click();
+    cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-3/');
+    cy.get('#salt-voting-back').click();
     cy.get('#salt-voting-open-combo').should('have.attr', 'href', '/combo/1-2/');
     cy.get('#salt-voting-login').click();
     cy.location('pathname').should('equal', '/login/');
@@ -171,6 +181,43 @@ describe('Salt Voting', () => {
       cy.get('#salt-voting-tally').should('contain', '2 voted · 0 skipped');
       cy.get('#salt-voting-caught-up').should('be.visible');
       expectSaltVotingSessions({ visited: 1, voted: 1 });
+    });
+
+    it('goes back to change a vote, with the button and with Backspace', () => {
+      cy.intercept(VOTE, (request) => request.reply({ statusCode: 201, body: {} })).as('vote');
+      cy.visit('/salt/');
+
+      cy.get('#salt-voting-back').should('be.disabled');
+      cy.get('[data-salt-tick="4"]').should('not.be.disabled').click();
+      cy.get('#salt-voting-vote').click();
+      cy.wait('@vote');
+      cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
+
+      cy.get('#salt-voting-back').click();
+      cy.get('#salt-voting-combo').should('contain', 'Mesmeric Orb');
+      cy.get('#salt-voting-slider').should('have.attr', 'aria-valuetext', '4, Extremely salty');
+      cy.get('#salt-voting-tally').should('contain', '1 voted · 0 skipped');
+      cy.get('body').trigger('keydown', { key: '1' });
+      cy.get('body').trigger('keydown', { key: 'Enter' });
+      cy.wait('@vote').then(({ request }) => {
+        expect(request.url).to.include('/salt-votes/1-2/');
+        expect(request.body).to.deep.equal({ score: 1 });
+      });
+
+      cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
+      cy.get('#salt-voting-slider').should('have.attr', 'aria-valuetext', 'Not rated');
+      cy.get('body').trigger('keydown', { key: 's' });
+      cy.get('#salt-voting-caught-up').should('be.visible');
+      cy.get('#salt-voting-tally').should('contain', '1 voted · 1 skipped');
+
+      cy.get('body').trigger('keydown', { key: 'Backspace' });
+      cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
+      cy.get('body').trigger('keydown', { key: 'Backspace' });
+      cy.get('#salt-voting-slider').should('have.attr', 'aria-valuetext', '1, Slightly salty');
+      cy.get('body').trigger('keydown', { key: 's' });
+      cy.get('#salt-voting-combo').should('contain', 'Forsaken Monument');
+      cy.get('#salt-voting-tally').should('contain', '1 voted · 1 skipped');
+      cy.get('@vote.all').should('have.length', 2);
     });
 
     it('explains why a vote could not be cast, and stays on the combo', () => {

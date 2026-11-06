@@ -14,10 +14,17 @@ import Loader from 'components/ui/Loader/Loader';
 import Icon from 'components/ui/Icon/Icon';
 import SaltSlider from 'components/salt/SaltSlider/SaltSlider';
 import { comboTitleToText } from 'lib/comboTitle';
+import classNames from 'lib/react/classNames';
 import { apiConfiguration } from 'services/api.service';
 import useCookie from 'lib/react/useCookie';
 import { MAX_SALT, SaltVoteError, saltVoteError } from 'lib/salt/salt';
-import { readSeenCombos, rememberComboToResume, rememberSeenCombo, takeComboToResume } from 'lib/salt/saltVotingSeen';
+import {
+  forgetSeenCombo,
+  readSeenCombos,
+  rememberComboToResume,
+  rememberSeenCombo,
+  takeComboToResume,
+} from 'lib/salt/saltVotingSeen';
 import { rememberSaltVotingSession } from 'lib/salt/saltVotingHistory';
 import { DEFAULT_ORDERING } from 'lib/constants';
 import { NewTabContext } from 'lib/newTab';
@@ -40,11 +47,6 @@ function freshCombos(batch: Variant[], skip: Set<string>): Variant[] {
   });
 }
 
-interface Tally {
-  voted: number;
-  skipped: number;
-}
-
 function isTypingTarget(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLElement &&
@@ -61,8 +63,10 @@ const SaltVoting: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
   const [pending, setPending] = useState(false);
+  const [wentBack, setWentBack] = useState(false);
   const [voteError, setVoteError] = useState<SaltVoteError | null>(null);
-  const [tally, setTally] = useState<Tally>({ voted: 0, skipped: 0 });
+  const [passed, setPassed] = useState<Variant[]>([]);
+  const [scores, setScores] = useState<Record<string, number | null>>({});
   const foolsDay = useFoolsDay();
   const queueRef = useRef(queue);
   queueRef.current = queue;
@@ -70,6 +74,10 @@ const SaltVoting: React.FC = () => {
   const unpopularOffset = useRef(0);
   const focusNextCombo = useRef(false);
   const current = queue[0];
+  const previous = passed.at(-1);
+  const score = picked ?? (current && scores[current.id]) ?? null;
+  const voted = Object.values(scores).filter((passedScore) => passedScore !== null).length;
+  const skipped = Object.keys(scores).length - voted;
 
   const fetchFreshCombos = async (skip: Set<string>): Promise<Variant[]> => {
     if (!isFoolsDay()) {
@@ -146,23 +154,40 @@ const SaltVoting: React.FC = () => {
     }
   }, [current?.id]);
 
-  const advance = (combo: Variant, outcome: keyof Tally) => {
+  const showAnotherCombo = (back: boolean) => {
     focusNextCombo.current = !!document.activeElement?.closest('#salt-voting-combo');
-    rememberSeenCombo(combo.id);
-    setQueue((queued) => queued.filter((queuedCombo) => queuedCombo.id !== combo.id));
-    setTally((counts) => ({ ...counts, [outcome]: counts[outcome] + 1 }));
+    setWentBack(back);
     setPicked(null);
     setVoteError(null);
   };
 
+  const advance = (combo: Variant, votedScore: number | null) => {
+    showAnotherCombo(false);
+    rememberSeenCombo(combo.id);
+    setQueue((queued) => queued.filter((queuedCombo) => queuedCombo.id !== combo.id));
+    setPassed((passedCombos) => passedCombos.concat(combo));
+    // Skipping a combo already voted on keeps that vote.
+    setScores((passedScores) => ({ ...passedScores, [combo.id]: votedScore ?? passedScores[combo.id] ?? null }));
+  };
+
   const skip = () => {
     if (current && !pending) {
-      advance(current, 'skipped');
+      advance(current, null);
     }
   };
 
+  const goBack = () => {
+    if (!previous || pending) {
+      return;
+    }
+    showAnotherCombo(true);
+    forgetSeenCombo(previous.id);
+    setPassed((passedCombos) => passedCombos.slice(0, -1));
+    setQueue((queued) => [previous, ...queued]);
+  };
+
   const vote = async () => {
-    if (!current || picked === null || pending) {
+    if (!current || score === null || pending) {
       return;
     }
     setPending(true);
@@ -170,10 +195,10 @@ const SaltVoting: React.FC = () => {
     try {
       await new SaltVotesApi(apiConfiguration()).saltVotesUpdate({
         variant: current.id,
-        saltVoteRequest: { score: picked },
+        saltVoteRequest: { score },
       });
       rememberSaltVotingSession('voted');
-      advance(current, 'voted');
+      advance(current, score);
     } catch (err) {
       setVoteError(saltVoteError(err));
     } finally {
@@ -201,6 +226,9 @@ const SaltVoting: React.FC = () => {
     } else if (event.key.toLowerCase() === 's') {
       event.preventDefault();
       skip();
+    } else if (event.key === 'Backspace') {
+      event.preventDefault();
+      goBack();
     }
   };
 
@@ -213,7 +241,7 @@ const SaltVoting: React.FC = () => {
   const renderCombo = (combo: Variant) => {
     const results = combo.produces.filter((result) => result.feature.name.toLowerCase() !== 'lock');
     return (
-      <article key={combo.id} id="salt-voting-combo" className={styles.combo}>
+      <article key={combo.id} id="salt-voting-combo" className={classNames(styles.combo, wentBack && styles.dealtBack)}>
         <header className={styles.comboHeader}>
           <div className={styles.identity}>
             <ColorIdentity identity={combo.identity} size="small" />
@@ -281,7 +309,7 @@ const SaltVoting: React.FC = () => {
               <SaltSlider
                 id="salt-voting-slider"
                 label="Your salt vote for this combo"
-                value={picked}
+                value={score}
                 onChange={setPicked}
                 onConfirm={vote}
                 disabled={pending}
@@ -302,10 +330,19 @@ const SaltVoting: React.FC = () => {
               )}
               <div className={styles.actions}>
                 <button
+                  id="salt-voting-back"
+                  type="button"
+                  className={styles.skipButton}
+                  disabled={!previous || pending}
+                  onClick={goBack}
+                >
+                  ← Back
+                </button>
+                <button
                   id="salt-voting-vote"
                   type="button"
                   className={styles.voteButton}
-                  disabled={picked === null || pending}
+                  disabled={score === null || pending}
                   onClick={vote}
                 >
                   Vote
@@ -327,6 +364,15 @@ const SaltVoting: React.FC = () => {
                 Log in to vote on how salty this combo is. You can still browse the combos.
               </p>
               <div className={styles.actions}>
+                <button
+                  id="salt-voting-back"
+                  type="button"
+                  className={styles.skipButton}
+                  disabled={!previous}
+                  onClick={goBack}
+                >
+                  ← Previous combo
+                </button>
                 <Link
                   id="salt-voting-login"
                   href="/login/?final=/salt/"
@@ -407,9 +453,11 @@ const SaltVoting: React.FC = () => {
         )}
         <NewTabContext value>{renderState()}</NewTabContext>
         <p id="salt-voting-tally" className={styles.tally} aria-live="polite">
-          {tally.voted} voted · {tally.skipped} skipped
+          {voted} voted · {skipped} skipped
           <span className={styles.shortcuts} aria-hidden="true">
-            {loggedIn ? ` · keys 0–${MAX_SALT} pick a score, Enter votes, S skips` : ' · S skips'}
+            {loggedIn
+              ? ` · keys 0–${MAX_SALT} pick a score, Enter votes, S skips, Backspace goes back`
+              : ' · S skips, Backspace goes back'}
           </span>
         </p>
       </div>
