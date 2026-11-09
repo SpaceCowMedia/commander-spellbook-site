@@ -77,13 +77,18 @@ function binomial(flips: number): Float64Array {
 const alikeWith = (thumbs: number) => 2 ** -(2 ** thumbs);
 
 /* The fewest Krarks from which every cast gives back what the dearest spell costs, short of a fluke rarer
-   than one in a million, the cast needing the wins `needs` says. A cast falls short by losing more flips
-   than it has to spare: each is lost half the time, or with Krark's Thumb only when every coin of it comes
-   up a loss, which leaves one flip fewer to spare, the first being lost on purpose to keep the spell. */
+   than one in a million, the cast needing the wins `needs` says: any Krarks at all where it needs none.
+   A cast falls short by losing more flips than it has to spare: each is lost half the time, or with
+   Krark's Thumb only when every coin of it comes up a loss, which leaves one flip fewer to spare, the
+   first being lost on purpose to keep the spell. */
 function horizonFor(needs: (krarks: number) => number, thumbs: number): number {
   const alike = alikeWith(thumbs);
   for (let krarks = 1; ; krarks++) {
-    const spare = krarks - needs(krarks) - Math.min(thumbs, 1);
+    const need = needs(krarks);
+    if (need <= 0) {
+      return krarks;
+    }
+    const spare = krarks - need - Math.min(thumbs, 1);
     if (spare < 0) {
       continue;
     }
@@ -197,11 +202,11 @@ function unlimitedOdds(spells: number, most: number, { ends, play }: Flipping): 
 const MOST_SWEEPS = 1000;
 
 /* The odds from every spot, playing each cast for the best chance, and with Krark's Thumbs each flip of
-   it too. Past `horizon` Krarks every cast gives back what the dearest spell costs, short of a fluke
-   rarer than one in a million, so from there only using up the spells can stop the combo. Mana past
-   `most` makes too little difference to keep count of, but to a lone Krark with its last copying spell,
-   and a Storm-Kiln Artist for every mana the dearest spell costs makes it pay for itself. A mana ritual
-   pays only while it's in hand and you can pay for it: nothing else makes more mana. */
+   it too. With enough Krarks every cast gives back what the dearest spell in hand costs, short of a
+   fluke rarer than one in a million, and the spot is settled: only using up the spells can stop the
+   combo. `horizon` is the most Krarks that ever takes. Mana past `most` makes too little difference to
+   keep count of, but to a lone Krark with its last copying spell. A mana ritual pays only while it's in
+   hand and you can pay for it: nothing else makes more mana. */
 export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumbs = 0, ...board }: Board = {}) {
   const ritual = engine === 'ritual' ? board.ritual : undefined;
   const costs = copiers.map((copier) => copier.cost);
@@ -210,17 +215,27 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
   const ritualBit = ritual ? bit(ritualIndex) : 0;
   const copying = bit(ritualIndex) - 1;
   const ritualMana = (krarks: number) => ritual!.makes * (ritual!.perKrark ? krarks : 1);
-  /* a mana ritual's wins make the mana for itself and the next copying spell */
-  const horizon = horizonFor(
-    (krarks) => (ritual ? Math.ceil((dearest + ritual.cost) / ritualMana(krarks)) : dearest),
-    thumbs,
-  );
-  const most = 16 * dearest + 2 * horizon;
   const breeds = engine === 'magecraft' && copiers.some((copier) => copier.everyNontoken);
   const fewestArtists = engine === 'magecraft' ? 1 : 0;
   const levels = breeds ? Math.max(1, dearest - fewestArtists) : 1;
   const spellCosts = ritual ? [...costs, ritual.cost] : costs;
   const hands = bit(spellCosts.length);
+  /* The Krarks from which each hand is settled, by Artists. A cast has to give back what the dearest
+     spell in hand costs: as many wins where each new Krark makes a mana, fewer the more Artists make a
+     Treasure for the cast and for every copy, none with an Artist for each mana of it, and the copies
+     of a mana ritual that pay for itself and for that spell. */
+  const horizons = Array.from({ length: levels * hands }, (_, group) => {
+    const artists = fewestArtists + Math.floor(group / hands);
+    const dear = Math.max(0, ...costs.filter((_, i) => (group % hands) & bit(i)));
+    return horizonFor((krarks) => {
+      if (ritual) {
+        return Math.ceil((dear + ritual.cost) / ritualMana(krarks));
+      }
+      return engine === 'magecraft' ? Math.ceil(dear / artists) - 1 : dear;
+    }, thumbs);
+  });
+  const horizon = Math.max(...horizons);
+  const most = 16 * dearest + 2 * horizon;
   const size = most + 1;
   const cheapest = Array.from({ length: hands }, (_, hand) => Math.min(...spellCosts.filter((_, i) => hand & bit(i))));
   const spellsIn = Array.from({ length: hands }, (_, hand) => costs.filter((_, i) => hand & bit(i)).length);
@@ -229,18 +244,31 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     spellsIn[hand] === 1 ? costs.findIndex((_, i) => hand & bit(i)) : -1,
   );
   const alike = alikeWith(thumbs);
-  const flips = flipping(thumbs, horizon);
+  if (ritual) {
+    /* A hand that lost the mana ritual can only use its spells up, so it is settled sooner: once not one
+       of all the casts the mana could pay for is at all likely to win every flip, which with nothing
+       left to win takes every coin of each. */
+    const hopeless = Math.ceil(Math.log(1e-6 / most) / Math.log(alike));
+    for (let hand = 0; hand < ritualBit; hand++) {
+      horizons[hand] = Math.min(horizons[hand], hopeless);
+    }
+  }
+  /* the Krarks past which no cast is taken to win every flip, however few it takes to be settled: rarer
+     than one in a billion for each */
+  const deep = Math.max(horizon, Math.ceil(Math.log(1e-9) / Math.log(alike)));
+  const flips = flipping(thumbs, deep);
   const { ends } = flips;
-  const unlimited = unlimitedOdds(copiers.length, 2 * horizon + 1, flips);
+  const unlimited = unlimitedOdds(copiers.length, 2 * deep + 1, flips);
   const win = new Float64Array(horizon * levels * hands * size);
   const usedUp = new Float64Array(win.length);
   const choice = new Int8Array(win.length).fill(-1);
   const at = (krarks: number, artists: number, hand: number) =>
     ((krarks * levels + artists - fewestArtists) * hands + hand) * size;
-  const settled = (krarks: number, artists: number) => krarks >= horizon || (breeds && artists >= dearest);
+  const settled = (krarks: number, artists: number, hand: number) =>
+    artists - fewestArtists >= levels || krarks >= horizons[(artists - fewestArtists) * hands + hand];
   /* whether the table holds the odds from a spot, rather than them being plain */
   const held = (krarks: number, artists: number, mana: number, hand: number) =>
-    (hand & copying) !== 0 && mana >= cheapest[hand] && !settled(krarks, artists);
+    (hand & copying) !== 0 && mana >= cheapest[hand] && !settled(krarks, artists, hand);
   /* the mana that keeps a settled combo going: the mana ritual's cost where the mana comes from it, a
      copying spell making none */
   const restarts = (hand: number) => (ritual ? ritual.cost : cheapest[hand]);
@@ -285,7 +313,7 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
           using += (1 - (1 - alike) ** casts) * (1 - using);
         }
       } else if (within >= restarts(hand) && (hand & ritualBit) === ritualBit) {
-        winning = unlimited[spellsIn[hand]][Math.min(krarks, 2 * horizon + 1)];
+        winning = unlimited[spellsIn[hand]][Math.min(krarks, 2 * deep + 1)];
         using = 1 - winning;
       }
     }
@@ -330,14 +358,20 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     return flips.play(krarks, stays);
   };
 
-  /* the odds of casting the mana ritual: every copy makes its mana, and so does the spell if it resolves */
+  /* The odds of casting the mana ritual from a spot the table holds: every copy makes its mana, and so
+     does the spell if it resolves. Short of that it comes back to hand with the Krarks as they were,
+     which the table holds too, so those odds are read straight from it. */
   const castRitual = (krarks: number, artists: number, mana: number, hand: number): Odds => {
     const made = ritualMana(krarks);
-    for (let wins = 0; wins <= krarks; wins++) {
-      const all = wins === krarks;
-      const nextMana = mana - ritual!.cost + made * (all ? wins + 1 : wins);
-      reach(wins, krarks, artists, nextMana, all ? hand & ~ritualBit : hand);
+    const paid = mana - ritual!.cost;
+    const back = at(krarks, artists, hand);
+    for (let wins = 0; wins < krarks; wins++) {
+      const left = Math.min(most, paid + made * wins);
+      const pays = left >= cheapest[hand];
+      ends.win[wins] = pays ? win[back + left] : 0;
+      ends.usedUp[wins] = pays ? usedUp[back + left] : 0;
     }
+    reach(krarks, krarks, artists, paid + made * (krarks + 1), hand & ~ritualBit);
     return flips.play(krarks, false);
   };
 
@@ -350,7 +384,8 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
 
   /* While the odds of a hand settle, each copying spell's casts kept by spell and mana, with the odds of
      losing every flip they went by: the rest of where they lead has more Krarks, so they change only
-     when those odds do. */
+     when those odds do. With no Thumb to choose by, they then change by as much, as often as every flip
+     is lost. */
   const keptWin = new Float64Array(copiers.length * size);
   const keptUsedUp = new Float64Array(keptWin.length);
   const lostWin = new Float64Array(keptWin.length);
@@ -361,22 +396,37 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     }
     const slot = i * size + mana;
     const stays = loseAll(krarks, artists, mana, hand, i);
-    if (Math.abs(ends.win[0] - lostWin[slot]) > 1e-12 || Math.abs(ends.usedUp[0] - lostUsedUp[slot]) > 1e-12) {
-      lostWin[slot] = ends.win[0];
-      lostUsedUp[slot] = ends.usedUp[0];
-      const odds = castCopier(krarks, artists, mana, hand, i, stays);
-      keptWin[slot] = odds.win;
-      keptUsedUp[slot] = odds.usedUp;
+    const lost = { win: ends.win[0], usedUp: ends.usedUp[0] };
+    if (Math.abs(lost.win - lostWin[slot]) > 1e-12 || Math.abs(lost.usedUp - lostUsedUp[slot]) > 1e-12) {
+      if (thumbs === 0 && lostWin[slot] >= 0) {
+        const every = 0.5 ** krarks;
+        keptWin[slot] += every * (lost.win - lostWin[slot]);
+        keptUsedUp[slot] += every * (lost.usedUp - lostUsedUp[slot]);
+      } else {
+        const odds = castCopier(krarks, artists, mana, hand, i, stays);
+        keptWin[slot] = odds.win;
+        keptUsedUp[slot] = odds.usedUp;
+      }
+      lostWin[slot] = lost.win;
+      lostUsedUp[slot] = lost.usedUp;
     }
     return { win: keptWin[slot], usedUp: keptUsedUp[slot] };
   };
 
-  /* the best spell to cast from a spot the table holds, kept there, and by how much its odds changed */
-  const settle = (krarks: number, artists: number, mana: number, hand: number, cast: Cast) => {
+  /* The best of the first `spells` spells to cast from a spot the table holds, kept there, and by how
+     much its odds changed. With none to pay for, the spot holds nothing until the ritual is counted. */
+  const settle = (
+    krarks: number,
+    artists: number,
+    mana: number,
+    hand: number,
+    cast: Cast,
+    spells = spellCosts.length,
+  ) => {
     const index = at(krarks, artists, hand) + mana;
     let best: Odds = { win: 0, usedUp: 0 };
     let bestSpell = -1;
-    for (let i = 0; i < spellCosts.length; i++) {
+    for (let i = 0; i < spells; i++) {
       if (hand & bit(i) && mana >= spellCosts[i]) {
         const odds = cast(krarks, artists, mana, hand, i);
         if (bestSpell < 0 || odds.win > best.win + 1e-12) {
@@ -395,7 +445,7 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
   for (let krarks = horizon - 1; krarks >= 1; krarks--) {
     for (let artists = fewestArtists + levels - 1; artists >= fewestArtists; artists--) {
       for (let hand = 1; hand < hands; hand++) {
-        if ((hand & copying) === 0) {
+        if ((hand & copying) === 0 || settled(krarks, artists, hand)) {
           continue;
         }
         const inHand = spellCosts.flatMap((_, i) => (hand & bit(i) ? [i] : []));
@@ -409,14 +459,15 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
         }
         /* A cast can come back to the same Krarks and hand with as much mana or more, the mana ritual by
            its copies and a copying spell by more Artists than it costs, so the odds with some mana count
-           on those with more as well as less. Go over the mana from the least up, then from the most
-           down, where the mana comes back to, until the odds stop changing. A cast drops at most `drop`
-           mana and comes back at most `up` ahead, so after the first time down only the mana that counts
-           on odds that changed needs going over again: from `drop` above the highest change down to the
-           lowest, which may count on itself, and on to `up` below any change on the way. */
+           on those with more as well as less. Go over the mana from the least up with the copying spells
+           alone, then from the most down, where the mana comes back to, until the odds stop changing. A
+           cast drops at most `drop` mana and comes back at most `up` ahead, so after the first time down
+           only the mana that counts on odds that changed needs going over again: from `drop` above the
+           highest change down to the lowest, which may count on itself, and on to `up` below any change
+           on the way. */
         lostWin.fill(-1);
         for (let mana = cheapest[hand]; mana <= most; mana++) {
-          settle(krarks, artists, mana, hand, castKept);
+          settle(krarks, artists, mana, hand, castKept, copiers.length);
         }
         const drop = Math.max(...inHand.map((i) => spellCosts[i]));
         let top = most;
@@ -469,6 +520,12 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
       }
       return { ...castSpell(krarks, artists, mana, hand, i), cast: i };
     },
+    /* whether a spot has the Krarks or the Artists to be settled, its odds those with mana to spare so
+       long as something makes mana */
+    settled(spot: Spot): boolean {
+      const { krarks, artists, hand } = clamp(spot);
+      return settled(krarks, artists, hand);
+    },
     /* the mana each cast costs a lone Krark holding its last copying spell, whose odds go on changing
        with the mana however much there is: none from any other spot */
     lone(spot: Spot): number {
@@ -477,7 +534,7 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     },
     /* the chance with mana to spare for every cast */
     unlimited(krarks: number, hand: number): number {
-      return unlimited[spellsIn[hand & copying]][Math.min(Math.max(1, krarks), 2 * horizon + 1)];
+      return unlimited[spellsIn[hand & copying]][Math.min(Math.max(1, krarks), 2 * deep + 1)];
     },
   };
 }

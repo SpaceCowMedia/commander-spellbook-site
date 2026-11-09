@@ -278,6 +278,16 @@ describe('the odds', () => {
     expectPlainOdds({ copiers: [{ cost: 1, everyNontoken: false }], engine: 'magecraft', thumbs: 1 });
   });
 
+  test('settle a hand as soon as every cast pays for the dearest spell in it, to one in a million', () => {
+    /* The plain way counting 12 Krarks past where the odds ever stop, with nothing taken as settled before:
+       the more Artists the sooner a cast pays, a hand left with the cheaper spell needs fewer wins, and a
+       Thumb wins nearly all of them. */
+    const pair: Copier[] = [MOLTEN, { cost: 3, everyNontoken: true }];
+    expectPlainOdds({ copiers: pair, engine: 'magecraft' }, 12);
+    expectPlainOdds({ copiers: TEMPLATE, engine: 'legendary' }, 12);
+    expectPlainOdds({ copiers: TEMPLATE, engine: 'legendary', thumbs: 1 }, 12);
+  });
+
   test('count the mana a cast leaves you ahead by where the Artists outnumber what a spell costs', () => {
     /* Two Artists make a Treasure more than the cheaper spell costs each time it's cast, so even a cast that
        loses every flip leaves a mana more toward the dearer one */
@@ -380,6 +390,12 @@ describe('the odds', () => {
     const odds = krarkOdds(TEMPLATE, 'legendary');
     expect(odds.unlimited(1, 3)).toBeCloseTo(chance(3), 9);
     expect(odds.unlimited(1, 3)).toBeCloseTo(0.8027, 4);
+    /* a one-mana spell and an Artist pay for every cast, so a single mana is as good as any, however few
+       the Krarks */
+    const free = krarkOdds([{ cost: 1, everyNontoken: false }], 'magecraft');
+    for (const krarks of [2, 3, 7]) {
+      expect(free.at({ krarks, artists: 1, mana: 1, hand: 1 }).win, `${krarks}`).toBeCloseTo(chance(krarks), 9);
+    }
     expect(odds.at({ krarks: 1, artists: 0, mana: odds.most, hand: 3 }).win).toBeCloseTo(odds.unlimited(1, 3), 6);
   });
 
@@ -465,12 +481,13 @@ describe('the odds', () => {
    Krarks down, every spot with that many gone over again and again, each from where the others stand,
    until none changes. A cast either makes a Krark more, which is worked out already, or comes back to
    the same Krarks, as the mana ritual does and any cast that loses every flip. With Krark's Thumbs each
-   flip that leaves a choice goes the way that gives the better chance. Past the horizon, or with an
-   Artist for every mana the dearest spell costs, it's the chance with mana to spare while something
-   still makes mana, and nothing otherwise. */
-function plainOdds(board: Board, odds: KrarkOdds) {
+   flip that leaves a choice goes the way that gives the better chance. Where the odds call a spot
+   settled, by its Krarks or its Artists, it's the chance with mana to spare while something still
+   makes mana, and nothing otherwise. */
+function plainOdds(board: Board, odds: KrarkOdds, past = 0) {
   const { copiers, thumbs = 0, ritual } = board;
-  const { horizon, most } = odds;
+  const { most } = odds;
+  const horizon = odds.horizon + past;
   const costs = [...copiers.map((copier) => copier.cost), ...(ritual ? [ritual.cost] : [])];
   const hands = 1 << costs.length;
   const copying = (1 << copiers.length) - 1;
@@ -485,7 +502,10 @@ function plainOdds(board: Board, odds: KrarkOdds) {
     if ((hand & copying) === 0 || !costs.some((cost, i) => hand & (1 << i) && mana >= cost)) {
       return 0;
     }
-    if (krarks >= horizon || artists > mostArtists) {
+    /* counting `past` the Krarks the odds ever settle from, nothing is taken as settled short of that */
+    const settled =
+      past > 0 ? krarks >= horizon || artists > mostArtists : odds.settled({ krarks, artists, mana, hand });
+    if (settled) {
       return (hand & ritualBit) === ritualBit && mana >= (ritual?.cost ?? 0) ? odds.unlimited(krarks, hand) : 0;
     }
     return table[krarks][slot(artists, hand, mana)];
@@ -536,9 +556,9 @@ function artistsOf({ copiers, engine }: Board): number[] {
 }
 
 /* the odds at every spot the table holds, against the plain way */
-function expectPlainOdds(board: Board) {
+function expectPlainOdds(board: Board, past = 0) {
   const odds = krarkOdds(board.copiers, board.engine, board);
-  const plain = plainOdds(board, odds);
+  const plain = plainOdds(board, odds, past);
   const hands = 1 << (board.copiers.length + (board.ritual ? 1 : 0));
   let worst = 0;
   let where = '';
@@ -556,7 +576,8 @@ function expectPlainOdds(board: Board) {
       }
     }
   }
-  expect(worst, where).toBeLessThan(5e-10);
+  /* settling sooner than the plain way does is good to the one in a million it goes by, twice over */
+  expect(worst, where).toBeLessThan(past > 0 ? 3e-6 : 5e-10);
 }
 
 describe('the odds with a mana ritual', () => {
@@ -631,11 +652,16 @@ describe('the odds with a mana ritual', () => {
     expect(odds.at({ krarks: 2, artists: 0, mana: 1, hand: 3 }).win).toBeCloseTo(back / 2, 12);
   });
 
-  test("with Krark's Thumbs, a combo that lost its ritual runs out of mana on either side of the horizon", () => {
+  test("with Krark's Thumbs, a combo that lost its ritual runs out of mana on either side of where it settles", () => {
     /* nothing left to win, so every flip that leaves a choice is lost and the spell stays in hand */
     const odds = krarkOdds([MOLTEN], 'ritual', { ritual: MANAMORPHOSE, thumbs: 2 });
-    for (const krarks of [odds.horizon - 1, odds.horizon]) {
-      const lost = odds.at({ krarks, artists: 0, mana: 10, hand: 1 });
+    const spot = (krarks: number) => ({ krarks, artists: 0, mana: 10, hand: 1 });
+    /* such a hand is settled sooner than one that can still go infinite */
+    const settles = Array.from({ length: odds.horizon }, (_, i) => i + 1).find((krarks) => odds.settled(spot(krarks)))!;
+    expect(settles).toBeGreaterThan(1);
+    expect(settles).toBeLessThan(odds.horizon);
+    for (const krarks of [settles - 1, settles]) {
+      const lost = odds.at(spot(krarks));
       expect(lost.win).toBe(0);
       expect(lost.usedUp).toBeLessThan(1e-6);
       expect(outOfMana(lost)).toBeGreaterThan(1 - 1e-6);
