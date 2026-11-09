@@ -864,5 +864,65 @@
     "manaNeeded": "{8}{U}{U}{U}{U}",
     "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
     "description": "Activate Earthcraft by tapping an untapped creature you control, untapping a basic land.\r\nActivate that basic land by tapping it, adding one mana.\nRepeat until there are no more available creatures to tap.\nCast Multiversal Incursion by paying its mana cost, targeting Krark.\nWhen you cast Multiversal Incursion, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying Multiversal Incursion for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nResolve each copy of Multiversal Incursion, creating a nonlegendary token copy of Krark each time.\nIf Multiversal Incursion is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the Multiversal Incursion card itself, creating one more Krark token and putting the card into your graveyard.\nRepeat steps 1 through 9 with Ember Island Production, if you still need more Krark copies.\nIf you manage to pass a critical threshold of Krark copies before both Multiversal Incursion and Ember Island Production end up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-2466-2719--221": {
+    "uses": [
+      "Krark, the Thumbless",
+      "Honor-Worn Shaku",
+      {
+        "name": "Sakashima of a Thousand Faces",
+        "battlefieldCardState": "as a copy of Krark"
+      }
+    ],
+    "requires": ["Instant or Sorcery that Creates One or More Copies of a Creature You Control"],
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
+    "description": "Activate Honor-Worn Shaku's second ability by tapping an untapped legendary permanent you control, untapping it.\nActivate Honor-Worn Shaku's first ability by tapping it, adding {C}.\nRepeat until there are no more available creatures to tap.\nCast the instant or sorcery that creates a copy of a creature by paying its mana cost, targeting Krark.\nWhen you cast that spell, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the card itself, creating one more Krark token and putting the card into your graveyard.\nIf you manage to pass a critical threshold of Krark copies before the copying spell ends up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-2757-3908--221": {
+    "uses": [
+      "Krark, the Thumbless",
+      "Earthcraft",
+      {
+        "name": "Spark Double",
+        "battlefieldCardState": "as a copy of Krark"
+      }
+    ],
+    "requires": ["Instant or Sorcery that Creates One or More Copies of a Creature You Control"],
+    "easyPrerequisites": "You control a basic land.",
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
+    "description": "Activate Earthcraft by tapping an untapped creature you control, untapping a basic land.\nActivate that basic land by tapping it, adding one mana.\nRepeat until there are no more available creatures to tap.\nCast the instant or sorcery that creates a copy of a creature by paying its mana cost, targeting Spark Double.\nWhen you cast that spell, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the card itself, creating one more Krark token and putting the card into your graveyard.\nIf you manage to pass a critical threshold of Krark copies before the copying spell ends up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-5195-8341--221": {
+    "uses": [
+      "Krark, the Thumbless",
+      "Storm-Kiln Artist",
+      {
+        "name": "Colossal Clone Master",
+        "battlefieldCardState": "as a copy of Krark"
+      }
+    ],
+    "requires": ["Instant or Sorcery that Creates One or More Copies of a Creature You Control"],
+    "easyPrerequisites": "You control a land.",
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
+    "description": "Cast the instant or sorcery that creates a copy of a creature by paying its mana cost, targeting Colossal Clone Master.\nWhen you cast that spell, Krark, any additional copies of Krark, and Storm-Kiln Artist trigger.\nResolve the Storm-Kiln Artist trigger, creating a Treasure token.\nResolve all Krark triggers, copying that spell for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nEach time you copy a spell, Storm-Kiln Artist triggers, creating a Treasure token.\nResolve each copy of that spell, creating a token copy of Krark each time.\nActivate all your Treasure tokens by tapping and sacrificing them, adding one mana of any color for each one.\nIf that spell is back in your hand, repeat from step 1.\nIf you won every flip, instead resolve the card itself, creating one more Krark token and putting the card into your graveyard.\nIf you manage to pass a critical threshold of Krark copies before the copying spell ends up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-2719--221--232": {
+    "uses": [
+      "Krark, the Thumbless",
+      {
+        "name": "Sakashima of a Thousand Faces",
+        "battlefieldCardState": "as a copy of Krark"
+      }
+    ],
+    "requires": ["Mana Ritual", "Instant or Sorcery that Creates One or More Copies of a Creature You Control"],
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
+    "description": "Cast the instant or sorcery that creates a copy of a creature by paying its mana cost, targeting Sakashima of a Thousand Faces.\nWhen you cast that spell, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nResolve each copy of that spell, creating a token copy of Krark each time.\nIf that spell is back in your hand and you need additional mana, cast the Mana Ritual by paying its costs, then repeat from step 2.\nIf that spell is back in your hand and you have enough mana, instead repeat from step 1.\nIf you won every flip, instead resolve the card itself, creating one more Krark token and putting the card into your graveyard.\nIf you manage to pass a critical threshold of Krark copies before the copying spell ends up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
+  },
+  "1704-7063-7694--232": {
+    "uses": ["Krark, the Thumbless", "Ember Island Production", "Multiversal Incursion"],
+    "requires": ["Mana Ritual"],
+    "manaNeeded": "{8}{U}{U}{U}{U}",
+    "notablePrerequisites": "This combo has a chance of failure based on the amount of starting mana you have and your first few coin flips. It may take significantly more or less mana than the amount shown. See the widget below for calculations.",
+    "description": "Cast Multiversal Incursion by paying its mana cost, targeting Krark.\nWhen you cast that spell, Krark and any additional copies of Krark trigger.\nResolve all Krark triggers, copying that spell for each flip you won, and returning the original to your hand as long as you lost at least one flip.\nIf you won every flip, resolve the card itself, creating one more Krark token and putting the card into your graveyard.\nIf you need additional mana and the Mana Ritual is still in your hand, cast the Mana Ritual by paying its costs, then repeat from step 2.\nIf you have sufficient mana and Multiversal Incursion is still in your hand, instead repeat from step 1.\nIf you have sufficient mana and Multiversal Incursion is in your graveyard, instead cast Ember Island Production, then repeat from step 2.\nIf you manage to pass a critical threshold of Krark copies before both copy spells ends up in your graveyard, this combo is overwhelmingly likely to be an infinite loop from that point on. See the widget below for failure chances.\nOnce you have infinite mana and infinite copies of Krark, you can repeat this loop with any instant or sorcery you can cast."
   }
 }
