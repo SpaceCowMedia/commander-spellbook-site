@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axe from 'axe-core';
 import { expect, test, vi } from 'vitest';
+import type { Variant } from '@space-cow-media/spellbook-client';
 import { fakeVariant, fixtureVariant } from '../../../lib/combo/widgets/testing/fakeVariant';
 import ComboWidget from 'components/combo/ComboWidget/ComboWidget';
 
@@ -21,6 +22,19 @@ test('renders nothing for a combo without a calculator', () => {
 test('renders nothing for a combo whose answer no input can change', () => {
   const { container } = render(<ComboWidget combo={fixtureVariant('1283-1537-2440-4183')} />);
   expect(container).toBeEmptyDOMElement();
+});
+
+test('renders an example of a variant, which comes with no text at all', () => {
+  const example = {
+    ...fixtureVariant('38-659-1288'),
+    status: 'E',
+    manaNeeded: null,
+    easyPrerequisites: null,
+    notablePrerequisites: null,
+    description: null,
+    notes: null,
+  } as unknown as Variant;
+  expect(() => render(<ComboWidget combo={example} />)).not.toThrow();
 });
 
 test('answers for the combo and answers again as the inputs change', async () => {

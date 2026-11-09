@@ -103,6 +103,10 @@ export function hasNothingToChange(calculator: Calculator): boolean {
 
 /* The first widget that recognizes the variant and leaves the player something to change. */
 export function detectWidget(variant: Variant): WidgetSpec | null {
+  /* an example of a variant comes without steps or prerequisites to work anything out from */
+  if (variant.description == null) {
+    return null;
+  }
   for (const widget of WIDGETS) {
     const params = widget.detect(variant);
     const spec = params && ({ ...params, widget: widget.id } as WidgetSpec);
