@@ -170,7 +170,7 @@ function flipping(thumbs: number, longest: number) {
     }
   };
 
-  return { ends, play: either > 0 ? chosen : counted };
+  return { ends, rows, play: either > 0 ? chosen : counted };
 }
 
 type Flipping = ReturnType<typeof flipping>;
@@ -334,10 +334,35 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     return false;
   };
 
-  /* The odds of casting copying spell `i` from a spot the table holds, then playing on for the best
-     chance, with where losing every flip leaves you in `ends` already, or `stays` for where you were */
-  const castCopier = (krarks: number, artists: number, mana: number, hand: number, i: number, stays: boolean) => {
+  /* Where winning each number of flips of a copying spell leaves you is the same whatever the mana, but
+     for the mana itself, so it is worked out once for a hand and its Krarks: the mana those wins leave
+     you ahead by, the least they have to leave for the odds to be anything, and where the table keeps
+     the odds from there or, settled or with the spells used up, the odds themselves. With no Thumb to
+     choose by, the wins whose odds no mana changes are summed up front, each by its chance, leaving
+     only the `open` ones to go by the mana. */
+  const landings = copiers.map(() => ({
+    krarks: 0,
+    artists: 0,
+    hand: 0,
+    ahead: new Float64Array(horizon + 1),
+    least: new Float64Array(horizon + 1),
+    held: new Int32Array(horizon + 1),
+    win: new Float64Array(horizon + 1),
+    usedUp: new Float64Array(horizon + 1),
+    open: new Int32Array(horizon + 1),
+    opens: 0,
+    sureWin: 0,
+    sureUsedUp: 0,
+  }));
+  const chances = (krarks: number): Float64Array | undefined => (thumbs === 0 ? flips.rows[krarks] : undefined);
+  const land = (krarks: number, artists: number, hand: number, i: number) => {
+    const landing = landings[i];
+    if (landing.krarks === krarks && landing.artists === artists && landing.hand === hand) {
+      return landing;
+    }
+    Object.assign(landing, { krarks, artists, hand, opens: 0, sureWin: 0, sureUsedUp: 0 });
     const { cost, everyNontoken } = copiers[i];
+    const chance = chances(krarks);
     for (let wins = 1; wins <= krarks; wins++) {
       const all = wins === krarks;
       const made = all ? wins + 1 : wins;
@@ -353,9 +378,73 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
         gain = artists * (1 + wins) + (everyNontoken ? (wins * (wins - 1)) / 2 : 0);
       }
       const nextArtists = breeds && everyNontoken ? artists + made : artists;
-      reach(wins, krarks + made, nextArtists, mana - cost + gain, all ? hand & ~bit(i) : hand);
+      const nextHand = all ? hand & ~bit(i) : hand;
+      /* settled with nothing making mana, the odds are none whatever the mana */
+      let least = Infinity;
+      let held = -1;
+      let winning = 0;
+      let using = 0;
+      if ((nextHand & copying) === 0) {
+        least = -Infinity;
+        using = 1;
+      } else if (!settled(krarks + made, nextArtists, nextHand)) {
+        least = cheapest[nextHand];
+        held = at(krarks + made, nextArtists, nextHand);
+      } else if ((nextHand & ritualBit) === ritualBit) {
+        least = restarts(nextHand);
+        winning = unlimited[spellsIn[nextHand]][Math.min(krarks + made, 2 * deep + 1)];
+        using = 1 - winning;
+      }
+      landing.ahead[wins] = gain - cost;
+      landing.least[wins] = least;
+      landing.held[wins] = held;
+      landing.win[wins] = winning;
+      landing.usedUp[wins] = using;
+      /* a cast is paid for, so it leaves at least the mana it makes */
+      if (chance && held < 0 && (gain >= least || least === Infinity)) {
+        landing.sureWin += chance[wins] * winning;
+        landing.sureUsedUp += chance[wins] * using;
+      } else {
+        landing.open[landing.opens++] = wins;
+      }
     }
-    return flips.play(krarks, stays);
+    return landing;
+  };
+
+  /* The odds of casting copying spell `i` from a spot the table holds, then playing on for the best
+     chance, with where losing every flip leaves you in `ends` already, or `stays` for where you were.
+     With no Thumb each number of wins is as likely as the coins make it, and a cast that can leave you
+     where you were counts only when it doesn't. */
+  const castCopier = (krarks: number, artists: number, mana: number, hand: number, i: number, stays: boolean) => {
+    const landing = land(krarks, artists, hand, i);
+    const chance = chances(krarks);
+    let winning = landing.sureWin;
+    let using = landing.sureUsedUp;
+    for (let open = 0; open < landing.opens; open++) {
+      const wins = landing.open[open];
+      const left = mana + landing.ahead[wins];
+      const held = landing.held[wins];
+      let won = 0;
+      let used = 0;
+      if (left >= landing.least[wins]) {
+        won = held < 0 ? landing.win[wins] : win[held + Math.min(most, left)];
+        used = held < 0 ? landing.usedUp[wins] : usedUp[held + Math.min(most, left)];
+      }
+      if (chance) {
+        winning += chance[wins] * won;
+        using += chance[wins] * used;
+      } else {
+        ends.win[wins] = won;
+        ends.usedUp[wins] = used;
+      }
+    }
+    if (!chance) {
+      return flips.play(krarks, stays);
+    }
+    if (stays) {
+      return { win: winning / (1 - chance[0]), usedUp: using / (1 - chance[0]) };
+    }
+    return { win: winning + chance[0] * ends.win[0], usedUp: using + chance[0] * ends.usedUp[0] };
   };
 
   /* The odds of casting the mana ritual from a spot the table holds: every copy makes its mana, and so
@@ -365,14 +454,24 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
     const made = ritualMana(krarks);
     const paid = mana - ritual!.cost;
     const back = at(krarks, artists, hand);
+    const chance = chances(krarks);
+    reach(krarks, krarks, artists, paid + made * (krarks + 1), hand & ~ritualBit);
+    let winning = chance ? chance[krarks] * ends.win[krarks] : 0;
+    let using = chance ? chance[krarks] * ends.usedUp[krarks] : 0;
     for (let wins = 0; wins < krarks; wins++) {
       const left = Math.min(most, paid + made * wins);
       const pays = left >= cheapest[hand];
-      ends.win[wins] = pays ? win[back + left] : 0;
-      ends.usedUp[wins] = pays ? usedUp[back + left] : 0;
+      const won = pays ? win[back + left] : 0;
+      const used = pays ? usedUp[back + left] : 0;
+      if (chance) {
+        winning += chance[wins] * won;
+        using += chance[wins] * used;
+      } else {
+        ends.win[wins] = won;
+        ends.usedUp[wins] = used;
+      }
     }
-    reach(krarks, krarks, artists, paid + made * (krarks + 1), hand & ~ritualBit);
-    return flips.play(krarks, false);
+    return chance ? { win: winning, usedUp: using } : flips.play(krarks, false);
   };
 
   type Cast = (krarks: number, artists: number, mana: number, hand: number, i: number) => Odds;
