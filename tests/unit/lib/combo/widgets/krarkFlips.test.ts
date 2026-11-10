@@ -1088,6 +1088,15 @@ describe('the calculator', () => {
     expect(fromOne.dots.map((dot) => dot.label)).toEqual(['1 or more Krarks: >99.9%']);
   });
 
+  test('charts the chance by Krarks where every cast pays for itself from the first Krark on', () => {
+    /* a one-mana spell with Storm-Kiln Artist: settled with any Krarks, the chance still grows with them */
+    const calculator = krarkFlips.calculator({ engine: 'Storm-Kiln Artist', spells: [{ everyNontoken: false }] });
+    const cheap = { firstCost: 1 };
+    expect(run(calculator, { numbers: { ...cheap, krarks: 2 } }).headline.value).toBe('53.5%');
+    expectSteadyFrom(calculator, 'krarks', 12, { numbers: cheap });
+    expectSteadyFrom(calculator, 'krarks', 6, { numbers: { ...cheap, thumbs: 1 } });
+  });
+
   test('asks what the mana ritual costs and makes, next to the spells, where the mana comes from one', () => {
     expect(
       calculatorFor(krarkFlips, RITUAL_INCURSION).inputs.map(({ key, label, initial }) => [key, label, initial]),

@@ -600,6 +600,8 @@ export function krarkOdds(copiers: Copier[], engine: Engine, { others = 0, thumb
   return {
     horizon,
     most,
+    /* Krarks enough that more make no difference to the odds: no cast is taken to win every flip */
+    plenty: deep + 1,
     /* the odds from a spot, at its best */
     at(spot: Spot): Odds {
       const { krarks, artists, mana, hand } = clamp(spot);
@@ -939,7 +941,7 @@ export const krarkFlips = defineWidget('krark-flips', {
           return copiers[i].cost < copiers[1 - i].cost ? 'the cheaper spell' : 'the dearer spell';
         };
 
-        const krarksSteady = steadyFrom(krarks, odds.horizon - 1, (x) => spotAt(x, values.numbers.mana));
+        const krarksSteady = steadyFrom(krarks, odds.plenty, (x) => spotAt(x, values.numbers.mana));
         const krarksNow = Math.min(values.numbers.krarks, krarksSteady);
         const manaSpot = (x: number) => spotAt(krarksNow, x);
         /* Past the mana the odds keep count of the answer reads the same, but for a lone Krark with its

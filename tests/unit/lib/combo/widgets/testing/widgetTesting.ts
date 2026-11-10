@@ -60,7 +60,8 @@ function expectSane(value: unknown, path: string): void {
 }
 
 /* Every input at its minimum, at its maximum (a billion for most) and at its default, and the
-   answers stay numbers: no NaN, no ∞, nothing undefined, and no time to speak of. */
+   answers stay numbers: no NaN, no ∞, nothing undefined, and no time to speak of. A chart that picks an
+   input never says the answer is steady from below what the input allows, which would pin it there. */
 export function expectSaneAtExtremes(calculator: Calculator): void {
   const picks = {
     initial: (input: { initial: number }) => input.initial,
@@ -72,6 +73,12 @@ export function expectSaneAtExtremes(calculator: Calculator): void {
     const result = calculator.compute(valuesFor(calculator, pick));
     expect(performance.now() - begin, `${name} took too long`).toBeLessThan(100);
     expectSane(result, name);
+    for (const chart of result.charts ?? []) {
+      const input = calculator.inputs.find((candidate) => candidate.key === chart.selects);
+      if (input?.kind === 'number' && chart.steadyFrom !== undefined) {
+        expect(chart.steadyFrom, `${name}: "${chart.title}" steady from`).toBeGreaterThanOrEqual(input.min);
+      }
+    }
   }
 }
 
