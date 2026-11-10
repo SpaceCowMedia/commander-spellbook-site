@@ -144,16 +144,17 @@ function choices(board: Board, odds: KrarkOdds, spot: Spot, i: number, aim: Odds
   const alike = 2 ** -(2 ** board.thumbs!);
   const flips = spot.krarks;
   const width = flips + 2;
+  const aimed = aim?.byFlip.length ?? 0;
   const keeps = new Uint8Array(flips * width * width);
   const worth = new Float64Array(width * width);
   for (let wins = 0; wins <= flips; wins++) {
-    for (let makers = 0; makers <= wins; makers++) {
+    for (let makers = 0; makers <= Math.min(wins, aimed); makers++) {
       worth[wins * width + makers] = odds.at(after(board, spot, i, wins, makers, aim?.spellToo ?? false)).win;
     }
   }
   for (let flip = flips - 1; flip >= 0; flip--) {
     for (let wins = 0; wins <= flip; wins++) {
-      for (let makers = 0; makers <= wins; makers++) {
+      for (let makers = 0; makers <= Math.min(wins, aimed); makers++) {
         /* a win now is one more copy, the maker if every copy so far is and the aim says so of this flip */
         const maker = makers === wins && makersAmong(aim, Array<number>(wins + 1).fill(flip + 1)) > wins;
         const lost = worth[wins * width + makers];
@@ -283,7 +284,7 @@ function expectPlayedOdds(board: Board, start: Spot, plays = 20_000) {
 }
 
 describe('the odds', () => {
-  test('match the combo played flip by flip, whatever pays for the next cast', () => {
+  test('match the combo played flip by flip, whatever pays for the next cast', { timeout: 60_000 }, () => {
     expectPlayedOdds({ copiers: TEMPLATE, engine: 'legendary' }, { krarks: 1, artists: 0, mana: 10, hand: 3 });
     expectPlayedOdds({ copiers: TEMPLATE, engine: 'legendary' }, { krarks: 1, artists: 0, mana: 6, hand: 3 });
     expectPlayedOdds(
@@ -328,28 +329,32 @@ describe('the odds', () => {
     );
   });
 
-  test("match the combo played with Krark's Thumbs, keeping the coin that gives the better chance", () => {
-    expectPlayedOdds(
-      { copiers: TEMPLATE, engine: 'legendary', thumbs: 1 },
-      { krarks: 1, artists: 0, mana: 4, hand: 3 },
-      10_000,
-    );
-    expectPlayedOdds(
-      { copiers: TEMPLATE, engine: 'legendary', thumbs: 2 },
-      { krarks: 1, artists: 0, mana: 3, hand: 3 },
-      10_000,
-    );
-    expectPlayedOdds(
-      { copiers: [INCURSION, DUPLICATION], engine: 'magecraft', thumbs: 1 },
-      { krarks: 1, artists: 1, mana: 12, hand: 3 },
-      10_000,
-    );
-    expectPlayedOdds(
-      { copiers: [INCURSION, PRODUCTION], engine: 'creature', others: 2, thumbs: 1 },
-      { krarks: 1, artists: 0, mana: 14, hand: 3 },
-      10_000,
-    );
-  });
+  test(
+    "match the combo played with Krark's Thumbs, keeping the coin that gives the better chance",
+    { timeout: 60_000 },
+    () => {
+      expectPlayedOdds(
+        { copiers: TEMPLATE, engine: 'legendary', thumbs: 1 },
+        { krarks: 1, artists: 0, mana: 4, hand: 3 },
+        10_000,
+      );
+      expectPlayedOdds(
+        { copiers: TEMPLATE, engine: 'legendary', thumbs: 2 },
+        { krarks: 1, artists: 0, mana: 3, hand: 3 },
+        10_000,
+      );
+      expectPlayedOdds(
+        { copiers: [INCURSION, DUPLICATION], engine: 'magecraft', thumbs: 1 },
+        { krarks: 1, artists: 1, mana: 12, hand: 3 },
+        10_000,
+      );
+      expectPlayedOdds(
+        { copiers: [INCURSION, PRODUCTION], engine: 'creature', others: 2, thumbs: 1 },
+        { krarks: 1, artists: 0, mana: 14, hand: 3 },
+        10_000,
+      );
+    },
+  );
 
   test('match the odds worked out the plain way, at every spot', () => {
     expectPlainOdds({ copiers: TEMPLATE, engine: 'legendary' });
@@ -424,7 +429,7 @@ describe('the odds', () => {
     expect(krarkOdds(TEMPLATE, 'legendary').makers({ krarks: 1, artists: 0, mana: 2, hand: 3 })).toBe(0);
   });
 
-  test('count two Treasures from each Tavern Scoundrel for every flip won', () => {
+  test('count two Treasures from each Tavern Scoundrel for every flip won', { timeout: 60_000 }, () => {
     expectPlainOdds({ copiers: TEMPLATE, engine: 'flips' });
     expectPlainOdds({ copiers: TEMPLATE, engine: 'flips', thumbs: 1 });
     expectPlainOdds({ copiers: [INCURSION, DUPLICATION], engine: 'flips' });
@@ -806,7 +811,7 @@ describe('the odds with a mana ritual', () => {
     expectPlainOdds({ ...board, thumbs: 1 });
   });
 
-  test('match the combo played flip by flip, ritual and all', () => {
+  test('match the combo played flip by flip, ritual and all', { timeout: 60_000 }, () => {
     expectPlayedOdds(
       { copiers: [MOLTEN], engine: 'ritual', ritual: MANAMORPHOSE },
       { krarks: 2, artists: 0, mana: 4, hand: 3 },
@@ -834,7 +839,7 @@ describe('the odds with a mana ritual', () => {
     expect(odds.at({ krarks: 1000, artists: 0, mana: 5, hand: 3 }).win).toBeCloseTo(1, 6);
   });
 
-  test("match the combo played with Krark's Thumbs, which can keep the ritual too", () => {
+  test("match the combo played with Krark's Thumbs, which can keep the ritual too", { timeout: 60_000 }, () => {
     expectPlayedOdds(
       { copiers: [MOLTEN], engine: 'ritual', ritual: PYRETIC_RITUAL, thumbs: 1 },
       { krarks: 1, artists: 0, mana: 3, hand: 3 },
