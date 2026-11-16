@@ -78,7 +78,7 @@
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "jsdom": "^31.0.0",
-    "lint-staged": "^17.6.0",
+    "lint-staged": "^17.6.1",
     "prettier": "^3.9.10",
     "sass": "^1.108.1",
     "stylelint": "^17.16.0",
