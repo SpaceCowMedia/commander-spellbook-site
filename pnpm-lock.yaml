@@ -228,8 +228,8 @@ importers:
         specifier: ^5.10.2
         version: 5.10.2(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)
       react-tooltip:
-        specifier: ^6.0.10
-        version: 6.0.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: ^6.0.12
+        version: 6.0.12(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       use-debounce:
         specifier: ^10.1.1
         version: 10.1.1(react@19.3.1)
@@ -3213,8 +3213,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-tooltip@6.0.10:
-    resolution: {integrity: sha512-dEecVZIbU0aeYgaJtkr1JVmzRolI5+maQwMEWXq8yKnKOYM1Sqx1uEhWtvhOqbYj8i6NdqS9iFf4w8INlZFltg==}
+  react-tooltip@6.0.12:
+    resolution: {integrity: sha512-3ideFpTFyZiC4obEBYdcDFKLCf2w9+ZnSPdkSz0DE9qUXarVSd3pS5GUcnRdxXvvZpQx0N6i1Jhmdd3CB1PTNg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -6838,7 +6838,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  react-tooltip@6.0.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  react-tooltip@6.0.12(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       '@floating-ui/dom': 1.7.6
       clsx: 2.1.1
