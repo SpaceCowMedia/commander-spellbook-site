@@ -32,6 +32,7 @@ interface Props {
   resultAutocomplete?: boolean;
   selectOptions?: readonly Option[];
   useValueForAutocompleteInput?: boolean;
+  acceptsAnyText?: boolean;
   label: string;
   labelIcon?: SpellbookIcon;
   pluralLabel?: string;
@@ -47,6 +48,7 @@ const MultiSearchInput: React.FC<Props> = ({
   templateAutocomplete,
   resultAutocomplete,
   useValueForAutocompleteInput,
+  acceptsAnyText,
   label,
   labelIcon,
   pluralLabel,
@@ -156,6 +158,7 @@ const MultiSearchInput: React.FC<Props> = ({
                   placeholder={getPlaceHolder(input)}
                   hasError={!!input.error}
                   useValueForInput={useValueForAutocompleteInput}
+                  acceptsAnyText={acceptsAnyText}
                 />
               )}
               {selectOptions && (

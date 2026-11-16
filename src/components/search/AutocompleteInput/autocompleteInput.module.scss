@@ -12,6 +12,10 @@
   @apply text-left p-2 cursor-pointer;
 }
 
+.typedTextResult:not(:first-child) {
+  @apply border-t border-light;
+}
+
 .autocompleteNotice {
   @apply p-2 text-left text-sm bg-white border border-light absolute w-full z-10 dark:bg-dark;
 }

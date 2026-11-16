@@ -324,6 +324,7 @@ const CardSubmission = ({
               placeholder="Search for a template (ex: 'Creature with haste') or type in a new one..."
               // hasError={!!input.error}
               useValueForInput
+              acceptsAnyText
               maxLength={256}
             />
           </div>
@@ -365,6 +366,7 @@ const CardSubmission = ({
               placeholder="Search for a card..."
               // hasError={!!input.error}
               useValueForInput
+              acceptsAnyText
               maxLength={256}
             />
           </div>

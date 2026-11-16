@@ -40,6 +40,7 @@ interface Props {
   onChange?: (_value: string) => void;
   onSelect?: (_value: string) => void;
   maxLength?: number;
+  acceptsAnyText?: boolean;
 }
 
 const AutocompleteInput: React.FC<Props> = ({
@@ -57,13 +58,16 @@ const AutocompleteInput: React.FC<Props> = ({
   onChange,
   onSelect,
   maxLength,
+  acceptsAnyText,
 }) => {
   const [firstRender, setFirstRender] = useState<boolean>(true);
   const resultsRef = React.useRef<HTMLUListElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState<string>(value);
-  const [debouncedLocalValue] = useDebounce(localValue, AUTOCOMPLETE_DELAY);
+  const [debouncedLocalValue, debounceControl] = useDebounce(localValue, AUTOCOMPLETE_DELAY);
   const [matchingAutoCompleteOptions, setMatchingAutoCompleteOptions] = useState<AutoCompleteOption[]>([]);
+  const [resultsOpen, setResultsOpen] = useState<boolean>(false);
+  const lookupId = React.useRef(0);
   const [arrowCounter, setArrowCounter] = useState<number>(-1);
   const [loading, setLoading] = useState<boolean>(false);
   const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
@@ -77,15 +81,25 @@ const AutocompleteInput: React.FC<Props> = ({
     templateAutocomplete;
   const inMemory = !active || (!cardAutocomplete && !resultAutocomplete && !templateAutocomplete);
 
-  const total = matchingAutoCompleteOptions.length;
+  const showTypedTextOption = !!acceptsAnyText && resultsOpen && localValue.trim() !== '';
+  const typedTextIndex = showTypedTextOption ? matchingAutoCompleteOptions.length : -1;
+  const typedTextLabel = `Use "${localValue}"`;
+  const total = matchingAutoCompleteOptions.length + (showTypedTextOption ? 1 : 0);
   const option = matchingAutoCompleteOptions[arrowCounter];
   let screenReaderSelectionText = '';
   if (total !== 0 && value) {
-    screenReaderSelectionText = option
-      ? `${option.label} (${arrowCounter + 1}/${total})`
-      : `${total} match${
-          total > 1 ? 'es' : ''
-        } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
+    if (option) {
+      screenReaderSelectionText = `${option.label} (${arrowCounter + 1}/${total})`;
+    } else if (arrowCounter === typedTextIndex) {
+      screenReaderSelectionText = `${typedTextLabel} (${arrowCounter + 1}/${total})`;
+    } else if (matchingAutoCompleteOptions.length === 0) {
+      screenReaderSelectionText = `No matches found for ${value}. Use the down arrow key and the enter or tab key to keep the text as typed.`;
+    } else {
+      const matches = matchingAutoCompleteOptions.length;
+      screenReaderSelectionText = `${matches} match${
+        matches > 1 ? 'es' : ''
+      } found for ${value}. Use the up and down arrow keys to browse the options. Use the enter or tab key to choose a selection or continue typing to narrow down the options.`;
+    }
   }
 
   const configuration = apiConfiguration();
@@ -233,16 +247,25 @@ const AutocompleteInput: React.FC<Props> = ({
   }
 
   const waitForAutocomplete: () => Promise<void> = async () => {
+    const id = ++lookupId.current;
     if (inMemory) {
       await timeout(AUTOCOMPLETE_DELAY);
+    }
+    if (id !== lookupId.current) {
+      return;
     }
     if (!localValue) {
       return handleClose();
     }
     setMatchingAutoCompleteOptions([]);
+    setResultsOpen(false);
     const totalOptions = await findAllMatches(localValue, autocompleteOptions);
+    if (id !== lookupId.current) {
+      return;
+    }
     const matchingOptions = findBestMatches(totalOptions, localValue);
     setMatchingAutoCompleteOptions(matchingOptions);
+    setResultsOpen(true);
   };
 
   const lookupAutoComplete = async () => {
@@ -256,12 +279,14 @@ const AutocompleteInput: React.FC<Props> = ({
   };
 
   const handleClose = () => {
+    lookupId.current++;
     if (resultsRef.current) {
       resultsRef.current.scrollTop = 0;
     }
 
     setArrowCounter(-1);
     setMatchingAutoCompleteOptions([]);
+    setResultsOpen(false);
     setRateLimitVisible(false);
   };
 
@@ -332,6 +357,25 @@ const AutocompleteInput: React.FC<Props> = ({
     handleClose();
   };
 
+  const handleTypedTextSelect = () => {
+    if (onSelect) {
+      onSelect(localValue);
+    }
+    debounceControl.cancel();
+    handleClose();
+  };
+
+  const selectHighlighted = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const selection = matchingAutoCompleteOptions[arrowCounter];
+    if (selection) {
+      e.preventDefault();
+      handleSelect(selection);
+    } else if (arrowCounter === typedTextIndex) {
+      e.preventDefault();
+      handleTypedTextSelect();
+    }
+  };
+
   const scrollToSelection = () => {
     if (!resultsRef.current) {
       return;
@@ -359,29 +403,20 @@ const AutocompleteInput: React.FC<Props> = ({
     scrollToSelection();
   };
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) {
-      return;
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
-    e.preventDefault();
-    handleSelect(selection);
-  };
-
-  const handleTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const selection = matchingAutoCompleteOptions[arrowCounter];
-    if (!selection) {
-      return;
-    }
-    e.preventDefault();
-    handleSelect(selection);
   };
 
   const handleClick = (item: AutoCompleteOption) => {
     handleSelect(item);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    focusInput();
+  };
+
+  const handleTypedTextClick = () => {
+    handleTypedTextSelect();
+    focusInput();
   };
 
   const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -389,10 +424,8 @@ const AutocompleteInput: React.FC<Props> = ({
       handleArrowDown(e);
     } else if (e.key === 'ArrowUp') {
       handleArrowUp(e);
-    } else if (e.key === 'Enter') {
-      handleEnter(e);
-    } else if (e.key === 'Tab') {
-      handleTab(e);
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      selectHighlighted(e);
     }
   };
 
@@ -448,6 +481,15 @@ const AutocompleteInput: React.FC<Props> = ({
               )}
             </li>
           ))}
+          {showTypedTextOption && (
+            <li
+              className={`${inputClassName} ${styles.autocompleteResult} ${styles.typedTextResult} ${typedTextIndex === arrowCounter && styles.isActive}`}
+              onClick={handleTypedTextClick}
+              onMouseOver={() => handleAutocompleteItemHover(typedTextIndex)}
+            >
+              {typedTextLabel}
+            </li>
+          )}
         </ul>
       )}
     </div>

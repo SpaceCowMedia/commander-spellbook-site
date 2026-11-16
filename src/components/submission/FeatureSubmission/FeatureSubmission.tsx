@@ -36,6 +36,7 @@ const FeatureSubmission: React.FC<Props> = ({ feature, onChange, onDelete, index
         placeholder="Search for a feature (ex: 'Infinite mana')..."
         // hasError={!!input.error}
         useValueForInput
+        acceptsAnyText
         maxLength={256}
       />
       <button className="submission-remove" onClick={onDelete} title="Remove feature from combo">

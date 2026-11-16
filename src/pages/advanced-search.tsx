@@ -754,6 +754,7 @@ const AdvancedSearch: React.FC = () => {
             value={cards}
             onChange={(cards) => setFormState({ cards })}
             cardAutocomplete={true}
+            acceptsAnyText
             label="Card Names"
             labelIcon="signature"
             operatorOptions={CARD_OPERATOR_OPTIONS}
@@ -776,6 +777,7 @@ const AdvancedSearch: React.FC = () => {
             value={templates}
             onChange={(templates) => setFormState({ templates })}
             templateAutocomplete={true}
+            acceptsAnyText
             label="Template Card Names"
             labelIcon="template"
             operatorOptions={CARD_OPERATOR_OPTIONS}
@@ -866,6 +868,7 @@ const AdvancedSearch: React.FC = () => {
             value={results}
             onChange={(results) => setFormState({ results })}
             resultAutocomplete={true}
+            acceptsAnyText
             label="Result"
             labelIcon="infinity"
             operatorOptions={COMBO_DATA_OPERATOR_OPTIONS}
@@ -878,6 +881,7 @@ const AdvancedSearch: React.FC = () => {
             value={commanders}
             onChange={(commanders) => setFormState({ commanders })}
             cardAutocomplete={true}
+            acceptsAnyText
             label="Commander"
             labelIcon="commandZone"
             operatorOptions={COMMANDER_OPTIONS}
